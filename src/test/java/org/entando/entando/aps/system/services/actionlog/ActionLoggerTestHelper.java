@@ -56,8 +56,8 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecords(conn, DELETE_LOG_COMMENT_RECORDS);
-			this.deleteRecords(conn, DELETE_LOG_LIKE_RECORDS);
+			//this.deleteRecords(conn, DELETE_LOG_COMMENT_RECORDS);
+			//this.deleteRecords(conn, DELETE_LOG_LIKE_RECORDS);
 			this.deleteRecords(conn, DELETE_LOG_RECORD_RELATIONS);
 			this.deleteRecords(conn, DELETE_LOG_RECORDS);
 			conn.commit();
@@ -113,10 +113,10 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		"DELETE from actionlogrecords";
 	private static final String DELETE_LOG_RECORD_RELATIONS = 
 		"DELETE from actionlogrelations";
-	private static final String DELETE_LOG_LIKE_RECORDS = 
-		"DELETE from actionloglikerecords";
-	private static final String DELETE_LOG_COMMENT_RECORDS = 
-		"DELETE from actionlogcommentrecords";
+	//private static final String DELETE_LOG_LIKE_RECORDS = 
+	//	"DELETE from actionloglikerecords";
+	//private static final String DELETE_LOG_COMMENT_RECORDS = 
+	//	"DELETE from actionlogcommentrecords";
 	
 	private IActionLogDAO _actionLoggerDAO;
 	
