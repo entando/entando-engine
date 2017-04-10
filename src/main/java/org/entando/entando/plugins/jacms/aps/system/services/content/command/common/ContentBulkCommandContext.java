@@ -15,10 +15,25 @@ package org.entando.entando.plugins.jacms.aps.system.services.content.command.co
 
 import java.util.Collection;
 
-public abstract class BaseContentPropertyBulkCommand<P> extends BaseContentBulkCommand<ContentPropertyBulkCommandContext<P>> {
+import org.entando.entando.aps.system.common.command.context.BaseBulkCommandContext;
+import org.entando.entando.aps.system.common.command.tracer.BulkCommandTracer;
 
-	public Collection<P> getItemProperties() {
-		return this.getContext().getItemProperties();
+import com.agiletec.aps.system.services.user.UserDetails;
+
+public class ContentBulkCommandContext extends BaseBulkCommandContext<String> {
+
+	public ContentBulkCommandContext(Collection<String> items, UserDetails currentUser, BulkCommandTracer<String> tracer) {
+		super(items, tracer);
+		this.setCurrentUser(currentUser);
 	}
+
+	public UserDetails getCurrentUser() {
+		return _currentUser;
+	}
+	public void setCurrentUser(UserDetails currentUser) {
+		this._currentUser = currentUser;
+	}
+
+	private UserDetails _currentUser;
 
 }

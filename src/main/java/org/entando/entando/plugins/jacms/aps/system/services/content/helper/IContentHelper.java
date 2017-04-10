@@ -11,18 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.plugins.jacms.aps.system.services.content;
+package org.entando.entando.plugins.jacms.aps.system.services.content.helper;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
-/**
- * @author eu
- * EVOLUZIONE DEL CORE - AGGIUNTA FIRST EDITOR e funzioni aggiornamento referenze
- */
-public interface IContentUpdaterDAO {
-	
-	public void reloadWorkContentCategoryReferences(Content content);
-	
-	public void reloadPublicContentCategoryReferences(Content content);
-	
+public interface IContentHelper {
+
+	public static String BEAN_NAME = "jacmsContentHelper";
+
+	public Map<String, List<?>> getReferencingObjects(Content content) throws ApsSystemException;
+
+	public Map<String, List<?>> getReferencingObjects(Content content, Collection<ContentUtilizer> contentUtilizers) throws ApsSystemException;
+
+	public List<ContentUtilizer> getContentUtilizers();
+
 }

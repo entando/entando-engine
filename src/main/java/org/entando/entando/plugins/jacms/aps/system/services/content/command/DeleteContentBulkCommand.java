@@ -11,21 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.plugins.jacms.aps.system.services.content.command.category;
-
-import java.util.Collection;
+package org.entando.entando.plugins.jacms.aps.system.services.content.command;
 
 import org.entando.entando.aps.system.common.command.constants.ApsCommandErrorCode;
-import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.BaseContentPropertyBulkCommand;
+import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.BaseContentBulkCommand;
+import org.entando.entando.plugins.jacms.aps.system.services.content.command.common.ContentBulkCommandContext;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
-public class JoinCategoryBulkCommand extends BaseContentPropertyBulkCommand<Category> {
+public class DeleteContentBulkCommand extends BaseContentBulkCommand<ContentBulkCommandContext> {
 
-	public static String BEAN_NAME = "jacmsJoinCategoryBulkCommand";
-	public static String COMMAND_NAME = "content.category.join";
+	public static String BEAN_NAME = "jacmsDeleteContentBulkCommand";
+	public static String COMMAND_NAME = "content.delete";
 
 	@Override
 	public String getName() {
@@ -34,20 +32,14 @@ public class JoinCategoryBulkCommand extends BaseContentPropertyBulkCommand<Cate
 
 	@Override
 	protected boolean apply(Content content) throws ApsSystemException {
-		Collection<Category> categories = this.getItemProperties();
-		if (null == categories || categories.isEmpty()) {
-			this.getTracer().traceError(content.getId(), ApsCommandErrorCode.PARAMS_NOT_VALID);
+		if (content.isOnLine()) {
+			this.getTracer().traceError(content.getId(), ApsCommandErrorCode.NOT_APPLICABLE);
 			return false;
 		} else {
-			for (Category category : categories) {
-				if (null != category && !category.getCode().equals(category.getParentCode())) {
-					content.addCategory(category);
-				}
-			}
-			this.getApplier().saveContent(content);
+			this.getApplier().deleteContent(content);
 			this.getTracer().traceSuccess(content.getId());
+			return true;
 		}
-		return true;
 	}
 
 }

@@ -11,9 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.category.thread;
+package org.entando.entando.aps.system.common.command.context;
 
-public interface ThreadCompleteListener {
+public interface ApsCommandContext {
 
-	public void notifyOfThreadComplete(final Thread thread);
 }
