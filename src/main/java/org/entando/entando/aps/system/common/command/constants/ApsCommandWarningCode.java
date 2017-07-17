@@ -11,13 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.common.entity;
-
-import com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper;
+package org.entando.entando.aps.system.common.command.constants;
 
 /**
- * The Class of the extra attribute roles.
- * @author E.Santoboni
- * @deprecated Since Entando 2.4.1, use ExtraAttributeRolesWrapper
+ * Codes used in the event of warnings in the execution of a command, relative to a single item.
+ * @author E.Mezzano
+ *
  */
-public class ExtraAttributeRoles extends ExtraAttributeRolesWrapper {}
+public enum ApsCommandWarningCode {
+	/**
+	 * Returned when the command is non necessary for the given item.
+	 */
+	NOT_NECESSARY
+}
