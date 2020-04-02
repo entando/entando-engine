@@ -11,34 +11,35 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 import java.io.Serializable;
 
-import com.agiletec.aps.system.exception.ApsException;
-
 /**
  * Base interface for implementing Services.
+ *
  * @author E.Santoboni
  */
 public interface IManager extends RefreshableBean, Serializable {
-	
-	/**
-	 * Service initialization.
-	 * @throws Exception In the case of error when service is initialized.
-	 */
-	public void init() throws Exception;
-	
-	/**
-	 * Destroy method invoked on bean factory shutdown.
-	 */
-	public void destroy();
-	
-	/** 
-	 * Return the service name.
-	 * @return the service name.
-	 */
-	public String getName();
 
-	
+    /**
+     * Service initialization.
+     *
+     * @throws Exception In the case of error when service is initialized.
+     */
+    void init() throws Exception;
+
+    /**
+     * Destroy method invoked on bean factory shutdown.
+     */
+    void destroy();
+
+    /**
+     * Return the service name.
+     *
+     * @return the service name.
+     */
+    String getName();
+
 }

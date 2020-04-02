@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.parse;
 
 import com.agiletec.aps.system.common.entity.parse.EntityTypeDOM;
@@ -20,14 +21,14 @@ import com.agiletec.aps.system.common.entity.parse.EntityTypeDOM;
  */
 public class UserProfileTypeDOM extends EntityTypeDOM {
 
-	@Override
-	protected String getEntityTypeRootElementName() {
-		return "profiletype";
-	}
-	
-	@Override
-	protected String getEntityTypesRootElementName() {
-		return "profiletypes";
-	}
-	
+    @Override
+    protected String getEntityTypeRootElementName() {
+        return "profiletype";
+    }
+
+    @Override
+    protected String getEntityTypesRootElementName() {
+        return "profiletypes";
+    }
+
 }

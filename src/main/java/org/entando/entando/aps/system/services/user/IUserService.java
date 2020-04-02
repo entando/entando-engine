@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.user;
 
 import java.util.List;
@@ -27,29 +28,29 @@ import org.entando.entando.web.user.model.UserRequest;
  */
 public interface IUserService {
 
-    public final static String BEAN_NAME = "UserService";
+    String BEAN_NAME = "UserService";
 
-    public final static String STATUS_ACTIVE = "active";
+    String STATUS_ACTIVE = "active";
 
-    public final static String STATUS_DISABLED = "inactive";
+    String STATUS_DISABLED = "inactive";
 
-    public List<UserAuthorityDto> getUserAuthorities(String username);
+    List<UserAuthorityDto> getUserAuthorities(String username);
 
-    public List<UserAuthorityDto> addUserAuthorities(String username, UserAuthoritiesRequest request);
+    List<UserAuthorityDto> addUserAuthorities(String username, UserAuthoritiesRequest request);
 
-    public List<UserAuthorityDto> updateUserAuthorities(String username, UserAuthoritiesRequest request);
+    List<UserAuthorityDto> updateUserAuthorities(String username, UserAuthoritiesRequest request);
 
-    public void deleteUserAuthorities(String username);
+    void deleteUserAuthorities(String username);
 
-    public PagedMetadata<UserDto> getUsers(RestListRequest requestList, String withProfile);
+    PagedMetadata<UserDto> getUsers(RestListRequest requestList, String withProfile);
 
-    public UserDto getUser(String username);
+    UserDto getUser(String username);
 
-    public UserDto updateUser(UserRequest userRequest);
+    UserDto updateUser(UserRequest userRequest);
 
-    public UserDto addUser(UserRequest userRequest);
+    UserDto addUser(UserRequest userRequest);
 
-    public void removeUser(String username);
+    void removeUser(String username);
 
-    public UserDto updateUserPassword(UserPasswordRequest passwordRequest);
+    UserDto updateUserPassword(UserPasswordRequest passwordRequest);
 }

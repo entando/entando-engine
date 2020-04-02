@@ -11,19 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the representation of a portal page metadata
@@ -93,8 +92,7 @@ public class PageMetadata implements Cloneable, Serializable {
     /**
      * Set the titles of the node.
      *
-     * @param titles A set of properties with the titles, where the keys are the
-     * codes of language.
+     * @param titles A set of properties with the titles, where the keys are the codes of language.
      */
     public void setTitles(ApsProperties titles) {
         this.titles = titles;
@@ -118,8 +116,7 @@ public class PageMetadata implements Cloneable, Serializable {
     }
 
     /**
-     * WARNING: This method is for the page manager service only exclusive use
-     * Assign the given page model to the current object
+     * WARNING: This method is for the page manager service only exclusive use Assign the given page model to the current object
      *
      * @param pageModel the model of the page to assign
      */
@@ -141,19 +138,18 @@ public class PageMetadata implements Cloneable, Serializable {
         this.getExtraGroups().remove(groupName);
     }
 
+    public Set<String> getExtraGroups() {
+        return extraGroups;
+    }
+
     public void setExtraGroups(Set<String> extraGroups) {
         this.extraGroups = extraGroups;
 
     }
 
-    public Set<String> getExtraGroups() {
-        return extraGroups;
-    }
-
     /**
-     * WARING: this method is reserved to the page manager service only. This
-     * returns a boolean values indicating whether the page is displayed in the
-     * menus or similar.
+     * WARING: this method is reserved to the page manager service only. This returns a boolean values indicating whether the page is
+     * displayed in the menus or similar.
      *
      * @return true if the page must be shown in the menu, false otherwise.
      */
@@ -162,11 +158,9 @@ public class PageMetadata implements Cloneable, Serializable {
     }
 
     /**
-     * WARING: this method is reserved to the page manager service only. Toggle
-     * the visibility of the current page in the menu or similar.
+     * WARING: this method is reserved to the page manager service only. Toggle the visibility of the current page in the menu or similar.
      *
-     * @param showable a boolean which toggles the visibility on when true, off
-     * otherwise.
+     * @param showable a boolean which toggles the visibility on when true, off otherwise.
      */
     public void setShowable(boolean showable) {
         this.showable = showable;
@@ -243,9 +237,6 @@ public class PageMetadata implements Cloneable, Serializable {
 
     /**
      * all but lastUpdate
-     *
-     * @param obj
-     * @return
      */
     public boolean hasEqualConfiguration(Object obj) {
         if (obj == null) {
@@ -300,10 +291,7 @@ public class PageMetadata implements Cloneable, Serializable {
         } else if (!titles.equals(other.titles)) {
             return false;
         }
-        if (useExtraTitles != other.useExtraTitles) {
-            return false;
-        }
-        return true;
+        return useExtraTitles == other.useExtraTitles;
     }
 
 }

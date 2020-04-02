@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 public class LocalStorageManagerIntegrationTest extends BaseTestCase {
 
     private static final Logger _logger = LoggerFactory.getLogger(LocalStorageManagerIntegrationTest.class);
+    private IStorageManager _localStorageManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -114,13 +115,13 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
             this._localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
             stream = this._localStorageManager.getStream(testFilePath, false);
             assertNotNull(stream);
-            String extractedString = IOUtils.toString(stream, "UTF-8");
+            String extractedString = IOUtils.toString(stream, StandardCharsets.UTF_8);
             stream.close();
             assertEquals(content, extractedString);
             String newContent = "This is the new content of text file";
             this._localStorageManager.editFile(testFilePath, false, new ByteArrayInputStream(newContent.getBytes()));
             stream = this._localStorageManager.getStream(testFilePath, false);
-            String extractedNewString = IOUtils.toString(stream, "UTF-8");
+            String extractedNewString = IOUtils.toString(stream, StandardCharsets.UTF_8);
             stream.close();
             assertEquals(newContent, extractedNewString);
             String readfileAfterWriteBackup = this._localStorageManager.readFile(testFilePath, false);
@@ -167,7 +168,5 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
             _logger.error("error on init", t);
         }
     }
-
-    private IStorageManager _localStorageManager;
 
 }

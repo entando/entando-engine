@@ -11,11 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.dataobject;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectService;
@@ -28,8 +32,10 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.dataobject.model.DataTypeDtoRequest;
 import org.entando.entando.web.dataobject.model.DataTypeRefreshRequest;
 import org.entando.entando.web.dataobject.validator.DataTypeValidator;
@@ -40,13 +46,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author E.Santoboni
@@ -80,7 +84,8 @@ public class DataTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<EntityTypeShortDto>> getDataTypes(@Valid RestListRequest requestList) throws JsonProcessingException {
+    public ResponseEntity<PagedRestResponse<EntityTypeShortDto>> getDataTypes(@Valid RestListRequest requestList)
+            throws JsonProcessingException {
         this.getDataTypeValidator().validateRestListRequest(requestList, DataTypeDto.class);
         PagedMetadata<EntityTypeShortDto> result = this.getDataObjectService().getShortDataTypes(requestList);
         this.getDataTypeValidator().validateRestListResult(requestList, result);
@@ -111,7 +116,8 @@ public class DataTypeController {
         }
         //business validations
         if (this.getDataTypeValidator().existType(bodyRequest.getCode())) {
-            bindingResult.reject(DataTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS, new String[]{bodyRequest.getCode()}, "entityType.exists");
+            bindingResult
+                    .reject(DataTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS, new String[]{bodyRequest.getCode()}, "entityType.exists");
         }
         if (bindingResult.hasErrors()) {
             throw new ValidationConflictException(bindingResult);
@@ -166,8 +172,10 @@ public class DataTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypeAttributes/{attributeTypeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getDataTypeAttributeType(@PathVariable String attributeTypeCode) throws JsonProcessingException {
+    @RequestMapping(value = "/dataTypeAttributes/{attributeTypeCode}", method = RequestMethod.GET, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getDataTypeAttributeType(@PathVariable String attributeTypeCode)
+            throws JsonProcessingException {
         logger.debug("Extracting attribute type -> {}", attributeTypeCode);
         AttributeTypeDto attribute = this.getDataObjectService().getAttributeType(attributeTypeCode);
         logger.debug("Main Response -> {}", attribute);
@@ -175,8 +183,10 @@ public class DataTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> getDataTypeAttribute(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws JsonProcessingException {
+    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.GET, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> getDataTypeAttribute(
+            @PathVariable String dataTypeCode, @PathVariable String attributeCode) throws JsonProcessingException {
         logger.debug("Requested data type {} - attribute {}", dataTypeCode, attributeCode);
         EntityTypeAttributeFullDto dto = this.getDataObjectService().getDataTypeAttribute(dataTypeCode, attributeCode);
         logger.debug("Main Response -> {}", dto);
@@ -187,7 +197,8 @@ public class DataTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> addDataTypeAttribute(@PathVariable String dataTypeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> addDataTypeAttribute(
+            @PathVariable String dataTypeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
             BindingResult bindingResult) throws JsonProcessingException {
         logger.debug("Data type {} - Adding attribute {}", dataTypeCode, bodyRequest);
         if (bindingResult.hasErrors()) {
@@ -204,14 +215,19 @@ public class DataTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> updateDataTypeAttribute(@PathVariable String dataTypeCode,
-            @PathVariable String attributeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) throws JsonProcessingException {
+    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.PUT, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map<String, String>>> updateDataTypeAttribute(
+            @PathVariable String dataTypeCode,
+            @PathVariable String attributeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult)
+            throws JsonProcessingException {
         logger.debug("Data type {} - Updating attribute {}", dataTypeCode, bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         } else if (!StringUtils.equals(attributeCode, bodyRequest.getCode())) {
-            bindingResult.rejectValue("code", DataTypeValidator.ERRCODE_URINAME_MISMATCH, new String[]{attributeCode, bodyRequest.getCode()}, "entityType.attribute.code.mismatch");
+            bindingResult
+                    .rejectValue("code", DataTypeValidator.ERRCODE_URINAME_MISMATCH, new String[]{attributeCode, bodyRequest.getCode()},
+                            "entityType.attribute.code.mismatch");
             throw new ValidationConflictException(bindingResult);
         }
         EntityTypeAttributeFullDto result = this.getDataObjectService().updateDataTypeAttribute(dataTypeCode, bodyRequest, bindingResult);
@@ -225,8 +241,10 @@ public class DataTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteDataTypeAttribute(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.DELETE, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Map>> deleteDataTypeAttribute(@PathVariable String dataTypeCode,
+            @PathVariable String attributeCode) throws ApsSystemException {
         logger.debug("Deleting attribute {} from data type {}", attributeCode, dataTypeCode);
         this.getDataObjectService().deleteDataTypeAttribute(dataTypeCode, attributeCode);
         Map<String, String> result = new HashMap<>();
@@ -270,20 +288,25 @@ public class DataTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveUp", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeUp(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveUp", method = RequestMethod.PUT, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeUp(@PathVariable String dataTypeCode,
+            @PathVariable String attributeCode) throws ApsSystemException {
         logger.debug("Move UP attribute {} from data type {}", attributeCode, dataTypeCode);
         return this.moveDataTypeAttribute(dataTypeCode, attributeCode, true);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveDown", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeDown(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveDown", method = RequestMethod.PUT, produces =
+            MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeDown(@PathVariable String dataTypeCode,
+            @PathVariable String attributeCode) throws ApsSystemException {
         logger.debug("Move DOWN attribute {} from data type {}", attributeCode, dataTypeCode);
         return this.moveDataTypeAttribute(dataTypeCode, attributeCode, false);
     }
 
-    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttribute(String dataTypeCode, String attributeCode, boolean moveUp) throws ApsSystemException {
+    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttribute(String dataTypeCode, String attributeCode,
+            boolean moveUp) throws ApsSystemException {
         this.getDataObjectService().moveDataTypeAttribute(dataTypeCode, attributeCode, moveUp);
         Map<String, String> result = new HashMap<>();
         result.put("dataTypeCode", dataTypeCode);

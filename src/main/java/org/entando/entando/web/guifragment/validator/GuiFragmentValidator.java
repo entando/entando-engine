@@ -11,16 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.guifragment.validator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
-import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.slf4j.Logger;
@@ -32,24 +28,19 @@ import org.springframework.validation.Errors;
 @Component
 public class GuiFragmentValidator extends AbstractPaginationValidator {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     //GET //PUT
     public static final String ERRCODE_FRAGMENT_DOES_NOT_EXISTS = "1";
-
     //POST
     public static final String ERRCODE_FRAGMENT_ALREADY_EXISTS = "3";
     public static final String ERRCODE_FRAGMENT_INVALID_CODE = "1";
     //POST PUT
     public static final String ERRCODE_FRAGMENT_INVALID_GUI_CODE = "2";
-
     //PUT
     public static final String ERRCODE_URINAME_MISMATCH = "2";
-
     //DELETE
     public static final String ERRCODE_FRAGMENT_REFERENCES = "1";
     public static final String ERRCODE_FRAGMENT_LOCKED = "2";
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private IGuiFragmentManager guiFragmentManager;
 
@@ -79,7 +70,8 @@ public class GuiFragmentValidator extends AbstractPaginationValidator {
 
     public int validateBody(String fragmentCode, GuiFragmentRequestBody request, Errors errors) {
         if (!StringUtils.equals(fragmentCode, request.getCode())) {
-            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{fragmentCode, request.getCode()}, "guifragment.code.mismatch");
+            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{fragmentCode, request.getCode()},
+                    "guifragment.code.mismatch");
             return 400;
         }
         return this.validateGuiCode(request, errors);

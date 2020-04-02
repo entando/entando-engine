@@ -11,53 +11,53 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.portdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.portdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
  */
 @DatabaseTable(tableName = Sysconfig.TABLE_NAME)
 public class Sysconfig implements ExtendedColumnDefinition {
-	
-	public Sysconfig() {}
-	
-	@DatabaseField(columnName = "version", 
-			dataType = DataType.STRING, 
-			width = 10, 
-			canBeNull = false)
-	private String _version;
-	
-	@DatabaseField(columnName = "item", 
-			dataType = DataType.STRING, 
-			width = 40, 
-			canBeNull = false)
-	private String _item;
-	
-	@DatabaseField(columnName = "descr", 
-			dataType = DataType.STRING, 
-			width = 100, 
-			canBeNull = false)
-	private String _descr;
-	
-	@DatabaseField(columnName = "config", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _config;
-	
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(version , item )"};
-	}
-	
-	public static final String TABLE_NAME = "sysconfig";
-	
+
+    public static final String TABLE_NAME = "sysconfig";
+    @DatabaseField(columnName = "version",
+            dataType = DataType.STRING,
+            width = 10,
+            canBeNull = false)
+    private String _version;
+
+    @DatabaseField(columnName = "item",
+            dataType = DataType.STRING,
+            width = 40,
+            canBeNull = false)
+    private String _item;
+
+    @DatabaseField(columnName = "descr",
+            dataType = DataType.STRING,
+            width = 100,
+            canBeNull = false)
+    private String _descr;
+
+    @DatabaseField(columnName = "config",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _config;
+
+    public Sysconfig() {
+    }
+
+    @Override
+    public String[] extensions(IDatabaseManager.DatabaseType type) {
+        return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(version , item )"};
+    }
+
 }
 
 /*

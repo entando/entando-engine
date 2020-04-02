@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -26,9 +26,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DataObjectAttributeRole.TABLE_NAME)
 public class DataObjectAttributeRole implements ExtendedColumnDefinition {
 
-    public DataObjectAttributeRole() {
-    }
-
+    public static final String TABLE_NAME = "dataobjectattributeroles";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -52,6 +50,9 @@ public class DataObjectAttributeRole implements ExtendedColumnDefinition {
             canBeNull = false, index = true)
     private String _roleName;
 
+    public DataObjectAttributeRole() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -61,10 +62,8 @@ public class DataObjectAttributeRole implements ExtendedColumnDefinition {
             contentTableName = "`" + DataObject.TABLE_NAME + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT contentattrroles_contid_fkey FOREIGN KEY (dataid) "
-            + "REFERENCES " + contentTableName + " (dataid)"};
+                + "ADD CONSTRAINT contentattrroles_contid_fkey FOREIGN KEY (dataid) "
+                + "REFERENCES " + contentTableName + " (dataid)"};
     }
-
-    public static final String TABLE_NAME = "dataobjectattributeroles";
 
 }

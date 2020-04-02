@@ -1,5 +1,8 @@
 package org.entando.entando.aps.system.services.group;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import com.agiletec.aps.BaseTestCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
@@ -7,9 +10,6 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class GroupServiceIntegrationTest extends BaseTestCase {
 

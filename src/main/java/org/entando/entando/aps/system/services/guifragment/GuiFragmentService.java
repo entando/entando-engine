@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.guifragment;
 
-import java.util.List;
-import java.util.stream.Collectors;
+package org.entando.entando.aps.system.services.guifragment;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -75,7 +74,8 @@ public class GuiFragmentService implements IGuiFragmentService {
     public PagedMetadata<GuiFragmentDtoSmall> getGuiFragments(RestListRequest restListReq) {
         PagedMetadata<GuiFragmentDtoSmall> pagedMetadata = null;
         try {
-            SearcherDaoPaginatedResult<GuiFragment> fragments = this.getGuiFragmentManager().getGuiFragments(restListReq.buildFieldSearchFilters());
+            SearcherDaoPaginatedResult<GuiFragment> fragments = this.getGuiFragmentManager()
+                    .getGuiFragments(restListReq.buildFieldSearchFilters());
             List<GuiFragmentDtoSmall> dtoList = this.getDtoSmallBuilder().convert(fragments.getList());
             pagedMetadata = new PagedMetadata<>(restListReq, dtoList, fragments.getCount());
         } catch (Throwable t) {
@@ -180,7 +180,8 @@ public class GuiFragmentService implements IGuiFragmentService {
                     new Object[]{fragment.getCode(), fragments, pagemodels}, "guifragment.cannot.delete.references");
         }
         if (fragment.isLocked()) {
-            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_LOCKED, new Object[]{fragment.getCode()}, "guifragment.cannot.delete.locked");
+            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_LOCKED, new Object[]{fragment.getCode()},
+                    "guifragment.cannot.delete.locked");
         }
         return bindingResult;
     }

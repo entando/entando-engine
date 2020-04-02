@@ -11,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.usersettings.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
 
 public class UserSettingsRequest {

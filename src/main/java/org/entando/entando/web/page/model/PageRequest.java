@@ -1,36 +1,35 @@
 /*
  * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.page.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- *
  * @author paddeo
  */
 public class PageRequest {
 
     @Size(max = 30, message = "string.size.invalid")
     @NotNull(message = "page.code.notBlank")
-    @Pattern(regexp = "[a-zA-Z0-9_]+", message="page.code.wrongCharacters")
+    @Pattern(regexp = "[a-zA-Z0-9_]+", message = "page.code.wrongCharacters")
     private String code;
     private String status;
     private boolean displayedInMenu;
@@ -136,7 +135,9 @@ public class PageRequest {
 
     @Override
     public String toString() {
-        return "PageRequest{" + "code=" + code + ", status=" + status + ", displayedInMenu=" + displayedInMenu + ", pageModel=" + pageModel + ", charset=" + charset + ", contentType=" + contentType + ", parentCode=" + parentCode + ", seo=" + seo + ", titles=" + titles + ", ownerGroup=" + ownerGroup + ", joinGroups=" + joinGroups + '}';
+        return "PageRequest{" + "code=" + code + ", status=" + status + ", displayedInMenu=" + displayedInMenu + ", pageModel=" + pageModel
+                + ", charset=" + charset + ", contentType=" + contentType + ", parentCode=" + parentCode + ", seo=" + seo + ", titles="
+                + titles + ", ownerGroup=" + ownerGroup + ", joinGroups=" + joinGroups + '}';
     }
 
 }

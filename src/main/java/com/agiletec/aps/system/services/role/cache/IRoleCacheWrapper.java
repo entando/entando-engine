@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.role.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -23,19 +24,19 @@ import java.util.List;
  */
 public interface IRoleCacheWrapper {
 
-	public static final String ROLE_CACHE_NAME_PREFIX = "RoleManager_role_";
-	public static final String ROLE_CODES_CACHE_NAME = "RoleManager_roles";
+    String ROLE_CACHE_NAME_PREFIX = "RoleManager_role_";
+    String ROLE_CODES_CACHE_NAME = "RoleManager_roles";
 
-	public void initCache(IRoleDAO roleDAO) throws ApsSystemException;
+    void initCache(IRoleDAO roleDAO) throws ApsSystemException;
 
-	public List<Role> getRoles();
+    List<Role> getRoles();
 
-	public Role getRole(String code);
+    Role getRole(String code);
 
-	public void addRole(Role role);
+    void addRole(Role role);
 
-	public void updateRole(Role role);
+    void updateRole(Role role);
 
-	public void removeRole(Role role);
+    void removeRole(Role role);
 
 }

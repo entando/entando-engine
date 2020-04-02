@@ -11,20 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
+import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
-
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.util.ApsProperties;
-
 /**
- * This class represent an instance of a widget configured in a page frame. 
+ * This class represent an instance of a widget configured in a page frame.
+ *
  * @author M.Diana - E.Santoboni
  */
 public class Widget implements Serializable {
-    
+
+    /**
+     * The type of the widget
+     */
+    private WidgetType _type;
+    /**
+     * The configuration properties; the configuration may be null
+     */
+    private ApsProperties _config;
+
     @Override
     public Widget clone() {
         Widget clone = new Widget();
@@ -37,80 +46,78 @@ public class Widget implements Serializable {
         return clone;
     }
 
-	/**
-	 * Return the configuration of the widget
-	 * @return The configuration properties
-	 */
-	public ApsProperties getConfig() {
-		if (null == this._config && null != this.getType()) {
-			return this.getType().getConfig();
-		}
-		return _config;
-	}
+    /**
+     * Return the configuration of the widget
+     *
+     * @return The configuration properties
+     */
+    public ApsProperties getConfig() {
+        if (null == this._config && null != this.getType()) {
+            return this.getType().getConfig();
+        }
+        return _config;
+    }
 
-	/**
-	 * Set the configuration of the widget.
-	 * @param config The configuration properties to set
-	 */
-	public void setConfig(ApsProperties config) {
-		this._config = config;
-	}
-	
-	/**
-	 * Return the type of the widget
-	 * @return The type of the widget
-	 */
-	public WidgetType getType() {
-		return _type;
-	}
+    /**
+     * Set the configuration of the widget.
+     *
+     * @param config The configuration properties to set
+     */
+    public void setConfig(ApsProperties config) {
+        this._config = config;
+    }
 
-	/**
-	 * Set the widget type
-	 * @param type The of the widget 
-	 */
-	public void setType(WidgetType type) {
-		this._type = type;
-	}
+    /**
+     * Return the type of the widget
+     *
+     * @return The type of the widget
+     */
+    public WidgetType getType() {
+        return _type;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((_config == null) ? 0 : _config.hashCode());
-		result = prime * result + ((_type == null) ? 0 : _type.hashCode());
-		return result;
-	}
+    /**
+     * Set the widget type
+     *
+     * @param type The of the widget
+     */
+    public void setType(WidgetType type) {
+        this._type = type;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Widget other = (Widget) obj;
-		if (_config == null) {
-			if (other._config != null)
-				return false;
-		} else if (!_config.equals(other._config))
-			return false;
-		if (_type == null) {
-			if (other._type != null)
-				return false;
-		} else if (!_type.equals(other._type))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_config == null) ? 0 : _config.hashCode());
+        result = prime * result + ((_type == null) ? 0 : _type.hashCode());
+        return result;
+    }
 
-	/**
-	 * The type of the widget
-	 */
-	private WidgetType _type;
-	
-	/**
-	 * The configuration properties; the configuration may be null
-	 */
-	private ApsProperties _config;
-	
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Widget other = (Widget) obj;
+        if (_config == null) {
+            if (other._config != null) {
+                return false;
+            }
+        } else if (!_config.equals(other._config)) {
+            return false;
+        }
+        if (_type == null) {
+            return other._type == null;
+        } else {
+            return _type.equals(other._type);
+        }
+    }
+
 }

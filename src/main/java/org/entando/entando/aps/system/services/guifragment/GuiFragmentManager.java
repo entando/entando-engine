@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
@@ -116,7 +115,9 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
-    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
+    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,"
+            + "GuiFragment_codesByWidgetTypeGroup'")
+    //TODO improve group handling
     public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
         try {
             this.getGuiFragmentDAO().insertGuiFragment(guiFragment);
@@ -129,7 +130,9 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
-    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
+    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,"
+            + "GuiFragment_codesByWidgetTypeGroup'")
+    //TODO improve group handling
     public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
         try {
             this.getGuiFragmentDAO().updateGuiFragment(guiFragment);
@@ -142,7 +145,9 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
-    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
+    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,"
+            + "GuiFragment_codesByWidgetTypeGroup'")
+    //TODO improve group handling
     public void deleteGuiFragment(String code) throws ApsSystemException {
         try {
             GuiFragment guiFragment = this.getGuiFragment(code);
@@ -261,12 +266,12 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
         return codes;
     }
 
-    public void setGuiFragmentDAO(IGuiFragmentDAO guiFragmentDAO) {
-        this.guiFragmentDAO = guiFragmentDAO;
-    }
-
     protected IGuiFragmentDAO getGuiFragmentDAO() {
         return guiFragmentDAO;
+    }
+
+    public void setGuiFragmentDAO(IGuiFragmentDAO guiFragmentDAO) {
+        this.guiFragmentDAO = guiFragmentDAO;
     }
 
 }

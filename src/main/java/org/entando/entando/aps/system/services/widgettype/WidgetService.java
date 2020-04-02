@@ -11,9 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -24,12 +23,11 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-
-import java.util.Arrays;
-import javax.servlet.ServletContext;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -164,7 +162,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     private WidgetDetails getWidgetDetails(IPage page, String widgetCode) {
         List<Widget> list = Arrays.asList(page.getWidgets());
-        int index = list.indexOf(list.stream().filter(widget -> widget != null && widget.getType().getCode().equals(widgetCode)).findFirst().get());
+        int index = list
+                .indexOf(list.stream().filter(widget -> widget != null && widget.getType().getCode().equals(widgetCode)).findFirst().get());
         WidgetDetails details = new WidgetDetails();
         details.setFrameIndex(index);
         details.setFrame(page.getModel().getFrames()[index]);
@@ -183,7 +182,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_ALREADY_EXISTS, new String[]{widgetType.getCode()}, "widgettype.exists");
             throw new ValidationGenericException(bindingResult);
         } else if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
-            bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()}, "widgettype.group.invalid");
+            bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()},
+                    "widgettype.group.invalid");
             throw new ValidationGenericException(bindingResult);
         }
         try {
@@ -208,7 +208,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         try {
             if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");
-                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()}, "widgettype.group.invalid");
+                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()},
+                        "widgettype.group.invalid");
                 throw new ValidationGenericException(bindingResult);
             }
             if (type.isUserType()
@@ -336,12 +337,14 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             return bindingResult;
         }
         if (widgetType.isLocked()) {
-            bindingResult.reject(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetType.getCode()}, "widgettype.delete.locked");
+            bindingResult.reject(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetType.getCode()},
+                    "widgettype.delete.locked");
         }
         List<IPage> onLinePages = this.getPageManager().getOnlineWidgetUtilizers(widgetType.getCode());
         List<IPage> draftPages = this.getPageManager().getDraftWidgetUtilizers(widgetType.getCode());
         if ((null != onLinePages && onLinePages.size() > 0) || (null != draftPages && draftPages.size() > 0)) {
-            bindingResult.reject(WidgetValidator.ERRCODE_CANNOT_DELETE_USED_PAGES, new String[]{widgetType.getCode()}, "widgettype.delete.references.page");
+            bindingResult.reject(WidgetValidator.ERRCODE_CANNOT_DELETE_USED_PAGES, new String[]{widgetType.getCode()},
+                    "widgettype.delete.references.page");
         }
         return bindingResult;
     }

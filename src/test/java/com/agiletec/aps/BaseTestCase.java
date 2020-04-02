@@ -11,20 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-
-import junit.framework.TestCase;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.FileSystemResourceLoader;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.agiletec.ConfigTestUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -36,28 +24,25 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import java.util.Set;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import junit.framework.TestCase;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * @author W.Ambu - E.Santoboni
  */
 public class BaseTestCase extends TestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        try {
-            super.setUp();
-            ServletContext srvCtx = new MockServletContext("", new FileSystemResourceLoader());
-            ApplicationContext applicationContext = this.getConfigUtils().createApplicationContext(srvCtx);
-            this.setApplicationContext(applicationContext);
-            RequestContext reqCtx = createRequestContext(applicationContext, srvCtx);
-            this.setRequestContext(reqCtx);
-            this.setUserOnSession("guest");
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+    private RequestContext _reqCtx;
+    private ApplicationContext _applicationContext;
 
     public static RequestContext createRequestContext(ApplicationContext applicationContext, ServletContext srvCtx) {
         RequestContext reqCtx = new RequestContext();
@@ -77,6 +62,21 @@ public class BaseTestCase extends TestCase {
         Lang defaultLang = langManager.getDefaultLang();
         reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, defaultLang);
         return reqCtx;
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        try {
+            super.setUp();
+            ServletContext srvCtx = new MockServletContext("", new FileSystemResourceLoader());
+            ApplicationContext applicationContext = this.getConfigUtils().createApplicationContext(srvCtx);
+            this.setApplicationContext(applicationContext);
+            RequestContext reqCtx = createRequestContext(applicationContext, srvCtx);
+            this.setRequestContext(reqCtx);
+            this.setUserOnSession("guest");
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
@@ -121,7 +121,8 @@ public class BaseTestCase extends TestCase {
      * @throws Exception In case of error.
      */
     protected UserDetails getUser(String username, String password) throws Exception {
-        IAuthenticationProviderManager provider = (IAuthenticationProviderManager) this.getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
+        IAuthenticationProviderManager provider = (IAuthenticationProviderManager) this
+                .getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
         IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         UserDetails user = null;
         if (username.equals(SystemConstants.GUEST_USER_NAME)) {
@@ -133,8 +134,7 @@ public class BaseTestCase extends TestCase {
     }
 
     /**
-     * Return a user (with his autority) by username, with the password equals
-     * than username.
+     * Return a user (with his autority) by username, with the password equals than username.
      *
      * @param username The username
      * @return The required user.
@@ -173,9 +173,5 @@ public class BaseTestCase extends TestCase {
     protected ConfigTestUtils getConfigUtils() {
         return new ConfigTestUtils();
     }
-
-    private RequestContext _reqCtx;
-
-    private ApplicationContext _applicationContext;
 
 }

@@ -11,29 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n;
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Servizio che fornisce stringhe "localizzate". Le stringhe sono specificate da
- * una chiave di identificazione e dalla lingua di riferimento.
+ * Servizio che fornisce stringhe "localizzate". Le stringhe sono specificate da una chiave di identificazione e dalla lingua di
+ * riferimento.
  */
 public class I18nManager extends AbstractService implements II18nManager {
 
@@ -201,18 +200,13 @@ public class I18nManager extends AbstractService implements II18nManager {
     }
 
     /**
-     * Restituisce la lista di chiavi di gruppi di labels in base ai parametri
-     * segnalati.
+     * Restituisce la lista di chiavi di gruppi di labels in base ai parametri segnalati.
      *
      * @param insertedText Il testo tramite il quale effettuare la ricerca.
-     * @param doSearchByKey Specifica se effettuare la ricerca sulle chiavi, in
-     * base al testo inserito.
-     * @param doSearchByLang Specifica se effettuare la ricerca sul testo di una
-     * lingua, in base al testo inserito.
-     * @param langCode Specifica la lingua della label sulla quale effettuare la
-     * ricerca, in base al testo inserito.
-     * @return La lista di chiavi di gruppi di labels in base ai parametri
-     * segbalati.
+     * @param doSearchByKey Specifica se effettuare la ricerca sulle chiavi, in base al testo inserito.
+     * @param doSearchByLang Specifica se effettuare la ricerca sul testo di una lingua, in base al testo inserito.
+     * @param langCode Specifica la lingua della label sulla quale effettuare la ricerca, in base al testo inserito.
+     * @return La lista di chiavi di gruppi di labels in base ai parametri segbalati.
      */
     @Override
     public List<String> searchLabelsKey(String insertedText, boolean doSearchByKey,

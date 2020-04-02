@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.model;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import static org.entando.entando.web.common.model.RestListRequest.DIRECTION_VALUE_DEFAULT;
 
 public class RestEntityListRequest extends RestListRequest {
 
@@ -46,7 +46,8 @@ public class RestEntityListRequest extends RestListRequest {
             String fieldName = isAttributeFilter ? this.getSort().substring(this.getSort().indexOf(".") + 1) : this.getSort();
             EntitySearchFilter sort = new EntitySearchFilter(fieldName, isAttributeFilter);
             if (StringUtils.isNotBlank(this.getDirection())) {
-                if (!this.getDirection().equalsIgnoreCase(FieldSearchFilter.ASC_ORDER) && !this.getDirection().equalsIgnoreCase(FieldSearchFilter.DESC_ORDER)) {
+                if (!this.getDirection().equalsIgnoreCase(FieldSearchFilter.ASC_ORDER) && !this.getDirection()
+                        .equalsIgnoreCase(FieldSearchFilter.DESC_ORDER)) {
                     this.setDirection(DIRECTION_VALUE_DEFAULT);
                 }
                 sort.setOrder(FieldSearchFilter.Order.valueOf(StringEscapeUtils.escapeSql(this.getDirection())));

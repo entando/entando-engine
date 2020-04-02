@@ -11,21 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.entando.entando.aps.system.services.database.DatabaseServiceTest;
 import org.entando.entando.aps.system.services.category.CategoryServiceTest;
+import org.entando.entando.aps.system.services.database.DatabaseServiceTest;
 import org.entando.entando.aps.system.services.dataobject.DataObjectServiceTest;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModelServiceTest;
 import org.entando.entando.aps.system.services.entity.EntityManagerServiceIntegrationTest;
 import org.entando.entando.aps.system.services.entity.EntityManagerServiceTest;
 import org.entando.entando.aps.system.services.group.GroupServiceIntegrationTest;
 import org.entando.entando.aps.system.services.group.GroupServiceTest;
-import org.entando.entando.web.common.RestListRequestTest;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentServiceTest;
 import org.entando.entando.aps.system.services.language.LanguageServiceTest;
 import org.entando.entando.aps.system.services.page.PageAuthorizationServiceIntegrationTest;
@@ -40,6 +40,7 @@ import org.entando.entando.aps.system.services.user.UserServiceIntegrationTest;
 import org.entando.entando.aps.system.services.widgettype.WidgetServiceTest;
 import org.entando.entando.web.common.EntandoMessageCodesResolverTest;
 import org.entando.entando.web.common.PagedMetadataTest;
+import org.entando.entando.web.common.RestListRequestTest;
 
 public class ServicesAllTests extends TestCase {
 

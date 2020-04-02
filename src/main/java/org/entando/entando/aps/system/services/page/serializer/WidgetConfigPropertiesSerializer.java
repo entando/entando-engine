@@ -40,8 +40,8 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
 
         jsonGenerator.writeStartObject();
 
-        for (Entry<Object,Object> property : properties.entrySet()) {
-            if(property.getKey().equals("categories")) {
+        for (Entry<Object, Object> property : properties.entrySet()) {
+            if (property.getKey().equals("categories")) {
                 logger.warn("Serializing WidgetConfig.config.categories into JSON Format");
                 writeCategories(jsonGenerator, property.getKey().toString(), property.getValue().toString());
             } else if (property.getKey().equals("contents")) {
@@ -75,7 +75,7 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
 
         for (Map<String, String> filter : extractConfigFilters(value)) {
             jsonGenerator.writeStartObject();
-            for (Entry<String,String> entry : filter.entrySet()) {
+            for (Entry<String, String> entry : filter.entrySet()) {
                 writeProperty(jsonGenerator, entry.getKey(), entry.getValue());
             }
             jsonGenerator.writeEndObject();
@@ -91,7 +91,7 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
         for (Map<String, String> config : extractConfigObject(value)) {
             jsonGenerator.writeStartObject();
 
-            for(Entry<String, String> property : config.entrySet()) {
+            for (Entry<String, String> property : config.entrySet()) {
                 writeProperty(jsonGenerator, property.getKey(), property.getValue());
             }
 
@@ -137,9 +137,9 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
                 .orElse("").split(regex))
                 .collect(Collectors.toList());
 
-        List<Map<String,String>> properties = new ArrayList<>();
+        List<Map<String, String>> properties = new ArrayList<>();
         for (String strProperty : split) {
-            Map<String,String> property = extractProperty(strProperty);
+            Map<String, String> property = extractProperty(strProperty);
 
             if (!property.entrySet().isEmpty()) {
                 properties.add(property);

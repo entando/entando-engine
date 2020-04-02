@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.i18n;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -18,15 +19,14 @@ import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Iterator;
+import java.util.Properties;
+import javax.ws.rs.core.Response;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.core.Response;
-import java.util.Iterator;
-import java.util.Properties;
 
 /**
  * @author E.Santoboni
@@ -34,6 +34,8 @@ import java.util.Properties;
 public class ApiI18nLabelInterface {
 
     private static final Logger _logger = LoggerFactory.getLogger(ApiI18nLabelInterface.class);
+    private II18nManager _i18nManager;
+    private ILangManager _langManager;
 
     public JAXBI18nLabel getLabel(Properties properties) throws ApiException, ApsSystemException {
         JAXBI18nLabel jaxbI18nLabel = null;
@@ -121,7 +123,8 @@ public class ApiI18nLabelInterface {
             Object defaultLangValue = labels.get(defaultLang.getCode());
             if (null == defaultLangValue || defaultLangValue.toString().trim().length() == 0) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
-                        "Label list must contain a label for the default language '" + defaultLang.getCode() + "'", Response.Status.CONFLICT);
+                        "Label list must contain a label for the default language '" + defaultLang.getCode() + "'",
+                        Response.Status.CONFLICT);
             }
             Iterator<Object> labelCodeIter = labels.keySet().iterator();
             while (labelCodeIter.hasNext()) {
@@ -152,8 +155,5 @@ public class ApiI18nLabelInterface {
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
-
-    private II18nManager _i18nManager;
-    private ILangManager _langManager;
 
 }

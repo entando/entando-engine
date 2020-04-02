@@ -11,12 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.actionlog;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+package org.entando.entando.aps.system.services.actionlog;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -26,6 +22,10 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
@@ -122,7 +122,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
     }
 
     @Override
-    public SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException {
+    public SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean)
+            throws ApsSystemException {
         SearcherDaoPaginatedResult<ActionLogRecord> pagedResult = null;
         try {
             List<ActionLogRecord> actionLogRecords = new ArrayList<>();
@@ -151,12 +152,12 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
         }
         return record;
     }
-    
+
     @Override
     public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException {
         return this.getActivityStream(null, userGroupCodes);
     }
-    
+
     @Override
     public List<Integer> getActivityStream(FieldSearchFilter[] filters, List<String> userGroupCodes) throws ApsSystemException {
         if (null == filters) {

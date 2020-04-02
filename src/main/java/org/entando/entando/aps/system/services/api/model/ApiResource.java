@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
@@ -30,6 +31,15 @@ public class ApiResource implements Serializable {
     private ApiMethod postMethod;
     private ApiMethod putMethod;
     private ApiMethod deleteMethod;
+
+    public static String getCode(String namespace, String resourceName) {
+        StringBuilder buffer = new StringBuilder();
+        if (null != namespace && namespace.trim().length() > 0) {
+            buffer.append(namespace.trim()).append(":");
+        }
+        buffer.append(resourceName.trim());
+        return buffer.toString();
+    }
 
     public ApiResource clone() {
         ApiResource clone = new ApiResource();
@@ -55,15 +65,6 @@ public class ApiResource implements Serializable {
 
     public String getCode() {
         return getCode(this.getNamespace(), this.getResourceName());
-    }
-
-    public static String getCode(String namespace, String resourceName) {
-        StringBuilder buffer = new StringBuilder();
-        if (null != namespace && namespace.trim().length() > 0) {
-            buffer.append(namespace.trim()).append(":");
-        }
-        buffer.append(resourceName.trim());
-        return buffer.toString();
     }
 
     public String getResourceName() {

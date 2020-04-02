@@ -11,21 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import org.entando.entando.aps.system.exception.CacheItemNotFoundException;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.I18nManagerTest;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
@@ -33,9 +24,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.aps.system.exception.CacheItemNotFoundException;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
 
 public class I18nManagerCacheWrapperTest {
 
@@ -45,10 +44,10 @@ public class I18nManagerCacheWrapperTest {
 
     @Mock
     private II18nDAO i18nDAO;
-    
+
     @Mock
     private CacheManager springCacheManager;
-    
+
     @InjectMocks
     private I18nManagerCacheWrapper cacheWrapper;
 
@@ -62,7 +61,7 @@ public class I18nManagerCacheWrapperTest {
         fakeCache.put(I18nManagerCacheWrapper.I18N_CACHE_NAME_PREFIX + TEST_KEY, I18nManagerTest.createLabel("ciao", "hello"));
         when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
     }
-    
+
     @Test
     public void testInitCache() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
@@ -74,7 +73,7 @@ public class I18nManagerCacheWrapperTest {
         this.cacheWrapper.initCache(this.i18nDAO);
         Mockito.verify(fakeCache, Mockito.times(1)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
     }
-    
+
     @Test(expected = ApsSystemException.class)
     public void testInitCacheWithErrors() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
@@ -89,14 +88,14 @@ public class I18nManagerCacheWrapperTest {
             Mockito.verify(fakeCache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
         }
     }
-    
+
     @Test
     public void getLabelsGroup() throws Exception {
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNotNull(properties);
         Assert.assertEquals("ciao", properties.get("it"));
     }
-    
+
     @Test
     public void update() {
         cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
@@ -104,12 +103,12 @@ public class I18nManagerCacheWrapperTest {
         Assert.assertNotNull(properties);
         Assert.assertEquals("yes", properties.get("en"));
     }
-    
+
     @Test(expected = CacheItemNotFoundException.class)
     public void updateInvalidEntry() {
         cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"));
     }
-    
+
     @Test
     public void delete() {
         cacheWrapper.removeLabelGroup(TEST_KEY);

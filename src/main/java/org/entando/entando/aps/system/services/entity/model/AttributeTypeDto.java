@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -20,12 +21,11 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 
 /**

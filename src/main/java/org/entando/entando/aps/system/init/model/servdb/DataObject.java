@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -23,9 +24,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DataObject.TABLE_NAME)
 public class DataObject {
 
-    public DataObject() {
-    }
-
+    public static final String TABLE_NAME = "dataobjects";
     @DatabaseField(columnName = "dataid",
             dataType = DataType.STRING,
             width = 16,
@@ -95,6 +94,7 @@ public class DataObject {
             canBeNull = true)
     private String _firstEditor;
 
-    public static final String TABLE_NAME = "dataobjects";
+    public DataObject() {
+    }
 
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.annotation;
 
 import java.lang.annotation.ElementType;
@@ -22,5 +23,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD) //can use in method only.
 public @interface RestAccessControl {
 
-    public String permission();
+    String permission();
 }

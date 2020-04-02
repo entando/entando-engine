@@ -11,23 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import java.util.List;
-
 import org.entando.entando.aps.system.init.model.Component;
 
 /**
  * @author E.Santoboni
  */
 public interface IComponentManager {
-	
-	public List<Component> getCurrentComponents();
-	
-	public boolean isComponentInstalled(String componentCode);
-	
-	public Component getInstalledComponent(String componentCode);
-	
-	public void refresh();
-	
+
+    List<Component> getCurrentComponents();
+
+    boolean isComponentInstalled(String componentCode);
+
+    Component getInstalledComponent(String componentCode);
+
+    void refresh();
+
 }

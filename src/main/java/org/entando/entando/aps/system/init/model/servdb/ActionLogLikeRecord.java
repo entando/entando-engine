@@ -11,16 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
-
-import java.util.Date;
-
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.util.Date;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -28,9 +27,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = ActionLogLikeRecord.TABLE_NAME)
 public class ActionLogLikeRecord implements ExtendedColumnDefinition {
 
-    public ActionLogLikeRecord() {
-    }
-
+    public static final String TABLE_NAME = "actionloglikerecords";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -53,6 +50,9 @@ public class ActionLogLikeRecord implements ExtendedColumnDefinition {
             canBeNull = false)
     private Date _likeDate;
 
+    public ActionLogLikeRecord() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -62,11 +62,9 @@ public class ActionLogLikeRecord implements ExtendedColumnDefinition {
             recordTableName = "`" + recordTableName + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT actionloglikerec_recid_fkey FOREIGN KEY (recordid) "
-            + "REFERENCES " + recordTableName + " (id)"};
+                + "ADD CONSTRAINT actionloglikerec_recid_fkey FOREIGN KEY (recordid) "
+                + "REFERENCES " + recordTableName + " (id)"};
     }
-
-    public static final String TABLE_NAME = "actionloglikerecords";
 
 }
 /*

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
@@ -21,34 +22,36 @@ import java.util.List;
  * @author E.Santoboni
  */
 public final class ApiMethodResult implements Serializable {
-    
+
+    private Object _result;
+    private List<ApiError> _errors;
+
     public Object getResult() {
         return _result;
     }
+
     public void setResult(Object result) {
         this._result = result;
     }
-    
+
     public void addError(String errorCode, String description) {
         ApiError error = new ApiError(errorCode, description);
         this.addError(error);
     }
-    
+
     public void addError(ApiError error) {
         if (null == this.getErrors()) {
             this.setErrors(new ArrayList<ApiError>());
         }
         this.getErrors().add(error);
     }
-    
+
     public List<ApiError> getErrors() {
         return _errors;
     }
+
     public void setErrors(List<ApiError> errors) {
         this._errors = errors;
     }
-    
-    private Object _result;
-    private List<ApiError> _errors;
-    
+
 }

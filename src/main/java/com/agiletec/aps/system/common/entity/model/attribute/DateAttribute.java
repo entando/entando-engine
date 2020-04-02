@@ -11,17 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import org.jdom.Element;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -30,19 +21,28 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
+import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import org.jdom.Element;
 
 /**
- * This class describes the "Date" attribute; obviously it does not support
- * multiple languages (mono-language)
+ * This class describes the "Date" attribute; obviously it does not support multiple languages (mono-language)
  *
  * @author W.Ambu - E.Santoboni
  */
 public class DateAttribute extends AbstractAttribute implements IndexableAttributeInterface {
 
+    private Date _date;
+    private String _failedDateString;
+
     /**
-     * Get the FULLy qualified date such as Tuesday, April 12, 1952 AD or
-     * 3:30:42pm PST.
+     * Get the FULLy qualified date such as Tuesday, April 12, 1952 AD or 3:30:42pm PST.
      *
      * @return The date format as formatted by the FULL DateFormat.
      */
@@ -167,24 +167,21 @@ public class DateAttribute extends AbstractAttribute implements IndexableAttribu
     }
 
     /**
-     * Set up the "date" as submitted in the back-office area. This method is
-     * used to handle the entity in the back-office
-     *
-     * @param failedDateString The date string as submitted in the back-office
-     * area
-     */
-    public void setFailedDateString(String failedDateString) {
-        this._failedDateString = failedDateString;
-    }
-
-    /**
-     * Return the "date" string as submitted in the back-office area. This
-     * method is used to handle the entity in the back-office.
+     * Return the "date" string as submitted in the back-office area. This method is used to handle the entity in the back-office.
      *
      * @return The date string as submitted in the back-office area
      */
     public String getFailedDateString() {
         return _failedDateString;
+    }
+
+    /**
+     * Set up the "date" as submitted in the back-office area. This method is used to handle the entity in the back-office
+     *
+     * @param failedDateString The date string as submitted in the back-office area
+     */
+    public void setFailedDateString(String failedDateString) {
+        this._failedDateString = failedDateString;
     }
 
     @Override
@@ -230,8 +227,5 @@ public class DateAttribute extends AbstractAttribute implements IndexableAttribu
     public String getIndexeableFieldValue() {
         return String.valueOf(_date);
     }
-
-    private Date _date;
-    private String _failedDateString;
 
 }

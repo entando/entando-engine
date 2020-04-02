@@ -11,60 +11,63 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.wrapper.I18nLabelBuilder;
 
 /**
- * Wrapper del Servizio I18N utilizzato nel contesto di Velocity per il parsing dei modelli.
- * Viene passato a Velocity già inizializzato con la lingua da utilizzare, perché per i 
- * modelli di contenuto la lingua deve essere "trasparente". 
- * Il servizio base richiede invece la specificazione della lingua ad ogni richiesta.
+ * Wrapper del Servizio I18N utilizzato nel contesto di Velocity per il parsing dei modelli. Viene passato a Velocity già inizializzato con
+ * la lingua da utilizzare, perché per i modelli di contenuto la lingua deve essere "trasparente". Il servizio base richiede invece la
+ * specificazione della lingua ad ogni richiesta.
+ *
  * @author S.Didaci
  */
 public class I18nManagerWrapper {
 
-	/**
-	 * Inizializzazione del Wrapper.
-	 * @param langCode La lingua tramite il quale restituire la label.
-	 * @param i18nManager Il manager gestore delle etichette.
-	 */
-	public I18nManagerWrapper(String langCode, II18nManager i18nManager) {
-		this._lang = langCode;
-		this._i18nManager = i18nManager;
-	}
+    private String _lang = null;
+    private II18nManager _i18nManager;
 
-	/**
-	 * Restituisce la label data la chiave. 
-	 * @param key La chiave tramite il quele estrarre la label.
-	 * @return La label cercata.
-	 * @throws ApsSystemException in caso di errori di parsing.
-	 */
-	public String getLabel(String key) throws ApsSystemException {
-		String label = null;
-		if (key != null) {
-			label = this._i18nManager.getLabel(key, this._lang);
-		}
-		return label;
-	}
+    /**
+     * Inizializzazione del Wrapper.
+     *
+     * @param langCode La lingua tramite il quale restituire la label.
+     * @param i18nManager Il manager gestore delle etichette.
+     */
+    public I18nManagerWrapper(String langCode, II18nManager i18nManager) {
+        this._lang = langCode;
+        this._i18nManager = i18nManager;
+    }
 
-	/**
-	 * Returns a {@link I18nLabelBuilder} from a given key, that allows to translate a label containing parameters. 
-	 * @param key The key of the desired label.
-	 * @return A {@link I18nLabelBuilder} that allows you to replace the params of the label.
-	 * @throws ApsSystemException in case of parsing errors.
-	 */
-	public I18nLabelBuilder getLabelWithParams(String key) throws ApsSystemException {
-		String label = null;
-		if (key != null) {
-			label = this._i18nManager.getLabel(key, this._lang);
-		}
-		return new I18nLabelBuilder(label);
-	}
+    /**
+     * Restituisce la label data la chiave.
+     *
+     * @param key La chiave tramite il quele estrarre la label.
+     * @return La label cercata.
+     * @throws ApsSystemException in caso di errori di parsing.
+     */
+    public String getLabel(String key) throws ApsSystemException {
+        String label = null;
+        if (key != null) {
+            label = this._i18nManager.getLabel(key, this._lang);
+        }
+        return label;
+    }
 
-	private String _lang = null;
-
-	private II18nManager _i18nManager;
+    /**
+     * Returns a {@link I18nLabelBuilder} from a given key, that allows to translate a label containing parameters.
+     *
+     * @param key The key of the desired label.
+     * @return A {@link I18nLabelBuilder} that allows you to replace the params of the label.
+     * @throws ApsSystemException in case of parsing errors.
+     */
+    public I18nLabelBuilder getLabelWithParams(String key) throws ApsSystemException {
+        String label = null;
+        if (key != null) {
+            label = this._i18nManager.getLabel(key, this._lang);
+        }
+        return new I18nLabelBuilder(label);
+    }
 
 }

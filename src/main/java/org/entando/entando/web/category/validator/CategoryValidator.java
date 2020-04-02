@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.category.validator;
 
 import com.agiletec.aps.system.services.category.Category;
@@ -53,7 +54,8 @@ public class CategoryValidator implements Validator {
 
     public void validatePutReferences(String categoryCode, CategoryDto request, BindingResult bindingResult) {
         if (!StringUtils.equals(categoryCode, request.getCode())) {
-            bindingResult.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{categoryCode, request.getCode()}, "category.code.mismatch");
+            bindingResult
+                    .rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{categoryCode, request.getCode()}, "category.code.mismatch");
             throw new ValidationGenericException(bindingResult);
         }
         Category category = this.getCategoryManager().getCategory(request.getCode());

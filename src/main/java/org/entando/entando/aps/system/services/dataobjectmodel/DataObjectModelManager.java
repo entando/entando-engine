@@ -11,13 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobjectmodel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -26,6 +21,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
@@ -132,7 +132,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
 
     @Override
     public DataObjectModel getDataObjectModel(long dataObjectModelId) {
-        return (DataObjectModel) this.getCacheWrapper().getModel(String.valueOf(dataObjectModelId));
+        return this.getCacheWrapper().getModel(String.valueOf(dataObjectModelId));
     }
 
     @Override
@@ -192,7 +192,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
                     if (null != id && null != dataId) {
                         long longId = Long.parseLong(id);
                         if (modelId == longId) {
-                            List<IPage> pages = (List<IPage>) utilizers.get(dataId);
+                            List<IPage> pages = utilizers.get(dataId);
                             if (null == pages) {
                                 pages = new ArrayList<>();
                             }

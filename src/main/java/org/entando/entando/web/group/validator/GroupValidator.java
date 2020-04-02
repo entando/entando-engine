@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.group.validator;
 
 import com.agiletec.aps.system.services.group.IGroupManager;

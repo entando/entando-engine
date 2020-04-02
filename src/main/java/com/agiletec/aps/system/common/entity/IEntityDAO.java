@@ -11,44 +11,48 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.common.entity;
 
-import java.util.List;
+package com.agiletec.aps.system.common.entity;
 
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import java.util.List;
 
 /**
  * Base interface for the DAO classes that handle the ApsEntity objects.
+ *
  * @author E.Santoboni
  */
 public interface IEntityDAO {
-	
-	/**
-	 * Search for a content given the ID.
-	 * @param id The entity id.
-	 * @return The entity found.
-	 */
-	public ApsEntityRecord loadEntityRecord(String id);
-	
-	public void addEntity(IApsEntity entity);
-	
-	public void updateEntity(IApsEntity entity);
-	
-	public void deleteEntity(String entityId);
-	
-	/**
-	 * Reload the search informations of an entity.
-	 * @param id The entity ID.
-	 * @param entity The entity whose search informations must be reloaded
-	 */
-	public void reloadEntitySearchRecords(String id, IApsEntity entity);
-	
-	/**
-	 * Return the complete list of entity IDs.
-	 * @return The list of all entity IDs.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use {@link IEntitySearcherDAO} searchId(EntitySearchFilter[]) method 
-	 */
-	public List<String> getAllEntityId();
-	
+
+    /**
+     * Search for a content given the ID.
+     *
+     * @param id The entity id.
+     * @return The entity found.
+     */
+    ApsEntityRecord loadEntityRecord(String id);
+
+    void addEntity(IApsEntity entity);
+
+    void updateEntity(IApsEntity entity);
+
+    void deleteEntity(String entityId);
+
+    /**
+     * Reload the search informations of an entity.
+     *
+     * @param id The entity ID.
+     * @param entity The entity whose search informations must be reloaded
+     */
+    void reloadEntitySearchRecords(String id, IApsEntity entity);
+
+    /**
+     * Return the complete list of entity IDs.
+     *
+     * @return The list of all entity IDs.
+     * @deprecated From jAPS 2.0 version 2.0.9, use {@link IEntitySearcherDAO} searchId(EntitySearchFilter[]) method
+     */
+    List<String> getAllEntityId();
+
 }

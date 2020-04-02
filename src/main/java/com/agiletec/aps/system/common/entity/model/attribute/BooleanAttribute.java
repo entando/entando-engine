@@ -11,25 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.ArrayList;
+import java.util.List;
+import org.jdom.Element;
 
 /**
- * This attribute represent an information of type boolean. Obviously this
- * attribute does not support multiple languages.
+ * This attribute represent an information of type boolean. Obviously this attribute does not support multiple languages.
  *
  * @author E.Santoboni
  */
 public class BooleanAttribute extends AbstractAttribute {
+
+    private Boolean _boolean;
 
     @Override
     public Element getJDOMElement() {
@@ -129,7 +128,5 @@ public class BooleanAttribute extends AbstractAttribute {
     public Status getStatus() {
         return Status.VALUED;
     }
-
-    private Boolean _boolean;
 
 }

@@ -11,16 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import com.agiletec.aps.util.HtmlHandler;
-
 import java.util.Iterator;
-
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jdom.CDATA;
 import org.jdom.Element;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * This class represents a 'Hypertext' Attribute.
@@ -47,13 +46,12 @@ public class HypertextAttribute extends TextAttribute {
     }
 
     /**
-     * Return the requested number of characters of the text associated to this
-     * attribute, in the current language purged by the HTML tags, if any.
+     * Return the requested number of characters of the text associated to this attribute, in the current language purged by the HTML tags,
+     * if any.
      *
      * @param n The number of characters to return
      * @return The string of text with the desired length.
-     * @deprecated It might return less characters than requested. Use the
-     * getHeadEscaped instead
+     * @deprecated It might return less characters than requested. Use the getHeadEscaped instead
      */
     public String getHead(int n) {
         HtmlHandler htmlhandler = new HtmlHandler();
@@ -69,9 +67,8 @@ public class HypertextAttribute extends TextAttribute {
     }
 
     /**
-     * Return the requested number of characters rounded on word boundary of the
-     * text associated to this attribute, in the current language, stripping
-     * HTML tags, if any.
+     * Return the requested number of characters rounded on word boundary of the text associated to this attribute, in the current language,
+     * stripping HTML tags, if any.
      *
      * @param n The minimum number of characters to return
      * @return The string of text with the desired length.
@@ -95,7 +92,7 @@ public class HypertextAttribute extends TextAttribute {
         Iterator<String> langIter = this.getTextMap().keySet().iterator();
         while (langIter.hasNext()) {
             String currentLangCode = langIter.next();
-            String hypertext = (String) this.getTextMap().get(currentLangCode);
+            String hypertext = this.getTextMap().get(currentLangCode);
             if (null != hypertext && hypertext.trim().length() > 0) {
                 Element hypertextElement = new Element("hypertext");
                 hypertextElement.setAttribute("lang", currentLangCode);

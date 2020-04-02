@@ -11,12 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
-
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -24,9 +20,12 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.util.crypto.LegacyPasswordEncryptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servizio di gestione degli utenti.
@@ -39,7 +38,7 @@ public class UserManager extends AbstractService implements IUserManager {
 
     private IUserDAO userDao;
     private ConfigInterface configManager;
-    
+
     @Override
     public void init() throws Exception {
         if (!this.getConfigManager().areLegacyPasswordsUpdated()) {
@@ -186,12 +185,10 @@ public class UserManager extends AbstractService implements IUserManager {
     }
 
     /**
-     * Recupera un'user caricandolo da db. Se la userName non corrisponde ad un
-     * utente restituisce null.
+     * Recupera un'user caricandolo da db. Se la userName non corrisponde ad un utente restituisce null.
      *
      * @param username Lo username dell'utente da restituire.
-     * @return L'utente cercato, null se non vi è nessun utente corrispondente
-     * alla username immessa.
+     * @return L'utente cercato, null se non vi è nessun utente corrispondente alla username immessa.
      * @throws ApsSystemException in caso di errore nell'accesso al db.
      */
     @Override
@@ -208,13 +205,11 @@ public class UserManager extends AbstractService implements IUserManager {
     }
 
     /**
-     * Recupera un'user caricandolo da db. Se userName e password non
-     * corrispondono ad un utente, restituisce null.
+     * Recupera un'user caricandolo da db. Se userName e password non corrispondono ad un utente, restituisce null.
      *
      * @param username Lo username dell'utente da restituire.
      * @param password La password dell'utente da restituire.
-     * @return L'utente cercato, null se non vi è nessun utente corrispondente
-     * alla username e password immessa.
+     * @return L'utente cercato, null se non vi è nessun utente corrispondente alla username e password immessa.
      * @throws ApsSystemException in caso di errore nell'accesso al db.
      */
     @Override
@@ -231,15 +226,11 @@ public class UserManager extends AbstractService implements IUserManager {
     }
 
     /**
-     * Inserisce nell'utenza le informazioni necessarie per la verifica della
-     * validità delle credenziali. In particolare, in base allo stato del Modulo
-     * Privacy (attivo oppure no), inserisce le informazioni riguardo il numero
-     * massimo di mesi consentiti dal ultimo accesso e il numero massimo di mesi
-     * consentiti dal ultimo cambio password (parametri estratti dalla
-     * configurazioni di sistema).
+     * Inserisce nell'utenza le informazioni necessarie per la verifica della validità delle credenziali. In particolare, in base allo stato
+     * del Modulo Privacy (attivo oppure no), inserisce le informazioni riguardo il numero massimo di mesi consentiti dal ultimo accesso e
+     * il numero massimo di mesi consentiti dal ultimo cambio password (parametri estratti dalla configurazioni di sistema).
      *
-     * @param user L'utenza sulla quale inserire le informazioni necessarie per
-     * la verifica della validità delle credenziali.
+     * @param user L'utenza sulla quale inserire le informazioni necessarie per la verifica della validità delle credenziali.
      */
     protected void setUserCredentialCheckParams(UserDetails user) {
         if (null != user && user.isEntandoUser()) {
@@ -250,7 +241,8 @@ public class UserManager extends AbstractService implements IUserManager {
             if (enabledPrivacyModule) {
                 int maxMonthsSinceLastAccess = this.extractNumberParamValue(SystemConstants.CONFIG_PARAM_PM_MM_LAST_ACCESS, 6);
                 japsUser.setMaxMonthsSinceLastAccess(maxMonthsSinceLastAccess);
-                int maxMonthsSinceLastPasswordChange = this.extractNumberParamValue(SystemConstants.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE, 3);
+                int maxMonthsSinceLastPasswordChange = this
+                        .extractNumberParamValue(SystemConstants.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE, 3);
                 japsUser.setMaxMonthsSinceLastPasswordChange(maxMonthsSinceLastPasswordChange);
             }
         }
@@ -295,10 +287,8 @@ public class UserManager extends AbstractService implements IUserManager {
     }
 
     /**
-     * Restituisce l'utente di default di sistema. L'utente di default
-     * rappresenta un utente "ospite" senza nessuna autorizzazione di accesso ad
-     * elementi non "liberi" e senza nessuna autorizzazione ad eseguire
-     * qualunque azione sugli elementi del sistema.
+     * Restituisce l'utente di default di sistema. L'utente di default rappresenta un utente "ospite" senza nessuna autorizzazione di
+     * accesso ad elementi non "liberi" e senza nessuna autorizzazione ad eseguire qualunque azione sugli elementi del sistema.
      *
      * @return L'utente di default di sistema.
      */

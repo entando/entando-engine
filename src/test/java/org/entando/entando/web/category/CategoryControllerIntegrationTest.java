@@ -11,15 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.category;
 
-import java.io.InputStream;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
+import java.io.InputStream;
 import org.entando.entando.aps.servlet.security.CORSFilter;
 import org.entando.entando.aps.system.services.category.ICategoryService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
@@ -32,15 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -205,7 +205,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     private ResultActions executeGet(String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/categories/{categoryCode}", new Object[]{categoryCode})
+                .perform(get("/categories/{categoryCode}", categoryCode)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(rm);
         return result;
@@ -226,7 +226,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         InputStream isJsonPut = this.getClass().getResourceAsStream(filename);
         String jsonPut = FileTextReader.getText(isJsonPut);
         ResultActions result = mockMvc
-                .perform(put("/categories/{categoryCode}", new Object[]{categoryCode})
+                .perform(put("/categories/{categoryCode}", categoryCode)
                         .content(jsonPut)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -236,7 +236,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     private ResultActions executeDelete(String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
-                .perform(delete("/categories/{categoryCode}", new Object[]{categoryCode})
+                .perform(delete("/categories/{categoryCode}", categoryCode)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(rm);
@@ -245,7 +245,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     private ResultActions executeReference(String categoryCode, String accessToken, String managerName, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/categories/{categoryCode}/references/{holder}", new Object[]{categoryCode, managerName})
+                .perform(get("/categories/{categoryCode}/references/{holder}", categoryCode, managerName)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(rm);

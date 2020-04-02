@@ -11,38 +11,36 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class describes the Entity of a Composed Attribute. This attribute is
- * build by one or more elementary attributes of different types. These
- * elementary attributes can support multiple languages or not (and are defined
- * multi or mono-language). The Composite Attribute is only utilized in
- * conjunction with the 'Monolist' attribute. Please note that the composite
- * attribute cannot be used as an element of the "List" attribute since the
- * items in the List can support multiple languages.
+ * This class describes the Entity of a Composed Attribute. This attribute is build by one or more elementary attributes of different types.
+ * These elementary attributes can support multiple languages or not (and are defined multi or mono-language). The Composite Attribute is
+ * only utilized in conjunction with the 'Monolist' attribute. Please note that the composite attribute cannot be used as an element of the
+ * "List" attribute since the items in the List can support multiple languages.
  *
  * @author E.Santoboni
  */
 public class CompositeAttribute extends AbstractComplexAttribute {
 
     private static final Logger _logger = LoggerFactory.getLogger(CompositeAttribute.class);
+    private List<AttributeInterface> _attributeList;
+    private Map<String, AttributeInterface> _attributeMap;
 
     /**
      * Attribute initialization.
@@ -121,7 +119,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
      * @return The requested attribute.
      */
     public AttributeInterface getAttribute(String name) {
-        AttributeInterface attribute = (AttributeInterface) this.getAttributeMap().get(name);
+        AttributeInterface attribute = this.getAttributeMap().get(name);
         return attribute;
     }
 
@@ -164,11 +162,12 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     @Deprecated(/**
-             * INSERTED to guaranted compatibility with previsous version of
-             * jAPS 2.0.12
-             */
-            )
-    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
+     * INSERTED to guaranted compatibility with previsous version of
+     * jAPS 2.0.12
+    */
+    )
+    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes)
+            throws ApsSystemException {
         List<Element> attributeElements = attributeElement.getChildren();
         for (int j = 0; j < attributeElements.size(); j++) {
             Element currentAttrJdomElem = attributeElements.get(j);
@@ -176,12 +175,14 @@ public class CompositeAttribute extends AbstractComplexAttribute {
         }
     }
 
-    private void extractAttributeCompositeElement(Map<String, AttributeInterface> attrTypes, Element currentAttrJdomElem) throws ApsSystemException {
+    private void extractAttributeCompositeElement(Map<String, AttributeInterface> attrTypes, Element currentAttrJdomElem)
+            throws ApsSystemException {
         String typeCode = this.extractXmlAttribute(currentAttrJdomElem, "attributetype", true);
-        AttributeInterface compositeAttrElem = (AttributeInterface) attrTypes.get(typeCode);
+        AttributeInterface compositeAttrElem = attrTypes.get(typeCode);
         if (compositeAttrElem == null) {
             throw new ApsSystemException("The type " + typeCode
-                    + " of the attribute element found in the tag <" + currentAttrJdomElem.getName() + "> of the composite attribute is not a valid one");
+                    + " of the attribute element found in the tag <" + currentAttrJdomElem.getName()
+                    + "> of the composite attribute is not a valid one");
         }
         compositeAttrElem = (AttributeInterface) compositeAttrElem.getAttributePrototype();
         compositeAttrElem.setAttributeConfig(currentAttrJdomElem);
@@ -191,15 +192,12 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     /**
-     * Since this kind of attribute can never be indexable this method, which
-     * overrides the one of the abstract class, always returns the constant
-     * "INDEXING_TYPE_NONE" (defined in AttributeInterface) which explicitly
-     * declares it not indexable. Declaring indexable a complex attribute will
-     * make the contained element indexable.
+     * Since this kind of attribute can never be indexable this method, which overrides the one of the abstract class, always returns the
+     * constant "INDEXING_TYPE_NONE" (defined in AttributeInterface) which explicitly declares it not indexable. Declaring indexable a
+     * complex attribute will make the contained element indexable.
      *
      * @return the indexing type
-     * @see
-     * com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getIndexingType()
+     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getIndexingType()
      */
     @Override
     public String getIndexingType() {
@@ -321,8 +319,5 @@ public class CompositeAttribute extends AbstractComplexAttribute {
         }
         return errors;
     }
-
-    private List<AttributeInterface> _attributeList;
-    private Map<String, AttributeInterface> _attributeMap;
 
 }

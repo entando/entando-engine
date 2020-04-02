@@ -11,17 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-
 import java.util.List;
 
 /**
  * @author S.Puddu - E.Santoboni
  */
 public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
+
+    private IGuiFragmentManager _guiFragmentManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -114,7 +116,5 @@ public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IGuiFragmentManager _guiFragmentManager;
 
 }

@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-
-import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.page.model.PageSearchRequest;
 
 public class PageSearchDto extends PagedMetadata<PageDto> {
@@ -26,14 +26,6 @@ public class PageSearchDto extends PagedMetadata<PageDto> {
 
     @JsonIgnore
     private Filter[] filters;
-
-    public String getPageCodeToken() {
-        return pageCodeToken;
-    }
-
-    public void setPageCodeToken(String pageCodeToken) {
-        this.pageCodeToken = pageCodeToken;
-    }
 
     public PageSearchDto() {
     }
@@ -55,6 +47,14 @@ public class PageSearchDto extends PagedMetadata<PageDto> {
         this.setFilters(req.getFilters());
         this.setBody(body);
         this.setPageCodeToken(req.getPageCodeToken());
+    }
+
+    public String getPageCodeToken() {
+        return pageCodeToken;
+    }
+
+    public void setPageCodeToken(String pageCodeToken) {
+        this.pageCodeToken = pageCodeToken;
     }
 
 }

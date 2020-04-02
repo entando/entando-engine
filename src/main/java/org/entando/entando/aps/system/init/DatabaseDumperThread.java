@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import org.slf4j.Logger;
@@ -21,22 +22,21 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseDumperThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumperThread.class);
-	
-	public DatabaseDumperThread(DatabaseManager manager) {
-		this._manager = manager;
-	}
-	
-	@Override
-	public void run() {
-		try {
-			this._manager.executeBackup();
-		} catch (Throwable t) {
-			_logger.error("error in run", t);
-			//ApsSystemUtils.logThrowable(t, this, "run");
-		}
-	}
-	
-	private DatabaseManager _manager;
-	
+    private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumperThread.class);
+    private DatabaseManager _manager;
+
+    public DatabaseDumperThread(DatabaseManager manager) {
+        this._manager = manager;
+    }
+
+    @Override
+    public void run() {
+        try {
+            this._manager.executeBackup();
+        } catch (Throwable t) {
+            _logger.error("error in run", t);
+            //ApsSystemUtils.logThrowable(t, this, "run");
+        }
+    }
+
 }

@@ -11,30 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 
 /**
  * Basic interface for those services whose handled elements are based on fragment.
+ *
  * @author E.Santoboni
  */
 public interface GuiFragmentUtilizer {
-	
-	/**
-	 * Return the id of the utilizing service.
-	 * @return The id of the utilizer.
-	 */
-	public String getName();
-	
-	/**
-	 * Return the list of the objects that use the fragment with the given name.
-	 * @param guiFragmentCode The name of the fragment
-	 * @return The list of the objects that use the fragment with the given code.
-	 * @throws ApsSystemException In case of error
-	 */
-	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException;
-	
+
+    /**
+     * Return the id of the utilizing service.
+     *
+     * @return The id of the utilizer.
+     */
+    String getName();
+
+    /**
+     * Return the list of the objects that use the fragment with the given name.
+     *
+     * @param guiFragmentCode The name of the fragment
+     * @return The list of the objects that use the fragment with the given code.
+     * @throws ApsSystemException In case of error
+     */
+    List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException;
+
 }

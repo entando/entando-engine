@@ -11,10 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.renderer;
 
 public interface IVelocityRenderer {
-	
-	public String render(Object object, String velocityTemplate);
-	
+
+    String render(Object object, String velocityTemplate);
+
 }

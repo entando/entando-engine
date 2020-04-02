@@ -11,14 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.userprofile;
 
-import java.io.InputStream;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
+import java.io.InputStream;
 import org.entando.entando.aps.servlet.security.CORSFilter;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
@@ -33,15 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -74,7 +74,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/profileTypes/{profileTypeCode}", new Object[]{"PFL"})
+                .perform(get("/profileTypes/{profileTypeCode}", "PFL")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
@@ -84,7 +84,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/profileTypes/{profileTypeCode}", new Object[]{"XXX"})
+                .perform(get("/profileTypes/{profileTypeCode}", "XXX")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isNotFound());
     }
@@ -105,7 +105,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
 
         String body2 = "{\"code\": \"\", \"name\": \"Description\", \"attributes\": []}";
         ResultActions result2 = mockMvc
-                .perform(put("/profileTypes/{profileTypeCode}", new Object[]{"AAA"}).content(body2)
+                .perform(put("/profileTypes/{profileTypeCode}", "AAA").content(body2)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result2.andExpect(status().isBadRequest());
@@ -128,7 +128,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             Assert.assertEquals(3, addedType.getAttributeList().size());
 
             ResultActions result = mockMvc
-                    .perform(get("/profileTypes/{profileTypeCode}", new Object[]{"TST"})
+                    .perform(get("/profileTypes/{profileTypeCode}", "TST")
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.code", is("TST")));
@@ -164,7 +164,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             Assert.assertEquals(2, addedType.getAttributeList().size());
 
             ResultActions result4 = mockMvc
-                    .perform(delete("/profileTypes/{profileTypeCode}", new Object[]{"AAA"})
+                    .perform(delete("/profileTypes/{profileTypeCode}", "AAA")
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
             Assert.assertNull(this.userProfileManager.getEntityPrototype("AAA"));
@@ -208,7 +208,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             Assert.assertEquals(5, modifiedDataObject.getAttributeList().size());
 
             ResultActions result4 = mockMvc
-                    .perform(delete("/profileTypes/{profileTypeCode}", new Object[]{"TST"})
+                    .perform(delete("/profileTypes/{profileTypeCode}", "TST")
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
             Assert.assertNull(this.userProfileManager.getEntityPrototype("TST"));
@@ -231,11 +231,12 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         return result;
     }
 
-    private ResultActions executeProfileTypePut(String fileName, String typeCode, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeProfileTypePut(String fileName, String typeCode, String accessToken, ResultMatcher expected)
+            throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(put("/profileTypes/{profileTypeCode}", new Object[]{typeCode})
+                .perform(put("/profileTypes/{profileTypeCode}", typeCode)
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -296,7 +297,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/profileTypeAttributes/{attributeTypeCode}", new Object[]{"Monotext"})
+                .perform(get("/profileTypeAttributes/{attributeTypeCode}", "Monotext")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("Monotext")));
@@ -310,7 +311,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/profileTypeAttributes/{attributeTypeCode}", new Object[]{"WrongTypeCode"})
+                .perform(get("/profileTypeAttributes/{attributeTypeCode}", "WrongTypeCode")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isNotFound());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -329,7 +330,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             this.executeProfileTypePost("2_POST_valid.json", accessToken, status().isOk());
 
             ResultActions result1 = mockMvc
-                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", new Object[]{"XXX", "TextAttribute"})
+                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", "XXX", "TextAttribute")
                             .header("Authorization", "Bearer " + accessToken));
             result1.andExpect(status().isNotFound());
             result1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -337,7 +338,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             result1.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = mockMvc
-                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", new Object[]{"TST", "WrongCpde"})
+                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", "TST", "WrongCpde")
                             .header("Authorization", "Bearer " + accessToken));
             result2.andExpect(status().isNotFound());
             result2.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -345,7 +346,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result3 = mockMvc
-                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", new Object[]{"TST", "TextAttribute"})
+                    .perform(get("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", "TST", "TextAttribute")
                             .header("Authorization", "Bearer " + accessToken));
             result3.andExpect(status().isOk());
             result3.andExpect(jsonPath("$.payload.code", is("TextAttribute")));
@@ -371,25 +372,29 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
 
             this.executeProfileTypePost("2_POST_valid.json", accessToken, status().isOk());
 
-            ResultActions result1 = this.executeProfileAttributePost("3_POST_attribute_invalid_1.json", typeCode, accessToken, status().isConflict());
+            ResultActions result1 = this
+                    .executeProfileAttributePost("3_POST_attribute_invalid_1.json", typeCode, accessToken, status().isConflict());
             result1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result1.andExpect(jsonPath("$.errors[0].code", is("14")));
             result1.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result2 = this.executeProfileAttributePost("3_POST_attribute_invalid_2.json", typeCode, accessToken, status().isBadRequest());
+            ResultActions result2 = this
+                    .executeProfileAttributePost("3_POST_attribute_invalid_2.json", typeCode, accessToken, status().isBadRequest());
             result2.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result2.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result2.andExpect(jsonPath("$.errors[0].code", is("53")));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result3 = this.executeProfileAttributePost("3_POST_attribute_invalid_3.json", typeCode, accessToken, status().isBadRequest());
+            ResultActions result3 = this
+                    .executeProfileAttributePost("3_POST_attribute_invalid_3.json", typeCode, accessToken, status().isBadRequest());
             result3.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result3.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result3.andExpect(jsonPath("$.errors[0].code", is("13")));
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result4 = this.executeProfileAttributePost("3_POST_attribute_invalid_4.json", typeCode, accessToken, status().isBadRequest());
+            ResultActions result4 = this
+                    .executeProfileAttributePost("3_POST_attribute_invalid_4.json", typeCode, accessToken, status().isBadRequest());
             result4.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result4.andExpect(jsonPath("$.errors", Matchers.hasSize(2)));
             result4.andExpect(jsonPath("$.metaData.size()", is(0)));
@@ -422,25 +427,29 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             IApsEntity profileType = this.userProfileManager.getEntityPrototype(typeCode);
             Assert.assertEquals(3, profileType.getAttributeList().size());
 
-            ResultActions result1 = this.executeProfileAttributePut("4_PUT_attribute_invalid_1.json", typeCode, "list_wrong", accessToken, status().isNotFound());
+            ResultActions result1 = this.executeProfileAttributePut("4_PUT_attribute_invalid_1.json", typeCode, "list_wrong", accessToken,
+                    status().isNotFound());
             result1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result1.andExpect(jsonPath("$.errors[0].code", is("15")));
             result1.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result2 = this.executeProfileAttributePut("4_PUT_attribute_invalid_2.json", typeCode, "list", accessToken, status().isBadRequest());
+            ResultActions result2 = this
+                    .executeProfileAttributePut("4_PUT_attribute_invalid_2.json", typeCode, "list", accessToken, status().isBadRequest());
             result2.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result2.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result2.andExpect(jsonPath("$.errors[0].code", is("16")));
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result3 = this.executeProfileAttributePut("4_PUT_attribute_valid.json", typeCode, "wrongname", accessToken, status().isConflict());
+            ResultActions result3 = this
+                    .executeProfileAttributePut("4_PUT_attribute_valid.json", typeCode, "wrongname", accessToken, status().isConflict());
             result3.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result3.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result3.andExpect(jsonPath("$.errors[0].code", is("6")));
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            ResultActions result4 = this.executeProfileAttributePut("4_PUT_attribute_valid.json", typeCode, "list", accessToken, status().isOk());
+            ResultActions result4 = this
+                    .executeProfileAttributePut("4_PUT_attribute_valid.json", typeCode, "list", accessToken, status().isOk());
             result4.andExpect(jsonPath("$.payload.code", is("list")));
             result4.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result4.andExpect(jsonPath("$.metaData.size()", is(1)));
@@ -500,11 +509,12 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         }
     }
 
-    private ResultActions executeProfileAttributePost(String fileName, String typeCode, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeProfileAttributePost(String fileName, String typeCode, String accessToken, ResultMatcher expected)
+            throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(post("/profileTypes/{profileTypeCode}/attribute", new Object[]{typeCode})
+                .perform(post("/profileTypes/{profileTypeCode}/attribute", typeCode)
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -512,11 +522,12 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         return result;
     }
 
-    private ResultActions executeProfileAttributePut(String fileName, String typeCode, String attributeCode, String accessToken, ResultMatcher expected) throws Exception {
+    private ResultActions executeProfileAttributePut(String fileName, String typeCode, String attributeCode, String accessToken,
+            ResultMatcher expected) throws Exception {
         InputStream isJsonPutValid = this.getClass().getResourceAsStream(fileName);
         String jsonPutValid = FileTextReader.getText(isJsonPutValid);
         ResultActions result = mockMvc
-                .perform(put("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", new Object[]{typeCode, attributeCode})
+                .perform(put("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", typeCode, attributeCode)
                         .content(jsonPutValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -527,7 +538,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     private ResultActions executeProfileAttributeDelete(String typeCode,
             String attributeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
-                .perform(delete("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", new Object[]{typeCode, attributeCode})
+                .perform(delete("/profileTypes/{profileTypeCode}/attribute/{attributeCode}", typeCode, attributeCode)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
@@ -588,7 +599,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             Assert.assertNotNull(this.userProfileManager.getEntityPrototype(typeCode));
 
             ResultActions result1 = mockMvc
-                    .perform(post("/profileTypes/refresh/{profileTypeCode}", new Object[]{typeCode})
+                    .perform(post("/profileTypes/refresh/{profileTypeCode}", typeCode)
                             .content("{}")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
@@ -599,7 +610,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             result1.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             ResultActions result2 = mockMvc
-                    .perform(post("/profileTypes/refresh/{profileTypeCode}", new Object[]{"XXX"})
+                    .perform(post("/profileTypes/refresh/{profileTypeCode}", "XXX")
                             .content("{}")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));

@@ -11,16 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.List;
 
 /**
- * Interfaccia base per i Servizi gestori dei tipi di widget (WidgetType)
- * definiti nel sistema.
+ * Interfaccia base per i Servizi gestori dei tipi di widget (WidgetType) definiti nel sistema.
  *
  * @author E.Santoboni
  */
@@ -32,16 +31,14 @@ public interface IWidgetTypeManager {
      * @param widgetTypeCode Il codice univoco del tipo
      * @return La definizione del tipo di widget
      */
-    public WidgetType getWidgetType(String widgetTypeCode);
+    WidgetType getWidgetType(String widgetTypeCode);
 
     /**
-     * Restituisce la lista completa (ordinata per descrizione) dei tipi di
-     * widget.
+     * Restituisce la lista completa (ordinata per descrizione) dei tipi di widget.
      *
-     * @return la lista completa dei widget (ordinata per la descrizione del
-     * tipo) disponibili in oggetti WidgetType.
+     * @return la lista completa dei widget (ordinata per la descrizione del tipo) disponibili in oggetti WidgetType.
      */
-    public List<WidgetType> getWidgetTypes();
+    List<WidgetType> getWidgetTypes();
 
     /**
      * Add a widget type into the catalogue
@@ -49,7 +46,7 @@ public interface IWidgetTypeManager {
      * @param widgetType The type to add
      * @throws ApsSystemException in case of error
      */
-    public void addWidgetType(WidgetType widgetType) throws ApsSystemException;
+    void addWidgetType(WidgetType widgetType) throws ApsSystemException;
 
     /**
      * Delete a widget type from the catalogue
@@ -57,7 +54,7 @@ public interface IWidgetTypeManager {
      * @param widgetTypeCode The code of the type to delete
      * @throws ApsSystemException in case of error
      */
-    public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException;
+    void deleteWidgetType(String widgetTypeCode) throws ApsSystemException;
 
     /**
      * Update a Widget type on the catalogue.
@@ -70,7 +67,7 @@ public interface IWidgetTypeManager {
      * @param bundleId The bundle id of the widget type to update.
      * @throws ApsSystemException in case of error
      */
-    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws ApsSystemException;
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+            String configUi, String bundleId) throws ApsSystemException;
 
 }

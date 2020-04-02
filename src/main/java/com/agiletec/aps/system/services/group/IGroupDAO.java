@@ -11,12 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.group;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.List;
 import java.util.Map;
-
-import com.agiletec.aps.system.common.FieldSearchFilter;
 
 /**
  * Interfaccia base per i Data Access Object degli oggetti Group.
@@ -25,44 +25,43 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
  */
 public interface IGroupDAO {
 
-	/**
-	 * Carica la mappa dei gruppi presenti nel sistema indicizzandola in base al
-	 * nome del gruppo.
-	 *
-	 * @return La mappa dei gruppi presenti nel sistema.
-	 */
-	public Map<String, Group> loadGroups();
+    /**
+     * Carica la mappa dei gruppi presenti nel sistema indicizzandola in base al nome del gruppo.
+     *
+     * @return La mappa dei gruppi presenti nel sistema.
+     */
+    Map<String, Group> loadGroups();
 
-	/**
-	 * Aggiunge un gruppo nel db.
-	 *
-	 * @param group Il gruppo da aggiungere.
-	 */
-	public void addGroup(Group group);
+    /**
+     * Aggiunge un gruppo nel db.
+     *
+     * @param group Il gruppo da aggiungere.
+     */
+    void addGroup(Group group);
 
-	/**
-	 * Aggiorna un gruppo nel db.
-	 *
-	 * @param group Il gruppo da aggiornare.
-	 */
-	public void updateGroup(Group group);
+    /**
+     * Aggiorna un gruppo nel db.
+     *
+     * @param group Il gruppo da aggiornare.
+     */
+    void updateGroup(Group group);
 
-	/**
-	 * Rimuove un gruppo dal db.
-	 *
-	 * @param group Il gruppo da rimuovere.
-	 */
-	public void deleteGroup(Group group);
+    /**
+     * Rimuove un gruppo dal db.
+     *
+     * @param group Il gruppo da rimuovere.
+     */
+    void deleteGroup(Group group);
 
-	/**
-	 * Rimuove un gruppo dal sistema.
-	 *
-	 * @param groupName Il nome del gruppo da rimuovere.
-	 */
-	public void deleteGroup(String groupName);
+    /**
+     * Rimuove un gruppo dal sistema.
+     *
+     * @param groupName Il nome del gruppo da rimuovere.
+     */
+    void deleteGroup(String groupName);
 
-    public List<String> searchGroups(FieldSearchFilter[] filters);
+    List<String> searchGroups(FieldSearchFilter[] filters);
 
-    public int countGroups(FieldSearchFilter[] filters);
+    int countGroups(FieldSearchFilter[] filters);
 
 }

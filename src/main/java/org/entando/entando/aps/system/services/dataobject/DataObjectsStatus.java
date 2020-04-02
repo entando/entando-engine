@@ -11,55 +11,56 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import java.util.Date;
 
 public class DataObjectsStatus {
 
-	public int getTotal() {
-		return this.getOnline() + this.getOnlineWithChanges() + this.getDraft();
-	}
+    private int _online;
+    private int _onlineWithChanges;
+    private int _draft;
+    private Date _lastUpdate;
 
-	@Override
-	public String toString() {
-		return "DataObjectsStatus [online=" + _online + ", onlineWithChanges=" + _onlineWithChanges + ", draft=" + _draft + "]";
-	}
+    public int getTotal() {
+        return this.getOnline() + this.getOnlineWithChanges() + this.getDraft();
+    }
 
-	public int getOnline() {
-		return _online;
-	}
+    @Override
+    public String toString() {
+        return "DataObjectsStatus [online=" + _online + ", onlineWithChanges=" + _onlineWithChanges + ", draft=" + _draft + "]";
+    }
 
-	public void setOnline(int online) {
-		this._online = online;
-	}
+    public int getOnline() {
+        return _online;
+    }
 
-	public int getOnlineWithChanges() {
-		return _onlineWithChanges;
-	}
+    public void setOnline(int online) {
+        this._online = online;
+    }
 
-	public void setOnlineWithChanges(int onlineWithChanges) {
-		this._onlineWithChanges = onlineWithChanges;
-	}
+    public int getOnlineWithChanges() {
+        return _onlineWithChanges;
+    }
 
-	public int getDraft() {
-		return _draft;
-	}
+    public void setOnlineWithChanges(int onlineWithChanges) {
+        this._onlineWithChanges = onlineWithChanges;
+    }
 
-	public void setDraft(int draft) {
-		this._draft = draft;
-	}
+    public int getDraft() {
+        return _draft;
+    }
 
-	public Date getLastUpdate() {
-		return _lastUpdate;
-	}
+    public void setDraft(int draft) {
+        this._draft = draft;
+    }
 
-	public void setLastUpdate(Date lastUpdate) {
-		this._lastUpdate = lastUpdate;
-	}
+    public Date getLastUpdate() {
+        return _lastUpdate;
+    }
 
-	private int _online;
-	private int _onlineWithChanges;
-	private int _draft;
-	private Date _lastUpdate;
+    public void setLastUpdate(Date lastUpdate) {
+        this._lastUpdate = lastUpdate;
+    }
 }

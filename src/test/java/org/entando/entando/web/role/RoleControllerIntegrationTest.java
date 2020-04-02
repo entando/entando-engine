@@ -11,7 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.role;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Role;
@@ -27,18 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class RoleControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -163,8 +164,6 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
      *
      * delete the role
      * </p>
-     *
-     * @throws Exception
      */
     @Test
     public void testCrudRole() throws Exception {
@@ -238,16 +237,14 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
             //--------------
             payload = new JsonPatchBuilder()
                     .withOperation("replace", "/name", "New Test Role")
-                    .withOperation("replace", "/permissions", ImmutableMap.of("manageCategories", true) )
+                    .withOperation("replace", "/permissions", ImmutableMap.of("manageCategories", true))
                     .getJsonPatchAsString();
-
 
             result = mockMvc
                     .perform(patch("/roles/{code}", code)
-                                     .contentType(RestMediaTypes.JSON_PATCH_JSON)
-                                     .content(payload)
-                                     .header("Authorization", "Bearer " + accessToken));
-
+                            .contentType(RestMediaTypes.JSON_PATCH_JSON)
+                            .content(payload)
+                            .header("Authorization", "Bearer " + accessToken));
 
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.name", is("New Test Role")));
@@ -261,16 +258,15 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
 
             result = mockMvc
                     .perform(patch("/roles/{code}", code)
-                                     .contentType(RestMediaTypes.JSON_PATCH_JSON)
-                                     .content(payload)
-                                     .header("Authorization", "Bearer " + accessToken));
-
+                            .contentType(RestMediaTypes.JSON_PATCH_JSON)
+                            .content(payload)
+                            .header("Authorization", "Bearer " + accessToken));
 
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0]", allOf(
-                   hasEntry("code", "1"),
-                   hasEntry("message", "The field 'code' can not be updated via JSON patch")
-                 )));
+                    hasEntry("code", "1"),
+                    hasEntry("message", "The field 'code' can not be updated via JSON patch")
+            )));
 
             //--------------
 

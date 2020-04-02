@@ -11,9 +11,9 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity;
 
-import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -21,7 +21,6 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
-import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -36,8 +35,6 @@ import org.springframework.validation.BindingResult;
 
 /**
  * @author E.Santoboni
- * @param <I>
- * @param <T>
  */
 public abstract class AbstractEntityService<I extends IApsEntity, T extends EntityDto> {
 
@@ -81,7 +78,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
             request.fillEntity(entity, this.getCategoryManager(), bindingResult);
             this.scanEntity(entity, bindingResult);
             if (!bindingResult.hasErrors()) {
-                I newEntity = (I) this.addEntity(entityManager, entity);
+                I newEntity = this.addEntity(entityManager, entity);
                 return this.buildEntityDto(newEntity);
             }
         } catch (ValidationConflictException vce) {
@@ -117,7 +114,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
             request.fillEntity(entity, this.getCategoryManager(), bindingResult);
             this.scanEntity(entity, bindingResult);
             if (!bindingResult.hasErrors()) {
-                I updatedEntity = (I) this.updateEntity(entityManager, entity);
+                I updatedEntity = this.updateEntity(entityManager, entity);
                 return this.buildEntityDto(updatedEntity);
             }
         } catch (Exception e) {
@@ -195,7 +192,8 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
         I entityType = (I) entityManager.getEntityPrototype(entityTypeCode);
         if (null == entityType) {
             logger.warn("no type found with code {}", entityTypeCode);
-            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Type Code", entityTypeCode);
+            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Type Code",
+                    entityTypeCode);
         }
         return (I) entityType.getEntityPrototype();
     }
@@ -204,7 +202,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
         IEntityManager entityManager = null;
         List<IEntityManager> managers = this.getEntityManagers();
         for (IEntityManager manager : managers) {
-            if (((IManager) manager).getName().equals(entityManagerCode)) {
+            if (manager.getName().equals(entityManagerCode)) {
                 entityManager = manager;
                 break;
             }

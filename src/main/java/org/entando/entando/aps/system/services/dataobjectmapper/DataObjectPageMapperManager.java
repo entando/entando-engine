@@ -11,78 +11,75 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobjectmapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.entando.entando.aps.system.services.dataobjectmapper;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
-
 import org.entando.entando.aps.system.services.dataobjectmapper.cache.IDataObjectMapperCacheWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Servizio gestore della mappa dei datatypes pubblicati nelle pagine. Il
- * servizio carica e gestisce nella mappa esclusivamente i datatypes pubblicati
- * esplicitamente nel frame principale delle pagine.
+ * Servizio gestore della mappa dei datatypes pubblicati nelle pagine. Il servizio carica e gestisce nella mappa esclusivamente i datatypes
+ * pubblicati esplicitamente nel frame principale delle pagine.
  *
  * @author W.Ambu
  */
 public class DataObjectPageMapperManager extends AbstractService implements IDataObjectPageMapperManager, PageChangedObserver {
 
-	private static final Logger logger = LoggerFactory.getLogger(DataObjectPageMapperManager.class);
-	
-	private IPageManager pageManager;
-	private IDataObjectMapperCacheWrapper cacheWrapper;
+    private static final Logger logger = LoggerFactory.getLogger(DataObjectPageMapperManager.class);
 
-	@Override
-	public void init() throws Exception {
-		this.getCacheWrapper().initCache(this.getPageManager());
-		logger.debug("{} ready.", this.getClass().getName());
-	}
+    private IPageManager pageManager;
+    private IDataObjectMapperCacheWrapper cacheWrapper;
 
-	/**
-	 * Effettua il caricamento della mappa contenuti pubblicati / pagine
-	 * @throws ApsSystemException
-	 */
-	@Override
-	public void reloadDataObjectPageMapper() throws ApsSystemException {
-		this.getCacheWrapper().initCache(this.getPageManager());
-	}
+    @Override
+    public void init() throws Exception {
+        this.getCacheWrapper().initCache(this.getPageManager());
+        logger.debug("{} ready.", this.getClass().getName());
+    }
 
-	@Override
-	public String getPageCode(String dataId) {
-		return this.getCacheWrapper().getPageCode(dataId);
-	}
+    /**
+     * Effettua il caricamento della mappa contenuti pubblicati / pagine
+     */
+    @Override
+    public void reloadDataObjectPageMapper() throws ApsSystemException {
+        this.getCacheWrapper().initCache(this.getPageManager());
+    }
 
-	@Override
-	public void updateFromPageChanged(PageChangedEvent event) {
-		try {
-			this.reloadDataObjectPageMapper();
-			String pagecode = (null != event.getPage()) ? event.getPage().getCode() : "*undefined*";
-			logger.debug("Notified page change event for page '{}'", pagecode);
-		} catch (Throwable t) {
-			logger.error("Error notifying event", t);
-		}
-	}
+    @Override
+    public String getPageCode(String dataId) {
+        return this.getCacheWrapper().getPageCode(dataId);
+    }
 
-	protected IPageManager getPageManager() {
-		return pageManager;
-	}
+    @Override
+    public void updateFromPageChanged(PageChangedEvent event) {
+        try {
+            this.reloadDataObjectPageMapper();
+            String pagecode = (null != event.getPage()) ? event.getPage().getCode() : "*undefined*";
+            logger.debug("Notified page change event for page '{}'", pagecode);
+        } catch (Throwable t) {
+            logger.error("Error notifying event", t);
+        }
+    }
 
-	public void setPageManager(IPageManager pageManager) {
-		this.pageManager = pageManager;
-	}
+    protected IPageManager getPageManager() {
+        return pageManager;
+    }
 
-	protected IDataObjectMapperCacheWrapper getCacheWrapper() {
-		return cacheWrapper;
-	}
+    public void setPageManager(IPageManager pageManager) {
+        this.pageManager = pageManager;
+    }
 
-	public void setCacheWrapper(IDataObjectMapperCacheWrapper cacheWrapper) {
-		this.cacheWrapper = cacheWrapper;
-	}
-	
+    protected IDataObjectMapperCacheWrapper getCacheWrapper() {
+        return cacheWrapper;
+    }
+
+    public void setCacheWrapper(IDataObjectMapperCacheWrapper cacheWrapper) {
+        this.cacheWrapper = cacheWrapper;
+    }
+
 }

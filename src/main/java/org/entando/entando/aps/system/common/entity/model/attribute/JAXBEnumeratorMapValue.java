@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -25,24 +25,26 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "value")
 @XmlType(propOrder = {"key", "value"})
 public class JAXBEnumeratorMapValue implements Serializable {
-    
-	@XmlElement(name = "key", required = false)
-	public String getKey() {
-		return _key;
-	}
-	public void setKey(String key) {
-		this._key = key;
-	}
-	
-	@XmlElement(name = "value", required = false)
-	public String getValue() {
-		return _value;
-	}
-	public void setValue(String value) {
-		this._value = value;
-	}
-	
-	private String _key;
-	private String _value;
-	
+
+    private String _key;
+    private String _value;
+
+    @XmlElement(name = "key", required = false)
+    public String getKey() {
+        return _key;
+    }
+
+    public void setKey(String key) {
+        this._key = key;
+    }
+
+    @XmlElement(name = "value", required = false)
+    public String getValue() {
+        return _value;
+    }
+
+    public void setValue(String value) {
+        this._value = value;
+    }
+
 }

@@ -11,18 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.page;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -33,19 +28,23 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserver;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is the page manager service class. Pages are held in a tree-like
- * structure, to allow a hierarchical access, and stored in a map, to allow a
- * key-value type access. In the tree, the father points the son and vice versa;
- * the order between the pages in the same level is always kept.
+ * This is the page manager service class. Pages are held in a tree-like structure, to allow a hierarchical access, and stored in a map, to
+ * allow a key-value type access. In the tree, the father points the son and vice versa; the order between the pages in the same level is
+ * always kept.
  *
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
+public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer,
+        PageModelChangedObserver {
 
     private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
 
@@ -109,14 +108,14 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             String[] childrenCodes = parent.getChildrenCodes();
             int lastPosition = (null != childrenCodes) ? childrenCodes.length : 0;
             if (null != childrenCodes && childrenCodes.length > 0) {
-                IPage lastParentChild = this.getDraftPage(childrenCodes[childrenCodes.length-1]);
+                IPage lastParentChild = this.getDraftPage(childrenCodes[childrenCodes.length - 1]);
                 if (null == lastParentChild) {
-                    _logger.error("Parent page {} - Invalid last child {}", page.getParentCode(), childrenCodes[childrenCodes.length-1]);
+                    _logger.error("Parent page {} - Invalid last child {}", page.getParentCode(), childrenCodes[childrenCodes.length - 1]);
                 } else {
                     lastPosition = (lastParentChild.getPosition() > lastPosition) ? lastParentChild.getPosition() : lastPosition;
                 }
             }
-            page.setPosition(lastPosition+1);
+            page.setPosition(lastPosition + 1);
             this.getPageDAO().addPage(page);
             this.getCacheWrapper().addDraftPage(page);
         } catch (Throwable t) {
@@ -153,7 +152,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error updating a page as online", t);
             throw new ApsSystemException("Error updating a page as online", t);
         }
-        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_ONLINE);
+        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null,
+                PageChangedEvent.EVENT_TYPE_SET_PAGE_ONLINE);
     }
 
     @Override
@@ -165,7 +165,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error updating a page as offline", t);
             throw new ApsSystemException("Error updating a page as offline", t);
         }
-        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
+        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null,
+                PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos) {
@@ -200,10 +201,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * Move a page.
      *
      * @param pageCode The code of the page to move.
-     * @param moveUp When true the page is moved to a higher level of the tree,
-     * otherwise to a lower level.
-     * @return The result of the operation: false if the move request could not
-     * be satisfied, true otherwise.
+     * @param moveUp When true the page is moved to a higher level of the tree, otherwise to a lower level.
+     * @return The result of the operation: false if the move request could not be satisfied, true otherwise.
      * @throws ApsSystemException In case of database access error.
      */
     @Override
@@ -240,20 +239,18 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     /**
      * Perform the movement of a page
      *
-     * @param pageDown
-     * @param pageUp
      * @throws ApsSystemException In case of database access error.
      */
     private void moveUpDown(String pageDown, String pageUp) throws ApsSystemException {
         try {
             IPage draftToMoveDown = this.getDraftPage(pageDown);
             IPage draftToMoveUp = this.getDraftPage(pageUp);
-            if (null != draftToMoveDown && null != draftToMoveUp 
+            if (null != draftToMoveDown && null != draftToMoveUp
                     && draftToMoveDown.getParentCode().equals(draftToMoveUp.getParentCode())) {
                 this.getCacheWrapper().moveUpDown(pageDown, pageUp);
                 this.getPageDAO().updatePosition(pageDown, pageUp);
             } else {
-                System.out.println("Movement impossible - page to move up {"+pageUp+"} - page to move down " + pageDown);
+                System.out.println("Movement impossible - page to move up {" + pageUp + "} - page to move down " + pageDown);
                 _logger.error("Movement impossible - page to move up {} - page to move down {}", pageUp, pageDown);
             }
         } catch (Throwable t) {
@@ -286,7 +283,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 this.getCacheWrapper().updateDraftPage(currentPage);
                 this.getPageDAO().updateWidgetPosition(pageCode, frameToMove, destFrame);
             }
-            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, frameToMove, destFrame, PageChangedEvent.EVENT_TYPE_MOVE_WIDGET);
+            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, frameToMove, destFrame,
+                    PageChangedEvent.EVENT_TYPE_MOVE_WIDGET);
         } catch (Throwable t) {
             _logger.error("Error while moving widget. page {} from position {} to position {}", pageCode, frameToMove, destFrame, t);
             throw new ApsSystemException("Error while moving a widget", t);
@@ -318,12 +316,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * Verify the possibility of the page to be moved elsewhere.
      *
      * @param position The position of the page to move
-     * @param moveUp When true the page is moved to a higher level of the tree,
-     * otherwise to a lower level.
-     * @param dimension The number the number of the pages of the parent of the
-     * page to move.
-     * @return if true then the requested movement is possible (but not
-     * performed) false otherwise.
+     * @param moveUp When true the page is moved to a higher level of the tree, otherwise to a lower level.
+     * @param dimension The number the number of the pages of the parent of the page to move.
+     * @return if true then the requested movement is possible (but not performed) false otherwise.
      */
     private boolean verifyRequiredMovement(int position, boolean moveUp, int dimension) {
         boolean result = true;
@@ -343,7 +338,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @param pageCode the code of the page
      * @param pos The position in the page to free
      * @throws ApsSystemException In case of error
-     * @deprecated Use {@link #removeWidget(String,int)} instead
+     * @deprecated Use {@link #removeWidget(String, int)} instead
      */
     @Override
     public void removeShowlet(String pageCode, int pos) throws ApsSystemException {
@@ -369,7 +364,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 ((Page) currentPage).setChanged(!widgetEquals);
             }
             this.getCacheWrapper().updateDraftPage(currentPage);
-            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos, PageChangedEvent.EVENT_TYPE_REMOVE_WIDGET);
+            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
+                    PageChangedEvent.EVENT_TYPE_REMOVE_WIDGET);
         } catch (Throwable t) {
             String message = "Error removing the widget from the page '" + pageCode + "' in the frame " + pos;
             _logger.error("Error removing the widget from the page '{}' in the frame {}", pageCode, pos, t);
@@ -378,11 +374,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     /**
-     * @param pageCode
-     * @param widget
-     * @param pos
      * @throws ApsSystemException In case of error.
-     * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
+     * @deprecated Use {@link #joinWidget(String, Widget, int)} instead
      */
     @Override
     public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException {
@@ -390,9 +383,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     /**
-     * Set the widget -including its configuration- in the given page in the
-     * desired position. If the position is already occupied by another widget
-     * this will be substituted with the new one.
+     * Set the widget -including its configuration- in the given page in the desired position. If the position is already occupied by
+     * another widget this will be substituted with the new one.
      *
      * @param pageCode the code of the page where to set the widget
      * @param widget The widget to set
@@ -414,7 +406,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 ((Page) currentPage).setChanged(!widgetEquals);
             }
             this.getCacheWrapper().updateDraftPage(currentPage);
-            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos, PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
+            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
+                    PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
         } catch (Throwable t) {
             String message = "Error during the assignation of a widget to the frame " + pos + " in the page code " + pageCode;
             _logger.error("Error during the assignation of a widget to the frame {} in the page code {}", pos, pageCode, t);
@@ -423,8 +416,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     /**
-     * Utility method which perform checks on the parameters submitted when
-     * editing the page.
+     * Utility method which perform checks on the parameters submitted when editing the page.
      *
      * @param pageCode The code of the page
      * @param pos The given position
@@ -437,7 +429,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         }
         PageModel model = currentPage.getMetadata().getModel();
         if (pos < 0 || pos >= model.getFrames().length) {
-            throw new ApsSystemException("The Position '" + pos + "' is not defined in the model '" + model.getDescription() + "' of the page '" + pageCode + "'!");
+            throw new ApsSystemException(
+                    "The Position '" + pos + "' is not defined in the model '" + model.getDescription() + "' of the page '" + pageCode
+                            + "'!");
         }
     }
 
@@ -507,8 +501,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     private void searchPages(IPage currentTarget, String pageCodeToken, List<String> allowedGroups, List<IPage> searchResult) {
-        if ((null == pageCodeToken || currentTarget.getCode().toLowerCase().contains(pageCodeToken.toLowerCase())) && (allowedGroups.contains(currentTarget.getGroup())
-                || allowedGroups.contains(Group.ADMINS_GROUP_NAME))) {
+        if ((null == pageCodeToken || currentTarget.getCode().toLowerCase().contains(pageCodeToken.toLowerCase())) && (
+                allowedGroups.contains(currentTarget.getGroup())
+                        || allowedGroups.contains(Group.ADMINS_GROUP_NAME))) {
             searchResult.add(currentTarget);
         }
         String[] childrenCodes = currentTarget.getChildrenCodes();
@@ -609,7 +604,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
     private void getPageModelUtilizers(IPage page, String pageModelCode, List<IPage> pageModelUtilizers, boolean draft) {
         PageMetadata pageMetadata = page.getMetadata();
-        boolean usingModel = pageMetadata != null && pageMetadata.getModel() != null && pageModelCode.equals(pageMetadata.getModel().getCode());
+        boolean usingModel =
+                pageMetadata != null && pageMetadata.getModel() != null && pageModelCode.equals(pageMetadata.getModel().getCode());
         if (!usingModel) {
             pageMetadata = page.getMetadata();
             usingModel = pageMetadata != null && pageMetadata.getModel() != null && pageModelCode.equals(pageMetadata.getModel().getCode());
@@ -644,17 +640,17 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error during refres pages", t);
         }
     }
-    
+
     @Override
-	public boolean movePage(IPage currentPage, IPage newParent) throws ApsSystemException {
+    public boolean movePage(IPage currentPage, IPage newParent) throws ApsSystemException {
         return this.movePage(currentPage.getCode(), newParent.getCode());
     }
 
-	@Override
-	public boolean movePage(String pageCode, String newParentCode) throws ApsSystemException {
+    @Override
+    public boolean movePage(String pageCode, String newParentCode) throws ApsSystemException {
         IPage pageToMove = this.getDraftPage(pageCode);
         IPage newParent = this.getDraftPage(newParentCode);
-		boolean resultOperation = false;
+        boolean resultOperation = false;
         if (null == pageToMove || null == newParent) {
             _logger.error("Page to move '{}' or new parent '{}' is null", pageCode, newParentCode);
             return resultOperation;

@@ -11,33 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.common.entity;
 
-import java.util.List;
+package com.agiletec.aps.system.common.entity;
 
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import java.util.List;
 
 /**
  * Basic interface for the DAO classes that perform searches on entities.
+ *
  * @author E.Santoboni
  */
 public interface IEntitySearcherDAO {
-	
-	public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters);
-	
-	public List<String> searchId(EntitySearchFilter[] filters);
-	
-	public List<String> searchId(String typeCode, EntitySearchFilter[] filters);
-	
-	/**
-	 * @deprecated As of jAPS 2.0 version 2.0.9, replaced by the constant  {@link IEntityManager}.
-	 */
-	public static final String ID_FILTER_KEY = IEntityManager.ENTITY_ID_FILTER_KEY;
-	
-	/**
-	 * @deprecated As of jAPS 2.0 version 2.0.9, replaced by contant on {@link IEntityManager}.
-	 */
-	public static final String TYPE_CODE_FILTER_KEY = IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY;
-	
+
+    /**
+     * @deprecated As of jAPS 2.0 version 2.0.9, replaced by the constant  {@link IEntityManager}.
+     */
+    String ID_FILTER_KEY = IEntityManager.ENTITY_ID_FILTER_KEY;
+    /**
+     * @deprecated As of jAPS 2.0 version 2.0.9, replaced by contant on {@link IEntityManager}.
+     */
+    String TYPE_CODE_FILTER_KEY = IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY;
+
+    List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters);
+
+    List<String> searchId(EntitySearchFilter[] filters);
+
+    List<String> searchId(String typeCode, EntitySearchFilter[] filters);
+
 }

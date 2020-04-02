@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.servlet.security;
 
 import java.io.IOException;
@@ -23,17 +24,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- *
  * @author paddeo
  */
 public class CORSFilter extends OncePerRequestFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
     public static final String ALLOWED_METHODS = "GET, POST, PUT, DELETE, OPTIONS, PATCH";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         logger.trace("Sending Header....");
         // CORS "pre-flight" request
         response.addHeader("Access-Control-Allow-Origin", "*");

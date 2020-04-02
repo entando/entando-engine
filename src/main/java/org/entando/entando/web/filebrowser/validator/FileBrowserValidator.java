@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.filebrowser.validator;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -36,15 +37,13 @@ import org.springframework.validation.Validator;
 @Component
 public class FileBrowserValidator extends AbstractPaginationValidator implements Validator {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public static final String ERRCODE_RESOURCE_DOES_NOT_EXIST = "1";
     public static final String ERRCODE_RESOURCE_ALREADY_EXIST = "2";
     public static final String ERRCODE_REQUIRED_FOLDER_TYPE = "3";
     public static final String ERRCODE_INVALID_PATH = "4";
     public static final String ERRCODE_FILENAME_MISMATCH = "5";
     public static final String ERRCODE_INVALID_FILENAME = "6";
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     @Qualifier(SystemConstants.STORAGE_MANAGER)
     private IStorageManager storageManager;
@@ -76,12 +75,14 @@ public class FileBrowserValidator extends AbstractPaginationValidator implements
             }
             if (request instanceof FileBrowserFileRequest) {
                 FileBrowserFileRequest fileRequest = (FileBrowserFileRequest) target;
-                String extractedFileName = path.substring(path.lastIndexOf("/") + 1, path.length());
+                String extractedFileName = path.substring(path.lastIndexOf("/") + 1);
                 if (!extractedFileName.equalsIgnoreCase(fileRequest.getFilename())) {
-                    errors.rejectValue("filename", ERRCODE_FILENAME_MISMATCH, new String[]{fileRequest.getFilename(), extractedFileName}, "fileBrowser.filename.body.mismatch");
+                    errors.rejectValue("filename", ERRCODE_FILENAME_MISMATCH, new String[]{fileRequest.getFilename(), extractedFileName},
+                            "fileBrowser.filename.body.mismatch");
                     throw new ValidationConflictException((BindingResult) errors);
                 } else if (!extractedFileName.contains(".")) {
-                    errors.rejectValue("filename", ERRCODE_INVALID_FILENAME, new String[]{extractedFileName}, "fileBrowser.filename.invalidFilename");
+                    errors.rejectValue("filename", ERRCODE_INVALID_FILENAME, new String[]{extractedFileName},
+                            "fileBrowser.filename.invalidFilename");
                 }
             }
         } catch (ValidationConflictException vce) {

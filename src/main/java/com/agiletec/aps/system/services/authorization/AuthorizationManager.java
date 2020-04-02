@@ -11,15 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.authorization;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+package com.agiletec.aps.system.services.authorization;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -32,6 +25,13 @@ import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -39,15 +39,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servizio di autorizzazione. Il servizio espone tutti i metodi necessari per
- * la verifica verifica delle autorizzazioni utente, qualsiasi sia la sua
- * provenienza e definizione.
+ * Servizio di autorizzazione. Il servizio espone tutti i metodi necessari per la verifica verifica delle autorizzazioni utente, qualsiasi
+ * sia la sua provenienza e definizione.
+ *
  * @author E.Santoboni
  */
 @Aspect
 public class AuthorizationManager extends AbstractService implements IAuthorizationManager, GroupUtilizer {
 
     private static final Logger _logger = LoggerFactory.getLogger(AuthorizationManager.class);
+    private IAuthorizationDAO _authorizationDAO;
+    private IRoleManager _roleManager;
+    private IGroupManager _groupManager;
 
     @Override
     public void init() throws Exception {
@@ -134,7 +137,8 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     private List getRelatedAuthorities(UserDetails user, String requiredAuthName, boolean isRole) {
-        if (null == user || null == requiredAuthName || (isRole && null == this.getRoleManager().getRole(requiredAuthName)) || (!isRole && null == this.getGroupManager().getGroup(requiredAuthName))) {
+        if (null == user || null == requiredAuthName || (isRole && null == this.getRoleManager().getRole(requiredAuthName)) || (!isRole
+                && null == this.getGroupManager().getGroup(requiredAuthName))) {
             return null;
         }
 
@@ -157,10 +161,12 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             if (null == userAuth) {
                 continue;
             }
-            if (!isRole && null != userAuth.getGroup() && (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME) || requiredAuthName.equals(userAuth.getGroup().getAuthority()))) {
+            if (!isRole && null != userAuth.getGroup() && (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME) || requiredAuthName
+                    .equals(userAuth.getGroup().getAuthority()))) {
                 authorities.add(userAuth.getRole());
             }
-            if (isRole && null != userAuth.getRole() && (adminRoleNames.contains(userAuth.getRole().getName()) || requiredAuthName.equals(userAuth.getRole().getAuthority()))) {
+            if (isRole && null != userAuth.getRole() && (adminRoleNames.contains(userAuth.getRole().getName()) || requiredAuthName
+                    .equals(userAuth.getRole().getAuthority()))) {
                 if (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME)) {
                     return this.getGroupManager().getGroups();
                 } else {
@@ -192,7 +198,8 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             return false;
         }
         String mainGroupName = entity.getMainGroup();
-        if (mainGroupName.equals(Group.FREE_GROUP_NAME) || this.checkAuth(user, mainGroupName, false) || this.checkAuth(user, Group.ADMINS_GROUP_NAME, false)) {
+        if (mainGroupName.equals(Group.FREE_GROUP_NAME) || this.checkAuth(user, mainGroupName, false) || this
+                .checkAuth(user, Group.ADMINS_GROUP_NAME, false)) {
             return true;
         }
         Set<String> groups = entity.getGroups();
@@ -255,7 +262,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
                 if (Group.ADMINS_GROUP_NAME.equals(groupName)) {
                     return this.getGroupManager().getGroups();
                 } else {
-                    if (!groups.contains((Group) auth)) {
+                    if (!groups.contains(auth)) {
                         groups.add((Group) auth);
                     }
                 }
@@ -437,7 +444,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 
     @Deprecated
     private boolean checkAuth(UserDetails user, IApsAuthority requiredAuth) {
-        if (null == requiredAuth) {
+        if (null == requiredAuth || null == user) {
             return false;
         }
         boolean isRole = (requiredAuth instanceof Role);
@@ -446,7 +453,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     private boolean checkAuth(UserDetails user, String requiredAuthName, boolean isRole) {
-        if (null == requiredAuthName) {
+        if (null == requiredAuthName || null == user) {
             return false;
         }
         List<Authorization> auths = user.getAuthorizations();
@@ -711,10 +718,10 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
     }
 
-	@Override
+    @Override
     public List<String> getGroupUtilizers(String groupName) throws ApsSystemException {
-		return this.getUsersByGroup(groupName, false);
-	}
+        return this.getUsersByGroup(groupName, false);
+    }
 
     protected IAuthorizationDAO getAuthorizationDAO() {
         return _authorizationDAO;
@@ -739,9 +746,5 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     public void setGroupManager(IGroupManager groupManager) {
         this._groupManager = groupManager;
     }
-
-    private IAuthorizationDAO _authorizationDAO;
-    private IRoleManager _roleManager;
-    private IGroupManager _groupManager;
 
 }

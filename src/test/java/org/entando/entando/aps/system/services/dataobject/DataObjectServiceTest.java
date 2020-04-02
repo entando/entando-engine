@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
+
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -21,9 +24,8 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**

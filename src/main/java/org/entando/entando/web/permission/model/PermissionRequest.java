@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.permission.model;
 
 import javax.validation.constraints.Size;
-
 import org.entando.entando.aps.system.services.role.model.PermissionDto;
 import org.hibernate.validator.constraints.NotBlank;
 

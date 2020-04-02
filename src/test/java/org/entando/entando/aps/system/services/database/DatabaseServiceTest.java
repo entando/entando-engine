@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.database;
+
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.ByteArrayInputStream;
@@ -26,7 +29,6 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class DatabaseServiceTest {
@@ -60,14 +62,16 @@ public class DatabaseServiceTest {
     @Test
     public void getValidTableDump() throws Throwable {
         ByteArrayInputStream is = new ByteArrayInputStream("dump".getBytes());
-        when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(is);
+        when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(is);
         byte[] base64 = this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
         Assert.assertNotNull(base64);
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void getInValidTableDump_1() throws Throwable {
-        when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(null);
+        when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(null);
         this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
     }
 

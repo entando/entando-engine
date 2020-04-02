@@ -11,150 +11,150 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import java.util.Properties;
-
 import javax.ws.rs.core.Response;
-
 import org.entando.entando.aps.system.common.entity.api.ApiEntityTypeInterface;
 import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.api.model.JAXBDataObjectType;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
-import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 
 /**
  * @author E.Santoboni
  */
 public class ApiDataObjectTypeInterface extends ApiEntityTypeInterface {
 
-	public JAXBDataObjectType getDataObjectType(Properties properties) throws ApiException, Throwable {
-		return (JAXBDataObjectType) super.getEntityType(properties);
-	}
+    private IDataObjectManager _dataObjectManager;
+    private IDataObjectModelManager _dataObjectModelManager;
 
-	@Override
-	protected JAXBEntityType createJAXBEntityType(IApsEntity masterEntityType) {
-		DataObject masterDataObjectType = (DataObject) masterEntityType;
-		JAXBDataObjectType jaxbDataObjectType = new JAXBDataObjectType(masterDataObjectType);
-		jaxbDataObjectType.setDefaultModelId(this.extractModelId(masterDataObjectType.getDefaultModel()));
-		jaxbDataObjectType.setListModelId(this.extractModelId(masterDataObjectType.getListModel()));
-		return jaxbDataObjectType;
-	}
+    public JAXBDataObjectType getDataObjectType(Properties properties) throws Throwable {
+        return (JAXBDataObjectType) super.getEntityType(properties);
+    }
 
-	private Integer extractModelId(String stringModelId) {
-		if (null == stringModelId) {
-			return null;
-		}
-		Integer modelId = null;
-		try {
-			modelId = Integer.parseInt(stringModelId);
-		} catch (Throwable t) {
-			//nothing to catch
-		}
-		return modelId;
-	}
+    @Override
+    protected JAXBEntityType createJAXBEntityType(IApsEntity masterEntityType) {
+        DataObject masterDataObjectType = (DataObject) masterEntityType;
+        JAXBDataObjectType jaxbDataObjectType = new JAXBDataObjectType(masterDataObjectType);
+        jaxbDataObjectType.setDefaultModelId(this.extractModelId(masterDataObjectType.getDefaultModel()));
+        jaxbDataObjectType.setListModelId(this.extractModelId(masterDataObjectType.getListModel()));
+        return jaxbDataObjectType;
+    }
 
-	public StringApiResponse addDataObjectType(JAXBDataObjectType jaxbDataObjectType) throws Throwable {
-		return super.addEntityType(jaxbDataObjectType);
-	}
+    private Integer extractModelId(String stringModelId) {
+        if (null == stringModelId) {
+            return null;
+        }
+        Integer modelId = null;
+        try {
+            modelId = Integer.parseInt(stringModelId);
+        } catch (Throwable t) {
+            //nothing to catch
+        }
+        return modelId;
+    }
 
-	@Override
-	protected void checkNewEntityType(JAXBEntityType jaxbEntityType, IApsEntity newEntityType, StringApiResponse response) throws ApiException, Throwable {
-		JAXBDataObjectType jaxbDataObjectType = (JAXBDataObjectType) jaxbEntityType;
-		DataObject dataType = (DataObject) newEntityType;
-		boolean defaultModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getDefaultModelId(), dataType, response);
-		if (defaultModelCheck) {
-			dataType.setDefaultModel(String.valueOf(jaxbDataObjectType.getDefaultModelId()));
-		}
-		boolean listModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getListModelId(), dataType, response);
-		if (listModelCheck) {
-			dataType.setListModel(String.valueOf(jaxbDataObjectType.getListModelId()));
-		}
-	}
+    public StringApiResponse addDataObjectType(JAXBDataObjectType jaxbDataObjectType) throws Throwable {
+        return super.addEntityType(jaxbDataObjectType);
+    }
 
-	public StringApiResponse updateDataObjectType(JAXBDataObjectType jaxbDataObjectType) throws Throwable {
-		return super.updateEntityType(jaxbDataObjectType);
-	}
+    @Override
+    protected void checkNewEntityType(JAXBEntityType jaxbEntityType, IApsEntity newEntityType, StringApiResponse response)
+            throws Throwable {
+        JAXBDataObjectType jaxbDataObjectType = (JAXBDataObjectType) jaxbEntityType;
+        DataObject dataType = (DataObject) newEntityType;
+        boolean defaultModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getDefaultModelId(), dataType, response);
+        if (defaultModelCheck) {
+            dataType.setDefaultModel(String.valueOf(jaxbDataObjectType.getDefaultModelId()));
+        }
+        boolean listModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getListModelId(), dataType, response);
+        if (listModelCheck) {
+            dataType.setListModel(String.valueOf(jaxbDataObjectType.getListModelId()));
+        }
+    }
 
-	@Override
-	protected void checkEntityTypeToUpdate(JAXBEntityType jaxbEntityType, IApsEntity entityTypeToUpdate, StringApiResponse response) throws ApiException, Throwable {
-		JAXBDataObjectType jaxbDataObjectType = (JAXBDataObjectType) jaxbEntityType;
-		DataObject dataType = (DataObject) entityTypeToUpdate;
-		boolean defaultModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getDefaultModelId(), dataType, response);
-		if (defaultModelCheck) {
-			dataType.setDefaultModel(String.valueOf(jaxbDataObjectType.getDefaultModelId()));
-		}
-		boolean listModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getListModelId(), dataType, response);
-		if (listModelCheck) {
-			dataType.setListModel(String.valueOf(jaxbDataObjectType.getListModelId()));
-		}
-	}
+    public StringApiResponse updateDataObjectType(JAXBDataObjectType jaxbDataObjectType) throws Throwable {
+        return super.updateEntityType(jaxbDataObjectType);
+    }
 
-	private boolean checkDataObjectModel(Integer modelId, DataObject dataObjectType, StringApiResponse response) {
-		if (null == modelId) {
-			return true;
-		}
-		DataObjectModel contentModel = this.getDataObjectModelManager().getDataObjectModel(modelId);
-		if (null == contentModel) {
-			ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
-					"DataObject model with id '" + modelId + "' does not exist", Response.Status.ACCEPTED);
-			response.addError(error);
-			return false;
-		}
-		if (!dataObjectType.getTypeCode().equals(contentModel.getDataType())) {
-			ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
-					"DataObject model with id '" + modelId + "' is for DataObjects of type '" + contentModel.getDataType() + "'", Response.Status.ACCEPTED);
-			response.addError(error);
-			return false;
-		}
-		return true;
-	}
+    @Override
+    protected void checkEntityTypeToUpdate(JAXBEntityType jaxbEntityType, IApsEntity entityTypeToUpdate, StringApiResponse response)
+            throws Throwable {
+        JAXBDataObjectType jaxbDataObjectType = (JAXBDataObjectType) jaxbEntityType;
+        DataObject dataType = (DataObject) entityTypeToUpdate;
+        boolean defaultModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getDefaultModelId(), dataType, response);
+        if (defaultModelCheck) {
+            dataType.setDefaultModel(String.valueOf(jaxbDataObjectType.getDefaultModelId()));
+        }
+        boolean listModelCheck = this.checkDataObjectModel(jaxbDataObjectType.getListModelId(), dataType, response);
+        if (listModelCheck) {
+            dataType.setListModel(String.valueOf(jaxbDataObjectType.getListModelId()));
+        }
+    }
 
-	public void deleteDataObjectType(Properties properties) throws ApiException, Throwable {
-		super.deleteEntityType(properties);
-	}
+    private boolean checkDataObjectModel(Integer modelId, DataObject dataObjectType, StringApiResponse response) {
+        if (null == modelId) {
+            return true;
+        }
+        DataObjectModel contentModel = this.getDataObjectModelManager().getDataObjectModel(modelId);
+        if (null == contentModel) {
+            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
+                    "DataObject model with id '" + modelId + "' does not exist", Response.Status.ACCEPTED);
+            response.addError(error);
+            return false;
+        }
+        if (!dataObjectType.getTypeCode().equals(contentModel.getDataType())) {
+            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
+                    "DataObject model with id '" + modelId + "' is for DataObjects of type '" + contentModel.getDataType() + "'",
+                    Response.Status.ACCEPTED);
+            response.addError(error);
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	protected String getTypeLabel() {
-		return "DataObject type";
-	}
+    public void deleteDataObjectType(Properties properties) throws Throwable {
+        super.deleteEntityType(properties);
+    }
 
-	@Override
-	protected String getTypeCodeParamName() {
-		return "code";
-	}
+    @Override
+    protected String getTypeLabel() {
+        return "DataObject type";
+    }
 
-	@Override
-	protected IEntityManager getEntityManager() {
-		return this.getDataObjectManager();
-	}
+    @Override
+    protected String getTypeCodeParamName() {
+        return "code";
+    }
 
-	public IDataObjectModelManager getDataObjectModelManager() {
-		return _dataObjectModelManager;
-	}
+    @Override
+    protected IEntityManager getEntityManager() {
+        return this.getDataObjectManager();
+    }
 
-	public void setDataObjectModelManager(IDataObjectModelManager dataObjectModelManager) {
-		this._dataObjectModelManager = dataObjectModelManager;
-	}
+    public IDataObjectModelManager getDataObjectModelManager() {
+        return _dataObjectModelManager;
+    }
 
-	public IDataObjectManager getDataObjectManager() {
-		return _dataObjectManager;
-	}
+    public void setDataObjectModelManager(IDataObjectModelManager dataObjectModelManager) {
+        this._dataObjectModelManager = dataObjectModelManager;
+    }
 
-	public void setDataObjectManager(IDataObjectManager _dataObjectManager) {
-		this._dataObjectManager = _dataObjectManager;
-	}
+    public IDataObjectManager getDataObjectManager() {
+        return _dataObjectManager;
+    }
 
-	private IDataObjectManager _dataObjectManager;
-	private IDataObjectModelManager _dataObjectModelManager;
+    public void setDataObjectManager(IDataObjectManager _dataObjectManager) {
+        this._dataObjectManager = _dataObjectManager;
+    }
 
 }

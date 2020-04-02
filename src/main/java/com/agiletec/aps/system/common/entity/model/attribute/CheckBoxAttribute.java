@@ -11,23 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 /**
- * This attribute represent an information of type CheckBox. 
- * This attribute does not support multiple languages.
+ * This attribute represent an information of type CheckBox. This attribute does not support multiple languages.
+ *
  * @author E.Santoboni
  */
 public class CheckBoxAttribute extends BooleanAttribute {
-	
-	@Override
-	protected boolean saveBooleanJDOMElement() {
-		return (null != super.getBooleanValue() && super.getBooleanValue());
-	}
 
-	@Override
-	protected boolean addSearchInfo() {
-		return (null != super.getBooleanValue() && super.getBooleanValue());
-	}
-	
+    @Override
+    protected boolean saveBooleanJDOMElement() {
+        return (null != super.getBooleanValue() && super.getBooleanValue());
+    }
+
+    @Override
+    protected boolean addSearchInfo() {
+        return (null != super.getBooleanValue() && super.getBooleanValue());
+    }
+
 }

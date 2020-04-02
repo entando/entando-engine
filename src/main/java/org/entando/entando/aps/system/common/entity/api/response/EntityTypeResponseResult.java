@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.api.response;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
@@ -22,11 +22,11 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResu
  * @author E.Santoboni
  */
 public class EntityTypeResponseResult extends AbstractApiResponseResult {
-    
+
     @Override
     @XmlElement(name = "entityType", required = false)
     public JAXBEntityType getResult() {
         return (JAXBEntityType) this.getMainResult();
     }
-    
+
 }

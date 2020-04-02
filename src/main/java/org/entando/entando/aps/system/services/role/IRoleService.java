@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.role;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,22 +24,22 @@ import org.entando.entando.web.role.model.RoleRequest;
 
 public interface IRoleService {
 
-    public String BEAN_NAME = "RoleService";
+    String BEAN_NAME = "RoleService";
 
-    public PagedMetadata<RoleDto> getRoles(RestListRequest requestList);
+    PagedMetadata<RoleDto> getRoles(RestListRequest requestList);
 
-    public RoleDto updateRole(RoleRequest roleRequest);
+    RoleDto updateRole(RoleRequest roleRequest);
 
-    public RoleDto addRole(RoleRequest roleRequest);
+    RoleDto addRole(RoleRequest roleRequest);
 
-    public void removeRole(String roleCode);
+    void removeRole(String roleCode);
 
-    public RoleDto getRole(String roleCode);
+    RoleDto getRole(String roleCode);
 
-    public RoleDto getPatchedRole(String roleCode, JsonNode jsonPatch);
+    RoleDto getPatchedRole(String roleCode, JsonNode jsonPatch);
 
-    public PagedMetadata<UserDto> getRoleReferences(String roleCode, RestListRequest requestList);
+    PagedMetadata<UserDto> getRoleReferences(String roleCode, RestListRequest requestList);
 
-    public PagedMetadata<PermissionDto> getPermissions(RestListRequest requestList);
+    PagedMetadata<PermissionDto> getPermissions(RestListRequest requestList);
 
 }

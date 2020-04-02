@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.user.model;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.services.DtoBuilder;
 
 /**
- *
  * @author paddeo
  */
 public class UserDtoBuilder extends DtoBuilder<UserDetails, UserDto> {

@@ -11,22 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.keygenerator;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Interfaccia base per i servizi gestori di sequenze univoche.
+ *
  * @author S.Didaci - E.Santoboni
  */
 public interface IKeyGeneratorManager {
 
-	/**
-	 * Restituisce la chiave univoca corrente.
-	 * @return La chiave univoca corrente.
-	 * @throws ApsSystemException In caso di errore 
-	 * nell'aggiornamento della chiave corrente.
-	 */
-	public int getUniqueKeyCurrentValue() throws ApsSystemException;
+    /**
+     * Restituisce la chiave univoca corrente.
+     *
+     * @return La chiave univoca corrente.
+     * @throws ApsSystemException In caso di errore nell'aggiornamento della chiave corrente.
+     */
+    int getUniqueKeyCurrentValue() throws ApsSystemException;
 
 }

@@ -11,54 +11,56 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage.api;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "storageResource")
-@XmlType(propOrder = {"name",  "directory", "base64", "protectedResource"})
+@XmlType(propOrder = {"name", "directory", "base64", "protectedResource"})
 public class JAXBStorageResource implements Serializable {
 
+    private String _name;
+    private boolean _protectedResource;
+    private boolean _directory;
+    private byte[] _base64;
 
-	@XmlElement(name = "name", required = false)
-	public String getName() {
-		return _name;
-	}
-	public void setName(String name) {
-		this._name = name;
-	}
+    @XmlElement(name = "name", required = false)
+    public String getName() {
+        return _name;
+    }
 
-	@XmlElement(name = "base64", required = false)
-	public byte[] getBase64() {
-		return _base64;
-	}
-	public void setBase64(byte[] base64) {
-		this._base64 = base64;
-	}
-	
+    public void setName(String name) {
+        this._name = name;
+    }
 
-	@XmlElement(name = "directory", required = false)
-	public boolean isDirectory() {
-		return _directory;
-	}
-	public void setDirectory(boolean directory) {
-		this._directory = directory;
-	}
+    @XmlElement(name = "base64", required = false)
+    public byte[] getBase64() {
+        return _base64;
+    }
 
-	@XmlElement(name = "protected", required = false)
-	public boolean isProtectedResource() {
-		return _protectedResource;
-	}
-	public void setProtectedResource(boolean protectedResource) {
-		this._protectedResource = protectedResource;
-	}
+    public void setBase64(byte[] base64) {
+        this._base64 = base64;
+    }
 
-	private String _name;
-	private boolean _protectedResource;
-	private boolean _directory;
-	private byte[] _base64;
+    @XmlElement(name = "directory", required = false)
+    public boolean isDirectory() {
+        return _directory;
+    }
+
+    public void setDirectory(boolean directory) {
+        this._directory = directory;
+    }
+
+    @XmlElement(name = "protected", required = false)
+    public boolean isProtectedResource() {
+        return _protectedResource;
+    }
+
+    public void setProtectedResource(boolean protectedResource) {
+        this._protectedResource = protectedResource;
+    }
 }

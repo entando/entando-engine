@@ -11,12 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.common.notify.INotifyManager;
+import java.util.ArrayList;
+import java.util.List;
 import org.entando.entando.aps.system.services.dataobjectmodel.cache.IDataObjectModelCacheWrapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +28,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
 public class DataObjectModelManagerTest {
 

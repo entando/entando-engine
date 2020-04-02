@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -23,9 +24,21 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DataObjectRelation.TABLE_NAME)
 public class DataObjectRelation /*implements ExtendedColumnDefinition*/ {
 
-    public DataObjectRelation() {
+    /*
+  @Override
+  public String[] extensions(IDatabaseManager.DatabaseType type) {
+    String tableName = TABLE_NAME;
+    String groupTableName = Group.TABLE_NAME;
+    if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
+      tableName = "`" + TABLE_NAME + "`";
+      groupTableName = "`" + groupTableName + "`";
     }
-
+    return new String[]{"ALTER TABLE " + tableName + " "
+      + "ADD CONSTRAINT " + TABLE_NAME + "_refgroup_fkey FOREIGN KEY (refgroup) "
+      + "REFERENCES " + groupTableName + " (groupname)"};
+  }
+     */
+    public static final String TABLE_NAME = "dataobjectrelations";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -46,20 +59,8 @@ public class DataObjectRelation /*implements ExtendedColumnDefinition*/ {
             dataType = DataType.STRING,
             width = 20, index = true)
     private String _group;
-    /*
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		String tableName = TABLE_NAME;
-		String groupTableName = Group.TABLE_NAME;
-		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + TABLE_NAME + "`";
-			groupTableName = "`" + groupTableName + "`";
-		}
-		return new String[]{"ALTER TABLE " + tableName + " "
-			+ "ADD CONSTRAINT " + TABLE_NAME + "_refgroup_fkey FOREIGN KEY (refgroup) "
-			+ "REFERENCES " + groupTableName + " (groupname)"};
-	}
-     */
-    public static final String TABLE_NAME = "dataobjectrelations";
+
+    public DataObjectRelation() {
+    }
 
 }

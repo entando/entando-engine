@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -24,46 +25,46 @@ import java.util.List;
  */
 public interface IPageManagerCacheWrapper {
 
-    public static final String PAGE_MANAGER_CACHE_NAME = "Entando_PageManager";
-    public static final String ONLINE_PAGE_CACHE_NAME_PREFIX = "PageManager_onLine_";
-    public static final String DRAFT_PAGE_CACHE_NAME_PREFIX = "PageManager_draft_";
-    public static final String ONLINE_ROOT_CACHE_NAME = "PageManager_onLineRoot";
-    public static final String DRAFT_ROOT_CACHE_NAME = "PageManager_draftRoot";
-    public static final String PAGE_STATUS_CACHE_NAME = "PageManager_pagesStatus";
-    public static final String DRAFT_PAGE_CODES_CACHE_NAME = "PageManager_draftCodes";
-    public static final String ONLINE_PAGE_CODES_CACHE_NAME = "PageManager_onlineCodes";
+    String PAGE_MANAGER_CACHE_NAME = "Entando_PageManager";
+    String ONLINE_PAGE_CACHE_NAME_PREFIX = "PageManager_onLine_";
+    String DRAFT_PAGE_CACHE_NAME_PREFIX = "PageManager_draft_";
+    String ONLINE_ROOT_CACHE_NAME = "PageManager_onLineRoot";
+    String DRAFT_ROOT_CACHE_NAME = "PageManager_draftRoot";
+    String PAGE_STATUS_CACHE_NAME = "PageManager_pagesStatus";
+    String DRAFT_PAGE_CODES_CACHE_NAME = "PageManager_draftCodes";
+    String ONLINE_PAGE_CODES_CACHE_NAME = "PageManager_onlineCodes";
 
-    public static final String ONLINE_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_onlineUtilizer_";
-    public static final String DRAFT_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_draftUtilizer_";
+    String ONLINE_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_onlineUtilizer_";
+    String DRAFT_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_draftUtilizer_";
 
-    public void initCache(IPageDAO pageDao) throws ApsSystemException;
+    void initCache(IPageDAO pageDao) throws ApsSystemException;
 
-    public PagesStatus getPagesStatus();
+    PagesStatus getPagesStatus();
 
-    public IPage getOnlinePage(String pageCode);
+    IPage getOnlinePage(String pageCode);
 
-    public IPage getDraftPage(String pageCode);
+    IPage getDraftPage(String pageCode);
 
-    public IPage getOnlineRoot();
+    IPage getOnlineRoot();
 
-    public IPage getDraftRoot();
-    
-    public List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
+    IPage getDraftRoot();
 
-    public List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
-    
-    public void deleteDraftPage(String pageCode);
-    
-    public void addDraftPage(IPage page);
-    
-    public void updateDraftPage(IPage page);
-    
-    public void moveUpDown(String pageDown, String pageUp);
-    
-    public void setPageOnline(String pageCode);
-    
-    public void setPageOffline(String pageCode);
-    
-    public void movePage(String pageCode, String newParentCode);
-    
+    List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
+
+    List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
+
+    void deleteDraftPage(String pageCode);
+
+    void addDraftPage(IPage page);
+
+    void updateDraftPage(IPage page);
+
+    void moveUpDown(String pageDown, String pageUp);
+
+    void setPageOnline(String pageCode);
+
+    void setPageOffline(String pageCode);
+
+    void movePage(String pageCode, String newParentCode);
+
 }

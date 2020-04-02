@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.model;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;

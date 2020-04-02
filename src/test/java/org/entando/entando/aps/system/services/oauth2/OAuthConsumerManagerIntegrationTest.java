@@ -11,15 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.oauth2;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.util.DateConverter;
 import java.util.Date;
+import java.util.List;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;

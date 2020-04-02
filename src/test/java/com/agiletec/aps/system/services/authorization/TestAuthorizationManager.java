@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
 
 import com.agiletec.aps.BaseTestCase;
@@ -23,7 +24,6 @@ import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +58,8 @@ public class TestAuthorizationManager extends BaseTestCase {
     public void testIsAuthOnGroupAndPermission_2() throws Throwable {
         String username = "mainEditor";
         UserDetails user = this.authenticationProvider.getUser(username);
-        boolean isAuth = this.authorizationManager.isAuthOnGroupAndPermission(user, Group.FREE_GROUP_NAME, Permission.CONTENT_EDITOR, false);
+        boolean isAuth = this.authorizationManager
+                .isAuthOnGroupAndPermission(user, Group.FREE_GROUP_NAME, Permission.CONTENT_EDITOR, false);
         assertFalse(isAuth);
         isAuth = this.authorizationManager.isAuthOnGroupAndPermission(user, Group.FREE_GROUP_NAME, Permission.CONTENT_EDITOR, true);
         assertTrue(isAuth);
@@ -155,7 +156,8 @@ public class TestAuthorizationManager extends BaseTestCase {
     }
 
     public void testCheckAdminUser() throws Throwable {
-        UserDetails adminUser = this.authenticationProvider.getUser("admin", "admin");//nel database di test, username e password sono uguali
+        UserDetails adminUser = this.authenticationProvider
+                .getUser("admin", "admin");//nel database di test, username e password sono uguali
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
         assertEquals(1, adminUser.getAuthorizations().size());

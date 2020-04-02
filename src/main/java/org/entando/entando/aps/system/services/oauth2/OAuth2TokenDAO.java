@@ -11,14 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -27,6 +30,8 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
@@ -42,7 +47,8 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
 
     private static final String ERROR_REMOVE_ACCESS_TOKEN = "Error while remove access token";
 
-    private static final String INSERT_TOKEN = "INSERT INTO api_oauth_tokens (accesstoken, clientid, expiresin, refreshtoken, granttype, localuser)  VALUES (? , ? , ? , ? , ?, ?)";
+    private static final String INSERT_TOKEN = "INSERT INTO api_oauth_tokens (accesstoken, clientid, expiresin, refreshtoken, granttype, "
+            + "localuser)  VALUES (? , ? , ? , ? , ?, ?)";
 
     private static final String DELETE_EXPIRED_TOKENS = "DELETE FROM api_oauth_tokens WHERE expiresin < ?";
 
@@ -143,7 +149,7 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
     public List<OAuth2AccessToken> findTokensByUserName(String username) {
         return this.findTokensByClientIdAndUserName(null, username);
     }
-    
+
     @Override
     public List<OAuth2AccessToken> findTokensByClientId(String clientId) {
         return this.findTokensByClientIdAndUserName(clientId, null);
@@ -218,12 +224,12 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
     public void removeAccessToken(final String accessToken) {
         super.executeQueryWithoutResultset(DELETE_TOKEN, accessToken);
     }
-    
+
     @Override
     public void removeAccessTokenUsingRefreshToken(String refreshToken) {
         super.executeQueryWithoutResultset(DELETE_TOKEN_BY_REFRESH, refreshToken);
     }
-    
+
     @Override
     public void deleteExpiredToken(int expirationTime) {
         Connection conn = null;
@@ -245,7 +251,7 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
             closeDaoResources(null, stat, conn);
         }
     }
-    
+
     @Override
     public OAuth2RefreshToken readRefreshToken(String tokenValue) {
         FieldSearchFilter filter = new FieldSearchFilter("refreshtoken", tokenValue, true);
@@ -256,7 +262,7 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
         }
         return null;
     }
-    
+
     @Override
     public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken refreshToken) {
         OAuth2Authentication authentication = null;
@@ -285,5 +291,5 @@ public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenD
         }
         return authentication;
     }
-    
+
 }

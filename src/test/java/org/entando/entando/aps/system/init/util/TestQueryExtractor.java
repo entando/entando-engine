@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.util;
 
 import com.agiletec.aps.BaseTestCase;
@@ -22,22 +23,22 @@ import java.io.InputStream;
  */
 public class TestQueryExtractor extends BaseTestCase {
 
-	public void testReadQueries() {
-		try {
-			InputStream is = this.getClass().getResourceAsStream("guifragment.sql");
-			String script = FileTextReader.getText(is);
-			assertNotNull(script);
-			String[] queries = QueryExtractor.extractInsertQueries(script);
-			assertNotNull(queries);
-			assertEquals(56, queries.length);
-			for (int i = 0; i < queries.length; i++) {
-				String query = queries[i];
-				assertTrue(query.startsWith("INSERT INTO guifragment (code, "));
-				assertTrue(query.endsWith("', 1)") || query.endsWith("', 0)"));
-			}
-		} catch (Throwable e) {
-			fail();
-		}
-	}
+    public void testReadQueries() {
+        try {
+            InputStream is = this.getClass().getResourceAsStream("guifragment.sql");
+            String script = FileTextReader.getText(is);
+            assertNotNull(script);
+            String[] queries = QueryExtractor.extractInsertQueries(script);
+            assertNotNull(queries);
+            assertEquals(56, queries.length);
+            for (int i = 0; i < queries.length; i++) {
+                String query = queries[i];
+                assertTrue(query.startsWith("INSERT INTO guifragment (code, "));
+                assertTrue(query.endsWith("', 1)") || query.endsWith("', 0)"));
+            }
+        } catch (Throwable e) {
+            fail();
+        }
+    }
 
 }

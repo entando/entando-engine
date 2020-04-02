@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api.response;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
@@ -25,15 +25,15 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResu
 @XmlRootElement(name = "response")
 public class DataObjectTypeResponse extends AbstractApiResponse {
 
-	@Override
-	@XmlElement(name = "result", required = true)
-	public DataObjectTypeResponseResult getResult() {
-		return (DataObjectTypeResponseResult) super.getResult();
-	}
+    @Override
+    @XmlElement(name = "result", required = true)
+    public DataObjectTypeResponseResult getResult() {
+        return (DataObjectTypeResponseResult) super.getResult();
+    }
 
-	@Override
-	protected AbstractApiResponseResult createResponseResultInstance() {
-		return new DataObjectTypeResponseResult();
-	}
+    @Override
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        return new DataObjectTypeResponseResult();
+    }
 
 }

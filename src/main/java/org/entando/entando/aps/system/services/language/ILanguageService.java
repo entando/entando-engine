@@ -7,11 +7,11 @@ public interface ILanguageService {
 
     String BEAN_NAME = "LanguageService";
 
-    public PagedMetadata<LanguageDto> getLanguages(RestListRequest requestList);
+    PagedMetadata<LanguageDto> getLanguages(RestListRequest requestList);
 
-    public LanguageDto getLanguage(String code);
+    LanguageDto getLanguage(String code);
 
-    public LanguageDto updateLanguage(String code, boolean active);
+    LanguageDto updateLanguage(String code, boolean active);
 
 }
 

@@ -11,23 +11,25 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-
 import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author E.Santoboni
  */
 public class TestJaxbPageModel extends BaseTestCase {
+
+    private IPageModelManager _pageModelManager = null;
+    private IWidgetTypeManager _widgetTypeManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -106,8 +108,5 @@ public class TestJaxbPageModel extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IPageModelManager _pageModelManager = null;
-    private IWidgetTypeManager _widgetTypeManager;
 
 }

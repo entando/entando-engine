@@ -11,29 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
-import java.util.List;
-
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import java.util.List;
 
 /**
  * @author E.Santoboni
  */
 public interface IGuiFragmentDAO {
 
-	public List<String> searchGuiFragments(FieldSearchFilter[] filters);
+    List<String> searchGuiFragments(FieldSearchFilter[] filters);
 
-	public int countGuiFragments(FieldSearchFilter[] filters);
+    int countGuiFragments(FieldSearchFilter[] filters);
 
-	public GuiFragment loadGuiFragment(String code);
+    GuiFragment loadGuiFragment(String code);
 
-	public void removeGuiFragment(String code);
+    void removeGuiFragment(String code);
 
-	public void updateGuiFragment(GuiFragment guiFragment);
+    void updateGuiFragment(GuiFragment guiFragment);
 
-	public void insertGuiFragment(GuiFragment guiFragment);
+    void insertGuiFragment(GuiFragment guiFragment);
 
-	public List<String> loadGuiFragmentPluginCodes();
+    List<String> loadGuiFragmentPluginCodes();
 
 }

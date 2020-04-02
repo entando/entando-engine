@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -19,19 +20,23 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author paddeo
  */
 public class PageDto {
 
     private static final String DEFAULT_CHARSET = "utf8";
-    private static final String DEFAULT_CONTENT_TYPE= "text/html";
+    private static final String DEFAULT_CONTENT_TYPE = "text/html";
     private String code;
     private String status;
     private boolean displayedInMenu;
@@ -69,16 +74,15 @@ public class PageDto {
         this.setDisplayedInMenu(page.isShowable());
         this.setPageModel(page.getModel().getCode());
 
-        if(page.getCharset() != null) {
+        if (page.getCharset() != null) {
             this.setCharset(page.getCharset());
-        }else {
+        } else {
             this.setCharset(DEFAULT_CHARSET);
         }
 
-        if(page.getMimeType() != null) {
+        if (page.getMimeType() != null) {
             this.setContentType(page.getMimeType());
-        }
-        else{
+        } else {
             this.setContentType(DEFAULT_CONTENT_TYPE);
         }
 
@@ -86,16 +90,16 @@ public class PageDto {
         this.setSeo(page.isUseExtraTitles());
         Optional<ApsProperties> apsTitles = Optional.ofNullable(page.getTitles());
         apsTitles.ifPresent(values -> values.keySet().forEach(lang
-                -> {
-            this.getTitles().put((String) lang, (String) values.get(lang));
-            this.getFullTitles().put((String) lang, (String) page.getFullTitle((String) lang, pageManager));
-        }
+                        -> {
+                    this.getTitles().put((String) lang, (String) values.get(lang));
+                    this.getFullTitles().put((String) lang, page.getFullTitle((String) lang, pageManager));
+                }
         ));
         this.setOwnerGroup(page.getGroup());
         Optional<Set<String>> groups = Optional.ofNullable(page.getExtraGroups());
         groups.ifPresent(values -> values.forEach((group) -> this.joinGroups.add(group)));
-        Optional.ofNullable(page.getChildrenCodes()).
-                ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
+        Optional.ofNullable(page.getChildrenCodes())
+                .ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
         this.setPosition(page.getPosition());
         Optional.ofNullable(page.getWidgets()).ifPresent(widgets -> this.setNumWidget(Arrays.asList(widgets).stream()
                 .filter(widget -> widget != null)
@@ -106,6 +110,17 @@ public class PageDto {
             this.setLastModified(sdf.format(page.getMetadata().getUpdatedAt()));
         }
         this.setFullPath(page.getPath(pageManager));
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "code":
+                return "code";
+            case "name":
+                return "descr";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getCode() {
@@ -258,17 +273,6 @@ public class PageDto {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "code":
-                return "code";
-            case "name":
-                return "descr";
-            default:
-                return dtoFieldName;
-        }
     }
 
     public Map<String, Boolean> getReferences() {

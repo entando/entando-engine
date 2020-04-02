@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.common.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+package org.entando.entando.web.common.model;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -129,7 +129,8 @@ public class RestListRequest {
     public List<EntitySearchFilter> buildEntitySearchFilters() {
         List<EntitySearchFilter> fieldSearchFilters = new ArrayList<>();
         if (null != filters && filters.length > 0) {
-            Arrays.stream(filters).filter(filter -> filter.getEntityAttr() != null).forEach(i -> fieldSearchFilters.add(i.getEntitySearchFilter()));
+            Arrays.stream(filters).filter(filter -> filter.getEntityAttr() != null)
+                    .forEach(i -> fieldSearchFilters.add(i.getEntitySearchFilter()));
         }
         return fieldSearchFilters;
     }
@@ -167,7 +168,8 @@ public class RestListRequest {
         if (StringUtils.isNotBlank(StringEscapeUtils.escapeSql(this.getSort()))) {
             FieldSearchFilter sort = new FieldSearchFilter(this.getSort());
             if (StringUtils.isNotBlank(this.getDirection())) {
-                if (!this.getDirection().equalsIgnoreCase(FieldSearchFilter.ASC_ORDER) && !this.getDirection().equalsIgnoreCase(FieldSearchFilter.DESC_ORDER)) {
+                if (!this.getDirection().equalsIgnoreCase(FieldSearchFilter.ASC_ORDER) && !this.getDirection()
+                        .equalsIgnoreCase(FieldSearchFilter.DESC_ORDER)) {
                     this.setDirection(DIRECTION_VALUE_DEFAULT);
                 }
                 sort.setOrder(FieldSearchFilter.Order.valueOf(StringEscapeUtils.escapeSql(this.getDirection())));
@@ -234,17 +236,15 @@ public class RestListRequest {
             return false;
         }
         if (sort == null) {
-            if (other.sort != null) {
-                return false;
-            }
-        } else if (!sort.equals(other.sort)) {
-            return false;
+            return other.sort == null;
+        } else {
+            return sort.equals(other.sort);
         }
-        return true;
     }
 
     @Override
     public String toString() {
-        return "RestListRequest{" + "sort=" + sort + ", direction=" + direction + ", page=" + page + ", pageSize=" + pageSize + ", filter=" + Arrays.toString(filters) + '}';
+        return "RestListRequest{" + "sort=" + sort + ", direction=" + direction + ", page=" + page + ", pageSize=" + pageSize + ", filter="
+                + Arrays.toString(filters) + '}';
     }
 }

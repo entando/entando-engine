@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
@@ -20,23 +21,23 @@ import java.util.List;
  * @author E.Santoboni - S.Puddu - S.Loru
  */
 public interface IActionLogRecordSearchBean {
-	
-	public Date getStartCreation();
-	
-	public Date getEndCreation();
-	
-	public Date getStartUpdate();
-	
-	public Date getEndUpdate();
-	
-	public String getUsername();
-	
-	public String getNamespace();
-	
-	public String getActionName();
-	
-	public String getParams();
-	
-	public List<String> getUserGroupCodes();
-	
+
+    Date getStartCreation();
+
+    Date getEndCreation();
+
+    Date getStartUpdate();
+
+    Date getEndUpdate();
+
+    String getUsername();
+
+    String getNamespace();
+
+    String getActionName();
+
+    String getParams();
+
+    List<String> getUserGroupCodes();
+
 }

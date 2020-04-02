@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -18,13 +19,12 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;

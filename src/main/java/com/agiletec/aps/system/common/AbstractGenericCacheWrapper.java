@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 import java.util.ArrayList;
@@ -22,14 +23,10 @@ import org.entando.entando.aps.system.exception.CacheItemNotFoundException;
 import org.springframework.cache.Cache;
 
 /**
- * @author E.Santoboni
  * @param <O> The object to manage
+ * @author E.Santoboni
  */
 public abstract class AbstractGenericCacheWrapper<O extends Object> extends AbstractCacheWrapper {
-
-    protected static enum Action {
-        ADD, UPDATE, DELETE
-    }
 
     protected void releaseCachedObjects(Cache cache) {
         List<String> codes = (List<String>) this.get(cache, this.getCodesCacheKey(), List.class);
@@ -125,5 +122,9 @@ public abstract class AbstractGenericCacheWrapper<O extends Object> extends Abst
     protected abstract String getCodesCacheKey();
 
     protected abstract String getCacheKeyPrefix();
+
+    protected enum Action {
+        ADD, UPDATE, DELETE
+    }
 
 }

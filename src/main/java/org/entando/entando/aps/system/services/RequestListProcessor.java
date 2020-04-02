@@ -1,16 +1,17 @@
 /*
  * Copyright 2018-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -24,11 +25,9 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.RestListRequest;
 
 /**
- * Base class used for defining filtering and sorting at service layer. This is
- * useful when entities have already been retrieved from the database and are
- * inside a cache or when the DAO layer is missing (e.g. the data is retrieved
- * from a web service and not from a database). The other filters are usually
- * managed at DAO layer.
+ * Base class used for defining filtering and sorting at service layer. This is useful when entities have already been retrieved from the
+ * database and are inside a cache or when the DAO layer is missing (e.g. the data is retrieved from a web service and not from a database).
+ * The other filters are usually managed at DAO layer.
  */
 public abstract class RequestListProcessor<T> {
 

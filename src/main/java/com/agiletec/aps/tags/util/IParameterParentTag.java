@@ -11,21 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags.util;
 
 import com.agiletec.aps.tags.ParameterTag;
 
 /**
  * Interface for custom tags that use the sub-tag ParameterTag.
+ *
  * @author E.Santoboni
  */
 public interface IParameterParentTag {
-	
-	/**
-	 * Add a parameter. This Method in invoked by sub-tags {@link ParameterTag}.
-	 * @param name The name of the parameter.
-	 * @param value The value of the parameter.
-	 */
-	public void addParameter(String name, String value);
-	
+
+    /**
+     * Add a parameter. This Method in invoked by sub-tags {@link ParameterTag}.
+     *
+     * @param name The name of the parameter.
+     * @param value The value of the parameter.
+     */
+    void addParameter(String name, String value);
+
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -32,19 +33,18 @@ public interface IDataAuthorizationHelper {
      * @return True if the given user can view the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuth(UserDetails user, DataObject content) throws ApsSystemException;
+    boolean isAuth(UserDetails user, DataObject content) throws ApsSystemException;
 
     /**
      * Return true if the given user can view the given content.
      *
      * @param user The user
      * @param dataId The content id.
-     * @param publicVersion true if the control should be carried out in the
-     * public version
+     * @param publicVersion true if the control should be carried out in the public version
      * @return True if the given user can view the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuth(UserDetails user, String dataId, boolean publicVersion) throws ApsSystemException;
+    boolean isAuth(UserDetails user, String dataId, boolean publicVersion) throws ApsSystemException;
 
     /**
      * Return true if the given user can view the given content.
@@ -54,7 +54,7 @@ public interface IDataAuthorizationHelper {
      * @return True if the given user can view the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuth(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException;
+    boolean isAuth(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException;
 
     /**
      * Return true if the given user can edit the given content.
@@ -64,19 +64,18 @@ public interface IDataAuthorizationHelper {
      * @return True if the given user can edit the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuthToEdit(UserDetails user, DataObject content) throws ApsSystemException;
+    boolean isAuthToEdit(UserDetails user, DataObject content) throws ApsSystemException;
 
     /**
      * Return true if the given user can edit the given content.
      *
      * @param user The user
      * @param dataId The content id.
-     * @param publicVersion true if the control should be carried out in the
-     * public version
+     * @param publicVersion true if the control should be carried out in the public version
      * @return True if the given user can edit the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuthToEdit(UserDetails user, String dataId, boolean publicVersion) throws ApsSystemException;
+    boolean isAuthToEdit(UserDetails user, String dataId, boolean publicVersion) throws ApsSystemException;
 
     /**
      * Return true if the given user can edit the given content.
@@ -86,7 +85,7 @@ public interface IDataAuthorizationHelper {
      * @return True if the given user can edit the content.
      * @throws ApsSystemException In case of error
      */
-    public boolean isAuthToEdit(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException;
+    boolean isAuthToEdit(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException;
 
     /**
      * Return the object that contains the authorization info of the content.
@@ -94,8 +93,8 @@ public interface IDataAuthorizationHelper {
      * @param dataId The content that extract the info.
      * @return The authorization info.
      */
-    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataId);
+    PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataId);
 
-    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataId, boolean cacheable);
+    PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataId, boolean cacheable);
 
 }

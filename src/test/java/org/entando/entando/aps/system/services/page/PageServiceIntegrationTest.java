@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page;
 
 import com.agiletec.aps.BaseTestCase;
@@ -28,7 +29,6 @@ import org.entando.entando.web.page.model.PageStatusRequest;
 import org.junit.Test;
 
 /**
- *
  * @author paddeo
  */
 public class PageServiceIntegrationTest extends BaseTestCase {
@@ -50,7 +50,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             throw e;
         }
     }
-    
+
     @Test
     public void testGetPage() {
         PageDto page = pageService.getPage("pagina_1", IPageService.STATUS_ONLINE);
@@ -91,7 +91,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             assertNull(addedPage);
         }
     }
-    
+
     @Test
     public void testUpdatePage() {
         String newCode = "pagina_13";
@@ -111,7 +111,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             parentPage = pageService.getPage(addedPage.getParentCode(), "draft");
             assertEquals(3, parentPage.getChildren().size());
             assertEquals(newCode, parentPage.getChildren().get(2));
-            
+
             IPage newDraftPage = this.pageManager.getDraftPage(newCode);
             assertEquals(3, newDraftPage.getPosition());
 
@@ -122,7 +122,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             assertEquals(2, modPage.getTitles().size());
             assertEquals("Pagina 1-3 mod", modPage.getTitles().get("it"));
             assertEquals(3, modPage.getPosition());
-            
+
             newDraftPage = this.pageManager.getDraftPage(newCode);
             assertEquals(3, newDraftPage.getPosition());
 
@@ -148,7 +148,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             assertNull(pageManager.getDraftPage(newCode));
         }
     }
-    
+
     @Test
     public void testUpdatePageStatus() {
         String newPageCode = "pagina_13";
@@ -180,7 +180,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             pageService.removePage(newPageCode);
         }
     }
-    
+
     @Test
     public void testChangeOnlyPosition() {
         String newPageCode = "pagina_13";
@@ -208,7 +208,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
             pageService.removePage(newPageCode);
         }
     }
-    
+
     @Test
     public void testChangeNode() {
         String newPageCode = "pagina_13";

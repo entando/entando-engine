@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model;
 
 import org.entando.entando.aps.system.init.IDatabaseManager;
@@ -19,7 +20,7 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
  * @author E.Santoboni
  */
 public interface ExtendedColumnDefinition {
-	
-	public String[] extensions(IDatabaseManager.DatabaseType type);
-	
+
+    String[] extensions(IDatabaseManager.DatabaseType type);
+
 }

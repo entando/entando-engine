@@ -11,12 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
 public interface PublicDataChangedObserver extends ObserverService {
 
-	public void updateFromPublicDataObjectChanged(PublicDataChangedEvent event);
+    void updateFromPublicDataObjectChanged(PublicDataChangedEvent event);
 
 }

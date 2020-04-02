@@ -11,10 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system;
 
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+package com.agiletec.aps.system;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -27,14 +25,16 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author W.Ambu
  */
 public class TestApplicationContext extends BaseTestCase {
-	
+
     public void testGetServices() {
-    	ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
+        ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
         assertNotNull(configManager);
         ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
         assertNotNull(cacheInfoManager);
@@ -61,5 +61,5 @@ public class TestApplicationContext extends BaseTestCase {
         ICategoryManager categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         assertNotNull(categoryManager);
     }
-    
+
 }

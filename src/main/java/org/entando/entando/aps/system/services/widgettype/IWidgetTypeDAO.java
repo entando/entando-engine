@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.util.ApsProperties;
-
 import java.util.Map;
 
 /**
@@ -29,18 +29,18 @@ public interface IWidgetTypeDAO {
      *
      * @return The map of the widget types
      */
-    public Map<String, WidgetType> loadWidgetTypes();
+    Map<String, WidgetType> loadWidgetTypes();
 
-    public void addWidgetType(WidgetType widgetType);
+    void addWidgetType(WidgetType widgetType);
 
     /**
      * Delete a widget type.
      *
      * @param widgetTypeCode The code of widget type to delete
      */
-    public void deleteWidgetType(String widgetTypeCode);
+    void deleteWidgetType(String widgetTypeCode);
 
-    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId);
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+            String configUi, String bundleId);
 
 }

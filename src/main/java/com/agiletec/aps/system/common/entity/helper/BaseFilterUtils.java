@@ -11,25 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.helper;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-
 /**
  * Provides base utility methods for entity filters.
+ *
  * @author E.Santoboni
  */
 public class BaseFilterUtils {
-    
+
+    public static final String DEFAULT_FILTER_PARAM_SEPARATOR = ";";
+
     /**
      * Split the filters (in form of string) into a list of properties (eatch properties is a single filter).
+     *
      * @param filtersString The filter (in form of string)
      * @return The list of properties
      */
@@ -47,7 +51,50 @@ public class BaseFilterUtils {
         }
         return properties;
     }
-    
+
+    public static String getToStringFilterParam(List<Properties> properties, String separator) {
+        StringBuilder param = new StringBuilder();
+        for (int i = 0; i < properties.size(); i++) {
+            if (i != 0) {
+                param.append("+");
+            }
+            Properties props = properties.get(i);
+            String element = createElement(props, separator);
+            param.append("(");
+            param.append(element);
+            param.append(")");
+        }
+        return param.toString();
+    }
+
+    private static String createElement(Properties props, String separator) {
+        StringBuilder param = new StringBuilder();
+        Iterator<Object> keys = props.keySet().iterator();
+        boolean init = true;
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (!init) {
+                param.append(separator);
+            }
+            param.append(key).append("=").append(props.getProperty(key));
+            init = false;
+        }
+        return param.toString();
+    }
+
+    protected static Properties getProperties(String toStringFilter, String separator) {
+        Properties props = new Properties();
+        String[] params = toStringFilter.split(separator);
+        for (int i = 0; i < params.length; i++) {
+            String[] elements = params[i].split("=");
+            if (elements.length != 2) {
+                continue;
+            }
+            props.setProperty(elements[0], elements[1]);
+        }
+        return props;
+    }
+
     public EntitySearchFilter[] getFilters(IApsEntity entityPrototype, String filtersString, String langCode) {
         if (null == entityPrototype) {
             return null;
@@ -62,15 +109,15 @@ public class BaseFilterUtils {
         }
         return filters;
     }
-    
+
     public EntitySearchFilter getFilter(IApsEntity entityPrototype, IEntityFilterBean bean, String langCode) {
         Properties props = new Properties();
         props.setProperty(EntitySearchFilter.KEY_PARAM, bean.getKey());
         props.setProperty(EntitySearchFilter.FILTER_TYPE_PARAM, String.valueOf(bean.isAttributeFilter()));
         props.setProperty(EntitySearchFilter.LIKE_OPTION_PARAM, String.valueOf(bean.getLikeOption()));
-		if (null != bean.getLikeOptionType()) {
-			props.setProperty(EntitySearchFilter.LIKE_OPTION_TYPE_PARAM, String.valueOf(bean.getLikeOptionType()));
-		}
+        if (null != bean.getLikeOptionType()) {
+            props.setProperty(EntitySearchFilter.LIKE_OPTION_TYPE_PARAM, bean.getLikeOptionType());
+        }
         if (null != bean.getValue()) {
             props.setProperty(EntitySearchFilter.VALUE_PARAM, bean.getValue());
         }
@@ -87,21 +134,21 @@ public class BaseFilterUtils {
         this.attachLangFilter(entityPrototype, filter, props, langCode);
         return filter;
     }
-    
+
     private void attachLangFilter(IApsEntity entityPrototype, EntitySearchFilter filter, Properties props, String langCode) {
         String filterType = (String) props.get(EntitySearchFilter.FILTER_TYPE_PARAM);
         boolean isAttributeFilter = Boolean.parseBoolean(filterType);
         if (isAttributeFilter) {
             String attributeName = (String) props.get(EntitySearchFilter.KEY_PARAM);
-            AttributeInterface attribute = (AttributeInterface) entityPrototype.getAttribute(attributeName);
+            AttributeInterface attribute = entityPrototype.getAttribute(attributeName);
             if (attribute.isMultilingual()) {
                 filter.setLangCode(langCode);
             }
         }
     }
-    
+
     public String getFilterParam(EntitySearchFilter[] filters) {
-        StringBuilder param = new StringBuilder("");
+        StringBuilder param = new StringBuilder();
         for (int i = 0; i < filters.length; i++) {
             if (i != 0) {
                 param.append("+");
@@ -113,50 +160,5 @@ public class BaseFilterUtils {
         }
         return param.toString();
     }
-    
-    public static String getToStringFilterParam(List<Properties> properties, String separator) {
-        StringBuilder param = new StringBuilder("");
-        for (int i = 0; i < properties.size(); i++) {
-            if (i != 0) {
-                param.append("+");
-            }
-            Properties props = properties.get(i);
-            String element = createElement(props, separator);
-            param.append("(");
-            param.append(element);
-            param.append(")");
-        }
-        return param.toString();
-    }
-    
-    private static String createElement(Properties props, String separator) {
-        StringBuilder param = new StringBuilder();
-        Iterator<Object> keys = props.keySet().iterator();
-        boolean init = true;
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            if (!init) {
-                param.append(separator);
-            }
-            param.append(key).append("=").append(props.getProperty(key));
-            init = false;
-        }
-        return param.toString();
-    }
-    
-    protected static Properties getProperties(String toStringFilter, String separator) {
-        Properties props = new Properties();
-        String[] params = toStringFilter.split(separator);
-        for (int i = 0; i < params.length; i++) {
-            String[] elements = params[i].split("=");
-            if (elements.length != 2) {
-                continue;
-            }
-            props.setProperty(elements[0], elements[1]);
-        }
-        return props;
-    }
-    
-    public static final String DEFAULT_FILTER_PARAM_SEPARATOR = ";";
-    
+
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 import java.math.BigDecimal;
@@ -24,13 +25,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility Class for searching operation on db. This class presents utility
- * method for searching on db table throw Field search filter.
+ * Utility Class for searching operation on db. This class presents utility method for searching on db table throw Field search filter.
  *
  * @author E.Santoboni
  */
@@ -132,12 +131,10 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
      * Add to the statement a filter on a attribute.
      *
      * @param filter The filter on the attribute to apply in the statement.
-     * @param index The last index used to associate the elements to the
-     * statement.
+     * @param index The last index used to associate the elements to the statement.
      * @param stat The statement where the filters are applied.
      * @return The last used index.
      * @throws SQLException In case of error.
-     *
      */
     protected int addObjectSearchStatementBlock(FieldSearchFilter filter, int index, PreparedStatement stat) throws SQLException {
         if (filter.isNullOption()) {
@@ -150,7 +147,8 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
                 this.addObjectSearchStatementBlock(stat, ++index, allowedValue, filter.isLikeOption());
             }
         } else if (filter.getValue() != null) {
-            this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.getValueDateDelay(), filter.isLikeOption(), filter.getLikeOptionType());
+            this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.getValueDateDelay(), filter.isLikeOption(),
+                    filter.getLikeOptionType());
         } else {
             if (null != filter.getStart()) {
                 this.addObjectSearchStatementBlock(stat, ++index, filter.getStart(), filter.getStartDateDelay(), false);
@@ -188,11 +186,11 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
                 object = ((String) object).toUpperCase();
                 String parameter = null;
                 if (null == likeOptionType || likeOptionType.equals(FieldSearchFilter.LikeOptionType.COMPLETE)) {
-                    parameter = "%" + ((String) object) + "%";
+                    parameter = "%" + object + "%";
                 } else if (likeOptionType.equals(FieldSearchFilter.LikeOptionType.LEFT)) {
-                    parameter = "%" + ((String) object);
+                    parameter = "%" + object;
                 } else if (likeOptionType.equals(FieldSearchFilter.LikeOptionType.RIGHT)) {
-                    parameter = ((String) object) + "%";
+                    parameter = object + "%";
                 }
                 stat.setString(index, parameter);
             } else {
@@ -258,7 +256,7 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
         query.append(" FROM ").append(masterTableName).append(" ");
         return query;
     }
-    
+
     protected void appendLimitQueryBlock(FieldSearchFilter[] filters, StringBuffer query) {
         try {
             if (null == filters || filters.length == 0) {
@@ -424,5 +422,5 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
     public void setDataSourceClassName(String dataSourceClassName) {
         this.dataSourceClassName = dataSourceClassName;
     }
-    
+
 }

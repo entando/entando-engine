@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.activitystream;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
 
@@ -23,15 +23,15 @@ import org.entando.entando.aps.system.services.activitystream.model.ActivityStre
  * @author E.Santoboni - S.Puddu
  */
 public interface ISocialActivityStreamManager {
-	
-	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException;
-	
-	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException;
-	
-	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException;
-	
-	public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException;
-	
-	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
-	
+
+    void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException;
+
+    List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException;
+
+    void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException;
+
+    void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException;
+
+    List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
+
 }

@@ -1,42 +1,41 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.entando.entando.web.page.model.PageRequest;
 import java.util.Arrays;
 import java.util.HashSet;
-import org.entando.entando.aps.system.services.page.model.PageDtoBuilder;
+import org.entando.entando.aps.system.services.IDtoBuilder;
+import org.entando.entando.aps.system.services.page.model.PageDto;
+import org.entando.entando.web.page.model.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import com.agiletec.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PageServiceTest {
@@ -49,7 +48,7 @@ public class PageServiceTest {
 
     @Mock
     private IGroupManager groupManager;
-    
+
     @Mock
     private IDtoBuilder<IPage, PageDto> dtoBuilder;
 
@@ -68,7 +67,7 @@ public class PageServiceTest {
         dto.addJoinGroup("free");
         dto.addJoinGroup("admin");
         when(dtoBuilder.convert(Mockito.any(IPage.class))).thenReturn(dto);
-        
+
         PageModel pageModel = getServicePageModel();
         when(pageModelManager.getPageModel(pageModel.getCode())).thenReturn(pageModel);
 
@@ -89,7 +88,7 @@ public class PageServiceTest {
         PageDto dto = new PageDto();
         dto.addJoinGroup("free");
         when(dtoBuilder.convert(Mockito.any(IPage.class))).thenReturn(dto);
-        
+
         PageModel pageModel = getServicePageModel();
         when(pageModelManager.getPageModel(pageModel.getCode())).thenReturn(pageModel);
 

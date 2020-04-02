@@ -11,16 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
-
-import java.util.Date;
-
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.util.Date;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -28,9 +27,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DataObjectSearch.TABLE_NAME)
 public class DataObjectSearch implements ExtendedColumnDefinition {
 
-    public DataObjectSearch() {
-    }
-
+    public static final String TABLE_NAME = "dataobjectsearch";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -69,6 +66,9 @@ public class DataObjectSearch implements ExtendedColumnDefinition {
             canBeNull = true)
     private String _langCode;
 
+    public DataObjectSearch() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -78,10 +78,8 @@ public class DataObjectSearch implements ExtendedColumnDefinition {
             contentTableName = "`" + contentTableName + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT " + TABLE_NAME + "_contid_fkey FOREIGN KEY (dataid) "
-            + "REFERENCES " + contentTableName + " (dataid)"};
+                + "ADD CONSTRAINT " + TABLE_NAME + "_contid_fkey FOREIGN KEY (dataid) "
+                + "REFERENCES " + contentTableName + " (dataid)"};
     }
-
-    public static final String TABLE_NAME = "dataobjectsearch";
 
 }

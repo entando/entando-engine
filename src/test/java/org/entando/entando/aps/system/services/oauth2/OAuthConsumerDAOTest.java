@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
+
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.util.DateConverter;
@@ -29,7 +32,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 /**

@@ -11,22 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.util;
 
 import com.agiletec.aps.BaseTestCase;
 
 /**
- * @version 1.0
  * @author W.Ambu
+ * @version 1.0
  */
 public class TestHtmlHandler extends BaseTestCase {
-	
+
     public void testGetParsedText() {
         String textToParse = "<title> This is the<b>first</b></title><body><b>this is</b>the next</body>";
         HtmlHandler htmlHandler = new HtmlHandler();
         String resultText = htmlHandler.getParsedText(textToParse);
         assertEquals("  This is the first    this is the next ", resultText);
     }
-    
+
 }
 

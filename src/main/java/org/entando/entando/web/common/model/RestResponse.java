@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.model;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class RestResponse<T, M> {
     public void addErrors(List<RestError> errors) {
         this.errors.addAll(errors);
     }
-    
+
     public void addError(RestError error) {
         this.errors.add(error);
     }

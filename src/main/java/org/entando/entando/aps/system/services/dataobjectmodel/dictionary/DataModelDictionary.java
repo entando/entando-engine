@@ -1,5 +1,9 @@
 package org.entando.entando.aps.system.services.dataobjectmodel.dictionary;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -10,22 +14,26 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataModelDictionary implements IEntityModelDictionary {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private static final String KEY_ROOT = "$data";
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+
+    public DataModelDictionary(List<String> contentConfig, List<String> i18nConfig, List<String> infoConfig, List<String> commonConfig,
+            Properties publicAttributeMethods, IApsEntity prototype) {
+        this.putAsMap(getEntityRootName(), contentConfig);
+        if (null != prototype) {
+            this.addAttributes(prototype, publicAttributeMethods);
+        }
+        this.putAsMap(KEY_I18N, i18nConfig);
+        this.putAsMap(KEY_INFO, infoConfig);
+        this.putAsList(commonConfig);
+    }
 
     @JsonValue
     public LinkedHashMap<String, Object> getData() {
@@ -39,16 +47,6 @@ public class DataModelDictionary implements IEntityModelDictionary {
     @Override
     public String getEntityRootName() {
         return KEY_ROOT;
-    }
-
-    public DataModelDictionary(List<String> contentConfig, List<String> i18nConfig, List<String> infoConfig, List<String> commonConfig, Properties publicAttributeMethods, IApsEntity prototype) {
-        this.putAsMap(getEntityRootName(), contentConfig);
-        if (null != prototype) {
-            this.addAttributes(prototype, publicAttributeMethods);
-        }
-        this.putAsMap(KEY_I18N, i18nConfig);
-        this.putAsMap(KEY_INFO, infoConfig);
-        this.putAsList(commonConfig);
     }
 
     protected void addAttributes(IApsEntity prototype, Properties publicAttributeMethods) {
@@ -76,7 +74,8 @@ public class DataModelDictionary implements IEntityModelDictionary {
                 }
             }
         } catch (Throwable t) {
-            logger.error("error loading allowed attribute methods for typeCode {} and attribute {}", attribute.getParentEntity().getTypeCode(), attribute.getName(), t);
+            logger.error("error loading allowed attribute methods for typeCode {} and attribute {}",
+                    attribute.getParentEntity().getTypeCode(), attribute.getName(), t);
             throw new RuntimeException("error loading allowed attribute methods for dictionary", t);
         }
         return methods;
@@ -91,6 +90,5 @@ public class DataModelDictionary implements IEntityModelDictionary {
         Map<String, String> result = list.stream().collect(HashMap::new, (m, v) -> m.put(v, null), HashMap::putAll);
         this.getData().putAll(result);
     }
-
 
 }

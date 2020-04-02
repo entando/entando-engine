@@ -11,17 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.tree;
 
-import java.io.Serializable;
-
 import com.agiletec.aps.util.ApsProperties;
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A node of a tree. The node is the basic information a tree and contains all the minimum information necessary for its
- * definition.
+ * A node of a tree. The node is the basic information a tree and contains all the minimum information necessary for its definition.
  *
  * @author E.Santoboni
  */
@@ -183,15 +182,13 @@ public class TreeNode implements ITreeNode, Serializable {
     }
 
     /**
-     * Create a full title of the code of the current page.The full title (breadcrumb) consists of the set of page
-     * titles (from the characters ".." if shortTitle = true) starting from the root up to the current page, and it is
-     * created by moving backwards in the page structure starting from the node current.
+     * Create a full title of the code of the current page.The full title (breadcrumb) consists of the set of page titles (from the
+     * characters ".." if shortTitle = true) starting from the root up to the current page, and it is created by moving backwards in the
+     * page structure starting from the node current.
      *
      * @param langCode The language code to extract the title of each node
      * @param separator The separator between the nodes
-     * @param shortTitle defines whether to return the full title in the form "short" (each title of the relative
-     * replaced with "..")
-     * @param treeNodeManager
+     * @param shortTitle defines whether to return the full title in the form "short" (each title of the relative replaced with "..")
      * @return The required full title.
      */
     protected String getFullTitle(String langCode, String separator, boolean shortTitle, ITreeNodeManager treeNodeManager) {
@@ -221,8 +218,8 @@ public class TreeNode implements ITreeNode, Serializable {
     }
 
     /**
-     * Returns the path of the single node. The path is composed by node codes (separated by "/") starting from the root
-     * up to the current node
+     * Returns the path of the single node. The path is composed by node codes (separated by "/") starting from the root up to the current
+     * node
      *
      * @return the path of the single node.
      */
@@ -232,8 +229,8 @@ public class TreeNode implements ITreeNode, Serializable {
     }
 
     /**
-     * Returns the path of the single node. The path is composed by node codes (separated by the given separator)
-     * starting from the root up to the current node
+     * Returns the path of the single node. The path is composed by node codes (separated by the given separator) starting from the root up
+     * to the current node
      *
      * @param separator The separator to use to divide the node codes
      * @param addRoot if true, the path starts with the code of the root node
@@ -246,10 +243,8 @@ public class TreeNode implements ITreeNode, Serializable {
     }
 
     /**
-     * Returns the path of the single node.The separator between the node will be '/' and the path contains the root
-     * node.
+     * Returns the path of the single node.The separator between the node will be '/' and the path contains the root node.
      *
-     * @param treeNodeManager
      * @return the path of the single node.
      */
     @Override
@@ -258,11 +253,9 @@ public class TreeNode implements ITreeNode, Serializable {
     }
 
     /**
-     * Returns the path array of the current node.The array in composed by node codes from the root up to the current
-     * node
+     * Returns the path array of the current node.The array in composed by node codes from the root up to the current node
      *
      * @param addRoot if true, the array starts with the code of the root node
-     * @param treeNodeManager
      * @return the required path array of the single node.
      */
     @Override

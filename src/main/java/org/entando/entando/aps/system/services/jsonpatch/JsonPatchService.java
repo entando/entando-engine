@@ -18,20 +18,25 @@ public class JsonPatchService<T> {
         this.validator = new JsonPatchValidator(this.converter);
     }
 
-    public JsonPatchPatchConverter getConverter() { return converter; }
+    public JsonPatchPatchConverter getConverter() {
+        return converter;
+    }
 
-    public JsonPatchValidator getValidator() { return validator; }
+    public JsonPatchValidator getValidator() {
+        return validator;
+    }
 
-    public Class<T> getReferenceClass() { return referenceClass; }
+    public Class<T> getReferenceClass() {
+        return referenceClass;
+    }
 
     public T applyPatch(JsonNode patch, T source) {
 
         this.getValidator().validatePatch(patch);
 
         Patch springPatch = this.getConverter().convert(patch);
-        return springPatch.apply(source, referenceClass );
+        return springPatch.apply(source, referenceClass);
 
     }
-
 
 }

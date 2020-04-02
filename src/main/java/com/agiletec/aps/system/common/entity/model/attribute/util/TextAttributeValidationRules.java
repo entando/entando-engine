@@ -11,16 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.jdom.CDATA;
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -30,14 +22,24 @@ import com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jdom.CDATA;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class TextAttributeValidationRules extends AbstractAttributeValidationRules {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(TextAttributeValidationRules.class);
-	
+    private static final Logger _logger = LoggerFactory.getLogger(TextAttributeValidationRules.class);
+    private Integer _maxLength;
+    private Integer _minLength;
+    private String _regexp;
+
     @Override
     public IAttributeValidationRules clone() {
         TextAttributeValidationRules clone = (TextAttributeValidationRules) super.clone();
@@ -46,7 +48,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         clone.setRegexp(this.getRegexp());
         return clone;
     }
-    
+
     @Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
@@ -73,7 +75,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         String toStringEndValue = (this.getRangeEnd() != null) ? String.valueOf(this.getRangeEnd()) : null;
         this.insertJDOMConfigElement("rangeend", this.getRangeEndAttribute(), toStringEndValue, configElement);
     }
-    
+
     @Override
     protected void extractValidationRules(Element validationElement) {
         super.extractValidationRules(validationElement);
@@ -105,19 +107,21 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
             this.setRangeEndAttribute(rangeEndElement.getAttributeValue("attribute"));
         }
     }
-    
-	@Override
+
+    @Override
     public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
         if (this.isEmpty()) {
-			return errors;
-		}
+            return errors;
+        }
         try {
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);
-                if (!attribute.isMultilingual() && !lang.isDefault()) continue;
-                AttributeTracer textTracer = (AttributeTracer) tracer.clone();
+                if (!attribute.isMultilingual() && !lang.isDefault()) {
+                    continue;
+                }
+                AttributeTracer textTracer = tracer.clone();
                 textTracer.setLang(lang);
                 this.checkTextLengths(attribute, textTracer, lang, errors);
                 this.checkRegExp(attribute, textTracer, lang, errors);
@@ -129,7 +133,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         }
         return errors;
     }
-    
+
     protected void checkTextLengths(AttributeInterface attribute, AttributeTracer tracer, Lang lang, List<AttributeFieldError> errors) {
         Integer maxLength = this.getMaxLength();
         Integer minLength = this.getMinLength();
@@ -138,7 +142,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
             if (text != null && text.trim().length() > 0) {
                 text = text.trim();
                 if ((null != maxLength && maxLength > -1) && text.length() > maxLength) {
-					AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MAX_LENGTH, tracer);
+                    AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MAX_LENGTH, tracer);
                     error.setMessage("Lang '" + lang.getDescr() + "' -  length " + text.length() + " upper than " + maxLength);
                     errors.add(error);
                 }
@@ -150,18 +154,19 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
             }
         }
     }
-    
+
     protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
         String text = ((ITextAttribute) attribute).getTextForLang(lang.getCode());
         if (text != null && attribute instanceof HypertextAttribute) {
             // remove HTML tags, entities an multiple spaces
-            text = text.replaceAll("<[^<>]+>", " ").replaceAll("&nbsp;", " ").replaceAll("\\&[^\\&;]+;", "_").replaceAll("([\t\n\r\f ])++", " ").trim();
+            text = text.replaceAll("<[^<>]+>", " ").replaceAll("&nbsp;", " ").replaceAll("\\&[^\\&;]+;", "_")
+                    .replaceAll("([\t\n\r\f ])++", " ").trim();
         }
         return text;
     }
-    
+
     protected void checkRegExp(AttributeInterface attribute, AttributeTracer tracer, Lang lang, List<AttributeFieldError> errors) {
-        String text = ((ITextAttribute)attribute).getTextForLang(lang.getCode());
+        String text = ((ITextAttribute) attribute).getTextForLang(lang.getCode());
         if (null != text && text.trim().length() > 0 && null != this.getRegexp() && this.getRegexp().trim().length() > 0) {
             Pattern pattern = Pattern.compile(this.getRegexp());
             Matcher matcher = pattern.matcher(text);
@@ -172,18 +177,19 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
             }
         }
     }
-    
-	@Override
+
+    @Override
     public boolean isEmpty() {
         return (super.isEmpty()
                 && (null == this.getMaxLength() || this.getMaxLength() < 0)
                 && (null == this.getMinLength() || this.getMinLength() < 0)
                 && (null == this.getRegexp() || this.getRegexp().trim().length() == 0));
     }
-    
+
     public Integer getMaxLength() {
         return _maxLength;
     }
+
     public void setMaxLength(Integer maxLength) {
         this._maxLength = maxLength;
     }
@@ -191,6 +197,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
     public Integer getMinLength() {
         return _minLength;
     }
+
     public void setMinLength(Integer minLength) {
         this._minLength = minLength;
     }
@@ -198,12 +205,9 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
     public String getRegexp() {
         return _regexp;
     }
+
     public void setRegexp(String regexp) {
         this._regexp = regexp;
     }
-    
-    private Integer _maxLength;
-    private Integer _minLength;
-    private String _regexp;
-    
+
 }

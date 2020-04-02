@@ -11,13 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services;
 
 /**
  * Base interface for implementing Services.
+ *
  * @author E.Santoboni
  * @deprecated use {@link com.agiletec.aps.system.common.IManager}
  */
 public interface IManager extends com.agiletec.aps.system.common.IManager {
-	
+
 }

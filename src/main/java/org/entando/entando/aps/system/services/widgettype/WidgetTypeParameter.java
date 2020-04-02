@@ -11,57 +11,63 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype;
 
 import java.io.Serializable;
 
 /**
  * Rappresenta un parametro di configurazione del widget.
+ *
  * @author E.Santoboni
  */
 public class WidgetTypeParameter implements Serializable {
-	
-	@Override
-	public WidgetTypeParameter clone() {
-		WidgetTypeParameter clone = new WidgetTypeParameter();
-		clone.setDescr(this.getDescr());
-		clone.setName(this.getName());
-		return clone;
-	}
-	
-	/**
-	 * Restituisce la descrizione del parametro.
-	 * @return La descrizione del parametro.
-	 */
-	public String getDescr() {
-		return _descr;
-	}
 
-	/**
-	 * Setta la descrizione del parametro.
-	 * @param descr La descrizione del parametro.
-	 */
-	public void setDescr(String descr) {
-		this._descr = descr;
-	}
+    private String _name;
+    private String _descr;
 
-	/**
-	 * Restituisce il nome del parametro.
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return _name;
-	}
+    @Override
+    public WidgetTypeParameter clone() {
+        WidgetTypeParameter clone = new WidgetTypeParameter();
+        clone.setDescr(this.getDescr());
+        clone.setName(this.getName());
+        return clone;
+    }
 
-	/**
-	 * Setta il nome del parametro.
-	 * @param name The name to set.
-	 */
-	public void setName(String name) {
-		this._name = name;
-	}
-	
-	private String _name;
-	private String _descr;
-	
+    /**
+     * Restituisce la descrizione del parametro.
+     *
+     * @return La descrizione del parametro.
+     */
+    public String getDescr() {
+        return _descr;
+    }
+
+    /**
+     * Setta la descrizione del parametro.
+     *
+     * @param descr La descrizione del parametro.
+     */
+    public void setDescr(String descr) {
+        this._descr = descr;
+    }
+
+    /**
+     * Restituisce il nome del parametro.
+     *
+     * @return Returns the name.
+     */
+    public String getName() {
+        return _name;
+    }
+
+    /**
+     * Setta il nome del parametro.
+     *
+     * @param name The name to set.
+     */
+    public void setName(String name) {
+        this._name = name;
+    }
+
 }

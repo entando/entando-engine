@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.label;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -18,6 +19,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -30,10 +34,6 @@ import org.entando.entando.web.label.LabelValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class LabelService implements ILabelService {
 
@@ -183,33 +183,39 @@ public class LabelService implements ILabelService {
         }
     }
 
-    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult) throws ApsSystemException {
+    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult)
+            throws ApsSystemException {
         List<String> configuredLangs = this.getLangManager().getLangs().stream().map(i -> i.getCode()).collect(Collectors.toList());
         List<String> systemLangs = this.getLangManager().getAssignableLangs().stream()
-                                       .map(i -> i.getCode()).collect(Collectors.toList());
+                .map(i -> i.getCode()).collect(Collectors.toList());
         labelDto.getTitles().entrySet().forEach(i -> validateLangEntry(i, systemLangs, configuredLangs, defaultLang, bindingResult));
     }
 
     protected boolean validateDefaultLang(LabelDto labelDto, BeanPropertyBindingResult bindingResult, String defaultLang) {
         String label = (null != labelDto && null != labelDto.getTitles()) ? labelDto.getTitles().get(defaultLang) : null;
         if (StringUtils.isEmpty(label)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_DEFAULT_LANG_REQUIRED, new String[]{defaultLang}, "labelGroup.langs.defaultLang.required");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_DEFAULT_LANG_REQUIRED, new String[]{defaultLang},
+                    "labelGroup.langs.defaultLang.required");
             return false;
         }
         return true;
     }
 
-    private void validateLangEntry(Entry<String, String> entry, List<String> systemLangs, List<String> configuredLangs, String defaultLangCode, BeanPropertyBindingResult bindingResult) {
+    private void validateLangEntry(Entry<String, String> entry, List<String> systemLangs, List<String> configuredLangs,
+            String defaultLangCode, BeanPropertyBindingResult bindingResult) {
         String currentLangCode = entry.getKey();
         if (!systemLangs.contains(currentLangCode)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_INVALID_LANG, new String[]{currentLangCode}, "labelGroup.langs.lang.invalid");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_INVALID_LANG, new String[]{currentLangCode},
+                    "labelGroup.langs.lang.invalid");
             return;
         }
         if (!configuredLangs.contains(currentLangCode)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_NOT_ACTIVE_LANG, new String[]{currentLangCode}, "labelGroup.langs.lang.notActive");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_NOT_ACTIVE_LANG, new String[]{currentLangCode},
+                    "labelGroup.langs.lang.notActive");
         }
         if (currentLangCode.equals(defaultLangCode) && StringUtils.isBlank(entry.getValue())) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_TEXT_REQUIRED, new String[]{currentLangCode}, "labelGroup.langs.defaultLang.textRequired");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_TEXT_REQUIRED, new String[]{currentLangCode},
+                    "labelGroup.langs.defaultLang.textRequired");
         }
     }
 

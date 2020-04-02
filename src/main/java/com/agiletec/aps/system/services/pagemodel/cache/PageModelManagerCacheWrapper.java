@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel.cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -28,60 +29,60 @@ import org.springframework.cache.Cache;
  */
 public class PageModelManagerCacheWrapper extends AbstractGenericCacheWrapper<PageModel> implements IPageModelManagerCacheWrapper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PageModelManagerCacheWrapper.class);
+    private static final Logger _logger = LoggerFactory.getLogger(PageModelManagerCacheWrapper.class);
 
-	@Override
-	public void initCache(IPageModelDAO pageModelDAO) throws ApsSystemException {
-		try {
-			Cache cache = this.getCache();
-			this.releaseCachedObjects(cache);
-			Map<String, PageModel> models = pageModelDAO.loadModels();
-			this.insertObjectsOnCache(cache, models);
-		} catch (Throwable t) {
-			_logger.error("Error loading page models", t);
-			throw new ApsSystemException("Error loading page models", t);
-		}
-	}
+    @Override
+    public void initCache(IPageModelDAO pageModelDAO) throws ApsSystemException {
+        try {
+            Cache cache = this.getCache();
+            this.releaseCachedObjects(cache);
+            Map<String, PageModel> models = pageModelDAO.loadModels();
+            this.insertObjectsOnCache(cache, models);
+        } catch (Throwable t) {
+            _logger.error("Error loading page models", t);
+            throw new ApsSystemException("Error loading page models", t);
+        }
+    }
 
-	@Override
-	public PageModel getPageModel(String name) {
-		return this.get(PAGE_MODEL_CACHE_NAME_PREFIX + name, PageModel.class);
-	}
+    @Override
+    public PageModel getPageModel(String name) {
+        return this.get(PAGE_MODEL_CACHE_NAME_PREFIX + name, PageModel.class);
+    }
 
-	@Override
-	public Collection<PageModel> getPageModels() {
-		Map<String, PageModel> map = super.getObjectMap();
-		return map.values();
-	}
+    @Override
+    public Collection<PageModel> getPageModels() {
+        Map<String, PageModel> map = super.getObjectMap();
+        return map.values();
+    }
 
-	@Override
-	public void addPageModel(PageModel pageModel) {
-		this.manage(pageModel.getCode(), pageModel, Action.ADD);
-	}
+    @Override
+    public void addPageModel(PageModel pageModel) {
+        this.manage(pageModel.getCode(), pageModel, Action.ADD);
+    }
 
-	@Override
-	public void updatePageModel(PageModel pageModel) {
-		this.manage(pageModel.getCode(), pageModel, Action.UPDATE);
-	}
+    @Override
+    public void updatePageModel(PageModel pageModel) {
+        this.manage(pageModel.getCode(), pageModel, Action.UPDATE);
+    }
 
-	@Override
-	public void deletePageModel(String code) {
-		this.manage(code, new PageModel(), Action.DELETE);
-	}
+    @Override
+    public void deletePageModel(String code) {
+        this.manage(code, new PageModel(), Action.DELETE);
+    }
 
-	@Override
-	protected String getCodesCacheKey() {
-		return PAGE_MODEL_CODES_CACHE_NAME;
-	}
+    @Override
+    protected String getCodesCacheKey() {
+        return PAGE_MODEL_CODES_CACHE_NAME;
+    }
 
-	@Override
-	protected String getCacheKeyPrefix() {
-		return PAGE_MODEL_CACHE_NAME_PREFIX;
-	}
+    @Override
+    protected String getCacheKeyPrefix() {
+        return PAGE_MODEL_CACHE_NAME_PREFIX;
+    }
 
-	@Override
-	protected String getCacheName() {
-		return PAGE_MODEL_MANAGER_CACHE_NAME;
-	}
+    @Override
+    protected String getCacheName() {
+        return PAGE_MODEL_MANAGER_CACHE_NAME;
+    }
 
 }

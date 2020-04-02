@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -156,9 +157,11 @@ public class EntityTypeAttributeValidationDto {
         } else if (attribute instanceof DateAttribute) {
             DateAttributeValidationRules dateValRule = (DateAttributeValidationRules) validationRules;
             dateValRule.setRangeStart(this.extractDate(this.getRangeStartDate(), typeCode, attribute.getName(),
-                    AbstractEntityTypeValidator.ERRCODE_INVALID_DATE_RANGE_START, "entityType.attribute.date.invalidRangeStart", bindingResult));
+                    AbstractEntityTypeValidator.ERRCODE_INVALID_DATE_RANGE_START, "entityType.attribute.date.invalidRangeStart",
+                    bindingResult));
             dateValRule.setRangeEnd(this.extractDate(this.getRangeEndDate(), typeCode, attribute.getName(),
-                    AbstractEntityTypeValidator.ERRCODE_INVALID_DATE_RANGE_END, "entityType.attribute.date.invalidRangeEnd", bindingResult));
+                    AbstractEntityTypeValidator.ERRCODE_INVALID_DATE_RANGE_END, "entityType.attribute.date.invalidRangeEnd",
+                    bindingResult));
             if (null != dateValRule.getRangeStart() && null != dateValRule.getRangeEnd()
                     && ((Date) dateValRule.getRangeEnd()).before((Date) dateValRule.getRangeStart())) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_NUMBER_RANGE,

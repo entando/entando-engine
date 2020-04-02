@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 /**
- * This attribute represent an information of type Three State. This attribute
- * does not support multiple languages.
+ * This attribute represent an information of type Three State. This attribute does not support multiple languages.
  *
  * @author E.Santoboni
  */

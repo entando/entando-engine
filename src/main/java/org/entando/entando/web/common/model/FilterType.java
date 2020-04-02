@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -48,12 +49,8 @@ public enum FilterType {
 
     private final String value;
 
-    private FilterType(String value) {
+    FilterType(String value) {
         this.value = value;
-    }
-
-    public String getValue() {
-        return value;
     }
 
     public static FilterType parse(String type) {
@@ -63,6 +60,10 @@ public enum FilterType {
             }
         }
         throw new IllegalArgumentException(type + " is not a supported filter type");
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public abstract Object parseFilterValue(String value);

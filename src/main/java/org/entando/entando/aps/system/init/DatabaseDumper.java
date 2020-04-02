@@ -11,10 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -26,13 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 
-import javax.sql.DataSource;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author E.Santoboni
  */
@@ -40,7 +46,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 
     private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumper.class);
 
-    protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport) throws ApsSystemException {
+    protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport)
+            throws ApsSystemException {
         try {
             DataSourceDumpReport report = new DataSourceDumpReport(installationReport);
             long start = System.currentTimeMillis();
@@ -68,7 +75,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
         }
     }
 
-    private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder) throws ApsSystemException {
+    private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder)
+            throws ApsSystemException {
         ClassLoader cl = ComponentManager.getComponentInstallerClassLoader();
         if (null == tableMapping || tableMapping.isEmpty()) {
             return;
@@ -154,8 +162,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
             }
             if (null != tempFile) {
                 boolean deleted = tempFile.delete();
-                if(!deleted) {
-                    _logger.warn("Failed to delete temp file {} ",tempFile.getAbsolutePath());
+                if (!deleted) {
+                    _logger.warn("Failed to delete temp file {} ", tempFile.getAbsolutePath());
                 }
             }
         }
@@ -167,8 +175,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
             String filePath = tempDir + File.separator + filename;
             File file = new File(filePath);
             boolean created = file.createNewFile();
-            if(!created) {
-                _logger.warn("Failed to create a temp file {} ",created);
+            if (!created) {
+                _logger.warn("Failed to create a temp file {} ", created);
             }
             return file;
         } catch (Throwable t) {

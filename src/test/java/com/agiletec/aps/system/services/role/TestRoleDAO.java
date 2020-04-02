@@ -11,89 +11,88 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.role;
 
+import com.agiletec.aps.BaseTestCase;
 import java.util.Map;
-
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
-
 /**
- * @version 1.0
  * @author M.Diana
+ * @version 1.0
  */
 public class TestRoleDAO extends BaseTestCase {
 
     public void testAddUpdateDeleteRole() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
-		RoleDAO roleDAO = new RoleDAO();
-		roleDAO.setDataSource(dataSource);
-		Role role = new Role();
-		role.setName("temp");
-		try {
-			roleDAO.deleteRole(role);
-        } catch (Throwable t) {
-        	throw t;
-        }
-		role.setDescription("temp");
-		role.addPermission(Permission.SUPERVISOR);        
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
+        RoleDAO roleDAO = new RoleDAO();
+        roleDAO.setDataSource(dataSource);
+        Role role = new Role();
+        role.setName("temp");
         try {
-        	roleDAO.addRole(role);
+            roleDAO.deleteRole(role);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		Map<String, Role> roles = null;
+        role.setDescription("temp");
+        role.addPermission(Permission.SUPERVISOR);
         try {
-        	roles = roleDAO.loadRoles();
+            roleDAO.addRole(role);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
+        }
+        Map<String, Role> roles = null;
+        try {
+            roles = roleDAO.loadRoles();
+        } catch (Throwable t) {
+            throw t;
         }
         assertTrue(roles.containsKey("temp"));
-        role = (Role)roles.get("temp");
+        role = roles.get("temp");
         assertEquals(role.getDescription(), "temp");
         assertTrue(role.getPermissions().contains(Permission.SUPERVISOR));
         this.updateRole(roleDAO);
         this.deleteRole(roleDAO);
-	}
-	
-	private void updateRole(RoleDAO roleDAO) throws Throwable {
-		Role role = new Role();
-		role.setName("temp");
-		role.setDescription("temp1");
-		role.addPermission(Permission.CONFIG); 
+    }
+
+    private void updateRole(RoleDAO roleDAO) throws Throwable {
+        Role role = new Role();
+        role.setName("temp");
+        role.setDescription("temp1");
+        role.addPermission(Permission.CONFIG);
         try {
-			roleDAO.updateRole(role);
+            roleDAO.updateRole(role);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		Map<String, Role> roles = null;
+        Map<String, Role> roles = null;
         try {
-        	roles = roleDAO.loadRoles();
+            roles = roleDAO.loadRoles();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         assertTrue(roles.containsKey("temp"));
-        role = (Role) roles.get("temp");
+        role = roles.get("temp");
         assertEquals(role.getDescription(), "temp1");
         assertTrue(role.getPermissions().contains(Permission.CONFIG));
-	}
-	
-	private void deleteRole(RoleDAO roleDAO) throws Throwable {
-		Role role = new Role();
-		role.setName("temp");
+    }
+
+    private void deleteRole(RoleDAO roleDAO) throws Throwable {
+        Role role = new Role();
+        role.setName("temp");
         try {
-			roleDAO.deleteRole(role);
+            roleDAO.deleteRole(role);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		Map<String, Role> roles = null;
+        Map<String, Role> roles = null;
         try {
-        	roles = roleDAO.loadRoles();
+            roles = roleDAO.loadRoles();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-        assertFalse(roles.containsKey("temp"));   
-	}	
-    	
+        assertFalse(roles.containsKey("temp"));
+    }
+
 }

@@ -11,47 +11,46 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.util;
 
 import java.util.Map;
-
 import org.apache.commons.digester.Rule;
 import org.xml.sax.Attributes;
 
 /**
- * Regola per il Digester, per alimentare un Map.
- * Il tag deve avere un attributo che specifica la chiave, ed il
- * valore nel corpo del tag. Il nome dell'attributo è impostato
- * nel costruttore della regola. 
+ * Regola per il Digester, per alimentare un Map. Il tag deve avere un attributo che specifica la chiave, ed il valore nel corpo del tag. Il
+ * nome dell'attributo è impostato nel costruttore della regola.
+ *
  * @author W.Ambu
  */
 public class MapSupportRule extends Rule {
 
-	/**
-	 * Costruttore che consente di definire il nome dell'attributo
-	 * del tag in cui è specificata la chiave.
-	 * @param keyAttrName Il nome dell'attributo
-	 */
-	public MapSupportRule(String keyAttrName) {
-		super();
-		_keyAttrName = keyAttrName;
-	}
+    private String _key;
+    private String _keyAttrName;
 
-	public void begin(String namespace, String name, Attributes attributes)
-			throws Exception{
-		_key = attributes.getValue(_keyAttrName);
-	}
-	
-	public void body(String namespace, String name, String text)
-			throws Exception{
-		Map map = (Map) getDigester().peek();
-		map.put(_key, text);
-	}
-	
-	public void finish() throws Exception {
-		_key = null;
-	}
-	
-	private String _key;
-	private String _keyAttrName;
+    /**
+     * Costruttore che consente di definire il nome dell'attributo del tag in cui è specificata la chiave.
+     *
+     * @param keyAttrName Il nome dell'attributo
+     */
+    public MapSupportRule(String keyAttrName) {
+        super();
+        _keyAttrName = keyAttrName;
+    }
+
+    public void begin(String namespace, String name, Attributes attributes)
+            throws Exception {
+        _key = attributes.getValue(_keyAttrName);
+    }
+
+    public void body(String namespace, String name, String text)
+            throws Exception {
+        Map map = (Map) getDigester().peek();
+        map.put(_key, text);
+    }
+
+    public void finish() throws Exception {
+        _key = null;
+    }
 }

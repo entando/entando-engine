@@ -11,13 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags;
 
 /**
  * Tag for the "External Framework" showlet.
+ *
  * @author M.Casari - E.Santoboni
  * @deprecated use InternalServletTag instead
  */
 public class ExternalFrameworkTag extends InternalServletTag {
-	
+
 }

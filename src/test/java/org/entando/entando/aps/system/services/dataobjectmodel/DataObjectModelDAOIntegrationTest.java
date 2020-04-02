@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
+import com.agiletec.aps.BaseTestCase;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
-import com.agiletec.aps.BaseTestCase;
 
 public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
 
@@ -39,7 +38,7 @@ public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
         }
         String value = null;
         boolean contains = false;
-        for (Iterator<DataObjectModel> iter = models.values().iterator(); iter.hasNext();) {
+        for (Iterator<DataObjectModel> iter = models.values().iterator(); iter.hasNext(); ) {
             DataObjectModel dataModel = iter.next();
             value = dataModel.getDataType();
             if (value.equals("ART")) {

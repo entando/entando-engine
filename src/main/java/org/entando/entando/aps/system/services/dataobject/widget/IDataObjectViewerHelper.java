@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.widget;
 
 import com.agiletec.aps.system.RequestContext;
@@ -34,12 +35,14 @@ public interface IDataObjectViewerHelper {
      * @return Il dataObject da visualizzare nella showlet.
      * @throws ApsSystemException In caso di errore
      */
-    public String getRenderedDataObject(String dataObjectId, String modelId, RequestContext reqCtx) throws ApsSystemException;
+    String getRenderedDataObject(String dataObjectId, String modelId, RequestContext reqCtx) throws ApsSystemException;
 
-    public String getRenderedDataObject(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
+    String getRenderedDataObject(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx)
+            throws ApsSystemException;
 
-    public DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
+    DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId, String modelId, boolean publishExtraTitle,
+            RequestContext reqCtx) throws ApsSystemException;
 
-    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId, RequestContext reqCtx) throws ApsSystemException;
+    PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId, RequestContext reqCtx) throws ApsSystemException;
 
 }

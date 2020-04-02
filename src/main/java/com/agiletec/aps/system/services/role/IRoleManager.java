@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.role;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 
 /**
  * Interfaccia base per il servizio di gestione dei ruoli.
@@ -24,14 +24,14 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface IRoleManager {
 
-    public static final String ROLE_MANAGER_CACHE_NAME = "Entando_RoleManager";
+    String ROLE_MANAGER_CACHE_NAME = "Entando_RoleManager";
 
     /**
      * Restituisce la lista ordinata dei ruoli esistenti.
      *
      * @return La lista ordinata dei ruoli esistenti.
      */
-    public List<Role> getRoles();
+    List<Role> getRoles();
 
     /**
      * Restituisce un ruolo in base al nome.
@@ -39,7 +39,7 @@ public interface IRoleManager {
      * @param roleName Il nome del ruolo richesto.
      * @return Il ruolo cercato.
      */
-    public Role getRole(String roleName);
+    Role getRole(String roleName);
 
     /**
      * Rimuove un ruolo.
@@ -47,7 +47,7 @@ public interface IRoleManager {
      * @param role Oggetto di tipo Role relativo al ruolo da rimuovere.
      * @throws ApsSystemException in caso di errore.
      */
-    public void removeRole(Role role) throws ApsSystemException;
+    void removeRole(Role role) throws ApsSystemException;
 
     /**
      * Aggiorna un ruolo.
@@ -55,7 +55,7 @@ public interface IRoleManager {
      * @param role Il ruolo da aggiornare.
      * @throws ApsSystemException in caso di errore.
      */
-    public void updateRole(Role role) throws ApsSystemException;
+    void updateRole(Role role) throws ApsSystemException;
 
     /**
      * Aggiunge un ruolo.
@@ -63,14 +63,14 @@ public interface IRoleManager {
      * @param role Oggetto di tipo Role relativo al ruolo da aggiungere.
      * @throws ApsSystemException in caso di errore.
      */
-    public void addRole(Role role) throws ApsSystemException;
+    void addRole(Role role) throws ApsSystemException;
 
     /**
      * Restituisce la lista ordinata dei permessi di autorizzazione.
      *
      * @return La lista ordinata dei permessi
      */
-    public List<Permission> getPermissions();
+    List<Permission> getPermissions();
 
     /**
      * Restituisce un permesso in base al nome.
@@ -78,7 +78,7 @@ public interface IRoleManager {
      * @param permissionName Il nome del permesso richiesto.
      * @return Il permesso richiesto.
      */
-    public Permission getPermission(String permissionName);
+    Permission getPermission(String permissionName);
 
     /**
      * Rimuove il permesso specificato e dai ruoli.
@@ -86,7 +86,7 @@ public interface IRoleManager {
      * @param permissionName Il permesso da rimuovere dal ruolo.
      * @throws ApsSystemException in caso di errore.
      */
-    public void removePermission(String permissionName) throws ApsSystemException;
+    void removePermission(String permissionName) throws ApsSystemException;
 
     /**
      * Aggiorna un permesso di autorizzazione.
@@ -94,7 +94,7 @@ public interface IRoleManager {
      * @param permission Il permesso da aggiornare.
      * @throws ApsSystemException in caso di errore.
      */
-    public void updatePermission(Permission permission) throws ApsSystemException;
+    void updatePermission(Permission permission) throws ApsSystemException;
 
     /**
      * Aggiunge un permesso di autorizzazione.
@@ -102,7 +102,7 @@ public interface IRoleManager {
      * @param permission Il permesso da aggiungere.
      * @throws ApsSystemException in caso di errore.
      */
-    public void addPermission(Permission permission) throws ApsSystemException;
+    void addPermission(Permission permission) throws ApsSystemException;
 
     /**
      * Restituisce la lista di ruoli comprendente il permesso specificato.
@@ -110,13 +110,13 @@ public interface IRoleManager {
      * @param permissionName Il nome del permesso.
      * @return La lista di ruoli.
      */
-    public List<Role> getRolesWithPermission(String permissionName);
+    List<Role> getRolesWithPermission(String permissionName);
 
     /**
      * Return the permission codes list
-     * 
+     *
      * @return the permission codes list
      */
-    public List<String> getPermissionsCodes();
+    List<String> getPermissionsCodes();
 
 }

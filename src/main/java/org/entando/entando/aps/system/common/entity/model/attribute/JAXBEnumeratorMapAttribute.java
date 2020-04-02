@@ -11,27 +11,27 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.model.attribute;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
-
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author E.Santoboni
  */
 public class JAXBEnumeratorMapAttribute extends AbstractJAXBAttribute implements Serializable {
-	
-	@XmlElement(name = "value", required = false)
-	public JAXBEnumeratorMapValue getMapValue() {
-		return _mapValue;
-	}
-	public void setMapValue(JAXBEnumeratorMapValue mapValue) {
-		this._mapValue = mapValue;
-	}
-	
-	private JAXBEnumeratorMapValue _mapValue;
-	
+
+    private JAXBEnumeratorMapValue _mapValue;
+
+    @XmlElement(name = "value", required = false)
+    public JAXBEnumeratorMapValue getMapValue() {
+        return _mapValue;
+    }
+
+    public void setMapValue(JAXBEnumeratorMapValue mapValue) {
+        this._mapValue = mapValue;
+    }
+
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -19,9 +20,9 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
  * @author E.Santoboni
  */
 public interface IInitializerManager {
-	
-	public SystemInstallationReport getCurrentReport();
-	
-	public void reloadCurrentReport();
-	
+
+    SystemInstallationReport getCurrentReport();
+
+    void reloadCurrentReport();
+
 }

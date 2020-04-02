@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
 import java.util.List;
-
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDtoSmall;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -23,16 +23,16 @@ import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 
 public interface IGuiFragmentService {
 
-	public PagedMetadata<GuiFragmentDtoSmall> getGuiFragments(RestListRequest restListReq);
+    PagedMetadata<GuiFragmentDtoSmall> getGuiFragments(RestListRequest restListReq);
 
-	public GuiFragmentDto getGuiFragment(String code);
+    GuiFragmentDto getGuiFragment(String code);
 
-	public GuiFragmentDto addGuiFragment(GuiFragmentRequestBody guiFragmentRequest);
+    GuiFragmentDto addGuiFragment(GuiFragmentRequestBody guiFragmentRequest);
 
-	public GuiFragmentDto updateGuiFragment(GuiFragmentRequestBody guiFragmentRequest);
+    GuiFragmentDto updateGuiFragment(GuiFragmentRequestBody guiFragmentRequest);
 
-	public void removeGuiFragment(String guiFragmentCode);
+    void removeGuiFragment(String guiFragmentCode);
 
-    public List<String> getPluginCodes();
+    List<String> getPluginCodes();
 
 }

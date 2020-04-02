@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
@@ -24,43 +24,47 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(propOrder = {"name", "description", "type", "roles"})
 public class AbstractJAXBAttribute {
-    
+
+    private String _name;
+    private String _description;
+    private String _type;
+    private List<String> _roles;
+
     @XmlElement(name = "name", required = true)
     public String getName() {
         return _name;
     }
+
     public void setName(String name) {
         this._name = name;
     }
-	
-	@XmlElement(name = "description", required = false)
+
+    @XmlElement(name = "description", required = false)
     public String getDescription() {
-		return _description;
-	}
-	public void setDescription(String description) {
-		this._description = description;
-	}
-    
+        return _description;
+    }
+
+    public void setDescription(String description) {
+        this._description = description;
+    }
+
     @XmlElement(name = "type", required = true)
     public String getType() {
         return _type;
     }
+
     public void setType(String type) {
         this._type = type;
     }
-    
+
     @XmlElement(name = "role", required = false)
     @XmlElementWrapper(name = "roles")
     public List<String> getRoles() {
         return _roles;
     }
+
     public void setRoles(List<String> roles) {
         this._roles = roles;
     }
-    
-    private String _name;
-	private String _description;
-    private String _type;
-    private List<String> _roles;
-    
+
 }

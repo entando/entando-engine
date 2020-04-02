@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
 
 import java.util.List;
@@ -18,5 +19,5 @@ import org.entando.entando.aps.system.services.user.model.UserDto;
 
 public interface IAuthorizationService {
 
-    public List<UserDto> getRoleUtilizer(String roleCode);
+    List<UserDto> getRoleUtilizer(String roleCode);
 }

@@ -11,33 +11,52 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.user;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.user.IUserService;
-import org.entando.entando.aps.system.services.user.model.*;
-import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
-import org.entando.entando.web.user.model.*;
-import org.entando.entando.web.user.validator.UserValidator;
-import org.slf4j.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.validation.*;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.*;
 
 import static org.entando.entando.web.user.validator.UserValidator.createDeleteAdminError;
 import static org.entando.entando.web.user.validator.UserValidator.isValidDeleteUser;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
+import org.entando.entando.aps.system.services.user.IUserService;
+import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
+import org.entando.entando.aps.system.services.user.model.UserDto;
+import org.entando.entando.web.common.annotation.RestAccessControl;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.user.model.UserAuthoritiesRequest;
+import org.entando.entando.web.user.model.UserPasswordRequest;
+import org.entando.entando.web.user.model.UserRequest;
+import org.entando.entando.web.user.validator.UserValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
 /**
- *
  * @author paddeo
  */
 @Validated
@@ -72,7 +91,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<UserDto>> getUsers(RestListRequest requestList, @RequestParam(value = "withProfile", required = false) String withProfile) {
+    public ResponseEntity<PagedRestResponse<UserDto>> getUsers(RestListRequest requestList,
+            @RequestParam(value = "withProfile", required = false) String withProfile) {
         logger.debug("getting users details with request {}", requestList);
         this.getUserValidator().validateRestListRequest(requestList, UserDto.class);
         PagedMetadata<UserDto> result = this.getUserService().getUsers(requestList, withProfile);
@@ -92,7 +112,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> addUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<UserDto>> addUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult)
+            throws ApsSystemException {
         logger.debug("adding user with request {}", userRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -108,7 +129,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateUser(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateUser(@ModelAttribute("user") UserDetails user, @PathVariable String target,
+            @Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) {
         logger.debug("updating user {} with request {}", target, userRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -125,7 +147,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{username:.+}/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateUserPassword(@PathVariable String username, @Valid @RequestBody UserPasswordRequest passwordRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateUserPassword(@PathVariable String username,
+            @Valid @RequestBody UserPasswordRequest passwordRequest, BindingResult bindingResult) {
         logger.debug("changing pasword for user {} with request {}", username, passwordRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -156,7 +179,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> updateUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> updateUserAuthorities(@ModelAttribute("user") UserDetails user,
+            @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) {
         logger.debug("user {} requesting update authorities for username {} with req {}", user.getUsername(), target, authRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -177,7 +201,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> getUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target) {
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> getUserAuthorities(@ModelAttribute("user") UserDetails user,
+            @PathVariable String target) {
         logger.debug("requesting authorities for username {}", target);
         List<UserAuthorityDto> authorities = this.getUserService().getUserAuthorities(target);
         return new ResponseEntity<>(new SimpleRestResponse<>(authorities), HttpStatus.OK);
@@ -185,7 +210,9 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> addUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> addUserAuthorities(@ModelAttribute("user") UserDetails user,
+            @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult)
+            throws ApsSystemException {
         logger.debug("user {} requesting add authorities for username {} with req {}", user.getUsername(), target, authRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -206,7 +233,8 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse> deleteUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse> deleteUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target)
+            throws ApsSystemException {
         logger.debug("user {} requesting delete authorities for username {}", user.getUsername(), target);
         DataBinder binder = new DataBinder(target);
         BindingResult bindingResult = binder.getBindingResult();

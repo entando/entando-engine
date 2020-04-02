@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public interface IPostProcessor {
-	
-	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, ApsSystemException;
-	
+
+    int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, ApsSystemException;
+
 }

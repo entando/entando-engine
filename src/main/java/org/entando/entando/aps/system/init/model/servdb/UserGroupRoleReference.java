@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -26,9 +26,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = UserGroupRoleReference.TABLE_NAME)
 public class UserGroupRoleReference implements ExtendedColumnDefinition {
 
-    public UserGroupRoleReference() {
-    }
-
+    public static final String TABLE_NAME = "authusergrouprole";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -53,6 +51,9 @@ public class UserGroupRoleReference implements ExtendedColumnDefinition {
             canBeNull = true)
     private Role _role;
 
+    public UserGroupRoleReference() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -64,14 +65,12 @@ public class UserGroupRoleReference implements ExtendedColumnDefinition {
             roleTableName = "`" + roleTableName + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT " + TABLE_NAME + "_grn_fkey FOREIGN KEY (groupname) "
-            + "REFERENCES " + groupTableName + " (groupname)",
-            "ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT " + TABLE_NAME + "_rln_fkey FOREIGN KEY (rolename) "
-            + "REFERENCES " + roleTableName + " (rolename)"};
+                + "ADD CONSTRAINT " + TABLE_NAME + "_grn_fkey FOREIGN KEY (groupname) "
+                + "REFERENCES " + groupTableName + " (groupname)",
+                "ALTER TABLE " + tableName + " "
+                        + "ADD CONSTRAINT " + TABLE_NAME + "_rln_fkey FOREIGN KEY (rolename) "
+                        + "REFERENCES " + roleTableName + " (rolename)"};
     }
-
-    public static final String TABLE_NAME = "authusergrouprole";
 
 }
 /*

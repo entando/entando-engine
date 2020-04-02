@@ -11,13 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
-
-import java.util.List;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -25,16 +20,20 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.List;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class NumberAttributeValidationRules extends AbstractAttributeValidationRules {
 
-	private static final long serialVersionUID = 3174872953012814318L;
-	private static final Logger _logger =  LoggerFactory.getLogger(NumberAttributeValidationRules.class);
-	
-	@Override
+    private static final long serialVersionUID = 3174872953012814318L;
+    private static final Logger _logger = LoggerFactory.getLogger(NumberAttributeValidationRules.class);
+
+    @Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
         String toStringEqualValue = (this.getValue() != null) ? String.valueOf(this.getValue()) : null;
@@ -46,8 +45,8 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         String toStringEndValue = (this.getRangeEnd() != null) ? String.valueOf(this.getRangeEnd()) : null;
         this.insertJDOMConfigElement("rangeend", this.getRangeEndAttribute(), toStringEndValue, configElement);
     }
-    
-	@Override
+
+    @Override
     protected void extractValidationRules(Element validationElement) {
         super.extractValidationRules(validationElement);
         Element valueElement = validationElement.getChild("value");
@@ -66,7 +65,7 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
             this.setRangeEndAttribute(rangeEndElement.getAttributeValue("attribute"));
         }
     }
-    
+
     private Integer getIntegerValue(String text) {
         if (null == text || text.trim().length() == 0) {
             return null;
@@ -75,36 +74,39 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         try {
             valueInteger = Integer.parseInt(text);
         } catch (NumberFormatException e) {
-           _logger.error("Error in parsing number '{}' for extracting attribute roles", text, e);
+            _logger.error("Error in parsing number '{}' for extracting attribute roles", text, e);
         }
         return valueInteger;
     }
-    
+
     @Override
-	public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
         if (this.isEmpty()) {
-			return errors;
-		}
+            return errors;
+        }
         try {
             NumberAttribute numberAttribute = (NumberAttribute) attribute;
             if (null == numberAttribute.getValue()) {
-				return errors;
-			}
+                return errors;
+            }
             int attributeValue = numberAttribute.getValue().intValue();
-            Integer startValue = (this.getRangeStart() != null) ? (Integer) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
+            Integer startValue = (this.getRangeStart() != null) ? (Integer) this.getRangeStart()
+                    : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
             if (null != startValue && attributeValue < startValue) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);
                 error.setMessage("Number less than " + startValue);
                 errors.add(error);
             }
-            Integer endValue = (this.getRangeEnd() != null) ? (Integer) this.getRangeEnd() : this.getOtherAttributeValue(attribute, this.getRangeEndAttribute());
+            Integer endValue = (this.getRangeEnd() != null) ? (Integer) this.getRangeEnd()
+                    : this.getOtherAttributeValue(attribute, this.getRangeEndAttribute());
             if (null != endValue && attributeValue > endValue) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.GREATER_THAN_ALLOWED, tracer);
                 error.setMessage("Number greater than " + endValue);
                 errors.add(error);
             }
-            Integer value = (this.getValue() != null) ? (Integer) this.getValue() : this.getOtherAttributeValue(attribute, this.getValueAttribute());
+            Integer value = (this.getValue() != null) ? (Integer) this.getValue()
+                    : this.getOtherAttributeValue(attribute, this.getValueAttribute());
             if (null != value && attributeValue != value) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
                 error.setMessage("Number not equals than " + value);
@@ -116,16 +118,16 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         }
         return errors;
     }
-    
+
     private Integer getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
         if (null == otherAttributeName) {
-			return null;
-		}
-        AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
+            return null;
+        }
+        AttributeInterface other = attribute.getParentEntity().getAttribute(otherAttributeName);
         if (null != other && (other instanceof NumberAttribute) && ((NumberAttribute) other).getValue() != null) {
             return ((NumberAttribute) other).getValue().intValue();
         }
         return null;
     }
-    
+
 }

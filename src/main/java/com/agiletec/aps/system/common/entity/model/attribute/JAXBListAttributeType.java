@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.Map;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 
@@ -29,7 +28,9 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 @XmlType(propOrder = {"nestedType"})
 @XmlSeeAlso({DefaultJAXBAttributeType.class, JAXBCompositeAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBListAttributeType extends DefaultJAXBAttributeType {
-    
+
+    private DefaultJAXBAttributeType _nestedType;
+
     @Override
     public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
         AbstractListAttribute listAttribute = (AbstractListAttribute) super.createAttribute(attributes);
@@ -39,19 +40,19 @@ public class JAXBListAttributeType extends DefaultJAXBAttributeType {
         }
         AttributeInterface masterNestedType = attributes.get(jaxbNestedType.getType());
         if (null == masterNestedType) {
-            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "List Attribute '" + this.getName() + "' - Nested Type '" + jaxbNestedType.getType() + "' does not exist");
+            throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
+                    "List Attribute '" + this.getName() + "' - Nested Type '" + jaxbNestedType.getType() + "' does not exist");
         }
         listAttribute.setNestedAttributeType(jaxbNestedType.createAttribute(attributes));
         return listAttribute;
     }
-    
+
     public DefaultJAXBAttributeType getNestedType() {
         return _nestedType;
     }
+
     public void setNestedType(DefaultJAXBAttributeType nestedType) {
         this._nestedType = nestedType;
     }
-    
-    private DefaultJAXBAttributeType _nestedType;
-    
+
 }

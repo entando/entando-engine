@@ -11,25 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.authorization;
 
-import java.io.Serializable;
+package com.agiletec.aps.system.services.authorization;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Role;
+import java.io.Serializable;
 
 /**
- * Rappresentazione di una autorizzazione.
- * Nelle implementazioni concrete viene utilizzata per le implementazioni 
- * degli oggetti Gruppi (classe {@link Group}) e Ruoli (classe {@link Role}).
+ * Rappresentazione di una autorizzazione. Nelle implementazioni concrete viene utilizzata per le implementazioni degli oggetti Gruppi
+ * (classe {@link Group}) e Ruoli (classe {@link Role}).
+ *
  * @author E.Santoboni
  */
 public interface IApsAuthority extends Serializable {
-	
-	/**
-	 * Restituisce il codice dell'autorizzazione.
-	 * @return Il codice deell'autorizzazione.
-	 */
-	public String getAuthority();
-	
+
+    /**
+     * Restituisce il codice dell'autorizzazione.
+     *
+     * @return Il codice deell'autorizzazione.
+     */
+    String getAuthority();
+
 }

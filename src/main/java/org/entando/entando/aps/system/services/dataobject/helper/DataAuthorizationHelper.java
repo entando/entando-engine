@@ -11,22 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
 import com.agiletec.aps.system.SystemConstants;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Return informations of dataobject authorization
@@ -36,6 +35,9 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 public class DataAuthorizationHelper implements IDataAuthorizationHelper {
 
     private static final Logger _logger = LoggerFactory.getLogger(DataAuthorizationHelper.class);
+    private IDataObjectManager _dataObjectManager;
+    private ILangManager _langManager;
+    private IAuthorizationManager _authorizationManager;
 
     @Override
     public boolean isAuth(UserDetails user, DataObject dataObject) throws ApsSystemException {
@@ -107,8 +109,9 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
 
     @Override
     //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-    //		key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_AUTH_INFO_CACHE_PREFIX.concat(#contentId)")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#contentId)")
+    //    key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_AUTH_INFO_CACHE_PREFIX.concat(#contentId)")
+    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv
+    // (#contentId)")
     public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId) {
         PublicDataTypeAuthorizationInfo authInfo = null;
         try {
@@ -126,8 +129,9 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
 
     @Override
     //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, condition = "#cacheable",
-    //		key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_AUTH_INFO_CACHE_PREFIX.concat(#contentId)")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#contentId)")
+    //    key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_AUTH_INFO_CACHE_PREFIX.concat(#contentId)")
+    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv
+    // (#contentId)")
     public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId, boolean cacheable) {
         PublicDataTypeAuthorizationInfo authInfo = null;
         try {
@@ -166,9 +170,5 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
         this._authorizationManager = authorizationManager;
     }
-
-    private IDataObjectManager _dataObjectManager;
-    private ILangManager _langManager;
-    private IAuthorizationManager _authorizationManager;
 
 }

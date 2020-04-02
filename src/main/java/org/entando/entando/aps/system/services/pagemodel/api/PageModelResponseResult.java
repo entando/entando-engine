@@ -11,23 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.pagemodel.api;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
 /**
  * @author E.Santoboni
  */
 public class PageModelResponseResult extends AbstractApiResponseResult {
-	
-	@Override
-	@XmlElement(name = "pageModel", required = false)
-	public PageModel getResult() {
-		return (PageModel) this.getMainResult();
-	}
-	
+
+    @Override
+    @XmlElement(name = "pageModel", required = false)
+    public PageModel getResult() {
+        return (PageModel) this.getMainResult();
+    }
+
 }

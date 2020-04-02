@@ -11,18 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.server;
 
+import com.agiletec.aps.system.common.renderer.IVelocityRenderer;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
+import com.agiletec.aps.util.FileTextReader;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Response;
-
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
@@ -40,19 +43,18 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
 
-import com.agiletec.aps.system.common.renderer.IVelocityRenderer;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
-import com.agiletec.aps.util.FileTextReader;
-
 /**
  * @author E.Santoboni
  */
 public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, ServletContextAware {
-   
-	private static final Logger _logger = LoggerFactory.getLogger(ApiRestStatusServer.class);
-	
-	@Override
+
+    private static final Logger _logger = LoggerFactory.getLogger(ApiRestStatusServer.class);
+    private IApiCatalogManager _apiCatalogManager;
+    private IVelocityRenderer _velocityRenderer;
+    private BeanFactory _beanFactory;
+    private ServletContext _servletContext;
+
+    @Override
     @Deprecated
     public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException {
         Object apiResponse = null;
@@ -60,7 +62,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             ApiMethod method = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
             apiResponse = this.createResponse(method, parameters);
         } catch (ApiException e) {
-        	_logger.error("Error creating response for method GET, resource '{}'", resourceName, e);
+            _logger.error("Error creating response for method GET, resource '{}'", resourceName, e);
             if (apiResponse == null) {
                 apiResponse = new StringApiResponse();
             }
@@ -68,13 +70,13 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         }
         return apiResponse;
     }
-    
-	@Override
+
+    @Override
     public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException {
         return createResponse(method, null, parameters);
     }
-    
-	@Override
+
+    @Override
     public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException {
         AbstractApiResponse response = null;
         try {
@@ -84,7 +86,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             if (method.getHttpMethod().equals(ApiMethod.HttpMethod.GET)) {
                 masterResult = this.invokeGetMethod(method, bean, null, parameters, true);
                 if (null == masterResult) {
-					ApiError error = new ApiError(IApiErrorCodes.API_INVALID_RESPONSE, "Invalid or null Response", Response.Status.SERVICE_UNAVAILABLE);
+                    ApiError error = new ApiError(IApiErrorCodes.API_INVALID_RESPONSE, "Invalid or null Response",
+                            Response.Status.SERVICE_UNAVAILABLE);
                     throw new ApiException(error);
                 }
             } else {
@@ -111,8 +114,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             response.addErrors(e.getErrors());
             response.setResult(FAILURE, null);
         } catch (Throwable t) {
-        	_logger.error("Error creating response - {}", this.buildApiSignature(method), t);
-			String message = "Error creating response - " + this.buildApiSignature(method);
+            _logger.error("Error creating response - {}", this.buildApiSignature(method), t);
+            String message = "Error creating response - " + this.buildApiSignature(method);
             if (response == null) {
                 response = new StringApiResponse();
             }
@@ -140,10 +143,10 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             if (null != t.getErrors()) {
                 apiResponse.addErrors(t.getErrors());
             } else {
-            	_logger.error("Error creating html response - {}", this.buildApiSignature(apiMethod), t);
-			}
+                _logger.error("Error creating html response - {}", this.buildApiSignature(apiMethod), t);
+            }
         } catch (Throwable t) {
-        	_logger.error("Error creating html response - {}", this.buildApiSignature(apiMethod), t);
+            _logger.error("Error creating html response - {}", this.buildApiSignature(apiMethod), t);
         }
         return htmlResult;
     }
@@ -159,10 +162,10 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
                 path.append(apiMethod.getSource()).append("/");
             }
             path.append("aps/get/");
-			if (null != apiMethod.getNamespace()) {
-				path.append(apiMethod.getNamespace()).append("/");
-			}
-			path.append(apiMethod.getResourceName()).append("/description-item.vm");
+            if (null != apiMethod.getNamespace()) {
+                path.append(apiMethod.getNamespace()).append("/");
+            }
+            path.append(apiMethod.getResourceName()).append("/description-item.vm");
             Resource[] resources = ApsWebApplicationUtils.getResources(path.toString(), this.getServletContext());
             if (null != resources && resources.length == 1) {
                 Resource resource = resources[0];
@@ -183,7 +186,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return template;
     }
 
-    private void checkParameter(ApiMethod apiMethod, Properties parameters) throws ApiException, Throwable {
+    private void checkParameter(ApiMethod apiMethod, Properties parameters) throws Throwable {
         try {
             List<ApiMethodParameter> apiParameters = apiMethod.getParameters();
             if (null == apiParameters || apiParameters.isEmpty()) {
@@ -195,7 +198,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
                 String paramName = apiParam.getKey();
                 Object value = parameters.get(paramName);
                 if (apiParam.isRequired() && (null == value || value.toString().trim().length() == 0)) {
-                    errors.add(new ApiError(IApiErrorCodes.API_PARAMETER_REQUIRED, "Parameter '" + paramName + "' is required", Response.Status.BAD_REQUEST));
+                    errors.add(new ApiError(IApiErrorCodes.API_PARAMETER_REQUIRED, "Parameter '" + paramName + "' is required",
+                            Response.Status.BAD_REQUEST));
                 }
             }
             if (!errors.isEmpty()) {
@@ -204,7 +208,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         } catch (ApiException t) {
             throw t;
         } catch (Throwable t) {
-        	_logger.error("Error checking api parameters", t);
+            _logger.error("Error checking api parameters", t);
             throw new ApsSystemException("Internal Error", t);
         }
     }
@@ -215,14 +219,14 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             Class responseClass = Class.forName(apiMethod.getResponseClassName());
             apiResponse = (AbstractApiResponse) responseClass.newInstance();
         } catch (Exception e) {
-        	_logger.error("Error creating instance of response '{}'", apiMethod.getResponseClassName(), e);
+            _logger.error("Error creating instance of response '{}'", apiMethod.getResponseClassName(), e);
         }
         return apiResponse;
     }
-    
+
     @Override
     @Deprecated
-	public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
+    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
         Object result = null;
         try {
             ApiMethod api = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
@@ -230,69 +234,70 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             Object bean = this.extractBean(api);
             result = this.invokeGetMethod(api, bean, "", parameters, true);
         } catch (ApiException ae) {
-        	_logger.error("Error invoking method GET for resource '{}'", resourceName, ae);
+            _logger.error("Error invoking method GET for resource '{}'", resourceName, ae);
             throw ae;
         } catch (Throwable t) {
-        	_logger.error("Error invoking method GET for resource '{}'", resourceName, t);
+            _logger.error("Error invoking method GET for resource '{}'", resourceName, t);
             throw new ApsSystemException("Error invoking method GET for resource '" + resourceName + "'", t);
         }
         return result;
     }
-    
-	@Override
+
+    @Override
     public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException {
         ApiMethod api = null;
         String signature = this.buildApiSignature(httpMethod, namespace, resourceName);
-		try {
+        try {
             api = this.getApiCatalogManager().getMethod(httpMethod, namespace, resourceName);
             if (null == api) {
-				ApiError error = new ApiError(IApiErrorCodes.API_INVALID, signature + " does not exists", Response.Status.NOT_FOUND);
+                ApiError error = new ApiError(IApiErrorCodes.API_INVALID, signature + " does not exists", Response.Status.NOT_FOUND);
                 throw new ApiException(error);
             }
             if (!api.isActive()) {
-				ApiError error = new ApiError(IApiErrorCodes.API_INVALID, signature + " does not exists", Response.Status.NOT_FOUND);
-				throw new ApiException(error);
+                ApiError error = new ApiError(IApiErrorCodes.API_INVALID, signature + " does not exists", Response.Status.NOT_FOUND);
+                throw new ApiException(error);
             }
         } catch (ApiException ae) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), ae);
+            _logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), ae);
             throw ae;
         } catch (Throwable t) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), t);
+            _logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), t);
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, signature + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
         }
         return api;
     }
-    
+
     private String buildApiSignature(ApiMethod apiMethod) {
         return this.buildApiSignature(apiMethod.getHttpMethod(), apiMethod.getNamespace(), apiMethod.getResourceName());
     }
-    
+
     private String buildApiSignature(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod.toString()).append("' Resource '").append(resourceName).append("'");
-		if (null != namespace) {
-			buffer.append(" Namespace '").append(namespace).append("'");
-		}
+        if (null != namespace) {
+            buffer.append(" Namespace '").append(namespace).append("'");
+        }
         return buffer.toString();
     }
-    
+
     protected Object extractBean(ApiMethod api) throws ApsSystemException, ApiException {
         Object bean = this.getBeanFactory().getBean(api.getSpringBean());
         if (null == bean) {
             _logger.error("Null bean '{}' for api {}", api.getSpringBean(), this.buildApiSignature(api));
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
         return bean;
     }
-    
+
     @Deprecated
     protected Object invokeMethod(ApiMethod api, Object bean,
-            String methodSuffix, Properties parameters, boolean throwException) throws ApiException, Throwable {
+            String methodSuffix, Properties parameters, boolean throwException) throws Throwable {
         return this.invokeGetMethod(api, bean, methodSuffix, parameters, throwException);
     }
-    
+
     protected Object invokeGetMethod(ApiMethod apiMethod, Object bean,
-            String methodSuffix, Properties parameters, boolean throwException) throws ApiException, Throwable {
+            String methodSuffix, Properties parameters, boolean throwException) throws Throwable {
         String methodName = null;
         Object result = null;
         try {
@@ -303,27 +308,30 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             result = method.invoke(bean, parameters);
         } catch (NoSuchMethodException e) {
             if (throwException) {
-            	_logger.error("No such method '{}' of class '{}'", methodName, bean.getClass(), e);
-                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod), Response.Status.INTERNAL_SERVER_ERROR);
+                _logger.error("No such method '{}' of class '{}'", methodName, bean.getClass(), e);
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod),
+                        Response.Status.INTERNAL_SERVER_ERROR);
             }
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof ApiException) {
-                throw (ApiException) e.getTargetException();
+                throw e.getTargetException();
             } else if (throwException) {
-            	_logger.error("Error invoking method '{}' of class '{}'", methodName, bean.getClass());
-                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod), Response.Status.INTERNAL_SERVER_ERROR);
+                _logger.error("Error invoking method '{}' of class '{}'", methodName, bean.getClass());
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod),
+                        Response.Status.INTERNAL_SERVER_ERROR);
             }
         } catch (Throwable t) {
             if (throwException) {
-            	_logger.error("Error invoking method - {} {} of class '{}'", this.buildApiSignature(apiMethod) , methodName, bean.getClass(), t);
+                _logger.error("Error invoking method - {} {} of class '{}'", this.buildApiSignature(apiMethod), methodName, bean.getClass(),
+                        t);
                 throw t;
             }
         }
         return result;
     }
-    
+
     protected Object invokePutPostDeleteMethod(ApiMethod apiMethod, Object bean,
-            Properties parameters, Object bodyObject) throws ApiException, Throwable {
+            Properties parameters, Object bodyObject) throws Throwable {
         Object result = null;
         try {
             if (apiMethod.getHttpMethod().equals(ApiMethod.HttpMethod.DELETE)) {
@@ -331,29 +339,33 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             } else {
                 result = this.invokePutPostMethod(apiMethod, bean, parameters, bodyObject);
             }
-            if (null != result) return result;
+            if (null != result) {
+                return result;
+            }
             StringApiResponse response = new StringApiResponse();
             response.setResult(SUCCESS, null);
             result = response;
         } catch (NoSuchMethodException e) {
-        	_logger.error("No such method '{}' of class '{}'",apiMethod.getSpringBeanMethod(), bean.getClass(), e);
-            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod), Response.Status.INTERNAL_SERVER_ERROR);
+            _logger.error("No such method '{}' of class '{}'", apiMethod.getSpringBeanMethod(), bean.getClass(), e);
+            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof ApiException) {
-                throw (ApiException) e.getTargetException();
+                throw e.getTargetException();
             } else {
-            	_logger.error("Error invoking method '{}' of class '{}'",apiMethod.getSpringBeanMethod(), bean.getClass());
-                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod), Response.Status.INTERNAL_SERVER_ERROR);
+                _logger.error("Error invoking method '{}' of class '{}'", apiMethod.getSpringBeanMethod(), bean.getClass());
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod),
+                        Response.Status.INTERNAL_SERVER_ERROR);
             }
         } catch (Throwable t) {
-        	_logger.error("Error invoking method '{}' of class '{}'",apiMethod.getSpringBeanMethod(), bean.getClass(), t);
+            _logger.error("Error invoking method '{}' of class '{}'", apiMethod.getSpringBeanMethod(), bean.getClass(), t);
             throw t;
         }
         return result;
     }
-    
-    private Object invokePutPostMethod(ApiMethod api, Object bean, 
-            Properties parameters, Object bodyObject) throws NoSuchMethodException, InvocationTargetException, Throwable {
+
+    private Object invokePutPostMethod(ApiMethod api, Object bean,
+            Properties parameters, Object bodyObject) throws Throwable {
         Object result = null;
         Class beanClass = bean.getClass();
         String methodName = api.getSpringBeanMethod();
@@ -373,19 +385,20 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         }
         return result;
     }
-    
-    private Object invokeDeleteMethod(ApiMethod api, Object bean, 
-            Properties parameters) throws NoSuchMethodException, InvocationTargetException, Throwable {
+
+    private Object invokeDeleteMethod(ApiMethod api, Object bean,
+            Properties parameters) throws Throwable {
         Class[] parameterTypes = new Class[]{Properties.class};
         Class beanClass = bean.getClass();
         String methodName = api.getSpringBeanMethod();
         Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
         return method.invoke(bean, parameters);
     }
-    
+
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;
     }
+
     public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
         this._apiCatalogManager = apiCatalogManager;
     }
@@ -393,6 +406,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected IVelocityRenderer getVelocityRenderer() {
         return _velocityRenderer;
     }
+
     public void setVelocityRenderer(IVelocityRenderer velocityRenderer) {
         this._velocityRenderer = velocityRenderer;
     }
@@ -400,7 +414,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected BeanFactory getBeanFactory() {
         return this._beanFactory;
     }
-	@Override
+
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }
@@ -408,14 +423,10 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected ServletContext getServletContext() {
         return this._servletContext;
     }
-	@Override
+
+    @Override
     public void setServletContext(ServletContext servletContext) {
         this._servletContext = servletContext;
     }
-    
-    private IApiCatalogManager _apiCatalogManager;
-    private IVelocityRenderer _velocityRenderer;
-    private BeanFactory _beanFactory;
-    private ServletContext _servletContext;
-    
+
 }

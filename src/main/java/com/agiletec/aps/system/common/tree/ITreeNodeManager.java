@@ -11,25 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.tree;
 
 /**
  * Interface for Tree Node Manager.
+ *
  * @author E.Santoboni
  */
 public interface ITreeNodeManager {
-	
-	/**
-	 * Return the root node.
-	 * @return The root node.
-	 */
-	public ITreeNode getRoot();
-	
-	/**
-	 * Return a Node by a code.
-	 * @param code The code or the node to return.
-	 * @return The node.
-	 */
-	public ITreeNode getNode(String code);
-	
+
+    /**
+     * Return the root node.
+     *
+     * @return The root node.
+     */
+    ITreeNode getRoot();
+
+    /**
+     * Return a Node by a code.
+     *
+     * @param code The code or the node to return.
+     * @return The node.
+     */
+    ITreeNode getNode(String code);
+
 }

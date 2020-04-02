@@ -11,7 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.userprofile;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
@@ -30,21 +39,13 @@ import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.hamcrest.CoreMatchers.is;
-import org.hamcrest.Matchers;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -64,7 +65,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     public void testGetUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
+                .perform(get("/userProfiles/{username}", "editorCoach")
                         .header("Authorization", "Bearer " + accessToken));
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
@@ -78,7 +79,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     public void testGetInvalidUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"xxxxx"})
+                .perform(get("/userProfiles/{username}", "xxxxx")
                         .header("Authorization", "Bearer " + accessToken));
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isNotFound());
@@ -88,7 +89,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     public void testGetValidUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
+                .perform(get("/userProfiles/{username}", "editorCoach")
                         .header("Authorization", "Bearer " + accessToken));
         System.out.println(result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
@@ -201,7 +202,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
 
     private ResultActions executeProfileGet(String username, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/{username}", new Object[]{username})
+                .perform(get("/userProfiles/{username}", username)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
@@ -223,7 +224,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(put("/userProfiles/{username}", new Object[]{username})
+                .perform(put("/userProfiles/{username}", username)
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

@@ -11,60 +11,61 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.activitystream.model;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author S.Loru
  */
 public class ActivityStreamComment implements Serializable {
 
-	public int getId() {
-		return _id;
-	}
+    private int _id;
+    private String _username;
+    private String _displayName;
+    private Date _commentDate;
+    private String _commentText;
 
-	public void setId(int id) {
-		this._id = id;
-	}
-	
-	public String getUsername() {
-		return _username;
-	}
+    public int getId() {
+        return _id;
+    }
 
-	public void setUsername(String username) {
-		this._username = username;
-	}
+    public void setId(int id) {
+        this._id = id;
+    }
 
-	public String getDisplayName() {
-		return _displayName;
-	}
+    public String getUsername() {
+        return _username;
+    }
 
-	public void setDisplayName(String displayName) {
-		this._displayName = displayName;
-	}
+    public void setUsername(String username) {
+        this._username = username;
+    }
 
-	public Date getCommentDate() {
-		return _commentDate;
-	}
+    public String getDisplayName() {
+        return _displayName;
+    }
 
-	public void setCommentDate(Date commentDate) {
-		this._commentDate = commentDate;
-	}
+    public void setDisplayName(String displayName) {
+        this._displayName = displayName;
+    }
 
-	public String getCommentText() {
-		return _commentText;
-	}
+    public Date getCommentDate() {
+        return _commentDate;
+    }
 
-	public void setCommentText(String commentText) {
-		this._commentText = commentText;
-	}
-	
-	private int _id;
-	private String _username;
-	private String _displayName;
-	private Date _commentDate;
-	private String _commentText;
+    public void setCommentDate(Date commentDate) {
+        this._commentDate = commentDate;
+    }
+
+    public String getCommentText() {
+        return _commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this._commentText = commentText;
+    }
 
 }

@@ -11,22 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -40,15 +26,27 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiError;
+import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
+import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.dataobject.api.model.ApiDataObjectListBean;
 import org.entando.entando.aps.system.services.dataobject.api.model.JAXBDataObject;
 import org.entando.entando.aps.system.services.dataobject.api.model.JAXBDataObjectAttribute;
 import org.entando.entando.aps.system.services.dataobject.helper.IDataAuthorizationHelper;
+import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListHelper;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
-import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
-import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListHelper;
 import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDispenser;
+import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -56,6 +54,17 @@ import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDi
 public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
 
     private static final Logger _logger = LoggerFactory.getLogger(ApiDataObjectInterface.class);
+    private IDataTypeListHelper _dataObjectListHelper;
+    private IUserManager _userManager;
+    private ICategoryManager _categoryManager;
+    private IGroupManager _groupManager;
+    private IPageManager _pageManager;
+    private IDataAuthorizationHelper _dataObjectAuthorizationHelper;
+    private IDataObjectDispenser _dataObjectDispenser;
+    private String _itemsStartElement = "<ul>";
+    private String _itemStartElement = "<li>";
+    private String _itemEndElement = "</li>";
+    private String _itemsEndElement = "</ul>";
 
     public List<String> getDataObjects(Properties properties) throws Throwable {
         return this.extractDataObjects(properties);
@@ -76,12 +85,13 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return contentsId;
     }
 
-    protected ApiDataObjectListBean buildSearchBean(Properties properties) throws ApiException, Throwable {
+    protected ApiDataObjectListBean buildSearchBean(Properties properties) throws Throwable {
         ApiDataObjectListBean bean = null;
         try {
             String dataType = properties.getProperty("dataType");
             if (null == this.getDataObjectManager().getSmallDataTypesMap().get(dataType)) {
-                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "DataObject Type '" + dataType + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "DataObject Type '" + dataType + "' does not exist",
+                        Response.Status.CONFLICT);
             }
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             String filtersParam = properties.getProperty("filters");
@@ -135,7 +145,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return render.toString();
     }
 
-    public JAXBDataObject getDataObject(Properties properties) throws ApiException, Throwable {
+    public JAXBDataObject getDataObject(Properties properties) throws Throwable {
         JAXBDataObject jaxbDataObject = null;
         String id = properties.getProperty("id");
         try {
@@ -147,7 +157,8 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
                 user = this.getUserManager().getGuestUser();
             }
             if (!this.getDataObjectAuthorizationHelper().isAuth(user, mainDataObject)) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Required DataObject '" + id + "' does not allowed", Response.Status.FORBIDDEN);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Required DataObject '" + id + "' does not allowed",
+                        Response.Status.FORBIDDEN);
             }
         } catch (ApiException ae) {
             throw ae;
@@ -162,7 +173,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return new JAXBDataObject(mainDataObject, langCode);
     }
 
-    public String getDataObjectToHtml(Properties properties) throws ApiException, Throwable {
+    public String getDataObjectToHtml(Properties properties) throws Throwable {
         String render = null;
         String id = properties.getProperty("id");
         String modelId = properties.getProperty("modelId");
@@ -187,19 +198,21 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
 
     protected String getRenderedDataObject(String id, int modelId, String langCode) {
         String renderedData = null;
-        DataObjectRenderizationInfo renderizationInfo = this.getDataObjectDispenser().getRenderizationInfo(id, modelId, langCode, null, true);
+        DataObjectRenderizationInfo renderizationInfo = this.getDataObjectDispenser()
+                .getRenderizationInfo(id, modelId, langCode, null, true);
         if (null != renderizationInfo) {
             renderedData = renderizationInfo.getRenderedDataobject();
         }
         return renderedData;
     }
 
-    protected DataObject getPublicDataObject(String id) throws ApiException, Throwable {
+    protected DataObject getPublicDataObject(String id) throws Throwable {
         DataObject dataObject = null;
         try {
             dataObject = this.getDataObjectManager().loadDataObject(id, true);
             if (null == dataObject) {
-                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Null DataObject by id '" + id + "'", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Null DataObject by id '" + id + "'",
+                        Response.Status.CONFLICT);
             }
         } catch (ApiException ae) {
             throw ae;
@@ -210,7 +223,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return dataObject;
     }
 
-    protected Integer checkModel(String modelId, DataObject dataObject) throws ApiException, Throwable {
+    protected Integer checkModel(String modelId, DataObject dataObject) throws Throwable {
         Integer modelIdInteger = null;
         try {
             if (null == modelId || modelId.trim().length() == 0) {
@@ -219,14 +232,16 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             if (modelId.equals("default")) {
                 if (null == dataObject.getDefaultModel()) {
                     throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
-                            "Invalid 'default' system model for DataObject type '" + dataObject.getTypeCode() + "' - Contact the administrators",
+                            "Invalid 'default' system model for DataObject type '" + dataObject.getTypeCode()
+                                    + "' - Contact the administrators",
                             Response.Status.ACCEPTED);
                 }
                 modelIdInteger = Integer.parseInt(dataObject.getDefaultModel());
             } else if (modelId.equals("list")) {
                 if (null == dataObject.getListModel()) {
                     throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
-                            "Invalid 'list' system model for DataObject type '" + dataObject.getTypeCode() + "' - Contact the administrators",
+                            "Invalid 'list' system model for DataObject type '" + dataObject.getTypeCode()
+                                    + "' - Contact the administrators",
                             Response.Status.ACCEPTED);
                 }
                 modelIdInteger = Integer.parseInt(dataObject.getListModel());
@@ -241,10 +256,12 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             }
             DataObjectModel model = this.getDataObjectModelManager().getDataObjectModel(modelIdInteger);
             if (model == null) {
-                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "The DataObject model with id '" + modelId + "' does not exist", Response.Status.ACCEPTED);
+                throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
+                        "The DataObject model with id '" + modelId + "' does not exist", Response.Status.ACCEPTED);
             } else if (!dataObject.getTypeCode().equals(model.getDataType())) {
                 throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
-                        "The DataObject model with id '" + modelId + "' does not match with DataObject of type '" + dataObject.getTypeDescription() + "' ",
+                        "The DataObject model with id '" + modelId + "' does not match with DataObject of type '" + dataObject
+                                .getTypeDescription() + "' ",
                         Response.Status.ACCEPTED);
             }
         } catch (ApiException ae) {
@@ -262,7 +279,8 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             String typeCode = jaxbDataObject.getTypeCode();
             DataObject prototype = (DataObject) this.getDataObjectManager().getEntityPrototype(typeCode);
             if (null == prototype) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject type with code '" + typeCode + "' does not exist",
+                        Response.Status.CONFLICT);
             }
             DataObject dataObject = (DataObject) jaxbDataObject.buildEntity(prototype, this.getCategoryManager(), null);
             if (null != dataObject.getId()) {
@@ -287,12 +305,14 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             String typeCode = jaxbDataObject.getTypeCode();
             DataObject prototype = (DataObject) this.getDataObjectManager().getEntityPrototype(typeCode);
             if (null == prototype) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject type with code '" + typeCode + "' does not exist",
+                        Response.Status.CONFLICT);
             }
             DataObject content = (DataObject) jaxbDataObject.buildEntity(prototype, this.getCategoryManager(), null);
             DataObject masterData = this.getDataObjectManager().loadDataObject(content.getId(), false);
             if (null == masterData) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + content.getId() + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + content.getId() + "' does not exist",
+                        Response.Status.CONFLICT);
             } else if (!masterData.getMainGroup().equals(content.getMainGroup())) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "Invalid main group " + content.getMainGroup() + " not equals then master " + masterData.getMainGroup(),
@@ -309,7 +329,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return response;
     }
 
-    protected StringApiResponse validateAndSaveDataObject(DataObject dataObject, Properties properties) throws ApiException, Throwable {
+    protected StringApiResponse validateAndSaveDataObject(DataObject dataObject, Properties properties) throws Throwable {
         StringApiResponse response = new StringApiResponse();
         try {
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
@@ -328,7 +348,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
                 return response;
             }
             String insertString = properties.getProperty("insert");
-            boolean insert = (null != insertString) ? Boolean.parseBoolean(insertString) : false;
+            boolean insert = (null != insertString) && Boolean.parseBoolean(insertString);
             if (!insert) {
                 this.getDataObjectManager().saveDataObject(dataObject);
             } else {
@@ -357,7 +377,8 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
                     FieldError fieldError = fieldErrors.get(i);
                     if (fieldError instanceof AttributeFieldError) {
                         AttributeFieldError attributeError = (AttributeFieldError) fieldError;
-                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, attributeError.getFullMessage(), Response.Status.CONFLICT));
+                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, attributeError.getFullMessage(),
+                                Response.Status.CONFLICT));
                     } else {
                         errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, fieldError.getMessage(), Response.Status.CONFLICT));
                     }
@@ -376,7 +397,8 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             String id = properties.getProperty("id");
             DataObject masterDataObject = this.getDataObjectManager().loadDataObject(id, false);
             if (null == masterDataObject) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + id + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + id + "' does not exist",
+                        Response.Status.CONFLICT);
             }
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
@@ -401,15 +423,17 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
         return response;
     }
 
-    public void updateDataObjectText(JAXBDataObjectAttribute jaxbDataObjectAttribute, Properties properties) throws ApiException, Throwable {
+    public void updateDataObjectText(JAXBDataObjectAttribute jaxbDataObjectAttribute, Properties properties)
+            throws Throwable {
         try {
             String dataId = jaxbDataObjectAttribute.getDataId();
             DataObject masterDataObject = this.getDataObjectManager().loadDataObject(jaxbDataObjectAttribute.getDataId(), true);
             if (null == masterDataObject) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + dataId + "' does not exist", Response.Status.CONFLICT);
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "DataObject with code '" + dataId + "' does not exist",
+                        Response.Status.CONFLICT);
             }
             String attributeName = jaxbDataObjectAttribute.getAttributeName();
-            AttributeInterface attribute = (AttributeInterface) masterDataObject.getAttribute(attributeName);
+            AttributeInterface attribute = masterDataObject.getAttribute(attributeName);
             if (null == attribute) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "DataObject Attribute with code '" + attributeName + "' does not exist into DataObject " + dataId,
@@ -521,17 +545,5 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
     public void setItemsEndElement(String itemsEndElement) {
         this._itemsEndElement = itemsEndElement;
     }
-
-    private IDataTypeListHelper _dataObjectListHelper;
-    private IUserManager _userManager;
-    private ICategoryManager _categoryManager;
-    private IGroupManager _groupManager;
-    private IPageManager _pageManager;
-    private IDataAuthorizationHelper _dataObjectAuthorizationHelper;
-    private IDataObjectDispenser _dataObjectDispenser;
-    private String _itemsStartElement = "<ul>";
-    private String _itemStartElement = "<li>";
-    private String _itemEndElement = "</li>";
-    private String _itemsEndElement = "</ul>";
 
 }

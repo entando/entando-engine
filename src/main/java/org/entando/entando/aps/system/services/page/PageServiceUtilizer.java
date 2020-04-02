@@ -11,14 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page;
 
 import java.util.List;
 
 public interface PageServiceUtilizer<T> {
 
-    public String getManagerName();
+    String getManagerName();
 
-    public List<T> getPageUtilizer(String pageCode);
+    List<T> getPageUtilizer(String pageCode);
 
 }

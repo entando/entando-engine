@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.util;
 
 import java.io.IOException;
@@ -18,60 +19,62 @@ import java.util.Properties;
 
 /**
  * Estensione di Properties con l'aggiunta di metodi di lettura/scrittura da stringa xml.
+ *
  * @author E.Santoboni
  */
 public class ApsProperties extends Properties {
-	
-	/**
-	 * Come java.util.Properties
-	 */
-	public ApsProperties() {
-		super();
-	}
-	
-	/**
-	 * Come java.util.Properties.
-	 * @param defaults Valori di default
-	 */
-	public ApsProperties(Properties defaults) {
-		super(defaults);
-	}
-	
-	@Override
-	public ApsProperties clone() {
-		ApsProperties clone = new ApsProperties();
-		clone.putAll(this);
-		return clone;
-	}
-	
-	/**
-	 * Setta Properties estraendole dal testo xml inserito.
-	 * @param propertyXml L'xml da cui estrarre le Properties
-	 * @throws IOException
-	 */
-	public void loadFromXml(String propertyXml) throws IOException {
-		ApsProperties prop = null;
-		if(propertyXml != null) {
-			ApsPropertiesDOM propDom = new ApsPropertiesDOM();
-			prop = propDom.extractProperties(propertyXml);
-			this.putAll(prop);
-		}
-	}
-	
-	/**
-	 * Costruisce l'xml relativo alle properties.
-	 * @return La stringa xml.
-	 * @throws IOException
-	 */
-	public String toXml() throws IOException {
-		String xml = null;
-		ApsProperties prop = (ApsProperties) this.clone();
-		if (null != prop && prop.size() > 0) {
-			ApsPropertiesDOM propDom = new ApsPropertiesDOM();
-			propDom.buildJDOM(prop);
-			xml = propDom.getXMLDocument();
-		}
-		return xml;
-	}
-	
+
+    /**
+     * Come java.util.Properties
+     */
+    public ApsProperties() {
+        super();
+    }
+
+    /**
+     * Come java.util.Properties.
+     *
+     * @param defaults Valori di default
+     */
+    public ApsProperties(Properties defaults) {
+        super(defaults);
+    }
+
+    @Override
+    public ApsProperties clone() {
+        ApsProperties clone = new ApsProperties();
+        clone.putAll(this);
+        return clone;
+    }
+
+    /**
+     * Setta Properties estraendole dal testo xml inserito.
+     *
+     * @param propertyXml L'xml da cui estrarre le Properties
+     */
+    public void loadFromXml(String propertyXml) throws IOException {
+        ApsProperties prop = null;
+        if (propertyXml != null) {
+            ApsPropertiesDOM propDom = new ApsPropertiesDOM();
+            prop = propDom.extractProperties(propertyXml);
+            this.putAll(prop);
+        }
+    }
+
+    /**
+     * Costruisce l'xml relativo alle properties.
+     *
+     * @return La stringa xml.
+     */
+    public String toXml() throws IOException {
+        String xml = null;
+        ApsProperties prop = this.clone();
+        if (null != prop && prop.size() > 0) {
+            ApsPropertiesDOM propDom = new ApsPropertiesDOM();
+            propDom.buildJDOM(prop);
+            xml = propDom.getXMLDocument();
+        }
+        return xml;
+    }
+
 }

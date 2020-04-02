@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -22,23 +23,23 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = Group.TABLE_NAME)
 public class Group {
-	
-	public Group() {}
-	
-	@DatabaseField(columnName = "groupname", 
-			dataType = DataType.STRING, 
-			width = 20, 
-			canBeNull = false, id = true)
-	private String _groupName;
-	
-	@DatabaseField(columnName = "descr", 
-			dataType = DataType.STRING, 
-			width = 50, 
-			canBeNull = false)
-	private String _description;
-	
-	public static final String TABLE_NAME = "authgroups";
-	
+
+    public static final String TABLE_NAME = "authgroups";
+    @DatabaseField(columnName = "groupname",
+            dataType = DataType.STRING,
+            width = 20,
+            canBeNull = false, id = true)
+    private String _groupName;
+
+    @DatabaseField(columnName = "descr",
+            dataType = DataType.STRING,
+            width = 50,
+            canBeNull = false)
+    private String _description;
+
+    public Group() {
+    }
+
 }
 /*
 CREATE TABLE authgroups

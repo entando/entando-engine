@@ -11,8 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,16 +25,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class extended by those DAO that perform searches on entities.
+ *
  * @author E.Santoboni
  */
 @SuppressWarnings(value = {"serial", "rawtypes"})
@@ -152,6 +152,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 
     /**
      * Add to the statement the filters on the entity metadata.
+     *
      * @param filters the filters to add to the statement.
      * @param index The current index of the statement.
      * @param stat The statement.
@@ -173,13 +174,14 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 
     /**
      * Add the attribute filters to the statement.
+     *
      * @param filters The filters on the entity filters to insert in the statement.
      * @param index The last index used to associate the elements to the statement.
      * @param stat The statement where the filters are applied.
      * @return The last used index.
      * @throws SQLException In case of error.
      */
-    protected int addAttributeFilterStatementBlock(EntitySearchFilter[] filters, 
+    protected int addAttributeFilterStatementBlock(EntitySearchFilter[] filters,
             int index, PreparedStatement stat) throws SQLException {
         if (filters == null) {
             return index;
@@ -200,6 +202,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 
     /**
      * Add to the statement a filter on a attribute.
+     *
      * @param filter The filter on the attribute to apply in the statement.
      * @param index The last index used to associate the elements to the statement.
      * @param stat The statement where the filters are applied.
@@ -212,7 +215,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
         }
         return super.addObjectSearchStatementBlock(filter, index, stat);
     }
-    
+
     protected String createQueryString(EntitySearchFilter[] filters, boolean isCount, boolean selectAll) {
         StringBuffer query = this.createBaseQueryBlock(filters, isCount, selectAll);
         boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
@@ -226,12 +229,10 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 
     /**
      * Create the 'base block' of the query with the eventual references to the support table.
+     *
      * @param filters The filters defined.
-     * @param isCount
-     * @param selectAll When true, this will insert all the fields in the master table in the select 
-     * of the master query.
-     * When true we select all the available fields; when false only the field addressed by the filter
-     * is selected.
+     * @param selectAll When true, this will insert all the fields in the master table in the select of the master query. When true we
+     * select all the available fields; when false only the field addressed by the filter is selected.
      * @return The base block of the query.
      */
     protected StringBuffer createBaseQueryBlock(EntitySearchFilter[] filters, boolean isCount, boolean selectAll) {
@@ -289,13 +290,13 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
             if ((null != filter.getKey() || null != filter.getRoleName()) && filter.isAttributeFilter() && !filter.isNullOption()) {
                 query.append("INNER JOIN ");
                 query.append(searchTableName).append(" ").append(searchTableName).append(i).append(" ON ")
-                     .append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
-                     .append(searchTableName).append(i).append(".").append(searchTableIdFieldName).append(" ");
+                        .append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
+                        .append(searchTableName).append(i).append(".").append(searchTableIdFieldName).append(" ");
                 if (null != filter.getRoleName()) {
                     query.append("INNER JOIN ");
                     query.append(attributeRoleTableName).append(" ").append(attributeRoleTableName).append(i).append(" ON ")
-                         .append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
-                         .append(attributeRoleTableName).append(i).append(".").append(attributeRoleTableIdFieldName).append(" ");
+                            .append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
+                            .append(attributeRoleTableName).append(i).append(".").append(attributeRoleTableIdFieldName).append(" ");
                 }
             }
         }
@@ -326,12 +327,14 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
         query.append("SELECT ").append(searchTableName).append(".").append(this.getEntitySearchTableIdFieldName());
         query.append(" FROM ").append(searchTableName).append(" WHERE ").append(searchTableName).append(".attrname = ? ");
         this.addAttributeLangQueryBlock(searchTableName, query, filter, true);
-        query.append(" AND (").append(searchTableName).append(".datevalue IS NOT NULL OR ").append(searchTableName).append(".textvalue IS NOT NULL OR ").append(searchTableName).append(".numvalue IS NOT NULL) ");
+        query.append(" AND (").append(searchTableName).append(".datevalue IS NOT NULL OR ").append(searchTableName)
+                .append(".textvalue IS NOT NULL OR ").append(searchTableName).append(".numvalue IS NOT NULL) ");
         query.append(" ) ");
         return hasAppendWhereClause;
     }
 
-    private boolean appendValuedAttributeFilterQueryBlocks(EntitySearchFilter filter, int index, StringBuffer query, boolean hasAppendWhereClause) {
+    private boolean appendValuedAttributeFilterQueryBlocks(EntitySearchFilter filter, int index, StringBuffer query,
+            boolean hasAppendWhereClause) {
         String searchTableNameAlias = this.getEntitySearchTableName() + index;
         String attributeRoleTableNameAlias = this.getEntityAttributeRoleTableName() + index;
         hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
@@ -339,7 +342,8 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
             query.append(searchTableNameAlias).append(".attrname = ? ");
         } else {
             query.append("UPPER(").append(attributeRoleTableNameAlias).append(".rolename) = ? ");
-            query.append(" AND ").append(searchTableNameAlias).append(".attrname = ").append(attributeRoleTableNameAlias).append(".attrname ");
+            query.append(" AND ").append(searchTableNameAlias).append(".attrname = ").append(attributeRoleTableNameAlias)
+                    .append(".attrname ");
         }
         hasAppendWhereClause = this.addAttributeLangQueryBlock(searchTableNameAlias, query, filter, hasAppendWhereClause);
 
@@ -355,7 +359,8 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
                 }
                 String operator = filter.isLikeOption() ? this.getLikeClause() : "= ? ";
                 if (filter.isLikeOption()) {
-                    query.append("UPPER(" + searchTableNameAlias).append(".").append(this.getAttributeFieldColunm(allowedValue)).append(") ");
+                    query.append("UPPER(" + searchTableNameAlias).append(".").append(this.getAttributeFieldColunm(allowedValue))
+                            .append(") ");
                 } else {
 
                     query.append(searchTableNameAlias).append(".").append(this.getAttributeFieldColunm(allowedValue)).append(" ");
@@ -370,30 +375,31 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
             Object object = filter.getValue();
             String operator = filter.isLikeOption() ? this.getLikeClause() : "= ? ";
             hasAppendWhereClause = this.addAttributeObjectSearchQueryBlock(searchTableNameAlias, query,
-                                                                           object, operator, hasAppendWhereClause, filter.getLangCode(), filter);
+                    object, operator, hasAppendWhereClause, filter.getLangCode(), filter);
         } else {
             //creazione blocco selezione su tabella ricerca
             if (null != filter.getStart()) {
                 hasAppendWhereClause = this.addAttributeObjectSearchQueryBlock(searchTableNameAlias, query,
-                                                                               filter.getStart(), ">= ? ", hasAppendWhereClause, filter.getLangCode(), filter);
+                        filter.getStart(), ">= ? ", hasAppendWhereClause, filter.getLangCode(), filter);
             }
             if (null != filter.getEnd()) {
                 hasAppendWhereClause = this.addAttributeObjectSearchQueryBlock(searchTableNameAlias, query,
-                                                                               filter.getEnd(), "<= ? ", hasAppendWhereClause, filter.getLangCode(), filter);
+                        filter.getEnd(), "<= ? ", hasAppendWhereClause, filter.getLangCode(), filter);
             }
             if (null == filter.getStart() && null == filter.getEnd()) {
                 hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
-                query.append(" (").append(searchTableNameAlias).append(".datevalue IS NOT NULL OR ").append(searchTableNameAlias).append(".textvalue IS NOT NULL OR ").append(searchTableNameAlias).append(
-                                                                                                                                                                                                           ".numvalue IS NOT NULL) ");
+                query.append(" (").append(searchTableNameAlias).append(".datevalue IS NOT NULL OR ").append(searchTableNameAlias)
+                        .append(".textvalue IS NOT NULL OR ").append(searchTableNameAlias).append(
+                        ".numvalue IS NOT NULL) ");
             }
         }
         return hasAppendWhereClause;
     }
 
     protected boolean addAttributeLangQueryBlock(String searchTableName,
-                                                 StringBuffer query,
-                                                 EntitySearchFilter filter,
-                                                 boolean hasAppendWhereClause) {
+            StringBuffer query,
+            EntitySearchFilter filter,
+            boolean hasAppendWhereClause) {
         if (filter.isAttributeFilter() && null != filter.getLangCode()) {
             hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
             query.append(searchTableName).append(".langcode = ? ");
@@ -440,12 +446,12 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
     }
 
     protected boolean addAttributeObjectSearchQueryBlock(String searchTableName,
-                                                         StringBuffer query,
-                                                         Object object,
-                                                         String operator,
-                                                         boolean hasAppendWhereClause,
-                                                         String langCode,
-                                                         EntitySearchFilter filter) {
+            StringBuffer query,
+            Object object,
+            String operator,
+            boolean hasAppendWhereClause,
+            String langCode,
+            EntitySearchFilter filter) {
         hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
         if (filter.getValue() != null) {
             if (filter.isLikeOption()) {
@@ -484,8 +490,8 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
         }
         if (null == object) {
             query.append(searchTableNameAlias).append(".textvalue ").append(order).append(", ")
-                 .append(searchTableNameAlias).append(".datevalue ").append(order).append(", ")
-                 .append(searchTableNameAlias).append(".numvalue ").append(order);
+                    .append(searchTableNameAlias).append(".datevalue ").append(order).append(", ")
+                    .append(searchTableNameAlias).append(".numvalue ").append(order);
             return;
         }
         query.append(searchTableNameAlias).append(".").append(this.getAttributeFieldColunm(object)).append(" ");
@@ -526,30 +532,35 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 
     /**
      * Return the name of the entities master table.
+     *
      * @return The name of the master table.
      */
     protected abstract String getEntityMasterTableName();
 
     /**
      * Return the name of the "entity ID" field in the master entity table.
+     *
      * @return The name of the "entity ID" field.
      */
     protected abstract String getEntityMasterTableIdFieldName();
 
     /**
      * Return the name of the "Entity Type code" in the master entity table.
+     *
      * @return The name of the "Entity Type code".
      */
     protected abstract String getEntityMasterTableIdTypeFieldName();
 
     /**
      * Return the name of the support table used to perform search on entities.
+     *
      * @return The name of the support table.
      */
     protected abstract String getEntitySearchTableName();
 
     /**
      * Return the name of the "Entity ID" in the support table used to perform search on entities.
+     *
      * @return The name of "Entity ID" field.
      */
     protected abstract String getEntitySearchTableIdFieldName();

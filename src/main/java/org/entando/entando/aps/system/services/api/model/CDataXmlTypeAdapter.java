@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -19,15 +20,15 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author Frédéric Barmes - E.Santoboni
  */
 public class CDataXmlTypeAdapter extends XmlAdapter<String, String> {
-    
-	@Override
-	public String unmarshal(String value) {
+
+    @Override
+    public String unmarshal(String value) {
         return (CDataAdapter.parse(value));
     }
-	
-	@Override
+
+    @Override
     public String marshal(String value) {
         return (CDataAdapter.print(value));
     }
-	
+
 }

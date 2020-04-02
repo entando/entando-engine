@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.actionlog;
 
-import java.util.List;
-import java.util.Set;
+package org.entando.entando.aps.system.services.actionlog;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
@@ -26,29 +26,29 @@ import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSe
  * @author E.Santoboni - S.Puddu
  */
 public interface IActionLogDAO {
-	
-	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean);
-	
-	public List<Integer> getActivityStreamRecords(IActivityStreamSearchBean searchBean);
-	
-	public List<Integer> getActionRecords(FieldSearchFilter[] filters);
-	
-	public List<Integer> getActionRecords(FieldSearchFilter[] filters, List<String> userGroupCodes);
-	
-	public void addActionRecord(ActionLogRecord actionRecord);
-	
-	public ActionLogRecord getActionRecord(int id);
-	
-	public void deleteActionRecord(int id);
-    
-    public Date getLastUpdate(IActionLogRecordSearchBean searchBean);
-    
-	public Date getLastUpdate(FieldSearchFilter[] filters, List<String> userGroupCodes);
-    
-	public Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup);
-    
-	public void updateRecordDate(int id);
 
-    public int countActionLogRecords(IActionLogRecordSearchBean searchBean);
-	
+    List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean);
+
+    List<Integer> getActivityStreamRecords(IActivityStreamSearchBean searchBean);
+
+    List<Integer> getActionRecords(FieldSearchFilter[] filters);
+
+    List<Integer> getActionRecords(FieldSearchFilter[] filters, List<String> userGroupCodes);
+
+    void addActionRecord(ActionLogRecord actionRecord);
+
+    ActionLogRecord getActionRecord(int id);
+
+    void deleteActionRecord(int id);
+
+    Date getLastUpdate(IActionLogRecordSearchBean searchBean);
+
+    Date getLastUpdate(FieldSearchFilter[] filters, List<String> userGroupCodes);
+
+    Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup);
+
+    void updateRecordDate(int id);
+
+    int countActionLogRecords(IActionLogRecordSearchBean searchBean);
+
 }

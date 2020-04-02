@@ -11,12 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -24,7 +20,10 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.page.IPageManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
@@ -96,7 +95,7 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
 
     @Override
     public DataTypeDto getDataType(String dataTypeCode) {
-        return (DataTypeDto) super.getFullEntityType(SystemConstants.DATA_OBJECT_MANAGER, dataTypeCode);
+        return super.getFullEntityType(SystemConstants.DATA_OBJECT_MANAGER, dataTypeCode);
     }
 
     @Override
@@ -106,11 +105,12 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
 
     @Override
     public DataTypeDto updateDataType(DataTypeDtoRequest request, BindingResult bindingResult) {
-        return (DataTypeDto) super.updateEntityType(SystemConstants.DATA_OBJECT_MANAGER, request, bindingResult);
+        return super.updateEntityType(SystemConstants.DATA_OBJECT_MANAGER, request, bindingResult);
     }
 
     @Override
-    protected DataObject createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult) throws Throwable {
+    protected DataObject createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult)
+            throws Throwable {
         DataObject dataObject = super.createEntityType(entityManager, dto, bindingResult);
         DataTypeDtoRequest dtr = (DataTypeDtoRequest) dto;
         if (this.checkModel(false, dataObject.getTypeCode(), dtr.getListModel(), bindingResult)) {
@@ -139,7 +139,8 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
         }
         DataObjectModel model = this.getDataObjectModelManager().getDataObjectModel(longId);
         if (null == model) {
-            this.addError((isDefault ? DataTypeValidator.ERRCODE_DEFAULT_MODEL_DOES_NOT_EXIST : DataTypeValidator.ERRCODE_LIST_MODEL_DOES_NOT_EXIST),
+            this.addError((isDefault ? DataTypeValidator.ERRCODE_DEFAULT_MODEL_DOES_NOT_EXIST
+                            : DataTypeValidator.ERRCODE_LIST_MODEL_DOES_NOT_EXIST),
                     bindingResult, new String[]{typeCode, modelIdString}, "dataType.modelId.doesNotExist");
             return false;
         } else if (model.getDataType().equals(typeCode)) {
@@ -155,7 +156,8 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
             return false;
         }
         if (null == this.getPageManager().getOnlinePage(pageCode)) {
-            this.addError(DataTypeValidator.ERRCODE_INVALID_VIEW_PAGE, bindingResult, new String[]{typeCode, pageCode}, "dataType.pageCode.invalid");
+            this.addError(DataTypeValidator.ERRCODE_INVALID_VIEW_PAGE, bindingResult, new String[]{typeCode, pageCode},
+                    "dataType.pageCode.invalid");
             return false;
         }
         return true;
@@ -182,12 +184,14 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
     }
 
     @Override
-    public EntityTypeAttributeFullDto addDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
+    public EntityTypeAttributeFullDto addDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
         return super.addEntityAttribute(SystemConstants.DATA_OBJECT_MANAGER, dataTypeCode, bodyRequest, bindingResult);
     }
 
     @Override
-    public EntityTypeAttributeFullDto updateDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
+    public EntityTypeAttributeFullDto updateDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
         return super.updateEntityAttribute(SystemConstants.DATA_OBJECT_MANAGER, dataTypeCode, bodyRequest, bindingResult);
     }
 

@@ -11,70 +11,70 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
  */
 @DatabaseTable(tableName = ApiCatalogMethod.TABLE_NAME)
 public class ApiCatalogMethod implements ExtendedColumnDefinition {
-	
-	public ApiCatalogMethod() {}
-	
-	@DatabaseField(columnName = "resourcecode", 
-			dataType = DataType.STRING, 
-			width = 100, 
-			canBeNull = false)
-	private String _resourceCode;
-	
-	@DatabaseField(columnName = "httpmethod", 
-			dataType = DataType.STRING, 
-			width = 6, 
-			canBeNull = false)
-	private String _httpmethod;
-	
-	@DatabaseField(columnName = "isactive", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _active;
-	
-	@DatabaseField(columnName = "ishidden", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _hidden;
-	
-	@DatabaseField(columnName = "authenticationrequired", 
-			dataType = DataType.SHORT)
-	private short _authenticationRequired;
-	
-	@DatabaseField(columnName = "authorizationrequired", 
-			foreign = true, width = 30)
-	private Permission _authorizationRequired;
-	
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		String tableName = TABLE_NAME;
-		String permissionsTableName = Permission.TABLE_NAME;
-		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + tableName + "`";
-			permissionsTableName = "`" + permissionsTableName + "`";
-		}
-		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " 
-				+ TABLE_NAME + "_pkey PRIMARY KEY(resourcecode , httpmethod)", 
-			"ALTER TABLE " + tableName + " ADD CONSTRAINT " 
-				+ TABLE_NAME + "_auth_fkey FOREIGN KEY (authorizationrequired) REFERENCES " 
-				+ permissionsTableName + " (permissionname)"};
-	}
-	
-	public static final String TABLE_NAME = "apicatalog_methods";
-	
+
+    public static final String TABLE_NAME = "apicatalog_methods";
+    @DatabaseField(columnName = "resourcecode",
+            dataType = DataType.STRING,
+            width = 100,
+            canBeNull = false)
+    private String _resourceCode;
+
+    @DatabaseField(columnName = "httpmethod",
+            dataType = DataType.STRING,
+            width = 6,
+            canBeNull = false)
+    private String _httpmethod;
+
+    @DatabaseField(columnName = "isactive",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _active;
+
+    @DatabaseField(columnName = "ishidden",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _hidden;
+
+    @DatabaseField(columnName = "authenticationrequired",
+            dataType = DataType.SHORT)
+    private short _authenticationRequired;
+
+    @DatabaseField(columnName = "authorizationrequired",
+            foreign = true, width = 30)
+    private Permission _authorizationRequired;
+
+    public ApiCatalogMethod() {
+    }
+
+    @Override
+    public String[] extensions(IDatabaseManager.DatabaseType type) {
+        String tableName = TABLE_NAME;
+        String permissionsTableName = Permission.TABLE_NAME;
+        if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
+            tableName = "`" + tableName + "`";
+            permissionsTableName = "`" + permissionsTableName + "`";
+        }
+        return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT "
+                + TABLE_NAME + "_pkey PRIMARY KEY(resourcecode , httpmethod)",
+                "ALTER TABLE " + tableName + " ADD CONSTRAINT "
+                        + TABLE_NAME + "_auth_fkey FOREIGN KEY (authorizationrequired) REFERENCES "
+                        + permissionsTableName + " (permissionname)"};
+    }
+
 }
 /*
 CREATE TABLE apicatalog_methods

@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -23,37 +23,37 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public interface IStorageManager extends Serializable {
-	
-	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException, IOException;
-	
-	public boolean deleteFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public void createDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public void deleteDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public InputStream getStream(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public String getResourceUrl(String subPath, boolean isProtectedResource);
-	
-	public boolean exists(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public BasicFileAttributeView getAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public String[] list(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public String[] listDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public String[] listFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public BasicFileAttributeView[] listAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public BasicFileAttributeView[] listDirectoryAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public BasicFileAttributeView[] listFileAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public String readFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
-	
-	public void editFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException;
-	
+
+    void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException, IOException;
+
+    boolean deleteFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    void createDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    void deleteDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    InputStream getStream(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    String getResourceUrl(String subPath, boolean isProtectedResource);
+
+    boolean exists(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    BasicFileAttributeView getAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    String[] list(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    String[] listDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    String[] listFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    BasicFileAttributeView[] listAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    BasicFileAttributeView[] listDirectoryAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    BasicFileAttributeView[] listFileAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    String readFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
+
+    void editFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException;
+
 }

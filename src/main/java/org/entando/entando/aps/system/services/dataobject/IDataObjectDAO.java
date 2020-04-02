@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.system.common.entity.IEntityDAO;
@@ -24,18 +25,18 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
  */
 public interface IDataObjectDAO extends IEntityDAO {
 
-    public void insertDataObject(DataObject data);
+    void insertDataObject(DataObject data);
 
-    public void reloadDataObjectReferences(DataObject data);
+    void reloadDataObjectReferences(DataObject data);
 
-    public void removeDataObject(DataObject data);
+    void removeDataObject(DataObject data);
 
-    public void updateDataObject(DataObject data, boolean updateDate);
+    void updateDataObject(DataObject data, boolean updateDate);
 
-    public DataObjectsStatus loadDataObjectsStatus();
+    DataObjectsStatus loadDataObjectsStatus();
 
-    public List<String> getCategoryUtilizers(String categoryCode);
+    List<String> getCategoryUtilizers(String categoryCode);
 
-    public List<String> getGroupUtilizers(String groupName);
+    List<String> getGroupUtilizers(String groupName);
 
 }

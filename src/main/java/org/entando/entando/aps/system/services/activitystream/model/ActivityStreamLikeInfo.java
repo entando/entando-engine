@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.activitystream.model;
 
 import java.io.Serializable;
@@ -19,22 +20,24 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public class ActivityStreamLikeInfo implements Serializable {
-	
-	public String getUsername() {
-		return _username;
-	}
-	public void setUsername(String username) {
-		this._username = username;
-	}
-	
-	public String getDisplayName() {
-		return _displayName;
-	}
-	public void setDisplayName(String displayName) {
-		this._displayName = displayName;
-	}
-	
-	private String _username;
-	private String _displayName;
-	
+
+    private String _username;
+    private String _displayName;
+
+    public String getUsername() {
+        return _username;
+    }
+
+    public void setUsername(String username) {
+        this._username = username;
+    }
+
+    public String getDisplayName() {
+        return _displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this._displayName = displayName;
+    }
+
 }

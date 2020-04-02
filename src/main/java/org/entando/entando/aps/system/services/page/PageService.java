@@ -11,16 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.page;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+package org.entando.entando.aps.system.services.page;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
@@ -41,6 +33,14 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
@@ -82,12 +82,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
 /**
- *
  * @author paddeo
  */
-public class PageService implements IPageService, GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>, ApplicationContextAware {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class PageService implements IPageService, GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>,
+        ApplicationContextAware {
 
     private static final String ERRCODE_PAGE_NOT_FOUND = "1";
     private static final String ERRCODE_PAGEMODEL_NOT_FOUND = "1";
@@ -97,9 +95,8 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
     private static final String ERRCODE_FRAME_INVALID = "2";
     private static final String ERRCODE_WIDGET_INVALID = "4";
     private static final String ERRCODE_STATUS_INVALID = "3";
-
     private static final String ERRCODE_PAGE_REFERENCES = "5";
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private IPageManager pageManager;
 
@@ -201,10 +198,11 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
     public List<PageDto> getPages(String parentCode) {
         List<PageDto> res = new ArrayList<>();
         IPage parent = this.getPageManager().getDraftPage(parentCode);
-        Optional.ofNullable(parent).ifPresent(root -> Optional.ofNullable(root.getChildrenCodes()).ifPresent(children -> Arrays.asList(children).forEach(childCode -> {
-            IPage childD = this.getPageManager().getDraftPage(childCode);
-            res.add(dtoBuilder.convert(childD));
-        })));
+        Optional.ofNullable(parent).ifPresent(
+                root -> Optional.ofNullable(root.getChildrenCodes()).ifPresent(children -> Arrays.asList(children).forEach(childCode -> {
+                    IPage childD = this.getPageManager().getDraftPage(childCode);
+                    res.add(dtoBuilder.convert(childD));
+                })));
         return res;
     }
 
@@ -329,7 +327,8 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                         PageServiceUtilizer serviceUtilizer = iter.next();
                         List utilizer = serviceUtilizer.getPageUtilizer(pageCode);
                         if (null != utilizer && utilizer.size() > 0) {
-                            bindingResult.reject(PageValidator.ERRCODE_REFERENCED_ONLINE_PAGE, new String[]{pageCode}, "page.status.invalid.online.ref");
+                            bindingResult.reject(PageValidator.ERRCODE_REFERENCED_ONLINE_PAGE, new String[]{pageCode},
+                                    "page.status.invalid.online.ref");
                             throw new ValidationGenericException(bindingResult);
                         }
                     }
@@ -364,7 +363,8 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         boolean moveUp = page.getPosition() > pageRequest.getPosition();
         try {
             if (page.getParentCode().equals(parent.getCode())) {
-                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp));
+                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp)) {
+                }
             } else {
                 this.getPageManager().movePage(page, parent);
             }
@@ -444,14 +444,16 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             if (null != validation && validation.hasErrors()) {
                 throw new ValidationConflictException(validation);
             }
-            ApsProperties properties = (ApsProperties) this.getWidgetProcessorFactory().get(widgetReq.getCode()).buildConfiguration(widgetReq);
+            ApsProperties properties = (ApsProperties) this.getWidgetProcessorFactory().get(widgetReq.getCode())
+                    .buildConfiguration(widgetReq);
             WidgetType widgetType = this.getWidgetType(widgetReq.getCode());
             Widget widget = new Widget();
             widget.setType(widgetType);
             widget.setConfig(properties);
             this.getPageManager().joinWidget(pageCode, widget, frameId);
 
-            ApsProperties outProperties = this.getWidgetProcessorFactory().get(widgetReq.getCode()).extractConfiguration(widget.getConfig());
+            ApsProperties outProperties = this.getWidgetProcessorFactory().get(widgetReq.getCode())
+                    .extractConfiguration(widget.getConfig());
             return new WidgetConfigurationDto(widget.getType().getCode(), outProperties);
         } catch (ApsSystemException e) {
             logger.error("Error in update widget configuration {}", pageCode, e);
@@ -468,7 +470,8 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                 return;
             }
             if (frameId >= page.getWidgets().length) {
-                logger.info("the frame to delete with index {} in page {} with model {} does not exists", frameId, pageCode, page.getModel().getCode());
+                logger.info("the frame to delete with index {} in page {} with model {} does not exists", frameId, pageCode,
+                        page.getModel().getCode());
                 return;
             }
             this.pageManager.removeWidget(pageCode, frameId);
@@ -506,10 +509,6 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
     /**
      * Merge the page configuration with the provided new one.
      * </p>
-     *
-     * @param page
-     * @param newWidgetConfiguration
-     * @return
      */
     protected Widget[] mergePageConfiguration(IPage page, Widget[] newWidgetConfiguration) {
         Widget[] widgets = page.getWidgets();
@@ -517,7 +516,8 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             Widget defaultWidget = newWidgetConfiguration[i];
             if (null != defaultWidget) {
                 if (null == defaultWidget.getType()) {
-                    logger.info("Widget Type null when adding defaulWidget (of pagemodel '{}') on frame '{}' of page '{}'", page.getModel().getCode(), i, page.getCode());
+                    logger.info("Widget Type null when adding defaulWidget (of pagemodel '{}') on frame '{}' of page '{}'",
+                            page.getModel().getCode(), i, page.getCode());
                     continue;
                 }
                 widgets[i] = defaultWidget;
@@ -565,10 +565,17 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
 
     private IPage updatePage(IPage oldPage, PageRequest pageRequest) {
         Page page = new Page();
+        PageMetadata metadata = oldPage.getMetadata();
+        if (metadata == null) {
+            metadata = new PageMetadata();
+        }
+        this.valueMetadataFromRequest(metadata, pageRequest);
+        page.setMetadata(metadata);
         page.setCode(pageRequest.getCode());
         page.setShowable(pageRequest.isDisplayedInMenu());
         if (!oldPage.getModel().getCode().equals(pageRequest.getPageModel())) {
             PageModel model = this.getPageModelManager().getPageModel(pageRequest.getPageModel());
+            model.setCode(pageRequest.getPageModel());
             page.setModel(model);
             page.setWidgets(new Widget[model.getFrames().length]);
         }
@@ -591,12 +598,6 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             pageRequest.getJoinGroups().forEach(page::addExtraGroup);
         }
         page.setParentCode(pageRequest.getParentCode());
-        PageMetadata metadata = oldPage.getMetadata();
-        if (metadata == null) {
-            metadata = new PageMetadata();
-        }
-        this.valueMetadataFromRequest(metadata, pageRequest);
-        page.setMetadata(metadata);
         page.setPosition(oldPage.getPosition());
         page.setChildrenCodes(oldPage.getChildrenCodes());
         return page;

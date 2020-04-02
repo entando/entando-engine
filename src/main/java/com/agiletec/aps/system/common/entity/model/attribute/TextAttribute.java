@@ -11,18 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
+import com.agiletec.aps.system.services.lang.Lang;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.jdom.Element;
-
-import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
-import com.agiletec.aps.system.services.lang.Lang;
 
 /**
  * This class implements the Text Attribute. It can support multiple languages.
@@ -30,6 +29,8 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author M.Diana
  */
 public class TextAttribute extends AbstractTextAttribute {
+
+    private Map<String, String> _textMap;
 
     /**
      * Initialize the map of the texts.
@@ -54,17 +55,16 @@ public class TextAttribute extends AbstractTextAttribute {
     }
 
     /**
-     * Return the associated text in the current language (set using the
-     * 'setLangCode' method) or the default language if the former is not
+     * Return the associated text in the current language (set using the 'setLangCode' method) or the default language if the former is not
      * available.
      *
      * @return The requested text.
      */
     @Override
     public String getText() {
-        String text = (String) this.getTextMap().get(this.getRenderingLang());
+        String text = this.getTextMap().get(this.getRenderingLang());
         if (text == null) {
-            text = (String) this.getTextMap().get(this.getDefaultLangCode());
+            text = this.getTextMap().get(this.getDefaultLangCode());
             if (text == null) {
                 text = "";
             }
@@ -74,7 +74,7 @@ public class TextAttribute extends AbstractTextAttribute {
 
     @Override
     public String getTextForLang(String langCode) {
-        return (String) this.getTextMap().get(langCode);
+        return this.getTextMap().get(langCode);
     }
 
     /**
@@ -94,8 +94,7 @@ public class TextAttribute extends AbstractTextAttribute {
     }
 
     /**
-     * Return the Map containing all the versions available of the associated
-     * text, one per language.
+     * Return the Map containing all the versions available of the associated text, one per language.
      *
      * @return A map indexed by the language code.
      */
@@ -104,9 +103,8 @@ public class TextAttribute extends AbstractTextAttribute {
     }
 
     /**
-     * Set up a map containing all the versions available of the associated
-     * text, one per language. This will overwrite, and possibly delete, all the
-     * previous values of the attribute.
+     * Set up a map containing all the versions available of the associated text, one per language. This will overwrite, and possibly
+     * delete, all the previous values of the attribute.
      *
      * @param textMap A map indexed by the language code.
      */
@@ -152,9 +150,8 @@ public class TextAttribute extends AbstractTextAttribute {
     }
 
     /**
-     * Add the elements, related to the texts inserted in the attribute, needed
-     * in order to prepare the element to finally insert in the XML of the
-     * entity.
+     * Add the elements, related to the texts inserted in the attribute, needed in order to prepare the element to finally insert in the XML
+     * of the entity.
      *
      * @param attributeElement The element to complete.
      */
@@ -199,7 +196,5 @@ public class TextAttribute extends AbstractTextAttribute {
         }
         return Status.EMPTY;
     }
-
-    private Map<String, String> _textMap;
 
 }

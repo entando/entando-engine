@@ -11,58 +11,51 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
-
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 
 /**
- * Interfaccia base per i Data Access Object dediti alle operazioni di ricerca
- * ad uso del motore di ricerca interno.
+ * Interfaccia base per i Data Access Object dediti alle operazioni di ricerca ad uso del motore di ricerca interno.
  *
  * @author E.Santoboni
  */
 public interface ISearcherDAO {
 
-	/**
-	 * Inizializzazione del searcher.
-	 *
-	 * @param dir La cartella locale contenitore dei dati persistenti.
-	 * @throws ApsSystemException In caso di errore
-	 */
-	public void init(File dir) throws ApsSystemException;
+    /**
+     * Inizializzazione del searcher.
+     *
+     * @param dir La cartella locale contenitore dei dati persistenti.
+     * @throws ApsSystemException In caso di errore
+     */
+    void init(File dir) throws ApsSystemException;
 
-	public FacetedContentsResult searchFacetedContents(SearchEngineFilter[] filters,
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+    FacetedContentsResult searchFacetedContents(SearchEngineFilter[] filters,
+            Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
 
-	/**
-	 * Ricerca una lista di identificativi di dataobject in base ai filtri
-	 * immessi.
-	 *
-	 * @param filters i filtri da applicare alla ricerca.
-	 * @param categories Le categorie da applicare alla ricerca.
-	 * @param allowedGroups I gruppi autorizzati alla visualizzazione. Nel caso
-	 * che la collezione sia nulla o vuota, la ricerca sarà effettuata su
-	 * contenuti referenziati con il gruppo "Ad accesso libero". Nel caso che
-	 * nella collezione sia presente il gruppo degli "Amministratori", la
-	 * ricerca produrrà un'insieme di identificativi di contenuto non filtrati
-	 * per gruppo.
-	 * @return La lista di identificativi contenuto.
-	 * @throws ApsSystemException
-	 */
-	public List<String> searchContentsId(SearchEngineFilter[] filters,
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+    /**
+     * Ricerca una lista di identificativi di dataobject in base ai filtri immessi.
+     *
+     * @param filters i filtri da applicare alla ricerca.
+     * @param categories Le categorie da applicare alla ricerca.
+     * @param allowedGroups I gruppi autorizzati alla visualizzazione. Nel caso che la collezione sia nulla o vuota, la ricerca sarà
+     * effettuata su contenuti referenziati con il gruppo "Ad accesso libero". Nel caso che nella collezione sia presente il gruppo degli
+     * "Amministratori", la ricerca produrrà un'insieme di identificativi di contenuto non filtrati per gruppo.
+     * @return La lista di identificativi contenuto.
+     */
+    List<String> searchContentsId(SearchEngineFilter[] filters,
+            Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
 
-	public void close();
-        
-        public void setCategoryManager(ICategoryManager categoryManager);
+    void close();
+
+    void setCategoryManager(ICategoryManager categoryManager);
 
 }

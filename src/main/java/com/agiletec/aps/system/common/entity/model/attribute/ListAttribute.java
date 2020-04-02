@@ -11,33 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class represents the Attribute of type "Multi-language List", composed
- * by several homogeneous attributes; there is a list for every language in the
- * system.
+ * This class represents the Attribute of type "Multi-language List", composed by several homogeneous attributes; there is a list for every
+ * language in the system.
  *
  * @author M.Diana
  */
 public class ListAttribute extends AbstractListAttribute {
 
     private static final Logger _logger = LoggerFactory.getLogger(ListAttribute.class);
+    private Map<String, List<AttributeInterface>> _listMap;
 
     /**
      * Initialize the data structure.
@@ -50,8 +49,7 @@ public class ListAttribute extends AbstractListAttribute {
      * Add a new empty attribute to the list in the specified language.
      *
      * @param langCode The code of the language.
-     * @return The attribute added to the list, ready to be populated with the
-     * data.
+     * @return The attribute added to the list, ready to be populated with the data.
      */
     public AttributeInterface addAttribute(String langCode) {
         AttributeInterface newAttr = (AttributeInterface) this.getNestedAttributeType().getAttributePrototype();
@@ -69,7 +67,7 @@ public class ListAttribute extends AbstractListAttribute {
      * @return A list of homogeneous attributes.
      */
     public List<AttributeInterface> getAttributeList(String langCode) {
-        List<AttributeInterface> attrList = (List<AttributeInterface>) this._listMap.get(langCode);
+        List<AttributeInterface> attrList = this._listMap.get(langCode);
         if (attrList == null) {
             attrList = new ArrayList<>();
             this._listMap.put(langCode, attrList);
@@ -91,8 +89,7 @@ public class ListAttribute extends AbstractListAttribute {
     /**
      * Remove from the list one of the attributes of the given language.
      *
-     * @param langCode The code of the language of the list where to delete the
-     * attribute from.
+     * @param langCode The code of the language of the list where to delete the attribute from.
      * @param index The index of the attribute in the list.
      */
     public void removeAttribute(String langCode, int index) {
@@ -141,8 +138,7 @@ public class ListAttribute extends AbstractListAttribute {
     }
 
     /**
-     * Return a Map containing all the localized versions of the associated
-     * list.
+     * Return a Map containing all the localized versions of the associated list.
      *
      * @return A map indexed by the language code.
      */
@@ -220,7 +216,7 @@ public class ListAttribute extends AbstractListAttribute {
                 List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
                 for (int j = 0; j < attributeList.size(); j++) {
                     AttributeInterface attributeElement = attributeList.get(j);
-                    AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                    AttributeTracer elementTracer = tracer.clone();
                     elementTracer.setListElement(true);
                     elementTracer.setListLang(lang);
                     elementTracer.setListIndex(j);
@@ -242,7 +238,5 @@ public class ListAttribute extends AbstractListAttribute {
         }
         return errors;
     }
-
-    private Map<String, List<AttributeInterface>> _listMap;
 
 }

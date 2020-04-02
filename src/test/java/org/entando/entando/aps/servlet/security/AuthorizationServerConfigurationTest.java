@@ -11,24 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.servlet.security;
+
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
-import org.springframework.security.crypto.codec.Base64;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.is;
 import org.junit.Assert;
 import org.junit.Before;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -63,9 +65,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
             String hash = new String(Base64.encode("test1_consumer:secret".getBytes()));
             ResultActions result
                     = mockMvc.perform(post("/oauth/token")
-                            .params(params)
-                            .header("Authorization", "Basic " + hash)
-                            .accept("application/json;charset=UTF-8"))
+                    .params(params)
+                    .header("Authorization", "Basic " + hash)
+                    .accept("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
@@ -107,9 +109,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
             String hash = new String(Base64.encode("test1_consumer:secret".getBytes()));
             ResultActions result
                     = mockMvc.perform(post("/oauth/token")
-                            .params(params)
-                            .header("Authorization", "Basic " + hash)
-                            .accept("application/json;charset=UTF-8"))
+                    .params(params)
+                    .header("Authorization", "Basic " + hash)
+                    .accept("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
@@ -152,9 +154,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
         String hash = new String(Base64.encode("test1_consumer:secret".getBytes()));
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")
-                        .params(params)
-                        .header("Authorization", "Basic " + hash)
-                        .accept("application/json;charset=UTF-8"))
+                .params(params)
+                .header("Authorization", "Basic " + hash)
+                .accept("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
@@ -180,9 +182,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
         String hash = new String(Base64.encode((clientId + ":" + secret).getBytes()));
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")
-                        .params(params)
-                        .header("Authorization", "Basic " + hash)
-                        .accept("application/json;charset=UTF-8"))
+                .params(params)
+                .header("Authorization", "Basic " + hash)
+                .accept("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
@@ -212,9 +214,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
         String hash = new String(Base64.encode((clientId + ":" + secret).getBytes()));
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")
-                        .params(params)
-                        .header("Authorization", "Basic " + hash)
-                        .accept("application/json;charset=UTF-8"))
+                .params(params)
+                .header("Authorization", "Basic " + hash)
+                .accept("application/json;charset=UTF-8"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
@@ -242,9 +244,9 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
         String hash = new String(Base64.encode((clientId + ":" + secret).getBytes()));
         ResultActions result
                 = mockMvc.perform(post("/oauth/token")
-                        .params(params)
-                        .header("Authorization", "Basic " + hash)
-                        .accept("application/json;charset=UTF-8"))
+                .params(params)
+                .header("Authorization", "Basic " + hash)
+                .accept("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized());
         String resultString = result.andReturn().getResponse().getContentAsString();
         Assert.assertTrue(StringUtils.isBlank(resultString));

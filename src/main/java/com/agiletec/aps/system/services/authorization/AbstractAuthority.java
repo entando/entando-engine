@@ -11,28 +11,31 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractAuthority implements IApsAuthority {
-	
-	public String getName() {
-		return _name;
-	}
-	public void setName(String name) {
-		this._name = name;
-	}
-	
-	public String getDescription() {
-		return _description;
-	}
-	public void setDescription(String description) {
-		this._description = description;
-	}
-	
-	private String _name;
-	private String _description;
-	
+
+    private String _name;
+    private String _description;
+
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(String name) {
+        this._name = name;
+    }
+
+    public String getDescription() {
+        return _description;
+    }
+
+    public void setDescription(String description) {
+        this._description = description;
+    }
+
 }

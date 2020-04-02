@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype;
 
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
@@ -21,17 +22,17 @@ import org.entando.entando.web.widget.model.WidgetRequest;
 
 public interface IWidgetService {
 
-    public String BEAN_NAME = "WidgetService";
+    String BEAN_NAME = "WidgetService";
 
-    public WidgetDto getWidget(String widgetCode);
+    WidgetDto getWidget(String widgetCode);
 
-    public WidgetDto addWidget(WidgetRequest widgetRequest);
+    WidgetDto addWidget(WidgetRequest widgetRequest);
 
-    public void removeWidget(String widgetCode);
+    void removeWidget(String widgetCode);
 
-    public PagedMetadata<WidgetDto> getWidgets(RestListRequest restRequest);
+    PagedMetadata<WidgetDto> getWidgets(RestListRequest restRequest);
 
-    public WidgetDto updateWidget(String widgetCode, WidgetRequest widgetRequest);
+    WidgetDto updateWidget(String widgetCode, WidgetRequest widgetRequest);
 
-    public WidgetInfoDto getWidgetInfo(String widgetCode);
+    WidgetInfoDto getWidgetInfo(String widgetCode);
 }

@@ -11,66 +11,74 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.user;
-
-import com.agiletec.aps.system.common.entity.model.attribute.*;
-import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.*;
-import com.agiletec.aps.system.services.role.*;
-import com.agiletec.aps.system.services.user.*;
-import de.mkammerer.argon2.Argon2Factory;
-import org.entando.entando.aps.system.services.user.UserService;
-import org.entando.entando.aps.system.services.user.model.*;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
-import org.entando.entando.aps.util.crypto.Argon2PasswordEncoder;
-import org.entando.entando.web.AbstractControllerTest;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
-import org.entando.entando.web.user.model.*;
-import org.entando.entando.web.user.validator.UserValidator;
-import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.*;
-import org.mockito.*;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.*;
-import org.entando.entando.aps.util.crypto.CryptoException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.role.IRoleManager;
+import com.agiletec.aps.system.services.role.Role;
+import com.agiletec.aps.system.services.user.IUserManager;
+import com.agiletec.aps.system.services.user.User;
+import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.entando.entando.aps.system.services.user.UserService;
+import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
+import org.entando.entando.aps.system.services.user.model.UserDto;
+import org.entando.entando.aps.system.services.user.model.UserDtoBuilder;
+import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
+import org.entando.entando.aps.util.crypto.CryptoException;
+import org.entando.entando.web.AbstractControllerTest;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.user.model.UserAuthoritiesRequest;
+import org.entando.entando.web.user.model.UserRequest;
+import org.entando.entando.web.user.validator.UserValidator;
+import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 /**
- *
  * @author paddeo
  */
 public class UserControllerUnitTest extends AbstractControllerTest {
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Mock
     IUserManager userManager;
-
     @Mock
     IGroupManager groupManager;
-
     @Mock
     IRoleManager roleManager;
-
     @Mock
     private UserService userService;
-
     @InjectMocks
     private UserController controller;
-    
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Before
     public void setUp() throws Exception {
@@ -249,7 +257,8 @@ public class UserControllerUnitTest extends AbstractControllerTest {
 
         when(this.controller.getUserValidator().getGroupManager().getGroup(any(String.class))).thenReturn(mockedGroup());
         when(this.controller.getUserValidator().getRoleManager().getRole(any(String.class))).thenReturn(mockedRole());
-        when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class))).thenReturn(authorities);
+        when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class)))
+                .thenReturn(authorities);
         ResultActions result = mockMvc.perform(
                 put("/users/{target}/authorities", "mockuser")
                         .sessionAttr("user", user)

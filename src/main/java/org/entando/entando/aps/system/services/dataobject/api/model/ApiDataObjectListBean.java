@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject.api.model;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+package org.entando.entando.aps.system.services.dataobject.api.model;
 
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListBean;
 
 /**
@@ -26,72 +26,72 @@ import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListBe
  */
 public class ApiDataObjectListBean implements IDataTypeListBean {
 
-	public ApiDataObjectListBean(String dataType, EntitySearchFilter[] filters, String[] categories) {
-		this.setDataType(dataType);
-		this.setCategories(categories);
-		this.setFilters(filters);
-	}
+    private String _dataType;
+    private EntitySearchFilter[] _filters;
+    private String[] _categories;
 
-	public String getListName() {
-		StringBuffer buffer = new StringBuffer("listName_api");
-		buffer.append("-TYPE:" + this.getDataType());
-		buffer.append("_FILTERS:");
-		if (null != this.getFilters() && this.getFilters().length > 0) {
-			BaseFilterUtils filterUtils = new BaseFilterUtils();
-			buffer.append(filterUtils.getFilterParam(this.getFilters()));
-		} else {
-			buffer.append("NULL");
-		}
-		buffer.append("_CATEGORIES:");
-		if (null != this.getCategories() && this.getCategories().length > 0) {
-			List<String> categories = Arrays.asList(this.getCategories());
-			Collections.sort(categories);
-			for (int i = 0; i < categories.size(); i++) {
-				if (i > 0) {
-					buffer.append("+");
-				}
-				buffer.append(categories.get(i));
-			}
-		} else {
-			buffer.append("NULL");
-		}
-		return buffer.toString();
-	}
+    public ApiDataObjectListBean(String dataType, EntitySearchFilter[] filters, String[] categories) {
+        this.setDataType(dataType);
+        this.setCategories(categories);
+        this.setFilters(filters);
+    }
 
-	@Override
-	public String getDataType() {
-		return _dataType;
-	}
+    public String getListName() {
+        StringBuffer buffer = new StringBuffer("listName_api");
+        buffer.append("-TYPE:" + this.getDataType());
+        buffer.append("_FILTERS:");
+        if (null != this.getFilters() && this.getFilters().length > 0) {
+            BaseFilterUtils filterUtils = new BaseFilterUtils();
+            buffer.append(filterUtils.getFilterParam(this.getFilters()));
+        } else {
+            buffer.append("NULL");
+        }
+        buffer.append("_CATEGORIES:");
+        if (null != this.getCategories() && this.getCategories().length > 0) {
+            List<String> categories = Arrays.asList(this.getCategories());
+            Collections.sort(categories);
+            for (int i = 0; i < categories.size(); i++) {
+                if (i > 0) {
+                    buffer.append("+");
+                }
+                buffer.append(categories.get(i));
+            }
+        } else {
+            buffer.append("NULL");
+        }
+        return buffer.toString();
+    }
 
-	public void setDataType(String dataType) {
-		this._dataType = dataType;
-	}
+    @Override
+    public String getDataType() {
+        return _dataType;
+    }
 
-	@Override
-	public String[] getCategories() {
-		return this._categories;
-	}
+    public void setDataType(String dataType) {
+        this._dataType = dataType;
+    }
 
-	protected void setCategories(String[] categories) {
-		this._categories = categories;
-	}
+    @Override
+    public String[] getCategories() {
+        return this._categories;
+    }
 
-	@Override
-	public EntitySearchFilter[] getFilters() {
-		return this._filters;
-	}
+    protected void setCategories(String[] categories) {
+        this._categories = categories;
+    }
 
-	protected void setFilters(EntitySearchFilter[] filters) {
-		this._filters = filters;
-	}
+    @Override
+    public EntitySearchFilter[] getFilters() {
+        return this._filters;
+    }
 
-	@Override
-	public boolean isCacheable() {
-		return true;
-	}
+    protected void setFilters(EntitySearchFilter[] filters) {
+        this._filters = filters;
+    }
 
-	private String _dataType;
-	private EntitySearchFilter[] _filters;
-	private String[] _categories;
+    @Override
+    public boolean isCacheable() {
+        return true;
+    }
 
 }

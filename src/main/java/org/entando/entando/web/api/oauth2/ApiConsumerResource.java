@@ -1,16 +1,17 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.api.oauth2;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -41,46 +42,42 @@ public interface ApiConsumerResource {
 
     @ApiOperation(value = "Retrieve a consumer by key")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Ok"),
-        @ApiResponse(code = 404, message = "Not Found")
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ApiConsumer>> get(@PathVariable("consumerKey") String consumerKey) throws ApsSystemException;
 
-
     @ApiOperation(value = "List consumers")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Ok")
+            @ApiResponse(code = 200, message = "Ok")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<PagedRestResponse<ApiConsumer>> list(@Valid RestListRequest request) throws ApsSystemException;
 
-
     @ApiOperation(value = "Create a consumer")
     @ApiResponses({
-        @ApiResponse(code = 201, message = "Created")
+            @ApiResponse(code = 201, message = "Created")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ApiConsumer>> create(@RequestBody @Valid ApiConsumer consumer) throws ApsSystemException;
 
-
     @ApiOperation(value = "Update a consumer")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Ok"),
-        @ApiResponse(code = 404, message = "Not Found")
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "Not Found")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PutMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ApiConsumer>> update(@PathVariable("consumerKey") String consumerKey,
             @RequestBody @Valid ApiConsumer consumer) throws ApsSystemException;
 
-
     @ApiOperation(value = "Delete a consumer")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Ok")
+            @ApiResponse(code = 200, message = "Ok")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @DeleteMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)

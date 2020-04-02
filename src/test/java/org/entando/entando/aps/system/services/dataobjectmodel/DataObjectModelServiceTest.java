@@ -11,7 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Page;
@@ -24,10 +28,8 @@ import org.entando.entando.aps.system.services.dataobjectmodel.model.DataModelDt
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class DataObjectModelServiceTest {

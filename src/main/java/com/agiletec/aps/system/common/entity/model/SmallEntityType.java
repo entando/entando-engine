@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model;
 
 import java.io.Serializable;
@@ -19,34 +20,37 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public class SmallEntityType implements Comparable<SmallEntityType>, Serializable {
-	
-	private String code;
-	private String description;
-	
-	public SmallEntityType(){}
-	
-	public SmallEntityType(String code, String description) {
-		this.setCode(code);
-		this.setDescription(description);
-	}
-	
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@Override
-	public int compareTo(SmallEntityType smallEntityType) {
-		return this.description.compareTo(smallEntityType.getDescription());
-	}
-	
+
+    private String code;
+    private String description;
+
+    public SmallEntityType() {
+    }
+
+    public SmallEntityType(String code, String description) {
+        this.setCode(code);
+        this.setDescription(description);
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public int compareTo(SmallEntityType smallEntityType) {
+        return this.description.compareTo(smallEntityType.getDescription());
+    }
+
 }

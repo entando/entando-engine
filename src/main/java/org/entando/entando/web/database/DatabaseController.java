@@ -11,17 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.database;
 
 import com.agiletec.aps.system.services.role.Permission;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.database.IDatabaseService;
 import org.entando.entando.aps.system.services.database.model.ComponentDto;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
 import org.entando.entando.aps.system.services.database.model.ShortDumpReportDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.database.validator.DatabaseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +40,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 
 /**
  * @author E.Santoboni
@@ -126,7 +126,8 @@ public class DatabaseController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/report/{reportCode}/dump/{dataSource}/{tableName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/report/{reportCode}/dump/{dataSource}/{tableName}", method = RequestMethod.GET, produces =
+            MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> getTableDump(@PathVariable String reportCode,
             @PathVariable String dataSource, @PathVariable String tableName) {
         logger.debug("Required dump report -> code {} - database {} - table {}", reportCode, dataSource, tableName);

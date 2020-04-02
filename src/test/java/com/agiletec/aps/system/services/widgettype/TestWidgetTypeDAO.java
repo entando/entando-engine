@@ -11,18 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.widgettype;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
 
 /**
  * @author M.Diana
@@ -41,11 +39,11 @@ public class TestWidgetTypeDAO extends BaseTestCase {
         } catch (Throwable t) {
             throw t;
         }
-        WidgetType widgetType = (WidgetType) types.get("formAction");
+        WidgetType widgetType = types.get("formAction");
         assertNotNull(widgetType);
-        widgetType = (WidgetType) types.get("login_form");
+        widgetType = types.get("login_form");
         assertNotNull(widgetType);
-        widgetType = (WidgetType) types.get("content_viewer_list");
+        widgetType = types.get("content_viewer_list");
         assertNull(widgetType);
     }
 

@@ -11,34 +11,34 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.keygenerator;
 
-import javax.sql.DataSource;
+package com.agiletec.aps.system.services.keygenerator;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockUniqueKeysDAO;
+import javax.sql.DataSource;
 
 /**
- * @version 1.0
  * @author M.Diana
+ * @version 1.0
  */
 public class TestKeyGeneratorDAO extends BaseTestCase {
-	
+
     public void testGetUniqueKey() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		KeyGeneratorDAO keyGeneratorDao = new KeyGeneratorDAO();
-		keyGeneratorDao.setDataSource(dataSource);
-		MockUniqueKeysDAO mockUniqueKeysDao = new MockUniqueKeysDAO();
-		mockUniqueKeysDao.setDataSource(dataSource);
-		int key = -1;
-		int current = -1;
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+        KeyGeneratorDAO keyGeneratorDao = new KeyGeneratorDAO();
+        keyGeneratorDao.setDataSource(dataSource);
+        MockUniqueKeysDAO mockUniqueKeysDao = new MockUniqueKeysDAO();
+        mockUniqueKeysDao.setDataSource(dataSource);
+        int key = -1;
+        int current = -1;
         try {
             current = mockUniqueKeysDao.getCurrentKey(1);
-    		key = keyGeneratorDao.getUniqueKey();
+            key = keyGeneratorDao.getUniqueKey();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		assertEquals(key, current);
-	}
-    
+        assertEquals(key, current);
+    }
+
 }

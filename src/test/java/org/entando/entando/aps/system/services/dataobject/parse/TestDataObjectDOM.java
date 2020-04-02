@@ -11,38 +11,39 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.parse;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 public class TestDataObjectDOM extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
+    private IDataObjectManager _dataObjectManager = null;
 
-	public void testGetXMLDocument() throws ApsSystemException {
-		DataObject dataObjectTest = this._dataObjectManager.createDataObject("ART");
-		assertNotNull(dataObjectTest);
-		dataObjectTest.addGroup("tempGroupName");
-		String xml = dataObjectTest.getXML();
-		int index = xml.indexOf("tempGroupName");
-		assertTrue((index != -1));
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.init();
+    }
 
-	private void init() throws Exception {
-		try {
-			_dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    public void testGetXMLDocument() throws ApsSystemException {
+        DataObject dataObjectTest = this._dataObjectManager.createDataObject("ART");
+        assertNotNull(dataObjectTest);
+        dataObjectTest.addGroup("tempGroupName");
+        String xml = dataObjectTest.getXML();
+        int index = xml.indexOf("tempGroupName");
+        assertTrue((index != -1));
+    }
 
-	private IDataObjectManager _dataObjectManager = null;
+    private void init() throws Exception {
+        try {
+            _dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
+        } catch (Throwable t) {
+            throw new Exception(t);
+        }
+    }
 
 }

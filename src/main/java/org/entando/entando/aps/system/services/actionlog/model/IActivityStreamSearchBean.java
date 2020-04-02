@@ -11,13 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog.model;
 
 /**
  * @author S. Loru
  */
-public interface IActivityStreamSearchBean extends IActionLogRecordSearchBean{
-	
-	public String getActivityStreamInfo();
-	
+public interface IActivityStreamSearchBean extends IActionLogRecordSearchBean {
+
+    String getActivityStreamInfo();
+
 }

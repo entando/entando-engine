@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog;
 
 import java.util.Iterator;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,32 +23,31 @@ import org.slf4j.LoggerFactory;
  * @author E.Santoboni
  */
 public class ActivityStreamCleanerThread extends Thread {
-	
-	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamCleanerThread.class);
-	
-	public ActivityStreamCleanerThread(Integer maxActivitySizeByGroup, IActionLogManager actionLogManager) {
-		this._maxActivitySizeByGroup = maxActivitySizeByGroup;
-		this._actionLogManager = actionLogManager;
-	}
-	
-	@Override
-	public void run() {
-		try {
-			Set<Integer> ids = this._actionLogManager.extractOldRecords(this._maxActivitySizeByGroup);
-			if (null != ids) {
-				Iterator<Integer> iter = ids.iterator();
-				while (iter.hasNext()) {
-					Integer id = iter.next();
-					this._actionLogManager.deleteActionRecord(id);
-				}
-			}
-		} catch (Throwable t) {
-			_logger.error("Error in run ", t);
-			//ApsSystemUtils.logThrowable(t, this, "run");
-		}
-	}
-	
-	private Integer _maxActivitySizeByGroup;
-	private IActionLogManager _actionLogManager;
-	
+
+    private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamCleanerThread.class);
+    private Integer _maxActivitySizeByGroup;
+    private IActionLogManager _actionLogManager;
+
+    public ActivityStreamCleanerThread(Integer maxActivitySizeByGroup, IActionLogManager actionLogManager) {
+        this._maxActivitySizeByGroup = maxActivitySizeByGroup;
+        this._actionLogManager = actionLogManager;
+    }
+
+    @Override
+    public void run() {
+        try {
+            Set<Integer> ids = this._actionLogManager.extractOldRecords(this._maxActivitySizeByGroup);
+            if (null != ids) {
+                Iterator<Integer> iter = ids.iterator();
+                while (iter.hasNext()) {
+                    Integer id = iter.next();
+                    this._actionLogManager.deleteActionRecord(id);
+                }
+            }
+        } catch (Throwable t) {
+            _logger.error("Error in run ", t);
+            //ApsSystemUtils.logThrowable(t, this, "run");
+        }
+    }
+
 }

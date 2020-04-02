@@ -11,7 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.dataobject;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
@@ -22,7 +29,6 @@ import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.dataobject.model.DataTypeDtoRequest;
 import org.entando.entando.web.dataobject.validator.DataTypeValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,10 +41,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class DataTypeControllerTest extends AbstractControllerTest {
 
@@ -96,7 +98,7 @@ public class DataTypeControllerTest extends AbstractControllerTest {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(post("/dataTypes/refresh/{dataTypeCode}", new Object[]{"TST"})
+                .perform(post("/dataTypes/refresh/{dataTypeCode}", "TST")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.cache;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -19,7 +20,6 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,14 +28,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -85,7 +83,8 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
                 keyExpression = cachePut.key();
             } else {
                 if (!StringUtils.isBlank(cacheable.condition())) {
-                    Object isCacheable = this.evaluateExpression(cacheable.condition(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
+                    Object isCacheable = this
+                            .evaluateExpression(cacheable.condition(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
                     Boolean check = Boolean.valueOf(isCacheable.toString());
                     if (null != check && !check) {
                         return pjp.proceed();
@@ -98,7 +97,8 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
             result = pjp.proceed();
             for (String cacheName : cacheNames) {
                 if (cacheableInfo.groups() != null && cacheableInfo.groups().trim().length() > 0) {
-                    Object groupsCsv = this.evaluateExpression(cacheableInfo.groups(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
+                    Object groupsCsv = this
+                            .evaluateExpression(cacheableInfo.groups(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
                     if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
                         String[] groups = groupsCsv.toString().split(",");
                         this.putInGroup(cacheName, key.toString(), groups);
@@ -123,7 +123,9 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
             Class targetClass = pjp.getTarget().getClass();
             Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
             String[] cacheNames = cacheInfoEvict.value();
-            Object groupsCsv = this.evaluateExpression(cacheInfoEvict.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
+            Object groupsCsv = this
+                    .evaluateExpression(cacheInfoEvict.groups(), targetMethod, pjp.getArgs(), effectiveTargetMethod,
+                            targetClass);
             if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
                 String[] groups = groupsCsv.toString().split(",");
                 for (String group : groups) {

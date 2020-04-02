@@ -11,8 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.services.group.Group;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +24,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.services.group.Group;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,8 @@ public class DataObjectSearcherDAO extends AbstractDataObjectSearcherDAO impleme
     private static final Logger _logger = LoggerFactory.getLogger(DataObjectSearcherDAO.class);
 
     @Override
-    public List<String> loadDataObjectsId(String contentType, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+    public List<String> loadDataObjectsId(String contentType, String[] categories, EntitySearchFilter[] filters,
+            Collection<String> userGroupCodes) {
         return this.loadDataObjectsId(contentType, categories, false, filters, userGroupCodes);
     }
 
@@ -43,7 +44,8 @@ public class DataObjectSearcherDAO extends AbstractDataObjectSearcherDAO impleme
     public List<String> loadDataObjectsId(String contentType, String[] categories, boolean orClauseCategoryFilter,
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
         if (contentType != null && contentType.trim().length() > 0) {
-            EntitySearchFilter typeFilter = new EntitySearchFilter(IDataObjectManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType, false);
+            EntitySearchFilter typeFilter = new EntitySearchFilter(IDataObjectManager.ENTITY_TYPE_CODE_FILTER_KEY, false, contentType,
+                    false);
             filters = this.addFilter(filters, typeFilter);
         }
         return this.loadDataObjectsId(categories, orClauseCategoryFilter, filters, userGroupCodes);

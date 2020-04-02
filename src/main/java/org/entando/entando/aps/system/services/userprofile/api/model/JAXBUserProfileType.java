@@ -11,24 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.api.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
-
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "userProfileType")
 public class JAXBUserProfileType extends JAXBEntityType {
-    
-    public JAXBUserProfileType() {}
-    
+
+    public JAXBUserProfileType() {
+    }
+
     public JAXBUserProfileType(IApsEntity entityType) {
         super(entityType);
     }
-    
+
 }

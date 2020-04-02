@@ -11,18 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 /**
  * This interface is for beans which support the refresh method.
+ *
  * @author E.Santoboni
  */
 public interface RefreshableBean {
-	
-	/**
-	 * Method to invoke when bean refresh is needed.
-	 * @throws Throwable In the case of error when service is initialized.
-	 */
-	public void refresh() throws Throwable;
-	
+
+    /**
+     * Method to invoke when bean refresh is needed.
+     *
+     * @throws Throwable In the case of error when service is initialized.
+     */
+    void refresh() throws Throwable;
+
 }

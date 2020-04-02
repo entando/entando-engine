@@ -14,15 +14,8 @@
  * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
+
 package org.entando.entando.aps.system.services.dataobject;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -31,16 +24,24 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.category.ReloadingCategoryReferencesThread;
 import com.agiletec.aps.system.services.group.Group;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 /**
- * Manages the operations on the contents in case of events on categories. In
- * the case of moving categories from one node to another must be recharged
- * references EVOLUZIONE DEL CORE - AGGIUNTA FIRST EDITOR e funzioni
- * aggiornamento referenze
- *
+ * Manages the operations on the contents in case of events on categories. In the case of moving categories from one node to another must be
+ * recharged references EVOLUZIONE DEL CORE - AGGIUNTA FIRST EDITOR e funzioni aggiornamento referenze
  */
 public class DataObjectUpdaterService extends AbstractService implements IDataObjectUpdaterService {
+
+    private IDataObjectManager _contentManager;
+    private ICategoryManager _categoryManager;
+    private IDataObjectUpdaterDAO _contentUpdaterDAO;
+    private ICacheInfoManager _cacheInfoManager;
 
     @Override
     public void init() throws Exception {
@@ -143,10 +144,5 @@ public class DataObjectUpdaterService extends AbstractService implements IDataOb
     public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
         this._cacheInfoManager = cacheInfoManager;
     }
-
-    private IDataObjectManager _contentManager;
-    private ICategoryManager _categoryManager;
-    private IDataObjectUpdaterDAO _contentUpdaterDAO;
-    private ICacheInfoManager _cacheInfoManager;
 
 }

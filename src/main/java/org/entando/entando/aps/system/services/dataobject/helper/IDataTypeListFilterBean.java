@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 
 /**
  * @author E.Santoboni
- * @deprecated From Entando 2.0 version 2.4.1. Use
- * com.agiletec.aps.system.common.entity.helper.IEntityFilterBean
+ * @deprecated From Entando 2.0 version 2.4.1. Use com.agiletec.aps.system.common.entity.helper.IEntityFilterBean
  */
 public interface IDataTypeListFilterBean extends IEntityFilterBean {
 

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import java.util.Collection;
@@ -19,8 +20,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 public interface IApiOAuth2TokenManager extends TokenStore {
 
-    public Collection<OAuth2AccessToken> findTokensByUserName(String username);
+    Collection<OAuth2AccessToken> findTokensByUserName(String username);
 
-    public OAuth2AccessToken createAccessTokenForLocalUser(String username);
+    OAuth2AccessToken createAccessTokenForLocalUser(String username);
 
 }

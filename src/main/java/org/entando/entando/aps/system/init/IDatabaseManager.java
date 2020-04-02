@@ -11,42 +11,43 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 import javax.sql.DataSource;
+import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
 /**
  * @author E.Santoboni
  */
 public interface IDatabaseManager {
-	
-	public void createBackup() throws ApsSystemException;
-	
-	public void deleteBackup(String subFolderName) throws ApsSystemException;
-	
-	public int getStatus();
-	
-	public InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws ApsSystemException;
-	
-	public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException;
-	
-	public DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
-	
-	public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException;
-	
-	public Map<String, List<String>> getEntandoTableMapping();
-	
-	public DatabaseType getDatabaseType(DataSource dataSource) throws ApsSystemException;
-	
-	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}
-	
-	public static final String DUMP_REPORT_FILE_NAME = "dumpReport.xml";
-	
+
+    String DUMP_REPORT_FILE_NAME = "dumpReport.xml";
+
+    void createBackup() throws ApsSystemException;
+
+    void deleteBackup(String subFolderName) throws ApsSystemException;
+
+    int getStatus();
+
+    InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws ApsSystemException;
+
+    boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException;
+
+    DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
+
+    List<DataSourceDumpReport> getBackupReports() throws ApsSystemException;
+
+    Map<String, List<String>> getEntandoTableMapping();
+
+    DatabaseType getDatabaseType(DataSource dataSource) throws ApsSystemException;
+
+    enum DatabaseType {
+        DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN
+    }
+
 }

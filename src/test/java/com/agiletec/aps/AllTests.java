@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps;
 
 import com.agiletec.aps.system.TestApplicationContext;
@@ -97,8 +98,8 @@ import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTes
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
 import org.entando.entando.aps.util.FilterUtilsTest;
-import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccessTest;
 
 /**
@@ -108,7 +109,7 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
-        
+
         //
         suite.addTest(new JUnit4TestAdapter(InitializerManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(DatabaseManagerTest.class));
@@ -213,7 +214,7 @@ public class AllTests {
         suite.addTestSuite(TestDataObjectDispenser.class);
 
         suite.addTestSuite(TestSearchEngineManager.class);
-        
+
         suite.addTestSuite(OAuthConsumerManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(OAuthConsumerManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(OAuthConsumerDAOTest.class));
@@ -226,7 +227,7 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(FilterUtilsTest.class));
         suite.addTest(new JUnit4TestAdapter(AbstractEntityTypeServiceTest.class));
-        
+
         suite.addTest(new JUnit4TestAdapter(DefaultTextEncryptorTest.class));
         suite.addTest(new JUnit4TestAdapter(CompatiblePasswordEncoderTest.class));
         suite.addTest(new JUnit4TestAdapter(IgnoreJacksonWriteOnlyAccessTest.class));

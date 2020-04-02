@@ -11,19 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.api.model;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.JAXBEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * @author E.Santoboni
@@ -31,6 +30,11 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 @XmlRootElement(name = "userProfile")
 @XmlType(propOrder = {"fullname", "mail"})
 public class JAXBUserProfile extends JAXBEntity {
+
+    //private String _firstname;
+    //private String _surname;
+    private String _fullname;
+    private String _mail;
 
     public JAXBUserProfile() {
     }
@@ -61,7 +65,7 @@ public class JAXBUserProfile extends JAXBEntity {
         if (null == attributeName || value == null) {
             return;
         }
-        AttributeInterface attribute = (AttributeInterface) profile.getAttribute(attributeName);
+        AttributeInterface attribute = profile.getAttribute(attributeName);
         if (null == attribute || !(attribute instanceof AbstractTextAttribute)) {
             return;
         }
@@ -79,21 +83,21 @@ public class JAXBUserProfile extends JAXBEntity {
     }
 
     /*
-	@XmlElement(name = "firstname", required = false)
-	public String getFirstname() {
-		return _firstname;
-	}
-	public void setFirstname(String firstname) {
-		this._firstname = firstname;
-	}
+  @XmlElement(name = "firstname", required = false)
+  public String getFirstname() {
+    return _firstname;
+  }
+  public void setFirstname(String firstname) {
+    this._firstname = firstname;
+  }
 
-	@XmlElement(name = "surname", required = false)
-	public String getSurname() {
-		return _surname;
-	}
-	public void setSurname(String surname) {
-		this._surname = surname;
-	}
+  @XmlElement(name = "surname", required = false)
+  public String getSurname() {
+    return _surname;
+  }
+  public void setSurname(String surname) {
+    this._surname = surname;
+  }
      */
     @XmlElement(name = "mail", required = false)
     public String getMail() {
@@ -103,9 +107,5 @@ public class JAXBUserProfile extends JAXBEntity {
     public void setMail(String mail) {
         this._mail = mail;
     }
-    //private String _firstname;
-    //private String _surname;
-    private String _fullname;
-    private String _mail;
 
 }

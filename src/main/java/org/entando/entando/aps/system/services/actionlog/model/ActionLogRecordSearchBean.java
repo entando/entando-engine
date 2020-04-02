@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
@@ -20,6 +21,16 @@ import java.util.List;
  * @author E.Santoboni - S.Puddu
  */
 public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
+
+    private Date _startCreation;
+    private Date _endCreation;
+    private Date _startUpdate;
+    private Date _endUpdate;
+    private String _username;
+    private String _namespace;
+    private String _actionName;
+    private String _params;
+    private List<String> _userGroupCodes;
 
     @Override
     public Date getStartCreation() {
@@ -101,15 +112,5 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
     public void setUserGroupCodes(List<String> userGroupCodes) {
         this._userGroupCodes = userGroupCodes;
     }
-
-    private Date _startCreation;
-    private Date _endCreation;
-    private Date _startUpdate;
-    private Date _endUpdate;
-    private String _username;
-    private String _namespace;
-    private String _actionName;
-    private String _params;
-    private List<String> _userGroupCodes;
 
 }

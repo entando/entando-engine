@@ -11,25 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.keygenerator;
 
 /**
  * Interfaccia base per i Data Access Object gestore del sistema di chiavi univoche.
+ *
  * @author S.Didaci - E.Santoboni
  */
 public interface IKeyGeneratorDAO {
 
-	/**
-	 * Estrae la chiave presente nel db.
-	 * Il metodo viene chiamato solo in fase di inizializzazione.
-	 * @return La chiave estratta.
-	 */
-	public int getUniqueKey();
+    /**
+     * Estrae la chiave presente nel db. Il metodo viene chiamato solo in fase di inizializzazione.
+     *
+     * @return La chiave estratta.
+     */
+    int getUniqueKey();
 
-	/**
-	 * Aggiorna la chiave univoca nel db.
-	 * @param currentKey Il valore della chiave corrente.
-	 */
-	public void updateKey(int currentKey);
+    /**
+     * Aggiorna la chiave univoca nel db.
+     *
+     * @param currentKey Il valore della chiave corrente.
+     */
+    void updateKey(int currentKey);
 
 }

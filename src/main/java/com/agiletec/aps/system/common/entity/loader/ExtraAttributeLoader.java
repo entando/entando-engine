@@ -11,59 +11,59 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.loader;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-
 /**
  * The Class loader of the extra attribute.
+ *
  * @author E.Santoboni
  */
 public class ExtraAttributeLoader {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeLoader.class);
-	
-	public Map<String, AttributeInterface> extractAttributes(BeanFactory beanFactory, String entityManagerName) {
-		Map<String, AttributeInterface> attributes = null;
-		try {
-			attributes = this.loadExtraAttributes(beanFactory, entityManagerName);
-		} catch (Throwable t) {
-			_logger.error("Error loading extra attributes. entityManager: {}", entityManagerName, t);
-		}
-		return attributes;
-	}
-	
-	private Map<String, AttributeInterface> loadExtraAttributes(BeanFactory beanFactory, String entityManagerName) {
-		Map<String, AttributeInterface> extraAttributes = new HashMap<>();
-		try {
-			ListableBeanFactory factory = (ListableBeanFactory) beanFactory;
-			String[] defNames = factory.getBeanNamesForType(ExtraAttributeWrapper.class);
-			for (int i=0; i<defNames.length; i++) {
-				try {
-					Object wrapperObject = beanFactory.getBean(defNames[i]);
-					if (wrapperObject != null) {
-						ExtraAttributeWrapper wrapper = (ExtraAttributeWrapper) wrapperObject;
-						String destEntityManagerName = wrapper.getEntityManagerNameDest();
-						if (entityManagerName.equals(destEntityManagerName) && null != wrapper.getAttribute()) {
-							extraAttributes.put(wrapper.getAttribute().getType(), wrapper.getAttribute());
-						}
-					}
-				} catch (Throwable t) {
-					_logger.error("Error extracting attribute : wrapper bean {}", defNames[i], t);
-				}
-			}
-		} catch (Throwable t) {
-			_logger.error("Error loading extra attributes. entityManagerName: {}", entityManagerName, t);
-		}
-		return extraAttributes;
-	}
-	
+    private static final Logger _logger = LoggerFactory.getLogger(ExtraAttributeLoader.class);
+
+    public Map<String, AttributeInterface> extractAttributes(BeanFactory beanFactory, String entityManagerName) {
+        Map<String, AttributeInterface> attributes = null;
+        try {
+            attributes = this.loadExtraAttributes(beanFactory, entityManagerName);
+        } catch (Throwable t) {
+            _logger.error("Error loading extra attributes. entityManager: {}", entityManagerName, t);
+        }
+        return attributes;
+    }
+
+    private Map<String, AttributeInterface> loadExtraAttributes(BeanFactory beanFactory, String entityManagerName) {
+        Map<String, AttributeInterface> extraAttributes = new HashMap<>();
+        try {
+            ListableBeanFactory factory = (ListableBeanFactory) beanFactory;
+            String[] defNames = factory.getBeanNamesForType(ExtraAttributeWrapper.class);
+            for (int i = 0; i < defNames.length; i++) {
+                try {
+                    Object wrapperObject = beanFactory.getBean(defNames[i]);
+                    if (wrapperObject != null) {
+                        ExtraAttributeWrapper wrapper = (ExtraAttributeWrapper) wrapperObject;
+                        String destEntityManagerName = wrapper.getEntityManagerNameDest();
+                        if (entityManagerName.equals(destEntityManagerName) && null != wrapper.getAttribute()) {
+                            extraAttributes.put(wrapper.getAttribute().getType(), wrapper.getAttribute());
+                        }
+                    }
+                } catch (Throwable t) {
+                    _logger.error("Error extracting attribute : wrapper bean {}", defNames[i], t);
+                }
+            }
+        } catch (Throwable t) {
+            _logger.error("Error loading extra attributes. entityManagerName: {}", entityManagerName, t);
+        }
+        return extraAttributes;
+    }
+
 }

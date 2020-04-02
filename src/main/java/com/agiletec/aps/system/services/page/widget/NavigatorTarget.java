@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page.widget;
 
 import com.agiletec.aps.system.RequestContext;
@@ -24,143 +25,137 @@ import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 /**
- * Rappresenta un obbiettivo di navigazione, da utilizzare come voce di un menu.
- * E' un wrapper della classe Page alla quale aggiunge un livello (relativo),
- * per poter definire menu a più livelli.
+ * Rappresenta un obbiettivo di navigazione, da utilizzare come voce di un menu. E' un wrapper della classe Page alla quale aggiunge un
+ * livello (relativo), per poter definire menu a più livelli.
  *
  * @author M.Diana - E.Santoboni
  */
 public class NavigatorTarget {
 
-	/**
-	 * Costruttore.
-	 *
-	 * @param page La pagina da wrappare.
-	 * @param level Il livello.
-	 */
-	public NavigatorTarget(IPage page, int level) {
-		this._page = page;
-		this._level = level;
-	}
+    private int _level;
+    private IPage _page;
+    private RequestContext _reqCtx;
 
-	/**
-	 * Restituisce il titolo della pagina nella lingua corrente. Nel caso il
-	 * titolo nella lingua corrente sia assente, viene restituito il titolo
-	 * nella lingua di default.
-	 *
-	 * @return Il titolo della pagina.
-	 */
-	public String getTitle() {
-		Lang lang = (Lang) this._reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-		String title = this.getPage().getTitle(lang.getCode());
-		if (title == null || title.trim().equals("")) {
-			ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this._reqCtx
-					.getRequest());
-			title = this.getPage().getTitle(langManager.getDefaultLang().getCode());
-		}
-		if (title == null || title.trim().equals("")) {
-			title = this.getPage().getCode();
-		}
-		return title;
-	}
+    /**
+     * Costruttore.
+     *
+     * @param page La pagina da wrappare.
+     * @param level Il livello.
+     */
+    public NavigatorTarget(IPage page, int level) {
+        this._page = page;
+        this._level = level;
+    }
 
-	/**
-	 * Restituisce il codice della pagina.
-	 *
-	 * @return Il codice della pagina.
-	 */
-	public String getCode() {
-		return this.getPage().getCode();
-	}
+    /**
+     * Restituisce il titolo della pagina nella lingua corrente. Nel caso il titolo nella lingua corrente sia assente, viene restituito il
+     * titolo nella lingua di default.
+     *
+     * @return Il titolo della pagina.
+     */
+    public String getTitle() {
+        Lang lang = (Lang) this._reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+        String title = this.getPage().getTitle(lang.getCode());
+        if (title == null || title.trim().equals("")) {
+            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this._reqCtx
+                    .getRequest());
+            title = this.getPage().getTitle(langManager.getDefaultLang().getCode());
+        }
+        if (title == null || title.trim().equals("")) {
+            title = this.getPage().getCode();
+        }
+        return title;
+    }
 
-	/**
-	 * Verifica se il target corrente è vuoto (nessun frame configurato).
-	 * Analizza il target corrente e se i frame della pagina non contengono
-	 * nessuna showlet restituisce true, false in caso contrario.
-	 *
-	 * @return true se la pagina è vuota, false in caso contrario.
-	 * @deprecated compatibility with JSP specification 2.1 - "void" is a
-	 * reserved word
-	 */
-	public boolean isVoid() {
-		return this.isVoidPage();
-	}
+    /**
+     * Restituisce il codice della pagina.
+     *
+     * @return Il codice della pagina.
+     */
+    public String getCode() {
+        return this.getPage().getCode();
+    }
 
-	/**
-	 * Verifica se il target corrente è vuoto (nessun frame configurato).
-	 * Analizza il target corrente e se i frame della pagina non contengono
-	 * nessuna showlet restituisce true, false in caso contrario.
-	 *
-	 * @return true se la pagina è vuota, false in caso contrario.
-	 */
-	public boolean isVoidPage() {
-		boolean isVoid = true;
-		Widget[] widgets = this.getPage().getWidgets();
-		if (widgets != null) {
-			for (int i = 0; i < widgets.length; i++) {
-				if (null != widgets[i]) {
-					isVoid = false;
-					break;
-				}
-			}
-		}
-		return isVoid;
-	}
+    /**
+     * Verifica se il target corrente è vuoto (nessun frame configurato). Analizza il target corrente e se i frame della pagina non
+     * contengono nessuna showlet restituisce true, false in caso contrario.
+     *
+     * @return true se la pagina è vuota, false in caso contrario.
+     * @deprecated compatibility with JSP specification 2.1 - "void" is a reserved word
+     */
+    public boolean isVoid() {
+        return this.isVoidPage();
+    }
 
-	/**
-	 * Restituisce il link alla pagina corrente.
-	 *
-	 * @return Il link alla pagina.
-	 */
-	public String getUrl() {
-		IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this._reqCtx.getRequest());
-		PageURL pageUrl = urlManager.createURL(this._reqCtx);
-		pageUrl.setPage(this.getPage());
-		String urlString = pageUrl.getURL();
-		return urlString;
-	}
+    /**
+     * Verifica se il target corrente è vuoto (nessun frame configurato). Analizza il target corrente e se i frame della pagina non
+     * contengono nessuna showlet restituisce true, false in caso contrario.
+     *
+     * @return true se la pagina è vuota, false in caso contrario.
+     */
+    public boolean isVoidPage() {
+        boolean isVoid = true;
+        Widget[] widgets = this.getPage().getWidgets();
+        if (widgets != null) {
+            for (int i = 0; i < widgets.length; i++) {
+                if (null != widgets[i]) {
+                    isVoid = false;
+                    break;
+                }
+            }
+        }
+        return isVoid;
+    }
 
-	/**
-	 * Check if the current target has children. Analyze the current target and
-	 * return true if it has at least one child, false otherwise.
-	 *
-	 * @return true if the current target has children, false otherwise.
-	 */
-	public boolean isParent() {
-		IPage page = this.getPage();
-		boolean isParent = (null != page && null != page.getChildrenCodes() && page.getChildrenCodes().length > 0);
-		return isParent;
-	}
+    /**
+     * Restituisce il link alla pagina corrente.
+     *
+     * @return Il link alla pagina.
+     */
+    public String getUrl() {
+        IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this._reqCtx.getRequest());
+        PageURL pageUrl = urlManager.createURL(this._reqCtx);
+        pageUrl.setPage(this.getPage());
+        String urlString = pageUrl.getURL();
+        return urlString;
+    }
 
-	/**
-	 * Setta il contesto della richiesta.
-	 *
-	 * @param reqCtx Il contesto della richiesta.
-	 */
-	public void setRequestContext(RequestContext reqCtx) {
-		this._reqCtx = reqCtx;
-	}
+    /**
+     * Check if the current target has children. Analyze the current target and return true if it has at least one child, false otherwise.
+     *
+     * @return true if the current target has children, false otherwise.
+     */
+    public boolean isParent() {
+        IPage page = this.getPage();
+        boolean isParent = (null != page && null != page.getChildrenCodes() && page.getChildrenCodes().length > 0);
+        return isParent;
+    }
 
-	/**
-	 * Restituisce il valore dell'attributo livello.
-	 *
-	 * @return Il livello
-	 */
-	public int getLevel() {
-		return _level;
-	}
+    /**
+     * Setta il contesto della richiesta.
+     *
+     * @param reqCtx Il contesto della richiesta.
+     */
+    public void setRequestContext(RequestContext reqCtx) {
+        this._reqCtx = reqCtx;
+    }
 
-	/**
-	 * Restituisce l'oggetto pagina sottostante.
-	 *
-	 * @return La pagina
-	 */
-	public IPage getPage() {
-		return _page;
-	}
+    /**
+     * Restituisce il valore dell'attributo livello.
+     *
+     * @return Il livello
+     */
+    public int getLevel() {
+        return _level;
+    }
 
-	private int _level;
-	private IPage _page;
-	private RequestContext _reqCtx;
+    /**
+     * Restituisce l'oggetto pagina sottostante.
+     *
+     * @return La pagina
+     */
+    public IPage getPage() {
+        return _page;
+    }
 
 }

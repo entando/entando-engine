@@ -11,13 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Role;
-
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.security.core.GrantedAuthority;

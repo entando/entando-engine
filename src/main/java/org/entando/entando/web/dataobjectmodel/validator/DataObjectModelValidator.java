@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.dataobjectmodel.validator;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -79,7 +80,7 @@ public class DataObjectModelValidator extends AbstractPaginationValidator {
     public void validateBodyName(String modelId, DataObjectModelRequest request, Errors errors) {
         if (!modelId.equals(request.getModelId())) {
             errors.rejectValue("modelId", ERRCODE_URINAME_MISMATCH,
-                    new String[]{String.valueOf(modelId), String.valueOf(request.getModelId())}, "dataObjectModel.modelId.mismatch");
+                    new String[]{modelId, String.valueOf(request.getModelId())}, "dataObjectModel.modelId.mismatch");
         }
         this.checkValidModelId(modelId, errors);
     }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog.model;
 
 /**
@@ -18,16 +19,15 @@ package org.entando.entando.aps.system.services.actionlog.model;
  */
 public class ActivityStreamSeachBean extends ActionLogRecordSearchBean implements IActivityStreamSearchBean {
 
-	@Override
-	public String getActivityStreamInfo() {
-		return _activityStreamInfo;
-	}
+    private String _activityStreamInfo;
 
+    @Override
+    public String getActivityStreamInfo() {
+        return _activityStreamInfo;
+    }
 
-	public void setActivityStreamInfo(String activityStreamInfo) {
-		this._activityStreamInfo = activityStreamInfo;
-	}
-	
-	private String _activityStreamInfo;
+    public void setActivityStreamInfo(String activityStreamInfo) {
+        this._activityStreamInfo = activityStreamInfo;
+    }
 
 }

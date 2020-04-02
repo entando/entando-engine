@@ -1,12 +1,11 @@
 package org.entando.entando.aps.system.services.jsonpatch.validator;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.ImmutableSet;
+import java.util.Iterator;
+import java.util.Set;
 import org.springframework.data.rest.webmvc.json.patch.JsonPatchPatchConverter;
 import org.springframework.data.rest.webmvc.json.patch.PatchException;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JsonPatchValidator {
 
-    private final Set<String> ENTANDO_SUPPORTED_OPERATIONS = ImmutableSet.of("replace");
+    private static final Set<String> ENTANDO_SUPPORTED_OPERATIONS = ImmutableSet.of("replace");
 
     private final JsonPatchPatchConverter converter;
 
@@ -28,7 +27,6 @@ public class JsonPatchValidator {
 
     /**
      * Validate the provided jsonNode using Entando criteria
-     * @param jsonNode
      */
     public void validatePatch(JsonNode jsonNode) {
 

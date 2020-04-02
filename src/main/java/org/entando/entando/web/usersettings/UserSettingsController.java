@@ -11,15 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.usersettings;
 
 import com.agiletec.aps.system.services.role.Permission;
-import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.usersettings.IUserSettingsService;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.usersettings.model.UserSettingsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 
 @RestController
 @RequestMapping(value = "/userSettings")
@@ -63,7 +61,8 @@ public class UserSettingsController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserSettingsDto>> updateUserSettings(@Valid @RequestBody UserSettingsRequest request, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<UserSettingsDto>> updateUserSettings(@Valid @RequestBody UserSettingsRequest request,
+            BindingResult bindingResult) {
         logger.debug("updatinug user settings");
         //params validations
         if (bindingResult.hasErrors()) {

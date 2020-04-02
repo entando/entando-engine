@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -20,8 +21,6 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 
 /**
  * @author E.Santoboni
- * @param <I>
- * @param <O>
  */
 public abstract class AbstractEntityTypeDtoBuilder<I extends IApsEntity, O extends EntityTypeFullDto> extends DtoBuilder<I, O> {
 

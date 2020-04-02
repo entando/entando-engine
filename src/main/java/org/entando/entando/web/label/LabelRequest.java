@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.label;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ import org.entando.entando.aps.system.services.label.model.LabelDto;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class LabelRequest extends LabelDto {
-    
+
     @NotEmpty(message = "labelRequest.key.required")
     @Size(max = 50, message = "labelRequest.key.invalidSize")
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "labelRequest.key.invalidCharacters")

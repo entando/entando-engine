@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.api.response;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 
 /**
@@ -23,20 +23,20 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
  */
 @XmlRootElement(name = "response")
 public class UserProfileTypeResponse extends AbstractApiResponse {
-    
-	@Override
+
+    @Override
     @XmlElement(name = "result", required = true)
     public UserProfileTypeResponseResult getResult() {
         return (UserProfileTypeResponseResult) super.getResult();
     }
-    
-	public void setResult(UserProfileTypeResponseResult result) {
-		super.setResult(result);
-	}
-	
+
+    public void setResult(UserProfileTypeResponseResult result) {
+        super.setResult(result);
+    }
+
     @Override
     protected UserProfileTypeResponseResult createResponseResultInstance() {
         return new UserProfileTypeResponseResult();
     }
-    
+
 }

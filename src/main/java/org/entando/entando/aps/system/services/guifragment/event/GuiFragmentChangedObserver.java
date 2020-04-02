@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
@@ -19,7 +20,7 @@ import com.agiletec.aps.system.common.notify.ObserverService;
  * @author E.Santoboni
  */
 public interface GuiFragmentChangedObserver extends ObserverService {
-	
-	public void updateFromGuiFragmentChanged(GuiFragmentChangedEvent event);
-	
+
+    void updateFromGuiFragmentChanged(GuiFragmentChangedEvent event);
+
 }

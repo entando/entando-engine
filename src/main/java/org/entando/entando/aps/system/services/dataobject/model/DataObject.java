@@ -11,198 +11,186 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject.model;
 
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.entando.entando.aps.system.services.dataobject.model;
 
 import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.entando.entando.aps.system.services.dataobject.parse.DataObjectDOM;
 
 public class DataObject extends ApsEntity {
 
-	public String getStatus() {
-		return this._status;
-	}
+    @Deprecated
+    public static final String STATES_NEW = "Nuovo";
+    public static final String STATUS_NEW = "NEW";
+    @Deprecated
+    public static final String STATES_DRAFT = "Bozza";
+    public static final String STATUS_DRAFT = "DRAFT";
+    @Deprecated
+    public static final String STATES_READY = "Pronto";
+    public static final String STATUS_READY = "READY";
+    public static final String STATUS_PUBLIC = "PUBLIC";
+    @Deprecated
+    public static final String[] STATES = {STATES_DRAFT, STATES_READY};
+    public static final String[] AVAILABLE_STATUS = {STATUS_DRAFT, STATUS_READY};
+    public static final String INIT_VERSION = "0.0";
+    private String _status;
+    private boolean _onLine;
+    private String _viewPage;
+    private String _listModel;
+    private String _defaultModel;
+    private Date _created;
+    private Date _lastModified;
+    private String _version;
+    private String _firstEditor;
+    private String _lastEditor;
 
-	public void setStatus(String status) {
-		this._status = status;
-	}
+    public String getStatus() {
+        return this._status;
+    }
 
-	public String getViewPage() {
-		return this._viewPage;
-	}
+    public void setStatus(String status) {
+        this._status = status;
+    }
 
-	public void setViewPage(String viewPage) {
-		this._viewPage = viewPage;
-	}
+    public String getViewPage() {
+        return this._viewPage;
+    }
 
-	public String getListModel() {
-		return this._listModel;
-	}
+    public void setViewPage(String viewPage) {
+        this._viewPage = viewPage;
+    }
 
-	public void setListModel(String listModel) {
-		this._listModel = listModel;
-	}
+    public String getListModel() {
+        return this._listModel;
+    }
 
-	public String getDefaultModel() {
-		return this._defaultModel;
-	}
+    public void setListModel(String listModel) {
+        this._listModel = listModel;
+    }
 
-	public void setDefaultModel(String defaultModel) {
-		this._defaultModel = defaultModel;
-	}
+    public String getDefaultModel() {
+        return this._defaultModel;
+    }
 
-	@Override
-	public IApsEntity getEntityPrototype() {
-		DataObject dataObject = (DataObject) super.getEntityPrototype();
-		dataObject.setStatus(STATUS_NEW);
-		dataObject.setVersion(INIT_VERSION);
-		dataObject.setViewPage(this.getViewPage());
-		dataObject.setListModel(this.getListModel());
-		dataObject.setDefaultModel(this.getDefaultModel());
-		return dataObject;
-	}
+    public void setDefaultModel(String defaultModel) {
+        this._defaultModel = defaultModel;
+    }
 
-	@Override
-	protected IApsEntityDOM getBuildJDOM() {
-		DataObjectDOM dataObjectDOM = (DataObjectDOM) super.getBuildJDOM();
-		dataObjectDOM.setStatus(this.getStatus());
-		dataObjectDOM.setVersion(this.getVersion());
-		dataObjectDOM.setFirstEditor(this.getFirstEditor());
-		dataObjectDOM.setLastEditor(this.getLastEditor());
-		dataObjectDOM.setCreationDate(this.getCreated());
-		dataObjectDOM.setModifyDate(this.getLastModified());
-		return dataObjectDOM;
-	}
+    @Override
+    public IApsEntity getEntityPrototype() {
+        DataObject dataObject = (DataObject) super.getEntityPrototype();
+        dataObject.setStatus(STATUS_NEW);
+        dataObject.setVersion(INIT_VERSION);
+        dataObject.setViewPage(this.getViewPage());
+        dataObject.setListModel(this.getListModel());
+        dataObject.setDefaultModel(this.getDefaultModel());
+        return dataObject;
+    }
 
-	public boolean isOnLine() {
-		return this._onLine;
-	}
+    @Override
+    protected IApsEntityDOM getBuildJDOM() {
+        DataObjectDOM dataObjectDOM = (DataObjectDOM) super.getBuildJDOM();
+        dataObjectDOM.setStatus(this.getStatus());
+        dataObjectDOM.setVersion(this.getVersion());
+        dataObjectDOM.setFirstEditor(this.getFirstEditor());
+        dataObjectDOM.setLastEditor(this.getLastEditor());
+        dataObjectDOM.setCreationDate(this.getCreated());
+        dataObjectDOM.setModifyDate(this.getLastModified());
+        return dataObjectDOM;
+    }
 
-	public void setOnLine(boolean onLine) {
-		this._onLine = onLine;
-	}
+    public boolean isOnLine() {
+        return this._onLine;
+    }
 
-	public Date getCreated() {
-		return _created;
-	}
+    public void setOnLine(boolean onLine) {
+        this._onLine = onLine;
+    }
 
-	public void setCreated(Date created) {
-		this._created = created;
-	}
+    public Date getCreated() {
+        return _created;
+    }
 
-	public Date getLastModified() {
-		return _lastModified;
-	}
+    public void setCreated(Date created) {
+        this._created = created;
+    }
 
-	public void setLastModified(Date lastModified) {
-		this._lastModified = lastModified;
-	}
+    public Date getLastModified() {
+        return _lastModified;
+    }
 
-	public String getVersion() {
-		return _version;
-	}
+    public void setLastModified(Date lastModified) {
+        this._lastModified = lastModified;
+    }
 
-	public void setVersion(String version) {
-		Pattern pattern = Pattern.compile("\\d+\\.\\d+");
-		Matcher matcher = pattern.matcher(version);
-		if (!matcher.matches()) {
-			throw new RuntimeException("Invalid data object version");
-		}
-		this._version = version;
-	}
+    public String getVersion() {
+        return _version;
+    }
 
-	public void incrementVersion(boolean approve) {
-		if (approve) {
-			this.updateVersionIdOnPublishing();
-		} else {
-			this.updateVersionId();
-		}
-	}
+    public void setVersion(String version) {
+        Pattern pattern = Pattern.compile("\\d+\\.\\d+");
+        Matcher matcher = pattern.matcher(version);
+        if (!matcher.matches()) {
+            throw new RuntimeException("Invalid data object version");
+        }
+        this._version = version;
+    }
 
-	protected void updateVersionId() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) {
-			prevVersionId = INIT_VERSION;
-		}
-		String[] item = this.getVersionItems(prevVersionId);
-		int workVersion = Integer.parseInt(item[1]);
-		int newWorkVersion = workVersion + 1;
-		String newVersionId = item[0] + "." + newWorkVersion;
-		this.setVersion(newVersionId);
-	}
+    public void incrementVersion(boolean approve) {
+        if (approve) {
+            this.updateVersionIdOnPublishing();
+        } else {
+            this.updateVersionId();
+        }
+    }
 
-	protected void updateVersionIdOnPublishing() {
-		String prevVersionId = this.getVersion();
-		if (null == prevVersionId) {
-			prevVersionId = INIT_VERSION;
-		}
-		String[] item = this.getVersionItems(prevVersionId);
-		int onlineVersion = Integer.parseInt(item[0]);
-		int newOnlineVersion = onlineVersion + 1;
-		String newVersionId = newOnlineVersion + ".0";
-		this.setVersion(newVersionId);
-	}
+    protected void updateVersionId() {
+        String prevVersionId = this.getVersion();
+        if (null == prevVersionId) {
+            prevVersionId = INIT_VERSION;
+        }
+        String[] item = this.getVersionItems(prevVersionId);
+        int workVersion = Integer.parseInt(item[1]);
+        int newWorkVersion = workVersion + 1;
+        String newVersionId = item[0] + "." + newWorkVersion;
+        this.setVersion(newVersionId);
+    }
 
-	protected String[] getVersionItems(String versionId) {
-		return versionId.split("\\.");
-	}
+    protected void updateVersionIdOnPublishing() {
+        String prevVersionId = this.getVersion();
+        if (null == prevVersionId) {
+            prevVersionId = INIT_VERSION;
+        }
+        String[] item = this.getVersionItems(prevVersionId);
+        int onlineVersion = Integer.parseInt(item[0]);
+        int newOnlineVersion = onlineVersion + 1;
+        String newVersionId = newOnlineVersion + ".0";
+        this.setVersion(newVersionId);
+    }
 
-	public String getFirstEditor() {
-		return _firstEditor;
-	}
+    protected String[] getVersionItems(String versionId) {
+        return versionId.split("\\.");
+    }
 
-	public void setFirstEditor(String firstEditor) {
-		this._firstEditor = firstEditor;
-	}
+    public String getFirstEditor() {
+        return _firstEditor;
+    }
 
-	public String getLastEditor() {
-		return _lastEditor;
-	}
+    public void setFirstEditor(String firstEditor) {
+        this._firstEditor = firstEditor;
+    }
 
-	public void setLastEditor(String lastEditor) {
-		this._lastEditor = lastEditor;
-	}
+    public String getLastEditor() {
+        return _lastEditor;
+    }
 
-	private String _status;
-	private boolean _onLine;
-	private String _viewPage;
-	private String _listModel;
-	private String _defaultModel;
-
-	private Date _created;
-	private Date _lastModified;
-
-	private String _version;
-	private String _firstEditor;
-	private String _lastEditor;
-
-	@Deprecated
-	public static final String STATES_NEW = "Nuovo";
-
-	public static final String STATUS_NEW = "NEW";
-
-	@Deprecated
-	public static final String STATES_DRAFT = "Bozza";
-
-	public static final String STATUS_DRAFT = "DRAFT";
-
-	@Deprecated
-	public static final String STATES_READY = "Pronto";
-
-	public static final String STATUS_READY = "READY";
-
-	public static final String STATUS_PUBLIC = "PUBLIC";
-
-	@Deprecated
-	public static final String[] STATES = {STATES_DRAFT, STATES_READY};
-
-	public static final String[] AVAILABLE_STATUS = {STATUS_DRAFT, STATUS_READY};
-
-	public static final String INIT_VERSION = "0.0";
+    public void setLastEditor(String lastEditor) {
+        this._lastEditor = lastEditor;
+    }
 
 }

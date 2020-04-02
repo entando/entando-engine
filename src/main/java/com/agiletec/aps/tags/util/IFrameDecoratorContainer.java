@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags.util;
 
 import com.agiletec.aps.system.RequestContext;
@@ -20,19 +21,19 @@ import com.agiletec.aps.system.services.page.Widget;
  * @author E.Santoboni
  */
 public interface IFrameDecoratorContainer {
-	
-	public boolean needsDecoration(Widget widget, RequestContext reqCtx);
-	
-	public boolean isWidgetDecorator();
-	
-	public String getHeaderJspPath();
-	
-	public String getHeaderFragmentCode();
-	
-	public String getFooterJspPath();
-	
-	public String getFooterFragmentCode();
-	
-	public int getOrder();
-	
+
+    boolean needsDecoration(Widget widget, RequestContext reqCtx);
+
+    boolean isWidgetDecorator();
+
+    String getHeaderJspPath();
+
+    String getHeaderFragmentCode();
+
+    String getFooterJspPath();
+
+    String getFooterFragmentCode();
+
+    int getOrder();
+
 }

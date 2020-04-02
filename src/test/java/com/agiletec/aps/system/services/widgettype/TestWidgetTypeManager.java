@@ -11,18 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.widgettype;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
@@ -30,11 +20,22 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 /**
  * @author M.Diana - E.Santoboni
  */
 public class TestWidgetTypeManager extends BaseTestCase {
+
+    private IWidgetTypeManager _widgetTypeManager = null;
+    private MockWidgetTypeDAO _mockWidgetTypeDAO;
 
     @Override
     protected void setUp() throws Exception {
@@ -75,7 +76,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
         Iterator<WidgetTypeParameter> iter = list.iterator();
         Map<String, String> parameters = new HashMap<>();
         while (iter.hasNext()) {
-            WidgetTypeParameter parameter = (WidgetTypeParameter) iter.next();
+            WidgetTypeParameter parameter = iter.next();
             parameters.put(parameter.getName(), parameter.getDescr());
         }
         assertEquals(1, parameters.size());
@@ -244,8 +245,5 @@ public class TestWidgetTypeManager extends BaseTestCase {
             throw new Exception(e);
         }
     }
-
-    private IWidgetTypeManager _widgetTypeManager = null;
-    private MockWidgetTypeDAO _mockWidgetTypeDAO;
 
 }

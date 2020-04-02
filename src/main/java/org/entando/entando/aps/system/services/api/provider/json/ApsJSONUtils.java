@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.provider.json;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.cxf.staxutils.DelegatingXMLStreamWriter;
 import org.codehaus.jettison.AbstractXMLStreamWriter;
@@ -35,19 +35,20 @@ import org.entando.entando.aps.system.services.api.model.CDataAdapter;
  */
 public class ApsJSONUtils {
 
-	private static final Charset UTF8 = Charset.forName("utf-8");
-	
-	public static XMLStreamWriter createIgnoreMixedContentWriterIfNeeded(XMLStreamWriter writer, boolean ignoreMixedContent) {
-        return ignoreMixedContent ? new IgnoreMixedContentWriter(writer) : writer; 
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
+
+    public static XMLStreamWriter createIgnoreMixedContentWriterIfNeeded(XMLStreamWriter writer, boolean ignoreMixedContent) {
+        return ignoreMixedContent ? new IgnoreMixedContentWriter(writer) : writer;
     }
-	
-	public static XMLStreamWriter createIgnoreNsWriterIfNeeded(XMLStreamWriter writer, boolean ignoreNamespaces, boolean ignoreXsiAttributes) {
+
+    public static XMLStreamWriter createIgnoreNsWriterIfNeeded(XMLStreamWriter writer, boolean ignoreNamespaces,
+            boolean ignoreXsiAttributes) {
         return ignoreNamespaces ? new CDataIgnoreNamespacesWriter(writer, ignoreXsiAttributes) : writer;
     }
-	
-	public static XMLStreamWriter createStreamWriter(OutputStream os, 
-			QName qname, boolean writeXsiType, Configuration config, 
-			boolean serializeAsArray, List<String> arrayKeys, boolean dropRootElement, String enc) throws Exception {
+
+    public static XMLStreamWriter createStreamWriter(OutputStream os,
+            QName qname, boolean writeXsiType, Configuration config,
+            boolean serializeAsArray, List<String> arrayKeys, boolean dropRootElement, String enc) throws Exception {
         MappedNamespaceConvention convention = new MappedNamespaceConvention(config);
         AbstractXMLStreamWriter xsw = new CDataMappedXMLStreamWriter(convention, new OutputStreamWriter(os, enc));
         if (serializeAsArray) {
@@ -56,43 +57,43 @@ public class ApsJSONUtils {
                     xsw.serializeAsArray(key);
                 }
             } else if (qname != null) {
-                String key = convention.createKey(qname.getPrefix(), 
-						qname.getNamespaceURI(), qname.getLocalPart());
+                String key = convention.createKey(qname.getPrefix(),
+                        qname.getNamespaceURI(), qname.getLocalPart());
                 xsw.serializeAsArray(key);
             }
         }
-        XMLStreamWriter writer = !writeXsiType || dropRootElement 
-            ? new IgnoreContentJettisonWriter(xsw, writeXsiType, dropRootElement) : xsw;
+        XMLStreamWriter writer = !writeXsiType || dropRootElement
+                ? new IgnoreContentJettisonWriter(xsw, writeXsiType, dropRootElement) : xsw;
         return writer;
-    }    
-	
-	private static class IgnoreMixedContentWriter extends DelegatingXMLStreamWriter {
-        
-		String lastText;
+    }
+
+    private static class IgnoreMixedContentWriter extends DelegatingXMLStreamWriter {
+
+        String lastText;
         boolean isMixed;
         List<Boolean> mixed = new LinkedList<Boolean>();
-        
-		public IgnoreMixedContentWriter(XMLStreamWriter writer) {
+
+        public IgnoreMixedContentWriter(XMLStreamWriter writer) {
             super(writer);
         }
-		
-		@Override
+
+        @Override
         public void writeCharacters(String text) throws XMLStreamException {
-            if (CDataAdapter.isCdata(new String(text))) {
-                text = CDataAdapter.parse(new String(text));
+            if (CDataAdapter.isCdata(text)) {
+                text = CDataAdapter.parse(text);
             }
-			if (StringUtils.isEmpty(text.trim())) {
-                lastText = text; 
+            if (StringUtils.isEmpty(text.trim())) {
+                lastText = text;
             } else if (lastText != null) {
                 lastText += text;
             } else if (!isMixed) {
-                super.writeCharacters(text);                                
+                super.writeCharacters(text);
             } else {
                 lastText = text;
             }
         }
-        
-		@Override
+
+        @Override
         public void writeStartElement(String prefix, String local, String uri) throws XMLStreamException {
             if (lastText != null) {
                 isMixed = true;
@@ -102,8 +103,8 @@ public class ApsJSONUtils {
             isMixed = false;
             super.writeStartElement(prefix, local, uri);
         }
-		
-		@Override
+
+        @Override
         public void writeStartElement(String uri, String local) throws XMLStreamException {
             if (lastText != null) {
                 isMixed = true;
@@ -113,8 +114,8 @@ public class ApsJSONUtils {
             isMixed = false;
             super.writeStartElement(uri, local);
         }
-		
-		@Override
+
+        @Override
         public void writeStartElement(String local) throws XMLStreamException {
             if (lastText != null) {
                 isMixed = true;
@@ -124,42 +125,42 @@ public class ApsJSONUtils {
             isMixed = false;
             super.writeStartElement(local);
         }
-		
-		@Override
+
+        @Override
         public void writeEndElement() throws XMLStreamException {
             if (lastText != null && (!isMixed || !StringUtils.isEmpty(lastText.trim()))) {
-                super.writeCharacters(lastText.trim());                
+                super.writeCharacters(lastText.trim());
             }
             super.writeEndElement();
             isMixed = mixed.get(0);
             mixed.remove(0);
         }
-		
+
     }
-	
-	private static class IgnoreContentJettisonWriter extends DelegatingXMLStreamWriter {
-        
+
+    private static class IgnoreContentJettisonWriter extends DelegatingXMLStreamWriter {
+
         private boolean writeXsiType;
         private boolean dropRootElement;
         private boolean rootDropped;
         private int index;
-		
+
         public IgnoreContentJettisonWriter(XMLStreamWriter writer, boolean writeXsiType, boolean dropRootElement) {
             super(writer);
             this.writeXsiType = writeXsiType;
             this.dropRootElement = dropRootElement;
         }
-        
-		@Override
-        public void writeAttribute(String prefix, String uri, 
-				String local, String value) throws XMLStreamException {
+
+        @Override
+        public void writeAttribute(String prefix, String uri,
+                String local, String value) throws XMLStreamException {
             if (!writeXsiType && "xsi".equals(prefix)
                     && ("type".equals(local) || "nil".equals(local))) {
                 return;
             }
             super.writeAttribute(prefix, uri, local, value);
         }
-        
+
         @Override
         public void writeStartElement(String prefix, String local, String uri) throws XMLStreamException {
             index++;
@@ -169,12 +170,12 @@ public class ApsJSONUtils {
             }
             super.writeStartElement(prefix, local, uri);
         }
-        
+
         @Override
         public void writeStartElement(String local) throws XMLStreamException {
             this.writeStartElement("", local, "");
         }
-        
+
         @Override
         public void writeEndElement() throws XMLStreamException {
             index--;
@@ -183,17 +184,17 @@ public class ApsJSONUtils {
             }
             super.writeEndElement();
         }
-		
-		@Override
-		public void writeCharacters(String text) throws XMLStreamException {
-            if (CDataAdapter.isCdata(new String(text))) {
-                String parsedCDataText = CDataAdapter.parse(new String(text));
+
+        @Override
+        public void writeCharacters(String text) throws XMLStreamException {
+            if (CDataAdapter.isCdata(text)) {
+                String parsedCDataText = CDataAdapter.parse(text);
                 super.writeCharacters(parsedCDataText);
             } else {
                 super.writeCharacters(text);
             }
         }
-		
+
     }
-	
+
 }

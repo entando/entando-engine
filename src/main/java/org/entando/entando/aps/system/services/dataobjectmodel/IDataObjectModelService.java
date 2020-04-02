@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,17 +23,17 @@ import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 
 public interface IDataObjectModelService {
 
-    public PagedMetadata<DataModelDto> getDataObjectModels(RestListRequest restListReq);
+    PagedMetadata<DataModelDto> getDataObjectModels(RestListRequest restListReq);
 
-    public DataModelDto getDataObjectModel(Long dataModelId);
+    DataModelDto getDataObjectModel(Long dataModelId);
 
-    public DataModelDto addDataObjectModel(DataObjectModelRequest dataObjectModelRequest);
+    DataModelDto addDataObjectModel(DataObjectModelRequest dataObjectModelRequest);
 
-    public DataModelDto updateDataObjectModel(DataObjectModelRequest dataObjectModelRequest);
+    DataModelDto updateDataObjectModel(DataObjectModelRequest dataObjectModelRequest);
 
-    public DataModelDto getPatchedDataObjectModel(Long dataModelId, JsonNode jsonPatch);
+    DataModelDto getPatchedDataObjectModel(Long dataModelId, JsonNode jsonPatch);
 
-    public void removeDataObjectModel(Long dataModelId);
+    void removeDataObjectModel(Long dataModelId);
 
-    public IEntityModelDictionary getDataModelDictionary(String typeCode);
+    IEntityModelDictionary getDataModelDictionary(String typeCode);
 }

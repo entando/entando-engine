@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.group;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+package com.agiletec.aps.system.services.group;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.cache.IGroupManagerCacheWrapper;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

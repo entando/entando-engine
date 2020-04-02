@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -23,35 +24,34 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = DataObjectModel.TABLE_NAME)
 public class DataObjectModel {
 
-	public DataObjectModel() {
-	}
+    public static final String TABLE_NAME = "dataobjectmodels";
+    @DatabaseField(columnName = "modelid",
+            dataType = DataType.INTEGER,
+            canBeNull = false, id = true)
+    private int _modelId;
 
-	@DatabaseField(columnName = "modelid",
-			dataType = DataType.INTEGER,
-			canBeNull = false, id = true)
-	private int _modelId;
+    @DatabaseField(columnName = "datatype",
+            dataType = DataType.STRING,
+            width = 30,
+            canBeNull = false)
+    private String _dataType;
 
-	@DatabaseField(columnName = "datatype",
-			dataType = DataType.STRING,
-			width = 30,
-			canBeNull = false)
-	private String _dataType;
+    @DatabaseField(columnName = "descr",
+            dataType = DataType.STRING,
+            width = 50,
+            canBeNull = false)
+    private String _description;
 
-	@DatabaseField(columnName = "descr",
-			dataType = DataType.STRING,
-			width = 50,
-			canBeNull = false)
-	private String _description;
+    @DatabaseField(columnName = "model",
+            dataType = DataType.LONG_STRING)
+    private String _model;
 
-	@DatabaseField(columnName = "model",
-			dataType = DataType.LONG_STRING)
-	private String _model;
+    @DatabaseField(columnName = "stylesheet",
+            dataType = DataType.STRING,
+            width = 50)
+    private String _styleSheet;
 
-	@DatabaseField(columnName = "stylesheet",
-			dataType = DataType.STRING,
-			width = 50)
-	private String _styleSheet;
-
-	public static final String TABLE_NAME = "dataobjectmodels";
+    public DataObjectModel() {
+    }
 
 }

@@ -11,21 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
 /**
- * Interface for event observers required to reload the entity references.
- * The interface is implemented by the basic service manager entity.
+ * Interface for event observers required to reload the entity references. The interface is implemented by the basic service manager
+ * entity.
+ *
  * @author E.Santoboni
  */
 public interface ReloadingEntitiesReferencesObserver extends ObserverService {
-	
-	/**
-	 * Reload the entity references.
-	 * @param event The event of required reloading entity references.
-	 */
-	public void reloadEntitiesReferences(ReloadingEntitiesReferencesEvent event);
-	
+
+    /**
+     * Reload the entity references.
+     *
+     * @param event The event of required reloading entity references.
+     */
+    void reloadEntitiesReferences(ReloadingEntitiesReferencesEvent event);
+
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -23,20 +24,20 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlRootElement(name = "response")
 @XmlSeeAlso({LinkedListItem.class})
 public class LinkedListApiResponse extends AbstractApiResponse {
-    
-	@Override
+
+    @Override
     @XmlElement(name = "result", required = true)
     public LinkedListApiResponseResult getResult() {
         return (LinkedListApiResponseResult) super.getResult();
     }
-	
-	public void setResult(LinkedListApiResponseResult result) {
-		super.setResult(result);
-	}
-    
-	@Override
+
+    public void setResult(LinkedListApiResponseResult result) {
+        super.setResult(result);
+    }
+
+    @Override
     protected AbstractApiResponseResult createResponseResultInstance() {
         return new LinkedListApiResponseResult();
     }
-    
+
 }

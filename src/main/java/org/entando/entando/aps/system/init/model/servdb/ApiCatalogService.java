@@ -11,100 +11,100 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
  */
 @DatabaseTable(tableName = ApiCatalogService.TABLE_NAME)
 public class ApiCatalogService implements ExtendedColumnDefinition {
-	
-	public ApiCatalogService() {}
-	
-	@DatabaseField(columnName = "servicekey", 
-			dataType = DataType.STRING, 
-			width = 100, 
-			canBeNull = false, id = true)
-	private String _serviceKey;
-	
-	@DatabaseField(columnName = "resourcecode", 
-			dataType = DataType.STRING, 
-			width = 100, 
-			canBeNull = false)
-	private String _resourceCode;
-	
-	@DatabaseField(columnName = "description", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _description;
-	
-	@DatabaseField(columnName = "parameters", 
-			dataType = DataType.LONG_STRING)
-	private String _parameters;
-	
-	@DatabaseField(columnName = "tag", 
-			dataType = DataType.STRING, 
-			width = 100)
-	private String _tag;
-	
-	@DatabaseField(columnName = "freeparameters", 
-			dataType = DataType.LONG_STRING)
-	private String _freeParameters;
-	
-	@DatabaseField(columnName = "isactive", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _active;
-	
-	@DatabaseField(columnName = "ishidden", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _hidden;
-	
-	@DatabaseField(columnName = "myentando", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _myentando;
-	
-	@DatabaseField(columnName = "authenticationrequired", 
-			dataType = DataType.SHORT)
-	private short _authenticationRequired;
-	
-	@DatabaseField(columnName = "requiredpermission", 
-			foreign = true, width = 30)
-	private Permission _requiredPermission;
-	
-	@DatabaseField(columnName = "requiredgroup", 
-			foreign = true, width = 20)
-	private Group _requiredGroup;
-	
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		String tableName = TABLE_NAME;
-		String permissionsTableName = Permission.TABLE_NAME;
-		String groupsTableName = Group.TABLE_NAME;
-		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + tableName + "`";
-			permissionsTableName = "`" + permissionsTableName + "`";
-			groupsTableName = "`" + groupsTableName + "`";
-		}
-		return new String[]{"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_gr_fkey FOREIGN KEY (requiredgroup) "
-				+ "REFERENCES " + groupsTableName + " (groupname)", 
-			"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_perm_fkey FOREIGN KEY (requiredpermission) "
-				+ "REFERENCES " + permissionsTableName + " (permissionname)"};
-	}
-	
-	public static final String TABLE_NAME = "apicatalog_services";
-	
+
+    public static final String TABLE_NAME = "apicatalog_services";
+    @DatabaseField(columnName = "servicekey",
+            dataType = DataType.STRING,
+            width = 100,
+            canBeNull = false, id = true)
+    private String _serviceKey;
+
+    @DatabaseField(columnName = "resourcecode",
+            dataType = DataType.STRING,
+            width = 100,
+            canBeNull = false)
+    private String _resourceCode;
+
+    @DatabaseField(columnName = "description",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _description;
+
+    @DatabaseField(columnName = "parameters",
+            dataType = DataType.LONG_STRING)
+    private String _parameters;
+
+    @DatabaseField(columnName = "tag",
+            dataType = DataType.STRING,
+            width = 100)
+    private String _tag;
+
+    @DatabaseField(columnName = "freeparameters",
+            dataType = DataType.LONG_STRING)
+    private String _freeParameters;
+
+    @DatabaseField(columnName = "isactive",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _active;
+
+    @DatabaseField(columnName = "ishidden",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _hidden;
+
+    @DatabaseField(columnName = "myentando",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _myentando;
+
+    @DatabaseField(columnName = "authenticationrequired",
+            dataType = DataType.SHORT)
+    private short _authenticationRequired;
+
+    @DatabaseField(columnName = "requiredpermission",
+            foreign = true, width = 30)
+    private Permission _requiredPermission;
+
+    @DatabaseField(columnName = "requiredgroup",
+            foreign = true, width = 20)
+    private Group _requiredGroup;
+
+    public ApiCatalogService() {
+    }
+
+    @Override
+    public String[] extensions(IDatabaseManager.DatabaseType type) {
+        String tableName = TABLE_NAME;
+        String permissionsTableName = Permission.TABLE_NAME;
+        String groupsTableName = Group.TABLE_NAME;
+        if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
+            tableName = "`" + tableName + "`";
+            permissionsTableName = "`" + permissionsTableName + "`";
+            groupsTableName = "`" + groupsTableName + "`";
+        }
+        return new String[]{"ALTER TABLE " + tableName + " "
+                + "ADD CONSTRAINT " + TABLE_NAME + "_gr_fkey FOREIGN KEY (requiredgroup) "
+                + "REFERENCES " + groupsTableName + " (groupname)",
+                "ALTER TABLE " + tableName + " "
+                        + "ADD CONSTRAINT " + TABLE_NAME + "_perm_fkey FOREIGN KEY (requiredpermission) "
+                        + "REFERENCES " + permissionsTableName + " (permissionname)"};
+    }
+
 }
 /*
 CREATE TABLE apicatalog_services

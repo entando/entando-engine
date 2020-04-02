@@ -3,18 +3,19 @@ package org.entando.entando.aps.system.init;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import org.entando.entando.aps.system.services.oauth2.OAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import java.sql.Date;
-import java.time.*;
+public class SwaggerInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
-public class SwaggerInitializer  implements ApplicationListener<ContextRefreshedEvent> {
     private static final Logger logger = LoggerFactory.getLogger(SwaggerInitializer.class);
-
 
     private BaseConfigManager baseConfigManager;
     private OAuthConsumerManager consumerManager;
@@ -28,7 +29,9 @@ public class SwaggerInitializer  implements ApplicationListener<ContextRefreshed
     public void onApplicationEvent(ContextRefreshedEvent event) {
         try {
             ConsumerRecordVO swaggerConsumer = consumerManager.getConsumerRecord("swagger");
-            if (swaggerConsumer == null) createSwaggerConsumer();
+            if (swaggerConsumer == null) {
+                createSwaggerConsumer();
+            }
         } catch (ApsSystemException e) {
             logger.warn("Can't configure Swagger.", e);
         }

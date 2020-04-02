@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import java.util.Date;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.util.Date;
 
 /**
  * @author E.Santoboni
@@ -25,9 +25,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = User.TABLE_NAME)
 public class User {
 
-    public User() {
-    }
-
+    public static final String TABLE_NAME = "authusers";
     @DatabaseField(columnName = "username",
             dataType = DataType.STRING,
             width = 80,
@@ -56,7 +54,8 @@ public class User {
             dataType = DataType.SHORT)
     private short _active;
 
-    public static final String TABLE_NAME = "authusers";
+    public User() {
+    }
 
 }
 /*

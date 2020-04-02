@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.group.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -23,20 +24,20 @@ import java.util.Map;
  */
 public interface IGroupManagerCacheWrapper {
 
-	public static final String GROUP_MANAGER_CACHE_NAME = "Entando_GroupManager";
-	public static final String GROUP_CACHE_NAME_PREFIX = "GroupManager_group_";
-	public static final String GROUP_CODES_CACHE_NAME = "GroupManager_groups";
+    String GROUP_MANAGER_CACHE_NAME = "Entando_GroupManager";
+    String GROUP_CACHE_NAME_PREFIX = "GroupManager_group_";
+    String GROUP_CODES_CACHE_NAME = "GroupManager_groups";
 
-	public void initCache(IGroupDAO groupDAO) throws ApsSystemException;
+    void initCache(IGroupDAO groupDAO) throws ApsSystemException;
 
-	public Map<String, Group> getGroups();
+    Map<String, Group> getGroups();
 
-	public Group getGroup(String code);
+    Group getGroup(String code);
 
-	public void addGroup(Group group);
+    void addGroup(Group group);
 
-	public void updateGroup(Group group);
+    void updateGroup(Group group);
 
-	public void removeGroup(Group group);
+    void removeGroup(Group group);
 
 }

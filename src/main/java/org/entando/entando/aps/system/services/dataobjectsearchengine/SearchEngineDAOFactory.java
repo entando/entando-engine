@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -18,10 +19,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * Classe factory degli elementi ad uso del SearchEngine.
@@ -31,6 +31,13 @@ import java.io.File;
 public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
 
     private static final Logger _logger = LoggerFactory.getLogger(SearchEngineDAOFactory.class);
+    private String _indexerClassName;
+    private String _searcherClassName;
+    private String _indexDiskRootFolder;
+    private String _subDirectory;
+    private ConfigInterface _configManager;
+    private ILangManager _langManager;
+    private ICategoryManager categoryManager;
 
     @Override
     public void init() throws Exception {
@@ -180,15 +187,5 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
     public void setCategoryManager(ICategoryManager categoryManager) {
         this.categoryManager = categoryManager;
     }
-
-    private String _indexerClassName;
-    private String _searcherClassName;
-
-    private String _indexDiskRootFolder;
-    private String _subDirectory;
-
-    private ConfigInterface _configManager;
-    private ILangManager _langManager;
-    private ICategoryManager categoryManager;
 
 }

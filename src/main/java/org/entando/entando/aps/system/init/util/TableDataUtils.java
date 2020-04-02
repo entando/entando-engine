@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.util;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.sql.Clob;
@@ -27,14 +27,9 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.lang.StringEscapeUtils;
-
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpReport;
@@ -45,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * @author E.Santoboni
  */
 public class TableDataUtils {
-    
+
     private static final Logger _logger = LoggerFactory.getLogger(TableDataUtils.class);
-    
+
     public static void valueDatabase(String script, String databaseName,
             DataSource dataSource, DataInstallationReport schemaReport) throws ApsSystemException {
         try {
@@ -71,7 +66,7 @@ public class TableDataUtils {
             throw new ApsSystemException("Error executing script into db " + databaseName, t);
         }
     }
-    
+
     public static void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
         if (null == queries || queries.length == 0) {
             return;
@@ -119,7 +114,7 @@ public class TableDataUtils {
             }
         }
     }
-    
+
     public static TableDumpReport dumpTable(BufferedWriter br, DataSource dataSource, String tableName) throws ApsSystemException {
         TableDumpReport report = new TableDumpReport(tableName);
         StringBuilder scriptPrefix = new StringBuilder("INSERT INTO ").append(tableName).append(" (");
@@ -203,22 +198,22 @@ public class TableDataUtils {
         report.setRequiredTime(time);
         return report;
     }
-    
+
     private static Object getColumnValue(ResultSet res, int columnIndex, int[] columnTypes) throws SQLException {
         int type = columnTypes[columnIndex];
         int resIndex = columnIndex + 1;
         switch (type) {
             //case Types.ARRAY:
-            //	return ....;
+            //  return ....;
             case Types.BIGINT:
                 Object bigintObject = res.getObject(resIndex);
                 if (null != bigintObject) {
-                    return (Integer) bigintObject;
+                    return bigintObject;
                 } else {
                     return null;
                 }
-            //case Types.BINARY:
-            //	return ....;
+                //case Types.BINARY:
+                //  return ....;
             case Types.BIT:
                 return (int) res.getByte(resIndex);
             case Types.BLOB:
@@ -235,72 +230,72 @@ public class TableDataUtils {
                 Clob clob = res.getClob(resIndex);
                 return getClobAsString(clob);
             //case Types.DATALINK:
-            //	return ....;
+            //  return ....;
             case Types.DATE:
                 Date date = res.getDate(resIndex);
                 return getDateAsString(date);
             case Types.DECIMAL:
                 return res.getBigDecimal(resIndex);
             //case Types.DISTINCT:
-            //	return ....;
+            //  return ....;
             case Types.DOUBLE:
                 Object doubleObject = res.getObject(resIndex);
                 if (null != doubleObject) {
-                    return (Double) doubleObject;
+                    return doubleObject;
                 } else {
                     return null;
                 }
             case Types.FLOAT:
                 Object floatObject = res.getObject(resIndex);
                 if (null != floatObject) {
-                    return (Float) floatObject;
+                    return floatObject;
                 } else {
                     return null;
                 }
             case Types.INTEGER:
                 Object intObject = res.getObject(resIndex);
                 if (null != intObject) {
-                    return (Integer) intObject;
+                    return intObject;
                 } else {
                     return null;
                 }
-            //case Types.JAVA_OBJECT:
-            //	return ....;
+                //case Types.JAVA_OBJECT:
+                //  return ....;
             case Types.LONGNVARCHAR:
                 return res.getString(resIndex);
             //case Types.LONGVARBINARY:
-            //	return ....;
+            //  return ....;
             case Types.LONGVARCHAR:
                 return res.getString(resIndex);
             //case Types.NCHAR:
-            //	return ....;
+            //  return ....;
             case Types.NCLOB:
                 return res.getString(resIndex);
             //case Types.NULL:
-            //	return ....;
+            //  return ....;
             //case Types.NUMERIC:
-            //	return ....;
+            //  return ....;
             case Types.NVARCHAR:
                 return res.getString(resIndex);
             //case Types.OTHER:
-            //	return ....;
+            //  return ....;
             //case Types.REAL:
-            //	return ....;
+            //  return ....;
             //case Types.REF:
-            //	return ....;
+            //  return ....;
             //case Types.ROWID:
-            //	return ....;
+            //  return ....;
             case Types.SMALLINT:
                 Object shortObject = res.getObject(resIndex);
                 if (null != shortObject) {
-                    return (Integer) shortObject;
+                    return shortObject;
                 } else {
                     return null;
                 }
-            //case Types.SQLXML:
-            //	return ....;
-            //case Types.STRUCT:
-            //	return ....;
+                //case Types.SQLXML:
+                //  return ....;
+                //case Types.STRUCT:
+                //  return ....;
             case Types.TIME:
                 Time time = res.getTime(resIndex);
                 return getTimeAsString(time);
@@ -310,12 +305,12 @@ public class TableDataUtils {
             case Types.TINYINT:
                 Object tinyintObject = res.getObject(resIndex);
                 if (null != tinyintObject) {
-                    return (Integer) tinyintObject;
+                    return tinyintObject;
                 } else {
                     return null;
                 }
-            //case Types.VARBINARY:
-            //	return ....;
+                //case Types.VARBINARY:
+                //  return ....;
             case Types.VARCHAR:
                 return res.getString(resIndex);
             default:
@@ -323,7 +318,7 @@ public class TableDataUtils {
         }
         //return null;
     }
-    
+
     protected static String getClobAsString(Clob clob) {
         if (null == clob) {
             return null;
@@ -340,14 +335,14 @@ public class TableDataUtils {
         }
         return strOut.toString().trim();
     }
-    
+
     private static String getDateAsString(Date date) {
         if (null == date) {
             return null;
         }
         return DateConverter.getFormattedDate(date, "yyyy-MM-dd HH:mm:ss");
     }
-    
+
     private static String getTimeAsString(Time time) {
         if (null == time) {
             return null;
@@ -355,7 +350,7 @@ public class TableDataUtils {
         Date date = new Date(time.getTime());
         return getDateAsString(date);
     }
-    
+
     private static String getTimestampAsString(Timestamp time) {
         if (null == time) {
             return null;
@@ -363,7 +358,7 @@ public class TableDataUtils {
         Date date = new Date(time.getTime());
         return getDateAsString(date);
     }
-    
+
     private static boolean isDataNeedsQuotes(int type) {
         switch (type) {
             case Types.BIGINT:
@@ -392,5 +387,5 @@ public class TableDataUtils {
                 return true;
         }
     }
-    
+
 }

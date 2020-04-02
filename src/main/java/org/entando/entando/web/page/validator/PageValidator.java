@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.page.validator;
 
 import com.agiletec.aps.system.services.group.Group;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 /**
- *
  * @author paddeo
  */
 @Component
@@ -123,8 +123,8 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validatePagesStatus(String pageCode, PagePositionRequest pageRequest, Errors errors) {
-        IPage parent = this.getPageManager().getDraftPage(pageRequest.getParentCode()),
-                page = this.getPageManager().getDraftPage(pageCode);
+        IPage parent = this.getPageManager().getDraftPage(pageRequest.getParentCode());
+        IPage page = this.getPageManager().getDraftPage(pageCode);
         if (page.isOnline() && !parent.isOnline()) {
             errors.reject(ERRCODE_STATUS_PAGE_MISMATCH, new String[]{pageCode}, "page.move.status.mismatch");
         }

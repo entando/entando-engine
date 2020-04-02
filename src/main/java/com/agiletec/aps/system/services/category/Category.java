@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.common.tree.TreeNode;
 import com.agiletec.aps.util.ApsProperties;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ public class Category extends TreeNode implements Comparable, Serializable {
 
     private String _renderingLang;
     private String _defaultLang;
-    
+
     @Override
     public Category clone() {
         Category clone = (Category) super.clone();
@@ -51,15 +51,14 @@ public class Category extends TreeNode implements Comparable, Serializable {
     public String[] getChildrenCodes() {
         String[] categories = new String[super.getChildrenCodes().length];
         for (int i = 0; i < super.getChildrenCodes().length; i++) {
-            categories[i] = (String) super.getChildrenCodes()[i];
+            categories[i] = super.getChildrenCodes()[i];
         }
         Arrays.sort(categories);
         return categories;
     }
 
     /**
-     * Restituisce il titolo della categoria nella lingua corrente
-     * (precedentemente impostata con il metodo setRenderingLang) o, se non
+     * Restituisce il titolo della categoria nella lingua corrente (precedentemente impostata con il metodo setRenderingLang) o, se non
      * disponibile, nella lingua di default.
      *
      * @return Il titolo della categoria
@@ -78,12 +77,9 @@ public class Category extends TreeNode implements Comparable, Serializable {
     }
 
     /**
-     * Restituisce il titolo (comprensivo delle progenitrici) della singola
-     * categoria.Il titolo viene restituito nella lingua corrente
- (precedentemente impostata con il metodo setRenderingLang) o, se non
- disponibile, nella lingua di default.
+     * Restituisce il titolo (comprensivo delle progenitrici) della singola categoria.Il titolo viene restituito nella lingua corrente
+     * (precedentemente impostata con il metodo setRenderingLang) o, se non disponibile, nella lingua di default.
      *
-     * @param treeNodeManager
      * @return Il titolo della categoria.
      */
     public String getFullTitle(ITreeNodeManager treeNodeManager) {
@@ -98,10 +94,8 @@ public class Category extends TreeNode implements Comparable, Serializable {
     }
 
     /**
-     * Restituisce il titolo (comprensivo delle progenitrici) della singola
-     * categoria nella lingua di default.
+     * Restituisce il titolo (comprensivo delle progenitrici) della singola categoria nella lingua di default.
      *
-     * @param treeNodeManager
      * @return Il titolo della categoria.
      */
     public String getDefaultFullTitle(ITreeNodeManager treeNodeManager) {
@@ -125,16 +119,12 @@ public class Category extends TreeNode implements Comparable, Serializable {
             return false;
         }
         final Category other = (Category) obj;
-        if (!Objects.equals(this.getCode(), other.getCode())) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.getCode(), other.getCode());
     }
 
     /**
-     * Crea un clone dell'oggetto categoria copiano solo gli elementi necessari
-     * ad essere erogata.Il metodo viene invocato dal Wrapper dei contenuti
- esclusivamente quando viene chiesto di erogare la lista di categorie.
+     * Crea un clone dell'oggetto categoria copiano solo gli elementi necessari ad essere erogata.Il metodo viene invocato dal Wrapper dei
+     * contenuti esclusivamente quando viene chiesto di erogare la lista di categorie.
      *
      * @return La categoria clonata.
      */
@@ -156,9 +146,8 @@ public class Category extends TreeNode implements Comparable, Serializable {
     }
 
     /**
-     * Imposta la lingua di renderizzazione alla categoria ed alle progenitrici.
-     * Il metodo viene invocato dal Wrapper dei contenuti esclusivamente quando
-     * viene chiesto di erogare la lista di categorie.
+     * Imposta la lingua di renderizzazione alla categoria ed alle progenitrici. Il metodo viene invocato dal Wrapper dei contenuti
+     * esclusivamente quando viene chiesto di erogare la lista di categorie.
      *
      * @param langCode Il codice della lingua di renderizzazione.
      */
@@ -179,5 +168,5 @@ public class Category extends TreeNode implements Comparable, Serializable {
     public String getManagerBeanCode() {
         return SystemConstants.CATEGORY_MANAGER;
     }
-    
+
 }

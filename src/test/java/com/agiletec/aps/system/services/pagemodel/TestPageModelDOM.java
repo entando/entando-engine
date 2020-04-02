@@ -11,17 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.pagemodel;
 
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+package com.agiletec.aps.system.services.pagemodel;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author M.Diana
  */
 public class TestPageModelDOM extends BaseTestCase {
+
+    public static final String FRAMES_XML = "<frames>"
+            + "<frame pos=\"0\"><descr>Box sinistra alto</descr></frame>"
+            + "<frame pos=\"1\"><descr>Box sinistra basso</descr><defaultWidget code=\"login_form\" /></frame>"
+            + "<frame pos=\"2\" main=\"true\"><descr>Box centrale 1</descr></frame>"
+            + "<frame pos=\"3\"><descr>Box centrale 2</descr></frame>"
+            + "<frame pos=\"4\"><descr>Box destra alto</descr></frame>"
+            + "<frame pos=\"5\"><descr>Box destra basso</descr></frame>"
+            + "</frames>";
 
     public void testGetFrames() throws Throwable {
         IWidgetTypeManager widgetTypeManager
@@ -31,14 +40,5 @@ public class TestPageModelDOM extends BaseTestCase {
         assertTrue(configuration[0].getDescription().equals("Box sinistra alto"));
         assertEquals("login_form", configuration[1].getDefaultWidget().getType().getCode());
     }
-
-    public final static String FRAMES_XML = "<frames>"
-            + "<frame pos=\"0\"><descr>Box sinistra alto</descr></frame>"
-            + "<frame pos=\"1\"><descr>Box sinistra basso</descr><defaultWidget code=\"login_form\" /></frame>"
-            + "<frame pos=\"2\" main=\"true\"><descr>Box centrale 1</descr></frame>"
-            + "<frame pos=\"3\"><descr>Box centrale 2</descr></frame>"
-            + "<frame pos=\"4\"><descr>Box destra alto</descr></frame>"
-            + "<frame pos=\"5\"><descr>Box destra basso</descr></frame>"
-            + "</frames>";
 
 }

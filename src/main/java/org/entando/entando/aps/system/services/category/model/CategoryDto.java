@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.category.model;
 
 import com.agiletec.aps.system.services.category.Category;
@@ -52,13 +53,24 @@ public class CategoryDto {
         this.setParentCode(page.getParentCode());
         Optional<ApsProperties> apsTitles = Optional.ofNullable(page.getTitles());
         apsTitles.ifPresent(values -> values.keySet().forEach((lang)
-                -> {
-            this.getTitles().put((String) lang, (String) values.get(lang));
-            this.getFullTitles().put((String) lang, (String) page.getFullTitle((String) lang, categoryManager));
-        }
+                        -> {
+                    this.getTitles().put((String) lang, (String) values.get(lang));
+                    this.getFullTitles().put((String) lang, page.getFullTitle((String) lang, categoryManager));
+                }
         ));
-        Optional.ofNullable(page.getChildrenCodes()).
-                ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
+        Optional.ofNullable(page.getChildrenCodes())
+                .ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "code":
+                return "code";
+            case "name":
+                return "descr";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getCode() {
@@ -115,17 +127,6 @@ public class CategoryDto {
 
     public void setReferences(Map<String, Boolean> references) {
         this.references = references;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "code":
-                return "code";
-            case "name":
-                return "descr";
-            default:
-                return dtoFieldName;
-        }
     }
 
 }

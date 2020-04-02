@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -20,26 +21,29 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public interface IEntityTypesConfigurer {
-	
-	/**
-	 * Add a new entity prototype on the catalog.
-	 * @param entityType The entity type to add.
-	 * @throws ApsSystemException In case of error.
-	 */
-	public void addEntityPrototype(IApsEntity entityType) throws ApsSystemException;
-	
-	/**
-	 * Update an entity prototype on the catalog.
-	 * @param entityType The entity type to update
-	 * @throws ApsSystemException In case of error.
-	 */
-	public void updateEntityPrototype(IApsEntity entityType) throws ApsSystemException;
-	
-	/**
-	 * Remove an entity type from the catalog.
-	 * @param entityTypeCode The code of the entity type to remove.
-	 * @throws ApsSystemException In case of error.
-	 */
-	public void removeEntityPrototype(String entityTypeCode) throws ApsSystemException;
-	
+
+    /**
+     * Add a new entity prototype on the catalog.
+     *
+     * @param entityType The entity type to add.
+     * @throws ApsSystemException In case of error.
+     */
+    void addEntityPrototype(IApsEntity entityType) throws ApsSystemException;
+
+    /**
+     * Update an entity prototype on the catalog.
+     *
+     * @param entityType The entity type to update
+     * @throws ApsSystemException In case of error.
+     */
+    void updateEntityPrototype(IApsEntity entityType) throws ApsSystemException;
+
+    /**
+     * Remove an entity type from the catalog.
+     *
+     * @param entityTypeCode The code of the entity type to remove.
+     * @throws ApsSystemException In case of error.
+     */
+    void removeEntityPrototype(String entityTypeCode) throws ApsSystemException;
+
 }

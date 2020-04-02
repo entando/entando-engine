@@ -11,20 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
 /**
  * Interface for observers of events of Entity Types.
+ *
  * @author E.Santoboni
  */
 public interface EntityTypesChangingObserver extends ObserverService {
-	
-	/**
-	 * The method is invoked by the service observers.
-	 * @param event The event of entity type changing.
-	 */
-	public void updateFromEntityTypesChanging(EntityTypesChangingEvent event);
-	
+
+    /**
+     * The method is invoked by the service observers.
+     *
+     * @param event The event of entity type changing.
+     */
+    void updateFromEntityTypesChanging(EntityTypesChangingEvent event);
+
 }

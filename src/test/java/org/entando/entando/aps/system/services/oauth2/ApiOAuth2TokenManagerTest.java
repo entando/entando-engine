@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
+
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +26,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
@@ -91,7 +93,8 @@ public class ApiOAuth2TokenManagerTest {
     @Test
     public void storeAccessToken() {
         this.tokenManager.storeAccessToken(this.createMockAccessToken(), this.createMockAuthentication());
-        Mockito.verify(tokenDAO, Mockito.times(1)).storeAccessToken(Mockito.any(OAuth2AccessToken.class), Mockito.any(OAuth2Authentication.class));
+        Mockito.verify(tokenDAO, Mockito.times(1))
+                .storeAccessToken(Mockito.any(OAuth2AccessToken.class), Mockito.any(OAuth2Authentication.class));
     }
 
     @Test
@@ -125,7 +128,8 @@ public class ApiOAuth2TokenManagerTest {
 
     @Test
     public void readAuthenticationForRefreshToken() throws Exception {
-        when(tokenDAO.readAuthenticationForRefreshToken(Mockito.any(OAuth2RefreshToken.class))).thenReturn(Mockito.any(OAuth2Authentication.class));
+        when(tokenDAO.readAuthenticationForRefreshToken(Mockito.any(OAuth2RefreshToken.class)))
+                .thenReturn(Mockito.any(OAuth2Authentication.class));
         OAuth2RefreshToken refreshToken = new DefaultOAuth2RefreshToken("value");
         OAuth2Authentication auth = this.tokenManager.readAuthenticationForRefreshToken(refreshToken);
         Assert.assertNull(auth);

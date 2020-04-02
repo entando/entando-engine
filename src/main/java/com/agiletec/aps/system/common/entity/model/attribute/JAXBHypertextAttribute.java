@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
 
 /**
@@ -25,17 +25,17 @@ import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
  */
 @XmlType(propOrder = {"htmlValue"})
 public class JAXBHypertextAttribute extends AbstractJAXBAttribute implements Serializable {
-    
+
+    private String _htmlValue;
+
     @XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
     @XmlElement(name = "htmlValue", required = false)
     public String getHtmlValue() {
         return _htmlValue;
     }
-    
+
     public void setHtmlValue(String htmlValue) {
         this._htmlValue = htmlValue;
     }
-    
-    private String _htmlValue;
-    
+
 }

@@ -11,10 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.common.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package org.entando.entando.web.common.interceptor;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -23,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
@@ -45,10 +45,12 @@ public class ActivityStreamInterceptor extends HandlerInterceptorAdapter {
     private IActionLogManager actionLogManager;
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
+            throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod method = (HandlerMethod) handler;
-            if (method.getMethod().isAnnotationPresent(RequestMapping.class) && method.getMethod().isAnnotationPresent(ActivityStreamAuditable.class)) {
+            if (method.getMethod().isAnnotationPresent(RequestMapping.class) && method.getMethod()
+                    .isAnnotationPresent(ActivityStreamAuditable.class)) {
                 RequestMapping requestMapping = method.getMethod().getAnnotation(RequestMapping.class);
                 String mapping = requestMapping.value()[0];
                 this.logMethod(mapping, request);

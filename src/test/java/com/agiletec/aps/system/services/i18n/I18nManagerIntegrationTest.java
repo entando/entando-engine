@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.i18n;
 
-import java.util.HashMap;
-import java.util.Map;
+package com.agiletec.aps.system.services.i18n;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @version 1.0
  * @author W.Ambu
+ * @version 1.0
  */
 public class I18nManagerIntegrationTest extends BaseTestCase {
 
@@ -41,7 +41,8 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertEquals("fullname", i18nManager.renderLabel("userprofile_PFL_fullname", "en", false));
         assertNull(i18nManager.renderLabel("not-exists", "en", false));
         assertEquals("not-exists", i18nManager.renderLabel("not-exists", "en", true));
-        assertEquals("Welcome ${surname} ${name} (${username} - ${name}.${surname})", i18nManager.renderLabel("LABEL_WITH_PARAMS", "en", true));
+        assertEquals("Welcome ${surname} ${name} (${username} - ${name}.${surname})",
+                i18nManager.renderLabel("LABEL_WITH_PARAMS", "en", true));
     }
 
     public void testRenderLabelWithParams() throws Throwable {
@@ -90,7 +91,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         try {
             assertNull(i18nManager.getLabelGroups().get(key));
             i18nManager.addLabelGroup(key, labels);
-            ApsProperties extracted = (ApsProperties) i18nManager.getLabelGroups().get(key);
+            ApsProperties extracted = i18nManager.getLabelGroups().get(key);
             assertNotNull(extracted);
             assertEquals("Testo Italiano", extracted.getProperty("it"));
             assertEquals("English Text", extracted.getProperty("en"));
@@ -110,12 +111,12 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         try {
             assertNull(i18nManager.getLabelGroups().get(key));
             i18nManager.addLabelGroup(key, labels);
-            ApsProperties toUpdate = (ApsProperties) i18nManager.getLabelGroups().get(key);
+            ApsProperties toUpdate = i18nManager.getLabelGroups().get(key);
             assertNotNull(toUpdate);
             toUpdate.put("it", "Testo Italiano Modificato");
             toUpdate.put("en", "Modified English Text");
             i18nManager.updateLabelGroup(key, toUpdate);
-            ApsProperties extracted = (ApsProperties) i18nManager.getLabelGroups().get(key);
+            ApsProperties extracted = i18nManager.getLabelGroups().get(key);
             assertNotNull(extracted);
             assertEquals("Testo Italiano Modificato", extracted.getProperty("it"));
             assertEquals("Modified English Text", extracted.getProperty("en"));

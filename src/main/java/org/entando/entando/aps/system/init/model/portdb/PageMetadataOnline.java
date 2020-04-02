@@ -11,23 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
-
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Mezzano
  */
 @DatabaseTable(tableName = PageMetadataOnline.TABLE_NAME)
 public class PageMetadataOnline extends AbstractPageMetadata implements ExtendedColumnDefinition {
-	
-	@Override
-	protected String getTableName() {
-		return TABLE_NAME;
-	}
-	
-	public static final String TABLE_NAME = "pages_metadata_online";
-	
+
+    public static final String TABLE_NAME = "pages_metadata_online";
+
+    @Override
+    protected String getTableName() {
+        return TABLE_NAME;
+    }
+
 }

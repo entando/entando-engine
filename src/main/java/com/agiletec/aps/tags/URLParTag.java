@@ -11,12 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags;
 
 /**
  * Used to add additional parameters in the tag "URLTag".
+ *
  * @deprecated use {@link ParameterTag}
  */
 public class URLParTag extends ParameterTag {
-	
+
 }

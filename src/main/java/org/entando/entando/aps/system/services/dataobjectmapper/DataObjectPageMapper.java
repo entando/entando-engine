@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
 import java.io.Serializable;
@@ -18,13 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Rappresentazione della mappa dei datatype pubblicati esplicitamene nelle
- * pagine del portale.
+ * Rappresentazione della mappa dei datatype pubblicati esplicitamene nelle pagine del portale.
  */
 public class DataObjectPageMapper implements Serializable {
 
-	private Map<String, String> dataTypePageMapper;
-	
+    private Map<String, String> dataTypePageMapper;
+
     /**
      * Inizializza la mappa.
      */
@@ -52,13 +52,11 @@ public class DataObjectPageMapper implements Serializable {
     }
 
     /**
-     * Restituisce il codice pagina nel quale è stato publicato il datatype
-     * specificato. Restituisce null nel caso in cui l'id del datatype non sia
-     * presente nella mappa.
+     * Restituisce il codice pagina nel quale è stato publicato il datatype specificato. Restituisce null nel caso in cui l'id del datatype
+     * non sia presente nella mappa.
      *
      * @param dataId L'id del datatype.
-     * @return Il codice pagina nel quale è stato publicato il datatype
-     * specificato.
+     * @return Il codice pagina nel quale è stato publicato il datatype specificato.
      */
     public String getPageCode(String dataId) {
         return this.dataTypePageMapper.get(dataId);
@@ -77,11 +75,10 @@ public class DataObjectPageMapper implements Serializable {
      * Verifica se un datatype è stato pubblicato esplicitamente in una pagina.
      *
      * @param dataId L'id del datatype.
-     * @return true se un datatype è stato pubblicato esplicitamente in una
-     * pagina, false in caso contrario.
+     * @return true se un datatype è stato pubblicato esplicitamente in una pagina, false in caso contrario.
      */
     protected boolean containDataObject(String dataId) {
         return this.dataTypePageMapper.containsKey(dataId);
-	}
+    }
 
 }

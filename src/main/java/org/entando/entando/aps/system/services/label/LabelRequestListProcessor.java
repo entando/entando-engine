@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.label;
 
-import org.entando.entando.aps.system.services.RequestListProcessor;
-import org.entando.entando.aps.system.services.label.model.LabelDto;
-import org.entando.entando.aps.util.FilterUtils;
-import org.entando.entando.web.common.model.Filter;
-import org.entando.entando.web.common.model.RestListRequest;
+package org.entando.entando.aps.system.services.label;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.entando.entando.aps.system.services.RequestListProcessor;
+import org.entando.entando.aps.system.services.label.model.LabelDto;
+import org.entando.entando.aps.util.FilterUtils;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.RestListRequest;
 
 public class LabelRequestListProcessor extends RequestListProcessor<LabelDto> {
 

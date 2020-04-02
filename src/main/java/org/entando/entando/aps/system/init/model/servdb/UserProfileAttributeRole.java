@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -26,9 +26,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = UserProfileAttributeRole.TABLE_NAME)
 public class UserProfileAttributeRole implements ExtendedColumnDefinition {
 
-    public UserProfileAttributeRole() {
-    }
-
+    public static final String TABLE_NAME = "authuserprofileattrroles";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -52,6 +50,9 @@ public class UserProfileAttributeRole implements ExtendedColumnDefinition {
             canBeNull = false, index = true)
     private String _roleName;
 
+    public UserProfileAttributeRole() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -61,10 +62,8 @@ public class UserProfileAttributeRole implements ExtendedColumnDefinition {
             profileTableName = "`" + UserProfile.TABLE_NAME + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT " + TABLE_NAME + "_fkey FOREIGN KEY (username) "
-            + "REFERENCES " + profileTableName + " (username)"};
+                + "ADD CONSTRAINT " + TABLE_NAME + "_fkey FOREIGN KEY (username) "
+                + "REFERENCES " + profileTableName + " (username)"};
     }
-
-    public static final String TABLE_NAME = "authuserprofileattrroles";
 
 }

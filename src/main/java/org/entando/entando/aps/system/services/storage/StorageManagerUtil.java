@@ -11,26 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage;
 
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.*;
-
-import java.io.File;
-import java.util.regex.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class StorageManagerUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(StorageManagerUtil.class);
+    private static final String REGEXP_FILE_EXTENSION = "([\\w|\\-]+?$)";
+    private static final String REGEXP_FILE_BASENAME = "\\A(?!(?:COM[0-9]|CON|LPT[0-9]|NUL|PRN|AUX|com[0-9]|con|lpt[0-9]|nul|prn|aux)"
+            + "|[\\s\\.])[^\\\\/:*\"?<>|]{1,254}\\z";
+    private static final String REGEXP_DIR = "(^[\\w|\\.|\\-|\\_|/| ]+?)";
 
     private StorageManagerUtil() {
         // Utility class, not to be instantiated
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(StorageManagerUtil.class);
-
-    private static final String REGEXP_FILE_EXTENSION = "([\\w|\\-]+?$)";
-    private static final String REGEXP_FILE_BASENAME = "\\A(?!(?:COM[0-9]|CON|LPT[0-9]|NUL|PRN|AUX|com[0-9]|con|lpt[0-9]|nul|prn|aux)|[\\s\\.])[^\\\\/:*\"?<>|]{1,254}\\z";
-    private static final String REGEXP_DIR = "(^[\\w|\\.|\\-|\\_|/| ]+?)";
 
     public static boolean isValidFilename(String fullname) {
         if (StringUtils.isBlank(fullname)) {

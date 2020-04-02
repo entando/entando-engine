@@ -11,42 +11,43 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.parse.attribute;
 
+import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-
 /**
- * Handler class that parses the XML fragment of a 'Boolean' Attribute. 
+ * Handler class that parses the XML fragment of a 'Boolean' Attribute.
+ *
  * @author E.Santoboni
  */
 public class BooleanAttributeHandler extends AbstractAttributeHandler {
-    
-	@Override
+
+    @Override
     public void startAttribute(Attributes attributes, String qName) throws SAXException {
         if (qName.equals("boolean")) {
             this.startBoolean(attributes, qName);
         }
     }
-    
+
     private void startBoolean(Attributes attributes, String qName) throws SAXException {
         //nothing to do
     }
-    
-	@Override
+
+    @Override
     public void endAttribute(String qName, StringBuffer textBuffer) {
         if (qName.equals("boolean")) {
             this.endBoolean(textBuffer);
         }
     }
-    
+
     private void endBoolean(StringBuffer textBuffer) {
         if (null != textBuffer && null != this.getCurrentAttr()) {
             Boolean booleanValue = Boolean.valueOf(textBuffer.toString());
             ((BooleanAttribute) this.getCurrentAttr()).setBooleanValue(booleanValue);
         }
     }
-    
+
 }

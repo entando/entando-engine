@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.database;
 
 import java.util.List;
@@ -25,20 +26,20 @@ import org.entando.entando.web.common.model.RestListRequest;
  */
 public interface IDatabaseService {
 
-    public int getStatus();
+    int getStatus();
 
-    public PagedMetadata<ShortDumpReportDto> getShortDumpReportDtos(RestListRequest requestList);
+    PagedMetadata<ShortDumpReportDto> getShortDumpReportDtos(RestListRequest requestList);
 
-    public List<ComponentDto> getCurrentComponents();
+    List<ComponentDto> getCurrentComponents();
 
-    public void startDatabaseBackup();
-    
-    public void startDatabaseRestore(String reportCode);
+    void startDatabaseBackup();
 
-    public DumpReportDto getDumpReportDto(String reportCode);
+    void startDatabaseRestore(String reportCode);
 
-    public void deleteDumpReport(String reportCode);
+    DumpReportDto getDumpReportDto(String reportCode);
 
-    public byte[] getTableDump(String reportCode, String dataSource, String tableName);
+    void deleteDumpReport(String reportCode);
+
+    byte[] getTableDump(String reportCode, String dataSource, String tableName);
 
 }

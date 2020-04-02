@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import java.util.List;
@@ -20,24 +21,24 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 public interface IOAuth2TokenDAO {
 
-    public void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication);
+    void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication);
 
-    public List<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String username);
+    List<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String username);
 
-    public List<OAuth2AccessToken> findTokensByClientId(String clientId);
-    
-    public List<OAuth2AccessToken> findTokensByUserName(String username);
+    List<OAuth2AccessToken> findTokensByClientId(String clientId);
 
-    public OAuth2AccessToken readAccessToken(final String accessToken);
+    List<OAuth2AccessToken> findTokensByUserName(String username);
 
-    public void removeAccessToken(final String accessToken);
-    
-    public void deleteExpiredToken(int expirationTime);
+    OAuth2AccessToken readAccessToken(final String accessToken);
 
-    public OAuth2RefreshToken readRefreshToken(String tokenValue);
-    
-    public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken refreshToken);
-    
-    public void removeAccessTokenUsingRefreshToken(final String refreshToken);
+    void removeAccessToken(final String accessToken);
+
+    void deleteExpiredToken(int expirationTime);
+
+    OAuth2RefreshToken readRefreshToken(String tokenValue);
+
+    OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken refreshToken);
+
+    void removeAccessTokenUsingRefreshToken(final String refreshToken);
 
 }

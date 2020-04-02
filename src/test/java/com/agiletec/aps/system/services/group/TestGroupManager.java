@@ -11,9 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.group;
 
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -21,15 +23,15 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.FieldSearchFilter.LikeOptionType;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author E.Santoboni
  */
 public class TestGroupManager extends BaseTestCase {
+
+    private IGroupManager _groupManager = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -144,7 +146,5 @@ public class TestGroupManager extends BaseTestCase {
             throw e;
         }
     }
-
-    private IGroupManager _groupManager = null;
 
 }

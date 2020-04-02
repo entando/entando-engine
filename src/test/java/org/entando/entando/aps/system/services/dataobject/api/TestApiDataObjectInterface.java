@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -95,7 +96,7 @@ public class TestApiDataObjectInterface extends ApiBaseTestCase {
             List<AttributeInterface> attributes = masterDataType.getAttributeList();
             for (int i = 0; i < attributes.size(); i++) {
                 AttributeInterface attribute = attributes.get(i);
-                AttributeInterface newAttribute = (AttributeInterface) newDataType.getAttribute(attribute.getName());
+                AttributeInterface newAttribute = newDataType.getAttribute(attribute.getName());
                 this.checkAttributes(attribute, newAttribute);
             }
         } catch (Exception e) {
@@ -152,12 +153,14 @@ public class TestApiDataObjectInterface extends ApiBaseTestCase {
         properties.put("id", dataId);
         Object result = this.getResponseBuilder().createResponse(getMethod, properties);
         assertNotNull(result);
-        ApiDataObjectInterface apiDataObjectInterface = (ApiDataObjectInterface) this.getApplicationContext().getBean("ApiDataObjectInterface");
+        ApiDataObjectInterface apiDataObjectInterface = (ApiDataObjectInterface) this.getApplicationContext()
+                .getBean("ApiDataObjectInterface");
         Object singleResult = apiDataObjectInterface.getDataObject(properties);
         assertNotNull(singleResult);
         String toString = this.marshall(singleResult, mediaType);
         InputStream stream = new ByteArrayInputStream(toString.getBytes());
-        JAXBDataObject jaxbData = (JAXBDataObject) UnmarshalUtils.unmarshal(super.getApplicationContext(), JAXBDataObject.class, stream, mediaType);
+        JAXBDataObject jaxbData = (JAXBDataObject) UnmarshalUtils
+                .unmarshal(super.getApplicationContext(), JAXBDataObject.class, stream, mediaType);
         assertNotNull(jaxbData);
         return jaxbData;
     }

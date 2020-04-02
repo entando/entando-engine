@@ -11,18 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import java.util.ArrayList;
+import java.util.List;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a list of homogeneous attributes.
@@ -32,6 +31,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 public class MonoListAttribute extends AbstractListAttribute {
 
     private static final Logger _logger = LoggerFactory.getLogger(MonoListAttribute.class);
+    private List<AttributeInterface> _attributes;
 
     /**
      * Initialize the list of attributes.
@@ -41,11 +41,9 @@ public class MonoListAttribute extends AbstractListAttribute {
     }
 
     /**
-     * Add a new empty attribute to the list. The attribute was previously
-     * defined using the 'setNestedAttributeType' method.
+     * Add a new empty attribute to the list. The attribute was previously defined using the 'setNestedAttributeType' method.
      *
-     * @return the empty attribute added to the list ready to be populated with
-     * the data.
+     * @return the empty attribute added to the list ready to be populated with the data.
      */
     public AttributeInterface addAttribute() {
         AttributeInterface newAttr = (AttributeInterface) this.getNestedAttributeType().getAttributePrototype();
@@ -62,7 +60,7 @@ public class MonoListAttribute extends AbstractListAttribute {
      * @return The requested attribute.
      */
     public AttributeInterface getAttribute(int index) {
-        return (AttributeInterface) this.getAttributes().get(index);
+        return this.getAttributes().get(index);
     }
 
     /**
@@ -85,9 +83,8 @@ public class MonoListAttribute extends AbstractListAttribute {
     }
 
     /**
-     * Set up the language for the renderization. Note: the attributes in the
-     * list may support several languages (depending on the attributes
-     * themselves)
+     * Set up the language for the renderization. Note: the attributes in the list may support several languages (depending on the
+     * attributes themselves)
      *
      * @param langCode The language code for the rendering process.
      */
@@ -95,25 +92,23 @@ public class MonoListAttribute extends AbstractListAttribute {
     public void setRenderingLang(String langCode) {
         super.setRenderingLang(langCode);
         for (int i = 0; i < this.getAttributes().size(); i++) {
-            AttributeInterface attribute = (AttributeInterface) this.getAttributes().get(i);
+            AttributeInterface attribute = this.getAttributes().get(i);
             attribute.setRenderingLang(langCode);
         }
     }
 
     /**
-     * Return an Element that represents a list of homogeneous attributes, that
-     * may be empty The list is the same for all the available languages, but it
-     * may contain attributes which, in turn, my support several languages.
+     * Return an Element that represents a list of homogeneous attributes, that may be empty The list is the same for all the available
+     * languages, but it may contain attributes which, in turn, my support several languages.
      *
-     * @return The JDOM representing a list of homogeneous attributes, with none
-     * or multiple elements.
+     * @return The JDOM representing a list of homogeneous attributes, with none or multiple elements.
      */
     @Override
     public Element getJDOMElement() {
         Element monolistElement = this.createRootElement("list");
         monolistElement.setAttribute("nestedtype", this.getNestedAttributeTypeCode());
         for (int i = 0; i < this.getAttributes().size(); i++) {
-            AttributeInterface attribute = (AttributeInterface) this.getAttributes().get(i);
+            AttributeInterface attribute = this.getAttributes().get(i);
             Element attributeElement = attribute.getJDOMElement();
             monolistElement.addContent(attributeElement);
         }
@@ -187,7 +182,7 @@ public class MonoListAttribute extends AbstractListAttribute {
             List<AttributeInterface> attributes = this.getAttributes();
             for (int i = 0; i < attributes.size(); i++) {
                 AttributeInterface attributeElement = attributes.get(i);
-                AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                AttributeTracer elementTracer = tracer.clone();
                 elementTracer.setListIndex(i);
                 elementTracer.setMonoListElement(true);
                 Status elementStatus = attributeElement.getStatus();
@@ -206,7 +201,5 @@ public class MonoListAttribute extends AbstractListAttribute {
         }
         return errors;
     }
-
-    private List<AttributeInterface> _attributes;
 
 }

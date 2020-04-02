@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.model;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
@@ -30,62 +31,62 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 public class GuiFragmentDtoBuilder extends DtoBuilder<GuiFragment, GuiFragmentDto> implements BeanFactoryAware {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private BeanFactory beanFactory;
-	private IWidgetTypeManager widgetTypeManager;
+    private BeanFactory beanFactory;
+    private IWidgetTypeManager widgetTypeManager;
 
-	@Override
-	protected GuiFragmentDto toDto(GuiFragment src) {
-		if (null == src) {
-			return null;
-		}
-		WidgetType type = null;
-		if (StringUtils.isNotEmpty(src.getWidgetTypeCode())) {
-			type = this.getWidgetTypeManager().getWidgetType(src.getWidgetTypeCode());
-		}
-		GuiFragmentDto dest = new GuiFragmentDto(src, type);
-		ListableBeanFactory factory = (ListableBeanFactory) this.beanFactory;
-		String[] defNames = factory.getBeanNamesForType(GuiFragmentUtilizer.class);
-		for (String defName : defNames) {
-			GuiFragmentUtilizer utilizers = null;
-			try {
-				utilizers = this.beanFactory.getBean(defName, GuiFragmentUtilizer.class);
-				List<Object> references = utilizers.getGuiFragmentUtilizers(src.getCode());
-				if (null != references) {
-					for (Object reference : references) {
-						if (reference instanceof GuiFragment) {
-							dest.addFragmentRef((GuiFragment) reference);
-						} else if (reference instanceof PageModel) {
-							dest.addPageModelRef((PageModel) reference);
-						} else {
-							logger.info("unexpected reference - type {}", reference.getClass());
-						}
-					}
-				}
-			} catch (Throwable t) {
-				logger.error("Error extracting reference from bean '{}'", defName);
-				utilizers = null;
-			}
-		}
-		return dest;
-	}
+    @Override
+    protected GuiFragmentDto toDto(GuiFragment src) {
+        if (null == src) {
+            return null;
+        }
+        WidgetType type = null;
+        if (StringUtils.isNotEmpty(src.getWidgetTypeCode())) {
+            type = this.getWidgetTypeManager().getWidgetType(src.getWidgetTypeCode());
+        }
+        GuiFragmentDto dest = new GuiFragmentDto(src, type);
+        ListableBeanFactory factory = (ListableBeanFactory) this.beanFactory;
+        String[] defNames = factory.getBeanNamesForType(GuiFragmentUtilizer.class);
+        for (String defName : defNames) {
+            GuiFragmentUtilizer utilizers = null;
+            try {
+                utilizers = this.beanFactory.getBean(defName, GuiFragmentUtilizer.class);
+                List<Object> references = utilizers.getGuiFragmentUtilizers(src.getCode());
+                if (null != references) {
+                    for (Object reference : references) {
+                        if (reference instanceof GuiFragment) {
+                            dest.addFragmentRef((GuiFragment) reference);
+                        } else if (reference instanceof PageModel) {
+                            dest.addPageModelRef((PageModel) reference);
+                        } else {
+                            logger.info("unexpected reference - type {}", reference.getClass());
+                        }
+                    }
+                }
+            } catch (Throwable t) {
+                logger.error("Error extracting reference from bean '{}'", defName);
+                utilizers = null;
+            }
+        }
+        return dest;
+    }
 
-	protected BeanFactory getBeanFactory() {
-		return beanFactory;
-	}
+    protected BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
 
-	@Override
-	public void setBeanFactory(BeanFactory bf) throws BeansException {
-		this.beanFactory = bf;
-	}
+    @Override
+    public void setBeanFactory(BeanFactory bf) throws BeansException {
+        this.beanFactory = bf;
+    }
 
-	protected IWidgetTypeManager getWidgetTypeManager() {
-		return widgetTypeManager;
-	}
+    protected IWidgetTypeManager getWidgetTypeManager() {
+        return widgetTypeManager;
+    }
 
-	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
-		this.widgetTypeManager = widgetTypeManager;
-	}
+    public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+        this.widgetTypeManager = widgetTypeManager;
+    }
 
 }

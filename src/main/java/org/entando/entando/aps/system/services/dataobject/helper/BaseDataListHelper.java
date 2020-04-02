@@ -11,19 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
@@ -32,8 +21,18 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -41,81 +40,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 public class BaseDataListHelper implements IDataTypeListHelper {
 
     private static final Logger _logger = LoggerFactory.getLogger(BaseDataListHelper.class);
-
-    @Override
-    public EntitySearchFilter[] getFilters(String dataType, String filtersShowletParam, String langCode) {
-        DataObject prototype = this.getDataObjectManager().createDataObject(dataType);
-        if (null == filtersShowletParam || filtersShowletParam.trim().length() == 0 || null == prototype) {
-            return null;
-        }
-        BaseFilterUtils dom = new BaseFilterUtils();
-        return dom.getFilters(prototype, filtersShowletParam, langCode);
-    }
-
-    /**
-     * @param dataTypeType
-     * @param bean
-     * @param langCode
-     * @return
-     * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String
-     * contentType, IEntityFilterBean, String) method
-     */
-    @Override
-    public EntitySearchFilter getFilter(String dataTypeType, IDataTypeListFilterBean bean, String langCode) {
-        return this.getFilter(dataTypeType, (IEntityFilterBean) bean, langCode);
-    }
-
-    @Override
-    public EntitySearchFilter getFilter(String dataTypeType, IEntityFilterBean bean, String langCode) {
-        BaseFilterUtils dom = new BaseFilterUtils();
-        DataObject contentPrototype = this.getDataObjectManager().createDataObject(dataTypeType);
-        if (null == contentPrototype) {
-            return null;
-        }
-        return dom.getFilter(contentPrototype, bean, langCode);
-    }
-
-    @Override
-    public String getFilterParam(EntitySearchFilter[] filters) {
-        BaseFilterUtils dom = new BaseFilterUtils();
-        return dom.getFilterParam(filters);
-    }
-
-    @Override
-    //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-    //		key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)", condition = "#bean.cacheable")
-    //@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
-    //		key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)",
-    //		beforeInvocation = true,
-    //		condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user))")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENTS_ID_CACHE_GROUP_PREFIX.concat(#bean.contentType)", expiresInMinute = 30)
-    public List<String> getDataTypesId(IDataTypeListBean bean, UserDetails user) throws Throwable {
-        List<String> contentsId = null;
-        try {
-            if (null == bean.getDataType()) {
-                throw new ApsSystemException("DataObject type not defined");
-            }
-            Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
-            contentsId = this.getDataObjectManager().loadDataObjectsId(bean.getDataType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
-        } catch (Throwable t) {
-            _logger.error("Error extracting DataObjects id", t);
-            throw new ApsSystemException("Error extracting DataObjects id", t);
-        }
-        return contentsId;
-    }
-
-    /**
-     * Return the groups to witch execute the filter to dataobject. The User
-     * object is non null, extract the groups from the user, else return a
-     * collection with only the "free" group.
-     *
-     * @param user The user. Can be null.
-     * @return The groups to witch execute the filter to dataobjects.
-     * @deprecated
-     */
-    protected Collection<String> getAllowedGroups(UserDetails user) {
-        return getAllowedGroupCodes(user);
-    }
+    private IDataObjectManager _dataObjectManager;
 
     public static Collection<String> getAllowedGroupCodes(UserDetails user) {
         Set<String> codes = new HashSet<String>();
@@ -208,6 +133,79 @@ public class BaseDataListHelper implements IDataTypeListHelper {
         return values;
     }
 
+    @Override
+    public EntitySearchFilter[] getFilters(String dataType, String filtersShowletParam, String langCode) {
+        DataObject prototype = this.getDataObjectManager().createDataObject(dataType);
+        if (null == filtersShowletParam || filtersShowletParam.trim().length() == 0 || null == prototype) {
+            return null;
+        }
+        BaseFilterUtils dom = new BaseFilterUtils();
+        return dom.getFilters(prototype, filtersShowletParam, langCode);
+    }
+
+    /**
+     * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String contentType, IEntityFilterBean, String) method
+     */
+    @Override
+    public EntitySearchFilter getFilter(String dataTypeType, IDataTypeListFilterBean bean, String langCode) {
+        return this.getFilter(dataTypeType, (IEntityFilterBean) bean, langCode);
+    }
+
+    @Override
+    public EntitySearchFilter getFilter(String dataTypeType, IEntityFilterBean bean, String langCode) {
+        BaseFilterUtils dom = new BaseFilterUtils();
+        DataObject contentPrototype = this.getDataObjectManager().createDataObject(dataTypeType);
+        if (null == contentPrototype) {
+            return null;
+        }
+        return dom.getFilter(contentPrototype, bean, langCode);
+    }
+
+    @Override
+    public String getFilterParam(EntitySearchFilter[] filters) {
+        BaseFilterUtils dom = new BaseFilterUtils();
+        return dom.getFilterParam(filters);
+    }
+
+    @Override
+    //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+    //    key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)",
+    //    condition = "#bean.cacheable")
+    //@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
+    //    key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)",
+    //    beforeInvocation = true,
+    //    condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps
+    //    .system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user))")
+    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENTS_ID_CACHE_GROUP_PREFIX.concat(#bean
+    // .contentType)", expiresInMinute = 30)
+    public List<String> getDataTypesId(IDataTypeListBean bean, UserDetails user) throws Throwable {
+        List<String> contentsId = null;
+        try {
+            if (null == bean.getDataType()) {
+                throw new ApsSystemException("DataObject type not defined");
+            }
+            Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
+            contentsId = this.getDataObjectManager()
+                    .loadDataObjectsId(bean.getDataType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
+        } catch (Throwable t) {
+            _logger.error("Error extracting DataObjects id", t);
+            throw new ApsSystemException("Error extracting DataObjects id", t);
+        }
+        return contentsId;
+    }
+
+    /**
+     * Return the groups to witch execute the filter to dataobject. The User object is non null, extract the groups from the user, else
+     * return a collection with only the "free" group.
+     *
+     * @param user The user. Can be null.
+     * @return The groups to witch execute the filter to dataobjects.
+     * @deprecated
+     */
+    protected Collection<String> getAllowedGroups(UserDetails user) {
+        return getAllowedGroupCodes(user);
+    }
+
     protected IDataObjectManager getDataObjectManager() {
         return _dataObjectManager;
     }
@@ -215,7 +213,5 @@ public class BaseDataListHelper implements IDataTypeListHelper {
     public void setDataObjectManager(IDataObjectManager dataObjectManager) {
         this._dataObjectManager = dataObjectManager;
     }
-
-    private IDataObjectManager _dataObjectManager;
 
 }

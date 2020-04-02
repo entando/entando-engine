@@ -11,22 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.guifragment;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.servlet.security.CORSFilter;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 

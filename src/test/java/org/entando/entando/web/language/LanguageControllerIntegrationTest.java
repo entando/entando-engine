@@ -11,7 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.language;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -25,16 +36,6 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class LanguageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -91,7 +92,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/languages/{code}", new Object[]{"en"})
+                .perform(get("/languages/{code}", "en")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
 
@@ -102,7 +103,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/languages/{code}", new Object[]{"de"})
+                .perform(get("/languages/{code}", "de")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
@@ -112,7 +113,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/languages/{code}", new Object[]{"xx"})
+                .perform(get("/languages/{code}", "xx")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isNotFound());
     }
@@ -130,7 +131,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
 
             String payload = "{\"isActive\": true}";
             ResultActions result = mockMvc
-                    .perform(put("/languages/{code}", new Object[]{langCode})
+                    .perform(put("/languages/{code}", langCode)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
@@ -142,7 +143,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
             //--
             payload = "{\"isActive\": false}";
             result = mockMvc
-                    .perform(put("/languages/{code}", new Object[]{langCode})
+                    .perform(put("/languages/{code}", langCode)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
@@ -170,7 +171,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
 
             String payload = "{\"isActive\": true}";
             ResultActions result = mockMvc
-                    .perform(put("/languages/{code}", new Object[]{langCode})
+                    .perform(put("/languages/{code}", langCode)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
@@ -182,7 +183,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
             //--
             payload = "{\"isActive\": false}";
             result = mockMvc
-                    .perform(put("/languages/{code}", new Object[]{langCode})
+                    .perform(put("/languages/{code}", langCode)
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
@@ -207,7 +208,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
 
         String payload = "{\"isActive\": true}";
         ResultActions result = mockMvc
-                .perform(put("/languages/{code}", new Object[]{langCode})
+                .perform(put("/languages/{code}", langCode)
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

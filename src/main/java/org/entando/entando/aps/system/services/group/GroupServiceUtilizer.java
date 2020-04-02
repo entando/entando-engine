@@ -11,14 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.group;
 
 import java.util.List;
 
 public interface GroupServiceUtilizer<T> {
 
-    public String getManagerName();
+    String getManagerName();
 
-    public List<T> getGroupUtilizer(String groupCode);
+    List<T> getGroupUtilizer(String groupCode);
 
 }

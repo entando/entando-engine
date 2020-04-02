@@ -11,16 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
-import java.util.Set;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.Set;
 
 public interface IDataObjectUpdaterService {
 
-	public void reloadCategoryReferences(String categoryCode);
+    void reloadCategoryReferences(String categoryCode);
 
-	public Set<String> getDataObjectsId(String categoryCode) throws ApsSystemException;
+    Set<String> getDataObjectsId(String categoryCode) throws ApsSystemException;
 
 }

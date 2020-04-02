@@ -11,17 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDtoBuilder;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class GuiFragmentServiceTest {

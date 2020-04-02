@@ -11,19 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.i18n.inlinediting.model;
 
 import com.agiletec.aps.util.ApsProperties;
-import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
 
 /**
  * @author E.Santoboni
@@ -31,6 +31,9 @@ import java.util.List;
 @XmlRootElement(name = "i18nLabel")
 @XmlType(propOrder = {"key", "labels"})
 public class JAXBI18nLabel implements Serializable {
+
+    private String _key;
+    private List<JAXBLabel> _labels;
 
     public JAXBI18nLabel() {
         super();
@@ -81,12 +84,12 @@ public class JAXBI18nLabel implements Serializable {
         this._labels = labels;
     }
 
-    private String _key;
-    private List<JAXBLabel> _labels;
-
     @XmlRootElement(name = "label")
     @XmlType(propOrder = {"langCode", "value"})
     public static class JAXBLabel {
+
+        private String _langCode;
+        private String _value;
 
         public JAXBLabel() {
         }
@@ -114,9 +117,6 @@ public class JAXBI18nLabel implements Serializable {
         public void setValue(String value) {
             this._value = value;
         }
-
-        private String _langCode;
-        private String _value;
 
     }
 

@@ -11,13 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services;
 
 /**
  * Classe contenente alcuni metodi di utilita per i DAO.
+ *
  * @author M.Diana - E.Santoboni
  * @deprecated use {@link com.agiletec.aps.system.common.AbstractDAO}
  */
 public abstract class AbstractDAO extends com.agiletec.aps.system.common.AbstractDAO {
-	
+
 }

@@ -11,9 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.activitystream;
 
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
@@ -30,29 +41,18 @@ import com.agiletec.aps.util.DateConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import java.sql.Timestamp;
+import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.activitystream.ISocialActivityStreamManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -267,8 +267,8 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
             Assert.assertEquals(2, (actualSize - startSize));
             mockMvc.perform(get("/activityStream")
                     .header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload", Matchers.hasSize(actualSize)));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload", Matchers.hasSize(actualSize)));
 
             mockMvc.perform(get("/activityStream")
                     .param("filters[0].attribute", "actionName")
@@ -295,7 +295,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
             assertThat(draftPage, is(not(nullValue())));
             //execute and action
             ResultActions result = mockMvc
-                    .perform(put("/pages/{pageCode}/configuration/defaultWidgets", new Object[]{pageCode})
+                    .perform(put("/pages/{pageCode}/configuration/defaultWidgets", pageCode)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());

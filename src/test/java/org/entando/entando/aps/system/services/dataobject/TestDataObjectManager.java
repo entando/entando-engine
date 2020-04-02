@@ -11,14 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -41,6 +35,12 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.util.DateConverter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
@@ -49,6 +49,8 @@ import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
  * @author M. Morini - E.Santoboni
  */
 public class TestDataObjectManager extends BaseTestCase {
+
+    private IDataObjectManager _dataObjectManager = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -71,14 +73,16 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected1.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected1);
 
-        EntitySearchFilter lastEditorFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_LAST_EDITOR_FILTER_KEY, false, "admin", true);
+        EntitySearchFilter lastEditorFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_LAST_EDITOR_FILTER_KEY, false, "admin",
+                true);
         EntitySearchFilter[] filters2 = {creationOrder, descrFilter, lastEditorFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters2);
         assertNotNull(dataObjectIds);
         assertEquals(expected1.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected1);
 
-        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "Cont", true, FieldSearchFilter.LikeOptionType.RIGHT);
+        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "Cont", true,
+                FieldSearchFilter.LikeOptionType.RIGHT);
         EntitySearchFilter[] filters3 = {creationOrder, descrFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters3);
         assertNotNull(dataObjectIds);
@@ -86,13 +90,15 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected3.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected3);
 
-        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "Cont", true, FieldSearchFilter.LikeOptionType.LEFT);
+        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "Cont", true,
+                FieldSearchFilter.LikeOptionType.LEFT);
         EntitySearchFilter[] filters4 = {creationOrder, descrFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters4);
         assertNotNull(dataObjectIds);
         assertTrue(dataObjectIds.isEmpty());
 
-        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "1", true, FieldSearchFilter.LikeOptionType.LEFT);
+        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "1", true,
+                FieldSearchFilter.LikeOptionType.LEFT);
         EntitySearchFilter[] filters5 = {creationOrder, descrFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters5);
         assertNotNull(dataObjectIds);
@@ -103,7 +109,8 @@ public class TestDataObjectManager extends BaseTestCase {
     }
 
     public void testSearchDataObjects_1_2() throws Throwable {
-        EntitySearchFilter versionFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CURRENT_VERSION_FILTER_KEY, false, "0.", true);
+        EntitySearchFilter versionFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CURRENT_VERSION_FILTER_KEY, false, "0.",
+                true);
         EntitySearchFilter[] filters3 = {versionFilter};
         List<String> dataObjectIds = this._dataObjectManager.searchId(filters3);
         assertNotNull(dataObjectIds);
@@ -136,7 +143,8 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected1.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected1);
 
-        EntitySearchFilter lastEditorFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_LAST_EDITOR_FILTER_KEY, false, "AdMin", true);
+        EntitySearchFilter lastEditorFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_LAST_EDITOR_FILTER_KEY, false, "AdMin",
+                true);
         EntitySearchFilter[] filters2 = {creationOrder, descrFilter, lastEditorFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters2);
         assertNotNull(dataObjectIds);
@@ -150,15 +158,18 @@ public class TestDataObjectManager extends BaseTestCase {
 
         EntitySearchFilter creationOrder = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
-        EntitySearchFilter descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.COMPLETE);
+        EntitySearchFilter descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true,
+                FieldSearchFilter.LikeOptionType.COMPLETE);
         EntitySearchFilter[] filters1 = {creationOrder, descrFilter};
         List<String> dataObjectIds = this._dataObjectManager.searchId(filters1);
         assertNotNull(dataObjectIds);
-        String[] expected1 = {"ART1", "RAH1", "ART187", "RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120", "ART121", "ART122"};
+        String[] expected1 = {"ART1", "RAH1", "ART187", "RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120",
+                "ART121", "ART122"};
         assertEquals(expected1.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected1);
 
-        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.RIGHT);
+        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true,
+                FieldSearchFilter.LikeOptionType.RIGHT);
         EntitySearchFilter[] filters2 = {creationOrder, descrFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters2);
         assertNotNull(dataObjectIds);
@@ -166,7 +177,8 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected2.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected2);
 
-        EntitySearchFilter idFilter = new EntitySearchFilter(IDataObjectManager.ENTITY_ID_FILTER_KEY, false, "1", true, FieldSearchFilter.LikeOptionType.LEFT);
+        EntitySearchFilter idFilter = new EntitySearchFilter(IDataObjectManager.ENTITY_ID_FILTER_KEY, false, "1", true,
+                FieldSearchFilter.LikeOptionType.LEFT);
         EntitySearchFilter[] filters3 = {creationOrder, descrFilter, idFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters3);
         assertNotNull(dataObjectIds);
@@ -174,7 +186,8 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected3.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected3);
 
-        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.LEFT);
+        descrFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, "co", true,
+                FieldSearchFilter.LikeOptionType.LEFT);
         EntitySearchFilter[] filters4 = {creationOrder, descrFilter};
         dataObjectIds = this._dataObjectManager.searchId(filters4);
         assertNotNull(dataObjectIds);
@@ -182,12 +195,11 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(expected4.length, dataObjectIds.size());
     }
 
-
-
     public void testSearchDataObjects_2() throws Throwable {
         EntitySearchFilter creationOrder = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CREATION_DATE_FILTER_KEY, false);
         creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
-        EntitySearchFilter groupFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_MAIN_GROUP_FILTER_KEY, false, "coach", false);
+        EntitySearchFilter groupFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_MAIN_GROUP_FILTER_KEY, false, "coach",
+                false);
         EntitySearchFilter[] filters = {creationOrder, groupFilter};
         List<String> dataObjectIds = this._dataObjectManager.searchId(filters);
         assertNotNull(dataObjectIds);
@@ -199,13 +211,14 @@ public class TestDataObjectManager extends BaseTestCase {
     public void testSearchDataObjects_3() throws Throwable {
         EntitySearchFilter modifyOrder = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_MODIFY_DATE_FILTER_KEY, false);
         modifyOrder.setOrder(EntitySearchFilter.ASC_ORDER);
-        EntitySearchFilter onlineFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_ONLINE_FILTER_KEY, false, "encoding=", true);
+        EntitySearchFilter onlineFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_ONLINE_FILTER_KEY, false, "encoding=",
+                true);
         EntitySearchFilter[] filters = {modifyOrder, onlineFilter};
         List<String> dataObjectIds = this._dataObjectManager.searchId(filters);
         assertNotNull(dataObjectIds);
         String[] expected = {"ART187", "ART1", "EVN193", "EVN194", "ART180", "RAH1",
-            "EVN191", "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23",
-            "EVN24", "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4"};
+                "EVN191", "EVN192", "RAH101", "EVN103", "ART104", "ART102", "EVN23",
+                "EVN24", "EVN25", "EVN41", "EVN20", "EVN21", "ART111", "ART120", "ART121", "ART122", "ART112", "ALL4"};
         assertEquals(expected.length, dataObjectIds.size());
         this.verifyOrder(dataObjectIds, expected);
     }
@@ -230,7 +243,8 @@ public class TestDataObjectManager extends BaseTestCase {
         this.verifyOrder(dataObjects, order1);
 
         groupCodes.add(Group.FREE_GROUP_NAME);
-        EntitySearchFilter statusFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_STATUS_FILTER_KEY, false, DataObject.STATUS_DRAFT, false);
+        EntitySearchFilter statusFilter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_STATUS_FILTER_KEY, false,
+                DataObject.STATUS_DRAFT, false);
         EntitySearchFilter[] filters2 = {creationOrder, typeFilter, statusFilter};
         dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters2, groupCodes);
         String[] order2 = {"ART121", "ART112", "ART102", "ART187", "ART1"};
@@ -264,8 +278,6 @@ public class TestDataObjectManager extends BaseTestCase {
         assertNotNull(dataObjects);
         assertEquals(24, dataObjects.size());
     }
-
-
 
     public void testSearchDataObjects_2_b() throws Throwable {
         //forcing case insensitive search
@@ -530,7 +542,7 @@ public class TestDataObjectManager extends BaseTestCase {
     public void testLoadEvents_1() throws ApsSystemException {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, null, null);
         String[] expectedFreeDataObjectsId = {"EVN194", "EVN193",
-            "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
+                "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
         assertEquals(expectedFreeDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedFreeDataObjectsId.length; i++) {
             assertTrue(dataObjects.contains(expectedFreeDataObjectsId[i]));
@@ -571,7 +583,7 @@ public class TestDataObjectManager extends BaseTestCase {
         dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters2, groups);
 
         String[] expectedOrderedDataObjectsId = {"EVN25", "EVN21", "EVN20", "EVN41", "EVN193",
-            "EVN192", "EVN103", "EVN23", "EVN24"};
+                "EVN192", "EVN103", "EVN23", "EVN24"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -579,7 +591,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters2, null);
         String[] expectedFreeOrderedDataObjectsId = {"EVN25", "EVN21", "EVN20", "EVN193",
-            "EVN192", "EVN23", "EVN24"};
+                "EVN192", "EVN23", "EVN24"};
         assertEquals(expectedFreeOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedFreeOrderedDataObjectsId.length; i++) {
             assertEquals(expectedFreeOrderedDataObjectsId[i], dataObjects.get(i));
@@ -775,7 +787,6 @@ public class TestDataObjectManager extends BaseTestCase {
         this.testLoadEvents_9_a(false);
     }
 
-
     protected void testLoadEvents_9_a(boolean useRoleFilter) throws ApsSystemException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
@@ -817,10 +828,6 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-
-
-
-
     public void testLoadEvents_1_b() throws ApsSystemException {
         //forcing case insensitive search
         DataObjectSearcherDAO searcherDao = (DataObjectSearcherDAO) this.getApplicationContext().getBean("DataObjectSearcherDAO");
@@ -831,7 +838,8 @@ public class TestDataObjectManager extends BaseTestCase {
         allowedDescription.add("descrizione");//"ART179" "ART180" "ART187"
         allowedDescription.add("on line");//"ART179"
         allowedDescription.add("customers");//"ART102" "RAH101"
-        EntitySearchFilter filter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, allowedDescription, true);
+        EntitySearchFilter filter = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false, allowedDescription,
+                true);
         EntitySearchFilter filter2 = new EntitySearchFilter(IDataObjectManager.ENTITY_ID_FILTER_KEY, false);
         filter2.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filter, filter2};
@@ -850,7 +858,7 @@ public class TestDataObjectManager extends BaseTestCase {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
 
         String[] expectedFreeDataObjectsId = {"EVN24", "EVN23", "EVN191",
-            "EVN192", "EVN193", "EVN194", "EVN20", "EVN21", "EVN25"};
+                "EVN192", "EVN193", "EVN194", "EVN20", "EVN21", "EVN25"};
         assertEquals(expectedFreeDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedFreeDataObjectsId.length; i++) {
             assertEquals(expectedFreeDataObjectsId[i], dataObjects.get(i));
@@ -872,7 +880,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedFreeOrderedDataObjectsId = {"EVN191", "EVN192", "EVN193", "EVN194",
-            "EVN20", "EVN23", "EVN24", "EVN25", "EVN21"};
+                "EVN20", "EVN23", "EVN24", "EVN25", "EVN21"};
         assertEquals(expectedFreeOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedFreeOrderedDataObjectsId.length; i++) {
             assertEquals(expectedFreeOrderedDataObjectsId[i], dataObjects.get(i));
@@ -895,7 +903,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedFreeOrderedDataObjectsId = {"EVN21", "EVN25", "EVN24", "EVN23",
-            "EVN20", "EVN194", "EVN193", "EVN192", "EVN191"};
+                "EVN20", "EVN194", "EVN193", "EVN192", "EVN191"};
         assertEquals(expectedFreeOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedFreeOrderedDataObjectsId.length; i++) {
             assertEquals(expectedFreeOrderedDataObjectsId[i], dataObjects.get(i));
@@ -905,7 +913,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         List<String> dataObjects2 = _dataObjectManager.loadDataObjectsId("EVN", null, filters2, null);
         String[] expectedFreeOrderedDataObjectsId2 = {"EVN194", "EVN193", "EVN24",
-            "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
+                "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
         assertEquals(expectedFreeOrderedDataObjectsId2.length, dataObjects2.size());
         for (int i = 0; i < expectedFreeOrderedDataObjectsId2.length; i++) {
             assertEquals(expectedFreeOrderedDataObjectsId2[i], dataObjects2.get(i));
@@ -928,7 +936,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
             List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
             String[] expectedFreeOrderedDataObjectsId = {"EVN194", masterDataObject.getId(), "EVN193", "EVN24",
-                "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
+                    "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
             assertEquals(expectedFreeOrderedDataObjectsId.length, dataObjects.size());
             for (int i = 0; i < expectedFreeOrderedDataObjectsId.length; i++) {
                 assertEquals(expectedFreeOrderedDataObjectsId[i], dataObjects.get(i));
@@ -950,7 +958,7 @@ public class TestDataObjectManager extends BaseTestCase {
         EntitySearchFilter[] filters = {filter};
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedOrderedDataObjectsId = {"EVN21", "EVN20", "EVN25", "EVN23",
-            "EVN24", "EVN193", "EVN194"};
+                "EVN24", "EVN193", "EVN194"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -964,7 +972,7 @@ public class TestDataObjectManager extends BaseTestCase {
         EntitySearchFilter[] filters = {filter};
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedOrderedDataObjectsId = {"EVN194", "EVN193", "EVN24",
-            "EVN23", "EVN25", "EVN20", "EVN21"};
+                "EVN23", "EVN25", "EVN20", "EVN21"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -980,7 +988,7 @@ public class TestDataObjectManager extends BaseTestCase {
         EntitySearchFilter[] filters = {filter};
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, groups);
         String[] expectedOrderedDataObjectsId = {"EVN194", "EVN193", "EVN24",
-            "EVN23", "EVN41", "EVN25", "EVN20", "EVN21"};
+                "EVN23", "EVN41", "EVN25", "EVN20", "EVN21"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -996,7 +1004,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedOrderedDataObjectsId = {"EVN191", "EVN192",
-            "EVN21", "EVN20", "EVN25", "EVN23"};
+                "EVN21", "EVN20", "EVN25", "EVN23"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -1012,7 +1020,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, null);
         String[] expectedOrderedDataObjectsId = {"EVN23", "EVN25",
-            "EVN20", "EVN21", "EVN192", "EVN191"};
+                "EVN20", "EVN21", "EVN192", "EVN191"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -1029,7 +1037,7 @@ public class TestDataObjectManager extends BaseTestCase {
         groups.add("coach");
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, filters, groups);
         String[] expectedOrderedDataObjectsId = {"EVN191", "EVN192", "EVN103",
-            "EVN21", "EVN20", "EVN25", "EVN41", "EVN23"};
+                "EVN21", "EVN20", "EVN25", "EVN41", "EVN23"};
         assertEquals(expectedOrderedDataObjectsId.length, dataObjects.size());
         for (int i = 0; i < expectedOrderedDataObjectsId.length; i++) {
             assertEquals(expectedOrderedDataObjectsId[i], dataObjects.get(i));
@@ -1042,18 +1050,18 @@ public class TestDataObjectManager extends BaseTestCase {
         String[] categories1 = {"general_cat1"};
         List<String> dataObjects = this._dataObjectManager.loadDataObjectsId(categories1, null, groups);
         assertEquals(2, dataObjects.size());
-//        assertTrue(dataObjects.contains("ART179"));
-//        assertTrue(dataObjects.contains("ART180"));
+        //        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART180"));
         assertTrue(dataObjects.contains("ART102"));
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("EVN192"));
+        //        assertTrue(dataObjects.contains("EVN192"));
 
         String[] categories2 = {"general_cat1", "general_cat2"};
 
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories2, null, groups);
         assertEquals(1, dataObjects.size());
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART179"));
     }
 
     public void testLoadDataObjectsForCategory_2() throws ApsSystemException {
@@ -1066,35 +1074,35 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(2, dataObjects.size());
         assertTrue(dataObjects.contains("ART102"));
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART180"));
-//        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART180"));
+        //        assertTrue(dataObjects.contains("ART179"));
 
         String[] categories2 = {"general_cat2"};
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories2, filters, groups);
         assertEquals(2, dataObjects.size());
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART112"));
+        //        assertTrue(dataObjects.contains("ART112"));
         assertTrue(dataObjects.contains("ART120"));
-//        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART179"));
 
         String[] categories12 = {"general_cat1", "general_cat2"};
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories12, false, filters, groups);
         assertEquals(1, dataObjects.size());
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART179"));
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories12, true, filters, groups);
         assertEquals(3, dataObjects.size());
         assertTrue(dataObjects.contains("ART102"));
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART112"));
+        //        assertTrue(dataObjects.contains("ART112"));
         assertTrue(dataObjects.contains("ART120"));
-//        assertTrue(dataObjects.contains("ART180"));
+        //        assertTrue(dataObjects.contains("ART180"));
 
         String[] categories3 = {"general_cat3"};
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories3, filters, groups);
         assertEquals(2, dataObjects.size());
         assertTrue(dataObjects.contains("ART120"));
-//        assertTrue(dataObjects.contains("ART121"));
+        //        assertTrue(dataObjects.contains("ART121"));
         assertTrue(dataObjects.contains("ART122"));
 
         String[] categories23 = {"general_cat2", "general_cat3"};
@@ -1104,10 +1112,10 @@ public class TestDataObjectManager extends BaseTestCase {
         dataObjects = this._dataObjectManager.loadDataObjectsId(categories23, true, filters, groups);
         assertEquals(3, dataObjects.size());
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART112"));
+        //        assertTrue(dataObjects.contains("ART112"));
         assertTrue(dataObjects.contains("ART120"));
-//        assertTrue(dataObjects.contains("ART179"));
-//        assertTrue(dataObjects.contains("ART121"));
+        //        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART121"));
         assertTrue(dataObjects.contains("ART122"));
 
         String[] categories123 = {"general_cat1", "general_cat2", "general_cat3"};
@@ -1117,12 +1125,12 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals(4, dataObjects.size());
         assertTrue(dataObjects.contains("ART102"));
         assertTrue(dataObjects.contains("ART111"));
-//        assertTrue(dataObjects.contains("ART112"));
+        //        assertTrue(dataObjects.contains("ART112"));
         assertTrue(dataObjects.contains("ART120"));
-//        assertTrue(dataObjects.contains("ART121"));
+        //        assertTrue(dataObjects.contains("ART121"));
         assertTrue(dataObjects.contains("ART122"));
-//        assertTrue(dataObjects.contains("ART180"));
-//        assertTrue(dataObjects.contains("ART179"));
+        //        assertTrue(dataObjects.contains("ART180"));
+        //        assertTrue(dataObjects.contains("ART179"));
     }
 
     public void testLoadDataObjectsForCategory() throws ApsSystemException {
@@ -1211,7 +1219,7 @@ public class TestDataObjectManager extends BaseTestCase {
     public void testLoadEventsForGroup() throws ApsSystemException {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, null, null);
         String[] expectedFreeDataObjectsId = {"EVN191", "EVN192", "EVN193", "EVN194",
-            "EVN20", "EVN23", "EVN21", "EVN24", "EVN25"};
+                "EVN20", "EVN23", "EVN21", "EVN24", "EVN25"};
         assertEquals(expectedFreeDataObjectsId.length, dataObjects.size());
 
         for (int i = 0; i < expectedFreeDataObjectsId.length; i++) {
@@ -1263,7 +1271,7 @@ public class TestDataObjectManager extends BaseTestCase {
         filter2.setNullOption(true);
         EntitySearchFilter[] filters2 = {filter0, filter1, filter2};
         String[] expectedDataObjectsId2 = {"ART1", "ART102", "ART104",
-            "ART111", "ART112", "ART122", "ART180", "ART187"};
+                "ART111", "ART112", "ART122", "ART180", "ART187"};
 
         dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters2, groups);
         assertEquals(expectedDataObjectsId2.length, dataObjects.size());
@@ -1282,7 +1290,7 @@ public class TestDataObjectManager extends BaseTestCase {
         filter2.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filter0, filter1, filter2};
         String[] expectedDataObjectsId = {"EVN103", "EVN191", "EVN192",
-            "EVN193", "EVN194", "EVN20", "EVN21", "EVN23", "EVN24", "EVN25", "EVN41"};
+                "EVN193", "EVN194", "EVN20", "EVN21", "EVN23", "EVN24", "EVN25", "EVN41"};
 
         List<String> dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters, groups);
         assertEquals(expectedDataObjectsId.length, dataObjects.size());
@@ -1325,8 +1333,9 @@ public class TestDataObjectManager extends BaseTestCase {
             filter2.setOrder(EntitySearchFilter.ASC_ORDER);
             EntitySearchFilter[] filters = {filter0, filter1, filter2};
             String[] expectedDataObjectsId = {"EVN191", "EVN192", "EVN193", "EVN194",
-                "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
-                newDataObjectIds[0], newDataObjectIds[1], newDataObjectIds[2], newDataObjectIds[3], newDataObjectIds[4], newDataObjectIds[5]};
+                    "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
+                    newDataObjectIds[0], newDataObjectIds[1], newDataObjectIds[2], newDataObjectIds[3], newDataObjectIds[4],
+                    newDataObjectIds[5]};
 
             List<String> dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters, groups);
             assertEquals(expectedDataObjectsId.length, dataObjects.size());
@@ -1339,8 +1348,8 @@ public class TestDataObjectManager extends BaseTestCase {
             filter3.setOrder(EntitySearchFilter.ASC_ORDER);
             EntitySearchFilter[] filters1 = {filter0, filter1, filter2, filter3};
             String[] expectedDataObjectsId1 = {"EVN191", "EVN192", "EVN193", "EVN194",
-                "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
-                newDataObjectIds[0], newDataObjectIds[2]};
+                    "EVN103", "EVN20", "EVN23", "EVN24", "EVN25", "EVN41", "EVN21",
+                    newDataObjectIds[0], newDataObjectIds[2]};
 
             dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters1, groups);
             assertEquals(expectedDataObjectsId1.length, dataObjects.size());
@@ -1352,7 +1361,7 @@ public class TestDataObjectManager extends BaseTestCase {
             filter3.setLangCode("it");
             EntitySearchFilter[] filters2 = {filter0, filter1, filter2, filter3};
             String[] expectedDataObjectsId2 = {newDataObjectIds[0], newDataObjectIds[1],
-                newDataObjectIds[2], newDataObjectIds[3], newDataObjectIds[4], newDataObjectIds[5]};
+                    newDataObjectIds[2], newDataObjectIds[3], newDataObjectIds[4], newDataObjectIds[5]};
 
             dataObjects = this._dataObjectManager.loadDataObjectsId(null, filters2, groups);
             assertEquals(expectedDataObjectsId2.length, dataObjects.size());
@@ -1419,7 +1428,5 @@ public class TestDataObjectManager extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IDataObjectManager _dataObjectManager = null;
 
 }

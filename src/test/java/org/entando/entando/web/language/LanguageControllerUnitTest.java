@@ -11,7 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.language;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.services.language.LanguageService;
@@ -26,9 +30,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class LanguageControllerUnitTest extends AbstractControllerTest {
 
@@ -53,7 +54,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{}";
         ResultActions result = mockMvc
-                .perform(put("/languages/{code}", new Object[]{"de"})
+                .perform(put("/languages/{code}", "de")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -66,7 +67,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{\"isActive\": \"WRONG\"}";
         ResultActions result = mockMvc
-                .perform(put("/languages/{code}", new Object[]{"de"})
+                .perform(put("/languages/{code}", "de")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -79,7 +80,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{\"isActive\": false}";
         ResultActions result = mockMvc
-                .perform(put("/languages/{code}", new Object[]{"de"})
+                .perform(put("/languages/{code}", "de")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

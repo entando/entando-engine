@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
@@ -24,9 +25,20 @@ import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.DateTools;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
@@ -35,12 +47,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SimpleFSLockFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
@@ -96,8 +102,7 @@ public class IndexerDAO implements IIndexerDAO {
     }
 
     /**
-     * Crea un oggetto Document pronto per l'indicizzazione da un oggetto
-     * Content.
+     * Crea un oggetto Document pronto per l'indicizzazione da un oggetto Content.
      *
      * @param entity Il dataobject dal quale ricavare il Document.
      * @return L'oggetto Document ricavato dal dataobject.
@@ -113,7 +118,7 @@ public class IndexerDAO implements IIndexerDAO {
                 entity.getMainGroup(), Field.Store.YES));
         Iterator<String> iterGroups = entity.getGroups().iterator();
         while (iterGroups.hasNext()) {
-            String groupName = (String) iterGroups.next();
+            String groupName = iterGroups.next();
             document.add(new StringField(DATAOBJECT_GROUP_FIELD_NAME,
                     groupName, Field.Store.YES));
         }
@@ -123,7 +128,7 @@ public class IndexerDAO implements IIndexerDAO {
                 AttributeInterface currentAttribute = (AttributeInterface) attributesIter.next();
                 List<Lang> langs = this.getLangManager().getLangs();
                 for (int i = 0; i < langs.size(); i++) {
-                    Lang currentLang = (Lang) langs.get(i);
+                    Lang currentLang = langs.get(i);
                     this.indexAttribute(document, currentAttribute, currentLang);
                 }
             }
@@ -200,10 +205,8 @@ public class IndexerDAO implements IIndexerDAO {
     /**
      * Cancella un documento.
      *
-     * @param name Il nome del campo Field da utilizzare per recupero del
-     * documento.
-     * @param value La chiave mediante il quale è stato indicizzato il
-     * documento.
+     * @param name Il nome del campo Field da utilizzare per recupero del documento.
+     * @param value La chiave mediante il quale è stato indicizzato il documento.
      * @throws ApsSystemException In caso di errore
      */
     @Override

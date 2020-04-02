@@ -11,76 +11,79 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.url;
 
-import java.util.Map;
+package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
-
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Interfaccia base per i servizi di creazione di URL.
+ *
  * @author M.Diana - E.Santoboni
  */
 public interface IURLManager {
-	
-	/**
-	 * Crea e restituisce un oggetto PageURL.<br>
-	 * N.B.: l'oggetto restituito deve essere utilizzato nell'ambito
-	 * della richiesta corrente (non memorizzarlo in modo più persistente, ad
-	 * esempio in sessione) in quanto contiene riferimenti ad altri servizi.
-	 * @param reqCtx Il contesto della richiesta.
-	 * @return L'oggetto creato.
-	 */
-	public PageURL createURL(RequestContext reqCtx);
-	
-	/**
-	 * Crea l'URL ad una pagina del portale, sulla base 
-	 * delle informazioni contenute nell'argomento passato.
-	 * @param pageUrl L'oggetto contenente le informazioni sulla destinazione
-	 * @param reqCtx Il contesto della richiesta dell'URL.
-	 * @return La Stringa contenente l'URL.
-	 */
-	public String getURLString(PageURL pageUrl, RequestContext reqCtx);
-	
-	/**
-	 * Create and return url by required page, lang and request params.
-	 * @param requiredPage The required page.
-	 * @param requiredLang The required lang.
-	 * @param params A map of params. Could be null.
-	 * @return The required url.
-	 */
-	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params);
-	
+
+    String ENCODING_CHARSET = "UTF-8";
+
+    /**
+     * Crea e restituisce un oggetto PageURL.<br> N.B.: l'oggetto restituito deve essere utilizzato nell'ambito della richiesta corrente
+     * (non memorizzarlo in modo più persistente, ad esempio in sessione) in quanto contiene riferimenti ad altri servizi.
+     *
+     * @param reqCtx Il contesto della richiesta.
+     * @return L'oggetto creato.
+     */
+    PageURL createURL(RequestContext reqCtx);
+
+    /**
+     * Crea l'URL ad una pagina del portale, sulla base delle informazioni contenute nell'argomento passato.
+     *
+     * @param pageUrl L'oggetto contenente le informazioni sulla destinazione
+     * @param reqCtx Il contesto della richiesta dell'URL.
+     * @return La Stringa contenente l'URL.
+     */
+    String getURLString(PageURL pageUrl, RequestContext reqCtx);
+
     /**
      * Create and return url by required page, lang and request params.
-	 * @param requiredPage The required page.
-	 * @param requiredLang The required lang.
-	 * @param params A map of params. Could be null.
+     *
+     * @param requiredPage The required page.
+     * @param requiredLang The required lang.
+     * @param params A map of params. Could be null.
+     * @return The required url.
+     */
+    String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params);
+
+    /**
+     * Create and return url by required page, lang and request params.
+     *
+     * @param requiredPage The required page.
+     * @param requiredLang The required lang.
+     * @param params A map of params. Could be null.
      * @param escapeAmp if true, escape "&" with "&amp;" in the query string
      * @return The required url.
      */
-	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp);
-	
+    String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp);
+
     /**
      * Create and return url by required page, lang and request params.
-	 * @param requiredPage The required page.
-	 * @param requiredLang The required lang.
-	 * @param params A map of params. Could be null.
+     *
+     * @param requiredPage The required page.
+     * @param requiredLang The required lang.
+     * @param params A map of params. Could be null.
      * @param escapeAmp if true, escape "&" with "&amp;" in the query string
-     * @param request The object that allows extracting the information from baseUrl (based on the configuration of the url style); 
-     * if null, the base url will be the one statically inserted by the context configuration
+     * @param request The object that allows extracting the information from baseUrl (based on the configuration of the url style); if null,
+     * the base url will be the one statically inserted by the context configuration
      * @return The required url.
      * @throws ApsSystemException In case of error
      */
-	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp, HttpServletRequest request) throws ApsSystemException;
-	
-	public String getApplicationBaseURL(HttpServletRequest request) throws ApsSystemException;
-	
-	public static final String ENCODING_CHARSET = "UTF-8";
-	
+    String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
+            HttpServletRequest request) throws ApsSystemException;
+
+    String getApplicationBaseURL(HttpServletRequest request) throws ApsSystemException;
+
 }

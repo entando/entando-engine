@@ -11,22 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.searchengine;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Collection;
 import java.util.List;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public interface ISearchEngineManager {
-	
-	public List<String> searchId(String sectionCode, 
-			String langCode, String word, Collection<String> allowedGroups) throws ApsSystemException;
-	/*
-	public List<String> searchId(String sectionCode, 
-			SearchEngineFilter[] filters, Collection<String> allowedGroups) throws ApsSystemException;
-	*/
+
+    List<String> searchId(String sectionCode,
+            String langCode, String word, Collection<String> allowedGroups) throws ApsSystemException;
+  /*
+  public List<String> searchId(String sectionCode,
+      SearchEngineFilter[] filters, Collection<String> allowedGroups) throws ApsSystemException;
+  */
 }

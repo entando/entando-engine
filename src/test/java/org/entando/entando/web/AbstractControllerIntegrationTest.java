@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web;
 
-import javax.annotation.Resource;
+package org.entando.entando.web;
 
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 import org.entando.entando.TestEntandoJndiUtils;
 import org.entando.entando.aps.servlet.security.CORSFilter;
@@ -41,13 +41,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-    "classpath*:spring/testpropertyPlaceholder.xml",
-    "classpath*:spring/baseSystemConfig.xml",
-    "classpath*:spring/aps/**/**.xml",
-    "classpath*:spring/apsadmin/**/**.xml",
-    "classpath*:spring/plugins/**/aps/**/**.xml",
-    "classpath*:spring/plugins/**/apsadmin/**/**.xml",
-    "classpath*:spring/web/**.xml",})
+        "classpath*:spring/testpropertyPlaceholder.xml",
+        "classpath*:spring/baseSystemConfig.xml",
+        "classpath*:spring/aps/**/**.xml",
+        "classpath*:spring/apsadmin/**/**.xml",
+        "classpath*:spring/plugins/**/aps/**/**.xml",
+        "classpath*:spring/plugins/**/apsadmin/**/**.xml",
+        "classpath*:spring/web/**.xml",})
 @WebAppConfiguration(value = "")
 public class AbstractControllerIntegrationTest {
 
@@ -55,22 +55,18 @@ public class AbstractControllerIntegrationTest {
 
     @Resource
     protected WebApplicationContext webApplicationContext;
-
-    @Autowired
-    private Filter springSecurityFilterChain;
-
     @Mock
     protected IApiOAuth2TokenManager apiOAuth2TokenManager;
-
     @Mock
     protected IAuthenticationProviderManager authenticationProviderManager;
-
     @Mock
     protected IAuthorizationManager authorizationManager;
-
     @Autowired
     @InjectMocks
     protected EntandoOauth2Interceptor entandoOauth2Interceptor;
+    @Autowired
+    private Filter springSecurityFilterChain;
+    private String accessToken;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -89,17 +85,16 @@ public class AbstractControllerIntegrationTest {
     protected String mockOAuthInterceptor(UserDetails user) {
         return OAuth2TestUtils.mockOAuthInterceptor(apiOAuth2TokenManager, authenticationProviderManager, authorizationManager, user);
     }
-    
+
     protected AuthRequestBuilder createAuthRequest(MockHttpServletRequestBuilder requestBuilder) {
         return new AuthRequestBuilder(mockMvc, getAccessToken(), requestBuilder);
     }
 
-    private String accessToken;
-
     private String getAccessToken() {
         if (this.accessToken == null) {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-            this.accessToken = OAuth2TestUtils.mockOAuthInterceptor(apiOAuth2TokenManager, authenticationProviderManager, authorizationManager, user);
+            this.accessToken = OAuth2TestUtils
+                    .mockOAuthInterceptor(apiOAuth2TokenManager, authenticationProviderManager, authorizationManager, user);
         }
         return this.accessToken;
     }

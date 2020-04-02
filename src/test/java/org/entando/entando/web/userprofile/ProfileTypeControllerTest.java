@@ -11,7 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.userprofile;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
@@ -22,7 +29,6 @@ import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.userprofile.model.ProfileTypeDtoRequest;
 import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +40,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.validation.BindingResult;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class ProfileTypeControllerTest extends AbstractControllerTest {
 
@@ -87,7 +89,8 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
                         .content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        Mockito.verify(userProfileTypeService, Mockito.times(1)).addUserProfileType(any(ProfileTypeDtoRequest.class), any(BindingResult.class));
+        Mockito.verify(userProfileTypeService, Mockito.times(1))
+                .addUserProfileType(any(ProfileTypeDtoRequest.class), any(BindingResult.class));
         result.andExpect(status().isOk());
     }
 
@@ -96,7 +99,7 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(post("/profileTypes/refresh/{profileTypeCode}", new Object[]{"TST"})
+                .perform(post("/profileTypes/refresh/{profileTypeCode}", "TST")
                         .content("{}")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

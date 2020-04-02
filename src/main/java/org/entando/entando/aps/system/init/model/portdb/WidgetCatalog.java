@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
 import com.j256.ormlite.field.DataType;
@@ -22,59 +23,59 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = WidgetCatalog.TABLE_NAME)
 public class WidgetCatalog {
-	
-	public WidgetCatalog() {}
-	
-	@DatabaseField(columnName = "code", 
-			dataType = DataType.STRING, 
-			width = 40, 
-			canBeNull = false, id = true)
-	private String _code;
-	
-	@DatabaseField(columnName = "titles", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _titles;
-	
-	@DatabaseField(columnName = "parameters", 
-			dataType = DataType.LONG_STRING)
-	private String _parameters;
-	
-	@DatabaseField(columnName = "plugincode", 
-			dataType = DataType.STRING, 
-			width = 30)
-	private String _pluginCode;
-	
-	@DatabaseField(columnName = "parenttypecode", 
-			dataType = DataType.STRING, 
-			width = 40)
-	private String _parentTypeCode;
-	
-	@DatabaseField(columnName = "defaultconfig", 
-			dataType = DataType.LONG_STRING)
-	private String _defaultConfig;
-	
-	@DatabaseField(columnName = "locked", 
-			dataType = DataType.SHORT, 
-			canBeNull = false)
-	private short _locked;
-	
-	@DatabaseField(columnName = "maingroup", 
-			dataType = DataType.STRING, 
-			width = 20)
-	private String _mainGroup;
 
-	@DatabaseField(columnName = "configui",
-			dataType = DataType.LONG_STRING)
-	private String configUi;
+    public static final String TABLE_NAME = "widgetcatalog";
+    @DatabaseField(columnName = "code",
+            dataType = DataType.STRING,
+            width = 40,
+            canBeNull = false, id = true)
+    private String _code;
 
-	@DatabaseField(columnName = "bundleid",
-			dataType = DataType.STRING,
-			width = 150)
-	private String bundleId;
-	
-	public static final String TABLE_NAME = "widgetcatalog";
-	
+    @DatabaseField(columnName = "titles",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _titles;
+
+    @DatabaseField(columnName = "parameters",
+            dataType = DataType.LONG_STRING)
+    private String _parameters;
+
+    @DatabaseField(columnName = "plugincode",
+            dataType = DataType.STRING,
+            width = 30)
+    private String _pluginCode;
+
+    @DatabaseField(columnName = "parenttypecode",
+            dataType = DataType.STRING,
+            width = 40)
+    private String _parentTypeCode;
+
+    @DatabaseField(columnName = "defaultconfig",
+            dataType = DataType.LONG_STRING)
+    private String _defaultConfig;
+
+    @DatabaseField(columnName = "locked",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short _locked;
+
+    @DatabaseField(columnName = "maingroup",
+            dataType = DataType.STRING,
+            width = 20)
+    private String _mainGroup;
+
+    @DatabaseField(columnName = "configui",
+            dataType = DataType.LONG_STRING)
+    private String configUi;
+
+    @DatabaseField(columnName = "bundleid",
+            dataType = DataType.STRING,
+            width = 150)
+    private String bundleId;
+
+    public WidgetCatalog() {
+    }
+
 }
 /*
 CREATE TABLE widgetcatalog

@@ -11,34 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 /**
- * Basic interface for the services whose handled elements may have references
- * to DataTypes.
+ * Basic interface for the services whose handled elements may have references to DataTypes.
  *
  * @author E.Santoboni
  */
 public interface DataTypeUtilizer {
 
-	/**
-	 * Return the ID of the utilizer service.
-	 *
-	 * @return the ID of the utilizer service.
-	 */
-	public String getName();
+    /**
+     * Return the ID of the utilizer service.
+     *
+     * @return the ID of the utilizer service.
+     */
+    String getName();
 
-	/**
-	 * Return the list of the objects which reference the given DataType.
-	 *
-	 * @param dataTypeId The code of the DataType to inspect.
-	 * @return the list of the objects which reference the DataType.
-	 * @throws ApsSystemException in case of error.
-	 */
-	public List getDataTypeUtilizers(String dataTypeId) throws ApsSystemException;
+    /**
+     * Return the list of the objects which reference the given DataType.
+     *
+     * @param dataTypeId The code of the DataType to inspect.
+     * @return the list of the objects which reference the DataType.
+     * @throws ApsSystemException in case of error.
+     */
+    List getDataTypeUtilizers(String dataTypeId) throws ApsSystemException;
 
 }

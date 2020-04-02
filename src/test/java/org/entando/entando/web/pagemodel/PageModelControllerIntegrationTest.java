@@ -11,27 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.pagemodel;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.pagemodel.*;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelManager;
 import com.agiletec.aps.system.services.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -43,10 +48,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     private String accessToken;
     private ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(NON_NULL);
 
-
     @Autowired
     private PageModelManager pageModelManager;
-
 
     @Override
     @Before
@@ -69,9 +72,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         pageModelManager.deletePageModel(PAGE_MODEL_CODE);
     }
 
-
-    @Test public void
-    get_all_page_models_return_OK() throws Exception {
+    @Test
+    public void get_all_page_models_return_OK() throws Exception {
 
         ResultActions result = mockMvc.perform(
                 get("/pageModels")
@@ -79,8 +81,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isOk());
     }
 
-    @Test public void
-    get_page_model_return_OK() throws Exception {
+    @Test
+    public void get_page_model_return_OK() throws Exception {
 
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", "home")
@@ -90,8 +92,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(jsonPath("$.payload.references.length()", is(1)));
     }
 
-    @Test public void
-    get_page_models_reference_return_OK() throws Exception {
+    @Test
+    public void get_page_models_reference_return_OK() throws Exception {
 
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "home", "PageManager")
@@ -102,8 +104,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(jsonPath("$.metaData.totalItems", is(25)));
     }
 
-    @Test public void
-    add_repeated_page_model_return_conflict() throws Exception {
+    @Test
+    public void add_repeated_page_model_return_conflict() throws Exception {
         // pageModel home always exists because it's created with DB.
         String payload = createPageModelPayload("home");
 
@@ -116,8 +118,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isConflict());
     }
 
-    @Test public void
-    add_page_model_return_OK() throws Exception {
+    @Test
+    public void add_page_model_return_OK() throws Exception {
         String payload = createPageModelPayload(PAGE_MODEL_CODE);
 
         ResultActions result = mockMvc.perform(
@@ -135,8 +137,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         return jsonMapper.writeValueAsString(pageModelRequest);
     }
 
-    @Test public void
-    get_nonexistent_page_model_return_not_found() throws Exception {
+    @Test
+    public void get_nonexistent_page_model_return_not_found() throws Exception {
 
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
@@ -145,8 +147,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isNotFound());
     }
 
-    @Test public void
-    delete_page_model_return_OK() throws Exception {
+    @Test
+    public void delete_page_model_return_OK() throws Exception {
 
         PageModel pageModel = new PageModel();
         pageModel.setCode(PAGE_MODEL_CODE);
@@ -160,8 +162,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isOk());
     }
 
-    @Test public void
-    delete_page_model_nonexistent_code_return_OK() throws Exception {
+    @Test
+    public void delete_page_model_nonexistent_code_return_OK() throws Exception {
 
         ResultActions result = mockMvc.perform(
                 delete("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)

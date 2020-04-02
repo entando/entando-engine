@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -21,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "response")
 public class StringApiResponse extends AbstractApiResponse {
-    
+
     @XmlElement(name = "result", required = false)
     public String getResult() {
         if (null != super.getResult()) {
@@ -29,17 +30,17 @@ public class StringApiResponse extends AbstractApiResponse {
         }
         return null;
     }
-    
-    public void setResult(Object result, String html) {
-        super.setResult(result);
-    }
-    
+
     public void setResult(String result) {
         super.setResult(result);
     }
-    
+
+    public void setResult(Object result, String html) {
+        super.setResult(result);
+    }
+
     protected AbstractApiResponseResult createResponseResultInstance() {
         throw new UnsupportedOperationException("Unsupported method");
     }
-    
+
 }

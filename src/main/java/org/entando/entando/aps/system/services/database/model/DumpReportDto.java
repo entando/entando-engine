@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.database.model;
 
 import java.util.ArrayList;
@@ -25,14 +26,14 @@ import org.entando.entando.aps.system.init.model.TableDumpReport;
  * @author E.Santoboni
  */
 public class DumpReportDto extends ShortDumpReportDto {
-    
+
     private Map<String, List<TableDumpReportDto>> dataSourcesReports = new HashMap<>();
-	private List<ComponentInstallationReportDto> componentsHistory = new ArrayList<>();
+    private List<ComponentInstallationReportDto> componentsHistory = new ArrayList<>();
 
     public DumpReportDto() {
         super();
     }
-    
+
     public DumpReportDto(DataSourceDumpReport report, IComponentManager componentManager) {
         super(report);
         Map<String, List<TableDumpReport>> dsReports = report.getDataSourcesReports();
@@ -66,5 +67,5 @@ public class DumpReportDto extends ShortDumpReportDto {
     public void setComponentsHistory(List<ComponentInstallationReportDto> componentsHistory) {
         this.componentsHistory = componentsHistory;
     }
-    
+
 }

@@ -11,10 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -23,18 +24,20 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.List;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.RestListRequest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 /**
  * @author M.Diana
  */
 public class TestPageModelManager extends BaseTestCase {
+
+    private IWidgetTypeManager _widgetTypeManager;
+    private IPageModelManager _pageModelManager = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -254,17 +257,20 @@ public class TestPageModelManager extends BaseTestCase {
         assertNull(this._pageModelManager.getPageModel(testPageModelBCode));
         assertNull(this._pageModelManager.getPageModel(testPageModelCCode));
         try {
-            String templateA = "Hello 	<@wp.fragment code=\"CODE_1\" escapeXml=false /><@wp.fragment code=\"CODE_1\" escapeXml=false /><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
+            String templateA = "Hello   <@wp.fragment code=\"CODE_1\" escapeXml=false /><@wp.fragment code=\"CODE_1\" escapeXml=false "
+                    + "/><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
             PageModel mockModelA = this.createMockPageModel(testPageModelACode);
             mockModelA.setTemplate(templateA);
             this._pageModelManager.addPageModel(mockModelA);
 
-            String templateB = "Hello 	<@wp.fragment code=\"CODE_B\" escapeXml=false />\r\n<@wp.fragment escapeXml=false code=\"CODE_X\" /><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
+            String templateB = "Hello   <@wp.fragment code=\"CODE_B\" escapeXml=false />\r\n<@wp.fragment escapeXml=false code=\"CODE_X\" "
+                    + "/><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
             PageModel mockModelB = this.createMockPageModel(testPageModelBCode);
             mockModelB.setTemplate(templateB);
             this._pageModelManager.addPageModel(mockModelB);
 
-            String templateC = "Hello\r\n 	<@wp.fragment code=\"CODE_B\" escapeXml=false />\n\t<@wp.fragment code=\"CODE_1\" escapeXml=false /><@wp.fragment escapeXml=false code=\"CODE_C\"  /><@wp.fragment code=\"CODE_1\"  />world";
+            String templateC = "Hello\r\n   <@wp.fragment code=\"CODE_B\" escapeXml=false />\n\t<@wp.fragment code=\"CODE_1\" "
+                    + "escapeXml=false /><@wp.fragment escapeXml=false code=\"CODE_C\"  /><@wp.fragment code=\"CODE_1\"  />world";
             PageModel mockModelC = this.createMockPageModel(testPageModelCCode);
             mockModelC.setTemplate(templateC);
             this._pageModelManager.addPageModel(mockModelC);
@@ -313,8 +319,5 @@ public class TestPageModelManager extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IWidgetTypeManager _widgetTypeManager;
-    private IPageModelManager _pageModelManager = null;
 
 }

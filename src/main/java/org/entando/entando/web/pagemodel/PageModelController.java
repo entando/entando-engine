@@ -11,26 +11,42 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.pagemodel;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.google.common.collect.ImmutableMap;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"page-models"})
 @RestController
@@ -47,7 +63,6 @@ public class PageModelController {
         this.pageModelService = pageModelService;
         this.pageModelValidator = pageModelValidator;
     }
-
 
     @ApiOperation("Retrieve multiple page models")
     @ApiResponses({
@@ -68,7 +83,6 @@ public class PageModelController {
         return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
 
-
     @ApiOperation("Retrieve page model by code")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
@@ -80,7 +94,6 @@ public class PageModelController {
         PageModelDto pageModelDto = pageModelService.getPageModel(code);
         return ResponseEntity.ok(new SimpleRestResponse<>(pageModelDto));
     }
-
 
     @ApiOperation("Retrieve page model references")
     @ApiResponses({
@@ -94,7 +107,6 @@ public class PageModelController {
         PagedMetadata<?> result = pageModelService.getPageModelReferences(code, manager, requestList);
         return ResponseEntity.ok(new PagedRestResponse<>(result));
     }
-
 
     @ApiOperation("Update page model")
     @ApiResponses({
@@ -123,7 +135,6 @@ public class PageModelController {
         }
     }
 
-
     @ApiOperation("Add page model")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK"),
@@ -150,7 +161,6 @@ public class PageModelController {
             throw new ValidationGenericException(bindingResult);
         }
     }
-
 
     @ApiOperation("Delete page model")
     @ApiResponses({

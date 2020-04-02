@@ -11,20 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.widget;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.collections.ListUtils;
-import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -38,9 +26,20 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.collections.ListUtils;
 import org.entando.entando.aps.system.services.dataobject.helper.BaseDataListHelper;
-import org.entando.entando.aps.system.services.dataobject.widget.util.FilterUtils;
 import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFilterBean;
+import org.entando.entando.aps.system.services.dataobject.widget.util.FilterUtils;
+import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classe helper per la widget di erogazione contenuti in lista.
@@ -50,6 +49,72 @@ import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFi
 public class DataObjectListHelper extends BaseDataListHelper implements IDataObjectListWidgetHelper {
 
     private static final Logger _logger = LoggerFactory.getLogger(DataObjectListHelper.class);
+    private String _userFilterDateFormat;
+    private IEntitySearchEngineManager _searchEngineManager;
+
+    public static boolean isUserFilterExecuted(IDataObjectListTagBean bean) {
+        if (null == bean || null == bean.getUserFilterOptions() || bean.getUserFilterOptions().isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < bean.getUserFilterOptions().size(); i++) {
+            UserFilterOptionBean userFilter = bean.getUserFilterOptions().get(i);
+            if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String buildCacheKey(IDataObjectListTagBean bean, RequestContext reqCtx) {
+        UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+        Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
+        return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
+    }
+
+    protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
+        IPage page = (null != reqCtx) ? (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) : null;
+        StringBuilder cacheKey = (null != page) ? new StringBuilder(page.getCode()) : new StringBuilder("NOTFOUND");
+        Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
+        if (null != currentWidget && null != currentWidget.getType()) {
+            cacheKey.append("_").append(currentWidget.getType().getCode());
+        }
+        if (null != reqCtx) {
+            Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+            if (null != frame) {
+                cacheKey.append("_").append(frame.intValue());
+            }
+            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
+            if (null != currentLang) {
+                cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
+            }
+        }
+        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
+        if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
+            groupCodes.add(Group.FREE_GROUP_NAME);
+        }
+        Collections.sort(groupCodes);
+        for (int i = 0; i < groupCodes.size(); i++) {
+            String code = groupCodes.get(i);
+            cacheKey.append("_").append(code);
+        }
+        if (null != currentWidget && null != currentWidget.getConfig()) {
+            List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
+            Collections.sort(paramKeys);
+            for (int i = 0; i < paramKeys.size(); i++) {
+                if (i == 0) {
+                    cacheKey.append("_WIDGETPARAM");
+                } else {
+                    cacheKey.append(",");
+                }
+                String paramkey = paramKeys.get(i);
+                cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
+            }
+        }
+        if (null != listName) {
+            cacheKey.append("_LISTNAME").append(listName);
+        }
+        return cacheKey.toString();
+    }
 
     @Override
     public EntitySearchFilter[] getFilters(String dataObjectType, String filtersShowletParam, RequestContext reqCtx) {
@@ -58,8 +123,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     }
 
     /**
-     * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String,
-     * IEntityFilterBean, RequestContext) method
+     * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String, IEntityFilterBean, RequestContext) method
      */
     @Override
     public EntitySearchFilter getFilter(String dataObjectType, IDataTypeListFilterBean bean, RequestContext reqCtx) {
@@ -73,8 +137,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     }
 
     /**
-     * @deprecated From Entando 3.0 version 3.0.1. Use
-     * getUserFilterOption(String, IEntityFilterBean, RequestContext) method
+     * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilterOption(String, IEntityFilterBean, RequestContext) method
      */
     @Override
     public UserFilterOptionBean getUserFilterOption(String dataObjectType, IDataTypeListFilterBean bean, RequestContext reqCtx) {
@@ -96,12 +159,15 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     @Override
     //@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
     //        key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)",
-    //        condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
+    //        condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper)
+    //        .isUserFilterExecuted(#bean)")
     //@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME,
     //        key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)",
     //        beforeInvocation = true,
-    //        condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx))")
-    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
+    //        condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps
+    //        .system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx))")
+    //@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager)
+    // .getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
     public List<String> getContentsId(IDataObjectListTagBean bean, RequestContext reqCtx) throws Throwable {
         List<String> dataObjectsId = null;
         try {
@@ -112,19 +178,6 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
             throw new ApsSystemException("Error extracting dataObjects id", t);
         }
         return dataObjectsId;
-    }
-
-    public static boolean isUserFilterExecuted(IDataObjectListTagBean bean) {
-        if (null == bean || null == bean.getUserFilterOptions() || bean.getUserFilterOptions().isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < bean.getUserFilterOptions().size(); i++) {
-            UserFilterOptionBean userFilter = bean.getUserFilterOptions().get(i);
-            if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected List<String> extractContentsId(IDataObjectListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
@@ -193,23 +246,24 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
         if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
             String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
             /*
-			String optionString = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[1]);
-			SearchEngineFilter.TextSearchOption option = SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD;
-			if (null != optionString) {
-				if (optionString.equals(UserFilterOptionBean.FULLTEXT_OPTION_ALL_WORDS)) {
-					option = SearchEngineFilter.TextSearchOption.ALL_WORDS;
-				} else if (optionString.equals(UserFilterOptionBean.FULLTEXT_OPTION_EXACT)) {
-					option = SearchEngineFilter.TextSearchOption.EXACT;
-				}
-			}
+      String optionString = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[1]);
+      SearchEngineFilter.TextSearchOption option = SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD;
+      if (null != optionString) {
+        if (optionString.equals(UserFilterOptionBean.FULLTEXT_OPTION_ALL_WORDS)) {
+          option = SearchEngineFilter.TextSearchOption.ALL_WORDS;
+        } else if (optionString.equals(UserFilterOptionBean.FULLTEXT_OPTION_EXACT)) {
+          option = SearchEngineFilter.TextSearchOption.EXACT;
+        }
+      }
              */
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             /*
-			SearchEngineFilter filter = new SearchEngineFilter(currentLang.getCode(), word, option);
-			SearchEngineFilter[] filters = {filter};
-			List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(filters, null, this.getAllowedGroups(reqCtx));
+      SearchEngineFilter filter = new SearchEngineFilter(currentLang.getCode(), word, option);
+      SearchEngineFilter[] filters = {filter};
+      List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(filters, null, this.getAllowedGroups(reqCtx));
              */
-            List<String> fullTextResult = this.getSearchEngineManager().searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
+            List<String> fullTextResult = this.getSearchEngineManager()
+                    .searchEntityId(currentLang.getCode(), word, this.getAllowedGroups(reqCtx));
             if (null != fullTextResult) {
                 return ListUtils.intersection(fullTextResult, masterContentsId);
             } else {
@@ -257,11 +311,13 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     }
 
     @Deprecated
-    protected void addShowletFilters(IDataObjectListTagBean bean, ApsProperties showletParams, String showletParamName, RequestContext reqCtx) {
+    protected void addShowletFilters(IDataObjectListTagBean bean, ApsProperties showletParams, String showletParamName,
+            RequestContext reqCtx) {
         this.addWidgetFilters(bean, showletParams, showletParamName, reqCtx);
     }
 
-    protected void addWidgetFilters(IDataObjectListTagBean bean, ApsProperties widgetParams, String widgetParamName, RequestContext reqCtx) {
+    protected void addWidgetFilters(IDataObjectListTagBean bean, ApsProperties widgetParams, String widgetParamName,
+            RequestContext reqCtx) {
         if (null == widgetParams) {
             return;
         }
@@ -285,59 +341,9 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
         return getAllowedGroupCodes(currentUser);
     }
 
-    public static String buildCacheKey(IDataObjectListTagBean bean, RequestContext reqCtx) {
-        UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-        Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
-        return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
-    }
-
-    protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
-        IPage page = (null != reqCtx) ? (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) : null;
-        StringBuilder cacheKey = (null != page) ? new StringBuilder(page.getCode()) : new StringBuilder("NOTFOUND");
-        Widget currentWidget = (null != reqCtx) ? (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET) : null;
-        if (null != currentWidget && null != currentWidget.getType()) {
-            cacheKey.append("_").append(currentWidget.getType().getCode());
-        }
-        if (null != reqCtx) {
-            Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-            if (null != frame) {
-                cacheKey.append("_").append(frame.intValue());
-            }
-            Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-            if (null != currentLang) {
-                cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
-            }
-        }
-        List<String> groupCodes = new ArrayList<String>(userGroupCodes);
-        if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
-            groupCodes.add(Group.FREE_GROUP_NAME);
-        }
-        Collections.sort(groupCodes);
-        for (int i = 0; i < groupCodes.size(); i++) {
-            String code = (String) groupCodes.get(i);
-            cacheKey.append("_").append(code);
-        }
-        if (null != currentWidget && null != currentWidget.getConfig()) {
-            List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
-            Collections.sort(paramKeys);
-            for (int i = 0; i < paramKeys.size(); i++) {
-                if (i == 0) {
-                    cacheKey.append("_WIDGETPARAM");
-                } else {
-                    cacheKey.append(",");
-                }
-                String paramkey = (String) paramKeys.get(i);
-                cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
-            }
-        }
-        if (null != listName) {
-            cacheKey.append("_LISTNAME").append(listName);
-        }
-        return cacheKey.toString();
-    }
-
     @Override
-    public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
+    public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx)
+            throws ApsSystemException {
         List<UserFilterOptionBean> userEntityFilters = null;
         try {
             Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
@@ -355,7 +361,9 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String userFilters = config.getProperty(WIDGET_PARAM_USER_FILTERS);
             if (null != userFilters && userFilters.length() > 0) {
-                userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, this.getUserFilterDateFormat(), reqCtx.getRequest());
+                userEntityFilters = FilterUtils
+                        .getUserFilters(userFilters, currentFrame, currentLang, prototype, this.getUserFilterDateFormat(),
+                                reqCtx.getRequest());
             }
         } catch (Throwable t) {
             _logger.error("Error extracting user filters", t);
@@ -379,9 +387,5 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
         this._searchEngineManager = searchEngineManager;
     }
-
-    private String _userFilterDateFormat;
-
-    private IEntitySearchEngineManager _searchEngineManager;
 
 }

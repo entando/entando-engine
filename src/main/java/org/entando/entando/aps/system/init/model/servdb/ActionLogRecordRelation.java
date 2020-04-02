@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
 /**
  * @author E.Santoboni
@@ -26,9 +26,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = ActionLogRecordRelation.TABLE_NAME)
 public class ActionLogRecordRelation implements ExtendedColumnDefinition {
 
-    public ActionLogRecordRelation() {
-    }
-
+    public static final String TABLE_NAME = "actionlogrelations";
     @DatabaseField(columnName = "id",
             dataType = DataType.INTEGER,
             canBeNull = false,
@@ -44,6 +42,9 @@ public class ActionLogRecordRelation implements ExtendedColumnDefinition {
             width = 20, index = true)
     private String _group;
 
+    public ActionLogRecordRelation() {
+    }
+
     @Override
     public String[] extensions(IDatabaseManager.DatabaseType type) {
         String tableName = TABLE_NAME;
@@ -53,11 +54,9 @@ public class ActionLogRecordRelation implements ExtendedColumnDefinition {
             logTableName = "`" + logTableName + "`";
         }
         return new String[]{"ALTER TABLE " + tableName + " "
-            + "ADD CONSTRAINT " + TABLE_NAME + "_recid_fkey FOREIGN KEY (recordid) "
-            + "REFERENCES " + logTableName + " (id)"};
+                + "ADD CONSTRAINT " + TABLE_NAME + "_recid_fkey FOREIGN KEY (recordid) "
+                + "REFERENCES " + logTableName + " (id)"};
     }
-
-    public static final String TABLE_NAME = "actionlogrelations";
 
 }
 /*

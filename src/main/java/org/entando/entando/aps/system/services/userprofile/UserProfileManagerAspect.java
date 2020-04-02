@@ -11,19 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
+import com.agiletec.aps.system.services.user.AbstractUser;
+import com.agiletec.aps.system.services.user.UserDetails;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.agiletec.aps.system.services.user.AbstractUser;
-import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
- * Implementation of ProfileManager Aspect. This class join a user with his
- * Profile whatever implementation of User Management.
+ * Implementation of ProfileManager Aspect. This class join a user with his Profile whatever implementation of User Management.
  *
  * @author E.Santoboni
  */
@@ -31,9 +31,9 @@ import com.agiletec.aps.system.services.user.UserDetails;
 public class UserProfileManagerAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(UserProfileManagerAspect.class);
-    
+
     private IUserProfileManager userProfileManager;
-    
+
     @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.getUser(..))", returning = "user")
     public void injectProfile(Object user) {
         if (user != null) {
@@ -63,7 +63,7 @@ public class UserProfileManagerAspect {
             }
         }
     }
-    
+
     @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.updateUser(..)) && args(user,..)")
     public void updateProfile(Object user) {
         if (user != null) {
@@ -104,5 +104,5 @@ public class UserProfileManagerAspect {
     public void setUserProfileManager(IUserProfileManager userProfileManager) {
         this.userProfileManager = userProfileManager;
     }
-    
+
 }

@@ -11,43 +11,50 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model;
 
 /**
  * This class represents an entity record.
+ *
  * @author E.Santoboni
  */
 public class ApsEntityRecord {
 
-	@Override
-	public boolean equals(Object rec) {
-		if (rec instanceof ApsEntityRecord) {
-			return this.getId().equals(((ApsEntityRecord)rec).getId());
-		}
-		return super.equals(rec);
-	}
+    private String _id;
+    private String _typeCode;
+    private String _xml;
 
-	public String getId() {
-		return _id;
-	}
-	public void setId(String id) {
-		this._id = id;
-	}
-	public String getTypeCode() {
-		return _typeCode;
-	}
-	public void setTypeCode(String typeCode) {
-		this._typeCode = typeCode;
-	}
-	public String getXml() {
-		return _xml;
-	}
-	public void setXml(String xml) {
-		this._xml = xml;
-	}
+    @Override
+    public boolean equals(Object rec) {
+        if (rec instanceof ApsEntityRecord) {
+            return this.getId().equals(((ApsEntityRecord) rec).getId());
+        }
+        return super.equals(rec);
+    }
 
-	private String _id;
-	private String _typeCode;
-	private String _xml;
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String id) {
+        this._id = id;
+    }
+
+    public String getTypeCode() {
+        return _typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this._typeCode = typeCode;
+    }
+
+    public String getXml() {
+        return _xml;
+    }
+
+    public void setXml(String xml) {
+        this._xml = xml;
+    }
 
 }

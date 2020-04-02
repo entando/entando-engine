@@ -11,30 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.cache;
 
-import java.util.Map;
-
-import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
-import org.entando.entando.aps.system.services.api.model.ApiService;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.Map;
+import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
+import org.entando.entando.aps.system.services.api.model.ApiService;
 
 public interface IApiServiceCacheWrapper {
 
-	public static final String APICATALOG_SERVICE_CACHE_NAME_PREFIX = "ApiCatalogManager_service_";
+    String APICATALOG_SERVICE_CACHE_NAME_PREFIX = "ApiCatalogManager_service_";
 
-	public static final String APICATALOG_SERVICES_CACHE_NAME = "ApiCatalogManager_services";
+    String APICATALOG_SERVICES_CACHE_NAME = "ApiCatalogManager_services";
 
-	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException;
+    void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException;
 
-	public Map<String, ApiService> getMasterServices();
+    Map<String, ApiService> getMasterServices();
 
-	public void addService(ApiService apiService);
+    void addService(ApiService apiService);
 
-	public void updateService(ApiService apiService);
+    void updateService(ApiService apiService);
 
-	public void removeService(String key);
+    void removeService(String key);
 
 }

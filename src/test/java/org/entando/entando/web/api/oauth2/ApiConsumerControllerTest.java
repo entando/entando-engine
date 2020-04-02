@@ -1,17 +1,28 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.api.oauth2;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,20 +38,12 @@ import org.entando.entando.web.api.oauth2.validator.ApiConsumerValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApiConsumerControllerTest extends AbstractControllerTest {
@@ -48,15 +51,11 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     private static final String BASE_URL = "/consumers";
 
     private final ApiConsumerValidator validator = new ApiConsumerValidator();
-
+    private final ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     @Mock
     private OAuthConsumerManager consumerManager;
-
     private ApiConsumerServiceImpl apiConsumerService;
-
     private ApiConsumerResourceController controller;
-
-    private final ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     private String accessToken;
 
     @Before
@@ -134,7 +133,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
 
         testValidationErrorPost(c -> c.getAuthorizedGrantTypes().add("invalid_grant"))
                 .andExpect(jsonPath("$.errors[0].code", is("2")));
-        
+
         testValidationErrorPost(c -> c.setExpirationDate("invalid-date"))
                 .andExpect(jsonPath("$.errors[0].code", is("4")));
 

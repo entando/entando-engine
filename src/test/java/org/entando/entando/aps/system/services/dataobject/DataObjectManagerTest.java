@@ -11,7 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -31,148 +38,133 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.BeanFactory;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
 public class DataObjectManagerTest {
 
-	private class FakeKeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
+    @Mock
+    private IEntityTypeFactory entityTypeFactory;
+    @Mock
+    private DataTypeDOM entityTypeDom;
+    @Mock
+    private DataObjectDOM entityDom;
+    @Mock
+    private IDataObjectDAO dataObjectDao;
+    @Mock
+    private BeanFactory beanFactory;
+    @Mock
+    private INotifyManager notifyManager;
+    private String beanName = "DataObjectManager";
+    private String className = "org.entando.entando.aps.system.services.dataobject.model.DataObject";
+    @InjectMocks
+    private DataObjectManager dataObjectManager;
 
-		private int key = 1;
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        this.dataObjectManager.setEntityClassName(className);
+        //this.dataObjectManager.setConfigItemName(configItemName);
+        this.dataObjectManager.setBeanName(this.beanName);
+    }
 
-		@Override
-		public void init() throws Exception {
-			//
-		}
+    @Test
+    public void testCreateDataObject() throws ApsSystemException {
+        String typeCode = "ART";
+        // @formatter:off
+        when(entityTypeFactory.extractEntityType(
+                "ART",
+                DataObject.class,
+                dataObjectManager.getConfigItemName(),
+                this.entityTypeDom,
+                dataObjectManager.getName(),
+                this.entityDom))
+                .thenReturn(this.createFakeEntity(typeCode, null, null));
+        // @formatter:on
+        DataObject dataObjectType = dataObjectManager.createDataObject(typeCode);
+        assertThat(dataObjectType, is(not(nullValue())));
+    }
 
-		@Override
-		public int getUniqueKeyCurrentValue() throws ApsSystemException {
-			return key++;
-		}
+    @Test
+    public void testCrateWithDefaultModel() throws ApsSystemException {
+        String typeCode = "ART";
+        // @formatter:off
+        when(entityTypeFactory.extractEntityType(
+                "ART",
+                DataObject.class,
+                dataObjectManager.getConfigItemName(),
+                this.entityTypeDom,
+                dataObjectManager.getName(),
+                this.entityDom))
+                .thenReturn(this.createFakeEntity(typeCode, "1", null));
+        // @formatter:on
+        DataObject dataObject = dataObjectManager.createDataObject(typeCode);
+        assertThat(dataObject, is(not(nullValue())));
 
-	}
+        String defaultModel = dataObject.getDefaultModel();
+        assertThat(defaultModel, is("1"));
+    }
 
-	@Mock
-	private IEntityTypeFactory entityTypeFactory;
+    @Test
+    public void testCrateWithDefaultViewPage() throws ApsSystemException {
+        String typeCode = "ART";
+        // @formatter:off
+        when(entityTypeFactory.extractEntityType(
+                "ART",
+                DataObject.class,
+                dataObjectManager.getConfigItemName(),
+                this.entityTypeDom,
+                dataObjectManager.getName(),
+                this.entityDom))
+                .thenReturn(this.createFakeEntity(typeCode, "1", "dataObjectview"));
+        // @formatter:on
+        DataObject dataObject = dataObjectManager.createDataObject(typeCode);
+        String viewPage = dataObject.getViewPage();
+        assertThat(viewPage, is("dataObjectview"));
+    }
 
-	@Mock
-	private DataTypeDOM entityTypeDom;
+    @Test
+    public void testSave() throws ApsSystemException {
+        String typeCode = "ART";
+        // @formatter:off
+        when(beanFactory.getBean(SystemConstants.KEY_GENERATOR_MANAGER)).thenReturn(new FakeKeyGeneratorManager());
+        when(entityTypeFactory.extractEntityType(
+                "ART",
+                DataObject.class,
+                dataObjectManager.getConfigItemName(),
 
-	@Mock
-	private DataObjectDOM entityDom;
+                this.entityTypeDom,
+                dataObjectManager.getName(),
+                this.entityDom))
+                .thenReturn(this.createFakeEntity(typeCode, "1", "dataObjectview"));
+        // @formatter:on
 
-	@Mock
-	private IDataObjectDAO dataObjectDao;
+        DataObject dataObject = dataObjectManager.createDataObject(typeCode);
+        dataObjectManager.saveDataObject(dataObject);
+        assertThat(dataObject.getId(), is("ART1"));
 
-	@Mock
-	private BeanFactory beanFactory;
+        Mockito.verify(dataObjectDao, Mockito.times(1)).addEntity(dataObject);
+    }
 
-	@Mock
-	private INotifyManager notifyManager;
+    private IApsEntity createFakeEntity(String typeCode, String defaultModel, String viewPage) {
+        DataObject dataObject = new DataObject();
+        dataObject.setTypeCode(typeCode);
+        dataObject.setDefaultModel(defaultModel);
+        dataObject.setViewPage(viewPage);
+        return dataObject;
+    }
 
-	private String beanName = "DataObjectManager";
+    private class FakeKeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
 
-	private String className = "org.entando.entando.aps.system.services.dataobject.model.DataObject";
+        private int key = 1;
 
-	@InjectMocks
-	private DataObjectManager dataObjectManager;
+        @Override
+        public void init() throws Exception {
+            //
+        }
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		this.dataObjectManager.setEntityClassName(className);
-		//this.dataObjectManager.setConfigItemName(configItemName);
-		this.dataObjectManager.setBeanName(this.beanName);
-	}
+        @Override
+        public int getUniqueKeyCurrentValue() throws ApsSystemException {
+            return key++;
+        }
 
-	@Test
-	public void testCreateDataObject() throws ApsSystemException {
-		String typeCode = "ART";
-		// @formatter:off
-		when(entityTypeFactory.extractEntityType(
-				"ART", 
-				DataObject.class, 
-				dataObjectManager.getConfigItemName(), 
-				this.entityTypeDom, 
-				dataObjectManager.getName(), 
-				this.entityDom))
-		.thenReturn(this.createFakeEntity(typeCode, null, null));
-		// @formatter:on
-		DataObject dataObjectType = dataObjectManager.createDataObject(typeCode);
-		assertThat(dataObjectType, is(not(nullValue())));
-	}
-
-	@Test
-	public void testCrateWithDefaultModel() throws ApsSystemException {
-		String typeCode = "ART";
-		// @formatter:off
-		when(entityTypeFactory.extractEntityType(
-				"ART", 
-				DataObject.class, 
-				dataObjectManager.getConfigItemName(), 
-				this.entityTypeDom, 
-				dataObjectManager.getName(), 
-				this.entityDom))
-		.thenReturn(this.createFakeEntity(typeCode, "1", null));
-		// @formatter:on
-		DataObject dataObject = dataObjectManager.createDataObject(typeCode);
-		assertThat(dataObject, is(not(nullValue())));
-
-		String defaultModel = dataObject.getDefaultModel();
-		assertThat(defaultModel, is("1"));
-	}
-
-	@Test
-	public void testCrateWithDefaultViewPage() throws ApsSystemException {
-		String typeCode = "ART";
-		// @formatter:off
-		when(entityTypeFactory.extractEntityType(
-				"ART", 
-				DataObject.class, 
-				dataObjectManager.getConfigItemName(), 
-				this.entityTypeDom, 
-				dataObjectManager.getName(), 
-				this.entityDom))
-		.thenReturn(this.createFakeEntity(typeCode, "1", "dataObjectview"));
-		// @formatter:on
-		DataObject dataObject = dataObjectManager.createDataObject(typeCode);
-		String viewPage = dataObject.getViewPage();
-		assertThat(viewPage, is("dataObjectview"));
-	}
-
-	@Test
-	public void testSave() throws ApsSystemException {
-		String typeCode = "ART";
-		// @formatter:off
-		when(beanFactory.getBean(SystemConstants.KEY_GENERATOR_MANAGER)).thenReturn(new FakeKeyGeneratorManager()); 
-		when(entityTypeFactory.extractEntityType(
-				"ART", 
-				DataObject.class, 
-				dataObjectManager.getConfigItemName(), 
-				
-				this.entityTypeDom, 
-				dataObjectManager.getName(), 
-				this.entityDom))
-		.thenReturn(this.createFakeEntity(typeCode, "1", "dataObjectview"));
-		// @formatter:on
-
-		DataObject dataObject = dataObjectManager.createDataObject(typeCode);
-		dataObjectManager.saveDataObject(dataObject);
-		assertThat(dataObject.getId(), is("ART1"));
-
-		Mockito.verify(dataObjectDao, Mockito.times(1)).addEntity(dataObject);
-	}
-
-
-	private IApsEntity createFakeEntity(String typeCode, String defaultModel, String viewPage) {
-		DataObject dataObject = new DataObject();
-		dataObject.setTypeCode(typeCode);
-		dataObject.setDefaultModel(defaultModel);
-		dataObject.setViewPage(viewPage);
-		return dataObject;
-	}
+    }
 
 }

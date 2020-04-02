@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
+import java.util.List;
 
 public class TestUtilizer extends BaseTestCase {
 

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
 import com.j256.ormlite.field.DataType;
@@ -23,9 +24,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = Page.TABLE_NAME)
 public class Page {
 
-    public Page() {
-    }
-
+    public static final String TABLE_NAME = "pages";
     @DatabaseField(columnName = "code",
             dataType = DataType.STRING,
             width = 30,
@@ -43,7 +42,8 @@ public class Page {
             canBeNull = false)
     private int _position;
 
-    public static final String TABLE_NAME = "pages";
+    public Page() {
+    }
 
 }
 /*

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.model;
 
 import com.agiletec.aps.system.services.page.IPage;
@@ -18,6 +19,9 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IComponentManager;
@@ -27,10 +31,6 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 
 public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
 

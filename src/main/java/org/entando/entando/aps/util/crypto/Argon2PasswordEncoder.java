@@ -1,34 +1,35 @@
 /*
  * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.util.crypto;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Argon2PasswordEncoder implements PasswordEncoder {
 
+    private final Charset charset = StandardCharsets.UTF_8;
     private int hashLength;
     private int saltLength;
     private int iterations; // -t N
     private int memory; // -m N
     private int parallelism; // -p N
-
-    private final Charset charset = Charset.forName("UTF-8");
     private Argon2Types type = Argon2Types.ARGON2i;
 
     public Argon2PasswordEncoder() {

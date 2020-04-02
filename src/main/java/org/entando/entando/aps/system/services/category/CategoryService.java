@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.category;
 
 import com.agiletec.aps.system.common.IManager;
@@ -53,17 +54,6 @@ public class CategoryService implements ICategoryService {
         CategoryDtoBuilder builder = new CategoryDtoBuilder();
         builder.setCategoryManager(this.categoryManager);
         return builder;
-    }
-    
-    public class CategoryDtoBuilder extends DtoBuilder<Category, CategoryDto> {
-        private ICategoryManager categoryManager;
-        @Override
-        protected CategoryDto toDto(Category src) {
-            return new CategoryDto(src, this.categoryManager);
-        }
-        public void setCategoryManager(ICategoryManager categoryManager) {
-            this.categoryManager = categoryManager;
-        }
     }
 
     @Override
@@ -136,7 +126,8 @@ public class CategoryService implements ICategoryService {
     public CategoryDto addCategory(CategoryDto categoryDto) {
         Category parentCategory = this.getCategoryManager().getCategory(categoryDto.getParentCode());
         if (null == parentCategory) {
-            throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category", categoryDto.getParentCode());
+            throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category",
+                    categoryDto.getParentCode());
         }
         Category category = this.getCategoryManager().getCategory(categoryDto.getCode());
         if (null != category) {
@@ -163,7 +154,8 @@ public class CategoryService implements ICategoryService {
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         Category parentCategory = this.getCategoryManager().getCategory(categoryDto.getParentCode());
         if (null == parentCategory) {
-            throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category", categoryDto.getParentCode());
+            throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category",
+                    categoryDto.getParentCode());
         }
         Category category = this.getCategoryManager().getCategory(categoryDto.getCode());
         if (null == category) {
@@ -194,7 +186,8 @@ public class CategoryService implements ICategoryService {
                 List references = categoryUtilizer.getCategoryUtilizers(categoryCode);
                 if (null != references && !references.isEmpty()) {
                     BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
-                    bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_REFERENCES, new String[]{categoryCode}, "category.cannot.delete.references");
+                    bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_REFERENCES, new String[]{categoryCode},
+                            "category.cannot.delete.references");
                     throw new ValidationGenericException(bindingResult);
                 }
             }
@@ -229,6 +222,20 @@ public class CategoryService implements ICategoryService {
 
     public void setCategoryServiceUtilizers(List<CategoryServiceUtilizer> categoryServiceUtilizers) {
         this.categoryServiceUtilizers = categoryServiceUtilizers;
+    }
+
+    public class CategoryDtoBuilder extends DtoBuilder<Category, CategoryDto> {
+
+        private ICategoryManager categoryManager;
+
+        @Override
+        protected CategoryDto toDto(Category src) {
+            return new CategoryDto(src, this.categoryManager);
+        }
+
+        public void setCategoryManager(ICategoryManager categoryManager) {
+            this.categoryManager = categoryManager;
+        }
     }
 
 }

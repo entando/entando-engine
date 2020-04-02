@@ -11,20 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
 import java.util.List;
 
 /**
- * Base interface for those bean classes that must extract 'Enumerator' Attribute. 
+ * Base interface for those bean classes that must extract 'Enumerator' Attribute.
+ *
  * @author E.Santoboni
  */
 public interface EnumeratorAttributeItemsExtractor {
-	
-	/**
-	 * Return the list of the items of the 'Enumerator' attribute.
-	 * @return The items list.
-	 */
-	public List<String> getItems();
-	
+
+    /**
+     * Return the list of the items of the 'Enumerator' attribute.
+     *
+     * @return The items list.
+     */
+    List<String> getItems();
+
 }

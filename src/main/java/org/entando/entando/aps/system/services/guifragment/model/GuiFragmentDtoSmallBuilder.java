@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.model;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,27 +22,27 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 public class GuiFragmentDtoSmallBuilder extends DtoBuilder<GuiFragment, GuiFragmentDtoSmall> {
 
-	private IWidgetTypeManager widgetTypeManager;
+    private IWidgetTypeManager widgetTypeManager;
 
-	@Override
-	protected GuiFragmentDtoSmall toDto(GuiFragment src) {
-		if (null == src) {
-			return null;
-		}
-		WidgetType type = null;
-		if (StringUtils.isNotEmpty(src.getWidgetTypeCode())) {
-			type = this.getWidgetTypeManager().getWidgetType(src.getWidgetTypeCode());
-		}
-		GuiFragmentDtoSmall dest = new GuiFragmentDtoSmall(src, type);
-		return dest;
-	}
+    @Override
+    protected GuiFragmentDtoSmall toDto(GuiFragment src) {
+        if (null == src) {
+            return null;
+        }
+        WidgetType type = null;
+        if (StringUtils.isNotEmpty(src.getWidgetTypeCode())) {
+            type = this.getWidgetTypeManager().getWidgetType(src.getWidgetTypeCode());
+        }
+        GuiFragmentDtoSmall dest = new GuiFragmentDtoSmall(src, type);
+        return dest;
+    }
 
-	protected IWidgetTypeManager getWidgetTypeManager() {
-		return widgetTypeManager;
-	}
+    protected IWidgetTypeManager getWidgetTypeManager() {
+        return widgetTypeManager;
+    }
 
-	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
-		this.widgetTypeManager = widgetTypeManager;
-	}
+    public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+        this.widgetTypeManager = widgetTypeManager;
+    }
 
 }

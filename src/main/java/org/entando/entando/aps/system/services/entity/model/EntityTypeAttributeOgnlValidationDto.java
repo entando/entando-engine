@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -51,10 +52,12 @@ public class EntityTypeAttributeOgnlValidationDto {
             // to check into validator
             OgnlValidationRule ognlValidationRule = new OgnlValidationRule();
             if (StringUtils.isEmpty(this.getErrorMessage()) && StringUtils.isEmpty(this.getKeyForErrorMessage())) {
-                this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_OGNL_ERROR, bindingResult, new String[]{typeCode, attribute.getName()}, "entityType.attribute.ognl.missingErrorMessage");
+                this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_OGNL_ERROR, bindingResult,
+                        new String[]{typeCode, attribute.getName()}, "entityType.attribute.ognl.missingErrorMessage");
             }
             if (StringUtils.isEmpty(this.getHelpMessage()) && StringUtils.isEmpty(this.getKeyForHelpMessage())) {
-                this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_OGNL_HELP, bindingResult, new String[]{typeCode, attribute.getName()}, "entityType.attribute.ognl.missingHelpMessage");
+                this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_OGNL_HELP, bindingResult,
+                        new String[]{typeCode, attribute.getName()}, "entityType.attribute.ognl.missingHelpMessage");
             }
             ognlValidationRule.setErrorMessage(this.getErrorMessage());
             ognlValidationRule.setErrorMessageKey(this.getKeyForErrorMessage());

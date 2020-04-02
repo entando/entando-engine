@@ -11,33 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.server;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Properties;
-
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public interface IResponseBuilder {
-    
-    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException;
-    
+
+    String SUCCESS = "SUCCESS";
+    String FAILURE = "FAILURE";
+
+    ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException;
+
     @Deprecated
-    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException;
-    
+    Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException;
+
     @Deprecated
-    public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException;
-    
-    public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException;
-    
-    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException;
-    
-    public static final String SUCCESS = "SUCCESS";
-    public static final String FAILURE = "FAILURE";
-    
+    Object createResponse(String resourceName, Properties parameters) throws ApsSystemException;
+
+    Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException;
+
+    Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException;
+
 }

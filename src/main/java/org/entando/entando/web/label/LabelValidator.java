@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.label;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +48,8 @@ public class LabelValidator extends AbstractPaginationValidator {
 
     public void validateBodyName(String labelCode, LabelRequest labelRequest, Errors errors) {
         if (!StringUtils.equals(labelCode, labelRequest.getKey())) {
-            errors.rejectValue("key", ERRCODE_URINAME_MISMATCH, new String[]{labelCode, labelRequest.getKey()}, "labelRequest.key.mismatch");
+            errors.rejectValue("key", ERRCODE_URINAME_MISMATCH, new String[]{labelCode, labelRequest.getKey()},
+                    "labelRequest.key.mismatch");
         }
     }
 

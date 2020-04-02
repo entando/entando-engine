@@ -1,17 +1,26 @@
 /*
  * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
@@ -25,65 +34,55 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserManagerTest {
 
-    @Mock
-    private IUserDAO userDao;
-
-    @Mock
-    private ConfigInterface configManager;
-
-    @InjectMocks
-    private UserManager userManager;
-
-    private List<UserDetails> users = new ArrayList<>();
-
     private final String params = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<Params>\n"
-            + "	<Param name=\"urlStyle\">classic</Param>\n"
-            + "	<Param name=\"hypertextEditor\">none</Param>\n"
-            + "	<Param name=\"treeStyle_page\">classic</Param>\n"
-            + "	<Param name=\"treeStyle_category\">classic</Param>\n"
-            + "	<Param name=\"startLangFromBrowser\">false</Param>\n"
-            + "	<Param name=\"firstTimeMessages\">false</Param>\n"
-            + "	<Param name=\"baseUrl\">request</Param>\n"
-            + "	<Param name=\"baseUrlContext\">true</Param>\n"
-            + "	<Param name=\"useJsessionId\">false</Param>\n"
-            + "	<Param name=\"gravatarIntegrationEnabled\">false</Param>\n"
-            + "	<Param name=\"editEmptyFragmentEnabled\">false</Param>\n"
-            + "	<SpecialPages>\n"
-            + "		<Param name=\"notFoundPageCode\">notfound</Param>\n"
-            + "		<Param name=\"homePageCode\">homepage</Param>\n"
-            + "		<Param name=\"errorPageCode\">errorpage</Param>\n"
-            + "		<Param name=\"loginPageCode\">login</Param>\n"
-            + "	</SpecialPages>\n"
-            + "	<FeaturesOnDemand>\n"
-            + "		<Param name=\"groupsOnDemand\">true</Param>\n"
-            + "		<Param name=\"categoriesOnDemand\">true</Param>\n"
-            + "		<Param name=\"contentTypesOnDemand\">true</Param>\n"
-            + "		<Param name=\"contentModelsOnDemand\">true</Param>\n"
-            + "		<Param name=\"apisOnDemand\">true</Param>\n"
-            + "		<Param name=\"resourceArchivesOnDemand\">true</Param>\n"
-            + "	</FeaturesOnDemand>\n"
-            + "	<ExtendendPrivacyModule>\n"
-            + "		<Param name=\"extendedPrivacyModuleEnabled\">false</Param>\n"
-            + "		<Param name=\"maxMonthsSinceLastAccess\">6</Param>\n"
-            + "		<Param name=\"maxMonthsSinceLastPasswordChange\">3</Param>\n"
-            + "	</ExtendendPrivacyModule>\n"
-            + "	<ExtraParams>\n"
-            + "		<Param name=\"page_preview_hash\">ofc99CdASX8GBGMiiXLZ</Param>\n"
-            + "	</ExtraParams>\n"
+            + "  <Param name=\"urlStyle\">classic</Param>\n"
+            + "  <Param name=\"hypertextEditor\">none</Param>\n"
+            + "  <Param name=\"treeStyle_page\">classic</Param>\n"
+            + "  <Param name=\"treeStyle_category\">classic</Param>\n"
+            + "  <Param name=\"startLangFromBrowser\">false</Param>\n"
+            + "  <Param name=\"firstTimeMessages\">false</Param>\n"
+            + "  <Param name=\"baseUrl\">request</Param>\n"
+            + "  <Param name=\"baseUrlContext\">true</Param>\n"
+            + "  <Param name=\"useJsessionId\">false</Param>\n"
+            + "  <Param name=\"gravatarIntegrationEnabled\">false</Param>\n"
+            + "  <Param name=\"editEmptyFragmentEnabled\">false</Param>\n"
+            + "  <SpecialPages>\n"
+            + "    <Param name=\"notFoundPageCode\">notfound</Param>\n"
+            + "    <Param name=\"homePageCode\">homepage</Param>\n"
+            + "    <Param name=\"errorPageCode\">errorpage</Param>\n"
+            + "    <Param name=\"loginPageCode\">login</Param>\n"
+            + "  </SpecialPages>\n"
+            + "  <FeaturesOnDemand>\n"
+            + "    <Param name=\"groupsOnDemand\">true</Param>\n"
+            + "    <Param name=\"categoriesOnDemand\">true</Param>\n"
+            + "    <Param name=\"contentTypesOnDemand\">true</Param>\n"
+            + "    <Param name=\"contentModelsOnDemand\">true</Param>\n"
+            + "    <Param name=\"apisOnDemand\">true</Param>\n"
+            + "    <Param name=\"resourceArchivesOnDemand\">true</Param>\n"
+            + "  </FeaturesOnDemand>\n"
+            + "  <ExtendendPrivacyModule>\n"
+            + "    <Param name=\"extendedPrivacyModuleEnabled\">false</Param>\n"
+            + "    <Param name=\"maxMonthsSinceLastAccess\">6</Param>\n"
+            + "    <Param name=\"maxMonthsSinceLastPasswordChange\">3</Param>\n"
+            + "  </ExtendendPrivacyModule>\n"
+            + "  <ExtraParams>\n"
+            + "    <Param name=\"page_preview_hash\">ofc99CdASX8GBGMiiXLZ</Param>\n"
+            + "  </ExtraParams>\n"
             + "</Params>\n";
-
     private final PasswordEncoder passwordEncoder = getCompatiblePasswordEncoder();
+    @Mock
+    private IUserDAO userDao;
+    @Mock
+    private ConfigInterface configManager;
+    @InjectMocks
+    private UserManager userManager;
+    private List<UserDetails> users = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {

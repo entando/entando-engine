@@ -11,7 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.user;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -43,20 +51,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-    "classpath*:spring/testpropertyPlaceholder.xml",
-    "classpath*:spring/baseSystemConfig.xml",
-    "classpath*:spring/aps/**/**.xml",
-    "classpath*:spring/plugins/**/aps/**/**.xml",
-    "classpath*:spring/web/**.xml",})
+        "classpath*:spring/testpropertyPlaceholder.xml",
+        "classpath*:spring/baseSystemConfig.xml",
+        "classpath*:spring/aps/**/**.xml",
+        "classpath*:spring/plugins/**/aps/**/**.xml",
+        "classpath*:spring/web/**.xml",})
 
 @WebAppConfiguration(value = "")
 public class UserControllerDeleteAuthoritiesIntegrationTest {
@@ -71,16 +72,13 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
 
     @Autowired
     protected IAuthorizationManager authorizationManager;
-
-    @Autowired
-    IUserManager userManager;
-
     @Mock
     protected IApiOAuth2TokenManager apiOAuth2TokenManager;
-
     @Autowired
     @InjectMocks
     protected EntandoOauth2Interceptor entandoOauth2Interceptor;
+    @Autowired
+    IUserManager userManager;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -154,7 +152,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
 
     private ResultActions executeDeleteUserAuthorities(String username, String accessToken) throws Exception {
         ResultActions result = mockMvc
-                .perform(delete("/users/{username}/authorities", new Object[]{username})
+                .perform(delete("/users/{username}/authorities", username)
                         .header("Authorization", "Bearer " + accessToken));
         return result;
     }

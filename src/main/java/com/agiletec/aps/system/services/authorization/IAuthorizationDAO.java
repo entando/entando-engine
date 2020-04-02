@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Role;
-
 import java.util.List;
 import java.util.Map;
 
@@ -23,18 +23,18 @@ import java.util.Map;
  * @author E.Santoboni
  */
 public interface IAuthorizationDAO {
-	
-	public void addUserAuthorization(String username, Authorization authorization);
-	
-	public void addUserAuthorizations(String username, List<Authorization> authorizations);
-	
-	public void updateUserAuthorizations(String username, List<Authorization> authorizations);
-	
-	public void deleteUserAuthorization(String username, String groupname, String rolename);
-	
-	public List<Authorization> getUserAuthorizations(String username, Map<String, Group> groups, Map<String, Role> roles);
-	
-	public void deleteUserAuthorizations(String username);
-	
-	public List<String> getUsersByAuthorities(List<String> groupNames, List<String> roleNames);
+
+    void addUserAuthorization(String username, Authorization authorization);
+
+    void addUserAuthorizations(String username, List<Authorization> authorizations);
+
+    void updateUserAuthorizations(String username, List<Authorization> authorizations);
+
+    void deleteUserAuthorization(String username, String groupname, String rolename);
+
+    List<Authorization> getUserAuthorizations(String username, Map<String, Group> groups, Map<String, Role> roles);
+
+    void deleteUserAuthorizations(String username);
+
+    List<String> getUsersByAuthorities(List<String> groupNames, List<String> roleNames);
 }

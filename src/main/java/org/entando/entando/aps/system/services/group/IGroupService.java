@@ -11,8 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.group;
 
+package org.entando.entando.aps.system.services.group;
 
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.model.PagedMetadata;

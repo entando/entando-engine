@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.entity;
 
 import com.agiletec.aps.system.services.role.Permission;
@@ -19,8 +20,9 @@ import org.entando.entando.aps.system.services.entity.IEntityManagerService;
 import org.entando.entando.aps.system.services.entity.model.EntityManagerDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.entity.validator.EntityManagerValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +34,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
 
 /**
  * @author E.Santoboni
@@ -79,7 +77,8 @@ public class EntityManagerController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{entityManagerCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityManagerDto>> getEntityManager(@PathVariable String entityManagerCode) throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<EntityManagerDto>> getEntityManager(@PathVariable String entityManagerCode)
+            throws JsonProcessingException {
         logger.debug("Requested manager -> {}", entityManagerCode);
         EntityManagerDto dto = this.getEntityManagerService().getEntityManager(entityManagerCode);
         logger.debug("Main Response -> {}", dto);

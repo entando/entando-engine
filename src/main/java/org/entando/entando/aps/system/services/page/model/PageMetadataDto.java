@@ -1,11 +1,10 @@
 package org.entando.entando.aps.system.services.page.model;
 
-import java.util.Date;
-import java.util.Set;
-
 import com.agiletec.aps.system.services.page.PageMetadata;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.BeanUtils;
 
 public class PageMetadataDto {

@@ -11,37 +11,40 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog.model;
 
 /**
  * @author E.Santoboni
  */
 public class ManagerConfiguration {
-	
-	public Boolean getCleanOldActivities() {
-		return _cleanOldActivities;
-	}
-	public void setCleanOldActivities(Boolean cleanOldActivities) {
-		this._cleanOldActivities = cleanOldActivities;
-	}
-	
-	public Integer getMaxActivitySizeByGroup() {
-		return _maxActivitySizeByGroup;
-	}
-	public void setMaxActivitySizeByGroup(Integer maxActivitySizeByGroup) {
-		this._maxActivitySizeByGroup = maxActivitySizeByGroup;
-	}
 
-	public Integer getNumberOfStreamsOnHistory() {
-		return _numberOfStreamsOnHistory;
-	}
+    private Boolean _cleanOldActivities = false;
+    private Integer _maxActivitySizeByGroup = 10;
+    private Integer _numberOfStreamsOnHistory = 500;
 
-	public void setNumberOfStreamsOnHistory(Integer numberOfStreamsOnHistory) {
-		this._numberOfStreamsOnHistory = numberOfStreamsOnHistory;
-	}
-	
-	private Boolean _cleanOldActivities = false;
-	private Integer _maxActivitySizeByGroup = 10;
-	private Integer _numberOfStreamsOnHistory = 500;
-	
+    public Boolean getCleanOldActivities() {
+        return _cleanOldActivities;
+    }
+
+    public void setCleanOldActivities(Boolean cleanOldActivities) {
+        this._cleanOldActivities = cleanOldActivities;
+    }
+
+    public Integer getMaxActivitySizeByGroup() {
+        return _maxActivitySizeByGroup;
+    }
+
+    public void setMaxActivitySizeByGroup(Integer maxActivitySizeByGroup) {
+        this._maxActivitySizeByGroup = maxActivitySizeByGroup;
+    }
+
+    public Integer getNumberOfStreamsOnHistory() {
+        return _numberOfStreamsOnHistory;
+    }
+
+    public void setNumberOfStreamsOnHistory(Integer numberOfStreamsOnHistory) {
+        this._numberOfStreamsOnHistory = numberOfStreamsOnHistory;
+    }
+
 }

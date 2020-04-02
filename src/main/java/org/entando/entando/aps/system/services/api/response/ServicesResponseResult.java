@@ -11,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.response;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
 import org.entando.entando.aps.system.services.api.model.ServiceInfo;
@@ -29,16 +28,17 @@ import org.entando.entando.aps.system.services.api.model.ServiceInfo;
  */
 @XmlSeeAlso({ServiceInfo.class})
 public class ServicesResponseResult extends AbstractApiResponseResult {
-    
+
     @XmlElement(name = "services", required = false)
     public ListResponse getResult() {
         if (this.getMainResult() instanceof Collection) {
             List<ServiceInfo> services = new ArrayList<ServiceInfo>();
             services.addAll((Collection<ServiceInfo>) this.getMainResult());
-            ListResponse listResponse = new ListResponse(services) {};
+            ListResponse listResponse = new ListResponse(services) {
+            };
             return listResponse;
         }
         return null;
     }
-    
+
 }

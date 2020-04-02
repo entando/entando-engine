@@ -1,26 +1,35 @@
 package org.entando.entando.web.swagger;
 
+import static java.util.Collections.singletonList;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import com.fasterxml.classmate.TypeResolver;
 import java.lang.reflect.WildcardType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import springfox.documentation.schema.AlternateTypeRules;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.springframework.context.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.builders.*;
-import springfox.documentation.service.*;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.OAuthBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.AlternateTypeRules;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.GrantType;
+import springfox.documentation.service.OAuth;
+import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Map;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
 
 @ComponentScan
 @EnableSwagger2
@@ -54,7 +63,7 @@ public class SwaggerConfig {
                         AlternateTypeRules.newRule(
                                 typeResolver.resolve(Map.class, String.class, typeResolver.resolve(List.class, String.class)),
                                 typeResolver.resolve(Map.class, String.class, WildcardType.class), Ordered.HIGHEST_PRECEDENCE)
-                        );
+                );
     }
 
     private OAuth oAuth() {

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
@@ -22,15 +23,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(propOrder = {"boolean"})
 public class JAXBBooleanAttribute extends AbstractJAXBAttribute implements Serializable {
-    
+
+    private Boolean _boolean;
+
     @XmlElement(name = "value", required = false)
     public Boolean getBoolean() {
         return _boolean;
     }
+
     public void setBoolean(Boolean booleanValue) {
         this._boolean = booleanValue;
     }
-    
-    private Boolean _boolean;
-    
+
 }

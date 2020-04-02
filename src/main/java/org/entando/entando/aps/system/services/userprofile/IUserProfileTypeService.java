@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
 import java.util.List;
@@ -30,36 +31,38 @@ import org.springframework.validation.BindingResult;
  */
 public interface IUserProfileTypeService {
 
-    public PagedMetadata<EntityTypeShortDto> getShortUserProfileTypes(RestListRequest requestList);
+    PagedMetadata<EntityTypeShortDto> getShortUserProfileTypes(RestListRequest requestList);
 
-    public UserProfileTypeDto getUserProfileType(String profileTypeCode);
+    UserProfileTypeDto getUserProfileType(String profileTypeCode);
 
-    public UserProfileTypeDto addUserProfileType(ProfileTypeDtoRequest bodyRequest, BindingResult bindingResult);
+    UserProfileTypeDto addUserProfileType(ProfileTypeDtoRequest bodyRequest, BindingResult bindingResult);
 
-    public UserProfileTypeDto updateUserProfileType(ProfileTypeDtoRequest request, BindingResult bindingResult);
+    UserProfileTypeDto updateUserProfileType(ProfileTypeDtoRequest request, BindingResult bindingResult);
 
-    public void deleteUserProfileType(String profileTypeCode);
-
-    // ----------------------------------
-    public PagedMetadata<String> getAttributeTypes(RestListRequest requestList);
-
-    public AttributeTypeDto getAttributeType(String attributeCode);
+    void deleteUserProfileType(String profileTypeCode);
 
     // ----------------------------------
-    public EntityTypeAttributeFullDto getUserProfileAttribute(String profileTypeCode, String attributeCode);
+    PagedMetadata<String> getAttributeTypes(RestListRequest requestList);
 
-    public EntityTypeAttributeFullDto addUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult);
+    AttributeTypeDto getAttributeType(String attributeCode);
 
-    public EntityTypeAttributeFullDto updateUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult);
+    // ----------------------------------
+    EntityTypeAttributeFullDto getUserProfileAttribute(String profileTypeCode, String attributeCode);
 
-    public void deleteUserProfileAttribute(String profileTypeCode, String attributeCode);
+    EntityTypeAttributeFullDto addUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult);
 
-    public void moveUserProfileAttribute(String profileTypeCode, String attributeCode, boolean moveUp);
+    EntityTypeAttributeFullDto updateUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult);
 
-    public void reloadProfileTypeReferences(String profileTypeCode);
+    void deleteUserProfileAttribute(String profileTypeCode, String attributeCode);
 
-    public Map<String, Integer> reloadProfileTypesReferences(List<String> profileTypeCodes);
+    void moveUserProfileAttribute(String profileTypeCode, String attributeCode, boolean moveUp);
 
-    public EntityTypesStatusDto getProfileTypesRefreshStatus();
+    void reloadProfileTypeReferences(String profileTypeCode);
+
+    Map<String, Integer> reloadProfileTypesReferences(List<String> profileTypeCodes);
+
+    EntityTypesStatusDto getProfileTypesRefreshStatus();
 
 }

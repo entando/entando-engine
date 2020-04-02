@@ -11,15 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.usersettings;
 
-import java.util.Map;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.entando.entando.aps.system.services.usersettings.IUserSettingsService;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
@@ -30,13 +37,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -73,10 +73,14 @@ public class UserSettingsControllerIntegrationTest extends AbstractControllerInt
 
         result.andExpect(status().isOk());
 
-        result.andExpect(jsonPath("$.payload.restrictionsActive", is(Boolean.parseBoolean(params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED)))));
-        result.andExpect(jsonPath("$.payload.enableGravatarIntegration", is(Boolean.parseBoolean(params.get(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED)))));
-        result.andExpect(jsonPath("$.payload.lastAccessPasswordExpirationMonths", is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS)))));
-        result.andExpect(jsonPath("$.payload.maxMonthsPasswordValid", is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE)))));
+        result.andExpect(jsonPath("$.payload.restrictionsActive",
+                is(Boolean.parseBoolean(params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED)))));
+        result.andExpect(jsonPath("$.payload.enableGravatarIntegration",
+                is(Boolean.parseBoolean(params.get(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED)))));
+        result.andExpect(jsonPath("$.payload.lastAccessPasswordExpirationMonths",
+                is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS)))));
+        result.andExpect(jsonPath("$.payload.maxMonthsPasswordValid",
+                is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE)))));
 
     }
 
@@ -100,7 +104,6 @@ public class UserSettingsControllerIntegrationTest extends AbstractControllerInt
                             .header("Authorization", "Bearer " + accessToken));
 
             result.andExpect(status().isOk());
-
 
             result.andExpect(jsonPath("$.payload.restrictionsActive",
                     is(Boolean.parseBoolean(params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED)))));

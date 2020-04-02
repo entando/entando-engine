@@ -11,9 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
+import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.util.EntityAttributeIterator;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.util.DateConverter;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,21 +35,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
-import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.util.EntityAttributeIterator;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
-import com.agiletec.aps.util.DateConverter;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DAO class for objects of type dataobject.
@@ -49,7 +48,54 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecord
 public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
 
     private static final Logger _logger = LoggerFactory.getLogger(DataObjectDAO.class);
-    
+    private static final String COUNT_OFFLINE_DATAOBJECTS = "SELECT count(dataid) FROM dataobjects WHERE onlinexml IS NULL";
+    private static final String COUNT_DATAOBJECTS = "SELECT count(dataid) FROM dataobjects "
+            + "WHERE onlinexml IS NOT NULL AND onlinexml = workxml";
+    private static final String COUNT_DATAOBJECTS_WITH_DIFFS = "SELECT count(dataid) FROM dataobjects "
+            + "WHERE onlinexml IS NOT NULL AND onlinexml <> workxml";
+    private static final String DELETE_DATAOBJECT = "DELETE FROM dataobjects WHERE dataid = ? ";
+    private static final String DELETE_DATAOBJECT_REL_RECORD = "DELETE FROM dataobjectrelations WHERE dataid = ? ";
+    private static final String ADD_DATAOBJECT_SEARCH_RECORD =
+            "INSERT INTO dataobjectsearch (dataid, attrname, textvalue, datevalue, numvalue, langcode) "
+                    + "VALUES ( ? , ? , ? , ? , ? , ? )";
+    private static final String DELETE_DATAOBJECT_SEARCH_RECORD = "DELETE FROM dataobjectsearch WHERE dataid = ? ";
+    private static final String ADD_DATAOBJECT_REL_RECORD = "INSERT INTO dataobjectrelations "
+            + "(dataid, refcategory, refgroup) VALUES ( ? , ? , ? )";
+    private static final String LOAD_DATAOBJECTS_ID_MAIN_BLOCK = "SELECT DISTINCT dataobjects.dataid FROM dataobjects ";
+    private static final String LOAD_REFERENCED_DATAOBJECTS_FOR_GROUP = LOAD_DATAOBJECTS_ID_MAIN_BLOCK
+            + " RIGHT JOIN dataobjectrelations ON dataobjects.dataid = dataobjectrelations.dataid WHERE dataobjectrelations.refgroup = ? "
+            + "ORDER BY dataobjects.dataid";
+    private static final String LOAD_REFERENCED_DATAOBJECTS_FOR_CATEGORY = LOAD_DATAOBJECTS_ID_MAIN_BLOCK
+            + " RIGHT JOIN dataobjectrelations ON dataobjects.dataid = dataobjectrelations.dataid WHERE dataobjectrelations.refcategory ="
+            + " ? "
+            + "ORDER BY dataobjects.dataid";
+    private static final String LOAD_DATAOBJECTS_VO_MAIN_BLOCK =
+            "SELECT dataobjects.dataid, dataobjects.datatype, dataobjects.descr, dataobjects.status, "
+                    + "dataobjects.workxml, dataobjects.created, dataobjects.lastmodified, dataobjects.onlinexml, dataobjects.maingroup, "
+                    + "dataobjects.currentversion, dataobjects.firsteditor, dataobjects.lasteditor FROM dataobjects ";
+    private static final String LOAD_DATAOBJECT_VO = LOAD_DATAOBJECTS_VO_MAIN_BLOCK + " WHERE dataobjects.dataid = ? ";
+    private static final String ADD_DATAOBJECT = "INSERT INTO dataobjects (dataid, datatype, descr, status, workxml, "
+            + "created, lastmodified, onlinexml, maingroup, currentversion, firsteditor, lasteditor) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
+    private static final String INSERT_DATAOBJECT = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
+            + "workxml = ? , lastmodified = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
+            + "WHERE dataid = ? ";
+    private static final String INSERT_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
+            + "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
+    private static final String REMOVE_DATAOBJECT = "UPDATE dataobjects SET onlinexml = ? , status = ? , "
+            + "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE dataid = ? ";
+    private static final String REMOVE_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET onlinexml = ? , status = ? , "
+            + "workxml = ? , currentversion = ? , lasteditor = ? WHERE dataid = ? ";
+    private static final String UPDATE_DATAOBJECT = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
+            + "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
+    private static final String UPDATE_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
+            + "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
+    private static final String LOAD_ALL_DATAOBJECTS_ID = "SELECT dataid FROM dataobjects";
+    private static final String ADD_ATTRIBUTE_ROLE_RECORD =
+            "INSERT INTO dataobjectattributeroles (dataid, attrname, rolename) VALUES ( ? , ? , "
+                    + "? )";
+    private static final String DELETE_ATTRIBUTE_ROLE_RECORD = "DELETE FROM dataobjectattributeroles WHERE dataid = ? ";
+    private static final String LOAD_LAST_MODIFIED = LOAD_DATAOBJECTS_VO_MAIN_BLOCK + "order by dataobjects.lastmodified desc";
     private ICategoryManager categoryManager;
 
     @Override
@@ -306,8 +352,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
     }
 
     /**
-     * Unpublish a dataobject, preventing it from being displayed in the portal.
-     * Obviously the dataobject itslef is not deleted.
+     * Unpublish a dataobject, preventing it from being displayed in the portal. Obviously the dataobject itslef is not deleted.
      *
      * @param dataobject the dataobject to unpublish.
      */
@@ -333,11 +378,9 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
     }
 
     /**
-     * Unpublish a dataobject, preventing it from being displayed in the portal.
-     * Obviously the dataobject itslef is not deleted.
+     * Unpublish a dataobject, preventing it from being displayed in the portal. Obviously the dataobject itslef is not deleted.
      *
      * @param dataobject the dataobject to unpublish.
-     * @param updateDate
      * @param conn the connection to the DB.
      */
     protected void executeRemoveDataObject(DataObject dataobject, boolean updateDate, Connection conn) {
@@ -383,13 +426,14 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         super.executeDeleteEntity(entityId, conn);
     }
 
-    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat) throws ApsSystemException {
+    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat)
+            throws ApsSystemException {
         if (dataobject.getCategories().size() > 0) {
             try {
                 Set<String> codes = new HashSet<String>();
                 Iterator<Category> categoryIter = dataobject.getCategories().iterator();
                 while (categoryIter.hasNext()) {
-                    Category category = (Category) categoryIter.next();
+                    Category category = categoryIter.next();
                     this.addCategoryCode(category, codes);
                 }
                 Iterator<String> codeIter = codes.iterator();
@@ -398,11 +442,11 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
                     int i = 1;
                     stat.setString(i++, dataobject.getId());
                     /*
-					if (isPublicRelations) {
-						stat.setString(i++, null);
-						stat.setString(i++, null);
-						stat.setBigDecimal(i++, null);
-					}
+          if (isPublicRelations) {
+            stat.setString(i++, null);
+            stat.setString(i++, null);
+            stat.setBigDecimal(i++, null);
+          }
                      */
                     stat.setString(i++, code);
                     if (isPublicRelations) {
@@ -413,7 +457,8 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
                 }
             } catch (SQLException e) {
                 _logger.error("Error saving dataobject relation record for dataobject {}", dataobject.getId(), e.getNextException());
-                throw new RuntimeException("Error saving dataobject relation record for dataobject " + dataobject.getId(), e.getNextException());
+                throw new RuntimeException("Error saving dataobject relation record for dataobject " + dataobject.getId(),
+                        e.getNextException());
             }
         }
     }
@@ -434,9 +479,9 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
                 String groupName = groupIter.next();
                 stat.setString(1, dataobject.getId());
                 /*
-				stat.setString(2, null);
-				stat.setString(3, null);
-				stat.setBigDecimal(4, null);
+        stat.setString(2, null);
+        stat.setString(3, null);
+        stat.setBigDecimal(4, null);
                  */
                 stat.setString(2, null);
                 stat.setString(3, groupName);
@@ -450,8 +495,8 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
     }
 
     /**
-     * Add a record in the table 'dataobjectrelations' for every resource, page,
-     * other dataobject, role and category associated to the given dataobject).
+     * Add a record in the table 'dataobjectrelations' for every resource, page, other dataobject, role and category associated to the given
+     * dataobject).
      *
      * @param dataobject The current dataobject.
      * @param conn The connection to the database.
@@ -603,73 +648,6 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         return LOAD_ALL_DATAOBJECTS_ID;
     }
 
-    private final String DELETE_DATAOBJECT = "DELETE FROM dataobjects WHERE dataid = ? ";
-
-    private final String DELETE_DATAOBJECT_REL_RECORD = "DELETE FROM dataobjectrelations WHERE dataid = ? ";
-
-    private final String ADD_DATAOBJECT_SEARCH_RECORD = "INSERT INTO dataobjectsearch (dataid, attrname, textvalue, datevalue, numvalue, langcode) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? )";
-
-    private final String DELETE_DATAOBJECT_SEARCH_RECORD = "DELETE FROM dataobjectsearch WHERE dataid = ? ";
-
-    private final String ADD_DATAOBJECT_REL_RECORD = "INSERT INTO dataobjectrelations "
-            + "(dataid, refcategory, refgroup) VALUES ( ? , ? , ? )";
-
-    private final String LOAD_DATAOBJECTS_ID_MAIN_BLOCK = "SELECT DISTINCT dataobjects.dataid FROM dataobjects ";
-
-    private final String LOAD_REFERENCED_DATAOBJECTS_FOR_GROUP = LOAD_DATAOBJECTS_ID_MAIN_BLOCK
-            + " RIGHT JOIN dataobjectrelations ON dataobjects.dataid = dataobjectrelations.dataid WHERE dataobjectrelations.refgroup = ? "
-            + "ORDER BY dataobjects.dataid";
-
-    private final String LOAD_REFERENCED_DATAOBJECTS_FOR_CATEGORY = LOAD_DATAOBJECTS_ID_MAIN_BLOCK
-            + " RIGHT JOIN dataobjectrelations ON dataobjects.dataid = dataobjectrelations.dataid WHERE dataobjectrelations.refcategory = ? "
-            + "ORDER BY dataobjects.dataid";
-
-    private final String LOAD_DATAOBJECTS_VO_MAIN_BLOCK = "SELECT dataobjects.dataid, dataobjects.datatype, dataobjects.descr, dataobjects.status, "
-            + "dataobjects.workxml, dataobjects.created, dataobjects.lastmodified, dataobjects.onlinexml, dataobjects.maingroup, "
-            + "dataobjects.currentversion, dataobjects.firsteditor, dataobjects.lasteditor FROM dataobjects ";
-
-    private final String LOAD_DATAOBJECT_VO = LOAD_DATAOBJECTS_VO_MAIN_BLOCK + " WHERE dataobjects.dataid = ? ";
-
-    private final String ADD_DATAOBJECT = "INSERT INTO dataobjects (dataid, datatype, descr, status, workxml, "
-            + "created, lastmodified, onlinexml, maingroup, currentversion, firsteditor, lasteditor) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
-
-    private final String INSERT_DATAOBJECT = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
-            + "workxml = ? , lastmodified = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? "
-            + "WHERE dataid = ? ";
-
-    private final String INSERT_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
-            + "workxml = ? , onlinexml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
-
-    private final String REMOVE_DATAOBJECT = "UPDATE dataobjects SET onlinexml = ? , status = ? , "
-            + "workxml = ? , lastmodified = ? , currentversion = ? , lasteditor = ? WHERE dataid = ? ";
-
-    private final String REMOVE_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET onlinexml = ? , status = ? , "
-            + "workxml = ? , currentversion = ? , lasteditor = ? WHERE dataid = ? ";
-
-    private final String UPDATE_DATAOBJECT = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
-            + "workxml = ? , lastmodified = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
-
-    private final String UPDATE_DATAOBJECT_WITHOUT_DATE = "UPDATE dataobjects SET datatype = ? , descr = ? , status = ? , "
-            + "workxml = ? , maingroup = ? , currentversion = ? , lasteditor = ? " + "WHERE dataid = ? ";
-
-    private final String LOAD_ALL_DATAOBJECTS_ID = "SELECT dataid FROM dataobjects";
-
-    private final String ADD_ATTRIBUTE_ROLE_RECORD = "INSERT INTO dataobjectattributeroles (dataid, attrname, rolename) VALUES ( ? , ? , ? )";
-
-    private final String DELETE_ATTRIBUTE_ROLE_RECORD = "DELETE FROM dataobjectattributeroles WHERE dataid = ? ";
-
-    private static final String COUNT_OFFLINE_DATAOBJECTS = "SELECT count(dataid) FROM dataobjects WHERE onlinexml IS NULL";
-
-    private static final String COUNT_DATAOBJECTS = "SELECT count(dataid) FROM dataobjects "
-            + "WHERE onlinexml IS NOT NULL AND onlinexml = workxml";
-
-    private static final String COUNT_DATAOBJECTS_WITH_DIFFS = "SELECT count(dataid) FROM dataobjects "
-            + "WHERE onlinexml IS NOT NULL AND onlinexml <> workxml";
-
-    private final String LOAD_LAST_MODIFIED = LOAD_DATAOBJECTS_VO_MAIN_BLOCK + "order by dataobjects.lastmodified desc";
-
     @Override
     public List<String> getGroupUtilizers(String groupName) {
         List<String> dataids = null;
@@ -701,5 +679,5 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
     public void setCategoryManager(ICategoryManager categoryManager) {
         this.categoryManager = categoryManager;
     }
-    
+
 }

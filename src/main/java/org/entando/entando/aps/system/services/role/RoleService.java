@@ -11,13 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.role;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -26,8 +21,12 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationService;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.Role;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -184,7 +183,9 @@ public class RoleService implements IRoleService {
             role.setDescription(roleRequest.getName());
             role.getPermissions().clear();
             if (null != roleRequest.getPermissions()) {
-                roleRequest.getPermissions().entrySet().stream().filter(entry -> null != entry.getValue() && entry.getValue().booleanValue()).forEach(i -> role.addPermission(i.getKey()));
+                roleRequest.getPermissions().entrySet().stream()
+                        .filter(entry -> null != entry.getValue() && entry.getValue().booleanValue())
+                        .forEach(i -> role.addPermission(i.getKey()));
             }
             BeanPropertyBindingResult validationResult = this.validateRoleForUpdate(role);
             if (validationResult.hasErrors()) {
@@ -311,7 +312,8 @@ public class RoleService implements IRoleService {
         role.setName(roleRequest.getCode());
         role.setDescription(roleRequest.getName());
         if (null != roleRequest.getPermissions()) {
-            roleRequest.getPermissions().entrySet().stream().filter(entry -> null != entry.getValue() && entry.getValue().booleanValue()).forEach(i -> role.addPermission(i.getKey()));
+            roleRequest.getPermissions().entrySet().stream().filter(entry -> null != entry.getValue() && entry.getValue().booleanValue())
+                    .forEach(i -> role.addPermission(i.getKey()));
         }
         return role;
     }
@@ -336,13 +338,15 @@ public class RoleService implements IRoleService {
     protected List<Permission> sortPermissionList(RestListRequest restRequest, List<Permission> permissions) {
         if (restRequest.getSort().equals(KEY_FILTER_PERMISSION_DESCR)) {
             if (restRequest.getDirection().equals(FieldSearchFilter.DESC_ORDER)) {
-                permissions = permissions.stream().sorted(Comparator.comparing(Permission::getDescription).reversed()).collect(Collectors.toList());
+                permissions = permissions.stream().sorted(Comparator.comparing(Permission::getDescription).reversed())
+                        .collect(Collectors.toList());
             } else {
                 permissions = permissions.stream().sorted(Comparator.comparing(Permission::getName)).collect(Collectors.toList());
             }
         } else {
             if (restRequest.getDirection().equals(FieldSearchFilter.DESC_ORDER)) {
-                permissions = permissions.stream().sorted(Comparator.comparing(Permission::getDescription).reversed()).collect(Collectors.toList());
+                permissions = permissions.stream().sorted(Comparator.comparing(Permission::getDescription).reversed())
+                        .collect(Collectors.toList());
             } else {
                 permissions = permissions.stream().sorted(Comparator.comparing(Permission::getName)).collect(Collectors.toList());
             }

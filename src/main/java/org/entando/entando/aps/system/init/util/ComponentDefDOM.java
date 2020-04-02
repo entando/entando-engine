@@ -11,21 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.util;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-
 import org.entando.entando.aps.system.init.model.Component;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -33,22 +34,20 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author E.Santoboni
  */
 public class ComponentDefDOM {
-	
-	private static final Logger _logger = LoggerFactory.getLogger(ComponentDefDOM.class);
-	
+
+    private static final Logger _logger = LoggerFactory.getLogger(ComponentDefDOM.class);
+    private Document _doc;
+
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
         this.validate(xmlText, configPath);
         _logger.debug("Loading Component from file : {}", configPath);
         this.decodeDOM(xmlText);
     }
-    
+
     private void validate(String xmlText, String configPath) throws ApsSystemException {
         SchemaFactory factory =
                 SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -65,7 +64,7 @@ public class ComponentDefDOM {
             _logger.debug("Valid Component definition : {}", configPath);
         } catch (Throwable t) {
             _logger.error("Error validating Component definition : {}", configPath, t);
-        	String message = "Error validating Component definition : " + configPath;
+            String message = "Error validating Component definition : " + configPath;
             throw new ApsSystemException(message, t);
         } finally {
             try {
@@ -76,22 +75,22 @@ public class ComponentDefDOM {
                     xmlIs.close();
                 }
             } catch (IOException e) {
-            	_logger.error("error in validate", e);
+                _logger.error("error in validate", e);
             }
         }
     }
-    
+
     protected Component getComponent(Map<String, String> postProcessClasses) {
         Component component = null;
         try {
             Element rootElement = this._doc.getRootElement();
-			component = new Component(rootElement, postProcessClasses);
+            component = new Component(rootElement, postProcessClasses);
         } catch (Throwable t) {
-        	_logger.error("Error loading component", t);
+            _logger.error("Error loading component", t);
         }
         return component;
     }
-	
+
     private void decodeDOM(String xmlText) throws ApsSystemException {
         SAXBuilder builder = new SAXBuilder();
         builder.setValidation(false);
@@ -99,11 +98,9 @@ public class ComponentDefDOM {
         try {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
-        	_logger.error("Error detected while parsing the XML {}", xmlText, t);
+            _logger.error("Error detected while parsing the XML {}", xmlText, t);
             throw new ApsSystemException("Error detected while parsing the XML", t);
         }
     }
-	
-    private Document _doc;
-    
+
 }

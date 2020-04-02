@@ -11,33 +11,35 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-
 /**
  * Interfaccia base per Data Access Object deii modelli di pagina (PageModel)
+ *
  * @author E.Santoboni
  */
 public interface IPageModelDAO {
-	
-	/**
-	 * Carica e restituisce la mappa dei modelli di pagina.
-	 * @return la mappa dei modelli.
-	 */
-	public Map<String, PageModel> loadModels();
-	
-	public void addModel(PageModel model);
-	
-	public void updateModel(PageModel model);
-	
-	public void deleteModel(String code);
 
-    public int count(FieldSearchFilter[] filters);
+    /**
+     * Carica e restituisce la mappa dei modelli di pagina.
+     *
+     * @return la mappa dei modelli.
+     */
+    Map<String, PageModel> loadModels();
 
-    public List<String> search(FieldSearchFilter[] filters);
-	
+    void addModel(PageModel model);
+
+    void updateModel(PageModel model);
+
+    void deleteModel(String code);
+
+    int count(FieldSearchFilter[] filters);
+
+    List<String> search(FieldSearchFilter[] filters);
+
 }

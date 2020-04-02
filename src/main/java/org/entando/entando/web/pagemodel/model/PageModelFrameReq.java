@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.pagemodel.model;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+package org.entando.entando.web.pagemodel.model;
 
 import com.agiletec.aps.system.services.pagemodel.FrameSketch;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PageModelFrameReq {

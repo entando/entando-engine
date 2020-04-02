@@ -11,25 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-
-import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.util.DateConverter;
-import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
-import org.springframework.security.authentication.AuthenticationManager;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,7 +55,8 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     public void testGetUser() throws Throwable {
-        UserDetails adminUser = this.authenticationProvider.getUser("admin", "admin");//nel database di test, username e password sono uguali
+        UserDetails adminUser = this.authenticationProvider
+                .getUser("admin", "admin");//nel database di test, username e password sono uguali
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
         assertEquals(1, adminUser.getAuthorizations().size());
@@ -217,7 +216,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     public void testAuthentication() throws Exception {
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "admin");
         try {
-            Authentication auth = ((AuthenticationManager) this.authenticationProvider).authenticate(authTest);
+            Authentication auth = this.authenticationProvider.authenticate(authTest);
             assertNotNull(auth);
             assertTrue(auth instanceof UsernamePasswordAuthenticationToken);
             assertEquals("admin", auth.getPrincipal());
@@ -238,7 +237,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
 
     private void testFailedAuthentication(Authentication auth, Class expectedException) throws Exception {
         try {
-            ((AuthenticationManager) this.authenticationProvider).authenticate(auth);
+            this.authenticationProvider.authenticate(auth);
             fail();
         } catch (Exception e) {
             assertEquals(expectedException, e.getClass());
@@ -270,8 +269,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     /**
      * Toggle the privacy module on or off
      *
-     * @param enable if true 'enables' the privacy module whereas 'false'
-     * disables it
+     * @param enable if true 'enables' the privacy module whereas 'false' disables it
      */
     private void togglePrivacyModuleStatus(boolean enable) throws Throwable {
         try {
@@ -291,7 +289,6 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
      * Get the status of the privacy module
      *
      * @return 'tre' if the module is enabled, false otherwise
-     * @throws Throwable
      */
     private boolean getPrivacyModuleStatus() throws Throwable {
         Boolean status = false;
@@ -299,7 +296,8 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
             String originalParams = this.configurationManager.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
             assertNotNull(originalParams);
             Map<String, String> systemParams = SystemParamsUtils.getParams(originalParams);
-            status = systemParams.containsKey("extendedPrivacyModuleEnabled") && systemParams.get("extendedPrivacyModuleEnabled").trim().equalsIgnoreCase("true");
+            status = systemParams.containsKey("extendedPrivacyModuleEnabled") && systemParams.get("extendedPrivacyModuleEnabled").trim()
+                    .equalsIgnoreCase("true");
         } catch (Exception e) {
             throw e;
         }

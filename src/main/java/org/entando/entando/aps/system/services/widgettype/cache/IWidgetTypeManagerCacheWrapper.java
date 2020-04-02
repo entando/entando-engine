@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -23,20 +24,20 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
  */
 public interface IWidgetTypeManagerCacheWrapper {
 
-	public static final String WIDGET_TYPE_MANAGER_CACHE_NAME = "Entando_WidgetTypeManager";
-	public static final String WIDGET_TYPE_CACHE_NAME_PREFIX = "WidgetTypeManager_type_";
-	public static final String WIDGET_TYPE_CODES_CACHE_NAME = "WidgetTypeManager_codes";
+    String WIDGET_TYPE_MANAGER_CACHE_NAME = "Entando_WidgetTypeManager";
+    String WIDGET_TYPE_CACHE_NAME_PREFIX = "WidgetTypeManager_type_";
+    String WIDGET_TYPE_CODES_CACHE_NAME = "WidgetTypeManager_codes";
 
-	public void initCache(IWidgetTypeDAO widgetTypeDAO) throws ApsSystemException;
+    void initCache(IWidgetTypeDAO widgetTypeDAO) throws ApsSystemException;
 
-	public WidgetType getWidgetType(String code);
+    WidgetType getWidgetType(String code);
 
-	public Collection<WidgetType> getWidgetTypes();
+    Collection<WidgetType> getWidgetTypes();
 
-	public void addWidgetType(WidgetType type);
+    void addWidgetType(WidgetType type);
 
-	public void updateWidgetType(WidgetType type);
+    void updateWidgetType(WidgetType type);
 
-	public void deleteWidgetType(String code);
+    void deleteWidgetType(String code);
 
 }

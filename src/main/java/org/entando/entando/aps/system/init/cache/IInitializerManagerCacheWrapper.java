@@ -11,22 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.cache;
 
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 
 public interface IInitializerManagerCacheWrapper {
 
-	public static final String INITIALIZER_MANAGER_CACHE_NAME = "Entando_InitializerManager";
+    String INITIALIZER_MANAGER_CACHE_NAME = "Entando_InitializerManager";
 
-	public static final String INITIALIZER_REPORT_CACHE_NAME = "I18nManager_report";
+    String INITIALIZER_REPORT_CACHE_NAME = "I18nManager_report";
 
-	public void initCache(SystemInstallationReport report) throws ApsSystemException;
+    void initCache(SystemInstallationReport report) throws ApsSystemException;
 
-	public SystemInstallationReport getReport();
+    SystemInstallationReport getReport();
 
-	public void setCurrentReport(SystemInstallationReport report);
+    void setCurrentReport(SystemInstallationReport report);
 
 }

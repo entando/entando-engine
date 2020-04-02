@@ -11,15 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import java.util.List;
-import java.util.Map;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
 
 /**
@@ -29,24 +29,25 @@ import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
  */
 public interface IDataObjectModelManager {
 
-    public void addDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    void addDataObjectModel(DataObjectModel model) throws ApsSystemException;
 
-    public void removeDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    void removeDataObjectModel(DataObjectModel model) throws ApsSystemException;
 
-    public void updateDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    void updateDataObjectModel(DataObjectModel model) throws ApsSystemException;
 
-    public DataObjectModel getDataObjectModel(long dataObjectModelId);
+    DataObjectModel getDataObjectModel(long dataObjectModelId);
 
-    public List<DataObjectModel> getDataObjectModels();
+    List<DataObjectModel> getDataObjectModels();
 
-    public List<DataObjectModel> getModelsForDataObjectType(String contentType);
+    List<DataObjectModel> getModelsForDataObjectType(String contentType);
 
-    public Map<String, List<IPage>> getReferencingPages(long modelId);
+    Map<String, List<IPage>> getReferencingPages(long modelId);
 
-    public SmallDataType getDefaultUtilizer(long modelId);
+    SmallDataType getDefaultUtilizer(long modelId);
 
-    public SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+    SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> fieldSearchFilters)
+            throws ApsSystemException;
 
-    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws ApsSystemException;
+    List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws ApsSystemException;
 
 }

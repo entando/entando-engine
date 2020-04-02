@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.database.model;
 
 import com.agiletec.aps.util.DateConverter;
@@ -22,18 +23,19 @@ import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
  * @author E.Santoboni
  */
 public class ComponentInstallationReportDto {
-    
+
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
+
     private String code;
     private String description;
-	private String artifactId;
-	private String artifactGroupId;
-	private String artifactVersion;
+    private String artifactId;
+    private String artifactGroupId;
+    private String artifactVersion;
     private String date;
-    
-    public ComponentInstallationReportDto(){}
-    
+
+    public ComponentInstallationReportDto() {
+    }
+
     public ComponentInstallationReportDto(ComponentInstallationReport report, IComponentManager componentManager) {
         this.setCode(report.getComponentCode());
         this.setDate(DateConverter.getFormattedDate(report.getDate(), DATE_FORMAT));
@@ -45,7 +47,7 @@ public class ComponentInstallationReportDto {
             this.setDescription(component.getDescription());
         }
     }
-    
+
     public String getCode() {
         return code;
     }
@@ -85,7 +87,7 @@ public class ComponentInstallationReportDto {
     public void setArtifactVersion(String artifactVersion) {
         this.artifactVersion = artifactVersion;
     }
-    
+
     public String getDate() {
         return date;
     }
@@ -93,5 +95,5 @@ public class ComponentInstallationReportDto {
     public void setDate(String date) {
         this.date = date;
     }
-    
+
 }

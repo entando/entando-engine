@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -18,7 +19,6 @@ import com.agiletec.aps.system.services.page.PagesStatus;
 import java.text.SimpleDateFormat;
 
 /**
- *
  * @author paddeo
  */
 public class PagesStatusDto {

@@ -11,17 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.dataobjectmodel;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.validation.Valid;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelService;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.DataModelDto;
@@ -102,7 +101,8 @@ public class DataObjectModelController {
         int result = this.getDataObjectModelValidator().checkModelId(dataModelId, bindingResult);
         if (bindingResult.hasErrors()) {
             if (404 == result) {
-                throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_DATAOBJECTMODEL_DOES_NOT_EXIST, "dataObjectModel", dataModelId);
+                throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_DATAOBJECTMODEL_DOES_NOT_EXIST, "dataObjectModel",
+                        dataModelId);
             } else {
                 throw new ValidationGenericException(bindingResult);
             }
@@ -113,7 +113,8 @@ public class DataObjectModelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<DataModelDto>> addDataObjectModel(@Valid @RequestBody DataObjectModelRequest dataObjectModelRequest,
+    public ResponseEntity<SimpleRestResponse<DataModelDto>> addDataObjectModel(
+            @Valid @RequestBody DataObjectModelRequest dataObjectModelRequest,
             BindingResult bindingResult) throws JsonProcessingException {
         logger.debug("Adding data object model -> {}", dataObjectModelRequest.getModelId());
         //field validations
@@ -128,7 +129,8 @@ public class DataObjectModelController {
         int result = this.getDataObjectModelValidator().validateBody(dataObjectModelRequest, false, bindingResult);
         if (bindingResult.hasErrors()) {
             if (404 == result) {
-                throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_POST_DATAOBJECTTYPE_DOES_NOT_EXIST, "type", dataObjectModelRequest.getType());
+                throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_POST_DATAOBJECTTYPE_DOES_NOT_EXIST, "type",
+                        dataObjectModelRequest.getType());
             } else {
                 throw new ValidationGenericException(bindingResult);
             }
@@ -155,9 +157,11 @@ public class DataObjectModelController {
         if (bindingResult.hasErrors()) {
             if (404 == result) {
                 if (1 == bindingResult.getFieldErrorCount("type")) {
-                    throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_PUT_DATAOBJECTTYPE_DOES_NOT_EXIST, "type", dataObjectModelRequest.getType());
+                    throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_PUT_DATAOBJECTTYPE_DOES_NOT_EXIST, "type",
+                            dataObjectModelRequest.getType());
                 } else {
-                    throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_DATAOBJECTMODEL_ALREADY_EXISTS, "modelId", dataObjectModelRequest.getModelId());
+                    throw new ResourceNotFoundException(DataObjectModelValidator.ERRCODE_DATAOBJECTMODEL_ALREADY_EXISTS, "modelId",
+                            dataObjectModelRequest.getModelId());
                 }
             } else {
                 throw new ValidationGenericException(bindingResult);
@@ -170,10 +174,11 @@ public class DataObjectModelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{dataModelId}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE, consumes="application/json-patch+json")
+    @RequestMapping(value = "/{dataModelId}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE, consumes =
+            "application/json-patch+json")
     public ResponseEntity<SimpleRestResponse<DataModelDto>> patchDataObjectModel(@PathVariable Long dataModelId,
-                                                                                 @RequestBody JsonNode jsonPatch,
-                                                                                 BindingResult bindingResult) throws JsonProcessingException {
+            @RequestBody JsonNode jsonPatch,
+            BindingResult bindingResult) throws JsonProcessingException {
         logger.debug("Patching data object model -> {}", dataModelId);
 
         this.getDataObjectModelValidator().validateDataObjectModelJsonPatch(jsonPatch, bindingResult);
@@ -205,7 +210,8 @@ public class DataObjectModelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dictionary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<IEntityModelDictionary>> getDictionary(@RequestParam(value = "typeCode", required = false) String typeCode) {
+    public ResponseEntity<SimpleRestResponse<IEntityModelDictionary>> getDictionary(
+            @RequestParam(value = "typeCode", required = false) String typeCode) {
         logger.debug("loading data model dictionary {}", typeCode);
         IEntityModelDictionary dictionary = this.getDataObjectModelService().getDataModelDictionary(typeCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(dictionary), HttpStatus.OK);

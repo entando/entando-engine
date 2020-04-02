@@ -11,23 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author M.Diana - E.Santoboni
  */
 public class TestPageModelDAO extends BaseTestCase {
+
+    private PageModelDAO _pageModelDAO;
+    private IWidgetTypeManager _widgetTypeManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -179,8 +180,5 @@ public class TestPageModelDAO extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private PageModelDAO _pageModelDAO;
-    private IWidgetTypeManager _widgetTypeManager;
 
 }

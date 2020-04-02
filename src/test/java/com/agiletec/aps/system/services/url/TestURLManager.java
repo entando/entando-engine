@@ -11,15 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.url;
 
-import java.util.Map;
+package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import java.util.Map;
 
 public class TestURLManager extends BaseTestCase {
 

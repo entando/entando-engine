@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
 import com.j256.ormlite.field.DataType;
@@ -22,21 +23,21 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = Uniquekeys.TABLE_NAME)
 public class Uniquekeys {
-	
-	public Uniquekeys() {}
-	
-	@DatabaseField(columnName = "id", 
-			dataType = DataType.INTEGER, 
-			canBeNull = false, id = true)
-	private int _id;
-	
-	@DatabaseField(columnName = "keyvalue", 
-			dataType = DataType.INTEGER, 
-			canBeNull = false)
-	private int _keyValue;
-	
-	public static final String TABLE_NAME = "uniquekeys";
-	
+
+    public static final String TABLE_NAME = "uniquekeys";
+    @DatabaseField(columnName = "id",
+            dataType = DataType.INTEGER,
+            canBeNull = false, id = true)
+    private int _id;
+
+    @DatabaseField(columnName = "keyvalue",
+            dataType = DataType.INTEGER,
+            canBeNull = false)
+    private int _keyValue;
+
+    public Uniquekeys() {
+    }
+
 }
 /*
 CREATE TABLE uniquekeys

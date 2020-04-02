@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -41,6 +42,7 @@ import org.springframework.validation.BindingResult;
  * @author E.Santoboni
  */
 public class EntityAttributeDto {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String code;
@@ -73,21 +75,21 @@ public class EntityAttributeDto {
                 String stringDate = DateConverter.getFormattedDate((Date) value, SystemConstants.API_DATE_FORMAT);
                 this.setValue(stringDate);
             } else if (value instanceof Map) {
-                setValues(((Map<String,Object>) value).entrySet().stream()
-                    .filter(e -> e.getValue() != null)
-                    .map(e -> {
-                        Object mapValue = e.getValue();
-                        String key = e.getKey();
-                        if (mapValue instanceof AttributeInterface) {
-                            return new AbstractMap.SimpleEntry<>(key, new EntityAttributeDto((AttributeInterface) mapValue));
-                        } else {
-                            return new AbstractMap.SimpleEntry<>(key, mapValue);
-                        }
-                    })
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-            } else if(TextAttribute.class.isAssignableFrom(src.getClass())){
+                setValues(((Map<String, Object>) value).entrySet().stream()
+                        .filter(e -> e.getValue() != null)
+                        .map(e -> {
+                            Object mapValue = e.getValue();
+                            String key = e.getKey();
+                            if (mapValue instanceof AttributeInterface) {
+                                return new AbstractMap.SimpleEntry<>(key, new EntityAttributeDto((AttributeInterface) mapValue));
+                            } else {
+                                return new AbstractMap.SimpleEntry<>(key, mapValue);
+                            }
+                        })
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+            } else if (TextAttribute.class.isAssignableFrom(src.getClass())) {
                 setValue(value);
-                setValues(((TextAttribute)src).getTextMap().entrySet().stream()
+                setValues(((TextAttribute) src).getTextMap().entrySet().stream()
                         .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), e.getValue()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
             }
@@ -112,7 +114,8 @@ public class EntityAttributeDto {
         if (attribute instanceof ITextAttribute) {
             ITextAttribute textAttribute = (ITextAttribute) attribute;
             if (attribute.isMultilingual() && !this.getValues().isEmpty()) {
-                this.getValues().keySet().stream().forEach(langCode -> textAttribute.setText(this.getValues().get(langCode).toString(), langCode));
+                this.getValues().keySet().stream()
+                        .forEach(langCode -> textAttribute.setText(this.getValues().get(langCode).toString(), langCode));
             } else if (null != this.getValue()) {
                 textAttribute.setText(this.getValue().toString(), null);
             }
@@ -122,7 +125,7 @@ public class EntityAttributeDto {
             ((NumberAttribute) attribute).setValue(number);
         }
         if (attribute instanceof BooleanAttribute) {
-            ((BooleanAttribute) attribute).setBooleanValue((Boolean)this.getValue());
+            ((BooleanAttribute) attribute).setBooleanValue((Boolean) this.getValue());
         }
         if (attribute instanceof DateAttribute && (null != this.getValue())) {
             Date date = null;
@@ -143,7 +146,7 @@ public class EntityAttributeDto {
         } else if (attribute instanceof MonoListAttribute && (null != this.getElements())) {
             this.getElements().stream().forEach(i -> {
                 AttributeInterface prototype = ((MonoListAttribute) attribute).addAttribute();
-                prototype.setName(((MonoListAttribute) attribute).getName());
+                prototype.setName(attribute.getName());
                 i.fillEntityAttribute(prototype, bindingResult);
             });
         } else if (attribute instanceof ListAttribute && (null != this.getListElements())) {
@@ -152,7 +155,7 @@ public class EntityAttributeDto {
                 List<EntityAttributeDto> list = this.getListElements().get(langCode);
                 list.stream().forEach(i -> {
                     AttributeInterface prototype = ((ListAttribute) attribute).addAttribute(langCode);
-                    prototype.setName(((ListAttribute) attribute).getName());
+                    prototype.setName(attribute.getName());
                     i.fillEntityAttribute(prototype, bindingResult);
                 });
             });
@@ -206,5 +209,5 @@ public class EntityAttributeDto {
     public void setListElements(Map<String, List<EntityAttributeDto>> listElements) {
         this.listElements = listElements;
     }
-    
+
 }

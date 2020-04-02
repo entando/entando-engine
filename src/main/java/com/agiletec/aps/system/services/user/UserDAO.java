@@ -11,8 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
 
+import com.agiletec.aps.system.common.AbstractDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,11 +23,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.AbstractDAO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -36,7 +35,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserDAO extends AbstractDAO implements IUserDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
-
+    private static final String PREFIX_LOAD_USERNAMES
+            = "SELECT authusers.username FROM authusers ";
+    private static final String PREFIX_LOAD_USERS
+            = "SELECT authusers.username, authusers.passwd, authusers.registrationdate, "
+            + "authusers.lastaccess, authusers.lastpasswordchange, authusers.active FROM authusers ";
+    private static final String LOAD_USERNAMES
+            = PREFIX_LOAD_USERNAMES + "ORDER BY authusers.username";
+    private static final String LOAD_USERS
+            = PREFIX_LOAD_USERS + "ORDER BY authusers.username";
+    private static final String SEARCH_USERNAMES_BY_TEXT
+            = PREFIX_LOAD_USERNAMES + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
+    private static final String SEARCH_USERS_BY_TEXT
+            = PREFIX_LOAD_USERS + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
+    private static final String LOAD_USER_FROM_USERNAME
+            = PREFIX_LOAD_USERS + "WHERE authusers.username = ? ";
+    private static final String DELETE_USER
+            = "DELETE FROM authusers WHERE username = ? ";
+    private static final String ADD_USER
+            = "INSERT INTO authusers (username, passwd, registrationdate, active) VALUES ( ? , ? , ? , ? )";
+    private static final String CHANGE_PASSWORD
+            = "UPDATE authusers SET passwd = ? , lastpasswordchange = ? WHERE username = ? ";
+    private static final String UPDATE_USER
+            = "UPDATE authusers SET lastaccess = ? , lastpasswordchange = ? , active = ? WHERE username = ? ";
+    private static final String UPDATE_LAST_ACCESS
+            = "UPDATE authusers SET lastaccess = ? WHERE username = ? ";
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -125,13 +148,11 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
     }
 
     /**
-     * Carica un'utente corrispondente alla userName e password immessa. null se
-     * non vi è nessun utente corrispondente.
+     * Carica un'utente corrispondente alla userName e password immessa. null se non vi è nessun utente corrispondente.
      *
      * @param username Nome utente dell'utente cercato
      * @param password password dell'utente cercato
-     * @return L'oggetto utente corrispondente ai parametri richiesti, oppure
-     * null se non vi è nessun utente corrispondente.
+     * @return L'oggetto utente corrispondente ai parametri richiesti, oppure null se non vi è nessun utente corrispondente.
      */
     @Override
     public UserDetails loadUser(String username, String password) {
@@ -148,12 +169,10 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
     }
 
     /**
-     * Carica un'utente corrispondente alla userName immessa. null se non vi è
-     * nessun utente corrispondente.
+     * Carica un'utente corrispondente alla userName immessa. null se non vi è nessun utente corrispondente.
      *
      * @param username Nome utente dell'utente cercato.
-     * @return L'oggetto utente corrispondente ai parametri richiesti, oppure
-     * null se non vi è nessun utente corrispondente.
+     * @return L'oggetto utente corrispondente ai parametri richiesti, oppure null se non vi è nessun utente corrispondente.
      */
     @Override
     public UserDetails loadUser(String username) {
@@ -247,8 +266,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
     }
 
     /**
-     * Aggiorna un utente già presente con nuovi valori (tranne la username che
-     * è fissa).
+     * Aggiorna un utente già presente con nuovi valori (tranne la username che è fissa).
      *
      * @param user Oggetto di tipo User relativo all'utente da aggiornare.
      */
@@ -337,14 +355,11 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
     }
 
     /**
-     * Crea un utente leggendo i valori dal record corrente del ResultSet
-     * passato. Attenzione: la query di origine del ResultSet deve avere nella
-     * select list i campi esattamente in questo numero e ordine: 1=username,
-     * 2=passwd
+     * Crea un utente leggendo i valori dal record corrente del ResultSet passato. Attenzione: la query di origine del ResultSet deve avere
+     * nella select list i campi esattamente in questo numero e ordine: 1=username, 2=passwd
      *
      * @param res Il ResultSet da cui leggere i valori
      * @return L'oggetto user popolato.
-     * @throws SQLException
      */
     protected User createUserFromRecord(ResultSet res) throws SQLException {
         User user = null;
@@ -369,42 +384,5 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
     public void setPasswordEncoder(PasswordEncoder encoder) {
         this.passwordEncoder = encoder;
     }
-
-    private final String PREFIX_LOAD_USERNAMES
-            = "SELECT authusers.username FROM authusers ";
-
-    private final String PREFIX_LOAD_USERS
-            = "SELECT authusers.username, authusers.passwd, authusers.registrationdate, "
-            + "authusers.lastaccess, authusers.lastpasswordchange, authusers.active FROM authusers ";
-
-    private final String LOAD_USERNAMES
-            = PREFIX_LOAD_USERNAMES + "ORDER BY authusers.username";
-
-    private final String LOAD_USERS
-            = PREFIX_LOAD_USERS + "ORDER BY authusers.username";
-
-    private final String SEARCH_USERNAMES_BY_TEXT
-            = PREFIX_LOAD_USERNAMES + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
-
-    private final String SEARCH_USERS_BY_TEXT
-            = PREFIX_LOAD_USERS + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
-
-    private final String LOAD_USER_FROM_USERNAME
-            = PREFIX_LOAD_USERS + "WHERE authusers.username = ? ";
-
-    private final String DELETE_USER
-            = "DELETE FROM authusers WHERE username = ? ";
-
-    private final String ADD_USER
-            = "INSERT INTO authusers (username, passwd, registrationdate, active) VALUES ( ? , ? , ? , ? )";
-
-    private final String CHANGE_PASSWORD
-            = "UPDATE authusers SET passwd = ? , lastpasswordchange = ? WHERE username = ? ";
-
-    private final String UPDATE_USER
-            = "UPDATE authusers SET lastaccess = ? , lastpasswordchange = ? , active = ? WHERE username = ? ";
-
-    private final String UPDATE_LAST_ACCESS
-            = "UPDATE authusers SET lastaccess = ? WHERE username = ? ";
 
 }

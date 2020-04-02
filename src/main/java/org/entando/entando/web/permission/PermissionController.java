@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.permission;
 
 import com.agiletec.aps.system.services.role.Permission;
@@ -19,8 +20,8 @@ import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.role.model.PermissionDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.permission.validator.PermissionValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import org.entando.entando.web.common.model.PagedRestResponse;
 
 @RestController
 @RequestMapping(value = "/permissions")

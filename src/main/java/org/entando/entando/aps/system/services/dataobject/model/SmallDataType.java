@@ -11,23 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.model;
 
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
-
 import java.io.Serializable;
 
 /**
  * @author E.Santoboni
- * @deprecated  From Entando 4.1.2, use {@link SmallEntityType} class 
+ * @deprecated From Entando 4.1.2, use {@link SmallEntityType} class
  */
 public class SmallDataType extends SmallEntityType implements Serializable {
-	
-	public String getDescr() {
-		return super.getDescription();
-	}
-	public void setDescr(String descr) {
-		super.setDescription(descr);
-	}
-	
+
+    public String getDescr() {
+        return super.getDescription();
+    }
+
+    public void setDescr(String descr) {
+        super.setDescription(descr);
+    }
+
 }

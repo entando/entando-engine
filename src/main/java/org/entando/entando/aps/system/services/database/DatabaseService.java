@@ -11,10 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.database;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.util.FileTextReader;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IComponentManager;
@@ -29,12 +35,6 @@ import org.entando.entando.web.database.validator.DatabaseValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author E.Santoboni
@@ -150,7 +150,8 @@ public class DatabaseService implements IDatabaseService {
             if (null == stream) {
                 logger.warn("no dump found with code {}, dataSource {}, table {}", reportCode, dataSource, tableName);
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableName, "tableName");
-                bindingResult.reject(DatabaseValidator.ERRCODE_NO_TABLE_DUMP_FOUND, new Object[]{reportCode, dataSource, tableName}, "database.dump.table.notFound");
+                bindingResult.reject(DatabaseValidator.ERRCODE_NO_TABLE_DUMP_FOUND, new Object[]{reportCode, dataSource, tableName},
+                        "database.dump.table.notFound");
                 throw new ResourceNotFoundException("code - dataSource - table",
                         "'" + reportCode + "' - '" + dataSource + "' - '" + tableName + "'");
             }

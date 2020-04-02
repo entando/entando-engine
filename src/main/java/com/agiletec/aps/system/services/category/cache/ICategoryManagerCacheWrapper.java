@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -24,28 +25,28 @@ import java.util.Map;
  */
 public interface ICategoryManagerCacheWrapper {
 
-	public static final String CATEGORY_MANAGER_CACHE_NAME = "Entando_CategoryManager";
-	public static final String CATEGORY_CACHE_NAME_PREFIX = "CategoryManager_node_";
-	public static final String CATEGORY_ROOT_CACHE_NAME = "CategoryManager_root";
-	public static final String CATEGORY_CODES_CACHE_NAME = "CategoryManager_codes";
-	public static final String CATEGORY_STATUS_CACHE_NAME = "CategoryManager_status";
+    String CATEGORY_MANAGER_CACHE_NAME = "Entando_CategoryManager";
+    String CATEGORY_CACHE_NAME_PREFIX = "CategoryManager_node_";
+    String CATEGORY_ROOT_CACHE_NAME = "CategoryManager_root";
+    String CATEGORY_CODES_CACHE_NAME = "CategoryManager_codes";
+    String CATEGORY_STATUS_CACHE_NAME = "CategoryManager_status";
 
-	public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws ApsSystemException;
+    void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws ApsSystemException;
 
-	public Category getRoot();
+    Category getRoot();
 
-	public Category getCategory(String code);
-    
-    public void addCategory(Category category);
-    
-    public void updateCategory(Category category);
+    Category getCategory(String code);
 
-	public void deleteCategory(String code);
+    void addCategory(Category category);
 
-	public Map<String, Integer> getMoveNodeStatus();
+    void updateCategory(Category category);
 
-	public void updateMoveNodeStatus(String beanName, Integer status);
-    
-    public void moveCategory(String categoryCode, String newParentCode);
+    void deleteCategory(String code);
+
+    Map<String, Integer> getMoveNodeStatus();
+
+    void updateMoveNodeStatus(String beanName, Integer status);
+
+    void moveCategory(String categoryCode, String newParentCode);
 
 }

@@ -11,35 +11,35 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectdispenser;
 
 import com.agiletec.aps.system.RequestContext;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 /**
- * Basic interface for service providers formatted dataObject. Implementations
- * may or may not use the caching engine.
+ * Basic interface for service providers formatted dataObject. Implementations may or may not use the caching engine.
  *
  * @author M.Diana - E.Santoboni
  */
 public interface IDataObjectDispenser {
 
-	/**
-	 * Return the object that contains the renderization info of the dataObject.
-	 *
-	 * @param dataObjectId The dataObject id.
-	 * @param modelId The velocity model id.
-	 * @param langCode The code of the current lang.
-	 * @param reqCtx The request context.
-	 * @return The formatted dataObject.
-	 */
-	public DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId,
-			long modelId, String langCode, RequestContext reqCtx);
+    /**
+     * Return the object that contains the renderization info of the dataObject.
+     *
+     * @param dataObjectId The dataObject id.
+     * @param modelId The velocity model id.
+     * @param langCode The code of the current lang.
+     * @param reqCtx The request context.
+     * @return The formatted dataObject.
+     */
+    DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId,
+            long modelId, String langCode, RequestContext reqCtx);
 
-	public DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId,
-			long modelId, String langCode, RequestContext reqCtx, boolean useCache);
+    DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId,
+            long modelId, String langCode, RequestContext reqCtx, boolean useCache);
 
-	public DataObjectRenderizationInfo getBaseRenderizationInfo(DataObject contentToRender,
-			long modelId, String langCode, RequestContext reqCtx);
+    DataObjectRenderizationInfo getBaseRenderizationInfo(DataObject contentToRender,
+            long modelId, String langCode, RequestContext reqCtx);
 
 }

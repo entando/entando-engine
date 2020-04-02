@@ -159,7 +159,7 @@ public class FilterUtils {
     private static String getUnsupportedOperatorMessage(Filter filter) {
         return "Operator '" + filter.getOperator() + "' is not supported";
     }
-    
+
     private static List<String> getFilterValues(Filter filter) {
         if (filter.getAllowedValues() == null || filter.getAllowedValues().length == 0) {
             List<String> values = new ArrayList<>();

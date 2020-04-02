@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.event;
 
 import com.agiletec.aps.system.common.IManager;
@@ -19,40 +20,36 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 public class PublicDataChangedEvent extends ApsEvent {
 
-	@Override
-	public void notify(IManager srv) {
-		((PublicDataChangedObserver) srv).updateFromPublicDataObjectChanged(this);
-	}
+    public static final int INSERT_OPERATION_CODE = 1;
+    public static final int REMOVE_OPERATION_CODE = 2;
+    public static final int UPDATE_OPERATION_CODE = 3;
+    private DataObject _dataObject;
+    private int _operationCode;
 
-	@Override
-	public Class getObserverInterface() {
-		return PublicDataChangedObserver.class;
-	}
+    @Override
+    public void notify(IManager srv) {
+        ((PublicDataChangedObserver) srv).updateFromPublicDataObjectChanged(this);
+    }
 
-	public DataObject getDataObject() {
-		return _dataObject;
-	}
+    @Override
+    public Class getObserverInterface() {
+        return PublicDataChangedObserver.class;
+    }
 
-	public void setDataObject(DataObject content) {
-		this._dataObject = content;
-	}
+    public DataObject getDataObject() {
+        return _dataObject;
+    }
 
-	public int getOperationCode() {
-		return _operationCode;
-	}
+    public void setDataObject(DataObject content) {
+        this._dataObject = content;
+    }
 
-	public void setOperationCode(int operationCode) {
-		this._operationCode = operationCode;
-	}
+    public int getOperationCode() {
+        return _operationCode;
+    }
 
-	private DataObject _dataObject;
-
-	private int _operationCode;
-
-	public static final int INSERT_OPERATION_CODE = 1;
-
-	public static final int REMOVE_OPERATION_CODE = 2;
-
-	public static final int UPDATE_OPERATION_CODE = 3;
+    public void setOperationCode(int operationCode) {
+        this._operationCode = operationCode;
+    }
 
 }

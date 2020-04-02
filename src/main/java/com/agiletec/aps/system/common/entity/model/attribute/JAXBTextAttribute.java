@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
@@ -22,15 +23,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(propOrder = {"text"})
 public class JAXBTextAttribute extends AbstractJAXBAttribute implements Serializable {
-    
+
+    private String _text;
+
     @XmlElement(name = "value", required = false)
     public String getText() {
         return _text;
     }
+
     public void setText(String text) {
         this._text = text;
     }
-    
-    private String _text;
-    
+
 }

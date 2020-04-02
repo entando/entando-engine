@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.widget.validator;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_WIDGET_DOES_NOT_EXISTS = "1";
     public static final String ERRCODE_URINAME_MISMATCH = "3";
     public static final String ERRCODE_MISSING_TITLE = "4";
-    
+
     public static final String ERRCODE_OPERATION_FORBIDDEN_LOCKED = "1";
     public static final String ERRCODE_CANNOT_DELETE_USED_PAGES = "2";
 
@@ -51,14 +52,15 @@ public class WidgetValidator extends AbstractPaginationValidator {
         }
         this.validateTitles(widgetRequest, errors);
     }
-    
+
     public void validateEditWidget(String widgetCode, WidgetRequest widgetRequest, Errors errors) {
         if (!StringUtils.equals(widgetCode, widgetRequest.getCode())) {
-            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.code.mismatch");
+            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{widgetCode, widgetRequest.getCode()},
+                    "widgettype.code.mismatch");
         }
         this.validateTitles(widgetRequest, errors);
     }
-    
+
     protected void validateTitles(WidgetRequest widgetRequest, Errors errors) {
         Map<String, String> titles = widgetRequest.getTitles();
         if (null == titles) {

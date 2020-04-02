@@ -11,20 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web;
 
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.web.common.handlers.RestExceptionHandler;
 import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
@@ -58,12 +56,11 @@ public class AbstractControllerTest {
 
     @InjectMocks
     protected EntandoOauth2Interceptor entandoOauth2Interceptor;
+    private String accessToken;
 
     /**
-     * The returned list contains an {@link HandlerExceptionResolver} built with
-     * an instance of a {@link ResourceBundleMessageSource}, that points to the
-     * default baseName and with an instance of {@link RestExceptionHandler},
-     * the global exceptionHandler
+     * The returned list contains an {@link HandlerExceptionResolver} built with an instance of a {@link ResourceBundleMessageSource}, that
+     * points to the default baseName and with an instance of {@link RestExceptionHandler}, the global exceptionHandler
      *
      * A typical use is:
      * <pre>
@@ -74,9 +71,6 @@ public class AbstractControllerTest {
      * .build();
      * </code>
      * </pre>
-     *
-     *
-     * @return
      */
     protected List<HandlerExceptionResolver> createHandlerExceptionResolver() {
         List<HandlerExceptionResolver> handlerExceptionResolvers = new ArrayList<>();
@@ -107,13 +101,13 @@ public class AbstractControllerTest {
         return exceptionResolver;
     }
 
-    protected Object createPagedMetadata(String json) throws IOException, JsonParseException, JsonMappingException {
+    protected Object createPagedMetadata(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Object result = mapper.readValue(json, PagedMetadata.class);
         return result;
     }
 
-    protected Object createMetadata(String json, Class classType) throws IOException, JsonParseException, JsonMappingException {
+    protected Object createMetadata(String json, Class classType) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Object result = mapper.readValue(json, classType);
         return result;
@@ -132,18 +126,17 @@ public class AbstractControllerTest {
     protected AuthRequestBuilder createAuthRequest(MockHttpServletRequestBuilder requestBuilder) {
         return new AuthRequestBuilder(mockMvc, getAccessToken(), requestBuilder);
     }
-    
+
     @Before
     public void cleanToken() {
         accessToken = null;
     }
 
-    private String accessToken;
-
     private String getAccessToken() {
         if (this.accessToken == null) {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-            this.accessToken = OAuth2TestUtils.mockOAuthInterceptor(apiOAuth2TokenManager, authenticationProviderManager, authorizationManager, user);
+            this.accessToken = OAuth2TestUtils
+                    .mockOAuthInterceptor(apiOAuth2TokenManager, authenticationProviderManager, authorizationManager, user);
         }
         return this.accessToken;
     }

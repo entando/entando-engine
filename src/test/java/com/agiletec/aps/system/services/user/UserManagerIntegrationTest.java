@@ -11,12 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.user;
 
-import java.util.List;
+package com.agiletec.aps.system.services.user;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import java.util.List;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
 
 public class UserManagerIntegrationTest extends BaseTestCase {

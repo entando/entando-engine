@@ -11,42 +11,47 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n;
 
-import java.util.Map;
-
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Map;
 
 /**
  * Interfaccia base per Data Access Object degli oggetti label (I18n).
+ *
  * @author E.Santoboni
  */
 public interface II18nDAO {
 
-	/**
-	 * Carica la mappa che contiene tutti i gruppi delle label in tutte le lingue.
-	 * @return La mappa contenente tutte le label.
-	 */
-	public Map<String, ApsProperties> loadLabelGroups();
+    /**
+     * Carica la mappa che contiene tutti i gruppi delle label in tutte le lingue.
+     *
+     * @return La mappa contenente tutte le label.
+     */
+    Map<String, ApsProperties> loadLabelGroups();
 
-	/**
-	 * Aggiunge un gruppo di label.
-	 * @param key La chiave del gruppo da aggiungere.
-	 * @param labels La mappa delle labels indicizzate per codice lingua.
-	 */
-	public void addLabelGroup(String key, ApsProperties labels);
+    /**
+     * Aggiunge un gruppo di label.
+     *
+     * @param key La chiave del gruppo da aggiungere.
+     * @param labels La mappa delle labels indicizzate per codice lingua.
+     */
+    void addLabelGroup(String key, ApsProperties labels);
 
-	/**
-	 * Aggiorna un gruppo di label.
-	 * @param key La chiave del gruppo da aggiornare.
-	 * @param labels La mappa delle labels indicizzate per codice lingua.
-	 */
-	public void updateLabelGroup(String key, ApsProperties labels);
+    /**
+     * Aggiorna un gruppo di label.
+     *
+     * @param key La chiave del gruppo da aggiornare.
+     * @param labels La mappa delle labels indicizzate per codice lingua.
+     */
+    void updateLabelGroup(String key, ApsProperties labels);
 
-	/**
-	 * Cancella un gruppo di label.
-	 * @param key La chiave del gruppo da cancellare.
-	 */
-	public void deleteLabelGroup(String key);
+    /**
+     * Cancella un gruppo di label.
+     *
+     * @param key La chiave del gruppo da cancellare.
+     */
+    void deleteLabelGroup(String key);
 
 }

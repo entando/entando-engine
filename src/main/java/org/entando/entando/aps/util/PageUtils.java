@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.util;
 
 import com.agiletec.aps.system.services.page.IPage;
@@ -30,8 +31,7 @@ public class PageUtils {
     private static final Logger logger = LoggerFactory.getLogger(PageUtils.class);
 
     /**
-     * Check whether the page can publish free content, related to the draft
-     * configuration of the page.
+     * Check whether the page can publish free content, related to the draft configuration of the page.
      *
      * @param page The page to check.
      * @param viewerWidgetCode The code of the viewer widget (optional)
@@ -52,8 +52,7 @@ public class PageUtils {
     }
 
     /**
-     * Check whether the page can publish free content, related to the online
-     * configuration of the page.
+     * Check whether the page can publish free content, related to the online configuration of the page.
      *
      * @param page The page to check.
      * @param viewerWidgetCode The code of the viewer widget (optional)
@@ -74,8 +73,7 @@ public class PageUtils {
     }
 
     /**
-     * Check whether the page can publish free content, related to the model and
-     * the widgets of the page.
+     * Check whether the page can publish free content, related to the model and the widgets of the page.
      *
      * @param model The model of the page to check.
      * @param widgets The widgets of the page to check.

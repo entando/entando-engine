@@ -1,10 +1,25 @@
 package org.entando.entando.aps.system.services.label;
 
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Collections;
+import java.util.Map;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.label.model.LabelDto;
@@ -19,19 +34,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.Map;
-
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Mockito.*;
-
 public class LabelServiceTest {
 
-    @Mock private I18nManager i18nManager;
-    @Mock private ILangManager langManager;
+    @Mock
+    private I18nManager i18nManager;
+    @Mock
+    private ILangManager langManager;
 
     private LabelService labelService;
     private Lang lang;
@@ -53,7 +61,7 @@ public class LabelServiceTest {
 
         when(i18nManager.getLabelGroups()).thenReturn(singletonMap("EN", create(singletonMap("EN", "some_value"))));
 
-        request.setFilters(new Filter [] { filter });
+        request.setFilters(new Filter[]{filter});
         PagedMetadata<LabelDto> labelGroups = labelService.getLabelGroups(request);
 
         assertThat(labelGroups.getBody()).hasSize(1);
@@ -66,7 +74,7 @@ public class LabelServiceTest {
         when(i18nManager.getLabelGroups()).thenReturn(singletonMap("EN", create(singletonMap("EN", "some_value"))));
 
         filter = new Filter("value", "some_", FilterOperator.EQUAL.getValue());
-        request.setFilters(new Filter [] { filter });
+        request.setFilters(new Filter[]{filter});
 
         labelGroups = labelService.getLabelGroups(request);
 
@@ -80,7 +88,7 @@ public class LabelServiceTest {
 
         when(i18nManager.getLabelGroups()).thenReturn(singletonMap("EN", create(singletonMap("EN", "some_value"))));
 
-        request.setFilters(new Filter [] { filter });
+        request.setFilters(new Filter[]{filter});
         PagedMetadata<LabelDto> labelGroups = labelService.getLabelGroups(request);
 
         assertThat(labelGroups.getBody()).hasSize(1);
@@ -93,7 +101,7 @@ public class LabelServiceTest {
         when(i18nManager.getLabelGroups()).thenReturn(singletonMap("EN", create(singletonMap("EN", "some_value"))));
 
         filter = new Filter("value", "some_", FilterOperator.LIKE.getValue());
-        request.setFilters(new Filter [] { filter });
+        request.setFilters(new Filter[]{filter});
 
         labelGroups = labelService.getLabelGroups(request);
 

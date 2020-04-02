@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -22,64 +23,63 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface ISearchEngineDAOFactory {
 
-	/**
-	 * Inizializzazione della classe factory.
-	 *
-	 * @throws Exception In caso di errore.
-	 */
-	public void init() throws Exception;
+    /**
+     * Inizializzazione della classe factory.
+     *
+     * @throws Exception In caso di errore.
+     */
+    void init() throws Exception;
 
-	/**
-	 * Restituisce la classe dao delegata alle operazioni di indicizzazione.
-	 *
-	 * @return La classe dao delegata alle operazioni di indicizzazione.
-	 * @throws ApsSystemException In caso nella errore.
-	 */
-	public IIndexerDAO getIndexer() throws ApsSystemException;
+    /**
+     * Restituisce la classe dao delegata alle operazioni di indicizzazione.
+     *
+     * @return La classe dao delegata alle operazioni di indicizzazione.
+     * @throws ApsSystemException In caso nella errore.
+     */
+    IIndexerDAO getIndexer() throws ApsSystemException;
 
-	/**
-	 * Restituisce la classe dao delegata alle operazioni di ricerca.
-	 *
-	 * @return La classe dao delegata alle operazioni di ricerca.
-	 * @throws ApsSystemException In caso nella errore.
-	 */
-	public ISearcherDAO getSearcher() throws ApsSystemException;
+    /**
+     * Restituisce la classe dao delegata alle operazioni di ricerca.
+     *
+     * @return La classe dao delegata alle operazioni di ricerca.
+     * @throws ApsSystemException In caso nella errore.
+     */
+    ISearcherDAO getSearcher() throws ApsSystemException;
 
-	/**
-	 * Restituisce la classe dao delegata alle operazioni di indicizzazione.
-	 *
-	 * @param subDir La sottocartella (figlia della root a servizio del sistema)
-	 * utilizzata per le operazioni di indicizzazione dei documenti.
-	 * @return La classe dao delegata alle operazioni di indicizzazione.
-	 * @throws ApsSystemException In caso nella errore.
-	 */
-	public IIndexerDAO getIndexer(String subDir) throws ApsSystemException;
+    /**
+     * Restituisce la classe dao delegata alle operazioni di indicizzazione.
+     *
+     * @param subDir La sottocartella (figlia della root a servizio del sistema) utilizzata per le operazioni di indicizzazione dei
+     * documenti.
+     * @return La classe dao delegata alle operazioni di indicizzazione.
+     * @throws ApsSystemException In caso nella errore.
+     */
+    IIndexerDAO getIndexer(String subDir) throws ApsSystemException;
 
-	/**
-	 * Restituisce la classe dao delegata alle operazioni di ricerca.
-	 *
-	 * @param subDir La sottocartella (figlia della root a servizio del sistema)
-	 * utilizzata per le operazioni di ricerca dei documenti.
-	 * @return La classe dao delegata alle operazioni di ricerca.
-	 * @throws ApsSystemException In caso nella errore.
-	 */
-	public ISearcherDAO getSearcher(String subDir) throws ApsSystemException;
+    /**
+     * Restituisce la classe dao delegata alle operazioni di ricerca.
+     *
+     * @param subDir La sottocartella (figlia della root a servizio del sistema) utilizzata per le operazioni di ricerca dei documenti.
+     * @return La classe dao delegata alle operazioni di ricerca.
+     * @throws ApsSystemException In caso nella errore.
+     */
+    ISearcherDAO getSearcher(String subDir) throws ApsSystemException;
 
-	/**
-	 * Aggiorna la sottocartella (figlia della root a servizio del sistema)
-	 * utilizzata per le operazioni di indicizzazione e ricerca dei documenti.
-	 *
-	 * @param newSubDirectory La nuova subdirectory.
-	 * @throws ApsSystemException In caso nella errore.
-	 */
-	public void updateSubDir(String newSubDirectory) throws ApsSystemException;
+    /**
+     * Aggiorna la sottocartella (figlia della root a servizio del sistema) utilizzata per le operazioni di indicizzazione e ricerca dei
+     * documenti.
+     *
+     * @param newSubDirectory La nuova subdirectory.
+     * @throws ApsSystemException In caso nella errore.
+     */
+    void updateSubDir(String newSubDirectory) throws ApsSystemException;
 
-	/**
-	 * Cancella la sottocartella (figlia della root a servizio del sistema)
-	 * utilizzata per le operazioni di indicizzazione e ricerca dei documenti.
-	 *
-	 * @param subDirectory La sottocartella
-	 */
-	public void deleteSubDirectory(String subDirectory);
+    /**
+     * Cancella la sottocartella (figlia della root a servizio del sistema) utilizzata per le operazioni di indicizzazione e ricerca dei
+     * documenti.
+     *
+     * @param subDirectory La sottocartella
+     */
+    void deleteSubDirectory(String subDirectory);
 
 }

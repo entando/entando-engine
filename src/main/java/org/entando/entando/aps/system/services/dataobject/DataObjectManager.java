@@ -1,26 +1,18 @@
 /*
-* Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
-*
-* This library is free software; you can redistribute it and/or modify it under
-* the terms of the GNU Lesser General Public License as published by the Free
-* Software Foundation; either version 2.1 of the License, or (at your option)
-* any later version.
-*
-* This library is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-* FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-* details.
+ * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
-package org.entando.entando.aps.system.services.dataobject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -34,6 +26,14 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.entando.entando.aps.system.services.dataobject.event.PublicDataChangedEvent;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
@@ -42,8 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * DataObjects manager. This implements all the methods needed to create and
- * manage the DataObjects.
+ * DataObjects manager. This implements all the methods needed to create and manage the DataObjects.
  *
  * @author M.Diana - E.Santoboni
  */
@@ -63,12 +62,10 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Create a new instance of the requested dataobject. The new dataobject is
-     * forked (or cloned) from the corresponding prototype, and it's returned
-     * empty.
+     * Create a new instance of the requested dataobject. The new dataobject is forked (or cloned) from the corresponding prototype, and
+     * it's returned empty.
      *
-     * @param typeCode The code of the requested (proto)type, as declared in the
-     * configuration.
+     * @param typeCode The code of the requested (proto)type, as declared in the configuration.
      * @return The new dataobject.
      */
     @Override
@@ -77,9 +74,8 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return a list of the of the dataobject types in a 'small form'. 'Small
-     * form' mans that the dataobjects returned are purged from all unnecessary
-     * information (eg. attributes).
+     * Return a list of the of the dataobject types in a 'small form'. 'Small form' mans that the dataobjects returned are purged from all
+     * unnecessary information (eg. attributes).
      *
      * @return The list of the types in a (small form).
      * @deprecated From Entando 4.1.2, use getSmallEntityTypes() method
@@ -93,12 +89,10 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return the map of the prototypes of the dataobjects types. Return a map,
-     * index by the code of the type, of the prototypes of the available
-     * dataobject types.
+     * Return the map of the prototypes of the dataobjects types. Return a map, index by the code of the type, of the prototypes of the
+     * available dataobject types.
      *
-     * @return The map of the prototypes of the dataobject types in a
-     * 'SmallDataObjectType' objects.
+     * @return The map of the prototypes of the dataobject types in a 'SmallDataObjectType' objects.
      */
     @Override
     public Map<String, SmallDataType> getSmallDataTypesMap() {
@@ -114,9 +108,8 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return the code of the default page used to display the given dataobject.
-     * The default page is defined at dataobject type level; the type is
-     * extrapolated from the code built following the conventions.
+     * Return the code of the default page used to display the given dataobject. The default page is defined at dataobject type level; the
+     * type is extrapolated from the code built following the conventions.
      *
      * @param dataId The dataobject ID
      * @return The page code.
@@ -140,8 +133,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return the code of the model to be used when the dataobject is rendered
-     * in list
+     * Return the code of the model to be used when the dataobject is rendered in list
      *
      * @param dataId The code of the dataobject
      * @return The code of the model
@@ -153,13 +145,12 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return a complete dataobject given its ID; it is possible to choose to
-     * return the published -unmodifiable!- dataobject or the working copy. It
-     * also returns the data in the form of XML.
+     * Return a complete dataobject given its ID; it is possible to choose to return the published -unmodifiable!- dataobject or the working
+     * copy. It also returns the data in the form of XML.
      *
      * @param id The ID of the dataobject
-     * @param onLine Specifies the type of the dataobject to return: 'true'
-     * references the published dataobject, 'false' the freely modifiable one.
+     * @param onLine Specifies the type of the dataobject to return: 'true' references the published dataobject, 'false' the freely
+     * modifiable one.
      * @return The requested dataobject.
      * @throws ApsSystemException In case of error.
      */
@@ -226,8 +217,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return a {@link DataObjectRecordVO} (shortly: VO) containing the all
-     * dataobject informations stored in the DB.
+     * Return a {@link DataObjectRecordVO} (shortly: VO) containing the all dataobject informations stored in the DB.
      *
      * @param id The id of the requested dataobject.
      * @return The VO object corresponding to the wanted dataobject.
@@ -262,11 +252,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Save a dataobject in the DB. Hopefully this method has no annotation
-     * attached
-     *
-     * @param dataobject
-     * @throws ApsSystemException
+     * Save a dataobject in the DB. Hopefully this method has no annotation attached
      */
     @Override
     public void addDataObject(DataObject dataobject) throws ApsSystemException {
@@ -303,8 +289,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     /**
      * Publish a dataobject.
      *
-     * @param dataobject The ID associated to the dataobject to be displayed in
-     * the portal.
+     * @param dataobject The ID associated to the dataobject to be displayed in the portal.
      * @throws ApsSystemException in case of error.
      */
     @Override
@@ -346,8 +331,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Unpublish a dataobject, preventing it from being displayed in the portal.
-     * Obviously the dataobject itself is not deleted.
+     * Unpublish a dataobject, preventing it from being displayed in the portal. Obviously the dataobject itself is not deleted.
      *
      * @param dataobject the dataobject to unpublish.
      * @throws ApsSystemException in case of error
@@ -373,7 +357,7 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
      *
      * @param dataobject The modified dataobject.
      * @param operationCode the operation code to notify.
-     * @exception ApsSystemException in caso of error.
+     * @throws ApsSystemException in caso of error.
      */
     private void notifyPublicDataObjectChanging(DataObject dataobject, int operationCode) throws ApsSystemException {
         PublicDataChangedEvent event = new PublicDataChangedEvent();
@@ -383,9 +367,8 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     }
 
     /**
-     * Return the dataobject type from the given ID code. The code is extracted
-     * following the coding conventions: the first three characters are the type
-     * of the code.
+     * Return the dataobject type from the given ID code. The code is extracted following the coding conventions: the first three characters
+     * are the type of the code.
      *
      * @param dataId the dataobject ID whose dataobject type is extracted.
      * @return The dataobject type requested
@@ -423,7 +406,8 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
             EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
         List<String> dataobjectsId = null;
         try {
-            dataobjectsId = this.getDataObjectSearcherDAO().loadDataObjectsId(dataobjectType, categories, orClauseCategoryFilter, filters, userGroupCodes);
+            dataobjectsId = this.getDataObjectSearcherDAO()
+                    .loadDataObjectsId(dataobjectType, categories, orClauseCategoryFilter, filters, userGroupCodes);
         } catch (Throwable t) {
             logger.error("Error while loading dataobjects", t);
             throw new ApsSystemException("Error while loading dataobjects", t);

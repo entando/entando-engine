@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.pagemodel.api;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
@@ -24,20 +24,20 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResu
  */
 @XmlRootElement(name = "response")
 public class PageModelResponse extends AbstractApiResponse {
-	
-	@Override
-	@XmlElement(name = "result", required = true)
-	public PageModelResponseResult getResult() {
-		return (PageModelResponseResult) super.getResult();
-	}
-	
-	public void setResult(PageModelResponseResult result) {
-		super.setResult(result);
-	}
-	
-	@Override
-	protected AbstractApiResponseResult createResponseResultInstance() {
-		return new PageModelResponseResult();
-	}
-	
+
+    @Override
+    @XmlElement(name = "result", required = true)
+    public PageModelResponseResult getResult() {
+        return (PageModelResponseResult) super.getResult();
+    }
+
+    public void setResult(PageModelResponseResult result) {
+        super.setResult(result);
+    }
+
+    @Override
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        return new PageModelResponseResult();
+    }
+
 }

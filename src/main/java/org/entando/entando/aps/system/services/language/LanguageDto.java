@@ -1,9 +1,8 @@
 package org.entando.entando.aps.system.services.language;
 
-import java.util.List;
-
 import com.agiletec.aps.system.services.lang.Lang;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class LanguageDto {
 
@@ -16,7 +15,8 @@ public class LanguageDto {
     @JsonProperty("isDefault")
     private boolean defaultLang;
 
-    public LanguageDto() {}
+    public LanguageDto() {
+    }
 
     public LanguageDto(Lang src) {
         this.setCode(src.getCode());
@@ -30,6 +30,17 @@ public class LanguageDto {
         this.setDescription(src.getDescr());
         this.setActive(codes.contains(src.getCode()));
         this.setDefaultLang(src.getCode().equals(defaultCode));
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "code":
+                return "code";
+            case "description":
+                return "descr";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getCode() {
@@ -63,17 +74,6 @@ public class LanguageDto {
 
     public void setDefaultLang(boolean defaultLang) {
         this.defaultLang = defaultLang;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "code":
-                return "code";
-            case "description":
-                return "descr";
-            default:
-                return dtoFieldName;
-        }
     }
 
 }

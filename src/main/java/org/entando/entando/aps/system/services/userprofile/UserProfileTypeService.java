@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -63,7 +64,8 @@ public class UserProfileTypeService extends AbstractEntityTypeService<IUserProfi
     }
 
     @Override
-    protected IUserProfile createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult) throws Throwable {
+    protected IUserProfile createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult)
+            throws Throwable {
         return super.createEntityType(entityManager, dto, bindingResult);
     }
 
@@ -88,12 +90,14 @@ public class UserProfileTypeService extends AbstractEntityTypeService<IUserProfi
     }
 
     @Override
-    public EntityTypeAttributeFullDto addUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
+    public EntityTypeAttributeFullDto addUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
         return super.addEntityAttribute(SystemConstants.USER_PROFILE_MANAGER, profileTypeCode, bodyRequest, bindingResult);
     }
 
     @Override
-    public EntityTypeAttributeFullDto updateUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
+    public EntityTypeAttributeFullDto updateUserProfileAttribute(String profileTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult) {
         return super.updateEntityAttribute(SystemConstants.USER_PROFILE_MANAGER, profileTypeCode, bodyRequest, bindingResult);
     }
 

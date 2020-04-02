@@ -11,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.parse;
 
 import com.agiletec.aps.system.SystemConstants;
-import java.util.Date;
-
-import org.jdom.Element;
-
 import com.agiletec.aps.system.common.entity.parse.ApsEntityDOM;
 import com.agiletec.aps.util.DateConverter;
+import java.util.Date;
+import org.jdom.Element;
 
 /**
  * Classe JDOM per la scrittura di un oggetto tipo DataObject in xml.
@@ -28,54 +27,54 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class DataObjectDOM extends ApsEntityDOM {
 
-	public void setStatus(String status) {
-		this.setAttribute(TAG_STATUS, status);
-	}
+    private static final String TAG_STATUS = "status";
+    private static final String TAG_VERSION = "version";
+    private static final String TAG_CREATED = "created";
+    private static final String TAG_LAST_MODIFIED = "lastModified";
+    private static final String TAG_FIRST_EDITOR = "firstEditor";
+    private static final String TAG_LAST_EDITOR = "lastEditor";
 
-	public void setVersion(String version) {
-		this.setAttribute(TAG_VERSION, version);
-	}
+    public void setStatus(String status) {
+        this.setAttribute(TAG_STATUS, status);
+    }
 
-	public void setFirstEditor(String firstEditor) {
-		this.setAttribute(TAG_FIRST_EDITOR, firstEditor);
-	}
+    public void setVersion(String version) {
+        this.setAttribute(TAG_VERSION, version);
+    }
 
-	public void setLastEditor(String lastEditor) {
-		this.setAttribute(TAG_LAST_EDITOR, lastEditor);
-	}
+    public void setFirstEditor(String firstEditor) {
+        this.setAttribute(TAG_FIRST_EDITOR, firstEditor);
+    }
 
-	public void setCreationDate(Date created) {
-		if (null == created) {
-			return;
-		}
-		String date = DateConverter.getFormattedDate(created, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
-		this.setAttribute(TAG_CREATED, date);
-	}
+    public void setLastEditor(String lastEditor) {
+        this.setAttribute(TAG_LAST_EDITOR, lastEditor);
+    }
 
-	public void setModifyDate(Date lastModified) {
-		if (null == lastModified) {
-			return;
-		}
-		String date = DateConverter.getFormattedDate(lastModified, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
-		this.setAttribute(TAG_LAST_MODIFIED, date);
-	}
+    public void setCreationDate(Date created) {
+        if (null == created) {
+            return;
+        }
+        String date = DateConverter.getFormattedDate(created, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
+        this.setAttribute(TAG_CREATED, date);
+    }
 
-	private void setAttribute(String name, String value) {
-		if (null == value) {
-			return;
-		}
-		if (this._root.getChild(name) == null) {
-			Element tag = new Element(name);
-			this._root.addContent(tag);
-		}
-		this._root.getChild(name).setText(value);
-	}
+    public void setModifyDate(Date lastModified) {
+        if (null == lastModified) {
+            return;
+        }
+        String date = DateConverter.getFormattedDate(lastModified, SystemConstants.DATA_TYPE_METADATA_DATE_FORMAT);
+        this.setAttribute(TAG_LAST_MODIFIED, date);
+    }
 
-	private final static String TAG_STATUS = "status";
-	private final static String TAG_VERSION = "version";
-	private final static String TAG_CREATED = "created";
-	private final static String TAG_LAST_MODIFIED = "lastModified";
-	private final static String TAG_FIRST_EDITOR = "firstEditor";
-	private final static String TAG_LAST_EDITOR = "lastEditor";
+    private void setAttribute(String name, String value) {
+        if (null == value) {
+            return;
+        }
+        if (this._root.getChild(name) == null) {
+            Element tag = new Element(name);
+            this._root.addContent(tag);
+        }
+        this._root.getChild(name).setText(value);
+    }
 
 }

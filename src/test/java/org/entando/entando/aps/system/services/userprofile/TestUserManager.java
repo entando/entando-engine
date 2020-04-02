@@ -11,12 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -24,11 +20,17 @@ import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Calendar;
+import java.util.Date;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * @author E.Santoboni
  */
 public class TestUserManager extends BaseTestCase {
+
+    private IUserProfileManager _profileManager;
+    private IUserManager _userManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -83,7 +85,7 @@ public class TestUserManager extends BaseTestCase {
             user.setPassword("changedPassword");
             IUserProfile extractedProfile = (IUserProfile) extractedUser.getProfile();
             assertNotNull(extractedProfile);
-            MonoTextAttribute emailAttr = (MonoTextAttribute) ((IUserProfile) extractedProfile).getAttribute("email");
+            MonoTextAttribute emailAttr = (MonoTextAttribute) extractedProfile.getAttribute("email");
             assertEquals("spuddu@agiletec.it", emailAttr.getText());
             emailAttr.setText("agiletectest@gmail.com");
             user.setProfile(extractedProfile);
@@ -94,7 +96,7 @@ public class TestUserManager extends BaseTestCase {
             extractedUser = this._userManager.getUser(username);
             assertNotNull(extractedUser);
             extractedProfile = (IUserProfile) extractedUser.getProfile();
-            MonoTextAttribute extractedEmailAttr = (MonoTextAttribute) ((IUserProfile) extractedProfile).getAttribute("email");
+            MonoTextAttribute extractedEmailAttr = (MonoTextAttribute) extractedProfile.getAttribute("email");
             assertEquals("agiletectest@gmail.com", extractedEmailAttr.getText());
         } catch (Throwable t) {
             throw t;
@@ -142,8 +144,5 @@ public class TestUserManager extends BaseTestCase {
             throw e;
         }
     }
-
-    private IUserProfileManager _profileManager;
-    private IUserManager _userManager;
 
 }

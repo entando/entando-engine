@@ -11,66 +11,65 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
+import java.util.Date;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
-
-import java.util.Date;
 
 /**
  * @author E.Santoboni
  */
 @DatabaseTable(tableName = ActionLogCommentRecord.TABLE_NAME)
 public class ActionLogCommentRecord implements ExtendedColumnDefinition {
-	
-	public ActionLogCommentRecord() {}
-		
-	@DatabaseField(columnName = "id", 
-			dataType = DataType.INTEGER, 
-			canBeNull = false, id = true)
-	private int _id;
-	
-	@DatabaseField(columnName = "recordid", 
-			foreign = true,
-			canBeNull = false)
-	private ActionLogRecord _record;
-	
-	@DatabaseField(columnName = "username", 
-			dataType = DataType.STRING, 
-			width = 20, 
-			canBeNull = false)
-	private String _username;
-	
-	@DatabaseField(columnName = "commenttext", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _commentText;
-	
-	@DatabaseField(columnName = "commentdate", 
-			dataType = DataType.DATE, 
-			canBeNull = false)
-	private Date _commentDate;
-	
-	@Override
-	public String[] extensions(IDatabaseManager.DatabaseType type) {
-		String tableName = TABLE_NAME;
-		String recordTableName = ActionLogRecord.TABLE_NAME;
-		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + tableName + "`";
-			recordTableName = "`" + recordTableName + "`";
-		}
-		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT actionlogcommentrec_recid_fkey FOREIGN KEY (recordid) "
-				+ "REFERENCES " + recordTableName + " (id)"};
-	}
-	
-	public static final String TABLE_NAME = "actionlogcommentrecords";
-	
+
+    public static final String TABLE_NAME = "actionlogcommentrecords";
+    @DatabaseField(columnName = "id",
+            dataType = DataType.INTEGER,
+            canBeNull = false, id = true)
+    private int _id;
+
+    @DatabaseField(columnName = "recordid",
+            foreign = true,
+            canBeNull = false)
+    private ActionLogRecord _record;
+
+    @DatabaseField(columnName = "username",
+            dataType = DataType.STRING,
+            width = 20,
+            canBeNull = false)
+    private String _username;
+
+    @DatabaseField(columnName = "commenttext",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _commentText;
+
+    @DatabaseField(columnName = "commentdate",
+            dataType = DataType.DATE,
+            canBeNull = false)
+    private Date _commentDate;
+
+    public ActionLogCommentRecord() {
+    }
+
+    @Override
+    public String[] extensions(IDatabaseManager.DatabaseType type) {
+        String tableName = TABLE_NAME;
+        String recordTableName = ActionLogRecord.TABLE_NAME;
+        if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
+            tableName = "`" + tableName + "`";
+            recordTableName = "`" + recordTableName + "`";
+        }
+        return new String[]{"ALTER TABLE " + tableName + " "
+                + "ADD CONSTRAINT actionlogcommentrec_recid_fkey FOREIGN KEY (recordid) "
+                + "REFERENCES " + recordTableName + " (id)"};
+    }
+
 }
 /*
 CREATE TABLE actionlogcommentrecords
@@ -78,7 +77,7 @@ CREATE TABLE actionlogcommentrecords
   id integer NOT NULL,
   recordid integer NOT NULL,
   username character varying(20) NOT NULL,
-  commenttext text NOT NULL,	
+  commenttext text NOT NULL,
   commentdate timestamp without time zone NOT NULL,
   CONSTRAINT actionlogcommentrecords_pkey PRIMARY KEY (id)
   CONSTRAINT actionloglikerec_recid_fkey FOREIGN KEY (recordid)

@@ -11,32 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel.cache;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelDAO;
 
 public interface IDataObjectModelCacheWrapper {
 
-    public static final String CACHE_NAME = "Entando_DataObjectModelManager";
+    String CACHE_NAME = "Entando_DataObjectModelManager";
 
-    public static final String CACHE_NAME_PREFIX = "DataObjectModelManager_model_";
+    String CACHE_NAME_PREFIX = "DataObjectModelManager_model_";
 
-    public static final String CODES_CACHE_NAME = "DataObjectModelManager_codes";
+    String CODES_CACHE_NAME = "DataObjectModelManager_codes";
 
-    public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws ApsSystemException;
+    void initCache(IDataObjectModelDAO dataObjectModelDAO) throws ApsSystemException;
 
-    public DataObjectModel getModel(String code);
+    DataObjectModel getModel(String code);
 
-    public void addModel(DataObjectModel model);
+    void addModel(DataObjectModel model);
 
-    public void updateModel(DataObjectModel model);
+    void updateModel(DataObjectModel model);
 
-    public void removeModel(DataObjectModel model);
+    void removeModel(DataObjectModel model);
 
-    public List<DataObjectModel> getModels();
+    List<DataObjectModel> getModels();
 
 }

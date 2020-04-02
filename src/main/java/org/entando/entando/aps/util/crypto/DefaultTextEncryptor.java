@@ -1,16 +1,17 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.util.crypto;
 
 import java.lang.reflect.Field;
@@ -27,18 +28,17 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
 /**
- * TextEncryptor implementation that wraps the standard Spring encryptor
- * generating also the required salt.
+ * TextEncryptor implementation that wraps the standard Spring encryptor generating also the required salt.
  */
 public class DefaultTextEncryptor implements TextEncryptor {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(DefaultTextEncryptor.class);
 
     private final String key;
 
     public DefaultTextEncryptor(String key) {
-        
-        // hack for JCE Unlimited Strength	
+
+        // hack for JCE Unlimited Strength
         try {
             Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
             field.setAccessible(true);
@@ -51,7 +51,7 @@ public class DefaultTextEncryptor implements TextEncryptor {
         } catch (ReflectiveOperationException ex) {
             logger.warn("Error while forcing unlimited JceSecurity", ex);
         }
-        
+
         if (StringUtils.isEmpty(key)) {
             throw new IllegalStateException("Empty key provided to DefaultTextEncryptor");
         }
@@ -59,8 +59,7 @@ public class DefaultTextEncryptor implements TextEncryptor {
     }
 
     /**
-     * Returns a Base64 string composed by the salt followed by the encrypted
-     * data.
+     * Returns a Base64 string composed by the salt followed by the encrypted data.
      */
     @Override
     public String encrypt(String plainText) {
@@ -76,8 +75,7 @@ public class DefaultTextEncryptor implements TextEncryptor {
     }
 
     /**
-     * Returns decrypted text from a Base64 string composed by the salt followed
-     * by the encrypted data.
+     * Returns decrypted text from a Base64 string composed by the salt followed by the encrypted data.
      */
     @Override
     public String decrypt(String base64Data) {

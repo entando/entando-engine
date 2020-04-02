@@ -11,30 +11,31 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.cache;
 
 /**
  * @author E.Santoboni
  */
 public interface ICacheInfoManager {
-	
-	public static final String CACHE_INFO_MANAGER_CACHE_NAME = "Entando_CacheInfoManager";
-	
-	public static final String GROUP_CACHE_NAME_PREFIX = "CacheInfoManager_groups_";
-	
-	public static final String EXPIRATIONS_CACHE_NAME_PREFIX = "CacheInfoManager_expitation_";
-	
-	public static final String DEFAULT_CACHE_NAME = "Entando_Cache";
 
-	@Deprecated
-	public static final String CACHE_NAME = DEFAULT_CACHE_NAME;
+    String CACHE_INFO_MANAGER_CACHE_NAME = "Entando_CacheInfoManager";
 
-	public void flushEntry(String targetCache, String key);
+    String GROUP_CACHE_NAME_PREFIX = "CacheInfoManager_groups_";
 
-	public void flushGroup(String targetCache, String group);
+    String EXPIRATIONS_CACHE_NAME_PREFIX = "CacheInfoManager_expitation_";
 
-	public void putInGroup(String targetCache, String key, String[] groups);
-	
-	public boolean isExpired(String targetCache, String key);
+    String DEFAULT_CACHE_NAME = "Entando_Cache";
+
+    @Deprecated
+    String CACHE_NAME = DEFAULT_CACHE_NAME;
+
+    void flushEntry(String targetCache, String key);
+
+    void flushGroup(String targetCache, String group);
+
+    void putInGroup(String targetCache, String key, String[] groups);
+
+    boolean isExpired(String targetCache, String key);
 
 }

@@ -11,21 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.api;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
 /**
  * @author E.Santoboni
  */
 public class GuiFragmentResponseResult extends AbstractApiResponseResult {
-    
+
     @Override
     @XmlElement(name = "guiFragment", required = false)
     public JAXBGuiFragment getResult() {
         return (JAXBGuiFragment) this.getMainResult();
     }
-    
+
 }

@@ -1,10 +1,9 @@
 package org.entando.entando.aps.system.services.usersettings;
 
-import java.util.Map;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import java.util.Map;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
@@ -38,7 +37,6 @@ public class UserSettingsService implements IUserSettingsService {
     public void setDtoBuilder(IDtoBuilder<Map<String, String>, UserSettingsDto> dtoBuilder) {
         this.dtoBuilder = dtoBuilder;
     }
-
 
     @Override
     public UserSettingsDto getUserSettings() {

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
@@ -21,10 +22,10 @@ import org.springframework.validation.BindingResult;
  */
 public interface IUserProfileService {
 
-    public EntityDto getUserProfile(String username);
+    EntityDto getUserProfile(String username);
 
-    public EntityDto addUserProfile(EntityDto request, BindingResult bindingResult);
+    EntityDto addUserProfile(EntityDto request, BindingResult bindingResult);
 
-    public EntityDto updateUserProfile(EntityDto request, BindingResult bindingResult);
+    EntityDto updateUserProfile(EntityDto request, BindingResult bindingResult);
 
 }

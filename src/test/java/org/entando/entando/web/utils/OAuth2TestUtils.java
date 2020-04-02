@@ -11,10 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.utils;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.Calendar;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.AuthorizationManager;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -24,13 +28,11 @@ import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Calendar;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
@@ -93,7 +95,8 @@ public class OAuth2TestUtils {
             UserDetails user) {
         try {
             String accessToken = OAuth2TestUtils.getValidAccessToken();
-            when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token(user.getUsername(), accessToken));
+            when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString()))
+                    .thenReturn(OAuth2TestUtils.getOAuth2Token(user.getUsername(), accessToken));
             when(authenticationProviderManager.getUser(user.getUsername())).thenReturn(user);
             when(authorizationManager.isAuthOnPermission(any(UserDetails.class), anyString())).then(invocation -> {
                 UserDetails user1 = (UserDetails) invocation.getArguments()[0];

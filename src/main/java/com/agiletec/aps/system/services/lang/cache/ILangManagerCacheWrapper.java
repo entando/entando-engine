@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.lang.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -22,24 +23,24 @@ import java.util.List;
  */
 public interface ILangManagerCacheWrapper {
 
-	public static final String LANG_MANAGER_CACHE_NAME = "Entando_LangManager";
+    String LANG_MANAGER_CACHE_NAME = "Entando_LangManager";
 
-	public static final String LANG_CACHE_NAME_PREFIX = "LangManager_lang_";
-	public static final String LANG_CODES_CACHE_NAME = "LangManager_codes";
-	public static final String LANG_DEFAULT_CACHE_NAME = "LangManager_default";
+    String LANG_CACHE_NAME_PREFIX = "LangManager_lang_";
+    String LANG_CODES_CACHE_NAME = "LangManager_codes";
+    String LANG_DEFAULT_CACHE_NAME = "LangManager_default";
 
-	public void initCache(String xmlConfig) throws ApsSystemException;
+    void initCache(String xmlConfig) throws ApsSystemException;
 
-	public List<Lang> getLangs();
+    List<Lang> getLangs();
 
-	public Lang getDefaultLang();
+    Lang getDefaultLang();
 
-	public Lang getLang(String code);
+    Lang getLang(String code);
 
-	public void addLang(Lang lang);
+    void addLang(Lang lang);
 
-	public void updateLang(Lang lang);
+    void updateLang(Lang lang);
 
-	public void removeLang(Lang lang);
+    void removeLang(Lang lang);
 
 }

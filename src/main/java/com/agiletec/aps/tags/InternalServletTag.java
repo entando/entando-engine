@@ -11,12 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags;
 
+import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.util.ApsProperties;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -26,93 +31,29 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.util.ApsProperties;
-
 /**
- * Tag for widget "InternalServlet". Publish a function erogated throw a
- * internal Servlet; the servlet is invoked by a path specificated by the tag
- * attribute "actionPath" or by the widget parameter of the same name.
+ * Tag for widget "InternalServlet". Publish a function erogated throw a internal Servlet; the servlet is invoked by a path specificated by
+ * the tag attribute "actionPath" or by the widget parameter of the same name.
  *
  * @author M.Casari - E.Santoboni
  */
 public class InternalServletTag extends TagSupport {
 
+    public static final String CONFIG_PARAM_ACTIONPATH = "actionPath";
+    public static final String REQUEST_PARAM_ACTIONPATH = "internalServletActionPath";
+    public static final String REQUEST_PARAM_FRAMEDEST = "internalServletFrameDest";
+    public static final String EXTRAPAR_STATIC_ACTION = "internalServletStaticAction";
     private static final Logger _logger = LoggerFactory.getLogger(InternalServletTag.class);
-
-    /**
-     * Internal class that wrappers the response, extending the
-     * javax.servlet.http.HttpServletResponseWrapper class to define a
-     * proprietary output channel. It is used to retrieve the content response
-     * after having made an 'include' in the RequestDispatcher
-     */
-    public class ResponseWrapper extends HttpServletResponseWrapper {
-
-        public ResponseWrapper(HttpServletResponse response) {
-            super(response);
-            _output = new CharArrayWriter();
-        }
-
-        @Override
-        public PrintWriter getWriter() {
-            return new PrintWriter(_output);
-        }
-
-        @Override
-        public void sendRedirect(String path) throws IOException {
-            this._redirectPath = path;
-        }
-
-        @Override
-        public void addCookie(Cookie cookie) {
-            super.addCookie(cookie);
-            int len = (null == this._cookiesToAdd) ? 0 : this._cookiesToAdd.length;
-            Cookie[] newCookiesToAdd = new Cookie[len + 1];
-            if (null != this._cookiesToAdd) {
-                for (int i = 0; i < len; i++) {
-                    newCookiesToAdd[i] = this._cookiesToAdd[i];
-                }
-            }
-            newCookiesToAdd[len] = cookie;
-            this._cookiesToAdd = newCookiesToAdd;
-        }
-
-        protected Cookie[] getCookiesToAdd() {
-            return _cookiesToAdd;
-        }
-
-        public boolean isRedirected() {
-            return (_redirectPath != null);
-        }
-
-        public String getRedirectPath() {
-            return _redirectPath;
-        }
-
-        @Override
-        public String toString() {
-            return _output.toString();
-        }
-
-        private String _redirectPath;
-        private CharArrayWriter _output;
-
-        private Cookie[] _cookiesToAdd;
-
-    }
+    private String _actionPath;
+    private boolean _staticAction;
 
     /**
      * Invokes the widget configured in the current page.
      *
-     * @throws JspException in case of error that occurred in both this method
-     * or in one of the included JSPs
+     * @throws JspException in case of error that occurred in both this method or in one of the included JSPs
      */
     @Override
     public int doEndTag() throws JspException {
@@ -162,7 +103,8 @@ public class InternalServletTag extends TagSupport {
         return output;
     }
 
-    protected void includeWidget(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
+    protected void includeWidget(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget)
+            throws ServletException, IOException {
         HttpServletRequest request = reqCtx.getRequest();
         try {
             String actionPath = this.extractIntroActionPath(reqCtx, widget);
@@ -188,19 +130,16 @@ public class InternalServletTag extends TagSupport {
 
     protected boolean isAllowedRequestPath(String requestActionPath) {
         String rapLowerCase = requestActionPath.toLowerCase();
-        if (rapLowerCase.contains("web-inf")
-                || rapLowerCase.contains("meta-inf")
-                || rapLowerCase.contains("../")
-                || rapLowerCase.contains("%2e%2e%2f")
-                || rapLowerCase.endsWith(".txt")
-                || rapLowerCase.contains("<")
-                || rapLowerCase.endsWith("%3c")
-                || rapLowerCase.endsWith("%00")
-                || rapLowerCase.endsWith("'")
-                || rapLowerCase.endsWith("\"")) {
-            return false;
-        }
-        return true;
+        return !rapLowerCase.contains("web-inf")
+                && !rapLowerCase.contains("meta-inf")
+                && !rapLowerCase.contains("../")
+                && !rapLowerCase.contains("%2e%2e%2f")
+                && !rapLowerCase.endsWith(".txt")
+                && !rapLowerCase.contains("<")
+                && !rapLowerCase.endsWith("%3c")
+                && !rapLowerCase.endsWith("%00")
+                && !rapLowerCase.endsWith("'")
+                && !rapLowerCase.endsWith("\"");
     }
 
     protected boolean isRecursivePath(String requestActionPath, HttpServletRequest request) {
@@ -213,8 +152,7 @@ public class InternalServletTag extends TagSupport {
     }
 
     /**
-     * Extract the init Action Path. Return the tag attribute (if set), else the
-     * widget parameter.
+     * Extract the init Action Path. Return the tag attribute (if set), else the widget parameter.
      *
      * @param reqCtx The request context.
      * @param widget The current widget.
@@ -261,13 +199,62 @@ public class InternalServletTag extends TagSupport {
         this._staticAction = staticAction;
     }
 
-    private String _actionPath;
-    private boolean _staticAction;
+    /**
+     * Internal class that wrappers the response, extending the javax.servlet.http.HttpServletResponseWrapper class to define a proprietary
+     * output channel. It is used to retrieve the content response after having made an 'include' in the RequestDispatcher
+     */
+    public class ResponseWrapper extends HttpServletResponseWrapper {
 
-    public static final String CONFIG_PARAM_ACTIONPATH = "actionPath";
-    public static final String REQUEST_PARAM_ACTIONPATH = "internalServletActionPath";
-    public static final String REQUEST_PARAM_FRAMEDEST = "internalServletFrameDest";
+        private String _redirectPath;
+        private CharArrayWriter _output;
+        private Cookie[] _cookiesToAdd;
 
-    public static final String EXTRAPAR_STATIC_ACTION = "internalServletStaticAction";
+        public ResponseWrapper(HttpServletResponse response) {
+            super(response);
+            _output = new CharArrayWriter();
+        }
+
+        @Override
+        public PrintWriter getWriter() {
+            return new PrintWriter(_output);
+        }
+
+        @Override
+        public void sendRedirect(String path) throws IOException {
+            this._redirectPath = path;
+        }
+
+        @Override
+        public void addCookie(Cookie cookie) {
+            super.addCookie(cookie);
+            int len = (null == this._cookiesToAdd) ? 0 : this._cookiesToAdd.length;
+            Cookie[] newCookiesToAdd = new Cookie[len + 1];
+            if (null != this._cookiesToAdd) {
+                for (int i = 0; i < len; i++) {
+                    newCookiesToAdd[i] = this._cookiesToAdd[i];
+                }
+            }
+            newCookiesToAdd[len] = cookie;
+            this._cookiesToAdd = newCookiesToAdd;
+        }
+
+        protected Cookie[] getCookiesToAdd() {
+            return _cookiesToAdd;
+        }
+
+        public boolean isRedirected() {
+            return (_redirectPath != null);
+        }
+
+        public String getRedirectPath() {
+            return _redirectPath;
+        }
+
+        @Override
+        public String toString() {
+            return _output.toString();
+        }
+
+    }
 
 }

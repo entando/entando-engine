@@ -11,17 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.actionlog;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+package org.entando.entando.aps.system.services.actionlog;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
@@ -33,23 +33,22 @@ import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSe
  */
 public interface IActionLogManager {
 
+    String LOG_APPENDER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActionRecordAppender_";
+    String LOG_CLEANER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActivityStreamCleanerThread_";
+
     /**
-     * Load a list of {@link ActionLogRecord} codes that match the search
-     * criteria rapresented by the searchBean
+     * Load a list of {@link ActionLogRecord} codes that match the search criteria rapresented by the searchBean
      *
      * @param searchBean object containing the search criteria
      * @return a list of codes
      * @throws ApsSystemException if an error occurs
      */
-    public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException;
+    List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException;
 
     /**
      * Save a new {@link ActionLogRecord}
-     *
-     * @param actionRecord
-     * @throws ApsSystemException
      */
-    public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException;
+    void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException;
 
     /**
      * Load a {@link ActionLogRecord}
@@ -58,7 +57,7 @@ public interface IActionLogManager {
      * @return an {@link ActionLogRecord}
      * @throws ApsSystemException if an error occurs
      */
-    public ActionLogRecord getActionRecord(int id) throws ApsSystemException;
+    ActionLogRecord getActionRecord(int id) throws ApsSystemException;
 
     /**
      * Delete a {@link ActionLogRecord}
@@ -66,27 +65,25 @@ public interface IActionLogManager {
      * @param id the code of the record to delete
      * @throws ApsSystemException if an error occurs
      */
-    public void deleteActionRecord(int id) throws ApsSystemException;
+    void deleteActionRecord(int id) throws ApsSystemException;
 
-    public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException;
-    
-    public List<Integer> getActivityStream(FieldSearchFilter[] filters, List<String> userGroupCodes) throws ApsSystemException;
+    List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException;
 
-    public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException;
+    List<Integer> getActivityStream(FieldSearchFilter[] filters, List<String> userGroupCodes) throws ApsSystemException;
 
-    public List<Integer> getActivityStream(FieldSearchFilter[] filters, UserDetails loggedUser) throws ApsSystemException;
+    List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException;
 
-    public List<Integer> getActivityStream(IActivityStreamSearchBean activityStreamSearchBean) throws ApsSystemException;
+    List<Integer> getActivityStream(FieldSearchFilter[] filters, UserDetails loggedUser) throws ApsSystemException;
 
-    public Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup) throws ApsSystemException;
+    List<Integer> getActivityStream(IActivityStreamSearchBean activityStreamSearchBean) throws ApsSystemException;
 
-    public void updateRecordDate(int id) throws ApsSystemException;
+    Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup) throws ApsSystemException;
 
-    public Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException;
+    void updateRecordDate(int id) throws ApsSystemException;
 
-    public static final String LOG_APPENDER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActionRecordAppender_";
-    public static final String LOG_CLEANER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActivityStreamCleanerThread_";
+    Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException;
 
-    public SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException;
+    SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean)
+            throws ApsSystemException;
 
 }

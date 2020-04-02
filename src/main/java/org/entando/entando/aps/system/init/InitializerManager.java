@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.cache.IInitializerManagerCacheWrapper;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentEnvironment;
@@ -36,10 +35,8 @@ import org.springframework.beans.FatalBeanException;
  */
 public class InitializerManager extends AbstractInitializerManager implements IInitializerManager {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     public static final String REPORT_CONFIG_ITEM = "entandoComponentsReport";
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private IInitializerManagerCacheWrapper cacheWrapper;
 
     private boolean checkOnStartup;
@@ -128,7 +125,8 @@ public class InitializerManager extends AbstractInitializerManager implements II
         }
         String compEnvKey = (AbstractInitializerManager.Environment.test.equals(this.getEnvironment()))
                 ? AbstractInitializerManager.Environment.test.toString() : AbstractInitializerManager.Environment.production.toString();
-        ComponentEnvironment componentEnvironment = (null != component.getEnvironments()) ? component.getEnvironments().get(compEnvKey) : null;
+        ComponentEnvironment componentEnvironment =
+                (null != component.getEnvironments()) ? component.getEnvironments().get(compEnvKey) : null;
         List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
         if (null == postProcesses || postProcesses.isEmpty()) {
             postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;

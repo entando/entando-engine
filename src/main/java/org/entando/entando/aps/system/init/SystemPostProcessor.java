@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import org.springframework.beans.BeansException;
@@ -20,19 +21,19 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * @author E.Santoboni
  */
 public class SystemPostProcessor implements BeanPostProcessor {
-	
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		//Nothing to do
-		return bean;
-	}
-	
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof InitializerManager) {
-			((InitializerManager) bean).executePostInitProcesses();
-		}
-		return bean;
-	}
-	
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        //Nothing to do
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof InitializerManager) {
+            ((InitializerManager) bean).executePostInitProcesses();
+        }
+        return bean;
+    }
+
 }

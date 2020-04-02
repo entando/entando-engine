@@ -11,7 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.filebrowser;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,15 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -313,7 +314,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             Assert.assertEquals("test test", text);
 
             ResultActions result = mockMvc
-                    .perform(delete("/fileBrowser/file").param("currentPath", folderName + "/testDelete.txt").param("protectedFolder", "true")
+                    .perform(delete("/fileBrowser/file").param("currentPath", folderName + "/testDelete.txt")
+                            .param("protectedFolder", "true")
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
@@ -339,7 +341,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             String accessToken = mockOAuthInterceptor(user);
 
             ResultActions result = mockMvc
-                    .perform(delete("/fileBrowser/file").param("currentPath", folderName + "/testDelete2.txt").param("protectedFolder", "true")
+                    .perform(delete("/fileBrowser/file").param("currentPath", folderName + "/testDelete2.txt")
+                            .param("protectedFolder", "true")
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
@@ -393,7 +396,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
-            String body = "{\"protectedFolder\":false,\"path\":\"test_folder/subfolder\"}";//this.createBody("test.txt", "test_folder/test.txt", false, "test test");
+            String body = "{\"protectedFolder\":false,\"path\":\"test_folder/subfolder\"}";//this.createBody("test.txt",
+            // "test_folder/test.txt", false, "test test");
             ResultActions result = this.executeDirectoryPost(body, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.size()", is(2)));
             result.andExpect(jsonPath("$.payload.protectedFolder", is(false)));

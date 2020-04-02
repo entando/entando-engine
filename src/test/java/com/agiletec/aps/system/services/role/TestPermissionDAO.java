@@ -11,106 +11,105 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.role;
 
+import com.agiletec.aps.BaseTestCase;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
-
 /**
- * @version 1.0
  * @author M.Diana
+ * @version 1.0
  */
 public class TestPermissionDAO extends BaseTestCase {
-	
+
     public void testAddUpdateDeletePermission() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
-		PermissionDAO permissionDao = new PermissionDAO();
-		permissionDao.setDataSource(dataSource);
-		try {
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
+        PermissionDAO permissionDao = new PermissionDAO();
+        permissionDao.setDataSource(dataSource);
+        try {
             permissionDao.deletePermission("temp");
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		Permission permission = new Permission();
-		permission.setName("temp");
-		permission.setDescription("temp");
+        Permission permission = new Permission();
+        permission.setName("temp");
+        permission.setDescription("temp");
         try {
-        	permissionDao.addPermission(permission);
+            permissionDao.addPermission(permission);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
-		Map<String, Permission> permissions = null;
+        Map<String, Permission> permissions = null;
         try {
-        	permissions = permissionDao.loadPermissions();
+            permissions = permissionDao.loadPermissions();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         Iterator<Permission> iter = permissions.values().iterator();
         boolean contains = false;
         while (iter.hasNext()) {
-			permission = iter.next();
-			if (permission.getName().equals("temp")) {
-				contains = true;
-			}
-		}
+            permission = iter.next();
+            if (permission.getName().equals("temp")) {
+                contains = true;
+            }
+        }
         assertTrue(contains);
         this.updatePermission(permissionDao);
         this.deletePermission(permissionDao);
-	}
-	
-	private void updatePermission(PermissionDAO permissionDao) throws Throwable {
-		Permission permission = new Permission();
-		permission.setName("temp");
-		permission.setDescription("temp1");
+    }
+
+    private void updatePermission(PermissionDAO permissionDao) throws Throwable {
+        Permission permission = new Permission();
+        permission.setName("temp");
+        permission.setDescription("temp1");
         try {
-        	permissionDao.updatePermission(permission);
+            permissionDao.updatePermission(permission);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         Map<String, Permission> permissions = null;
         try {
-        	permissions = permissionDao.loadPermissions();
+            permissions = permissionDao.loadPermissions();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         Iterator<Permission> iter = permissions.values().iterator();
         boolean contains = false;
         while (iter.hasNext()) {
-			permission = iter.next();
-			if (permission.getDescription().equals("temp1")) {
-				contains = true;
-			}
-		}
+            permission = iter.next();
+            if (permission.getDescription().equals("temp1")) {
+                contains = true;
+            }
+        }
         assertTrue(contains);
-	}
-		
-	private void deletePermission(PermissionDAO permissionDao) throws Throwable {
-		Permission permission = new Permission();
-		permission.setName("temp");
+    }
+
+    private void deletePermission(PermissionDAO permissionDao) throws Throwable {
+        Permission permission = new Permission();
+        permission.setName("temp");
         try {
-        	permissionDao.deletePermission(permission);
+            permissionDao.deletePermission(permission);
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         Map<String, Permission> permissions = null;
         try {
-        	permissions = permissionDao.loadPermissions();
+            permissions = permissionDao.loadPermissions();
         } catch (Throwable t) {
-        	throw t;
+            throw t;
         }
         Iterator<Permission> iter = permissions.values().iterator();
         boolean contains = false;
         while (iter.hasNext()) {
-			permission = iter.next();
-			if (permission.getName().equals("temp")) {
-				contains = true;
-			}
-		}
-        assertFalse(contains);    
-	}		
-    	
+            permission = iter.next();
+            if (permission.getName().equals("temp")) {
+                contains = true;
+            }
+        }
+        assertFalse(contains);
+    }
+
 }

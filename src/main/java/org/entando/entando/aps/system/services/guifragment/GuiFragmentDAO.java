@@ -11,17 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +33,15 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 
     private static final Logger logger = LoggerFactory.getLogger(GuiFragmentDAO.class);
 
-    private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (code, widgettypecode, plugincode, gui, locked ) VALUES (? , ? , ? , ? , ?)";
+    private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (code, widgettypecode, plugincode, gui, locked ) VALUES (? , ?"
+            + " , ? , ? , ?)";
 
     private static final String UPDATE_GUIFRAGMENT = "UPDATE guifragment SET widgettypecode = ?, plugincode = ? , gui = ? WHERE code = ? ";
 
     private static final String DELETE_GUIFRAGMENT = "DELETE FROM guifragment WHERE code = ?";
 
-    private static final String LOAD_GUIFRAGMENT = "SELECT code, widgettypecode, plugincode, gui, defaultgui, locked FROM guifragment WHERE code = ?";
+    private static final String LOAD_GUIFRAGMENT = "SELECT code, widgettypecode, plugincode, gui, defaultgui, locked FROM guifragment "
+            + "WHERE code = ?";
 
     private static final String LOAD_GUIFRAGMENT_PLUGIN_CODES = "SELECT plugincode FROM guifragment";
 

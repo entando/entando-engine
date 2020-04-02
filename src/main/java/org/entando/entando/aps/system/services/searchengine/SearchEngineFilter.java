@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package org.entando.entando.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,33 +30,31 @@ import java.util.List;
  * @author E.Santoboni
  */
 public class SearchEngineFilter<T> extends FieldSearchFilter<T> implements Serializable {
-    
+
     private TextSearchOption textSearchOption;
-    
+
     private boolean fullTextSearch;
     private boolean attributeFilter;
     private String langCode;
-    
-    public enum TextSearchOption {EXACT, ALL_WORDS, AT_LEAST_ONE_WORD, ANY_WORD}
-	
-	public SearchEngineFilter(String key, T value) {
-		this(key, value, TextSearchOption.AT_LEAST_ONE_WORD);
-	}
-	
-	public SearchEngineFilter(String key, T value, TextSearchOption textSearchOption) {
-		super(key, value, false);
-		this.setTextSearchOption(textSearchOption);
-	}
-	
-	public SearchEngineFilter(String key, List<T> allowedValues, TextSearchOption textSearchOption) {
-		super(key, allowedValues, false);
-		this.setTextSearchOption(textSearchOption);
-	}
-	
-	public SearchEngineFilter(String key, T start, T end) {
-		super(key, start, end);
-	}
-    
+
+    public SearchEngineFilter(String key, T value) {
+        this(key, value, TextSearchOption.AT_LEAST_ONE_WORD);
+    }
+
+    public SearchEngineFilter(String key, T value, TextSearchOption textSearchOption) {
+        super(key, value, false);
+        this.setTextSearchOption(textSearchOption);
+    }
+
+    public SearchEngineFilter(String key, List<T> allowedValues, TextSearchOption textSearchOption) {
+        super(key, allowedValues, false);
+        this.setTextSearchOption(textSearchOption);
+    }
+
+    public SearchEngineFilter(String key, T start, T end) {
+        super(key, start, end);
+    }
+
     public SearchEngineFilter(String key, boolean attributeFilter) {
         this(key, null);
         this.setAttributeFilter(attributeFilter);
@@ -72,7 +70,8 @@ public class SearchEngineFilter<T> extends FieldSearchFilter<T> implements Seria
         this.setAttributeFilter(attributeFilter);
     }
 
-    public static SearchEngineFilter createAllowedValuesFilter(String key, boolean attributeFilter, List allowedValues, TextSearchOption textSearchOption) {
+    public static SearchEngineFilter createAllowedValuesFilter(String key, boolean attributeFilter, List allowedValues,
+            TextSearchOption textSearchOption) {
         SearchEngineFilter filter = new SearchEngineFilter(key, attributeFilter);
         filter.setAllowedValues(allowedValues);
         filter.setTextSearchOption(textSearchOption);
@@ -85,16 +84,17 @@ public class SearchEngineFilter<T> extends FieldSearchFilter<T> implements Seria
         filter.setEnd(end);
         return filter;
     }
-	
-	public TextSearchOption getTextSearchOption() {
-		if (null == this.textSearchOption && super.isNullOption()) {
-			return TextSearchOption.ANY_WORD;
-		}
-		return textSearchOption;
-	}
-	protected void setTextSearchOption(TextSearchOption textSearchOption) {
-		this.textSearchOption = textSearchOption;
-	}
+
+    public TextSearchOption getTextSearchOption() {
+        if (null == this.textSearchOption && super.isNullOption()) {
+            return TextSearchOption.ANY_WORD;
+        }
+        return textSearchOption;
+    }
+
+    protected void setTextSearchOption(TextSearchOption textSearchOption) {
+        this.textSearchOption = textSearchOption;
+    }
 
     public boolean isFullTextSearch() {
         return fullTextSearch;
@@ -127,5 +127,9 @@ public class SearchEngineFilter<T> extends FieldSearchFilter<T> implements Seria
         }
         super.setLikeOption(likeOption);
     }
-	
+
+    public enum TextSearchOption {
+        EXACT, ALL_WORDS, AT_LEAST_ONE_WORD, ANY_WORD
+    }
+
 }

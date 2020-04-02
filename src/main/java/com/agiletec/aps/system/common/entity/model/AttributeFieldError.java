@@ -11,24 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model;
 
-import java.io.Serializable;
-
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import java.io.Serializable;
 
 /**
  * @author E.Santoboni
  */
 public class AttributeFieldError extends FieldError implements Serializable {
 
+    public static final String OGNL_VALIDATION = "OGNL_VALIDATION";
+    private AttributeTracer _tracer;
+    private AttributeInterface _attribute;
+
     public AttributeFieldError(AttributeInterface attribute, String errorCode, AttributeTracer tracer) {
         super(null, errorCode);
         this.setTracer(tracer);
         this.setAttribute(attribute);
     }
-	
-	@Override
+
+    @Override
     public String getFieldCode() {
         String fieldCode = super.getFieldCode();
         if (null == fieldCode) {
@@ -57,6 +61,7 @@ public class AttributeFieldError extends FieldError implements Serializable {
     public AttributeTracer getTracer() {
         return _tracer;
     }
+
     protected void setTracer(AttributeTracer tracer) {
         this._tracer = tracer;
     }
@@ -64,13 +69,9 @@ public class AttributeFieldError extends FieldError implements Serializable {
     public AttributeInterface getAttribute() {
         return _attribute;
     }
+
     protected void setAttribute(AttributeInterface attribute) {
         this._attribute = attribute;
     }
-
-    private AttributeTracer _tracer;
-    private AttributeInterface _attribute;
-
-    public static final String OGNL_VALIDATION = "OGNL_VALIDATION";
 
 }

@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.group.model;
 
 import com.agiletec.aps.system.services.group.Group;
 import org.entando.entando.aps.system.services.DtoBuilder;
-
 
 public class GroupDtoBuilder extends DtoBuilder<Group, GroupDto> {
 

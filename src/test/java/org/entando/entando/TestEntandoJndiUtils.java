@@ -11,17 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class TestEntandoJndiUtils {
 
@@ -71,7 +75,7 @@ public class TestEntandoJndiUtils {
         Iterator<Entry<Object, Object>> configIter = testConfig.entrySet().iterator();
         while (configIter.hasNext()) {
             Entry<Object, Object> entry = configIter.next();
-            builder.bind("java:comp/env/" + (String) entry.getKey(), (String) entry.getValue());
+            builder.bind("java:comp/env/" + entry.getKey(), entry.getValue());
             logger.trace("{} : {}", entry.getKey(), entry.getValue());
         }
     }

@@ -1,7 +1,5 @@
 package org.entando.entando.aps.system.services.widgettype.validators;
 
-import java.util.Map;
-
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 
@@ -18,7 +16,7 @@ public class NoOpWidgetConfigurationProcessor implements WidgetConfigurationProc
             return null;
         }
         ApsProperties properties = new ApsProperties();
-        properties.putAll((Map<? extends Object, ? extends Object>) widget.getConfig());
+        properties.putAll(widget.getConfig());
         return properties;
     }
 

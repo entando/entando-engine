@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -21,11 +22,11 @@ import com.agiletec.aps.system.services.page.IPageManager;
  */
 public interface IDataObjectMapperCacheWrapper {
 
-	public static final String OBJECT_MAPPER_CACHE_NAME = "Entando_DataObjectPageMapperManager";
-	public static final String OBJECT_MAPPER_CACHE_KEY = "DataObjectMapper_mapper";
+    String OBJECT_MAPPER_CACHE_NAME = "Entando_DataObjectPageMapperManager";
+    String OBJECT_MAPPER_CACHE_KEY = "DataObjectMapper_mapper";
 
-	public void initCache(IPageManager pageManager) throws ApsSystemException;
+    void initCache(IPageManager pageManager) throws ApsSystemException;
 
-	public String getPageCode(String dataId);
+    String getPageCode(String dataId);
 
 }

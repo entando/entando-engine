@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -20,13 +21,13 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface IEntityManagerCacheWrapper {
 
-	public static final String ENTITY_MANAGER_CACHE_NAME_PREFIX = "Entando_";
-	public static final String ENTITY_STATUS_CACHE_NAME = "EntityManager_status";
+    String ENTITY_MANAGER_CACHE_NAME_PREFIX = "Entando_";
+    String ENTITY_STATUS_CACHE_NAME = "EntityManager_status";
 
-	public void initCache(String managerName) throws ApsSystemException;
+    void initCache(String managerName) throws ApsSystemException;
 
-	public Integer getEntityTypeStatus(String typeCode);
+    Integer getEntityTypeStatus(String typeCode);
 
-	public void updateEntityTypeStatus(String typeCode, Integer status);
+    void updateEntityTypeStatus(String typeCode, Integer status);
 
 }

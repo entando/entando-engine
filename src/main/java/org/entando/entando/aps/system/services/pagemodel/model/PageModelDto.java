@@ -1,10 +1,11 @@
 package org.entando.entando.aps.system.services.pagemodel.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.util.*;
 
 public class PageModelDto {
 
@@ -18,7 +19,7 @@ public class PageModelDto {
     private int mainFrame = NO_MAIN_FRAME;
     private String pluginCode;
     private String template;
-    
+
     /**
      * The references grouped by service name.
      * <p>
@@ -29,7 +30,7 @@ public class PageModelDto {
 
     public PageModelDto() {
     }
-    
+
     public PageModelDto(PageModelDto other) {
         this.code = other.code;
         this.descr = other.descr;
@@ -38,6 +39,19 @@ public class PageModelDto {
         this.pluginCode = other.pluginCode;
         this.template = other.template;
         this.references = other.references;
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "description":
+                return "descr";
+            case "pluginCode":
+                return "plugincode";
+            case "template":
+                return "templategui";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getCode() {
@@ -55,7 +69,6 @@ public class PageModelDto {
     public void setDescr(String descr) {
         this.descr = descr;
     }
-
 
     public int getMainFrame() {
         return mainFrame;
@@ -89,19 +102,6 @@ public class PageModelDto {
         this.references = references;
     }
 
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "description":
-                return "descr";
-            case "pluginCode":
-                return "plugincode";
-            case "template":
-                return "templategui";
-            default:
-                return dtoFieldName;
-        }
-    }
-
     public PageModelConfigurationDto getConfiguration() {
         return configuration;
     }
@@ -112,16 +112,20 @@ public class PageModelDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PageModelDto that = (PageModelDto) o;
         return mainFrame == that.mainFrame &&
-               Objects.equals(code, that.code) &&
-               Objects.equals(descr, that.descr) &&
-               Objects.equals(configuration, that.configuration) &&
-               Objects.equals(pluginCode, that.pluginCode) &&
-               Objects.equals(template, that.template) &&
-               Objects.equals(references, that.references);
+                Objects.equals(code, that.code) &&
+                Objects.equals(descr, that.descr) &&
+                Objects.equals(configuration, that.configuration) &&
+                Objects.equals(pluginCode, that.pluginCode) &&
+                Objects.equals(template, that.template) &&
+                Objects.equals(references, that.references);
     }
 
     @Override

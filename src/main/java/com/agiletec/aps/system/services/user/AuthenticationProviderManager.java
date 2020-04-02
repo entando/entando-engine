@@ -11,19 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
-
-import java.util.List;
-
-import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import java.util.List;
+import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,11 +31,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 /**
- * Implementazione concreta dell'oggetto Authentication Provider di default del
- * sistema. L'Authentication Provider è l'oggetto delegato alla restituzione di
- * un'utenza (comprensiva delle sue autorizzazioni) in occasione di una
- * richiesta di autenticazione utente; questo oggetto non ha visibilitÃ  ai
- * singoli sistemi (concreti) delegati alla gestione delle autorizzazioni.
+ * Implementazione concreta dell'oggetto Authentication Provider di default del sistema. L'Authentication Provider è l'oggetto delegato alla
+ * restituzione di un'utenza (comprensiva delle sue autorizzazioni) in occasione di una richiesta di autenticazione utente; questo oggetto
+ * non ha visibilitÃ  ai singoli sistemi (concreti) delegati alla gestione delle autorizzazioni.
  *
  * @author E.Santoboni
  */
@@ -130,7 +127,7 @@ public class AuthenticationProviderManager extends AbstractService
             if (null != user) {
                 Authentication newAuth
                         = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-                                authentication.getCredentials(), user.getAuthorizations());
+                        authentication.getCredentials(), user.getAuthorizations());
                 return newAuth;
             } else {
                 throw new UsernameNotFoundException("Invalid username/password");

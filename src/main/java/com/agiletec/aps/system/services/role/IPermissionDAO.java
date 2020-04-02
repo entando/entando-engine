@@ -11,44 +11,51 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.role;
 
 import java.util.Map;
 
 /**
  * Interfaccia base per i Data Access Object dei permessi (Permission).
+ *
  * @author M.Diana
  */
 public interface IPermissionDAO {
 
-	/**
-	 * Carica la mappa (indicizzata in base al nome) dei permessi di autorizzazione presenti nel db.
-	 * @return La mappa dei permessi di autorizzazione.
-	 */
-	public Map<String, Permission> loadPermissions();
+    /**
+     * Carica la mappa (indicizzata in base al nome) dei permessi di autorizzazione presenti nel db.
+     *
+     * @return La mappa dei permessi di autorizzazione.
+     */
+    Map<String, Permission> loadPermissions();
 
-	/**
-	 * Aggiunge un permesso di autorizzazione al db.
-	 * @param permission Oggetto Permission rappresentante il permesso da aggiungere.
-	 */
-	public void addPermission(Permission permission);
+    /**
+     * Aggiunge un permesso di autorizzazione al db.
+     *
+     * @param permission Oggetto Permission rappresentante il permesso da aggiungere.
+     */
+    void addPermission(Permission permission);
 
-	/**
-	 * Aggiorna un permesso nel db.
-	 * @param permission Oggetto Permission rappresentante il permesso da aggionare.
-	 */
-	public void updatePermission(Permission permission);
+    /**
+     * Aggiorna un permesso nel db.
+     *
+     * @param permission Oggetto Permission rappresentante il permesso da aggionare.
+     */
+    void updatePermission(Permission permission);
 
-	/**
-	 * Cancella un permesso di autorizzazione dal db.
-	 * @param permission Oggetto Permission rappresentante il permesso da eliminare.
-	 */
-	public void deletePermission(Permission permission);
+    /**
+     * Cancella un permesso di autorizzazione dal db.
+     *
+     * @param permission Oggetto Permission rappresentante il permesso da eliminare.
+     */
+    void deletePermission(Permission permission);
 
-	/**
-	 * Cancella un permesso di autorizzazione dal db.
-	 * @param permissionName Oggetto Permission rappresentante il permesso da eliminare.
-	 */
-	public void deletePermission(String permissionName);
+    /**
+     * Cancella un permesso di autorizzazione dal db.
+     *
+     * @param permissionName Oggetto Permission rappresentante il permesso da eliminare.
+     */
+    void deletePermission(String permissionName);
 
 }

@@ -11,17 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.role;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.validation.Valid;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.role.model.RoleDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
@@ -105,7 +104,8 @@ public class RoleController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{roleCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<RoleDto>> updateRole(@PathVariable String roleCode, @Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<RoleDto>> updateRole(@PathVariable String roleCode,
+            @Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) {
         logger.debug("updating role {}", roleCode);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -120,8 +120,10 @@ public class RoleController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{roleCode}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE, consumes="application/json-patch+json")
-    public ResponseEntity<SimpleRestResponse<RoleDto>> updateRole(@PathVariable String roleCode, @RequestBody JsonNode patchRequest, BindingResult bindingResult) {
+    @RequestMapping(value = "/{roleCode}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE, consumes =
+            "application/json-patch+json")
+    public ResponseEntity<SimpleRestResponse<RoleDto>> updateRole(@PathVariable String roleCode, @RequestBody JsonNode patchRequest,
+            BindingResult bindingResult) {
         logger.debug("update role {} with jsonpatch-request {}", roleCode, patchRequest);
 
         this.getRoleValidator().validateJsonPatch(patchRequest, bindingResult);
@@ -135,10 +137,10 @@ public class RoleController {
         return this.updateRole(roleCode, patchedRoleRequest, bindingResult);
     }
 
-
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult)
+            throws ApsSystemException {
         logger.debug("adding role");
         //field validations
         if (bindingResult.hasErrors()) {

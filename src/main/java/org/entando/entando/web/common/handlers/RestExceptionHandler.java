@@ -11,14 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.web.common.RestErrorCodes;
-import org.entando.entando.web.common.exceptions.*;
-import org.entando.entando.web.common.model.RestError;
+import org.entando.entando.web.common.exceptions.EntandoAuthorizationException;
+import org.entando.entando.web.common.exceptions.EntandoTokenException;
+import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.exceptions.ValidationUpdateSelfException;
 import org.entando.entando.web.common.model.ErrorRestResponse;
+import org.entando.entando.web.common.model.RestError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +43,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -60,7 +65,8 @@ public class RestExceptionHandler {
     @ResponseBody
     public ErrorRestResponse processRuntimeExceptionException(RuntimeException ex) {
         logger.warn("Processing unhandled exception", ex);
-        RestError error = new RestError(RestErrorCodes.INTERNAL_ERROR, this.resolveLocalizedErrorMessage("GENERIC_ERROR", new Object[]{ex.getMessage()}));
+        RestError error = new RestError(RestErrorCodes.INTERNAL_ERROR,
+                this.resolveLocalizedErrorMessage("GENERIC_ERROR", new Object[]{ex.getMessage()}));
         return new ErrorRestResponse(error);
     }
 
@@ -69,7 +75,8 @@ public class RestExceptionHandler {
     @ResponseBody
     public ErrorRestResponse processEntandoAuthorizationException(EntandoAuthorizationException ex) {
         logger.debug("Handling {} error", ex.getClass().getSimpleName());
-        RestError error = new RestError(RestErrorCodes.UNAUTHORIZED, this.resolveLocalizedErrorMessage("UNAUTHORIZED", new Object[]{ex.getUsername(), ex.getRequestURI(), ex.getMethod()}));
+        RestError error = new RestError(RestErrorCodes.UNAUTHORIZED,
+                this.resolveLocalizedErrorMessage("UNAUTHORIZED", new Object[]{ex.getUsername(), ex.getRequestURI(), ex.getMethod()}));
         return new ErrorRestResponse(error);
     }
 
@@ -78,7 +85,8 @@ public class RestExceptionHandler {
     @ResponseBody
     public ErrorRestResponse processEntandoTokenException(EntandoAuthorizationException ex) {
         logger.debug("Handling {} error", ex.getClass().getSimpleName());
-        RestError error = new RestError(RestErrorCodes.UNAUTHORIZED, this.resolveLocalizedErrorMessage("UNAUTHORIZED", new Object[]{ex.getUsername(), ex.getRequestURI(), ex.getMethod()}));
+        RestError error = new RestError(RestErrorCodes.UNAUTHORIZED,
+                this.resolveLocalizedErrorMessage("UNAUTHORIZED", new Object[]{ex.getUsername(), ex.getRequestURI(), ex.getMethod()}));
         return new ErrorRestResponse(error);
     }
 
@@ -91,7 +99,8 @@ public class RestExceptionHandler {
             BindingResult result = ex.getBindingResult();
             return processAllErrors(result);
         } else {
-            RestError error = new RestError(RestErrorCodes.UNAUTHORIZED, this.resolveLocalizedErrorMessage("UNAUTHORIZED_ON_RESOURCE", new Object[]{ex.getUsername(), ex.getResource()}));
+            RestError error = new RestError(RestErrorCodes.UNAUTHORIZED,
+                    this.resolveLocalizedErrorMessage("UNAUTHORIZED_ON_RESOURCE", new Object[]{ex.getUsername(), ex.getResource()}));
             return new ErrorRestResponse(error);
         }
     }
@@ -105,7 +114,8 @@ public class RestExceptionHandler {
             BindingResult result = ex.getBindingResult();
             return processAllErrors(result);
         } else {
-            RestError error = new RestError(ex.getErrorCode(), this.resolveLocalizedErrorMessage("NOT_FOUND", new Object[]{ex.getObjectName(), ex.getObjectCode()}));
+            RestError error = new RestError(ex.getErrorCode(),
+                    this.resolveLocalizedErrorMessage("NOT_FOUND", new Object[]{ex.getObjectName(), ex.getObjectCode()}));
             return new ErrorRestResponse(error);
         }
     }
@@ -183,9 +193,6 @@ public class RestExceptionHandler {
 
     /**
      * prova ad utilizzare il default message, altrimenti va sul default
-     *
-     * @param fieldError
-     * @return
      */
     private String resolveLocalizedErrorMessage(DefaultMessageSourceResolvable fieldError) {
         Locale currentLocale = LocaleContextHolder.getLocale();

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -22,22 +23,22 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = UserShortcut.TABLE_NAME)
 public class UserShortcut {
-	
-	public UserShortcut() {}
-	
-	@DatabaseField(columnName = "username", 
-			dataType = DataType.STRING, 
-			width = 80,
-			canBeNull = false, id = true)
-	private String _username;
-	
-	@DatabaseField(columnName = "config", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _config;
-	
-	public static final String TABLE_NAME = "authusershortcuts";
-	
+
+    public static final String TABLE_NAME = "authusershortcuts";
+    @DatabaseField(columnName = "username",
+            dataType = DataType.STRING,
+            width = 80,
+            canBeNull = false, id = true)
+    private String _username;
+
+    @DatabaseField(columnName = "config",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _config;
+
+    public UserShortcut() {
+    }
+
 }
 /*
 CREATE TABLE authusershortcuts

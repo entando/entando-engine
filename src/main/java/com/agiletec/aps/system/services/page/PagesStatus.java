@@ -11,12 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class PagesStatus implements Serializable {
+
+    private int online;
+    private int onlineWithChanges;
+    private int unpublished;
+    private Date lastUpdate;
 
     public int getTotal() {
         return this.getOnline() + this.getOnlineWithChanges() + this.getUnpublished();
@@ -68,10 +74,5 @@ public class PagesStatus implements Serializable {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-    private int online;
-    private int onlineWithChanges;
-    private int unpublished;
-    private Date lastUpdate;
 
 }

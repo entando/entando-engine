@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import org.slf4j.Logger;
@@ -18,16 +19,16 @@ import org.slf4j.LoggerFactory;
 
 public class ScheduledDeleteExpiredTokenThread implements Runnable {
 
-    private final static Logger logger = LoggerFactory.getLogger(ScheduledDeleteExpiredTokenThread.class);
-    
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledDeleteExpiredTokenThread.class);
+
     private IOAuth2TokenDAO tokenDAO;
     private int expirationTime;
-    
+
     public ScheduledDeleteExpiredTokenThread(IOAuth2TokenDAO tokenDAO, int expirationTime) {
         this.tokenDAO = tokenDAO;
         this.expirationTime = expirationTime;
     }
-    
+
     @Override
     public void run() {
         logger.debug("start delete expired access token");

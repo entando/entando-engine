@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import java.util.Date;
@@ -22,48 +23,45 @@ import java.util.Date;
  */
 public class LastReloadInfo {
 
-	/**
-	 * Restituisce la data dell'ultimo ricaricamento indici effettuata.
-	 *
-	 * @return La data dell'ultimo ricaricamento.
-	 */
-	public Date getDate() {
-		return _date;
-	}
+    public static final int ID_FAILURE_RESULT = 0;
+    public static final int ID_SUCCESS_RESULT = 1;
+    private Date _date;
+    private int _result;
 
-	/**
-	 * Setta la data dell'ultimo ricaricamento indici effettuata.
-	 *
-	 * @param date La data dell'ultimo ricaricamento.
-	 */
-	protected void setDate(Date date) {
-		this._date = date;
-	}
+    /**
+     * Restituisce la data dell'ultimo ricaricamento indici effettuata.
+     *
+     * @return La data dell'ultimo ricaricamento.
+     */
+    public Date getDate() {
+        return _date;
+    }
 
-	/**
-	 * Restituisce il risultato dell'ultimo ricaricamento indici effettuata.
-	 * True se è andato a buon fine,false in caso contrario.
-	 *
-	 * @return Il risultato dell'ultimo ricaricamento.
-	 */
-	public int getResult() {
-		return _result;
-	}
+    /**
+     * Setta la data dell'ultimo ricaricamento indici effettuata.
+     *
+     * @param date La data dell'ultimo ricaricamento.
+     */
+    protected void setDate(Date date) {
+        this._date = date;
+    }
 
-	/**
-	 * Setta il risultato dell'ultimo ricaricamento indici effettuata. True se è
-	 * andato a buon fine,false in caso contrario.
-	 *
-	 * @param result Il risultato dell'ultimo ricaricamento.
-	 */
-	protected void setResult(int result) {
-		this._result = result;
-	}
+    /**
+     * Restituisce il risultato dell'ultimo ricaricamento indici effettuata. True se è andato a buon fine,false in caso contrario.
+     *
+     * @return Il risultato dell'ultimo ricaricamento.
+     */
+    public int getResult() {
+        return _result;
+    }
 
-	private Date _date;
-	private int _result;
-
-	public static final int ID_FAILURE_RESULT = 0;
-	public static final int ID_SUCCESS_RESULT = 1;
+    /**
+     * Setta il risultato dell'ultimo ricaricamento indici effettuata. True se è andato a buon fine,false in caso contrario.
+     *
+     * @param result Il risultato dell'ultimo ricaricamento.
+     */
+    protected void setResult(int result) {
+        this._result = result;
+    }
 
 }

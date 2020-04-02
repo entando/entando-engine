@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.activitystream;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.activitystream;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
+import java.util.List;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
@@ -41,6 +41,10 @@ import org.springframework.cache.annotation.Cacheable;
 public class SocialActivityStreamManager extends AbstractService implements ISocialActivityStreamManager, ProfileChangedObserver {
 
     private static final Logger _logger = LoggerFactory.getLogger(SocialActivityStreamManager.class);
+    private IActionLogManager _actionLogManager;
+    private ISocialActivityStreamDAO _socialActivityStreamDAO;
+    private IKeyGeneratorManager _keyGeneratorManager;
+    private IUserProfileManager _userProfileManager;
 
     @Override
     public void init() throws Exception {
@@ -188,11 +192,5 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
     public void setUserProfileManager(IUserProfileManager userProfileManager) {
         this._userProfileManager = userProfileManager;
     }
-
-    private IActionLogManager _actionLogManager;
-
-    private ISocialActivityStreamDAO _socialActivityStreamDAO;
-    private IKeyGeneratorManager _keyGeneratorManager;
-    private IUserProfileManager _userProfileManager;
 
 }

@@ -11,34 +11,36 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags.util;
 
-
 /**
- * @version 1.0
  * @author E.Santoboni
+ * @version 1.0
  */
 public class SmallCategory implements Comparable<SmallCategory> {
 
-	public String getCode() {
-		return _code;
-	}
-	public void setCode(String code) {
-		this._code = code;
-	}
+    private String _code;
+    private String _title;
 
-	public String getTitle() {
-		return _title;
-	}
-	public void setTitle(String title) {
-		this._title = title;
-	}
+    public String getCode() {
+        return _code;
+    }
 
-	public int compareTo(SmallCategory smallCat) {
-		return _title.compareTo(smallCat.getTitle());
-	}
+    public void setCode(String code) {
+        this._code = code;
+    }
 
-	private String _code;
-	private String _title;
+    public String getTitle() {
+        return _title;
+    }
+
+    public void setTitle(String title) {
+        this._title = title;
+    }
+
+    public int compareTo(SmallCategory smallCat) {
+        return _title.compareTo(smallCat.getTitle());
+    }
 
 }

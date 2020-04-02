@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.json;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Date> {
 
     @Override
     public Date deserialize(JsonParser jsonParser,
-            DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+            DeserializationContext deserializationContext) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
         String date = jsonParser.getText();
         if (null == date) {

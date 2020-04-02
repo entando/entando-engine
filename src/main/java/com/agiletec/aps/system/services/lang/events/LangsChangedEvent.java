@@ -11,25 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.lang.events;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.ApsEvent;
 
 /**
- * Evento specifico da rilanciare in corispondenza 
- * di modifica delle lingue di sistema.
+ * Evento specifico da rilanciare in corispondenza di modifica delle lingue di sistema.
+ *
  * @author E.Santoboni - M.Diana
  */
 public class LangsChangedEvent extends ApsEvent {
-	
-	@Override
-	public void notify(IManager srv) {
-		((LangsChangedObserver) srv).updateFromLangsChanged(this);
-	}
-	
-	public Class getObserverInterface() {
-		return LangsChangedObserver.class;
-	}
-	
+
+    @Override
+    public void notify(IManager srv) {
+        ((LangsChangedObserver) srv).updateFromLangsChanged(this);
+    }
+
+    public Class getObserverInterface() {
+        return LangsChangedObserver.class;
+    }
+
 }

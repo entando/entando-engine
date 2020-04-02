@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
@@ -25,17 +25,17 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(propOrder = {"attributes"})
 public class JAXBListAttribute extends AbstractJAXBAttribute implements Serializable {
-    
+
+    private List<AbstractJAXBAttribute> _attributes = null;
+
     @XmlElement(name = "attribute", required = true)
     @XmlElementWrapper(name = "attributes")
     public List<AbstractJAXBAttribute> getAttributes() {
         return _attributes;
     }
-    
+
     public void setAttributes(List<AbstractJAXBAttribute> attributes) {
         this._attributes = attributes;
     }
-    
-    private List<AbstractJAXBAttribute> _attributes = null;
-    
+
 }

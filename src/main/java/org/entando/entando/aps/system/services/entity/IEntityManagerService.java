@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity;
 
 import org.entando.entando.aps.system.services.entity.model.EntityManagerDto;
@@ -26,20 +27,20 @@ import org.springframework.validation.BindingResult;
  */
 public interface IEntityManagerService {
 
-    public PagedMetadata<String> getEntityManagers(RestListRequest requestList);
+    PagedMetadata<String> getEntityManagers(RestListRequest requestList);
 
-    public EntityManagerDto getEntityManager(String entityManagerCode);
+    EntityManagerDto getEntityManager(String entityManagerCode);
 
-    public PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode, RestListRequest requestList);
+    PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode, RestListRequest requestList);
 
-    public EntityTypeFullDto getFullEntityType(String entityManagerCode, String entityTypeCode);
+    EntityTypeFullDto getFullEntityType(String entityManagerCode, String entityTypeCode);
 
-    public EntityTypeFullDto addEntityType(String entityManagerCode, EntityTypeDtoRequest bodyRequest, BindingResult bindingResult);
+    EntityTypeFullDto addEntityType(String entityManagerCode, EntityTypeDtoRequest bodyRequest, BindingResult bindingResult);
 
-    public EntityTypeFullDto updateEntityType(String entityManagerCode, EntityTypeDtoRequest request, BindingResult bindingResult);
+    EntityTypeFullDto updateEntityType(String entityManagerCode, EntityTypeDtoRequest request, BindingResult bindingResult);
 
-    public void deleteEntityType(String entityManagerCode, String entityTypeCode);
+    void deleteEntityType(String entityManagerCode, String entityTypeCode);
 
-    public PagedMetadata<String> getAttributeTypes(String entityManagerCode, RestListRequest requestList);
+    PagedMetadata<String> getAttributeTypes(String entityManagerCode, RestListRequest requestList);
 
 }

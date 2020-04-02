@@ -6,27 +6,20 @@ import org.springframework.validation.BeanPropertyBindingResult;
 
 /**
  * Interface to be implemented by components that performs widget configuration validation
- * 
- * 
- * @author spuddu
  *
+ * @author spuddu
  */
 public interface WidgetConfigurationValidator {
 
-    public static final String PROCESS_INFO_CONFIG = "cfg";
+    String PROCESS_INFO_CONFIG = "cfg";
 
     /**
      * Returns true is the implementation of this validator fits the provided widget code
-     * @param widgetCode
-     * @return
      */
     boolean supports(String widgetCode);
 
     /**
      * Validate the widgetConfiguration against the given page
-     * @param widget
-     * @param page
-     * @return
      */
-    public BeanPropertyBindingResult validate(WidgetConfigurationRequest widget, IPage page);
+    BeanPropertyBindingResult validate(WidgetConfigurationRequest widget, IPage page);
 }

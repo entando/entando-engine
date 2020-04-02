@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel.model;
 
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
@@ -35,6 +36,17 @@ public class DataModelDto {
         this.setModel(objectModel.getShape());
         this.setStylesheet(objectModel.getStylesheet());
         this.setType(objectModel.getDataType());
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "code":
+                return "modelid";
+            case "type":
+                return "datatype";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getModelId() {
@@ -75,17 +87,6 @@ public class DataModelDto {
 
     public void setStylesheet(String stylesheet) {
         this.stylesheet = stylesheet;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "code":
-                return "modelid";
-            case "type":
-                return "datatype";
-            default:
-                return dtoFieldName;
-        }
     }
 
 }

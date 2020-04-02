@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.io.Serializable;
@@ -23,15 +24,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(propOrder = {"number"})
 public class JAXBNumberAttribute extends AbstractJAXBAttribute implements Serializable {
-    
+
+    private BigDecimal _number;
+
     @XmlElement(name = "value", required = false)
     public BigDecimal getNumber() {
         return _number;
     }
+
     public void setNumber(BigDecimal number) {
         this._number = number;
     }
-    
-    private BigDecimal _number;
-    
+
 }

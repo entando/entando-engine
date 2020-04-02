@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.util.crypto;
 
 import java.security.Key;
 import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
@@ -28,6 +28,22 @@ import org.springframework.stereotype.Component;
 @Component
 @Deprecated
 public class LegacyPasswordEncryptor implements TextEncryptor {
+
+    public static final String TRIPLE_DES_KEY_SPEC = "DESede";
+    public static final String TRIPLE_DES = "DESede/ECB/PKCS5Padding";
+    private static final String KEY_STRING
+            = "21-199-217-127-162-182-251-137-227-56-131-242-191-224-21-97-146-158-152-21-124-70-127-91";
+
+    public static Key getKey() {
+        try {
+            byte[] bytes = KEY_STRING.getBytes();
+            DESedeKeySpec pass = new DESedeKeySpec(bytes);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance(TRIPLE_DES_KEY_SPEC);
+            return skf.generateSecret(pass);
+        } catch (Throwable t) {
+            throw new CryptoException("Error creating key", t);
+        }
+    }
 
     @Override
     public String encrypt(String plainText) {
@@ -57,20 +73,4 @@ public class LegacyPasswordEncryptor implements TextEncryptor {
             throw new CryptoException("Error decrypting string", t);
         }
     }
-
-    public static Key getKey() {
-        try {
-            byte[] bytes = KEY_STRING.getBytes();
-            DESedeKeySpec pass = new DESedeKeySpec(bytes);
-            SecretKeyFactory skf = SecretKeyFactory.getInstance(TRIPLE_DES_KEY_SPEC);
-            return skf.generateSecret(pass);
-        } catch (Throwable t) {
-            throw new CryptoException("Error creating key", t);
-        }
-    }
-
-    public static final String TRIPLE_DES_KEY_SPEC = "DESede";
-    public static final String TRIPLE_DES = "DESede/ECB/PKCS5Padding";
-    private static final String KEY_STRING
-            = "21-199-217-127-162-182-251-137-227-56-131-242-191-224-21-97-146-158-152-21-124-70-127-91";
 }

@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobjectmodel;
 
-import java.util.List;
-import java.util.Map;
+package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.page.IPage;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
 
 public class DataObjectModelManagerIntegrationTest extends BaseTestCase {

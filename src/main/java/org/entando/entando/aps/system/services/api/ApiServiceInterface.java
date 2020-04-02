@@ -11,8 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,9 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.ws.rs.core.Response;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
@@ -33,19 +37,17 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsProperties;
-
 /**
  * @author E.Santoboni
  */
 public class ApiServiceInterface {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ApiServiceInterface.class);
-	
+    private static final Logger _logger = LoggerFactory.getLogger(ApiServiceInterface.class);
+    private IAuthorizationManager _authorizationManager;
+    private IApiCatalogManager _apiCatalogManager;
+    private ILangManager _langManager;
+    private IResponseBuilder _responseBuilder;
+
     public ArrayList<ServiceInfo> getServices(Properties properties) throws ApiException {
         ArrayList<ServiceInfo> services = new ArrayList<ServiceInfo>();
         try {
@@ -53,12 +55,13 @@ public class ApiServiceInterface {
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             String tagParamValue = properties.getProperty("tag");
             //String myentandoParamValue = properties.getProperty("myentando");
-            //Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? Boolean.valueOf(myentandoParamValue) : null;
+            //Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? Boolean.valueOf
+            // (myentandoParamValue) : null;
             langCode = (null != langCode && null != this.getLangManager().getLang(langCode)) ? langCode : defaultLangCode;
-			Map<String, ApiService> masterServices = this.getApiCatalogManager().getServices(tagParamValue/*, myentando*/);
+            Map<String, ApiService> masterServices = this.getApiCatalogManager().getServices(tagParamValue/*, myentando*/);
             Iterator<ApiService> iter = masterServices.values().iterator();
             while (iter.hasNext()) {
-                ApiService service = (ApiService) iter.next();
+                ApiService service = iter.next();
                 if (service.isActive() && !service.isHidden() && this.checkServiceAuthorization(service, properties, false)) {
                     ServiceInfo smallService = this.createServiceInfo(service, langCode, defaultLangCode);
                     services.add(smallService);
@@ -67,12 +70,12 @@ public class ApiServiceInterface {
             BeanComparator comparator = new BeanComparator("description");
             Collections.sort(services, comparator);
         } catch (Throwable t) {
-        	_logger.error("Error extracting services", t);
+            _logger.error("Error extracting services", t);
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Internal error");
         }
         return services;
     }
-    
+
     protected ServiceInfo createServiceInfo(ApiService service, String langCode, String defaultLangCode) {
         String description = service.getDescription().getProperty(langCode);
         if (null == description || description.trim().length() == 0) {
@@ -98,7 +101,7 @@ public class ApiServiceInterface {
         }
         return smallService;
     }
-    
+
     public Object getService(Properties properties) throws ApiException {
         Object response = null;
         String key = (String) properties.get("key");
@@ -110,14 +113,14 @@ public class ApiServiceInterface {
             if (!service.isActive()) {
                 throw new ApiException(IApiErrorCodes.API_SERVICE_ACTIVE_FALSE, "Service '" + key + "' is not active");
             }
-			this.checkServiceAuthorization(service, properties, true);
+            this.checkServiceAuthorization(service, properties, true);
             Properties serviceParameters = new Properties();
             serviceParameters.putAll(service.getParameters());
             Iterator<Object> paramIter = properties.keySet().iterator();
             List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
             while (paramIter.hasNext()) {
                 Object paramName = paramIter.next();
-				String paramNameString = paramName.toString();
+                String paramNameString = paramName.toString();
                 if (reservedParameters.contains(paramNameString) || service.isFreeParameter(paramNameString)) {
                     serviceParameters.put(paramNameString, properties.get(paramName));
                 }
@@ -126,70 +129,71 @@ public class ApiServiceInterface {
         } catch (ApiException e) {
             throw e;
         } catch (Throwable t) {
-        	_logger.error("Error invocating service - key '{}'", key, t);
+            _logger.error("Error invocating service - key '{}'", key, t);
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Internal error");
         }
         return response;
     }
-	
-	protected boolean checkServiceAuthorization(ApiService service, Properties properties, boolean throwApiException) throws ApiException, Throwable {
-		if (!service.getRequiredAuth()) {
-			return true;
-		}
-		try {
-			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
+
+    protected boolean checkServiceAuthorization(ApiService service, Properties properties, boolean throwApiException)
+            throws Throwable {
+        if (!service.getRequiredAuth()) {
+            return true;
+        }
+        try {
+            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
-                throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, 
-						"Authentication is mandatory for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
+                throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED,
+                        "Authentication is mandatory for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
             }
-			if ((null != service.getRequiredGroup() && !this.getAuthorizationManager().isAuthOnGroup(user, service.getRequiredGroup())) 
-					|| (null != service.getRequiredPermission() && !this.getAuthorizationManager().isAuthOnPermission(user, service.getRequiredPermission()))) {
-				throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, 
-						"Permission denied for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
-			}
-		} catch (ApiException ae) {
-			if (throwApiException) {
-				throw ae;
-			}
-			return false;
-		} catch (Throwable t) {
-			_logger.error("Error checking auth for service - key '{}'", service.getKey(), t);
+            if ((null != service.getRequiredGroup() && !this.getAuthorizationManager().isAuthOnGroup(user, service.getRequiredGroup()))
+                    || (null != service.getRequiredPermission() && !this.getAuthorizationManager()
+                    .isAuthOnPermission(user, service.getRequiredPermission()))) {
+                throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED,
+                        "Permission denied for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
+            }
+        } catch (ApiException ae) {
+            if (throwApiException) {
+                throw ae;
+            }
+            return false;
+        } catch (Throwable t) {
+            _logger.error("Error checking auth for service - key '{}'", service.getKey(), t);
             throw t;
-		}
-		return true;
-	}
-	
-	protected IAuthorizationManager getAuthorizationManager() {
-		return _authorizationManager;
-	}
-	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
-		this._authorizationManager = authorizationManager;
-	}
-	
+        }
+        return true;
+    }
+
+    protected IAuthorizationManager getAuthorizationManager() {
+        return _authorizationManager;
+    }
+
+    public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
+        this._authorizationManager = authorizationManager;
+    }
+
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;
     }
+
     public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
         this._apiCatalogManager = apiCatalogManager;
     }
-	
+
     protected ILangManager getLangManager() {
         return _langManager;
     }
+
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
-	
+
     protected IResponseBuilder getResponseBuilder() {
         return _responseBuilder;
     }
+
     public void setResponseBuilder(IResponseBuilder responseBuilder) {
         this._responseBuilder = responseBuilder;
     }
-    
-	private IAuthorizationManager _authorizationManager;
-    private IApiCatalogManager _apiCatalogManager;
-    private ILangManager _langManager;
-    private IResponseBuilder _responseBuilder;
-    
+
 }

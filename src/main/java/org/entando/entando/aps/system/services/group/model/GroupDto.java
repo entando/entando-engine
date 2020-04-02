@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.group.model;
 
-import java.util.Map;
+package org.entando.entando.aps.system.services.group.model;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import java.util.Map;
 
 public class GroupDto {
 
@@ -37,7 +36,6 @@ public class GroupDto {
 
     }
 
-
     public GroupDto(String code, String name) {
         this.code = code;
         this.name = name;
@@ -46,6 +44,17 @@ public class GroupDto {
     public GroupDto(Group group) {
         this.setCode(group.getName());
         this.setName(group.getDescription());
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "code":
+                return "groupname";
+            case "name":
+                return "descr";
+            default:
+                return dtoFieldName;
+        }
     }
 
     public String getCode() {
@@ -62,17 +71,6 @@ public class GroupDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "code":
-                return "groupname";
-            case "name":
-                return "descr";
-            default:
-                return dtoFieldName;
-        }
     }
 
     public Map<String, Boolean> getReferences() {

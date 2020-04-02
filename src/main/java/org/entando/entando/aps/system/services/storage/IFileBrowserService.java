@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage;
 
 import java.util.List;
@@ -24,18 +25,18 @@ import org.springframework.validation.BindingResult;
  */
 public interface IFileBrowserService {
 
-    public List<BasicFileAttributeViewDto> browseFolder(String currentPath, Boolean protectedFolder);
+    List<BasicFileAttributeViewDto> browseFolder(String currentPath, Boolean protectedFolder);
 
-    public byte[] getFileStream(String currentPath, Boolean protectedFolder);
+    byte[] getFileStream(String currentPath, Boolean protectedFolder);
 
-    public void addFile(FileBrowserFileRequest request, BindingResult bindingResult);
+    void addFile(FileBrowserFileRequest request, BindingResult bindingResult);
 
-    public void updateFile(FileBrowserFileRequest request, BindingResult bindingResult);
+    void updateFile(FileBrowserFileRequest request, BindingResult bindingResult);
 
-    public void deleteFile(String currentPath, Boolean protectedResource);
+    void deleteFile(String currentPath, Boolean protectedResource);
 
-    public void addDirectory(FileBrowserRequest request, BindingResult bindingResult);
+    void addDirectory(FileBrowserRequest request, BindingResult bindingResult);
 
-    public void deleteDirectory(String currentPath, Boolean protectedFolder);
+    void deleteDirectory(String currentPath, Boolean protectedFolder);
 
 }

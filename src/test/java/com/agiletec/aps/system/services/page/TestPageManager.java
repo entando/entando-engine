@@ -11,20 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetsDAO;
@@ -34,11 +22,21 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 /**
  * @author M.Diana, E.Mezzano
  */
 public class TestPageManager extends BaseTestCase {
+
+    private IPageManager _pageManager = null;
+    private IWidgetTypeManager _widgetTypeManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -349,7 +347,8 @@ public class TestPageManager extends BaseTestCase {
             assertTrue(result);
             for (int i = 0; i < 2; i++) {
                 this.checkOrderAndPos("pagina_11", Arrays.asList("st_move_3", "st_move_4"));
-                this.checkOrderAndPos("pagina_12", Arrays.asList("dt_move_1", "dt_move_2", "dt_move_3", "dt_move_4", "st_move_2", "st_move_1"));
+                this.checkOrderAndPos("pagina_12",
+                        Arrays.asList("dt_move_1", "dt_move_2", "dt_move_3", "dt_move_4", "st_move_2", "st_move_1"));
                 ((IManager) this._pageManager).refresh(); // to check the same values after cache refresh
             }
 
@@ -676,7 +675,8 @@ public class TestPageManager extends BaseTestCase {
             IPage parentPage = _pageManager.getDraftRoot();
             PageModel pageModel = parentPage.getMetadata().getModel();
             PageMetadata draftMeta = PageTestUtil.createPageMetadata(pageModel, true, "pagina temporanea", null, null, false, null, null);
-            Page pageToAdd = PageTestUtil.createPage(testCode, parentPage.getCode(), "free", draftMeta, new Widget[pageModel.getFrames().length]);
+            Page pageToAdd = PageTestUtil
+                    .createPage(testCode, parentPage.getCode(), "free", draftMeta, new Widget[pageModel.getFrames().length]);
             _pageManager.addPage(pageToAdd);
             PagesStatus newStatus = this._pageManager.getPagesStatus();
             assertEquals(status.getOnline(), newStatus.getOnline());
@@ -764,7 +764,7 @@ public class TestPageManager extends BaseTestCase {
         IPage page = this._pageManager.getOnlinePage(onlinePageCode);
         assertNotNull(page);
         assertTrue(page.isOnline());
-        List<String> childs = Arrays.asList(page.getChildrenCodes());
+        String[] childs = page.getChildrenCodes();
         for (String child : childs) {
             String code = child;
             assertFalse(code.equalsIgnoreCase(onlyDraftPageCode));
@@ -779,7 +779,7 @@ public class TestPageManager extends BaseTestCase {
         IPage page = this._pageManager.getDraftPage(onlinePageCode);
         assertNotNull(page);
         assertTrue(page.isOnline());
-        List<String> childs = Arrays.asList(page.getChildrenCodes());
+        String[] childs = page.getChildrenCodes();
         boolean found = false;
         for (String child : childs) {
             String code = child;
@@ -796,8 +796,5 @@ public class TestPageManager extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IPageManager _pageManager = null;
-    private IWidgetTypeManager _widgetTypeManager;
 
 }

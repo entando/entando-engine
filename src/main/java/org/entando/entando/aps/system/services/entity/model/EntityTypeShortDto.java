@@ -11,22 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
-import java.util.Objects;
-
 /**
  * @author E.Santoboni
  */
 public class EntityTypeShortDto {
-    
+
     @NotNull(message = "entityType.code.notBlank")
     @Size(min = 3, max = 3, message = "entityType.code.invalidCharacters")
     @Pattern(regexp = "^[A-Z0-9]*$", message = "entityType.code.invalidCharacters")
@@ -71,8 +71,12 @@ public class EntityTypeShortDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EntityTypeShortDto that = (EntityTypeShortDto) o;
         return Objects.equals(code, that.code) &&
                 Objects.equals(name, that.name) &&

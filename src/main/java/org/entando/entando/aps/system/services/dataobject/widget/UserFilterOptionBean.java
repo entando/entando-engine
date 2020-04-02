@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.widget;
 
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -25,16 +26,13 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.CheckFormatUtil;
 import com.agiletec.aps.util.DateConverter;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.dataobjectsearchengine.IIndexerDAO;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
@@ -48,7 +46,27 @@ import org.slf4j.LoggerFactory;
  */
 public class UserFilterOptionBean implements Serializable {
 
+    public static final String PARAM_KEY = "key";
+    public static final String PARAM_IS_ATTRIBUTE_FILTER = "attributeFilter";
+    public static final String TYPE_METADATA = "metadata";
+    public static final String TYPE_ATTRIBUTE = "attribute";
+    public static final String KEY_FULLTEXT = "fulltext";
+    public static final String KEY_CATEGORY = "category";
+    public static final String PARAM_CATEGORY_CODE = "categoryCode";
+    public static final String FULLTEXT_OPTION_ALL_WORDS = "allwords";
+    public static final String FULLTEXT_OPTION_ONE_WORDS = "oneword";
+    public static final String FULLTEXT_OPTION_EXACT = "exact";
     private static final Logger _logger = LoggerFactory.getLogger(UserFilterOptionBean.class);
+    private String _key; //'fulltext' || 'category' || a name of attribute
+    private boolean _attributeFilter;
+    private AttributeInterface _attribute;
+    private Integer _currentFrame;
+    private Lang _currentLang;
+    private String _dateFormat;
+    private String[] _formFieldNames;
+    private Map<String, String> _formFieldValues;
+    private Map<String, AttributeFormFieldError> _formFieldErrors;
+    private String _userFilterCategoryCode;
 
     public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
         this.setKey(properties.getProperty(PARAM_KEY));
@@ -58,7 +76,7 @@ public class UserFilterOptionBean implements Serializable {
         String isAttributeFilter = properties.getProperty(PARAM_IS_ATTRIBUTE_FILTER);
         this.setAttributeFilter(null != isAttributeFilter && isAttributeFilter.equalsIgnoreCase("true"));
         if (this.isAttributeFilter()) {
-            this.setAttribute((AttributeInterface) prototype.getAttribute(this.getKey()));
+            this.setAttribute(prototype.getAttribute(this.getKey()));
             if (null == this.getAttribute()) {
                 throw new ApsSystemException("Null attribute by key '" + this.getKey() + "'");
             }
@@ -97,12 +115,12 @@ public class UserFilterOptionBean implements Serializable {
         this._attributeFilter = attributeFilter;
     }
 
-    public void setAttribute(AttributeInterface attribute) {
-        this._attribute = attribute;
-    }
-
     public AttributeInterface getAttribute() {
         return _attribute;
+    }
+
+    public void setAttribute(AttributeInterface attribute) {
+        this._attribute = attribute;
     }
 
     public Integer getCurrentFrame() {
@@ -186,7 +204,8 @@ public class UserFilterOptionBean implements Serializable {
         }
         if (check) {
             this.setFormFieldErrors(new HashMap<String, AttributeFormFieldError>(2));
-            AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), formFieldNames[1], AttributeFormFieldError.INVALID_RANGE_KEY, null);
+            AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), formFieldNames[1],
+                    AttributeFormFieldError.INVALID_RANGE_KEY, null);
             this.getFormFieldErrors().put(formFieldNames[1], error);
         }
     }
@@ -198,7 +217,8 @@ public class UserFilterOptionBean implements Serializable {
             for (int i = 0; i < formFieldNames.length; i++) {
                 String formFieldName = formFieldNames[i];
                 boolean isDateAttribute = attributeType.equals("Date");
-                String rangeField = (i == 0) ? AttributeFormFieldError.FIELD_TYPE_RANGE_START : AttributeFormFieldError.FIELD_TYPE_RANGE_END;
+                String rangeField =
+                        (i == 0) ? AttributeFormFieldError.FIELD_TYPE_RANGE_START : AttributeFormFieldError.FIELD_TYPE_RANGE_END;
                 String value = request.getParameter(formFieldName);
                 this.checkNoTextAttributeFormValue(isDateAttribute, value, formFieldName, rangeField);
             }
@@ -229,7 +249,8 @@ public class UserFilterOptionBean implements Serializable {
             if (null == this.getFormFieldErrors()) {
                 this.setFormFieldErrors(new HashMap<String, AttributeFormFieldError>(2));
             }
-            AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), fieldName, AttributeFormFieldError.INVALID_FORMAT_KEY, rangeField);
+            AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), fieldName,
+                    AttributeFormFieldError.INVALID_FORMAT_KEY, rangeField);
             this.getFormFieldErrors().put(fieldName, error);
         }
     }
@@ -267,8 +288,7 @@ public class UserFilterOptionBean implements Serializable {
                 String ignore = this.getFormFieldValues().get(this.getFormFieldNames()[1]);
                 if (null != ignore) {
                     return null;
-                } else if (null == value
-                        || value.equals("both")) {//special option for three state Attribute
+                } else if (null == value || value.equals("both")) { //special option for three state Attribute
                     filter = new EntitySearchFilter(attribute.getName(), true);
                     filter.setNullOption(true);
                 } else {
@@ -321,7 +341,8 @@ public class UserFilterOptionBean implements Serializable {
                 //String[] fieldsSuffix = {"", "_option"};
                 filter = new SearchEngineFilter(this.getCurrentLang().getCode(), value0, this.getOption(value1));
             } else if (this.getKey().equals(KEY_CATEGORY) && !StringUtils.isEmpty(value0)) {
-                filter = new SearchEngineFilter(IIndexerDAO.DATAOBJECT_CATEGORY_FIELD_NAME, value0, SearchEngineFilter.TextSearchOption.EXACT);
+                filter = new SearchEngineFilter(IIndexerDAO.DATAOBJECT_CATEGORY_FIELD_NAME, value0,
+                        SearchEngineFilter.TextSearchOption.EXACT);
             }
         } else {
             AttributeInterface attribute = this.getAttribute();
@@ -425,36 +446,16 @@ public class UserFilterOptionBean implements Serializable {
         this._userFilterCategoryCode = userFilterCategoryCode;
     }
 
-    private String _key; //'fulltext' || 'category' || a name of attribute
-    private boolean _attributeFilter;
-    private AttributeInterface _attribute;
-
-    private Integer _currentFrame;
-    private Lang _currentLang;
-
-    private String _dateFormat;
-
-    private String[] _formFieldNames;
-    private Map<String, String> _formFieldValues;
-    private Map<String, AttributeFormFieldError> _formFieldErrors;
-
-    public static final String PARAM_KEY = "key";
-    public static final String PARAM_IS_ATTRIBUTE_FILTER = "attributeFilter";
-
-    public static final String TYPE_METADATA = "metadata";
-    public static final String TYPE_ATTRIBUTE = "attribute";
-
-    public static final String KEY_FULLTEXT = "fulltext";
-    public static final String KEY_CATEGORY = "category";
-    public static final String PARAM_CATEGORY_CODE = "categoryCode";
-
-    public static final String FULLTEXT_OPTION_ALL_WORDS = "allwords";
-    public static final String FULLTEXT_OPTION_ONE_WORDS = "oneword";
-    public static final String FULLTEXT_OPTION_EXACT = "exact";
-
-    private String _userFilterCategoryCode;
-
     public class AttributeFormFieldError {
+
+        public static final String INVALID_FORMAT_KEY = "jacms_LIST_VIEWER_INVALID_FORMAT";
+        public static final String INVALID_RANGE_KEY = "jacms_LIST_VIEWER_INVALID_RANGE";
+        public static final String FIELD_TYPE_RANGE_START = "START";
+        public static final String FIELD_TYPE_RANGE_END = "END";
+        private String _attributeName;
+        private String _fieldName;
+        private String _errorKey;
+        private String _rangeFieldType;
 
         public AttributeFormFieldError(String attributeName, String fieldName, String errorKey, String rangeFieldType) {
             this._attributeName = attributeName;
@@ -478,17 +479,6 @@ public class UserFilterOptionBean implements Serializable {
         public String getRangeFieldType() {
             return _rangeFieldType;
         }
-
-        private String _attributeName;
-        private String _fieldName;
-        private String _errorKey;
-        private String _rangeFieldType;
-
-        public static final String INVALID_FORMAT_KEY = "jacms_LIST_VIEWER_INVALID_FORMAT";
-        public static final String INVALID_RANGE_KEY = "jacms_LIST_VIEWER_INVALID_RANGE";
-
-        public static final String FIELD_TYPE_RANGE_START = "START";
-        public static final String FIELD_TYPE_RANGE_END = "END";
 
     }
 

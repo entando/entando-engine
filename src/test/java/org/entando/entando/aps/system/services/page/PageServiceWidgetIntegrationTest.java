@@ -1,5 +1,9 @@
 package org.entando.entando.aps.system.services.page;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -15,15 +19,10 @@ import org.entando.entando.aps.system.services.page.model.PageConfigurationDto;
 import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 public class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;
-
 
     @Override
     protected void setUp() throws Exception {
@@ -42,7 +41,8 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     public void testGetPageConfiguration() throws JsonProcessingException {
         IPage draftRoot = this.pageManager.getDraftRoot();
-        PageConfigurationDto pageConfigurationDto = (PageConfigurationDto) this.pageService.getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
+        PageConfigurationDto pageConfigurationDto = this.pageService
+                .getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
         ObjectMapper mapper = new ObjectMapper();
         String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pageConfigurationDto);
     }
@@ -52,11 +52,12 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
-                                                                true, pageCode, null, null, false, null, null);
+                true, pageCode, null, null, false, null, null);
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, null);
         try {
             pageManager.addPage(pageToAdd);
-            WidgetConfigurationDto widgetConfigurationDto = this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);
+            WidgetConfigurationDto widgetConfigurationDto = this.pageService
+                    .getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);
             assertThat(widgetConfigurationDto, is(nullValue()));
 
             WidgetConfigurationRequest widgetConfigurationRequest = new WidgetConfigurationRequest();
@@ -65,7 +66,8 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
             this.pageService.updateWidgetConfiguration(pageCode, 0, widgetConfigurationRequest);
 
-            assertThat(this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT).getCode(), is("login_form"));
+            assertThat(this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT).getCode(),
+                    is("login_form"));
 
         } finally {
             pageManager.deletePage(pageCode);
@@ -78,11 +80,12 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
-                                                                true, pageCode, null, null, false, null, null);
+                true, pageCode, null, null, false, null, null);
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, null);
         try {
             pageManager.addPage(pageToAdd);
-            WidgetConfigurationDto widgetConfigurationDto = this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);
+            WidgetConfigurationDto widgetConfigurationDto = this.pageService
+                    .getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);
             assertThat(widgetConfigurationDto, is(nullValue()));
 
             WidgetConfigurationRequest widgetConfigurationRequest = new WidgetConfigurationRequest();
@@ -90,7 +93,8 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
             widgetConfigurationRequest.setConfig(null);
 
             this.pageService.updateWidgetConfiguration(pageCode, 0, widgetConfigurationRequest);
-            assertThat(this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT).getCode(), is("login_form"));
+            assertThat(this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT).getCode(),
+                    is("login_form"));
 
             this.pageService.deleteWidgetConfiguration(pageToAdd.getCode(), 0);
             assertThat(widgetConfigurationDto, is(nullValue()));
@@ -99,6 +103,5 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
             pageManager.deletePage(pageCode);
         }
     }
-
 
 }

@@ -11,11 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -25,6 +22,9 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
@@ -35,9 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Servizio di gestione dei tipi di widget (WidgetType) definiti nel sistema.
- * (Questo servizio non riguarda la configurazione delle istanze di widget nelle
- * pagine)
+ * Servizio di gestione dei tipi di widget (WidgetType) definiti nel sistema. (Questo servizio non riguarda la configurazione delle istanze
+ * di widget nelle pagine)
  *
  * @author M.Diana - E.Santoboni
  */
@@ -149,7 +148,7 @@ public class WidgetTypeManager extends AbstractService
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws ApsSystemException {
+            String configUi, String bundleId) throws ApsSystemException {
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {

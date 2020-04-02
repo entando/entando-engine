@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.entity.validator;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -31,17 +32,12 @@ import org.springframework.validation.Validator;
  */
 public abstract class EntityValidator extends AbstractPaginationValidator implements Validator {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public static final String ERRCODE_ENTITY_DOES_NOT_EXIST = "1";
-
     public static final String ERRCODE_ENTITY_ALREADY_EXISTS = "1";
-
     public static final String ERRCODE_URINAME_MISMATCH = "2";
-
     public static final String ERRCODE_TYPE_MISMATCH = "3";
-
     public static final String ERRCODE_ATTRIBUTE_INVALID = "4";
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean supports(Class<?> paramClass) {

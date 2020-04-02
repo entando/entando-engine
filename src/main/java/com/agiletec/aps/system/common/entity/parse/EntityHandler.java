@@ -11,13 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.common.entity.parse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+package com.agiletec.aps.system.common.entity.parse;
 
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -25,25 +20,37 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This class supports the parsing of the XML string that represents an Entity.
- * This "handler" class is used by the managers which manage the ApsEntities.
- * This class is utilized by default in the definition of the Spring abstract service {@link ApsEntityManager}.
- * This definition must be substituted in the declaration of those services which make use, extending it,
- * of the ApsEntityManager to support a customized entity. This entity must implement the IApsEntity
- * interface. 
+ * This class supports the parsing of the XML string that represents an Entity. This "handler" class is used by the managers which manage
+ * the ApsEntities. This class is utilized by default in the definition of the Spring abstract service {@link ApsEntityManager}. This
+ * definition must be substituted in the declaration of those services which make use, extending it, of the ApsEntityManager to support a
+ * customized entity. This entity must implement the IApsEntity interface.
+ *
  * @author M.Diana - E.Santoboni
  */
 public class EntityHandler extends DefaultHandler {
 
-	private static final Logger _logger = LoggerFactory.getLogger(EntityHandler.class);
-	
+    private static final Logger _logger = LoggerFactory.getLogger(EntityHandler.class);
+    private boolean _intoAttributes;
+    private IApsEntity _currentEntity;
+    private AttributeHandlerInterface _parserModule;
+    private StringBuffer _textBuffer;
+    private AttributeInterface _currentAttr;
+    private ICategoryManager _categoryManager;
+    private String _xmlAttributeRootElementName;
+
     /**
      * Handler initialization.
-     * @param entity The Entity Prototype to fill with data. 
+     *
+     * @param entity The Entity Prototype to fill with data.
      * @param xmlAttributeRootElementName The name of the root XML attribute.
-     * @param categoryManager The category manager suitable for the Entity Type. 
+     * @param categoryManager The category manager suitable for the Entity Type.
      */
     public void initHandler(IApsEntity entity, String xmlAttributeRootElementName,
             ICategoryManager categoryManager) {
@@ -52,7 +59,7 @@ public class EntityHandler extends DefaultHandler {
         this._xmlAttributeRootElementName = xmlAttributeRootElementName;
         this._categoryManager = categoryManager;
     }
-    
+
     public EntityHandler getHandlerPrototype() {
         EntityHandler handler = null;
         try {
@@ -63,8 +70,8 @@ public class EntityHandler extends DefaultHandler {
         }
         return handler;
     }
-    
-	@Override
+
+    @Override
     public void characters(char[] buf, int offset, int length) throws SAXException {
         String s = new String(buf, offset, length);
         if (_textBuffer == null) {
@@ -73,8 +80,8 @@ public class EntityHandler extends DefaultHandler {
             _textBuffer.append(s);
         }
     }
-    
-	@Override
+
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         this._textBuffer = null;
         try {
@@ -106,10 +113,9 @@ public class EntityHandler extends DefaultHandler {
     }
 
     /**
-     * Initialize the entity. This method is triggered by the startElement event
-     * on the root element in the XML defining the entity.
-     * This method must be extended when defining particular operations to perform
-     * on customized entities.
+     * Initialize the entity. This method is triggered by the startElement event on the root element in the XML defining the entity. This
+     * method must be extended when defining particular operations to perform on customized entities.
+     *
      * @param attributes The Attribute Elements.
      * @param qName The name of the XML attribute.
      * @throws SAXException If errors are detected while parsing the XML string.
@@ -122,12 +128,10 @@ public class EntityHandler extends DefaultHandler {
     }
 
     /**
-     * This method performs the operations not handled in the base handler.
-     * This method is triggered by the startElement event on those elements
-     * not recognized in the base handler.
-     * By default this method does not perform any action.
-     * This method must be extended to perform specific operations that depend
-     * on the structure of the Entity Type.
+     * This method performs the operations not handled in the base handler. This method is triggered by the startElement event on those
+     * elements not recognized in the base handler. By default this method does not perform any action. This method must be extended to
+     * perform specific operations that depend on the structure of the Entity Type.
+     *
      * @param uri The URI.
      * @param localName The localName.
      * @param qName The name of the XML attribute.
@@ -138,8 +142,8 @@ public class EntityHandler extends DefaultHandler {
             String qName, Attributes attributes) throws SAXException {
         //default: do nothing
     }
-    
-	@Override
+
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
             if (this.isIntoAttributes()) {
@@ -166,66 +170,61 @@ public class EntityHandler extends DefaultHandler {
                 }
             }
         } catch (Throwable t) {
-        	_logger.error("error in endElement", t);
+            _logger.error("error in endElement", t);
             throw new SAXException(t.getMessage(), new Exception(t));
         }
     }
 
     /**
-     * This is the last step in the interpretation process of the XML entity.
-     * This method is triggered by the endElement event on the root element of the XML 
-     * string.
-     * By default this method does not perform any action.
-     * This method must be extended to perform specific operations that depend
-     * on the structure of the Entity Type.
+     * This is the last step in the interpretation process of the XML entity. This method is triggered by the endElement event on the root
+     * element of the XML string. By default this method does not perform any action. This method must be extended to perform specific
+     * operations that depend on the structure of the Entity Type.
      */
     private void endEntity() {
         // nothing to do
     }
 
     /**
-     * Perform the operations for those attributes not handled in the base handler.
-     * This method is triggered by the endElement event on elements unknown to the
-     * base handler.
-     * By default this method does not perform any action.
-     * This method must be extended to perform specific operations that depend
-     * on the structure of the Entity Type.
+     * Perform the operations for those attributes not handled in the base handler. This method is triggered by the endElement event on
+     * elements unknown to the base handler. By default this method does not perform any action. This method must be extended to perform
+     * specific operations that depend on the structure of the Entity Type.
+     *
      * @param uri The URI.
      * @param localName The localName.
      * @param qName The name of the XML attribute.
-     * @throws SAXException If errors are detected while parsing the XML code 
+     * @throws SAXException If errors are detected while parsing the XML code
      */
     protected void endEntityElement(String uri, String localName, String qName) throws SAXException {
         // default: nothing to do
     }
-    
+
     private void startAttributes(Attributes attributes, String qName) throws SAXException {
         this.setIntoAttributes(true);
     }
-    
+
     private void endAttributes() {
         this.setIntoAttributes(false);
     }
-    
+
     private void startDescr(Attributes attributes, String qName) throws SAXException {
         // nothing to do
     }
-    
+
     private void endDescr() {
         if (null != this._textBuffer) {
             this._currentEntity.setDescription(this._textBuffer.toString());
         }
     }
-    
+
     private void startGroups(Attributes attributes, String qName) throws SAXException {
         String mainGroup = extractXmlAttribute(attributes, "mainGroup", qName, false);
         this._currentEntity.setMainGroup(mainGroup);
     }
-    
+
     private void endGroups() {
         // nothing to do
     }
-    
+
     private void startGroup(Attributes attributes, String qName) throws SAXException {
         String groupName = extractXmlAttribute(attributes, "name", qName, false);
         this._currentEntity.addGroup(groupName);
@@ -234,15 +233,15 @@ public class EntityHandler extends DefaultHandler {
     private void endGroup() {
         // nothing to do
     }
-    
+
     private void startCategories(Attributes attributes, String qName) throws SAXException {
         // nothing to do
     }
-    
+
     private void endCategories() {
         // nothing to do
     }
-    
+
     private void startCategory(Attributes attributes, String qName) throws SAXException {
         if (this._categoryManager != null) {
             String categoryCode = extractXmlAttribute(attributes, "id", qName, true);
@@ -252,24 +251,24 @@ public class EntityHandler extends DefaultHandler {
             }
         }
     }
-    
+
     private void endCategory() {
         // nothing to do
     }
-    
+
     private void startAttribute(Attributes attributes, String qName) throws SAXException {
         if (null == this._currentAttr) {
             String attributeName = this.extractXmlAttribute(attributes, "name", qName, false);
             if (null != attributeName) {
-				String attributeType = this.extractXmlAttribute(attributes, "attributetype", qName, false);
-                this._currentAttr = (AttributeInterface) this._currentEntity.getAttribute(attributeName);
+                String attributeType = this.extractXmlAttribute(attributes, "attributetype", qName, false);
+                this._currentAttr = this._currentEntity.getAttribute(attributeName);
                 if (null != this._currentAttr && this._currentAttr.getType().equals(attributeType)) {
                     this._parserModule = this._currentAttr.getHandler();
                     this._parserModule.setCurrentAttr(this._currentAttr);
                 } else {
-					this._parserModule = null;
-					this._currentAttr = null;
-				}
+                    this._parserModule = null;
+                    this._currentAttr = null;
+                }
             }
         }
         if (null != _parserModule) {
@@ -282,21 +281,20 @@ public class EntityHandler extends DefaultHandler {
             this._parserModule.endAttribute(qName, this._textBuffer);
             if (this._parserModule.isEndAttribute(qName)) {
                 this._parserModule = null;
-				this._currentAttr = null;
+                this._currentAttr = null;
             }
         }
     }
 
     /**
-     * Recupera in modo controllato un attributo di un tag xml dall'insieme
-     * degli attributi.
+     * Recupera in modo controllato un attributo di un tag xml dall'insieme degli attributi.
+     *
      * @param attrs Attributi del tag xml.
      * @param attributeName Nome dell'attributo richiesto.
      * @param qName Nome del tag xml.
      * @param required Se true, l'attributo è considerato obbligatorio.
      * @return Il valore dell'attributo richiesto.
-     * @throws SAXException Nel caso l'attributo sia dichiarato obbligatorio e
-     * risulti assente.
+     * @throws SAXException Nel caso l'attributo sia dichiarato obbligatorio e risulti assente.
      */
     protected String extractXmlAttribute(Attributes attrs, String attributeName,
             String qName, boolean required) throws SAXException {
@@ -309,20 +307,21 @@ public class EntityHandler extends DefaultHandler {
     }
 
     /**
-     * Verifica se, nell'istante in cui il metodo è richiamato, ci si trova 
-     * all'interno della definizione della lista di attributi componenti l'entità.
-     * @return True se ci si trova all'interno della definizione della lista di attributi 
-     * componenti l'entità, false in caso contrario.
+     * Verifica se, nell'istante in cui il metodo è richiamato, ci si trova all'interno della definizione della lista di attributi
+     * componenti l'entità.
+     *
+     * @return True se ci si trova all'interno della definizione della lista di attributi componenti l'entità, false in caso contrario.
      */
     protected boolean isIntoAttributes() {
         return _intoAttributes;
     }
 
     /**
-     * Setta se, nell'istante in cui il metodo è richiamato, ci si trova 
-     * all'interno della definizione della lista di attributi componenti l'entità.
-     * @param intoAttributes True se ci si trova all'interno della definizione della 
-     * lista di attributi componenti l'entità, false in caso contrario.
+     * Setta se, nell'istante in cui il metodo è richiamato, ci si trova all'interno della definizione della lista di attributi componenti
+     * l'entità.
+     *
+     * @param intoAttributes True se ci si trova all'interno della definizione della lista di attributi componenti l'entità, false in caso
+     * contrario.
      */
     protected void setIntoAttributes(boolean intoAttributes) {
         this._intoAttributes = intoAttributes;
@@ -330,6 +329,7 @@ public class EntityHandler extends DefaultHandler {
 
     /**
      * Resituisce il buffer relativo al testo incluso.
+     *
      * @return Il buffer relativo al testo incluso.
      */
     protected StringBuffer getTextBuffer() {
@@ -338,6 +338,7 @@ public class EntityHandler extends DefaultHandler {
 
     /**
      * Restituisce l'entità gestita dall'handler.
+     *
      * @return L'entità gestita dall'handler.
      */
     protected IApsEntity getCurrentEntity() {
@@ -345,9 +346,8 @@ public class EntityHandler extends DefaultHandler {
     }
 
     /**
-     * Effettua il reset delle variabili di istanza dell'handler.
-     * Il metodo viene richiamato in fase di inizializzazione degli 
-     * elementi dell'handler, prima di effettuare la scanzìsione del documento.
+     * Effettua il reset delle variabili di istanza dell'handler. Il metodo viene richiamato in fase di inizializzazione degli elementi
+     * dell'handler, prima di effettuare la scanzìsione del documento.
      */
     protected void reset() {
         this._categoryManager = null;
@@ -358,13 +358,5 @@ public class EntityHandler extends DefaultHandler {
         this._xmlAttributeRootElementName = null;
         this._currentAttr = null;
     }
-    
-    private boolean _intoAttributes;
-    private IApsEntity _currentEntity;
-    private AttributeHandlerInterface _parserModule;
-    private StringBuffer _textBuffer;
-    private AttributeInterface _currentAttr;
-    private ICategoryManager _categoryManager;
-    private String _xmlAttributeRootElementName;
-    
+
 }

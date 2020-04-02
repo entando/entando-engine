@@ -11,10 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.filebrowser;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.storage.IFileBrowserService;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
@@ -31,13 +36,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author E.Santoboni
@@ -56,7 +59,8 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map>> browseFolder(@RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
+    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map>> browseFolder(
+            @RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
             @RequestParam(value = "protectedFolder", required = false) Boolean protectedFolder) {
         logger.debug("browsing folder {} - protected {}", currentPath, protectedFolder);
         List<BasicFileAttributeViewDto> result = this.getFileBrowserService().browseFolder(currentPath, protectedFolder);
@@ -86,7 +90,8 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> getFile(@RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
+    public ResponseEntity<RestResponse<Map, Map>> getFile(
+            @RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
             @RequestParam(value = "protectedFolder", required = false, defaultValue = "false") Boolean protectedFolder) {
         logger.debug("required file {} - protected {}", currentPath, protectedFolder);
         byte[] base64 = this.getFileBrowserService().getFileStream(currentPath, protectedFolder);
@@ -102,7 +107,8 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<RestResponse<Map, Map>> addFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult)
+            throws ApsSystemException {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -116,7 +122,8 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> updateFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) {
+    public ResponseEntity<RestResponse<Map, Map>> updateFile(@Valid @RequestBody FileBrowserFileRequest request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -154,7 +161,8 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/directory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addDirectory(@Valid @RequestBody FileBrowserRequest request, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<RestResponse<Map, Map>> addDirectory(@Valid @RequestBody FileBrowserRequest request, BindingResult bindingResult)
+            throws ApsSystemException {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

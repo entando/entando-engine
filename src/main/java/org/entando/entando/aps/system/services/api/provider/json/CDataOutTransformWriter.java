@@ -11,14 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.provider.json;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.cxf.staxutils.transform.OutTransformWriter;
 import org.entando.entando.aps.system.services.api.model.CDataAdapter;
 
@@ -26,13 +25,13 @@ import org.entando.entando.aps.system.services.api.model.CDataAdapter;
  * @author E.Santoboni
  */
 public class CDataOutTransformWriter extends OutTransformWriter {
-    
-    public CDataOutTransformWriter(XMLStreamWriter writer, 
-            Map<String, String> outMap, Map<String, String> append, 
+
+    public CDataOutTransformWriter(XMLStreamWriter writer,
+            Map<String, String> outMap, Map<String, String> append,
             List<String> dropEls, boolean attributesToElements, String defaultNamespace) {
         super(writer, outMap, append, dropEls, attributesToElements, defaultNamespace);
     }
-    
+
     @Override
     public void writeCharacters(String text) throws XMLStreamException {
         if (CDataAdapter.isCdata(text)) {
@@ -42,5 +41,5 @@ public class CDataOutTransformWriter extends OutTransformWriter {
             super.writeCharacters(text);
         }
     }
-    
+
 }

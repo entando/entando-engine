@@ -11,57 +11,57 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.common.entity.parse;
 
-import java.util.Map;
+package com.agiletec.aps.system.common.entity.parse;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface of the JDOM classes that parse the XML code defining the Entity Types.
+ *
  * @author E.Santoboni
  */
 public interface IEntityTypeDOM {
-	
-	public List<SmallEntityType> extractSmallEntityTypes(String xml) throws ApsSystemException;
-	
-	/**
-	 * Return the Map of the prototypes of the Entity Types (indexed by their code) that the
-	 * entity service is going to handle.
-	 * The structure of the Entity Types is obtained from a configuration XML.
-	 * @param xml The configuration XML of the Entity Types available.
-	 * @param entityClass The class of the Entity Type.
-	 * @param entityDom The DOM class that creates the XML of the entity instances. 
-	 * @param entityManagerName The entity manager name
-	 * @return The map of the Entity Types Prototypes, indexed by code. 
-	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
-	 */
-	public Map<String, IApsEntity> extractEntityTypes(String xml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
-	
-	public IApsEntity extractEntityType(String typeCode, String xml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
-	
-	/**
-	 * Prepare the map with the Attribute Types.
-	 * The map is indexed by the code of the Attribute type.
-	 * The Attributes are utilized (as elementary "bricks") to build the structure
-	 * of the Entity Types.
-	 * @param attributeTypes The map containing the Attribute Types indexed by the type code. 
-	 */
-	public void setAttributeTypes(Map<String, AttributeInterface> attributeTypes);
-	
-	public Map<String, AttributeInterface> getAttributeTypes();
-	
-	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException;
-	
-	public String getXml(IApsEntity entityType) throws ApsSystemException;
-	
-	public IApsEntity extractEntityType(String entityTypeXml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
-	
+
+    List<SmallEntityType> extractSmallEntityTypes(String xml) throws ApsSystemException;
+
+    /**
+     * Return the Map of the prototypes of the Entity Types (indexed by their code) that the entity service is going to handle. The
+     * structure of the Entity Types is obtained from a configuration XML.
+     *
+     * @param xml The configuration XML of the Entity Types available.
+     * @param entityClass The class of the Entity Type.
+     * @param entityDom The DOM class that creates the XML of the entity instances.
+     * @param entityManagerName The entity manager name
+     * @return The map of the Entity Types Prototypes, indexed by code.
+     * @throws ApsSystemException If errors are detected while parsing the configuration XML.
+     */
+    Map<String, IApsEntity> extractEntityTypes(String xml, Class entityClass,
+            IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+
+    IApsEntity extractEntityType(String typeCode, String xml, Class entityClass,
+            IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+
+    Map<String, AttributeInterface> getAttributeTypes();
+
+    /**
+     * Prepare the map with the Attribute Types. The map is indexed by the code of the Attribute type. The Attributes are utilized (as
+     * elementary "bricks") to build the structure of the Entity Types.
+     *
+     * @param attributeTypes The map containing the Attribute Types indexed by the type code.
+     */
+    void setAttributeTypes(Map<String, AttributeInterface> attributeTypes);
+
+    String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException;
+
+    String getXml(IApsEntity entityType) throws ApsSystemException;
+
+    IApsEntity extractEntityType(String entityTypeXml, Class entityClass,
+            IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+
 }

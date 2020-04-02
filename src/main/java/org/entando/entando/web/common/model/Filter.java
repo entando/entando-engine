@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.model;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -33,6 +34,19 @@ public class Filter {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String order;
     private String[] allowedValues;
+
+    public Filter() {
+    }
+
+    public Filter(String attribute, String value) {
+        this.attribute = attribute;
+        this.value = value;
+    }
+
+    public Filter(String attribute, String value, String operator) {
+        this(attribute, value);
+        this.operator = operator;
+    }
 
     public String getAttribute() {
         return attribute;
@@ -82,19 +96,6 @@ public class Filter {
         this.order = order;
     }
 
-    public Filter() {
-    }
-
-    public Filter(String attribute, String value) {
-        this.attribute = attribute;
-        this.value = value;
-    }
-
-    public Filter(String attribute, String value, String operator) {
-        this(attribute, value);
-        this.operator = operator;
-    }
-
     @JsonIgnore
     public String getAttributeName() {
         return this.getAttribute();
@@ -130,7 +131,8 @@ public class Filter {
             filter = new EntitySearchFilter(key, isAttributeFilter, objectValue, false);
             filter.setNotOption(true);
         } else {
-            filter = new EntitySearchFilter(key, isAttributeFilter, objectValue, FilterOperator.LIKE.getValue().equalsIgnoreCase(this.getOperator()), LikeOptionType.COMPLETE);
+            filter = new EntitySearchFilter(key, isAttributeFilter, objectValue,
+                    FilterOperator.LIKE.getValue().equalsIgnoreCase(this.getOperator()), LikeOptionType.COMPLETE);
         }
         filter.setOrder(this.getOrder());
         return filter;
@@ -209,18 +211,16 @@ public class Filter {
             return false;
         }
         if (value == null) {
-            if (other.value != null) {
-                return false;
-            }
-        } else if (!value.equals(other.value)) {
-            return false;
+            return other.value == null;
+        } else {
+            return value.equals(other.value);
         }
-        return true;
     }
 
     @Override
     public String toString() {
-        return "Filter{" + "attribute=" + attribute + ", operator=" + operator + ", value=" + value + ", allowedValues=[" + String.join(",", allowedValues) + "]}";
+        return "Filter{" + "attribute=" + attribute + ", operator=" + operator + ", value=" + value + ", allowedValues=[" + String
+                .join(",", allowedValues) + "]}";
     }
 
 }

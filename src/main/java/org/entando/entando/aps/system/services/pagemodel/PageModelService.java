@@ -3,21 +3,32 @@ package org.entando.entando.aps.system.services.pagemodel;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.pagemodel.*;
-import org.entando.entando.aps.system.exception.*;
+import com.agiletec.aps.system.services.pagemodel.Frame;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.entando.entando.web.common.model.*;
-import org.entando.entando.web.pagemodel.model.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
+import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import java.util.*;
 
 @Service
 public class PageModelService implements IPageModelService, ApplicationContextAware {
@@ -47,8 +58,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
             //transforms the filters by overriding the key specified in the request with the correct one known by the dto
             List<FieldSearchFilter> filters = new ArrayList<>(restListReq.buildFieldSearchFilters());
             filters.stream()
-                   .filter(i -> i.getKey() != null)
-                   .forEach(i -> i.setKey(PageModelDto.getEntityFieldName(i.getKey())));
+                    .filter(i -> i.getKey() != null)
+                    .forEach(i -> i.setKey(PageModelDto.getEntityFieldName(i.getKey())));
 
             SearcherDaoPaginatedResult<PageModel> pageModels = pageModelManager.searchPageModels(filters);
 
@@ -100,7 +111,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         try {
             PageModel pageModel = pageModelManager.getPageModel(pageModelRequest.getCode());
             if (null == pageModel) {
-                throw new ResourceNotFoundException(PageModelValidator.ERRCODE_PAGEMODEL_NOT_FOUND, "pageModel", pageModelRequest.getCode());
+                throw new ResourceNotFoundException(PageModelValidator.ERRCODE_PAGEMODEL_NOT_FOUND, "pageModel",
+                        pageModelRequest.getCode());
             }
             this.copyProperties(pageModelRequest, pageModel);
             pageModelManager.updatePageModel(pageModel);
@@ -165,7 +177,6 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         descPageModel.setConfiguration(this.createPageModelConfiguration(srcPpageModelRequest));
     }
 
-
     protected Frame[] createPageModelConfiguration(PageModelRequest pageModelRequest) {
         Frame[] destConfiguration = null;
         List<PageModelFrameReq> frameRequestList = pageModelRequest.getConfiguration().getFrames();
@@ -174,8 +185,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         }
 
         return frameRequestList.stream()
-                               .map(this::createFrame)
-                               .toArray(Frame[]::new);
+                .map(this::createFrame)
+                .toArray(Frame[]::new);
     }
 
     protected Frame createFrame(PageModelFrameReq pageModelFrameReq) {
@@ -202,7 +213,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
 
         Map<String, List<Object>> references = this.getReferencingObjects(pageModel);
         if (references.size() > 0) {
-            bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_REFERENCES, new Object[]{pageModel.getCode(), references}, "pageModel.cannot.delete.references");
+            bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_REFERENCES, new Object[]{pageModel.getCode(), references},
+                    "pageModel.cannot.delete.references");
         }
         return bindingResult;
 
@@ -270,8 +282,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     private PageModelServiceUtilizer<?> getPageModelServiceUtilizer(String managerName) {
         Map<String, PageModelServiceUtilizer> beans = applicationContext.getBeansOfType(PageModelServiceUtilizer.class);
         Optional<PageModelServiceUtilizer> defName = beans.values().stream()
-                                                          .filter(service -> service.getManagerName().equals(managerName))
-                                                          .findFirst();
+                .filter(service -> service.getManagerName().equals(managerName))
+                .findFirst();
         return defName.orElse(null);
     }
 }

@@ -11,14 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.baseconfig;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -27,8 +28,6 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 /**
  * DOM support class used to handle the configuration parameters.
  *
@@ -36,6 +35,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class SystemParamsUtils {
 
+    public static final String PARAMS_ELEMENT = "Params";
+    public static final String PARAM_ELEMENT = "Param";
+    public static final String EXTRA_PARAMS_ELEMENT = "ExtraParams";
     private static final Logger _logger = LoggerFactory.getLogger(SystemParamsUtils.class);
 
     /**
@@ -67,9 +69,8 @@ public class SystemParamsUtils {
     }
 
     /**
-     * Return the XML of the configuration with updated parameters. NOTE: All
-     * the values contained in the map but NOT in the given XML are NOT ignored
-     * and will be added into the new xml.
+     * Return the XML of the configuration with updated parameters. NOTE: All the values contained in the map but NOT in the given XML are
+     * NOT ignored and will be added into the new xml.
      *
      * @param oldXmlParams The old configuration XML.
      * @param newSystemParams The map with updated values
@@ -85,8 +86,7 @@ public class SystemParamsUtils {
      *
      * @param oldXmlParams The old configuration XML.
      * @param newSystemParams The map with updated values
-     * @param addNewParams True if the new parameters have to be added into the
-     * xml, otherwise false.
+     * @param addNewParams True if the new parameters have to be added into the xml, otherwise false.
      * @return The new system configuration string.
      * @throws Exception if errors are detected.
      */
@@ -158,9 +158,5 @@ public class SystemParamsUtils {
         }
         return doc;
     }
-
-    public static final String PARAMS_ELEMENT = "Params";
-    public static final String PARAM_ELEMENT = "Param";
-    public static final String EXTRA_PARAMS_ELEMENT = "ExtraParams";
 
 }

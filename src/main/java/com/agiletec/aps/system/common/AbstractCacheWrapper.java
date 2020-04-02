@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 import org.springframework.cache.Cache;
@@ -20,12 +21,6 @@ import org.springframework.cache.CacheManager;
  * @author E.Santoboni
  */
 public abstract class AbstractCacheWrapper {
-
-    protected static enum Action {
-        ADD,
-        UPDATE,
-        DELETE
-    }
 
     private CacheManager springCacheManager;
 
@@ -55,5 +50,10 @@ public abstract class AbstractCacheWrapper {
         return this.getSpringCacheManager().getCache(this.getCacheName());
     }
 
+    protected enum Action {
+        ADD,
+        UPDATE,
+        DELETE
+    }
 
 }

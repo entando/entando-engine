@@ -1,5 +1,7 @@
 package org.entando.entando.aps.system.services.group;
 
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,8 +11,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.when;
 
 public class GroupServiceTest {
 

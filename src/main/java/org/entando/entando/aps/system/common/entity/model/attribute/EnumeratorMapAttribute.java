@@ -11,22 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute;
+import com.agiletec.aps.util.SelectItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.common.entity.model.attribute.util.EnumeratorMapAttributeItemsExtractor;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute;
-import com.agiletec.aps.util.SelectItem;
 
 /**
  * This class describes an "EnumeratorMap" Attribute.
@@ -36,6 +35,8 @@ import com.agiletec.aps.util.SelectItem;
 public class EnumeratorMapAttribute extends EnumeratorAttribute {
 
     private static final Logger _logger = LoggerFactory.getLogger(EnumeratorMapAttribute.class);
+    private static final String DEFAULT_KEY_VALUE_SEPARATOR = "=";
+    private SelectItem[] _mapItems;
 
     @Override
     public Object getAttributePrototype() {
@@ -51,7 +52,8 @@ public class EnumeratorMapAttribute extends EnumeratorAttribute {
         }
         if (null != this.getExtractorBeanName()) {
             try {
-                EnumeratorMapAttributeItemsExtractor extractor = (EnumeratorMapAttributeItemsExtractor) this.getBeanFactory().getBean(this.getExtractorBeanName(), EnumeratorMapAttributeItemsExtractor.class);
+                EnumeratorMapAttributeItemsExtractor extractor = this.getBeanFactory()
+                        .getBean(this.getExtractorBeanName(), EnumeratorMapAttributeItemsExtractor.class);
                 if (null != extractor) {
                     List<SelectItem> items = extractor.getMapItems();
                     if (items != null && items.size() > 0) {
@@ -186,8 +188,5 @@ public class EnumeratorMapAttribute extends EnumeratorAttribute {
     public boolean isSearchableOptionSupported() {
         return true;
     }
-
-    private SelectItem[] _mapItems;
-    private final String DEFAULT_KEY_VALUE_SEPARATOR = "=";
 
 }

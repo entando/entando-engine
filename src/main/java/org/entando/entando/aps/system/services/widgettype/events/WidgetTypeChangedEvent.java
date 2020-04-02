@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.events;
 
 import com.agiletec.aps.system.common.IManager;
@@ -20,45 +21,47 @@ import com.agiletec.aps.system.common.notify.ApsEvent;
  * @author E.Santoboni
  */
 public class WidgetTypeChangedEvent extends ApsEvent {
-	
-	@Override
-	public void notify(IManager srv) {
-		((WidgetTypeChangedObserver) srv).updateFromShowletTypeChanged(this);
-	}
-	
-	@Override
-	public Class getObserverInterface() {
-		return WidgetTypeChangedObserver.class;
-	}
-	
-	@Deprecated
-	public String getShowletTypeCode() {
-		return this.getWidgetTypeCode();
-	}
-	@Deprecated
-	public void setShowletTypeCode(String showletTypeCode) {
-		this.setWidgetTypeCode(showletTypeCode);
-	}
-	
-	public String getWidgetTypeCode() {
-		return _widgetTypeCode;
-	}
-	public void setWidgetTypeCode(String widgetTypeCode) {
-		this._widgetTypeCode = widgetTypeCode;
-	}
-	
-	public int getOperationCode() {
-		return _operationCode;
-	}
-	public void setOperationCode(int operationCode) {
-		this._operationCode = operationCode;
-	}
-	
-	private String _widgetTypeCode;
-	private int _operationCode;
-	
-	public static final int INSERT_OPERATION_CODE = 1;
-	public static final int REMOVE_OPERATION_CODE = 2;
-	public static final int UPDATE_OPERATION_CODE = 3;
-	
+
+    public static final int INSERT_OPERATION_CODE = 1;
+    public static final int REMOVE_OPERATION_CODE = 2;
+    public static final int UPDATE_OPERATION_CODE = 3;
+    private String _widgetTypeCode;
+    private int _operationCode;
+
+    @Override
+    public void notify(IManager srv) {
+        ((WidgetTypeChangedObserver) srv).updateFromShowletTypeChanged(this);
+    }
+
+    @Override
+    public Class getObserverInterface() {
+        return WidgetTypeChangedObserver.class;
+    }
+
+    @Deprecated
+    public String getShowletTypeCode() {
+        return this.getWidgetTypeCode();
+    }
+
+    @Deprecated
+    public void setShowletTypeCode(String showletTypeCode) {
+        this.setWidgetTypeCode(showletTypeCode);
+    }
+
+    public String getWidgetTypeCode() {
+        return _widgetTypeCode;
+    }
+
+    public void setWidgetTypeCode(String widgetTypeCode) {
+        this._widgetTypeCode = widgetTypeCode;
+    }
+
+    public int getOperationCode() {
+        return _operationCode;
+    }
+
+    public void setOperationCode(int operationCode) {
+        this._operationCode = operationCode;
+    }
+
 }

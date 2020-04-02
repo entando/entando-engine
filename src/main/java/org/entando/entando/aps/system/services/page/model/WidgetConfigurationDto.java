@@ -18,6 +18,20 @@ public class WidgetConfigurationDto {
     @JsonSerialize(using = WidgetConfigPropertiesSerializer.class)
     private ApsProperties config;
 
+    public WidgetConfigurationDto() {
+
+    }
+
+    public WidgetConfigurationDto(Widget widget) {
+        this.code = widget.getType().getCode();
+        this.config = widget.getConfig();
+    }
+
+    public WidgetConfigurationDto(String code, ApsProperties config) {
+        this.code = code;
+        this.config = config;
+    }
+
     public String getCode() {
         return code;
     }
@@ -31,20 +45,6 @@ public class WidgetConfigurationDto {
     }
 
     public void setConfig(ApsProperties config) {
-        this.config = config;
-    }
-
-    public WidgetConfigurationDto() {
-
-    }
-
-    public WidgetConfigurationDto(Widget widget) {
-        this.code = widget.getType().getCode();
-        this.config = widget.getConfig();
-    }
-
-    public WidgetConfigurationDto(String code, ApsProperties config) {
-        this.code = code;
         this.config = config;
     }
 

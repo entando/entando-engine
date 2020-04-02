@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
 import com.j256.ormlite.field.DataType;
@@ -23,27 +24,27 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = Category.TABLE_NAME)
 public class Category {
 
-	public Category() {}
-	
-	@DatabaseField(columnName = "catcode", 
-			dataType = DataType.STRING, 
-			width = 30, 
-			canBeNull = false, id = true)
-	private String _categoryCode;
-	
-	@DatabaseField(columnName = "parentcode", 
-			dataType = DataType.STRING, 
-			width = 30, 
-			canBeNull = false)
-	private String _parentCode;
-	
-	@DatabaseField(columnName = "titles", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = false)
-	private String _titles;
-	
-	public static final String TABLE_NAME = "categories";
-	
+    public static final String TABLE_NAME = "categories";
+    @DatabaseField(columnName = "catcode",
+            dataType = DataType.STRING,
+            width = 30,
+            canBeNull = false, id = true)
+    private String _categoryCode;
+
+    @DatabaseField(columnName = "parentcode",
+            dataType = DataType.STRING,
+            width = 30,
+            canBeNull = false)
+    private String _parentCode;
+
+    @DatabaseField(columnName = "titles",
+            dataType = DataType.LONG_STRING,
+            canBeNull = false)
+    private String _titles;
+
+    public Category() {
+    }
+
 }
 /*
 CREATE TABLE categories

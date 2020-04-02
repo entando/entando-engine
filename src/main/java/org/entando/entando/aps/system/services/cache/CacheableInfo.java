@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.cache;
 
 import java.lang.annotation.Documented;
@@ -21,8 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Add information on the cacheable object. 
- * This annotation has to be used with the annotation {@link org.springframework.cache.annotation.Cacheable}
+ * Add information on the cacheable object. This annotation has to be used with the annotation {@link
+ * org.springframework.cache.annotation.Cacheable}
+ *
  * @author E.Santoboni
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -30,9 +32,9 @@ import java.lang.annotation.Target;
 @Inherited
 @Documented
 public @interface CacheableInfo {
-	
-	public int expiresInMinute() default -1;
-	
-	public String groups() default "";
-	
+
+    int expiresInMinute() default -1;
+
+    String groups() default "";
+
 }

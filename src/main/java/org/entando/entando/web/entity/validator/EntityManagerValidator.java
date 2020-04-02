@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.entity.validator;
 
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;

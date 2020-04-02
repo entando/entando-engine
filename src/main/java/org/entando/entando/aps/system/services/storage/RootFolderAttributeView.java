@@ -11,12 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage;
 
 /**
  * @author E.Santoboni
  */
 public class RootFolderAttributeView extends BasicFileAttributeView {
+
+    private boolean _protectedFolder;
 
     public RootFolderAttributeView(String name, boolean isProtected) {
         this.setName(name);
@@ -31,7 +34,5 @@ public class RootFolderAttributeView extends BasicFileAttributeView {
     protected void setProtectedFolder(boolean protectedFolder) {
         this._protectedFolder = protectedFolder;
     }
-
-    private boolean _protectedFolder;
 
 }

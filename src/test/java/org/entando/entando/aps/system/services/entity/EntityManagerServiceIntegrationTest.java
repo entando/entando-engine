@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity;
 
 import com.agiletec.aps.BaseTestCase;
@@ -22,9 +23,6 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class EntityManagerServiceIntegrationTest extends BaseTestCase {
 
@@ -80,7 +78,8 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     @Test
     public void testGetEntityTypes_1() {
         RestListRequest restListRequest = new RestListRequest();
-        PagedMetadata<EntityTypeShortDto> dtos = this.entityManagerService.getShortEntityTypes(SystemConstants.USER_PROFILE_MANAGER, restListRequest);
+        PagedMetadata<EntityTypeShortDto> dtos = this.entityManagerService
+                .getShortEntityTypes(SystemConstants.USER_PROFILE_MANAGER, restListRequest);
         assertNotNull(dtos);
         assertEquals(1, dtos.getBody().size());
     }

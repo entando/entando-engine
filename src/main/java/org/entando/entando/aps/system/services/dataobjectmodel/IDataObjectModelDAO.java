@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -22,16 +23,16 @@ import java.util.Map;
  */
 public interface IDataObjectModelDAO {
 
-    public Map<Long, DataObjectModel> loadDataModels();
+    Map<Long, DataObjectModel> loadDataModels();
 
-    public void addDataModel(DataObjectModel model);
+    void addDataModel(DataObjectModel model);
 
-    public void deleteDataModel(DataObjectModel model);
+    void deleteDataModel(DataObjectModel model);
 
-    public void updateDataModel(DataObjectModel model);
+    void updateDataModel(DataObjectModel model);
 
-    public int countDataObjectModels(FieldSearchFilter[] filters);
+    int countDataObjectModels(FieldSearchFilter[] filters);
 
-    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters);
+    List<Long> searchDataObjectModels(FieldSearchFilter[] filters);
 
 }

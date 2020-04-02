@@ -11,12 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.Map;
-
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.entando.entando.aps.system.services.api.model.ApiException;
 
 /**
@@ -24,28 +23,35 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
  */
 @XmlRootElement(name = "attributeType")
 public class JAXBEnumeratorAttributeType extends DefaultJAXBAttributeType {
-    
+
+    private String _staticItems;
+    private String _extractorBeanName;
+    private String _customSeparator;
+
     public String getStaticItems() {
         return _staticItems;
     }
+
     public void setStaticItems(String staticItems) {
         this._staticItems = staticItems;
     }
-    
+
     public String getExtractorBeanName() {
         return _extractorBeanName;
     }
+
     public void setExtractorBeanName(String extractorBeanName) {
         this._extractorBeanName = extractorBeanName;
     }
-    
+
     public String getCustomSeparator() {
         return _customSeparator;
     }
+
     public void setCustomSeparator(String customSeparator) {
         this._customSeparator = customSeparator;
     }
-    
+
     @Override
     public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
         EnumeratorAttribute attribute = (EnumeratorAttribute) super.createAttribute(attributes);
@@ -54,9 +60,5 @@ public class JAXBEnumeratorAttributeType extends DefaultJAXBAttributeType {
         attribute.setCustomSeparator(this.getCustomSeparator());
         return attribute;
     }
-    
-    private String _staticItems;
-    private String _extractorBeanName;
-    private String _customSeparator;
-    
+
 }

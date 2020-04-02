@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.cache;
 
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
-
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,25 +29,25 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 
 public class ApiServiceCacheWrapperTest {
 
-	private static final String CACHE_NAME = IApiCatalogManager.API_CATALOG_CACHE_NAME;
+    private static final String CACHE_NAME = IApiCatalogManager.API_CATALOG_CACHE_NAME;
 
-	@Mock
-	private CacheManager springCacheManager;
+    @Mock
+    private CacheManager springCacheManager;
 
-	@InjectMocks
-	private ApiServiceCacheWrapper cacheWrapper;
+    @InjectMocks
+    private ApiServiceCacheWrapper cacheWrapper;
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);
-		fakeCache.put(IApiServiceCacheWrapper.APICATALOG_SERVICES_CACHE_NAME, new HashMap<String, ApiService>());
-		when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
-	}
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);
+        fakeCache.put(IApiServiceCacheWrapper.APICATALOG_SERVICES_CACHE_NAME, new HashMap<String, ApiService>());
+        when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
+    }
 
-	@Test
-	public void should_update_existing_entry() {
-		cacheWrapper.removeService("test");
-	}
+    @Test
+    public void should_update_existing_entry() {
+        cacheWrapper.removeService("test");
+    }
 
 }

@@ -11,8 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.Lang;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,22 +23,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.lang.Lang;
-
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 /**
- * Represents the authorization information of a DataType. The enhanced object
- * is cached by alphanumeric identifier produced by the identifier of the
- * DataType.
+ * Represents the authorization information of a DataType. The enhanced object is cached by alphanumeric identifier produced by the
+ * identifier of the DataType.
  *
  * @author E.Santoboni
  */
 public class PublicDataTypeAuthorizationInfo implements Serializable {
 
     private static final long serialVersionUID = -5241592759371755368L;
+    private String _dataId;
+    private String _dataType;
+    private String _mainGroup;
+    private String[] _allowedGroups = new String[0];
 
     @Deprecated
     public PublicDataTypeAuthorizationInfo(DataObject content) {
@@ -57,8 +59,7 @@ public class PublicDataTypeAuthorizationInfo implements Serializable {
     }
 
     /**
-     * Setta l'array dei codici dei gruppi autorizzati alla visualizzazione del
-     * dataType.
+     * Setta l'array dei codici dei gruppi autorizzati alla visualizzazione del dataType.
      *
      * @param allowedGroups L'array dei codici dei gruppi autorizzati.
      */
@@ -84,13 +85,11 @@ public class PublicDataTypeAuthorizationInfo implements Serializable {
     }
 
     /**
-     * Verifica i permessi dell'utente in accesso al dataType. Restituisce true
-     * se l'utente specificato è abilitato ad accedere al dataType, false in
-     * caso contrario.
+     * Verifica i permessi dell'utente in accesso al dataType. Restituisce true se l'utente specificato è abilitato ad accedere al dataType,
+     * false in caso contrario.
      *
      * @param userGroups I gruppi dell'utente di cui verificarne l'abilitazione.
-     * @return true se l'utente specificato è abilitato ad accedere al dataType,
-     * false in caso contrario.
+     * @return true se l'utente specificato è abilitato ad accedere al dataType, false in caso contrario.
      */
     public boolean isUserAllowed(List<Group> userGroups) {
         if (null == userGroups) {
@@ -119,12 +118,5 @@ public class PublicDataTypeAuthorizationInfo implements Serializable {
     public String getMainGroup() {
         return _mainGroup;
     }
-
-    private String _dataId;
-    private String _dataType;
-
-    private String _mainGroup;
-
-    private String[] _allowedGroups = new String[0];
 
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,18 +21,16 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
+import com.agiletec.aps.util.ApsProperties;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
-import com.agiletec.aps.util.ApsProperties;
 
 public class I18nManagerTest {
 
@@ -43,6 +42,13 @@ public class I18nManagerTest {
 
     @InjectMocks
     private I18nManager i18nManager = null;
+
+    public static ApsProperties createLabel(String it, String en) {
+        ApsProperties labelOne = new ApsProperties();
+        labelOne.put("it", it);
+        labelOne.put("en", en);
+        return labelOne;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -56,7 +62,7 @@ public class I18nManagerTest {
         Map<String, ApsProperties> extractedLabels = this.i18nManager.getLabelGroups();
         assertThat(extractedLabels.size(), is(3));
     }
-    
+
     @Test
     public void testGetLabel() throws Throwable {
         when(cacheWrapper.getLabelGroup("TEST")).thenReturn(createLabel("IT Test", "EN Test"));
@@ -100,20 +106,13 @@ public class I18nManagerTest {
         i18nManager.deleteLabelGroup(key);
         Mockito.verify(cacheWrapper, Mockito.times(1)).removeLabelGroup(key);
     }
-    
+
     private Map<String, ApsProperties> createMockLabels() {
         Map<String, ApsProperties> labelsGroup = new HashMap<>();
         labelsGroup.put("ONE", createLabel("uno", "one"));
         labelsGroup.put("TWO", createLabel("due", "two"));
         labelsGroup.put("3", createLabel("tre", "three"));
         return labelsGroup;
-    }
-
-    public static ApsProperties createLabel(String it, String en) {
-        ApsProperties labelOne = new ApsProperties();
-        labelOne.put("it", it);
-        labelOne.put("en", en);
-        return labelOne;
     }
 
 }

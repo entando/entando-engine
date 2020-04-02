@@ -11,14 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page;
 
 public interface IPageTokenManager {
 
-	public static final String PREVIEW_HASH = "page_preview_hash";
+    String PREVIEW_HASH = "page_preview_hash";
 
-	public String encrypt(String pageCode);
+    String encrypt(String pageCode);
 
-	public  String decrypt(String encryptKey);
+    String decrypt(String encryptKey);
 
 }

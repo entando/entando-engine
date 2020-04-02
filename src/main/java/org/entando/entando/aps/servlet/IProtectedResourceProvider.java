@@ -11,26 +11,27 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.servlet;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Provider bean of protected resources.
+ *
  * @author E.Santoboni
  */
 public interface IProtectedResourceProvider {
-	
-	/**
-	 * Provide a protected resource.
-	 * @param request The servlet request.
-	 * @param response 
-	 * @return true if the resource was provided and the response was committed.
-	 * @throws ApsSystemException In case of error
-	 */
-	public boolean provideProtectedResource(HttpServletRequest request, HttpServletResponse response) throws ApsSystemException;
-	
+
+    /**
+     * Provide a protected resource.
+     *
+     * @param request The servlet request.
+     * @return true if the resource was provided and the response was committed.
+     * @throws ApsSystemException In case of error
+     */
+    boolean provideProtectedResource(HttpServletRequest request, HttpServletResponse response) throws ApsSystemException;
+
 }

@@ -11,48 +11,54 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category;
 
-import java.util.List;
-
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.List;
 
 /**
  * Interfaccia di base per le classi DAO di gestione Categorie.
+ *
  * @author E.Santoboni
  */
 public interface ICategoryDAO {
-	
-	/**
-	 * Carica la lista delle categorie inserite nel sistema.
-	 * @param langManager Il manager delle lingue.
-	 * @return La lista delle categorie inserite nel sistema.
-	 */
-	public List<Category> loadCategories(ILangManager langManager);
-	
-	/**
+
+    /**
+     * Carica la lista delle categorie inserite nel sistema.
+     *
+     * @param langManager Il manager delle lingue.
+     * @return La lista delle categorie inserite nel sistema.
+     */
+    List<Category> loadCategories(ILangManager langManager);
+
+    /**
      * Cancella la categoria corrispondente al codice immesso.
+     *
      * @param code Il codice relativo alla categoria da cancellare.
      */
-    public void deleteCategory(String code);
-    
+    void deleteCategory(String code);
+
     /**
      * Inserisce una nuova Categoria.
+     *
      * @param category La nuova Categoria da inserire.
      */
-    public void addCategory(Category category);
-    
+    void addCategory(Category category);
+
     /**
      * Aggiorna una categoria sul db.
+     *
      * @param category La categoria da aggiornare.
      */
-    public void updateCategory(Category category);
-	
-	/**
-	 * Move a category under a a new parent node
-	 * @param currentCategory category to move
-	 * @param newParent the new parent
-	 */
-	public void moveCategory(Category currentCategory, Category newParent);
-	
+    void updateCategory(Category category);
+
+    /**
+     * Move a category under a a new parent node
+     *
+     * @param currentCategory category to move
+     * @param newParent the new parent
+     */
+    void moveCategory(Category currentCategory, Category newParent);
+
 }

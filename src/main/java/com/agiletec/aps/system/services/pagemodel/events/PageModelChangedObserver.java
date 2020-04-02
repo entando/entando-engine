@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel.events;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
@@ -19,7 +20,7 @@ import com.agiletec.aps.system.common.notify.ObserverService;
  * @author E.Santoboni
  */
 public interface PageModelChangedObserver extends ObserverService {
-	
-	public void updateFromPageModelChanged(PageModelChangedEvent event);
-	
+
+    void updateFromPageModelChanged(PageModelChangedEvent event);
+
 }

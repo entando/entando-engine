@@ -11,21 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.api;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
 /**
  * @author E.Santoboni
  */
 public class WidgetTypeResponseResult extends AbstractApiResponseResult {
-	
-	@Override
-	@XmlElement(name = "widgetType", required = false)
-	public JAXBWidgetType getResult() {
-		return (JAXBWidgetType) this.getMainResult();
-	}
-	
+
+    @Override
+    @XmlElement(name = "widgetType", required = false)
+    public JAXBWidgetType getResult() {
+        return (JAXBWidgetType) this.getMainResult();
+    }
+
 }

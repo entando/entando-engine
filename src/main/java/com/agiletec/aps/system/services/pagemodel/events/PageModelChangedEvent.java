@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.pagemodel.events;
 
 import com.agiletec.aps.system.common.IManager;
@@ -21,37 +22,37 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
  * @author E.Santoboni
  */
 public class PageModelChangedEvent extends ApsEvent {
-	
-	@Override
-	public void notify(IManager srv) {
-		((PageModelChangedObserver) srv).updateFromPageModelChanged(this);
-	}
-	
-	@Override
-	public Class getObserverInterface() {
-		return PageModelChangedObserver.class;
-	}
-	
-	public PageModel getPageModel() {
-		return _pageModel;
-	}
-	public void setPageModel(PageModel pageModel) {
-		this._pageModel = pageModel;
-	}
-	
-	public int getOperationCode() {
-		return _operationCode;
-	}
-	public void setOperationCode(int operationCode) {
-		this._operationCode = operationCode;
-	}
-	
-	private PageModel _pageModel;
-	
-	private int _operationCode;
-	
-	public static final int INSERT_OPERATION_CODE = 1;
-	public static final int REMOVE_OPERATION_CODE = 2;
-	public static final int UPDATE_OPERATION_CODE = 3;
-	
+
+    public static final int INSERT_OPERATION_CODE = 1;
+    public static final int REMOVE_OPERATION_CODE = 2;
+    public static final int UPDATE_OPERATION_CODE = 3;
+    private PageModel _pageModel;
+    private int _operationCode;
+
+    @Override
+    public void notify(IManager srv) {
+        ((PageModelChangedObserver) srv).updateFromPageModelChanged(this);
+    }
+
+    @Override
+    public Class getObserverInterface() {
+        return PageModelChangedObserver.class;
+    }
+
+    public PageModel getPageModel() {
+        return _pageModel;
+    }
+
+    public void setPageModel(PageModel pageModel) {
+        this._pageModel = pageModel;
+    }
+
+    public int getOperationCode() {
+        return _operationCode;
+    }
+
+    public void setOperationCode(int operationCode) {
+        this._operationCode = operationCode;
+    }
+
 }

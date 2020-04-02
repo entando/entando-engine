@@ -11,24 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.util.ApsProperties;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.util.ApsProperties;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Data Access Object per i tipi di widget (WidgetType).
@@ -38,21 +37,19 @@ import java.util.Map;
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(WidgetTypeDAO.class);
-
-    private ILangManager langManager;
-
-    private final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid FROM widgetcatalog";
-
-    private final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)";
-
-    private final String DELETE_WIDGET_TYPE
+    private static final String ALL_WIDGET_TYPES
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid FROM "
+            + "widgetcatalog";
+    private static final String ADD_WIDGET_TYPE
+            =
+            "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui,"
+                    + " bundleid) "
+                    + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)";
+    private static final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
-
-    private final String UPDATE_WIDGET_TYPE
+    private static final String UPDATE_WIDGET_TYPE
             = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ? WHERE code = ? ";
+    private ILangManager langManager;
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -192,7 +189,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) {
+            String configUi, String bundleId) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {

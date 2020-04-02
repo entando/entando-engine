@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.authorization;
 
 import com.agiletec.aps.BaseTestCase;
@@ -24,26 +25,31 @@ import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 /**
  * @author E.Santoboni
  */
 public class TestDataObjectAuthorization extends BaseTestCase {
-    
+
+    private IAuthorizationManager _authorizationManager;
+    private IUserManager _userManager = null;
+    private RoleManager _roleManager = null;
+    private GroupManager _groupManager = null;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
-    
+
     public void testCheckAdminUser() throws Throwable {
         UserDetails adminUser = this.getUser("admin");
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
         assertEquals(1, adminUser.getAuthorizations().size());
-        
+
         IDataObjectManager contentManager = (IDataObjectManager) this.getService("DataObjectManager");
         DataObject content = contentManager.loadDataObject("ART111", true);
         boolean check = this._authorizationManager.isAuth(adminUser, content);
@@ -55,13 +61,13 @@ public class TestDataObjectAuthorization extends BaseTestCase {
         check = this._authorizationManager.isAuth(adminUser, content);
         assertTrue(check);
     }
-    
+
     public void testCheckCustomerUser() throws Throwable {
         UserDetails extractedUser = this.getUser("pageManagerCustomers");
         assertNotNull(extractedUser);
         assertEquals("pageManagerCustomers", extractedUser.getUsername());
         assertEquals(1, extractedUser.getAuthorizations().size());
-        
+
         IDataObjectManager contentManager = (IDataObjectManager) this.getService("DataObjectManager");
         DataObject content = contentManager.loadDataObject("ART111", true);
         boolean checkContent = this._authorizationManager.isAuth(extractedUser, content);
@@ -87,14 +93,14 @@ public class TestDataObjectAuthorization extends BaseTestCase {
             assertEquals(username, extractedUser.getUsername());
             assertNotNull(extractedUser);
             assertEquals(1, extractedUser.getAuthorizations().size());
-            
+
             Group group = this._groupManager.getGroup("coach");
             boolean checkGroup = this._authorizationManager.isAuth(extractedUser, group);
             assertFalse(checkGroup);
             group = this._groupManager.getGroup(Group.FREE_GROUP_NAME);
             checkGroup = this._authorizationManager.isAuth(extractedUser, group);
             assertTrue(checkGroup);
-            
+
             boolean checkPermission = this._authorizationManager.isAuthOnPermission(extractedUser, Permission.SUPERVISOR);
             assertFalse(checkPermission);
             checkPermission = this._authorizationManager.isAuthOnPermission(extractedUser, Permission.SUPERUSER);
@@ -103,7 +109,7 @@ public class TestDataObjectAuthorization extends BaseTestCase {
             assertTrue(checkPermission);
             checkPermission = this._authorizationManager.isAuthOnPermission(extractedUser, "editContents");
             assertTrue(checkPermission);
-            
+
             IDataObjectManager contentManager = (IDataObjectManager) this.getService("DataObjectManager");
             DataObject content = contentManager.loadDataObject("ART111", true);
             boolean checkContent = this._authorizationManager.isAuth(extractedUser, content);
@@ -124,7 +130,7 @@ public class TestDataObjectAuthorization extends BaseTestCase {
             assertNull(extractedUser);
         }
     }
-    
+
     private void addUserForTest(String username, String password) throws Throwable {
         User user = new User();
         user.setUsername(username);
@@ -139,7 +145,7 @@ public class TestDataObjectAuthorization extends BaseTestCase {
         this._userManager.addUser(user);
         this._authorizationManager.addUserAuthorization(username, auth);
     }
-    
+
     private void init() throws Exception {
         try {
             this._authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
@@ -150,10 +156,5 @@ public class TestDataObjectAuthorization extends BaseTestCase {
             throw new Exception(e);
         }
     }
-    
-    private IAuthorizationManager _authorizationManager;
-    private IUserManager _userManager = null;
-    private RoleManager _roleManager = null;
-    private GroupManager _groupManager = null;
-    
+
 }

@@ -11,129 +11,125 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectdispenser;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 /**
- * Represents the rendering information of a dataobject. The enhanced object is
- * cached by alphanumeric identifier produced by the identifier of the
- * dataobject, the model an the rendering lang.
+ * Represents the rendering information of a dataobject. The enhanced object is cached by alphanumeric identifier produced by the identifier
+ * of the dataobject, the model an the rendering lang.
  *
  * @author E.Santoboni
  */
 public class DataObjectRenderizationInfo implements Serializable {
 
-	private static final long serialVersionUID = 2514275355950411866L;
+    private static final long serialVersionUID = 2514275355950411866L;
+    private String _dataObjectId;
+    private String _dataType;
+    private String _renderedDataobject;
+    private String _renderingLang;
+    private long _modelId;
+    private Map<String, Object> _attributeValues = new HashMap<String, Object>();
 
-	protected DataObjectRenderizationInfo() {
-	}
+    protected DataObjectRenderizationInfo() {
+    }
 
-	public DataObjectRenderizationInfo(DataObject dataObject,
-			String cachedRenderedDataobject, long modelId, String renderingLang, List<AttributeRole> roles) {
-		if (null != dataObject) {
-			this._dataObjectId = dataObject.getId();
-			this._dataType = dataObject.getTypeCode();
-		}
-		this._renderedDataobject = cachedRenderedDataobject;
-		this._renderingLang = renderingLang;
-		this._modelId = modelId;
-		if (null == roles) {
-			return;
-		}
-		for (int i = 0; i < roles.size(); i++) {
-			AttributeRole role = roles.get(i);
-			AttributeInterface attribute = dataObject.getAttributeByRole(role.getName());
-			if (null != attribute) {
-				this.getAttributeValues().put(role.getName(), attribute.getValue());
-			}
-		}
-	}
+    public DataObjectRenderizationInfo(DataObject dataObject,
+            String cachedRenderedDataobject, long modelId, String renderingLang, List<AttributeRole> roles) {
+        if (null != dataObject) {
+            this._dataObjectId = dataObject.getId();
+            this._dataType = dataObject.getTypeCode();
+        }
+        this._renderedDataobject = cachedRenderedDataobject;
+        this._renderingLang = renderingLang;
+        this._modelId = modelId;
+        if (null == roles) {
+            return;
+        }
+        for (int i = 0; i < roles.size(); i++) {
+            AttributeRole role = roles.get(i);
+            AttributeInterface attribute = dataObject.getAttributeByRole(role.getName());
+            if (null != attribute) {
+                this.getAttributeValues().put(role.getName(), attribute.getValue());
+            }
+        }
+    }
 
-	@Override
-	public DataObjectRenderizationInfo clone() {
-		DataObjectRenderizationInfo clone = new DataObjectRenderizationInfo();
-		clone.setDataObjectId(this.getDataObjectId());
-		clone.setDataType(this.getDataType());
-		clone.setModelId(this.getModelId());
-		clone.setRenderedDataobject(this.getRenderedDataobject());
-		clone.setRenderingLang(this.getRenderingLang());
-		clone.getAttributeValues().putAll(this.getAttributeValues());
-		return clone;
-	}
+    @Override
+    public DataObjectRenderizationInfo clone() {
+        DataObjectRenderizationInfo clone = new DataObjectRenderizationInfo();
+        clone.setDataObjectId(this.getDataObjectId());
+        clone.setDataType(this.getDataType());
+        clone.setModelId(this.getModelId());
+        clone.setRenderedDataobject(this.getRenderedDataobject());
+        clone.setRenderingLang(this.getRenderingLang());
+        clone.getAttributeValues().putAll(this.getAttributeValues());
+        return clone;
+    }
 
-	public String getDataObjectId() {
-		return _dataObjectId;
-	}
+    public String getDataObjectId() {
+        return _dataObjectId;
+    }
 
-	protected void setDataObjectId(String dataObjectId) {
-		this._dataObjectId = dataObjectId;
-	}
+    protected void setDataObjectId(String dataObjectId) {
+        this._dataObjectId = dataObjectId;
+    }
 
-	public String getDataType() {
-		return _dataType;
-	}
+    public String getDataType() {
+        return _dataType;
+    }
 
-	protected void setDataType(String contentType) {
-		this._dataType = contentType;
-	}
+    protected void setDataType(String contentType) {
+        this._dataType = contentType;
+    }
 
-	public String getRenderedDataobject() {
-		return _renderedDataobject;
-	}
+    public String getRenderedDataobject() {
+        return _renderedDataobject;
+    }
 
-	public void setRenderedDataobject(String renderedDataobject) {
-		this._renderedDataobject = renderedDataobject;
-	}
+    public void setRenderedDataobject(String renderedDataobject) {
+        this._renderedDataobject = renderedDataobject;
+    }
 
-	public String getRenderingLang() {
-		return _renderingLang;
-	}
+    public String getRenderingLang() {
+        return _renderingLang;
+    }
 
-	protected void setRenderingLang(String renderingLang) {
-		this._renderingLang = renderingLang;
-	}
+    protected void setRenderingLang(String renderingLang) {
+        this._renderingLang = renderingLang;
+    }
 
-	public long getModelId() {
-		return _modelId;
-	}
+    public long getModelId() {
+        return _modelId;
+    }
 
-	protected void setModelId(long modelId) {
-		this._modelId = modelId;
-	}
+    protected void setModelId(long modelId) {
+        this._modelId = modelId;
+    }
 
-	/**
-	 * Return the map of the attribute values indexed by the attribute role.
-	 *
-	 * @return The map of the attribute values
-	 */
-	public Map<String, Object> getAttributeValues() {
-		return _attributeValues;
-	}
+    /**
+     * Return the map of the attribute values indexed by the attribute role.
+     *
+     * @return The map of the attribute values
+     */
+    public Map<String, Object> getAttributeValues() {
+        return _attributeValues;
+    }
 
-	/**
-	 * Set the map of the attribute values indexed by the attribute role.
-	 *
-	 * @param attributeValues The map of the attribute values to set.
-	 */
-	public void setAttributeValues(Map<String, Object> attributeValues) {
-		this._attributeValues = attributeValues;
-	}
-
-	private String _dataObjectId;
-	private String _dataType;
-
-	private String _renderedDataobject;
-	private String _renderingLang;
-	private long _modelId;
-
-	private Map<String, Object> _attributeValues = new HashMap<String, Object>();
+    /**
+     * Set the map of the attribute values indexed by the attribute role.
+     *
+     * @param attributeValues The map of the attribute values to set.
+     */
+    public void setAttributeValues(Map<String, Object> attributeValues) {
+        this._attributeValues = attributeValues;
+    }
 
 }

@@ -11,20 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.validator;
 
 import com.agiletec.aps.system.SystemConstants;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.Filter;
-import org.entando.entando.web.common.model.FilterOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Validator;
-
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,13 +24,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.FilterOperator;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Validator;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractPaginationValidator implements Validator {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     public static final String ERRCODE_PAGE_INVALID = "110";
     public static final String ERRCODE_NO_ITEM_ON_PAGE = "111";
     public static final String ERRCODE_PAGE_SIZE_INVALID = "112";
@@ -48,8 +47,8 @@ public abstract class AbstractPaginationValidator implements Validator {
     public static final String ERRCODE_FILTERING_ATTR_INVALID = "101";
     public static final String ERRCODE_DIRECTION_INVALID = "102";
     public static final String ERRCODE_FILTERING_OP_INVALID = "103";
-
     private static final String[] directions = {"ASC", "DESC"};
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void validateRestListRequest(RestListRequest listRequest, Class<?> type) {
         this.checkDefaultSortField(listRequest);
@@ -80,8 +79,8 @@ public abstract class AbstractPaginationValidator implements Validator {
             if (Arrays.stream(FilterOperator.values())
                     .map(FilterOperator::getValue)
                     .noneMatch(op -> Arrays.stream(listRequest.getFilters())
-                    .map(Filter::getOperator)
-                    .anyMatch(op::equals))) {
+                            .map(Filter::getOperator)
+                            .anyMatch(op::equals))) {
                 bindingResult.reject(ERRCODE_FILTERING_OP_INVALID, new Object[]{}, "filtering.filter.operation.invalid");
             }
 
@@ -92,7 +91,8 @@ public abstract class AbstractPaginationValidator implements Validator {
                             SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
                             sdf.parse(f.getValue());
                         } catch (ParseException ex) {
-                            bindingResult.reject(ERRCODE_FILTERING_OP_INVALID, new Object[]{f.getValue(), f.getAttribute()}, "filtering.filter.date.format.invalid");
+                            bindingResult.reject(ERRCODE_FILTERING_OP_INVALID, new Object[]{f.getValue(), f.getAttribute()},
+                                    "filtering.filter.date.format.invalid");
                         }
                     });
         }
@@ -122,7 +122,7 @@ public abstract class AbstractPaginationValidator implements Validator {
         fields = getAllFields(fields, type);
         if (fieldName.contains(".")) {
             String fieldClass = fieldName.substring(0, fieldName.indexOf("."));
-            if (fields.keySet().contains(fieldClass)) {
+            if (fields.containsKey(fieldClass)) {
                 String subFields = fieldName.substring(fieldName.indexOf(".") + 1);
                 Class subType = null;
                 try {
@@ -136,7 +136,7 @@ public abstract class AbstractPaginationValidator implements Validator {
                 return false;
             }
         } else {
-            return fields.keySet().contains(fieldName);
+            return fields.containsKey(fieldName);
         }
     }
 

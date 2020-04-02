@@ -11,47 +11,46 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.services.mock;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author M.Casari
  */
-public class MockWidgetsDAO  extends AbstractDAO {
+public class MockWidgetsDAO extends AbstractDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(MockWidgetsDAO.class);
+    private static final Logger _logger = LoggerFactory.getLogger(MockWidgetsDAO.class);
 
     /**
-     * Restituisce un booleano che attesta la presenza o meno della
-     * showlet con il codice dato dal parametro code.
+     * Restituisce un booleano che attesta la presenza o meno della showlet con il codice dato dal parametro code.
+     *
      * @param code Codice della showlet
      * @return true se la showlet esiste, false in caso contrario.
      * @throws ApsSystemException In caso di errore nell'accesso al db.
      */
     public boolean exists(String code) throws ApsSystemException {
-    	Connection conn = null;
+        Connection conn = null;
         PreparedStatement stat = null;
         ResultSet res = null;
         boolean result = false;
         try {
-        	conn = this.getConnection();
+            conn = this.getConnection();
             stat = conn.prepareStatement("select pagecode from widgetconfig where pagecode=?");
             stat.setString(1, code);
             res = stat.executeQuery();
             result = res.next();
         } catch (Throwable t) {
-            _logger.error("Error checking test widget",  t);
-			throw new RuntimeException("Error checking test widget", t);
-			//processDaoException(t, "Errore in controllo presenza showlet di test", "exists");
+            _logger.error("Error checking test widget", t);
+            throw new RuntimeException("Error checking test widget", t);
+            //processDaoException(t, "Errore in controllo presenza showlet di test", "exists");
         } finally {
             closeDaoResources(res, stat, conn);
         }

@@ -11,23 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.ArrayList;
+import java.util.List;
+import org.jdom.Element;
 
 /**
- * This class implements a text attribute that must be the same for all the
- * languages in the system.
+ * This class implements a text attribute that must be the same for all the languages in the system.
  *
  * @author W.Ambu
  */
 public class MonoTextAttribute extends AbstractTextAttribute {
+
+    private String _text;
 
     /**
      * Return the text field to index.
@@ -52,6 +52,15 @@ public class MonoTextAttribute extends AbstractTextAttribute {
         return "";
     }
 
+    /**
+     * Associate the given text to the attribute
+     *
+     * @param text The text to set.
+     */
+    public void setText(String text) {
+        this._text = text;
+    }
+
     @Override
     public String getTextForLang(String langCode) {
         return this.getText();
@@ -65,15 +74,6 @@ public class MonoTextAttribute extends AbstractTextAttribute {
     @Override
     public boolean needToConvertSpecialCharacter() {
         return true;
-    }
-
-    /**
-     * Associate the given text to the attribute
-     *
-     * @param text The text to set.
-     */
-    public void setText(String text) {
-        this._text = text;
     }
 
     @Override
@@ -125,7 +125,5 @@ public class MonoTextAttribute extends AbstractTextAttribute {
         }
         return Status.EMPTY;
     }
-
-    private String _text;
 
 }

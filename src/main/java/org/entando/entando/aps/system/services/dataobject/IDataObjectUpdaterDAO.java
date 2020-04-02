@@ -11,12 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 public interface IDataObjectUpdaterDAO {
 
-    public void reloadDataObjectCategoryReferences(DataObject dataObject);
+    void reloadDataObjectCategoryReferences(DataObject dataObject);
 
 }

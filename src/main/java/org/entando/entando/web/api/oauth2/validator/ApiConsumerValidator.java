@@ -1,16 +1,17 @@
 /*
  * Copyright 2019-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.api.oauth2.validator;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -19,11 +20,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.aps.system.services.oauth2.IOAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth2.model.ApiConsumer;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -72,8 +73,7 @@ public class ApiConsumerValidator extends AbstractPaginationValidator {
     }
 
     /**
-     * The secret must be not null for creating the consumer. Instead it can be
-     * null during the update.
+     * The secret must be not null for creating the consumer. Instead it can be null during the update.
      */
     public void validateForCreate(ApiConsumer consumer) {
         if (StringUtils.isEmpty(consumer.getSecret())) {
@@ -88,7 +88,8 @@ public class ApiConsumerValidator extends AbstractPaginationValidator {
         if (!consumer.getKey().equals(consumerKey)) {
             DataBinder dataBinder = new DataBinder(consumer);
             BindingResult bindingResult = dataBinder.getBindingResult();
-            bindingResult.rejectValue("key", ERRCODE_URINAME_MISMATCH, new String[]{consumerKey, consumer.getKey()}, "api.consumer.key.mismatch");
+            bindingResult.rejectValue("key", ERRCODE_URINAME_MISMATCH, new String[]{consumerKey, consumer.getKey()},
+                    "api.consumer.key.mismatch");
             throw new ValidationGenericException(bindingResult);
         }
     }

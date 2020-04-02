@@ -11,23 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.api;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
-
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -35,6 +20,19 @@ import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribut
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBCompositeAttributeType;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBEnumeratorAttributeType;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttributeType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiError;
+import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -44,10 +42,15 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttributeTy
 @XmlSeeAlso({JAXBListAttributeType.class, JAXBCompositeAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBEntityType {
 
-	private static final Logger _logger = LoggerFactory.getLogger(JAXBEntityType.class);
-	
-    public JAXBEntityType() {}
-    
+    private static final Logger _logger = LoggerFactory.getLogger(JAXBEntityType.class);
+    private String _entityManagerName;
+    private String _typeCode;
+    private String _typeDescription;
+    private List<DefaultJAXBAttributeType> _attributes = new ArrayList<DefaultJAXBAttributeType>();
+
+    public JAXBEntityType() {
+    }
+
     public JAXBEntityType(IApsEntity entityType) {
         this.setTypeCode(entityType.getTypeCode());
         this.setTypeDescription(entityType.getTypeDescription());
@@ -59,8 +62,8 @@ public class JAXBEntityType {
             }
         }
     }
-    
-    public IApsEntity buildEntityType(Class entityClass, Map<String, AttributeInterface> attributes) throws ApiException, Throwable {
+
+    public IApsEntity buildEntityType(Class entityClass, Map<String, AttributeInterface> attributes) throws Throwable {
         List<ApiError> errors = new ArrayList<ApiError>();
         IApsEntity entityType = null;
         try {
@@ -73,7 +76,7 @@ public class JAXBEntityType {
                     DefaultJAXBAttributeType jaxbAttributeType = jabxAttributes.get(i);
                     AttributeInterface attribute = jaxbAttributeType.createAttribute(attributes);
                     if (null != entityType.getAttribute(attribute.getName())) {
-                        throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                                 "Attribute '" + attribute.getName() + "' already defined");
                     }
                     entityType.addAttribute(attribute);
@@ -82,51 +85,51 @@ public class JAXBEntityType {
                 }
             }
         } catch (Throwable t) {
-        	_logger.error("error in buildEntityType", t);
+            _logger.error("error in buildEntityType", t);
             //ApsSystemUtils.logThrowable(t, this, "buildEntityType");
             throw t;
         }
-        if (!errors.isEmpty()) throw new ApiException(errors);
+        if (!errors.isEmpty()) {
+            throw new ApiException(errors);
+        }
         return entityType;
     }
-    
+
     @XmlElement(name = "entityManagerName", required = true)
     public String getEntityManagerName() {
         return _entityManagerName;
     }
+
     public void setEntityManagerName(String entityManagerName) {
         this._entityManagerName = entityManagerName;
     }
-    
+
     @XmlElement(name = "typeCode", required = true)
     public String getTypeCode() {
         return _typeCode;
     }
+
     public void setTypeCode(String typeCode) {
         this._typeCode = typeCode;
     }
-    
+
     @XmlElement(name = "typeDescription", required = true)
     public String getTypeDescription() {
         return _typeDescription;
     }
+
     public void setTypeDescription(String typeDescription) {
         this._typeDescription = typeDescription;
     }
-    
+
     @XmlElement(name = "attribute", required = false)
     @XmlElementWrapper(name = "attributes")
     public List<DefaultJAXBAttributeType> getAttributes() {
         return _attributes;
     }
+
     public void setAttributes(List<DefaultJAXBAttributeType> attributes) {
         this._attributes = attributes;
     }
-    
-    private String _entityManagerName;
-    private String _typeCode;
-    private String _typeDescription;
-    
-    private List<DefaultJAXBAttributeType> _attributes = new ArrayList<DefaultJAXBAttributeType>();
-    
+
 }

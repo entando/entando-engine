@@ -11,7 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.group;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -38,18 +51,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GroupControllerUnitTest extends AbstractControllerTest {
 
@@ -78,8 +79,8 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
         when(groupService.getGroups(any(RestListRequest.class))).thenReturn(new PagedMetadata<GroupDto>());
         ResultActions result = mockMvc.perform(
                 get("/groups").param("page", "1")
-                .param("pageSize", "4")
-                .header("Authorization", "Bearer " + accessToken)
+                        .param("pageSize", "4")
+                        .header("Authorization", "Bearer " + accessToken)
         );
 
         result.andExpect(status().isOk());
@@ -99,10 +100,10 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/groups").param("page", "1")
-                .param("pageSize", "4")
-                .param("filter[0].attribute", "code")
-                .param("filter[0].value", "free")
-                .header("Authorization", "Bearer " + accessToken)
+                        .param("pageSize", "4")
+                        .param("filter[0].attribute", "code")
+                        .param("filter[0].value", "free")
+                        .header("Authorization", "Bearer " + accessToken)
         );
 
         result.andExpect(status().isOk());
@@ -123,14 +124,14 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/groups")
-                .header("Authorization", "Bearer " + accessToken)
+                        .header("Authorization", "Bearer " + accessToken)
         );
 
         result.andExpect(status().isForbidden());
     }
 
     @Test
-    public void testValidateOnUpdateWithInvalidPathAndPayload() throws ApsSystemException, Exception {
+    public void testValidateOnUpdateWithInvalidPathAndPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -144,15 +145,15 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
         ResultActions result = mockMvc.perform(
                 put("/groups/{groupCode}",
                         "helpdesk")
-                .content(payload)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .content(payload)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testValidateOnDeleteReservedGroups() throws ApsSystemException, Exception {
+    public void testValidateOnDeleteReservedGroups() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -166,14 +167,14 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
         ResultActions result = mockMvc.perform(
                 delete("/groups/{groupName}",
                         groupName)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isConflict());
         result.andExpect(jsonPath("$.errors[0].code", is(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP)));
     }
 
     @Test
-    public void testParamSize() throws ApsSystemException, Exception {
+    public void testParamSize() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -187,9 +188,9 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
         this.controller.setGroupValidator(new GroupValidator());
         ResultActions result = mockMvc.perform(
                 post("/groups")
-                .content(payload)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .content(payload)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
 
@@ -205,7 +206,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 delete("/groups/{code}", code)
-                .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken));
 
         result
                 .andExpect(status().isOk())

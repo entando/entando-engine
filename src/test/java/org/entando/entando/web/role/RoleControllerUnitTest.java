@@ -11,7 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.role;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +34,6 @@ import org.mockito.Spy;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class RoleControllerUnitTest extends AbstractControllerTest {
 
@@ -67,9 +68,9 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
         String payload = mapper.writeValueAsString(request);
         ResultActions result = mockMvc.perform(
                 post("/roles")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(payload)
-                .header("Authorization", "Bearer " + accessToken));
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(payload)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
     }
@@ -88,9 +89,9 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
         String payload = mapper.writeValueAsString(request);
         ResultActions result = mockMvc.perform(
                 post("/roles")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(payload)
-                .header("Authorization", "Bearer " + accessToken));
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(payload)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
     }

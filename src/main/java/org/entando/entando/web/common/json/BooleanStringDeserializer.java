@@ -1,24 +1,21 @@
 package org.entando.entando.web.common.json;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BooleanStringDeserializer extends JsonDeserializer<Boolean> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     protected static final String FALSE = "false";
     protected static final String TRUE = "true";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Boolean deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Boolean deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonToken currentToken = jp.getCurrentToken();
 
         if (currentToken.equals(JsonToken.VALUE_STRING)) {
@@ -29,7 +26,6 @@ public class BooleanStringDeserializer extends JsonDeserializer<Boolean> {
                 return Boolean.FALSE;
             } else {
                 logger.warn("only {}, {} and {}, {} values are supported as boolean input", TRUE, "\"true\"", FALSE, "\"false\"");
-                ;
                 return null;
             }
 

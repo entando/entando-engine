@@ -11,36 +11,40 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.util;
 
 /**
  * A single item for a select form element.
+ *
  * @author E.Santoboni
  */
 public class SelectItem {
-	
-	public SelectItem(String key, String value) {
-		this._key = key;
-		this._value = value;
-	}
-	
-	public SelectItem(String key, String value, String optgroup) {
-		this(key, value);
-		this._optgroup = optgroup;
-	}
-	
-	public String getKey() {
-		return _key;
-	}
-	public String getValue() {
-		return _value;
-	}
-	public String getOptgroup() {
-		return _optgroup;
-	}
-	
-	private String _key;
-	private String _value;
-	private String _optgroup;
-	
+
+    private String _key;
+    private String _value;
+    private String _optgroup;
+
+    public SelectItem(String key, String value) {
+        this._key = key;
+        this._value = value;
+    }
+
+    public SelectItem(String key, String value, String optgroup) {
+        this(key, value);
+        this._optgroup = optgroup;
+    }
+
+    public String getKey() {
+        return _key;
+    }
+
+    public String getValue() {
+        return _value;
+    }
+
+    public String getOptgroup() {
+        return _optgroup;
+    }
+
 }

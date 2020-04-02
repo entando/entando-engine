@@ -11,51 +11,50 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.loader;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class of the extra attribute disabling codes.
+ *
  * @author E.Santoboni
  */
 public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeSupportObject {
-	
-	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeDisablingCodesWrapper.class);
-	
-	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		String managerName = ((IManager) entityManager).getName();
-		if (!managerName.equals(super.getEntityManagerNameDest())) {
-			return;
-		}
-		try {
-			String xml = super.extractXml();
-			AttributeDisablingCodesDOM dom = new AttributeDisablingCodesDOM();
-			Map<String, String> codeMap = dom.extractDisablingCodes(xml, this.getDefsFilePath());
-			List<String> codes = new ArrayList<>(codeMap.keySet());
-			for (int i = 0; i < codes.size(); i++) {
-				String code = codes.get(i);
-				if (collectionToFill.containsKey(code)) {
-					_logger.warn("You can't override existing disabling code : {} - {}", code, collectionToFill.get(code));
-				} else {
-					collectionToFill.put(code, codeMap.get(code));
-					_logger.info("Added new disabling code : {} - {}", code, collectionToFill.get(code));
-				}
-			}
-		} catch (Throwable t) {
-			//ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute disabling codes");
-			_logger.error("Error loading extra attribute disabling codes", t);
-		}
-	}
-	
+
+    private static final Logger _logger = LoggerFactory.getLogger(ExtraAttributeDisablingCodesWrapper.class);
+
+    public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
+        String managerName = entityManager.getName();
+        if (!managerName.equals(super.getEntityManagerNameDest())) {
+            return;
+        }
+        try {
+            String xml = super.extractXml();
+            AttributeDisablingCodesDOM dom = new AttributeDisablingCodesDOM();
+            Map<String, String> codeMap = dom.extractDisablingCodes(xml, this.getDefsFilePath());
+            List<String> codes = new ArrayList<>(codeMap.keySet());
+            for (int i = 0; i < codes.size(); i++) {
+                String code = codes.get(i);
+                if (collectionToFill.containsKey(code)) {
+                    _logger.warn("You can't override existing disabling code : {} - {}", code, collectionToFill.get(code));
+                } else {
+                    collectionToFill.put(code, codeMap.get(code));
+                    _logger.info("Added new disabling code : {} - {}", code, collectionToFill.get(code));
+                }
+            }
+        } catch (Throwable t) {
+            //ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute disabling codes");
+            _logger.error("Error loading extra attribute disabling codes", t);
+        }
+    }
+
 }

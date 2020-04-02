@@ -11,10 +11,9 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject.widget;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+package org.entando.entando.aps.system.services.dataobject.widget;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -24,13 +23,15 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.util.ApsProperties;
-import org.entando.entando.aps.system.services.dataobject.helper.PublicDataTypeAuthorizationInfo;
-import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
-import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
-import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
-import org.entando.entando.aps.system.services.dataobject.helper.IDataAuthorizationHelper;
-import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDispenser;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.helper.IDataAuthorizationHelper;
+import org.entando.entando.aps.system.services.dataobject.helper.PublicDataTypeAuthorizationInfo;
+import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
+import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDispenser;
+import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
+import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classe helper per i Widget di erogazione dataobject singoli.
@@ -40,6 +41,10 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 public class DataObjectViewerHelper implements IDataObjectViewerHelper {
 
     private static final Logger _logger = LoggerFactory.getLogger(DataObjectViewerHelper.class);
+    private IDataObjectModelManager _dataObjectModelManager;
+    private IDataObjectManager _dataObjectManager;
+    private IDataObjectDispenser _dataObjectDispenser;
+    private IDataAuthorizationHelper _dataAuthorizationHelper;
 
     @Override
     public String getRenderedDataObject(String dataobjectId, String modelId, RequestContext reqCtx) throws ApsSystemException {
@@ -51,7 +56,6 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
      *
      * @param dataobjectId L'identificativo del dataObject ricavato dal tag.
      * @param modelId Il modello del dataObject ricavato dal tag.
-     * @param publishExtraTitle
      * @param reqCtx Il contesto della richiesta.
      * @return Il dataObject da visualizzare nella widget.
      * @throws ApsSystemException In caso di errore.
@@ -71,7 +75,8 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
     }
 
     @Override
-    public DataObjectRenderizationInfo getRenderizationInfo(String dataobjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx)
+    public DataObjectRenderizationInfo getRenderizationInfo(String dataobjectId, String modelId, boolean publishExtraTitle,
+            RequestContext reqCtx)
             throws ApsSystemException {
         DataObjectRenderizationInfo renderizationInfo = null;
         try {
@@ -139,13 +144,10 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
     }
 
     /**
-     * Metodo che determina con che ordine viene ricercato l'identificativo del
-     * dataobject. L'ordine con cui viene cercato è questo: 1) Nel parametro
-     * specificato all'interno del tag. 2) Tra i parametri di configurazione del
-     * widget 3) Nella Request.
+     * Metodo che determina con che ordine viene ricercato l'identificativo del dataobject. L'ordine con cui viene cercato è questo: 1) Nel
+     * parametro specificato all'interno del tag. 2) Tra i parametri di configurazione del widget 3) Nella Request.
      *
-     * @param dataobjectId L'identificativo del dataobject specificato nel tag.
-     * Può essere null o una Stringa alfanumerica.
+     * @param dataobjectId L'identificativo del dataobject specificato nel tag. Può essere null o una Stringa alfanumerica.
      * @param widgetConfig I parametri di configurazione del widget corrente.
      * @param reqCtx Il contesto della richiesta.
      * @return L'identificativo del dataobject da erogare.
@@ -166,27 +168,18 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
     }
 
     /**
-     * Restituisce l'identificativo del modello con il quale renderizzare il
-     * dataobject. Metodo che determina con che ordine viene ricercato
-     * l'identificativo del modello di dataobject. L'ordine con cui viene
-     * cercato è questo: 1) Nel parametro specificato all'interno del tag. 2)
-     * Tra i parametri di configurazione del widget Nel caso non venga trovato
-     * nessun identificativo, viene restituito l'identificativo del modello di
-     * default specificato nella configurazione del tipo di dataobject.
+     * Restituisce l'identificativo del modello con il quale renderizzare il dataobject. Metodo che determina con che ordine viene ricercato
+     * l'identificativo del modello di dataobject. L'ordine con cui viene cercato è questo: 1) Nel parametro specificato all'interno del
+     * tag. 2) Tra i parametri di configurazione del widget Nel caso non venga trovato nessun identificativo, viene restituito
+     * l'identificativo del modello di default specificato nella configurazione del tipo di dataobject.
      *
-     * @param dataobjectId L'identificativo del dataobject da erogare. Può
-     * essere null, un numero in forma di stringa, o un'identificativo della
-     * tipologia del modello 'list' (in tal caso viene restituito il modello per
-     * le liste definito nella configurazione del tipo di dataobject) o
-     * 'default' (in tal caso viene restituito il modello di default definito
-     * nella configurazione del tipo di dataobject).
-     * @param modelId L'identificativo del modello specificato nel tag. Può
-     * essere null.
-     * @param widgetConfig La configurazione del widget corrente nel qual è
-     * inserito il tag erogatore del dataobject.
+     * @param dataobjectId L'identificativo del dataobject da erogare. Può essere null, un numero in forma di stringa, o un'identificativo
+     * della tipologia del modello 'list' (in tal caso viene restituito il modello per le liste definito nella configurazione del tipo di
+     * dataobject) o 'default' (in tal caso viene restituito il modello di default definito nella configurazione del tipo di dataobject).
+     * @param modelId L'identificativo del modello specificato nel tag. Può essere null.
+     * @param widgetConfig La configurazione del widget corrente nel qual è inserito il tag erogatore del dataobject.
      * @param reqCtx Il contesto della richiesta.
-     * @return L'identificativo del modello con il quale renderizzare il
-     * dataobject.
+     * @return L'identificativo del modello con il quale renderizzare il dataobject.
      */
     protected String extractModelId(String dataobjectId, String modelId, ApsProperties widgetConfig, RequestContext reqCtx) {
         modelId = this.extractConfiguredModelId(dataobjectId, modelId, widgetConfig);
@@ -266,11 +259,5 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
     public void setDataAuthorizationHelper(IDataAuthorizationHelper dataAuthorizationHelper) {
         this._dataAuthorizationHelper = dataAuthorizationHelper;
     }
-
-    private IDataObjectModelManager _dataObjectModelManager;
-    private IDataObjectManager _dataObjectManager;
-    private IDataObjectDispenser _dataObjectDispenser;
-
-    private IDataAuthorizationHelper _dataAuthorizationHelper;
 
 }

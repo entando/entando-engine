@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.renderer;
 
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -19,38 +20,43 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
  * @author E.Santoboni
  */
 public final class TextAttributeCharReplaceInfo {
-	
-	protected TextAttributeCharReplaceInfo(ITextAttribute textAttribute, String oldtext, String langCode) {
-		this.setTextAttribute(textAttribute);
-		this.setOldtext(oldtext);
-		this.setLangCode(langCode);
-	}
-	
-	protected void restore() {
-		this.getTextAttribute().setText(this.getOldtext(), this.getLangCode());
-	}
-	
-	private ITextAttribute getTextAttribute() {
-		return _textAttribute;
-	}
-	private void setTextAttribute(ITextAttribute textAttribute) {
-		this._textAttribute = textAttribute;
-	}
-	private String getOldtext() {
-		return _oldtext;
-	}
-	private void setOldtext(String oldtext) {
-		this._oldtext = oldtext;
-	}
-	private String getLangCode() {
-		return _langCode;
-	}
-	private void setLangCode(String langCode) {
-		this._langCode = langCode;
-	}
-	
-	private ITextAttribute _textAttribute;
-	private String _oldtext;
-	private String _langCode;
-	
+
+    private ITextAttribute _textAttribute;
+    private String _oldtext;
+    private String _langCode;
+
+    protected TextAttributeCharReplaceInfo(ITextAttribute textAttribute, String oldtext, String langCode) {
+        this.setTextAttribute(textAttribute);
+        this.setOldtext(oldtext);
+        this.setLangCode(langCode);
+    }
+
+    protected void restore() {
+        this.getTextAttribute().setText(this.getOldtext(), this.getLangCode());
+    }
+
+    private ITextAttribute getTextAttribute() {
+        return _textAttribute;
+    }
+
+    private void setTextAttribute(ITextAttribute textAttribute) {
+        this._textAttribute = textAttribute;
+    }
+
+    private String getOldtext() {
+        return _oldtext;
+    }
+
+    private void setOldtext(String oldtext) {
+        this._oldtext = oldtext;
+    }
+
+    private String getLangCode() {
+        return _langCode;
+    }
+
+    private void setLangCode(String langCode) {
+        this._langCode = langCode;
+    }
+
 }

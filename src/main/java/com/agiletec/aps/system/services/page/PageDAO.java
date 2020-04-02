@@ -11,8 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
+import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.util.ApsProperties;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import org.entando.entando.aps.system.init.model.portdb.PageMetadataDraft;
 import org.entando.entando.aps.system.init.model.portdb.PageMetadataOnline;
 import org.entando.entando.aps.system.init.model.portdb.WidgetConfig;
@@ -34,12 +39,6 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
-import com.agiletec.aps.system.services.pagemodel.PageModel;
-import com.agiletec.aps.util.ApsProperties;
-
 /**
  * Data Access Object for the 'page' objects
  *
@@ -48,10 +47,54 @@ import com.agiletec.aps.util.ApsProperties;
 public class PageDAO extends AbstractDAO implements IPageDAO {
 
     private static final Logger _logger = LoggerFactory.getLogger(PageDAO.class);
-
-    protected enum WidgetConfigDest {
-        ON_LINE, DRAFT;
-    }
+    // attenzione: l'ordinamento deve rispettare prima l'ordine delle pagine
+    // figlie nelle pagine madri, e poi l'ordine dei widget nella pagina.
+    private static final String ALL_PAGES = "SELECT p.parentcode, p.pos, p.code, "
+            + "onl.groupcode, onl.titles, onl.modelcode, onl.showinmenu, onl.extraconfig, onl.updatedat, "
+            + "drf.groupcode, drf.titles, drf.modelcode, drf.showinmenu, drf.extraconfig, drf.updatedat FROM pages p LEFT JOIN "
+            + PageMetadataOnline.TABLE_NAME + " onl ON p.code = onl.code LEFT JOIN " + PageMetadataDraft.TABLE_NAME
+            + " drf ON p.code = drf.code ORDER BY p.parentcode, p.pos, p.code ";
+    private static final String ALL_WIDGETS_START = "SELECT w.pagecode, w.framepos, w.widgetcode, w.config " + "FROM pages p JOIN ";
+    private static final String ALL_WIDGETS_END = " w ON p.code = w.pagecode " + "ORDER BY p.parentcode, p.pos, p.code, w.framepos ";
+    private static final String ALL_WIDGETS_ONLINE = ALL_WIDGETS_START + WidgetConfig.TABLE_NAME + ALL_WIDGETS_END;
+    private static final String ALL_WIDGETS_DRAFT = ALL_WIDGETS_START + WidgetConfigDraft.TABLE_NAME + ALL_WIDGETS_END;
+    private static final String ADD_PAGE = "INSERT INTO pages(code, parentcode, pos) VALUES ( ? , ? , ? )";
+    private static final String DELETE_PAGE = "DELETE FROM pages WHERE code = ? ";
+    private static final String DELETE_WIDGETS_FOR_PAGE_ONLINE = "DELETE FROM " + WidgetConfig.TABLE_NAME + " WHERE pagecode = ? ";
+    private static final String DELETE_WIDGETS_FOR_PAGE_DRAFT = "DELETE FROM " + WidgetConfigDraft.TABLE_NAME + " WHERE pagecode = ? ";
+    private static final String DELETE_WIDGET_FOR_PAGE_DRAFT = DELETE_WIDGETS_FOR_PAGE_DRAFT + " AND framepos = ? ";
+    private static final String MOVE_UP = "UPDATE pages SET pos = (pos - 1) WHERE code = ? ";
+    private static final String MOVE_DOWN = "UPDATE pages SET pos = (pos + 1) WHERE code = ? ";
+    private static final String UPDATE_PAGE = "UPDATE pages SET parentcode = ? WHERE code = ? ";
+    private static final String SHIFT_PAGE = "UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
+    private static final String ADD_WIDGET_FOR_PAGE = "INSERT INTO " + WidgetConfig.TABLE_NAME
+            + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
+    private static final String ADD_WIDGET_FOR_PAGE_DRAFT = "INSERT INTO " + WidgetConfigDraft.TABLE_NAME
+            + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
+    private static final String MOVE_WIDGET = "UPDATE " + WidgetConfigDraft.TABLE_NAME
+            + " SET framepos = ? WHERE pagecode = ? and framepos = ? ";
+    private static final String UPDATE_PAGE_TREE_POSITION = "UPDATE pages SET parentcode = ? , pos =?  WHERE code = ? ";
+    private static final String PAGE_METADATA_WHERE_CODE = " WHERE code = ?";
+    private static final String ADD_PAGE_METADATA_END = " (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES"
+            + " (?, ?, ?, ?, ?, ?, ?) ";
+    private static final String UPDATE_PAGE_METADATA_END =
+            "SET groupcode = ? , titles = ?, modelcode = ?, showinmenu = ?, extraconfig = ?, updatedat = ? "
+                    + PAGE_METADATA_WHERE_CODE;
+    private static final String ADD_PAGE_METADATA_START = "INSERT INTO ";
+    private static final String UPDATE_PAGE_METADATA_START = "UPDATE ";
+    private static final String DELETE_ONLINE_PAGE_METADATA = "DELETE FROM " + PageMetadataOnline.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
+    private static final String DELETE_DRAFT_PAGE_METADATA = "DELETE FROM " + PageMetadataDraft.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
+    private static final String SET_ONLINE_METADATA = "INSERT INTO " + PageMetadataOnline.TABLE_NAME
+            + " (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) SELECT code, groupcode, titles, modelcode, "
+            + "showinmenu, extraconfig, updatedat FROM "
+            + PageMetadataDraft.TABLE_NAME + " WHERE code = ?";
+    private static final String SET_ONLINE_WIDGETS = "INSERT INTO " + WidgetConfig.TABLE_NAME
+            + " (pagecode, framepos, widgetcode, config) SELECT pagecode, framepos, widgetcode, config FROM " + WidgetConfigDraft.TABLE_NAME
+            + " WHERE pagecode = ?";
+    private static final String LOAD_LAST_UPDATED_PAGES = "SELECT code FROM pages_metadata_draft ORDER BY updatedat DESC";
+    private static final String GET_LAST_CHILDREN_POSITION = "SELECT pos FROM pages WHERE parentcode = ? ORDER BY pos DESC";
+    private IPageModelManager _pageModelManager;
+    private IWidgetTypeManager _widgetTypeManager;
 
     @Override
     public List<PageRecord> loadPageRecords() {
@@ -138,7 +181,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         return numFrames;
     }
 
-    protected void readWidget(PageRecord page, int numOfFrames, Widget widgets[],
+    protected void readWidget(PageRecord page, int numOfFrames, Widget[] widgets,
             int startIndex, ResultSet res) throws ApsSystemException, SQLException {
         Object posObj = res.getObject(startIndex);
         if (posObj != null) {
@@ -243,7 +286,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
             closeDaoResources(null, stat);
         }
         if (page instanceof Page) {
-            ((Page) page).setPosition(position);
+            page.setPosition(position);
         }
     }
 
@@ -332,8 +375,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     }
 
     /**
-     * Decrement by one the position of a group of pages to compact the
-     * positions after a deletion
+     * Decrement by one the position of a group of pages to compact the positions after a deletion
      *
      * @param parentCode the code of the parent of the pages to compact.
      * @param position The empty position which needs to be compacted.
@@ -400,13 +442,13 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     @Override
     public void updateWidgetPosition(String pageCode, Integer frameToMove, Integer destFrame) {
         Connection conn = null;
-        int TEMP_FRAME_POSITION = -9999;
+        int tempFramePosition = -9999;
         try {
             conn = this.getConnection();
             conn.setAutoCommit(false);
-            this.updateWidgetPosition(pageCode, frameToMove, TEMP_FRAME_POSITION, conn);
+            this.updateWidgetPosition(pageCode, frameToMove, tempFramePosition, conn);
             this.updateWidgetPosition(pageCode, destFrame, frameToMove, conn);
-            this.updateWidgetPosition(pageCode, TEMP_FRAME_POSITION, destFrame, conn);
+            this.updateWidgetPosition(pageCode, tempFramePosition, destFrame, conn);
             this.updatePageMetadataDraftLastUpdate(pageCode, new Date(), conn);
             conn.commit();
         } catch (Throwable t) {
@@ -828,76 +870,8 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         this._widgetTypeManager = widgetTypeManager;
     }
 
-    private IPageModelManager _pageModelManager;
-    private IWidgetTypeManager _widgetTypeManager;
-
-    // attenzione: l'ordinamento deve rispettare prima l'ordine delle pagine
-    // figlie nelle pagine madri, e poi l'ordine dei widget nella pagina.
-    private static final String ALL_PAGES = "SELECT p.parentcode, p.pos, p.code, "
-            + "onl.groupcode, onl.titles, onl.modelcode, onl.showinmenu, onl.extraconfig, onl.updatedat, "
-            + "drf.groupcode, drf.titles, drf.modelcode, drf.showinmenu, drf.extraconfig, drf.updatedat FROM pages p LEFT JOIN "
-            + PageMetadataOnline.TABLE_NAME + " onl ON p.code = onl.code LEFT JOIN " + PageMetadataDraft.TABLE_NAME
-            + " drf ON p.code = drf.code ORDER BY p.parentcode, p.pos, p.code ";
-
-    private static final String ALL_WIDGETS_START = "SELECT w.pagecode, w.framepos, w.widgetcode, w.config " + "FROM pages p JOIN ";
-    private static final String ALL_WIDGETS_END = " w ON p.code = w.pagecode " + "ORDER BY p.parentcode, p.pos, p.code, w.framepos ";
-
-    private static final String ALL_WIDGETS_ONLINE = ALL_WIDGETS_START + WidgetConfig.TABLE_NAME + ALL_WIDGETS_END;
-    private static final String ALL_WIDGETS_DRAFT = ALL_WIDGETS_START + WidgetConfigDraft.TABLE_NAME + ALL_WIDGETS_END;
-
-    private static final String ADD_PAGE = "INSERT INTO pages(code, parentcode, pos) VALUES ( ? , ? , ? )";
-
-    private static final String DELETE_PAGE = "DELETE FROM pages WHERE code = ? ";
-
-    private static final String DELETE_WIDGETS_FOR_PAGE_ONLINE = "DELETE FROM " + WidgetConfig.TABLE_NAME + " WHERE pagecode = ? ";
-
-    private static final String DELETE_WIDGETS_FOR_PAGE_DRAFT = "DELETE FROM " + WidgetConfigDraft.TABLE_NAME + " WHERE pagecode = ? ";
-
-    private static final String DELETE_WIDGET_FOR_PAGE_DRAFT = DELETE_WIDGETS_FOR_PAGE_DRAFT + " AND framepos = ? ";
-
-    private static final String MOVE_UP = "UPDATE pages SET pos = (pos - 1) WHERE code = ? ";
-
-    private static final String MOVE_DOWN = "UPDATE pages SET pos = (pos + 1) WHERE code = ? ";
-
-    private static final String UPDATE_PAGE = "UPDATE pages SET parentcode = ? WHERE code = ? ";
-
-    private static final String SHIFT_PAGE = "UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
-
-    private static final String ADD_WIDGET_FOR_PAGE = "INSERT INTO " + WidgetConfig.TABLE_NAME
-            + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
-
-    private static final String ADD_WIDGET_FOR_PAGE_DRAFT = "INSERT INTO " + WidgetConfigDraft.TABLE_NAME
-            + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
-
-    private static final String MOVE_WIDGET = "UPDATE " + WidgetConfigDraft.TABLE_NAME
-            + " SET framepos = ? WHERE pagecode = ? and framepos = ? ";
-
-    private static final String UPDATE_PAGE_TREE_POSITION = "UPDATE pages SET parentcode = ? , pos =?  WHERE code = ? ";
-
-    private static final String PAGE_METADATA_WHERE_CODE = " WHERE code = ?";
-
-    private static final String ADD_PAGE_METADATA_END = " (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES (?, ?, ?, ?, ?, ?, ?) ";
-
-    private static final String UPDATE_PAGE_METADATA_END = "SET groupcode = ? , titles = ?, modelcode = ?, showinmenu = ?, extraconfig = ?, updatedat = ? "
-            + PAGE_METADATA_WHERE_CODE;
-
-    private static final String ADD_PAGE_METADATA_START = "INSERT INTO ";
-
-    private static final String UPDATE_PAGE_METADATA_START = "UPDATE ";
-
-    private static final String DELETE_ONLINE_PAGE_METADATA = "DELETE FROM " + PageMetadataOnline.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
-    private static final String DELETE_DRAFT_PAGE_METADATA = "DELETE FROM " + PageMetadataDraft.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
-
-    private static final String SET_ONLINE_METADATA = "INSERT INTO " + PageMetadataOnline.TABLE_NAME
-            + " (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) SELECT code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat FROM "
-            + PageMetadataDraft.TABLE_NAME + " WHERE code = ?";
-
-    private static final String SET_ONLINE_WIDGETS = "INSERT INTO " + WidgetConfig.TABLE_NAME
-            + " (pagecode, framepos, widgetcode, config) SELECT pagecode, framepos, widgetcode, config FROM " + WidgetConfigDraft.TABLE_NAME
-            + " WHERE pagecode = ?";
-
-    private static final String LOAD_LAST_UPDATED_PAGES = "SELECT code FROM pages_metadata_draft ORDER BY updatedat DESC";
-
-    private static final String GET_LAST_CHILDREN_POSITION = "SELECT pos FROM pages WHERE parentcode = ? ORDER BY pos DESC";
+    protected enum WidgetConfigDest {
+        ON_LINE, DRAFT
+    }
 
 }

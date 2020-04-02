@@ -11,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import java.sql.Connection;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
-import java.sql.Connection;
-
 /**
- *
  * @author E.Santoboni
  */
 public class DataObjectUpdaterDAO extends DataObjectDAO implements IDataObjectUpdaterDAO {

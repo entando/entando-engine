@@ -1,9 +1,5 @@
 package org.entando.entando.aps.system.services.actionlog.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -11,7 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
@@ -58,6 +57,28 @@ public class ActionLogRecordDto {
         this.setUsername(src.getUsername());
     }
 
+    public ActionLogRecordDto(ActionLogRecord src, List<ActivityStreamLikeInfo> actionLikeRecords,
+            List<ActivityStreamComment> actionCommentRecords) {
+        this(src);
+        if (null != actionLikeRecords) {
+            actionLikeRecords.stream().forEach(i -> likes.add(new LikeInfo(i)));
+        }
+        if (null != actionCommentRecords) {
+            actionCommentRecords.stream().forEach(i -> comments.add(new CommentInfo(i)));
+        }
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "createdAt":
+                return "actiondate";
+            case "updatedAt":
+                return "updatedate";
+            default:
+                return dtoFieldName;
+        }
+    }
+
     private List<String> readLines(String text) {
         InputStream is = null;
         List<String> lines = new ArrayList<>();
@@ -81,16 +102,6 @@ public class ActionLogRecordDto {
             }
         }
         return lines;
-    }
-
-    public ActionLogRecordDto(ActionLogRecord src, List<ActivityStreamLikeInfo> actionLikeRecords, List<ActivityStreamComment> actionCommentRecords) {
-        this(src);
-        if (null != actionLikeRecords) {
-            actionLikeRecords.stream().forEach(i -> likes.add(new LikeInfo(i)));
-        }
-        if (null != actionCommentRecords) {
-            actionCommentRecords.stream().forEach(i -> comments.add(new CommentInfo(i)));
-        }
     }
 
     public int getId() {
@@ -163,17 +174,6 @@ public class ActionLogRecordDto {
 
     public void setComments(List<CommentInfo> comments) {
         this.comments = comments;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "createdAt":
-                return "actiondate";
-            case "updatedAt":
-                return "updatedate";
-            default:
-                return dtoFieldName;
-        }
     }
 
     protected class LikeInfo {

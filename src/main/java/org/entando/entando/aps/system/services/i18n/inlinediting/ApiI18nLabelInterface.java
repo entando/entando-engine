@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.i18n.inlinediting;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Iterator;
+import javax.ws.rs.core.Response;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.i18n.inlinediting.model.JAXBI18nLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.core.Response;
-import java.util.Iterator;
 
 /**
  * @author E.Santoboni
@@ -87,7 +87,7 @@ public class ApiI18nLabelInterface extends org.entando.entando.aps.system.servic
             }
         } catch (ApiException ae) {
             _logger.error("Error method checkLabels ", ae);
-            throw new ApiException("Error method checkLabels", ae) ;
+            throw new ApiException("Error method checkLabels", ae);
         }
     }
 

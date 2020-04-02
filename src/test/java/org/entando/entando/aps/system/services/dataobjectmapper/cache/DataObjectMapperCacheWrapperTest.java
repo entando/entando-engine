@@ -11,7 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -27,7 +31,8 @@ import java.util.List;
 import org.entando.entando.aps.system.services.dataobjectmapper.DataObjectPageMapper;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,12 +40,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 public class DataObjectMapperCacheWrapperTest {
-	
-	@Mock
+
+    @Mock
     private CacheManager cacheManager;
 
     @Mock
@@ -48,83 +50,83 @@ public class DataObjectMapperCacheWrapperTest {
 
     @Mock
     private Cache cache;
-	
-	@Mock
+
+    @Mock
     private Cache.ValueWrapper valueWrapper;
-	
-	@InjectMocks
+
+    @InjectMocks
     private DataObjectMapperCacheWrapper cacheWrapper;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test(expected = ApsSystemException.class)
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test(expected = ApsSystemException.class)
     public void testInitCacheWithError() throws Throwable {
         cacheWrapper.initCache(this.pageManager);
     }
-	
-	@Test
-	public void testInitCache() throws Throwable {
-		Mockito.when(pageManager.getOnlineRoot()).thenReturn(this.createMockPage());
-		Mockito.when(cacheManager.getCache(IDataObjectMapperCacheWrapper.OBJECT_MAPPER_CACHE_NAME)).thenReturn(this.cache);
-		cacheWrapper.initCache(this.pageManager);
-	}
-	
-	@Test
-	public void testGetPageCode() {
-		DataObjectPageMapper dataObjectPageMapper = new DataObjectPageMapper();
-		dataObjectPageMapper.add("dataId", "temp_model");
-		dataObjectPageMapper.add("dataId2", "wring_page");
-		Mockito.when(valueWrapper.get()).thenReturn(dataObjectPageMapper);
-		Mockito.when(cache.get(Mockito.anyString())).thenReturn(valueWrapper);
-		Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
-		String pageCode = this.cacheWrapper.getPageCode("dataId");
-		assertNotNull(pageCode);
-		assertEquals("temp_model", pageCode);
-	}
-	
-	private IPage createMockPage() {
-		Page root = new Page();
-		root.setCode("root_code");
-		root.setModel(this.createMockPageModel());
-		root.setGroup(Group.FREE_GROUP_NAME);
-		Widget[] widgets = new Widget[]{this.createMockWidget()};
-		root.setWidgets(widgets);
-		root.setChildrenCodes(new String[]{});
-		return root;
-	}
-	
-	private PageModel createMockPageModel() {
-		PageModel model = new PageModel();
-		model.setCode("temp_model");
-		Frame frame = new Frame();
-		frame.setMainFrame(true);
-		frame.setDescription("Main Frame");
-		frame.setPos(0);
-		Frame[] configuration = new Frame[]{frame};
-		model.setConfiguration(configuration);
-		model.setMainFrame(0);
-		return model;
-	}
-	
-	private Widget createMockWidget() {
-		Widget widget = new Widget();
-		WidgetType type = new WidgetType();
-		type.setCode("type");
-		WidgetTypeParameter param1 = new WidgetTypeParameter();
-		param1.setName("dataId");
-		WidgetTypeParameter param2 = new WidgetTypeParameter();
-		param2.setName("testParam");
-		List<WidgetTypeParameter> params = Arrays.asList(param1, param2);
-		type.setTypeParameters(params);
-		widget.setType(type);
-		ApsProperties props = new ApsProperties();
-		props.put("dataId", "id1");
-		props.put("testParam", "test");
-		widget.setConfig(props);
-		return widget;
-	}
-	
+
+    @Test
+    public void testInitCache() throws Throwable {
+        Mockito.when(pageManager.getOnlineRoot()).thenReturn(this.createMockPage());
+        Mockito.when(cacheManager.getCache(IDataObjectMapperCacheWrapper.OBJECT_MAPPER_CACHE_NAME)).thenReturn(this.cache);
+        cacheWrapper.initCache(this.pageManager);
+    }
+
+    @Test
+    public void testGetPageCode() {
+        DataObjectPageMapper dataObjectPageMapper = new DataObjectPageMapper();
+        dataObjectPageMapper.add("dataId", "temp_model");
+        dataObjectPageMapper.add("dataId2", "wring_page");
+        Mockito.when(valueWrapper.get()).thenReturn(dataObjectPageMapper);
+        Mockito.when(cache.get(Mockito.anyString())).thenReturn(valueWrapper);
+        Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
+        String pageCode = this.cacheWrapper.getPageCode("dataId");
+        assertNotNull(pageCode);
+        assertEquals("temp_model", pageCode);
+    }
+
+    private IPage createMockPage() {
+        Page root = new Page();
+        root.setCode("root_code");
+        root.setModel(this.createMockPageModel());
+        root.setGroup(Group.FREE_GROUP_NAME);
+        Widget[] widgets = new Widget[]{this.createMockWidget()};
+        root.setWidgets(widgets);
+        root.setChildrenCodes(new String[]{});
+        return root;
+    }
+
+    private PageModel createMockPageModel() {
+        PageModel model = new PageModel();
+        model.setCode("temp_model");
+        Frame frame = new Frame();
+        frame.setMainFrame(true);
+        frame.setDescription("Main Frame");
+        frame.setPos(0);
+        Frame[] configuration = new Frame[]{frame};
+        model.setConfiguration(configuration);
+        model.setMainFrame(0);
+        return model;
+    }
+
+    private Widget createMockWidget() {
+        Widget widget = new Widget();
+        WidgetType type = new WidgetType();
+        type.setCode("type");
+        WidgetTypeParameter param1 = new WidgetTypeParameter();
+        param1.setName("dataId");
+        WidgetTypeParameter param2 = new WidgetTypeParameter();
+        param2.setName("testParam");
+        List<WidgetTypeParameter> params = Arrays.asList(param1, param2);
+        type.setTypeParameters(params);
+        widget.setType(type);
+        ApsProperties props = new ApsProperties();
+        props.put("dataId", "id1");
+        props.put("testParam", "test");
+        widget.setConfig(props);
+        return widget;
+    }
+
 }

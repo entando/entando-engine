@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
-import java.io.File;
+package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.io.File;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
@@ -27,44 +27,42 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  */
 public interface IIndexerDAO {
 
-	/**
-	 * Inizializzazione dell'indicizzatore.
-	 *
-	 * @param dir La cartella locale contenitore dei dati persistenti.
-	 * @throws ApsSystemException In caso di errori.
-	 */
-	public void init(File dir) throws ApsSystemException;
+    String FIELD_PREFIX = "entity:";
+    String DATAOBJECT_ID_FIELD_NAME = FIELD_PREFIX + "id";
+    String DATAOBJECT_TYPE_FIELD_NAME = FIELD_PREFIX + "type";
+    String DATAOBJECT_GROUP_FIELD_NAME = FIELD_PREFIX + "group";
+    String DATAOBJECT_CATEGORY_FIELD_NAME = FIELD_PREFIX + "category";
+    String DATAOBJECT_CATEGORY_SEPARATOR = "/";
 
-	/**
-	 * Aggiunge un dataobject nel db del motore di ricerca.
-	 *
-	 * @param entity Il dataobject da aggiungere.
-	 * @throws ApsSystemException In caso di errori.
-	 */
-	public void add(IApsEntity entity) throws ApsSystemException;
+    /**
+     * Inizializzazione dell'indicizzatore.
+     *
+     * @param dir La cartella locale contenitore dei dati persistenti.
+     * @throws ApsSystemException In caso di errori.
+     */
+    void init(File dir) throws ApsSystemException;
 
-	/**
-	 * Cancella un documento indicizzato.
-	 *
-	 * @param name Il nome del campo Field da utilizzare per recupero del
-	 * documento.
-	 * @param value La chiave mediante il quale è stato indicizzato il
-	 * documento.
-	 * @throws ApsSystemException In caso di errori.
-	 */
-	public void delete(String name, String value) throws ApsSystemException;
+    /**
+     * Aggiunge un dataobject nel db del motore di ricerca.
+     *
+     * @param entity Il dataobject da aggiungere.
+     * @throws ApsSystemException In caso di errori.
+     */
+    void add(IApsEntity entity) throws ApsSystemException;
 
-	public void close();
+    /**
+     * Cancella un documento indicizzato.
+     *
+     * @param name Il nome del campo Field da utilizzare per recupero del documento.
+     * @param value La chiave mediante il quale è stato indicizzato il documento.
+     * @throws ApsSystemException In caso di errori.
+     */
+    void delete(String name, String value) throws ApsSystemException;
 
-	public void setLangManager(ILangManager langManager);
+    void close();
 
-	public void setCategoryManager(ICategoryManager categoryManager);
+    void setLangManager(ILangManager langManager);
 
-	public static final String FIELD_PREFIX = "entity:";
-	public static final String DATAOBJECT_ID_FIELD_NAME = FIELD_PREFIX + "id";
-	public static final String DATAOBJECT_TYPE_FIELD_NAME = FIELD_PREFIX + "type";
-	public static final String DATAOBJECT_GROUP_FIELD_NAME = FIELD_PREFIX + "group";
-	public static final String DATAOBJECT_CATEGORY_FIELD_NAME = FIELD_PREFIX + "category";
-	public static final String DATAOBJECT_CATEGORY_SEPARATOR = "/";
+    void setCategoryManager(ICategoryManager categoryManager);
 
 }

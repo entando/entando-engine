@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.tags.util;
 
 import com.agiletec.aps.system.RequestContext;
@@ -20,71 +21,76 @@ import com.agiletec.aps.system.services.page.Widget;
  * @author E.Santoboni
  */
 public class BaseFrameDecoratorContainer implements IFrameDecoratorContainer {
-	
-	@Override
-	public boolean needsDecoration(Widget widget, RequestContext reqCtx) {
-		return true;
-	}
-	
-	@Override
-	public boolean isWidgetDecorator() {
-		return false;
-	}
-	
-	@Deprecated
-	public void setHeaderPath(String headerPath) {
-		this.setHeaderJspPath(headerPath);
-	}
-	
-	@Override
-	public String getHeaderJspPath() {
-		return _headerJspPath;
-	}
-	public void setHeaderJspPath(String headerJspPath) {
-		this._headerJspPath = headerJspPath;
-	}
-	
-	@Override
-	public String getHeaderFragmentCode() {
-		return _headerFragmentCode;
-	}
-	public void setHeaderFragmentCode(String headerFragmentCode) {
-		this._headerFragmentCode = headerFragmentCode;
-	}
-	
-	@Deprecated
-	public void setFooterPath(String footerPath) {
-		this.setFooterJspPath(footerPath);
-	}
-	
-	@Override
-	public String getFooterJspPath() {
-		return _footerJspPath;
-	}
-	public void setFooterJspPath(String footerJspPath) {
-		this._footerJspPath = footerJspPath;
-	}
-	
-	@Override
-	public String getFooterFragmentCode() {
-		return _footerFragmentCode;
-	}
-	public void setFooterFragmentCode(String footerFragmentCode) {
-		this._footerFragmentCode = footerFragmentCode;
-	}
-	
-	@Override
-	public int getOrder() {
-		return _order;
-	}
-	public void setOrder(int order) {
-		this._order = order;
-	}
-	
-	private String _headerJspPath;
-	private String _headerFragmentCode;
-	private String _footerJspPath;
-	private String _footerFragmentCode;
-	private int _order;
-	
+
+    private String _headerJspPath;
+    private String _headerFragmentCode;
+    private String _footerJspPath;
+    private String _footerFragmentCode;
+    private int _order;
+
+    @Override
+    public boolean needsDecoration(Widget widget, RequestContext reqCtx) {
+        return true;
+    }
+
+    @Override
+    public boolean isWidgetDecorator() {
+        return false;
+    }
+
+    @Deprecated
+    public void setHeaderPath(String headerPath) {
+        this.setHeaderJspPath(headerPath);
+    }
+
+    @Override
+    public String getHeaderJspPath() {
+        return _headerJspPath;
+    }
+
+    public void setHeaderJspPath(String headerJspPath) {
+        this._headerJspPath = headerJspPath;
+    }
+
+    @Override
+    public String getHeaderFragmentCode() {
+        return _headerFragmentCode;
+    }
+
+    public void setHeaderFragmentCode(String headerFragmentCode) {
+        this._headerFragmentCode = headerFragmentCode;
+    }
+
+    @Deprecated
+    public void setFooterPath(String footerPath) {
+        this.setFooterJspPath(footerPath);
+    }
+
+    @Override
+    public String getFooterJspPath() {
+        return _footerJspPath;
+    }
+
+    public void setFooterJspPath(String footerJspPath) {
+        this._footerJspPath = footerJspPath;
+    }
+
+    @Override
+    public String getFooterFragmentCode() {
+        return _footerFragmentCode;
+    }
+
+    public void setFooterFragmentCode(String footerFragmentCode) {
+        this._footerFragmentCode = footerFragmentCode;
+    }
+
+    @Override
+    public int getOrder() {
+        return _order;
+    }
+
+    public void setOrder(int order) {
+        this._order = order;
+    }
+
 }

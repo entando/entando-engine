@@ -11,24 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
 /**
- * Interfaccia base per l'implementazione dei servizi destinatari della
- * notificazione di eventi di modifica di un modello di datatype.
+ * Interfaccia base per l'implementazione dei servizi destinatari della notificazione di eventi di modifica di un modello di datatype.
  *
  * @author C.Siddi - E.Santoboni
  */
 public interface DataObjectModelChangedObserver extends ObserverService {
 
     /**
-     * Aggiorna il servizio di conseguenza alla notifica di un evento di
-     * modifica modello di datatype.
+     * Aggiorna il servizio di conseguenza alla notifica di un evento di modifica modello di datatype.
      *
      * @param event L'evento notificato.
      */
-    public void updateFromDataObjectModelChanged(DataObjectModelChangedEvent event);
+    void updateFromDataObjectModelChanged(DataObjectModelChangedEvent event);
 
 }

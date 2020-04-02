@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.activitystream.valiator;
 
 import org.entando.entando.web.activitystream.ActivityStreamCommentRequest;
@@ -34,7 +35,8 @@ public class ActivityStreamValidator extends AbstractPaginationValidator {
 
     public void validateBodyName(int recordId, ActivityStreamCommentRequest commentRequest, Errors errors) {
         if (recordId != commentRequest.getRecordId()) {
-            errors.rejectValue("recordId", ERRCODE_URINAME_MISMATCH, new Object[]{recordId, commentRequest.getRecordId()}, "comment.recordId.mismatch");
+            errors.rejectValue("recordId", ERRCODE_URINAME_MISMATCH, new Object[]{recordId, commentRequest.getRecordId()},
+                    "comment.recordId.mismatch");
         }
     }
 

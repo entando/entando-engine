@@ -11,21 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.common.entity.model.attribute.util;
 
 import com.agiletec.aps.util.SelectItem;
 import java.util.List;
 
 /**
- * Base interface for those bean classes that must extract 'EnumeratorMap' Attribute. 
+ * Base interface for those bean classes that must extract 'EnumeratorMap' Attribute.
+ *
  * @author E.Santoboni
  */
 public interface EnumeratorMapAttributeItemsExtractor {
-	
-	/**
-	 * Return the list of the items of the 'Enumerator' attribute.
-	 * @return The items list.
-	 */
-	public List<SelectItem> getMapItems();
-	
+
+    /**
+     * Return the list of the items of the 'Enumerator' attribute.
+     *
+     * @return The items list.
+     */
+    List<SelectItem> getMapItems();
+
 }

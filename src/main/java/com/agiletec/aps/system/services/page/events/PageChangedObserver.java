@@ -11,22 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page.events;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
 /**
- * Interfaccia base per l'implementazione dei servizi destinatari 
- * della notificazione di eventi di modifica pagina.
+ * Interfaccia base per l'implementazione dei servizi destinatari della notificazione di eventi di modifica pagina.
+ *
  * @author E.Santoboni - M.Diana
  */
 public interface PageChangedObserver extends ObserverService {
-	
-	/**
-	 * Aggiorna il servizio di conseguenza alla notifica 
-	 * di un evento di modifica pagina.
-	 * @param event L'evento notificato.
-	 */
-	public void updateFromPageChanged(PageChangedEvent event);
-	
+
+    /**
+     * Aggiorna il servizio di conseguenza alla notifica di un evento di modifica pagina.
+     *
+     * @param event L'evento notificato.
+     */
+    void updateFromPageChanged(PageChangedEvent event);
+
 }

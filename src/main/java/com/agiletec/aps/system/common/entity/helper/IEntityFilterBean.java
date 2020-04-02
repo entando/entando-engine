@@ -11,27 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.helper;
 
 /**
  * @author E.Santoboni
  */
 public interface IEntityFilterBean {
-    
-    public String getKey();
-    
-    public boolean isAttributeFilter();
-    
-    public boolean getLikeOption();
-    
-    public String getLikeOptionType();
-    
-    public String getValue();
-    
-    public String getStart();
-    
-    public String getEnd();
-    
-    public String getOrder();
-    
+
+    String getKey();
+
+    boolean isAttributeFilter();
+
+    boolean getLikeOption();
+
+    String getLikeOptionType();
+
+    String getValue();
+
+    String getStart();
+
+    String getEnd();
+
+    String getOrder();
+
 }

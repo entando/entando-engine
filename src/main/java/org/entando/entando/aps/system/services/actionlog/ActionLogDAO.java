@@ -11,8 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.services.group.Group;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,10 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.services.group.Group;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
@@ -49,37 +49,28 @@ import org.slf4j.LoggerFactory;
  */
 public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private static final String ADD_ACTION_RECORD
             = "INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo, updatedate) "
             + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
-
     private static final String GET_ACTION_RECORD
-            = "SELECT username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
-
+            = "SELECT username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE"
+            + " id = ?";
     private static final String SELECT_LAST_UPDATE_MAIN_BLOCK = "SELECT MAX(updatedate) FROM actionlogrecords ";
-    
     private static final String DELETE_LOG_RECORD
             = "DELETE from actionlogrecords where id = ?";
-
     private static final String DELETE_LOG_RECORD_RELATIONS
             = "DELETE from actionlogrelations where recordid = ?";
-
     private static final String DELETE_LOG_RECORD_LIKES
             = "DELETE from actionloglikerecords where recordid = ?";
-
     private static final String DELETE_LOG_RECORD_COMMENTS
             = "DELETE from actionlogcommentrecords where recordid = ?";
-
-    private final String ADD_LOG_RECORD_RELATION
-            = "INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
-
     private static final String GET_GROUP_OCCURRENCES
             = "SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
-
     private static final String UPDATE_UPDATEDATE_ACTION_RECORD
             = "UPDATE actionlogrecords SET updatedate = ? WHERE id = ?";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String ADD_LOG_RECORD_RELATION
+            = "INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
 
     @Override
     public int countActionLogRecords(IActionLogRecordSearchBean searchBean) {
@@ -212,7 +203,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
         }
         return actionRecords;
     }
-    
+
     @Override
     public Date getLastUpdate(FieldSearchFilter[] filters, List<String> userGroupCodes) {
         Connection conn = null;
@@ -236,9 +227,11 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
         }
         return date;
     }
-    
-    private PreparedStatement buildStatement(FieldSearchFilter[] filters, Collection<String> groupCodes, boolean isSelectMax, Connection conn) {
-        String query = (isSelectMax) ? this.createQueryStringForSelectMax(filters, groupCodes): this.createQueryString(filters, groupCodes);
+
+    private PreparedStatement buildStatement(FieldSearchFilter[] filters, Collection<String> groupCodes, boolean isSelectMax,
+            Connection conn) {
+        String query =
+                (isSelectMax) ? this.createQueryStringForSelectMax(filters, groupCodes) : this.createQueryString(filters, groupCodes);
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(query);
@@ -374,7 +367,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 
     protected List<String> extractSearchValues(String text) {
         String[] titleSplit = text.trim().split(" ");
-        return (List<String>) Arrays.asList(titleSplit);
+        return Arrays.asList(titleSplit);
     }
 
     @Override

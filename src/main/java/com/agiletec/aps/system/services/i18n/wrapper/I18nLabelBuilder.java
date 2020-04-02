@@ -11,41 +11,40 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.i18n.wrapper;
 
-import org.apache.commons.lang.text.StrSubstitutor;
+package com.agiletec.aps.system.services.i18n.wrapper;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * A builder of parameterized label.
  */
 public class I18nLabelBuilder {
-	
-	public I18nLabelBuilder(String label) {
-		this.label = label;
-	}
-	
-	public I18nLabelBuilder addParam(String key, String value) {
-		if (this.params == null) {
-			this.params = new HashMap<>();
-		}
-		this.params.put(key, value);
-		return this;
-	}
-	
-	@Override
-	public String toString() {
-		if (this.label != null && this.params != null && !this.params.isEmpty()) {
-			StrSubstitutor strSub = new StrSubstitutor(this.params);
-			this.label = strSub.replace(this.label);
-		}
-		return this.label;
-	}
-	
-	private String label;
-	private Map<String, String> params;
-	
+
+    private String label;
+    private Map<String, String> params;
+
+    public I18nLabelBuilder(String label) {
+        this.label = label;
+    }
+
+    public I18nLabelBuilder addParam(String key, String value) {
+        if (this.params == null) {
+            this.params = new HashMap<>();
+        }
+        this.params.put(key, value);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        if (this.label != null && this.params != null && !this.params.isEmpty()) {
+            StrSubstitutor strSub = new StrSubstitutor(this.params);
+            this.label = strSub.replace(this.label);
+        }
+        return this.label;
+    }
+
 }

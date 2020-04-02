@@ -11,19 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
+import com.agiletec.aps.BaseTestCase;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sql.DataSource;
-
-import com.agiletec.aps.BaseTestCase;
 
 /**
  * @author E.Santoboni
  */
 public class TestDataObjectSearcherDAO extends BaseTestCase {
+
+    private DataObjectSearcherDAO _dataObjectSearcherDao;
 
     @Override
     protected void setUp() throws Exception {
@@ -71,12 +72,10 @@ public class TestDataObjectSearcherDAO extends BaseTestCase {
         try {
             _dataObjectSearcherDao = new DataObjectSearcherDAO();
             DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
-            ((DataObjectSearcherDAO) _dataObjectSearcherDao).setDataSource(dataSource);
+            _dataObjectSearcherDao.setDataSource(dataSource);
         } catch (Throwable t) {
             throw new Exception(t);
         }
     }
-
-    private DataObjectSearcherDAO _dataObjectSearcherDao;
 
 }

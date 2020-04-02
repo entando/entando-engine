@@ -11,13 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model;
 
+import com.agiletec.aps.util.DateConverter;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -26,19 +28,10 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.util.DateConverter;
-import java.io.Serializable;
-
 /**
  * @author E.Santoboni
  */
 public class SystemInstallationReport implements Serializable {
-
-    private static final Logger logger = LoggerFactory.getLogger(SystemInstallationReport.class);
-
-    public enum Status {
-        OK, PORTING, SKIPPED, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT, UNINSTALLED
-    }
 
     protected static final String ROOT_ELEMENT = "reports";
     protected static final String CREATION_ELEMENT = "creation";
@@ -54,9 +47,8 @@ public class SystemInstallationReport implements Serializable {
     protected static final String STATUS_ATTRIBUTE = "status";
     protected static final String DATASOURCE_ELEMENT = "datasource";
     protected static final String TABLE_ELEMENT = "table";
-
     protected static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
+    private static final Logger logger = LoggerFactory.getLogger(SystemInstallationReport.class);
     private Date creation;
     private Date lastUpdate;
     private Status status;
@@ -234,6 +226,10 @@ public class SystemInstallationReport implements Serializable {
 
     public List<ComponentInstallationReport> getReports() {
         return reports;
+    }
+
+    public enum Status {
+        OK, PORTING, SKIPPED, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT, UNINSTALLED
     }
 
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
 
 import java.util.List;
@@ -30,36 +31,38 @@ import org.springframework.validation.BindingResult;
  */
 public interface IDataObjectService {
 
-    public PagedMetadata<EntityTypeShortDto> getShortDataTypes(RestListRequest requestList);
+    PagedMetadata<EntityTypeShortDto> getShortDataTypes(RestListRequest requestList);
 
-    public DataTypeDto getDataType(String dataTypeCode);
+    DataTypeDto getDataType(String dataTypeCode);
 
-    public DataTypeDto addDataType(DataTypeDtoRequest bodyRequest, BindingResult bindingResult);
+    DataTypeDto addDataType(DataTypeDtoRequest bodyRequest, BindingResult bindingResult);
 
-    public DataTypeDto updateDataType(DataTypeDtoRequest request, BindingResult bindingResult);
+    DataTypeDto updateDataType(DataTypeDtoRequest request, BindingResult bindingResult);
 
-    public void deleteDataType(String dataTypeCode);
-
-    // ----------------------------------
-    public PagedMetadata<String> getAttributeTypes(RestListRequest requestList);
-
-    public AttributeTypeDto getAttributeType(String attributeCode);
+    void deleteDataType(String dataTypeCode);
 
     // ----------------------------------
-    public EntityTypeAttributeFullDto getDataTypeAttribute(String dataTypeCode, String attributeCode);
+    PagedMetadata<String> getAttributeTypes(RestListRequest requestList);
 
-    public EntityTypeAttributeFullDto addDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult);
+    AttributeTypeDto getAttributeType(String attributeCode);
 
-    public EntityTypeAttributeFullDto updateDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult);
+    // ----------------------------------
+    EntityTypeAttributeFullDto getDataTypeAttribute(String dataTypeCode, String attributeCode);
 
-    public void deleteDataTypeAttribute(String dataTypeCode, String attributeCode);
+    EntityTypeAttributeFullDto addDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult);
 
-    public void moveDataTypeAttribute(String dataTypeCode, String attributeCode, boolean moveUp);
+    EntityTypeAttributeFullDto updateDataTypeAttribute(String dataTypeCode, EntityTypeAttributeFullDto bodyRequest,
+            BindingResult bindingResult);
 
-    public void reloadDataTypeReferences(String dataTypeCode);
+    void deleteDataTypeAttribute(String dataTypeCode, String attributeCode);
 
-    public Map<String, Integer> reloadDataTypesReferences(List<String> dataTypeCodes);
+    void moveDataTypeAttribute(String dataTypeCode, String attributeCode, boolean moveUp);
 
-    public EntityTypesStatusDto getDataTypesRefreshStatus();
+    void reloadDataTypeReferences(String dataTypeCode);
+
+    Map<String, Integer> reloadDataTypesReferences(List<String> dataTypeCodes);
+
+    EntityTypesStatusDto getDataTypesRefreshStatus();
 
 }

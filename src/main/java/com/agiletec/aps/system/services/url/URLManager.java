@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
@@ -22,22 +23,25 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.PageUtils;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-
 /**
- * Servizio di gestione degli url; crea un URL completo ad una pagina del
- * portale a partire da informazioni essenziali.
+ * Servizio di gestione degli url; crea un URL completo ad una pagina del portale a partire da informazioni essenziali.
  *
  * @author M.Diana - E.Santoboni
  */
 public class URLManager extends AbstractURLManager {
 
+    protected static final int DEFAULT_HTTP_PORT = 80;
+    protected static final int DEFAULT_HTTPS_PORT = 443;
     private static final Logger _logger = LoggerFactory.getLogger(URLManager.class);
+    private ConfigInterface _configManager;
+    private IPageManager _pageManager;
+    private ILangManager _langManager;
 
     @Override
     public void init() throws Exception {
@@ -45,11 +49,8 @@ public class URLManager extends AbstractURLManager {
     }
 
     /**
-     * Crea un URL completo ad una pagina del portale a partire dalle
-     * informazioni essenziali contenute nell'oggetto pageUrl passato come
-     * parametro.<br>
-     * In questa implementazione, l'URL è costruito come concatenazione dei
-     * seguenti elementi:
+     * Crea un URL completo ad una pagina del portale a partire dalle informazioni essenziali contenute nell'oggetto pageUrl passato come
+     * parametro.<br> In questa implementazione, l'URL è costruito come concatenazione dei seguenti elementi:
      * <ul>
      * <li>parametro di configurazione PAR_APPL_BASE_URL, che rappresenta l'URL
      * base della web application così come viene visto dall'esterno; deve
@@ -94,7 +95,7 @@ public class URLManager extends AbstractURLManager {
             String url = this.createURL(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
             if (null != reqCtx && this.useJsessionId()) {
                 HttpServletResponse resp = reqCtx.getResponse();
-                String encUrl = resp.encodeURL(url.toString());
+                String encUrl = resp.encodeURL(url);
                 return encUrl;
             } else {
                 return url;
@@ -133,7 +134,7 @@ public class URLManager extends AbstractURLManager {
 
     @Override
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
-                            HttpServletRequest request) throws ApsSystemException {
+            HttpServletRequest request) throws ApsSystemException {
         StringBuilder url = null;
         try {
             url = new StringBuilder(this.getApplicationBaseURL(request));
@@ -252,12 +253,5 @@ public class URLManager extends AbstractURLManager {
     public void setPageManager(IPageManager pageManager) {
         this._pageManager = pageManager;
     }
-
-    private ConfigInterface _configManager;
-    private IPageManager _pageManager;
-    private ILangManager _langManager;
-
-    protected static final int DEFAULT_HTTP_PORT = 80;
-    protected static final int DEFAULT_HTTPS_PORT = 443;
 
 }

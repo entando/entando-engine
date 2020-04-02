@@ -11,42 +11,42 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.parse.attribute;
 
+import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-
 /**
- * Handler class that interprets the XML defining a Text that DOES NOT support multiple languages
- * ('Monotext Attribute')
+ * Handler class that interprets the XML defining a Text that DOES NOT support multiple languages ('Monotext Attribute')
+ *
  * @author E.Santoboni
  */
 public class MonoTextAttributeHandler extends AbstractAttributeHandler {
-	
-	@Override
-	public void startAttribute(Attributes attributes, String qName) throws SAXException {
-		if (qName.equals("monotext")) {
-			this.startMonoText(attributes, qName);
-		}
-	}
-	
-	private void startMonoText(Attributes attributes, String qName) throws SAXException {
-		//Nothing to do;
-	}
-	
-	@Override
-	public void endAttribute(String qName, StringBuffer textBuffer) {
-		if (qName.equals("monotext")) {
-			this.endMonoText(textBuffer);
-		}
-	}
-	
-	private void endMonoText(StringBuffer textBuffer) {
-		if (null != textBuffer && null != this.getCurrentAttr()) {
-			((MonoTextAttribute) this.getCurrentAttr()).setText(textBuffer.toString());
-		}
-	}
+
+    @Override
+    public void startAttribute(Attributes attributes, String qName) throws SAXException {
+        if (qName.equals("monotext")) {
+            this.startMonoText(attributes, qName);
+        }
+    }
+
+    private void startMonoText(Attributes attributes, String qName) throws SAXException {
+        //Nothing to do;
+    }
+
+    @Override
+    public void endAttribute(String qName, StringBuffer textBuffer) {
+        if (qName.equals("monotext")) {
+            this.endMonoText(textBuffer);
+        }
+    }
+
+    private void endMonoText(StringBuffer textBuffer) {
+        if (null != textBuffer && null != this.getCurrentAttr()) {
+            ((MonoTextAttribute) this.getCurrentAttr()).setText(textBuffer.toString());
+        }
+    }
 
 }

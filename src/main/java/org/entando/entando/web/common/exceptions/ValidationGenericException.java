@@ -11,20 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.exceptions;
 
 import org.springframework.validation.BindingResult;
 
 public class ValidationGenericException extends RuntimeException {
 
-	private final BindingResult bindingResult;
+    private final BindingResult bindingResult;
 
-	public ValidationGenericException(BindingResult bindingResult) {
-		this.bindingResult = bindingResult;
-	}
+    public ValidationGenericException(BindingResult bindingResult) {
+        this.bindingResult = bindingResult;
+    }
 
-	public BindingResult getBindingResult() {
-		return bindingResult;
-	}
+    public BindingResult getBindingResult() {
+        return bindingResult;
+    }
 
 }

@@ -1,13 +1,11 @@
 package org.entando.entando.aps.system.services.language;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -53,7 +51,7 @@ public class LanguageService implements ILanguageService {
         try {
             List<Lang> sysLangs = this.getLangManager().getAssignableLangs();
             List<LanguageDto> langs = this.getLanguageDtoBuilder().convert(sysLangs);
-            
+
             langs = new LanguageRequestListProcessor(requestList, langs)
                     .filterAndSort().toList();
 
@@ -95,7 +93,8 @@ public class LanguageService implements ILanguageService {
 
     protected LanguageDto disableLang(String code) {
         try {
-            Lang sysLang = this.getLangManager().getAssignableLangs().stream().filter(i -> i.getCode().equals(code)).findFirst().orElse(null);
+            Lang sysLang = this.getLangManager().getAssignableLangs().stream().filter(i -> i.getCode().equals(code)).findFirst()
+                    .orElse(null);
             if (null == sysLang) {
                 logger.warn("no lang found with code {}", code);
                 throw new ResourceNotFoundException(LanguageValidator.ERRCODE_LANGUAGE_DOES_NOT_EXISTS, "language", code);
@@ -136,7 +135,8 @@ public class LanguageService implements ILanguageService {
     protected BeanPropertyBindingResult validateDisable(Lang lang) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(lang, "lang");
         if (lang.isDefault()) {
-            bindingResult.reject(LanguageValidator.ERRCODE_LANGUAGE_CANNOT_DISABLE_DEFAULT, new Object[]{lang.getCode(), lang.getDescr()}, "language.cannot.disable.default");
+            bindingResult.reject(LanguageValidator.ERRCODE_LANGUAGE_CANNOT_DISABLE_DEFAULT, new Object[]{lang.getCode(), lang.getDescr()},
+                    "language.cannot.disable.default");
         }
         return bindingResult;
 

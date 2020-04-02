@@ -11,15 +11,25 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.widget;
 
-import java.util.Map;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.servlet.security.CORSFilter;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -31,25 +41,15 @@ import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import org.junit.Assert;
-import static org.junit.Assert.assertNotNull;
 import org.springframework.test.web.servlet.ResultMatcher;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
-    
+
     @Autowired
     private IPageManager pageManager;
 
@@ -81,7 +81,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
-    
+
     @Test
     public void testGetWidget_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -158,7 +158,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
-    
+
     @Test
     public void testAddUpdateWidget_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -180,17 +180,17 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
             Assert.assertNotNull(widgetType);
             Assert.assertEquals("Title EN", widgetType.getTitles().getProperty("en"));
-            
+
             request.setGroup("invalid");
             titles.put("en", "Title EN modified");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID)));
-            
+
             request.setGroup("helpdesk");
             request.setCustomUi("");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
-            
+
             titles.put("en", "Title EN modified");
             request.setCustomUi("New Custom Ui");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isOk());
@@ -199,7 +199,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             Assert.assertNotNull(widgetType);
             Assert.assertEquals("Title EN modified", widgetType.getTitles().getProperty("en"));
             Assert.assertEquals("helpdesk", widgetType.getMainGroup());
-            
+
             result = this.executeWidgetDelete(newCode, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newCode)));
             widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -210,7 +210,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             this.widgetTypeManager.deleteWidgetType(newCode);
         }
     }
-    
+
     @Test
     public void testAddUpdateWidget_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -229,22 +229,22 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setGroup(Group.FREE_GROUP_NAME);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
-            
+
             titles.put("en", "");
             request.setCustomUi("Custom UI");
             result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_MISSING_TITLE)));
-            
+
             titles.put("en", "Title EN 2 bis");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_WIDGET_NOT_FOUND)));
-            
+
             result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.group", is(Group.FREE_GROUP_NAME)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
             Assert.assertNotNull(widgetType);
             Assert.assertEquals("Title EN 2 bis", widgetType.getTitles().getProperty("en"));
-            
+
             titles.put("it", "");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_MISSING_TITLE)));
@@ -255,7 +255,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             Assert.assertNull(this.widgetTypeManager.getWidgetType(newCode));
         }
     }
-    
+
     @Test
     public void testAddUpdateWidget_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -276,7 +276,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             ResultActions result0 = this.executeWidgetPost(request, accessToken, status().isOk());
             result0.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
-            
+
             PageRequest pageRequest = new PageRequest();
             pageRequest.setCode(pageCode);
             pageRequest.setPageModel("home");
@@ -287,19 +287,19 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             pageRequest.setTitles(pageTitles);
             pageRequest.setParentCode("service");
             this.addPage(accessToken, pageRequest);
-            
+
             ResultActions result1 = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
             result1.andExpect(jsonPath("$.payload.used", is(0)));
-            
+
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
             wcr.setCode(newWidgetCode);
             ResultActions resultPutWidget = mockMvc
-                .perform(put("/pages/{pageCode}/widgets/{frameId}", new Object[]{pageCode, 1})
-                        .content(mapper.writeValueAsString(wcr))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
+                    .perform(put("/pages/{pageCode}/widgets/{frameId}", pageCode, 1)
+                            .content(mapper.writeValueAsString(wcr))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
             resultPutWidget.andExpect(status().isOk());
-            
+
             ResultActions result3 = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
             result3.andExpect(jsonPath("$.payload.used", is(1)));
         } catch (Exception e) {
@@ -311,7 +311,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
-    
+
     private void addPage(String accessToken, PageRequest pageRequest) throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/pages")
@@ -320,7 +320,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
-    
+
     @Test
     public void testUpdateStockLocked() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -334,7 +334,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
     }
-    
+
     @Test
     public void testDeleteWidgetLocked() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -343,15 +343,15 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         ResultActions result = this.executeWidgetDelete(code, accessToken, status().isBadRequest());
         result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
     }
-    
+
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/widgets/{code}", new Object[]{widgetTypeCode})
+                .perform(get("/widgets/{code}", widgetTypeCode)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
     }
-    
+
     private ResultActions executeWidgetPost(WidgetRequest request, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/widgets")
@@ -361,23 +361,24 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         result.andExpect(expected);
         return result;
     }
-    
-    private ResultActions executeWidgetPut(WidgetRequest request, String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
+
+    private ResultActions executeWidgetPut(WidgetRequest request, String widgetTypeCode, String accessToken, ResultMatcher expected)
+            throws Exception {
         ResultActions result = mockMvc
-                .perform(put("/widgets/{code}", new Object[]{widgetTypeCode})
+                .perform(put("/widgets/{code}", widgetTypeCode)
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
     }
-    
+
     private ResultActions executeWidgetDelete(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc.perform(
-                delete("/widgets/{code}", new Object[]{widgetTypeCode})
+                delete("/widgets/{code}", widgetTypeCode)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
     }
-    
+
 }

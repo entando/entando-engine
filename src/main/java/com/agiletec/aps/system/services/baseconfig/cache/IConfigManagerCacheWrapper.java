@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.baseconfig.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -21,17 +22,17 @@ import com.agiletec.aps.system.services.baseconfig.IConfigItemDAO;
  */
 public interface IConfigManagerCacheWrapper {
 
-	public static final String CONFIG_MANAGER_CACHE_NAME = "Entando_ConfigManager";
-	public static final String CONFIG_ITEM_CACHE_NAME_PREFIX = "ConfigManager_item_";
-	public static final String CONFIG_ITEMS_CODES_CACHE_NAME = "ConfigManager_items";
+    String CONFIG_MANAGER_CACHE_NAME = "Entando_ConfigManager";
+    String CONFIG_ITEM_CACHE_NAME_PREFIX = "ConfigManager_item_";
+    String CONFIG_ITEMS_CODES_CACHE_NAME = "ConfigManager_items";
 
-	public static final String CONFIG_PARAM_CACHE_NAME_PREFIX = "ConfigManager_param_";
-	public static final String CONFIG_PARAMS_CODES_CACHE_NAME = "ConfigManager_params";
+    String CONFIG_PARAM_CACHE_NAME_PREFIX = "ConfigManager_param_";
+    String CONFIG_PARAMS_CODES_CACHE_NAME = "ConfigManager_params";
 
-	public void initCache(IConfigItemDAO configItemDAO, String version) throws ApsSystemException;
+    void initCache(IConfigItemDAO configItemDAO, String version) throws ApsSystemException;
 
-	public String getConfigItem(String name);
+    String getConfigItem(String name);
 
-	public String getParam(String name);
-	
+    String getParam(String name);
+
 }

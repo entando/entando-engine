@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.common.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,6 @@ public class EntandoAuthorizationException extends RuntimeException {
         this.request = request;
         this.username = username;
     }
-
 
     public String getRequestURI() {
         return this.request.getRequestURI();

@@ -11,13 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
 
-import javax.sql.DataSource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.agiletec.aps.BaseTestCase;
+import javax.sql.DataSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDAOIntegrationTest extends BaseTestCase {
 

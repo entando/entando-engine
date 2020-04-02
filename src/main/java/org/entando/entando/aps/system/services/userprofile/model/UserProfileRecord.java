@@ -11,24 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.model;
 
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 
 /**
  * A UserProfile Record.
+ *
  * @author E.Santoboni
  */
 public class UserProfileRecord extends ApsEntityRecord {
-	
-	public boolean isPublicProfile() {
-		return _publicProfile;
-	}
-	
-	public void setPublicProfile(boolean publicProfile) {
-		this._publicProfile = publicProfile;
-	}
-	
-	private boolean _publicProfile;
-	
+
+    private boolean _publicProfile;
+
+    public boolean isPublicProfile() {
+        return _publicProfile;
+    }
+
+    public void setPublicProfile(boolean publicProfile) {
+        this._publicProfile = publicProfile;
+    }
+
 }

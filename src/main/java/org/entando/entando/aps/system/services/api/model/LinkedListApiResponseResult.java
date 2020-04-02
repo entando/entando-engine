@@ -11,29 +11,30 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author E.Santoboni
  */
 public class LinkedListApiResponseResult extends AbstractApiResponseResult {
-    
-	@Override
+
+    @Override
     @XmlElement(name = "items", required = false)
     public ListResponse<LinkedListItem> getResult() {
         if (null != this.getMainResult()) {
             List<LinkedListItem> items = new ArrayList<LinkedListItem>();
             items.addAll((Collection<LinkedListItem>) this.getMainResult());
-            ListResponse<LinkedListItem> entity = new ListResponse<LinkedListItem>(items) {};
+            ListResponse<LinkedListItem> entity = new ListResponse<LinkedListItem>(items) {
+            };
             return entity;
         }
         return null;
     }
-    
+
 }

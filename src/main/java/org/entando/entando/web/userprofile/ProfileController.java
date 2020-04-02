@@ -11,12 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.userprofile;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
@@ -25,7 +27,7 @@ import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.entando.entando.web.userprofile.validator.ProfileValidator;
 import org.slf4j.Logger;
@@ -35,10 +37,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author E.Santoboni
@@ -118,7 +121,8 @@ public class ProfileController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/userProfiles", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> addUserProfile(@Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<EntityDto>> addUserProfile(@Valid @RequestBody EntityDto bodyRequest,
+            BindingResult bindingResult) {
         logger.debug("Add new user profile -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);

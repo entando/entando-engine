@@ -11,44 +11,39 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject.helper;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.dataobject.helper;
 
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.List;
 
 /**
  * @author E.Santoboni
  */
 public interface IDataTypeListHelper {
 
-	/**
-	 * Restituisce la lista di identificativi di DataType in base ai parametri
-	 * di ricerca.
-	 *
-	 * @param bean Il contenitore delle informazioni base sulla interrogazione
-	 * da eseguire.
-	 * @param user
-	 * @return La lista di identificativi di DataType in base ai parametri di
-	 * ricerca.
-	 * @throws Throwable In caso di errore.
-	 */
-	public List<String> getDataTypesId(IDataTypeListBean bean, UserDetails user) throws Throwable;
+    String CATEGORIES_SEPARATOR = ",";
 
-	public EntitySearchFilter[] getFilters(String dataType, String filtersShowletParam, String langCode);
+    /**
+     * Restituisce la lista di identificativi di DataType in base ai parametri di ricerca.
+     *
+     * @param bean Il contenitore delle informazioni base sulla interrogazione da eseguire.
+     * @return La lista di identificativi di DataType in base ai parametri di ricerca.
+     * @throws Throwable In caso di errore.
+     */
+    List<String> getDataTypesId(IDataTypeListBean bean, UserDetails user) throws Throwable;
 
-	/**
-	 * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String
-	 * dataType, IEntityFilterBean, String) method
-	 */
-	public EntitySearchFilter getFilter(String dataType, IDataTypeListFilterBean bean, String langCode);
+    EntitySearchFilter[] getFilters(String dataType, String filtersShowletParam, String langCode);
 
-	public EntitySearchFilter getFilter(String dataType, IEntityFilterBean bean, String langCode);
+    /**
+     * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String dataType, IEntityFilterBean, String) method
+     */
+    EntitySearchFilter getFilter(String dataType, IDataTypeListFilterBean bean, String langCode);
 
-	public String getFilterParam(EntitySearchFilter[] filters);
+    EntitySearchFilter getFilter(String dataType, IEntityFilterBean bean, String langCode);
 
-	public static final String CATEGORIES_SEPARATOR = ",";
+    String getFilterParam(EntitySearchFilter[] filters);
 
 }

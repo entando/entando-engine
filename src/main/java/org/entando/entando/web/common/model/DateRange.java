@@ -1,15 +1,22 @@
 package org.entando.entando.web.common.model;
 
-import java.util.Date;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 public class DateRange {
 
     private Date start;
     private Date end;
+
+    public DateRange() {
+
+    }
+
+    public DateRange(String input) {
+        this.decode(input);
+    }
 
     public Date getStart() {
         return start;
@@ -25,14 +32,6 @@ public class DateRange {
 
     public void setEnd(Date end) {
         this.end = end;
-    }
-
-    public DateRange() {
-
-    }
-
-    public DateRange(String input) {
-        this.decode(input);
     }
 
     private void decode(String input) {

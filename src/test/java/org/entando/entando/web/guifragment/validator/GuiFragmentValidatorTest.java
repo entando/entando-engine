@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.guifragment.validator;
+
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -22,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.MapBindingResult;
 

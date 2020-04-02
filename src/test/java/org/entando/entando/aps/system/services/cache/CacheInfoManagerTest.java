@@ -11,27 +11,40 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.cache;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.*;
-import org.mockito.*;
-import org.springframework.cache.*;
-
 import java.lang.annotation.Annotation;
-import java.util.*;
-
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 /**
  * @author E.Santoboni
  */
 public class CacheInfoManagerTest {
-	
-	@Mock
+
+    @Mock
     private CacheManager cacheManager;
 
     @Mock
@@ -39,202 +52,208 @@ public class CacheInfoManagerTest {
 
     @Mock
     private Cache.ValueWrapper valueWrapperForExpirationTime;
-	
-	@Mock
+
+    @Mock
     private Cache.ValueWrapper valueWrapperForGroups;
-	
+
     @Mock
     private ProceedingJoinPoint proceedingJoinPoint;
 
-	@InjectMocks
+    @InjectMocks
     private CacheInfoManager cacheInfoManager;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		Map<String, Date> map = new HashMap<>();
-		Mockito.when(valueWrapperForExpirationTime.get()).thenReturn(map);
-		Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.EXPIRATIONS_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForExpirationTime);
-		Map<String, List<String>> groupsMap = new HashMap<>();
-		List<String> list_a = Arrays.asList("key_a1", "key_a2", "key_a3");
-		List<String> list_b = Arrays.asList("key_b1", "key_b2", "key_b3", "key_b4");
-		groupsMap.put("group_1", new ArrayList<>(list_a));
-		groupsMap.put("group_2", new ArrayList<>(list_b));
-		Mockito.when(valueWrapperForGroups.get()).thenReturn(groupsMap);
-		Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForGroups);
-		Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
-	}
-	
-	@Test(expected = ApsSystemException.class)
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        Map<String, Date> map = new HashMap<>();
+        Mockito.when(valueWrapperForExpirationTime.get()).thenReturn(map);
+        Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.EXPIRATIONS_CACHE_NAME_PREFIX)))
+                .thenReturn(valueWrapperForExpirationTime);
+        Map<String, List<String>> groupsMap = new HashMap<>();
+        List<String> list_a = Arrays.asList("key_a1", "key_a2", "key_a3");
+        List<String> list_b = Arrays.asList("key_b1", "key_b2", "key_b3", "key_b4");
+        groupsMap.put("group_1", new ArrayList<>(list_a));
+        groupsMap.put("group_2", new ArrayList<>(list_b));
+        Mockito.when(valueWrapperForGroups.get()).thenReturn(groupsMap);
+        Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForGroups);
+        Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
+    }
+
+    @Test(expected = ApsSystemException.class)
     public void testAroundCacheableMethod() throws Throwable {
-		CacheableInfo cacheableInfo = new CacheableInfo() {
-			@Override
-			public int expiresInMinute() {
-				return 1;
-			}
-			@Override
-			public String groups() {
-				return "testGroup";
-			}
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return CacheableInfo.class;
-			}
-		};
+        CacheableInfo cacheableInfo = new CacheableInfo() {
+            @Override
+            public int expiresInMinute() {
+                return 1;
+            }
+
+            @Override
+            public String groups() {
+                return "testGroup";
+            }
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return CacheableInfo.class;
+            }
+        };
         cacheInfoManager.aroundCacheableMethod(proceedingJoinPoint, cacheableInfo);
         Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
         Mockito.verify(cacheInfoManager, Mockito.never())
-				.putInGroup(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String[].class));
+                .putInGroup(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String[].class));
         Mockito.verify(cacheInfoManager, Mockito.never())
-				.setExpirationTime(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(Date.class));
+                .setExpirationTime(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(Date.class));
     }
-	
+
     @Test(expected = ApsSystemException.class)
     public void testAroundCacheInfoEvictMethod() throws Throwable {
-		CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
-			@Override
-			public String[] value() {
-				return new String[]{ICacheInfoManager.DEFAULT_CACHE_NAME};
-			}
-			@Override
-			public String groups() {
-				return "testCacheGroup2,testCacheGroup2";
-			}
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return CacheInfoEvict.class;
-			}
-		};
+        CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
+            @Override
+            public String[] value() {
+                return new String[]{ICacheInfoManager.DEFAULT_CACHE_NAME};
+            }
+
+            @Override
+            public String groups() {
+                return "testCacheGroup2,testCacheGroup2";
+            }
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return CacheInfoEvict.class;
+            }
+        };
         cacheInfoManager.aroundCacheInfoEvictMethod(proceedingJoinPoint, cacheInfoEvict);
         Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
     }
-	
+
     @Test
     public void setExpirationTimeInMinutes() {
-		String targetCache = "targetCacheName1";
-		String cacheKey = "testkey1";
-		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
+        String targetCache = "targetCacheName1";
+        String cacheKey = "testkey1";
+        cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
         cacheInfoManager.setExpirationTime(targetCache, cacheKey, 1);
-		boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertFalse(expired);
+        boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
+        assertFalse(expired);
     }
-	
+
     @Test
     public void setExpirationTimeInSeconds() throws Throwable {
-		String targetCache = "targetCacheName2";
-		String cacheKey = "testkey2";
-		cacheInfoManager.putInCache(targetCache, cacheKey, "Some other value");
+        String targetCache = "targetCacheName2";
+        String cacheKey = "testkey2";
+        cacheInfoManager.putInCache(targetCache, cacheKey, "Some other value");
         cacheInfoManager.setExpirationTime(targetCache, cacheKey, 1L);
-		boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertFalse(expired);
-		synchronized (this) {
-    		this.wait(2000);
-		}
-		boolean expired2 = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertTrue(expired2);
+        boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
+        assertFalse(expired);
+        synchronized (this) {
+            this.wait(2000);
+        }
+        boolean expired2 = cacheInfoManager.isExpired(targetCache, cacheKey);
+        assertTrue(expired2);
     }
-	
+
     @Test
     public void updateFromPageChanged() {
-		PageChangedEvent event = new PageChangedEvent();
-		Page page = new Page();
-		page.setCode("code");
-		event.setPage(page);
+        PageChangedEvent event = new PageChangedEvent();
+        Page page = new Page();
+        page.setCode("code");
+        event.setPage(page);
         cacheInfoManager.updateFromPageChanged(event);
-		Mockito.verify(cache, Mockito.times(1)).get(Mockito.anyString());
-		Mockito.verify(cache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(Map.class));
-		Object requiredMap = cacheInfoManager.getFromCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME, 
-				ICacheInfoManager.GROUP_CACHE_NAME_PREFIX + ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
-		assertTrue(requiredMap instanceof Map);
-		assertNotNull(requiredMap);
-		assertEquals(2, ((Map) requiredMap).size());
+        Mockito.verify(cache, Mockito.times(1)).get(Mockito.anyString());
+        Mockito.verify(cache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(Map.class));
+        Object requiredMap = cacheInfoManager.getFromCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME,
+                ICacheInfoManager.GROUP_CACHE_NAME_PREFIX + ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
+        assertTrue(requiredMap instanceof Map);
+        assertNotNull(requiredMap);
+        assertEquals(2, ((Map) requiredMap).size());
     }
-	
-	@Test
+
+    @Test
     public void destroy() {
-		cacheInfoManager.destroy();
-		Mockito.verify(cacheManager, Mockito.times(0)).getCacheNames();
-		Mockito.verify(cacheManager, Mockito.times(4)).getCache(Mockito.anyString());
-		Mockito.verify(cache, Mockito.times(2)).clear();
-	}
-	
-	@Test
+        cacheInfoManager.destroy();
+        Mockito.verify(cacheManager, Mockito.times(0)).getCacheNames();
+        Mockito.verify(cacheManager, Mockito.times(4)).getCache(Mockito.anyString());
+        Mockito.verify(cache, Mockito.times(2)).clear();
+    }
+
+    @Test
     public void flushAll() {
-		cacheInfoManager.flushAll();
-		Mockito.verify(cacheManager, Mockito.times(1)).getCacheNames();
-		Mockito.verify(cacheManager, Mockito.times(0)).getCache(Mockito.anyString());
-		Mockito.verify(cache, Mockito.times(0)).clear();
-	}
-	
-	@Test
+        cacheInfoManager.flushAll();
+        Mockito.verify(cacheManager, Mockito.times(1)).getCacheNames();
+        Mockito.verify(cacheManager, Mockito.times(0)).getCache(Mockito.anyString());
+        Mockito.verify(cache, Mockito.times(0)).clear();
+    }
+
+    @Test
     public void flushAllWithCaches() {
-		List<String> cacheNames = new ArrayList<>();
-		cacheNames.add("cache1");
-		cacheNames.add("cache2");
-		Mockito.when(cacheManager.getCacheNames()).thenReturn(cacheNames);
-		cacheInfoManager.flushAll();
-		Mockito.verify(cacheManager, Mockito.times(1)).getCacheNames();
-		Mockito.verify(cacheManager, Mockito.times(4)).getCache(Mockito.anyString());
-		Mockito.verify(cache, Mockito.times(2)).clear();
-	}
-	
-	@Test
+        List<String> cacheNames = new ArrayList<>();
+        cacheNames.add("cache1");
+        cacheNames.add("cache2");
+        Mockito.when(cacheManager.getCacheNames()).thenReturn(cacheNames);
+        cacheInfoManager.flushAll();
+        Mockito.verify(cacheManager, Mockito.times(1)).getCacheNames();
+        Mockito.verify(cacheManager, Mockito.times(4)).getCache(Mockito.anyString());
+        Mockito.verify(cache, Mockito.times(2)).clear();
+    }
+
+    @Test
     public void flushEntry() {
-		String targetCache = "targetCacheName3";
-		String cacheKey = "testkey3";
-		cacheInfoManager.flushEntry(targetCache, cacheKey);
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(Mockito.eq(targetCache));
-		Mockito.verify(cache, Mockito.times(1)).evict(Mockito.eq(cacheKey));
-	}
-	
-	@Test
+        String targetCache = "targetCacheName3";
+        String cacheKey = "testkey3";
+        cacheInfoManager.flushEntry(targetCache, cacheKey);
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(Mockito.eq(targetCache));
+        Mockito.verify(cache, Mockito.times(1)).evict(Mockito.eq(cacheKey));
+    }
+
+    @Test
     public void putInCache() {
-		String targetCache = "targetCacheName3";
-		String cacheKey = "testkey3";
-		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(targetCache);
-		Mockito.verify(cache, Mockito.times(1)).put(cacheKey, "Some value");
-	}
-	
-	@Test
+        String targetCache = "targetCacheName3";
+        String cacheKey = "testkey3";
+        cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(targetCache);
+        Mockito.verify(cache, Mockito.times(1)).put(cacheKey, "Some value");
+    }
+
+    @Test
     public void putInCacheWithGroups() {
-		String targetCache = "targetCacheName3";
-		String cacheKey = "testkey3";
-		String[] groups = new String[]{"group_1", "group_2"};
-		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value", groups);
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(targetCache);
-		Mockito.verify(cache, Mockito.times(1)).put(cacheKey, "Some value");
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
-	}
-	
-	@Test
+        String targetCache = "targetCacheName3";
+        String cacheKey = "testkey3";
+        String[] groups = new String[]{"group_1", "group_2"};
+        cacheInfoManager.putInCache(targetCache, cacheKey, "Some value", groups);
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(targetCache);
+        Mockito.verify(cache, Mockito.times(1)).put(cacheKey, "Some value");
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
+    }
+
+    @Test
     public void putInGroup() {
-		String targetCache = "targetCacheName4";
-		String cacheKey = "testkey4";
-		String[] groups = new String[]{"group_1", "group_2"};
-		cacheInfoManager.putInGroup(targetCache, cacheKey, groups);
-		Mockito.verify(cacheManager, Mockito.times(0)).getCache(targetCache);
-		Mockito.verify(cache, Mockito.times(0)).put(cacheKey, Mockito.eq(Mockito.anyString()));
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
-	}
-	
-	@Test
+        String targetCache = "targetCacheName4";
+        String cacheKey = "testkey4";
+        String[] groups = new String[]{"group_1", "group_2"};
+        cacheInfoManager.putInGroup(targetCache, cacheKey, groups);
+        Mockito.verify(cacheManager, Mockito.times(0)).getCache(targetCache);
+        Mockito.verify(cache, Mockito.times(0)).put(cacheKey, Mockito.eq(Mockito.anyString()));
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
+    }
+
+    @Test
     public void flushGroup_1() {
-		this.flushGroup("group_1", 3);
-	}
-	
-	@Test
+        this.flushGroup("group_1", 3);
+    }
+
+    @Test
     public void flushGroup_2() {
-		this.flushGroup("group_2", 4);
-	}
-	
+        this.flushGroup("group_2", 4);
+    }
+
     private void flushGroup(String groupName, int expectedEvict) {
-		String targetCache = "targetCacheName5";
-		cacheInfoManager.flushGroup(targetCache, groupName);
-		Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
-		Mockito.verify(cacheManager, Mockito.times(expectedEvict)).getCache(targetCache);
-		Mockito.verify(cache, Mockito.times(expectedEvict)).evict(Mockito.any(Object.class));
-		Mockito.verify(cache, Mockito.times(1)).put(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX), Mockito.any(Object.class));
-	}
-	
+        String targetCache = "targetCacheName5";
+        cacheInfoManager.flushGroup(targetCache, groupName);
+        Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
+        Mockito.verify(cacheManager, Mockito.times(expectedEvict)).getCache(targetCache);
+        Mockito.verify(cache, Mockito.times(expectedEvict)).evict(Mockito.any(Object.class));
+        Mockito.verify(cache, Mockito.times(1))
+                .put(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX), Mockito.any(Object.class));
+    }
+
 }

@@ -11,23 +11,22 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Data Access Object per gli oggetti datatype.
@@ -37,20 +36,16 @@ import java.util.List;
 public class DataObjectModelDAO extends AbstractSearcherDAO implements IDataObjectModelDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(DataObjectModelDAO.class);
-
-    private final String ALL_DATA_UX
-            = "SELECT modelid, datatype, descr, model, stylesheet FROM dataobjectmodels";
-
-    private final String ADD_DATA_UX
-            = "INSERT INTO dataobjectmodels (modelid, datatype, descr, model, stylesheet ) VALUES ( ? , ? , ? , ? , ? )";
-
     private static final String DELETE_DATA_UX
             = "DELETE FROM dataobjectmodels WHERE modelid = ? ";
-
-    private final String UPDATE_DATA_UX
+    private static final String ALL_DATA_UX
+            = "SELECT modelid, datatype, descr, model, stylesheet FROM dataobjectmodels";
+    private static final String ADD_DATA_UX
+            = "INSERT INTO dataobjectmodels (modelid, datatype, descr, model, stylesheet ) VALUES ( ? , ? , ? , ? , ? )";
+    private static final String UPDATE_DATA_UX
             = "UPDATE dataobjectmodels SET datatype = ? , descr = ? , model = ? , stylesheet = ? WHERE modelid = ? ";
 
-    private final String EXTRACT_NEXT_ID
+    private static final String EXTRACT_NEXT_ID
             = "SELECT MAX(modelid) FROM dataobjectmodels ";
 
     @Override

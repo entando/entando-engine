@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.tags;
 
 import java.io.IOException;
@@ -23,38 +24,39 @@ import org.apache.commons.lang.StringEscapeUtils;
  * @author E.Santoboni
  */
 public abstract class ExtendedTagSupport extends TagSupport {
-	
-	private boolean _escapeXml = true;
-	
-	public ExtendedTagSupport() {
-		super();
-		this.init();
-	}
-	
-	// resets local state
-	private void init() {
-		this._escapeXml = true;
-	}
-	
-	@Override
-	public void release() {
-		super.release();
-		init();
-	}
-	
-	public boolean getEscapeXml() {
-		return _escapeXml;
-	}
-	public void setEscapeXml(boolean escapeXml) {
-		this._escapeXml = escapeXml;
-	}
-	
-	public static void out(PageContext pageContext, boolean escapeXml, Object obj) throws IOException {
-		if (null != obj) {
-			String text = (escapeXml) ? StringEscapeUtils.escapeXml(obj.toString()) : obj.toString();
-			JspWriter w = pageContext.getOut();
-			w.write(text);
-		}
-	}
-	
+
+    private boolean _escapeXml = true;
+
+    public ExtendedTagSupport() {
+        super();
+        this.init();
+    }
+
+    public static void out(PageContext pageContext, boolean escapeXml, Object obj) throws IOException {
+        if (null != obj) {
+            String text = (escapeXml) ? StringEscapeUtils.escapeXml(obj.toString()) : obj.toString();
+            JspWriter w = pageContext.getOut();
+            w.write(text);
+        }
+    }
+
+    // resets local state
+    private void init() {
+        this._escapeXml = true;
+    }
+
+    @Override
+    public void release() {
+        super.release();
+        init();
+    }
+
+    public boolean getEscapeXml() {
+        return _escapeXml;
+    }
+
+    public void setEscapeXml(boolean escapeXml) {
+        this._escapeXml = escapeXml;
+    }
+
 }

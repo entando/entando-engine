@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.model;
 
 import java.util.ArrayList;
@@ -36,35 +37,8 @@ public class WidgetDto {
     private String bundleId;
     private Map<String, Object> configUi;
 
-    protected class GuiFragmentRef {
-
-        private String code;
-        private String customUi;
-        private String defaultUi;
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
-
-        public String getCustomUi() {
-            return customUi;
-        }
-
-        public void setCustomUi(String customUi) {
-            this.customUi = customUi;
-        }
-
-        public String getDefaultUi() {
-            return defaultUi;
-        }
-
-        public void setDefaultUi(String defaultUi) {
-            this.defaultUi = defaultUi;
-        }
+    public static String getEntityFieldName(String dtoFieldName) {
+        return dtoFieldName;
     }
 
     public void addGuiFragmentRef(String code, String customUi, String defaultUi) {
@@ -73,10 +47,6 @@ public class WidgetDto {
         ref.customUi = customUi;
         ref.defaultUi = defaultUi;
         guiFragments.add(ref);
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        return dtoFieldName;
     }
 
     public String getCode() {
@@ -165,5 +135,36 @@ public class WidgetDto {
 
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
+    }
+
+    protected class GuiFragmentRef {
+
+        private String code;
+        private String customUi;
+        private String defaultUi;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getCustomUi() {
+            return customUi;
+        }
+
+        public void setCustomUi(String customUi) {
+            this.customUi = customUi;
+        }
+
+        public String getDefaultUi() {
+            return defaultUi;
+        }
+
+        public void setDefaultUi(String defaultUi) {
+            this.defaultUi = defaultUi;
+        }
     }
 }

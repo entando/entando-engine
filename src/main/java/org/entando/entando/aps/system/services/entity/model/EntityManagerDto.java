@@ -11,9 +11,9 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity.model;
 
-import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
@@ -32,7 +32,7 @@ public class EntityManagerDto {
     }
 
     public EntityManagerDto(IEntityManager src) {
-        this.setCode(((IManager) src).getName());
+        this.setCode(src.getName());
         List<AttributeRole> roles = src.getAttributeRoles();
         List<IApsEntity> extractedEntityTypes = new ArrayList<>(src.getEntityPrototypes().values());
         for (IApsEntity entityType : extractedEntityTypes) {

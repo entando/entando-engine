@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.entity;
+
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -19,8 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-
-import static org.junit.Assert.fail;
 
 public class EntityManagerServiceTest {
 

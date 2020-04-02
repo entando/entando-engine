@@ -11,66 +11,66 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.model.servdb;
 
-import java.util.Date;
+package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.util.Date;
 
 /**
  * @author E.Santoboni
  */
 @DatabaseTable(tableName = ActionLogRecord.TABLE_NAME)
 public class ActionLogRecord {
-	
-	public ActionLogRecord() {}
-	
-	@DatabaseField(columnName = "id", 
-			dataType = DataType.INTEGER, 
-			canBeNull = false, id = true)
-	private int _id;
-	
-	@DatabaseField(columnName = "username", 
-			dataType = DataType.STRING, 
-			width = 40, 
-			canBeNull = true)
-	private String _username;
-	
-	@DatabaseField(columnName = "actiondate", 
-			dataType = DataType.DATE, 
-			canBeNull = true, index = true)
-	private Date _actionDate;
-	
-	@DatabaseField(columnName = "namespace", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String _namespace;
-	
-	@DatabaseField(columnName = "actionname", 
-			dataType = DataType.STRING, 
-			width = 250, 
-			canBeNull = true)
-	private String _actionname;
-	
-	@DatabaseField(columnName = "parameters", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String _parameters;
-	
-	@DatabaseField(columnName = "activitystreaminfo", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String _activitystreaminfo;
-    
-	@DatabaseField(columnName = "updatedate", 
-			dataType = DataType.DATE, 
-			canBeNull = true, index = true)
-	private Date _updateDate;
-	
-	public static final String TABLE_NAME = "actionlogrecords";
-	
+
+    public static final String TABLE_NAME = "actionlogrecords";
+    @DatabaseField(columnName = "id",
+            dataType = DataType.INTEGER,
+            canBeNull = false, id = true)
+    private int _id;
+
+    @DatabaseField(columnName = "username",
+            dataType = DataType.STRING,
+            width = 40,
+            canBeNull = true)
+    private String _username;
+
+    @DatabaseField(columnName = "actiondate",
+            dataType = DataType.DATE,
+            canBeNull = true, index = true)
+    private Date _actionDate;
+
+    @DatabaseField(columnName = "namespace",
+            dataType = DataType.LONG_STRING,
+            canBeNull = true)
+    private String _namespace;
+
+    @DatabaseField(columnName = "actionname",
+            dataType = DataType.STRING,
+            width = 250,
+            canBeNull = true)
+    private String _actionname;
+
+    @DatabaseField(columnName = "parameters",
+            dataType = DataType.LONG_STRING,
+            canBeNull = true)
+    private String _parameters;
+
+    @DatabaseField(columnName = "activitystreaminfo",
+            dataType = DataType.LONG_STRING,
+            canBeNull = true)
+    private String _activitystreaminfo;
+
+    @DatabaseField(columnName = "updatedate",
+            dataType = DataType.DATE,
+            canBeNull = true, index = true)
+    private Date _updateDate;
+
+    public ActionLogRecord() {
+    }
+
 }
 /*
 CREATE TABLE actionloggerrecords

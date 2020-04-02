@@ -11,12 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.ApsEntityManager;
+import com.agiletec.aps.system.common.entity.IEntityDAO;
+import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
@@ -26,14 +33,6 @@ import org.entando.entando.aps.system.services.userprofile.model.UserProfileReco
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
-
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.ApsEntityManager;
-import com.agiletec.aps.system.common.entity.IEntityDAO;
-import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -44,6 +43,8 @@ import org.springframework.cache.annotation.Cacheable;
 public class UserProfileManager extends ApsEntityManager implements IUserProfileManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UserProfileManager.class);
+    private IUserProfileDAO _profileDAO;
+    private IEntitySearcherDAO _entitySearcherDAO;
 
     @Override
     public IApsEntity getEntity(String entityId) throws ApsSystemException {
@@ -155,7 +156,7 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
 
     @Override
     protected IEntityDAO getEntityDao() {
-        return (IEntityDAO) this.getProfileDAO();
+        return this.getProfileDAO();
     }
 
     @Override
@@ -178,8 +179,5 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
     public void setEntitySearcherDAO(IEntitySearcherDAO entitySearcherDAO) {
         this._entitySearcherDAO = entitySearcherDAO;
     }
-
-    private IUserProfileDAO _profileDAO;
-    private IEntitySearcherDAO _entitySearcherDAO;
 
 }

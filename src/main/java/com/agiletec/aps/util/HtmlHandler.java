@@ -11,24 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.util;
 
 /**
- * 
  * @author W.Ambu
  */
 public class HtmlHandler {
 
-	/**
-	 * Extracts text without html tags
-	 * @param textToParse
-	 * @return the text value of the node
-	 */
-	public String getParsedText(String textToParse) {
-		String parsedText;
-		parsedText = textToParse.replaceAll("<[^<>]+>", " ");
-		return parsedText;
-	}
+    /**
+     * Extracts text without html tags
+     *
+     * @return the text value of the node
+     */
+    public String getParsedText(String textToParse) {
+        String parsedText;
+        parsedText = textToParse.replaceAll("<[^<>]+>", " ");
+        return parsedText;
+    }
 
 }
 

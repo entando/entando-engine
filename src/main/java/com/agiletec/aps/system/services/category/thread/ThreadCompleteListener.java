@@ -11,9 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category.thread;
 
 public interface ThreadCompleteListener {
 
-	public void notifyOfThreadComplete(final Thread thread);
+    void notifyOfThreadComplete(final Thread thread);
 }

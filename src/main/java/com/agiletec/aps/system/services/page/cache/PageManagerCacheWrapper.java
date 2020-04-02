@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
@@ -196,14 +197,14 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         if (null == page) {
             return;
         }
-        ((Page) page).setPosition(page.getPosition() - 1);
+        page.setPosition(page.getPosition() - 1);
         if (online) {
             cache.put(ONLINE_PAGE_CACHE_NAME_PREFIX + page.getCode(), page);
         } else {
             cache.put(DRAFT_PAGE_CACHE_NAME_PREFIX + page.getCode(), page);
         }
     }
-    
+
     @Override
     public void addDraftPage(IPage page) {
         Cache cache = this.getCache();
@@ -223,10 +224,10 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         this.cleanLocalCache(cache);
         PagesStatus status = this.getPagesStatus();
         status.setLastUpdate(new Date());
-        status.setUnpublished(status.getUnpublished()+1);
+        status.setUnpublished(status.getUnpublished() + 1);
         cache.put(PAGE_STATUS_CACHE_NAME, status);
     }
-    
+
     @Override
     public void updateDraftPage(IPage page) {
         IPage onlinepage = this.getOnlinePage(page.getCode());
@@ -243,7 +244,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             PagesStatus status = this.getPagesStatus();
             status.setLastUpdate(new Date());
             status.setOnlineWithChanges(status.getOnlineWithChanges() + 1);
-            status.setOnline(status.getOnline()-1);
+            status.setOnline(status.getOnline() - 1);
             cache.put(PAGE_STATUS_CACHE_NAME, status);
         }
     }
@@ -381,7 +382,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         }
         return changed;
     }
-    
+
     private void addCodeFromCachedList(Cache cache, String listKey, String codeToAdd) {
         List<String> codes = (List<String>) this.get(cache, listKey, List.class);
         if (null != codes && !codes.contains(codeToAdd)) {
@@ -389,7 +390,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             cache.put(listKey, codes);
         }
     }
-    
+
     private void removeCodeFromCachedList(Cache cache, String listKey, String codeToRemove) {
         List<String> codes = (List<String>) this.get(cache, listKey, List.class);
         if (null != codes) {
@@ -397,7 +398,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             cache.put(listKey, codes);
         }
     }
-    
+
     @Override
     public void moveUpDown(String pageDown, String pageUp) {
         IPage draftToMoveUp = this.getDraftPage(pageUp);
@@ -405,13 +406,13 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         if (null != draftToMoveDown && null != draftToMoveUp
                 && draftToMoveDown.getParentCode().equals(draftToMoveUp.getParentCode())) {
             Cache cache = this.getCache();
-            draftToMoveUp.setPosition(draftToMoveUp.getPosition()-1);
+            draftToMoveUp.setPosition(draftToMoveUp.getPosition() - 1);
             cache.put(DRAFT_PAGE_CACHE_NAME_PREFIX + draftToMoveUp.getCode(), draftToMoveUp);
-            draftToMoveDown.setPosition(draftToMoveDown.getPosition()+1);
+            draftToMoveDown.setPosition(draftToMoveDown.getPosition() + 1);
             cache.put(DRAFT_PAGE_CACHE_NAME_PREFIX + draftToMoveDown.getCode(), draftToMoveDown);
             this.upgradePositionOnOnlineVersion(pageUp, draftToMoveUp.getPosition(), cache);
             this.upgradePositionOnOnlineVersion(pageDown, draftToMoveDown.getPosition(), cache);
-            if (draftToMoveUp.getPosition()<draftToMoveDown.getPosition()) {
+            if (draftToMoveUp.getPosition() < draftToMoveDown.getPosition()) {
                 this.switchSisterOnParent(draftToMoveUp.getParentCode(), pageUp, pageDown, cache, false);
                 this.switchSisterOnParent(draftToMoveUp.getParentCode(), pageUp, pageDown, cache, true);
             }
@@ -419,7 +420,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             _logger.error("Movement impossible - page to move up {} - page to move down {}", pageUp, pageDown);
         }
     }
-    
+
     private void upgradePositionOnOnlineVersion(String pageCode, int position, Cache cache) {
         IPage onlinePage = this.getOnlinePage(pageCode);
         if (null != onlinePage) {
@@ -427,7 +428,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             cache.put(ONLINE_PAGE_CACHE_NAME_PREFIX + onlinePage.getCode(), onlinePage);
         }
     }
-    
+
     private void switchSisterOnParent(String parentCode, String pageUp, String pageDown, Cache cache, boolean online) {
         IPage parent = (online) ? this.getOnlinePage(parentCode) : this.getDraftPage(parentCode);
         if (null != parent) {
@@ -437,7 +438,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             if (pos1 >= 0 && pos2 >= 0) {
                 Collections.swap(children, pos1, pos2);
                 ((Page) parent).setChildrenCodes(children.toArray(new String[children.size()]));
-                String cacheKey = (online) ? 
+                String cacheKey = (online) ?
                         (ONLINE_PAGE_CACHE_NAME_PREFIX + parent.getCode()) :
                         (DRAFT_PAGE_CACHE_NAME_PREFIX + parent.getCode());
                 cache.put(cacheKey, parent);
@@ -445,7 +446,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             this.checkRootModification(parent, online, cache);
         }
     }
-    
+
     private void checkRootModification(IPage page, boolean online, Cache cache) {
         if (page.isRoot()) {
             if (!online) {
@@ -455,12 +456,12 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             }
         }
     }
-    
+
     @Override
     public PagesStatus getPagesStatus() {
         return this.get(PAGE_STATUS_CACHE_NAME, PagesStatus.class);
     }
-    
+
     @Override
     public IPage getOnlinePage(String pageCode) {
         IPage page = this.get(ONLINE_PAGE_CACHE_NAME_PREFIX + pageCode, IPage.class);
@@ -484,7 +485,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         IPage page = this.get(DRAFT_ROOT_CACHE_NAME, IPage.class).clone();
         return this.returnClone(page);
     }
-    
+
     private IPage returnClone(IPage page) {
         if (null != page) {
             return page.clone();
@@ -569,7 +570,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     private void getWidgetUtilizers(IPage page, Map<String, List> utilizersMap, boolean draft) {
         Widget[] widgets = page.getWidgets();
 
-        if(widgets!=null) {
+        if (widgets != null) {
             for (Widget widget : widgets) {
                 if (null != widget && null != widget.getType()) {
                     String cacheCode = this.getWidgetUtilizerCacheName(widget.getType().getCode(), draft);
@@ -584,7 +585,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         }
         String[] childrenCodes = page.getChildrenCodes();
 
-        if(childrenCodes !=null) {
+        if (childrenCodes != null) {
             for (String childrenCode : childrenCodes) {
                 IPage child = (draft) ? this.getDraftPage(childrenCode) : this.getOnlinePage(childrenCode);
                 if (null != child) {
@@ -599,27 +600,27 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         Cache cache = super.getCache();
         IPage pageToMove = this.getDraftPage(pageCode);
         IPage newParent = this.getDraftPage(newParentCode);
-        
+
         IPage oldParentDraft = this.updateOldParent(pageToMove, true, cache);
         this.updateOldParent(pageToMove, false, cache);
         String[] newChildrenDraft = oldParentDraft.getChildrenCodes();
         for (int i = 0; i < newChildrenDraft.length; i++) {
-            this.updatePositionAndParent(newChildrenDraft[i], i+1, null, false, cache);
-            this.updatePositionAndParent(newChildrenDraft[i], i+1, null, true, cache);
+            this.updatePositionAndParent(newChildrenDraft[i], i + 1, null, false, cache);
+            this.updatePositionAndParent(newChildrenDraft[i], i + 1, null, true, cache);
         }
-        
+
         String[] oldChildDest = newParent.getChildrenCodes();
         Integer lastPos = (null == oldChildDest || oldChildDest.length == 0) ? 1
                 : Arrays.stream(oldChildDest).map(f -> this.getDraftPage(f).getPosition()).max(Integer::compareTo).get() + 1;
         this.updatePositionAndParent(pageCode, lastPos, newParentCode, false, cache);
         this.updatePositionAndParent(pageCode, lastPos, newParentCode, true, cache);
-        
+
         this.updateNewParent(pageCode, newParentCode, true, cache);
         if (null != this.getOnlinePage(pageCode)) {
             this.updateNewParent(pageCode, newParentCode, false, cache);
         }
     }
-    
+
     private IPage updateOldParent(IPage pageToMove, boolean draft, Cache cache) {
         IPage oldParent = (draft) ? this.getDraftPage(pageToMove.getParentCode()) : this.getOnlinePage(pageToMove.getParentCode());
         if (null == oldParent) {
@@ -634,7 +635,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         }
         return oldParent;
     }
-    
+
     private void updatePositionAndParent(String pageCode, int newPosition, String newParent, boolean draft, Cache cache) {
         IPage page = (draft) ? this.getDraftPage(pageCode) : this.getOnlinePage(pageCode);
         if (null != page) {
@@ -645,7 +646,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             cache.put(((draft) ? DRAFT_PAGE_CACHE_NAME_PREFIX : ONLINE_PAGE_CACHE_NAME_PREFIX) + page.getCode(), page);
         }
     }
-    
+
     private IPage updateNewParent(String pageToMoveCode, String newParentCode, boolean draft, Cache cache) {
         IPage newParent = (draft) ? this.getDraftPage(newParentCode) : this.getOnlinePage(newParentCode);
         if (null == newParent) {
@@ -656,7 +657,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         cache.put(((draft) ? DRAFT_PAGE_CACHE_NAME_PREFIX : ONLINE_PAGE_CACHE_NAME_PREFIX) + newParent.getCode(), newParent);
         return newParent;
     }
-    
+
     private String getWidgetUtilizerCacheName(String widgetTypeCode, boolean draft) {
         return ((draft) ? DRAFT_WIDGET_UTILIZER_CACHE_NAME_PREFIX : ONLINE_WIDGET_UTILIZER_CACHE_NAME_PREFIX) + widgetTypeCode;
     }

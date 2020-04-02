@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.group;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -19,6 +20,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -35,8 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.validation.BeanPropertyBindingResult;
-
-import java.util.*;
 
 public class GroupService implements IGroupService, ApplicationContextAware {
 
@@ -193,7 +197,8 @@ public class GroupService implements IGroupService, ApplicationContextAware {
             return bindingResult;
         }
         if (Group.FREE_GROUP_NAME.equals(group.getName()) || Group.ADMINS_GROUP_NAME.equals(group.getName())) {
-            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()}, "group.cannot.delete.reserved");
+            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()},
+                    "group.cannot.delete.reserved");
         }
         if (!bindingResult.hasErrors()) {
 
@@ -202,7 +207,8 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                 for (Map.Entry<String, Boolean> entry : references.entrySet()) {
                     if (true == entry.getValue().booleanValue()) {
 
-                        bindingResult.reject(GroupValidator.ERRCODE_GROUP_REFERENCES, new Object[]{group.getName(), entry.getKey()}, "group.cannot.delete.references");
+                        bindingResult.reject(GroupValidator.ERRCODE_GROUP_REFERENCES, new Object[]{group.getName(), entry.getKey()},
+                                "group.cannot.delete.references");
                     }
                 }
             }

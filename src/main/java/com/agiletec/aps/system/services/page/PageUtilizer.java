@@ -11,30 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
 
 /**
  * Base interface for the services whose elements can directly reference the pages in the portal
+ *
  * @author E.Santoboni
  */
 public interface PageUtilizer {
-	
-	/**
-	 * Return the id of the utilizer service.
-	 * @return The id of the utilizer
-	 */
-	public String getName();
-	
-	/**
-	 * Return the list of the objects which reference the given page.
-	 * @param pageCode The code of the page
-	 * @return The list of the object referencing the given page 
-	 * @throws ApsSystemException In case of error
-	 */
-	public List getPageUtilizers(String pageCode) throws ApsSystemException;
-	
+
+    /**
+     * Return the id of the utilizer service.
+     *
+     * @return The id of the utilizer
+     */
+    String getName();
+
+    /**
+     * Return the list of the objects which reference the given page.
+     *
+     * @param pageCode The code of the page
+     * @return The list of the object referencing the given page
+     * @throws ApsSystemException In case of error
+     */
+    List getPageUtilizers(String pageCode) throws ApsSystemException;
+
 }

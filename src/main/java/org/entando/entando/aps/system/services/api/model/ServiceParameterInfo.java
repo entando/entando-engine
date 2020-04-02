@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -23,46 +24,48 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "serviceParameterInfo")
 @XmlType(propOrder = {"key", "description", "required", "defaultValue"})
 public class ServiceParameterInfo extends ApiMethodParameter {
-	
-	public ServiceParameterInfo() {}
-	
-	public ServiceParameterInfo(ApiMethodParameter parameter) {
-		this.setKey(parameter.getKey());
-		this.setDescription(parameter.getDescription());
-		this.setRequired(parameter.isRequired());
-	}
-	
-	@XmlElement(name = "key", required = true)
-	@Override
-	public String getKey() {
-		return super.getKey();
-	}
-	
-	@XmlElement(name = "description", required = true)
-	@Override
-	public String getDescription() {
-		return super.getDescription();
-	}
-	
-	@XmlElement(name = "required", required = true)
-	@Override
-	public boolean isRequired() {
-		return super.isRequired();
-	}
-	
-	@Override
-	public void setRequired(boolean required) {
-		super.setRequired(required);
-	}
-	
-	@XmlElement(name = "defaultValue", required = true)
-	public String getDefaultValue() {
-		return _defaultValue;
-	}
-	public void setDefaultValue(String defaultValue) {
-		this._defaultValue = defaultValue;
-	}
 
-	private String _defaultValue;
-	
+    private String _defaultValue;
+
+    public ServiceParameterInfo() {
+    }
+
+    public ServiceParameterInfo(ApiMethodParameter parameter) {
+        this.setKey(parameter.getKey());
+        this.setDescription(parameter.getDescription());
+        this.setRequired(parameter.isRequired());
+    }
+
+    @XmlElement(name = "key", required = true)
+    @Override
+    public String getKey() {
+        return super.getKey();
+    }
+
+    @XmlElement(name = "description", required = true)
+    @Override
+    public String getDescription() {
+        return super.getDescription();
+    }
+
+    @XmlElement(name = "required", required = true)
+    @Override
+    public boolean isRequired() {
+        return super.isRequired();
+    }
+
+    @Override
+    public void setRequired(boolean required) {
+        super.setRequired(required);
+    }
+
+    @XmlElement(name = "defaultValue", required = true)
+    public String getDefaultValue() {
+        return _defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this._defaultValue = defaultValue;
+    }
+
 }

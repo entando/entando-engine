@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.searchengine;
 
 /**
@@ -18,5 +19,5 @@ package com.agiletec.aps.system.common.searchengine;
  * @deprecated Since Entando 3.3.1, use org.entando.entando.aps.system.services.searchengine.ISearchEngineManager
  */
 public interface ISearchEngineManager extends org.entando.entando.aps.system.services.searchengine.ISearchEngineManager {
-	
+
 }

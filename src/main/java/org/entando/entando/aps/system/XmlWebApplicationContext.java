@@ -11,26 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+package org.entando.entando.aps.system;
 
 /**
  * @author M.Casari
  */
 public class XmlWebApplicationContext extends org.springframework.web.context.support.XmlWebApplicationContext {
-	/*
+  /*
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons, boolean allowEagerInit) throws BeansException {
         Map<String, T> map = super.getBeansOfType(type, includeNonSingletons, allowEagerInit);
-        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+        ("pluginsContextsList");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                 try {
@@ -46,7 +39,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
         Map<String, T> map = super.getBeansOfType(type);
-        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+        ("pluginsContextsList");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                 try {
@@ -62,7 +56,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     @Override
     public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
         String[] beanNames = super.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+        ("pluginsContextsList");
         Set removedPluginsSubMenuSet = (Set<String>) this.getServletContext().getAttribute("removedPluginsSubMenuSet");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
@@ -88,7 +83,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     @Override
     public String[] getBeanNamesForType(Class<?> type) {
         String[] beanNames = super.getBeanNamesForType(type);
-        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+        ("pluginsContextsList");
         Set removedPluginsSubMenuSet = (Set<String>) this.getServletContext().getAttribute("removedPluginsSubMenuSet");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
@@ -119,7 +115,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
     @Override
     public Object getBean(String name, Object... args) throws BeansException {
         Object bean = super.getBean(name, args);
-        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+        List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+        ("pluginsContextsList");
         if (contexts != null) {
             for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                 if (bean == null) {
@@ -139,7 +136,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         try {
             bean = super.getBean(requiredType);
         } catch (Exception e) {
-            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+            ("pluginsContextsList");
             if (contexts != null) {
                 for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                     if (bean == null) {
@@ -161,7 +159,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         try {
             bean = super.getBean(name, requiredType);
         } catch (Exception e) {
-            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+            ("pluginsContextsList");
             if (contexts != null) {
                 for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                     if (bean == null) {
@@ -183,7 +182,8 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         try {
             bean = super.getBean(name);
         } catch (Exception e) {
-            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute("pluginsContextsList");
+            List<ClassPathXmlApplicationContext> contexts = (List<ClassPathXmlApplicationContext>) this.getServletContext().getAttribute
+            ("pluginsContextsList");
             if (contexts != null) {
                 for (ClassPathXmlApplicationContext classPathXmlApplicationContext : contexts) {
                     if (bean == null) {
@@ -198,5 +198,5 @@ public class XmlWebApplicationContext extends org.springframework.web.context.su
         }
         return bean;
     }
-	*/
+  */
 }

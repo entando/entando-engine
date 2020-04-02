@@ -11,61 +11,52 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobject;
 
-import java.util.Collection;
-import java.util.List;
+package org.entando.entando.aps.system.services.dataobject;
 
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * Interfaccia base per i Data Access Object riservato al caricamento/ricerca
- * lista di contenuti dataobject.
+ * Interfaccia base per i Data Access Object riservato al caricamento/ricerca lista di contenuti dataobject.
  *
  * @author E.Santoboni
  */
 public interface IDataObjectSearcherDAO extends IEntitySearcherDAO {
 
     /**
-     * Carica una lista di identificativi di dataobject publici in base ai
-     * parametri immessi.
+     * Carica una lista di identificativi di dataobject publici in base ai parametri immessi.
      *
      * @param categories Le categorie dei dataobject da cercare.
-     * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca
-     * deve essere effettuata.
-     * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente
-     * la lista. Se la collezione è vuota o nulla, gli identificativi di
-     * dataobject erogati saranno relativi al gruppo definito "ad accesso
-     * libero". Nel caso nella collezione sia presente il codice del gruppo
-     * degli amministratori, non sarà applicato alcun il filtro sul gruppo.
+     * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca deve essere effettuata.
+     * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente la lista. Se la collezione è vuota o nulla, gli
+     * identificativi di dataobject erogati saranno relativi al gruppo definito "ad accesso libero". Nel caso nella collezione sia presente
+     * il codice del gruppo degli amministratori, non sarà applicato alcun il filtro sul gruppo.
      * @return La lista degli id dei dataobject cercati.
      */
-    public List<String> loadDataObjectsId(String[] categories, EntitySearchFilter[] filters,
+    List<String> loadDataObjectsId(String[] categories, EntitySearchFilter[] filters,
             Collection<String> userGroupCodes);
 
-    public List<String> loadDataObjectsId(String[] categories,
+    List<String> loadDataObjectsId(String[] categories,
             boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 
     /**
-     * Carica una lista di identificativi di DataObject publici in base ai
-     * parametri immessi.
+     * Carica una lista di identificativi di DataObject publici in base ai parametri immessi.
      *
      * @param dataObjectType Il codice dei tipi di DataObject da cercare.
      * @param categories Le categorie dei DataObject da cercare.
-     * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca
-     * deve essere effettuata.
-     * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente
-     * la lista. Se la collezione è vuota o nulla, gli identificativi di
-     * contenuto erogati saranno relativi al gruppo definito "ad accesso
-     * libero". Nel caso nella collezione sia presente il codice del gruppo
-     * degli amministratori, non sarà applicato alcun il filtro sul gruppo.
+     * @param filters L'insieme dei filtri sugli attibuti, su cui la ricerca deve essere effettuata.
+     * @param userGroupCodes I codici dei gruppi utenti dell'utente richiedente la lista. Se la collezione è vuota o nulla, gli
+     * identificativi di contenuto erogati saranno relativi al gruppo definito "ad accesso libero". Nel caso nella collezione sia presente
+     * il codice del gruppo degli amministratori, non sarà applicato alcun il filtro sul gruppo.
      * @return La lista degli id dei contenuti cercati.
      */
-    public List<String> loadDataObjectsId(String dataObjectType, String[] categories, EntitySearchFilter[] filters,
+    List<String> loadDataObjectsId(String dataObjectType, String[] categories, EntitySearchFilter[] filters,
             Collection<String> userGroupCodes);
 
-    public List<String> loadDataObjectsId(String dataObjectType,
+    List<String> loadDataObjectsId(String dataObjectType,
             String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.user.model;
 
 import org.entando.entando.aps.system.services.user.IUserService;
@@ -18,7 +19,6 @@ import org.entando.entando.web.common.annotation.ValidateString;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
  * @author paddeo
  */
 public class UserRequest {

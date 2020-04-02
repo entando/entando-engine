@@ -11,15 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.role;
 
-import java.util.List;
+package org.entando.entando.aps.system.services.role;
 
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Role;
+import java.util.List;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.role.model.RoleDto;
-
 
 public class RoleDtoBuilder extends DtoBuilder<Role, RoleDto> {
 

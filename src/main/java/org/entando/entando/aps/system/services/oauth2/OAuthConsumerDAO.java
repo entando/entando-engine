@@ -11,21 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.List;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
@@ -45,13 +45,15 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             + "FROM api_oauth_consumers WHERE consumerkey = ? ";
 
     private static final String ADD_CONSUMER
-            = "INSERT INTO api_oauth_consumers (consumerkey, consumersecret,name, description, callbackurl,scope, authorizedgranttypes, expirationdate, issueddate) VALUES (?,?,?,?,?,?,?,?,?) ";
+            = "INSERT INTO api_oauth_consumers (consumerkey, consumersecret,name, description, callbackurl,scope, authorizedgranttypes, "
+            + "expirationdate, issueddate) VALUES (?,?,?,?,?,?,?,?,?) ";
 
     private static final String UPDATE_CONSUMER_PREFIX = "UPDATE api_oauth_consumers SET ";
 
     private static final String UPDATE_CONSUMER_SECRET = "consumersecret = ? , ";
 
-    private static final String UPDATE_CONSUMER_SUFFIX = "name = ? , description = ? , callbackurl = ?, scope=?, authorizedgranttypes = ?, expirationdate = ? WHERE consumerkey = ? ";
+    private static final String UPDATE_CONSUMER_SUFFIX = "name = ? , description = ? , callbackurl = ?, scope=?, authorizedgranttypes = "
+            + "?, expirationdate = ? WHERE consumerkey = ? ";
 
     private static final String UPDATE_CONSUMER = UPDATE_CONSUMER_PREFIX + UPDATE_CONSUMER_SUFFIX;
 
@@ -127,8 +129,8 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
         // keeps the order of the keys collection
         return keys.stream()
                 .map(key -> consumers.stream()
-                .filter(c -> key.equals(c.getKey()))
-                .findFirst().get())
+                        .filter(c -> key.equals(c.getKey()))
+                        .findFirst().get())
                 .collect(Collectors.toList());
     }
 

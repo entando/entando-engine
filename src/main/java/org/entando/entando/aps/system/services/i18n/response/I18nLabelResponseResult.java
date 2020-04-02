@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.i18n.response;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
 
@@ -22,11 +22,11 @@ import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
  * @author E.Santoboni
  */
 public class I18nLabelResponseResult extends AbstractApiResponseResult {
-    
+
     @Override
     @XmlElement(name = "item", required = false)
     public JAXBI18nLabel getResult() {
         return (JAXBI18nLabel) this.getMainResult();
     }
-    
+
 }

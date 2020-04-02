@@ -11,33 +11,34 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api;
 
-import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelManager;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractApiDataObjectInterface {
 
-	public IDataObjectModelManager getDataObjectModelManager() {
-		return _dataObjectModelManager;
-	}
+    private IDataObjectManager _dataObjectManager;
+    private IDataObjectModelManager _dataObjectModelManager;
 
-	public void setDataObjectModelManager(IDataObjectModelManager dataObjectModelManager) {
-		this._dataObjectModelManager = dataObjectModelManager;
-	}
+    public IDataObjectModelManager getDataObjectModelManager() {
+        return _dataObjectModelManager;
+    }
 
-	public IDataObjectManager getDataObjectManager() {
-		return _dataObjectManager;
-	}
+    public void setDataObjectModelManager(IDataObjectModelManager dataObjectModelManager) {
+        this._dataObjectModelManager = dataObjectModelManager;
+    }
 
-	public void setDataObjectManager(IDataObjectManager _dataObjectManager) {
-		this._dataObjectManager = _dataObjectManager;
-	}
+    public IDataObjectManager getDataObjectManager() {
+        return _dataObjectManager;
+    }
 
-	private IDataObjectManager _dataObjectManager;
-	private IDataObjectModelManager _dataObjectModelManager;
+    public void setDataObjectManager(IDataObjectManager _dataObjectManager) {
+        this._dataObjectManager = _dataObjectManager;
+    }
 
 }

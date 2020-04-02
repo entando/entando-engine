@@ -11,21 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.authorization;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.user.model.UserDto;

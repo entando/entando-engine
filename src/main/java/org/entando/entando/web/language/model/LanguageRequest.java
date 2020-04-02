@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.language.model;
 
-import javax.validation.constraints.NotNull;
+package org.entando.entando.web.language.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.validation.constraints.NotNull;
 import org.entando.entando.web.common.json.BooleanStringDeserializer;
 
 public class LanguageRequest {

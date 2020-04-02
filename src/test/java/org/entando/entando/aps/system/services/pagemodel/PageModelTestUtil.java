@@ -1,8 +1,10 @@
 package org.entando.entando.aps.system.services.pagemodel;
 
-import org.entando.entando.web.pagemodel.model.*;
-
 import static java.util.Collections.singletonList;
+
+import org.entando.entando.web.pagemodel.model.PageModelConfigurationRequest;
+import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
+import org.entando.entando.web.pagemodel.model.PageModelRequest;
 
 public final class PageModelTestUtil {
 

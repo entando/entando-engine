@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.role.model;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -54,6 +54,5 @@ public class RoleRequest {
     public void setPermissions(Map<String, Boolean> permissions) {
         this.permissions = permissions;
     }
-
 
 }

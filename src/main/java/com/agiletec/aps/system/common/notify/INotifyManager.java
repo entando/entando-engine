@@ -11,20 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.notify;
 
 import org.springframework.context.ApplicationEvent;
 
 /**
  * Interfaccia base per i servizi notificatore eventi.
+ *
  * @author M.Diana - E.Santoboni
  */
 public interface INotifyManager {
-	
-	/**
-	 * Notifica un'evento a tutti i listener definiti nel sistema.
-	 * @param event L'evento da notificare.
-	 */
-	public void publishEvent(ApplicationEvent event);
-	
+
+    /**
+     * Notifica un'evento a tutti i listener definiti nel sistema.
+     *
+     * @param event L'evento da notificare.
+     */
+    void publishEvent(ApplicationEvent event);
+
 }

@@ -11,18 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.storage.api;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
 public class BasicFileAttributeViewApiResponseResult extends AbstractApiResponseResult {
-	
-	@Override
-	@XmlElement(name = "basicFileAttributeView", required = false)
-	public JAXBBasicFileAttributeView getResult() {
-		return (JAXBBasicFileAttributeView) this.getMainResult();
-	}
+
+    @Override
+    @XmlElement(name = "basicFileAttributeView", required = false)
+    public JAXBBasicFileAttributeView getResult() {
+        return (JAXBBasicFileAttributeView) this.getMainResult();
+    }
 
 }

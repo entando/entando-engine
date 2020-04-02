@@ -1,11 +1,10 @@
 package org.entando.entando.aps.system.services.page.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PageConfigurationDto {
 
@@ -35,7 +34,6 @@ public class PageConfigurationDto {
         this.buildWidgetsDto(src.getWidgets());
         this.setChanged(src.isChanged());
     }
-
 
     public String getCode() {
         return code;
@@ -131,7 +129,5 @@ public class PageConfigurationDto {
         }
         this.setWidgets(widgetDtoList.toArray(new WidgetConfigurationDto[widgetDtoList.size()]));
     }
-
-
 
 }

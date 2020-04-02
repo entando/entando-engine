@@ -11,16 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -32,6 +24,13 @@ import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInt
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This abstract class must be used when implementing Entity Attributes.
@@ -76,6 +75,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     @Override
+    public void setName(String name) {
+        this._name = name;
+    }
+
+    @Override
     public String getDescription() {
         return _description;
     }
@@ -85,14 +89,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         this._description = description;
     }
 
-    @Override
-    public void setName(String name) {
-        this._name = name;
-    }
-
     /**
-     * The returned type corresponds to the attribute code as found in the
-     * declaration of the attribute type.
+     * The returned type corresponds to the attribute code as found in the declaration of the attribute type.
      */
     @Override
     public String getType() {
@@ -104,11 +102,6 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         this._type = typeName;
     }
 
-    @Override
-    public void setDefaultLangCode(String langCode) {
-        this._defaultLangCode = langCode;
-    }
-
     /**
      * Return the code of the default language.
      *
@@ -116,6 +109,20 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
      */
     public String getDefaultLangCode() {
         return _defaultLangCode;
+    }
+
+    @Override
+    public void setDefaultLangCode(String langCode) {
+        this._defaultLangCode = langCode;
+    }
+
+    /**
+     * Return the code of the language used in the rendering process.
+     *
+     * @return The code of the language used for rendering.
+     */
+    public String getRenderingLang() {
+        return _renderingLangCode;
     }
 
     /**
@@ -126,15 +133,6 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     @Override
     public void setRenderingLang(String langCode) {
         _renderingLangCode = langCode;
-    }
-
-    /**
-     * Return the code of the language used in the rendering process.
-     *
-     * @return The code of the language used for rendering.
-     */
-    public String getRenderingLang() {
-        return _renderingLangCode;
     }
 
     @Override
@@ -150,9 +148,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Test whether the attribute is searchable (using a query on the DB) or
-     * not. The information held by a searchable attribute is replicated in an
-     * appropriate table used for SQL queries.
+     * Test whether the attribute is searchable (using a query on the DB) or not. The information held by a searchable attribute is
+     * replicated in an appropriate table used for SQL queries.
      *
      * @return True if the attribute is a searchable one.
      */
@@ -162,12 +159,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Set up the searchable status of an attribute. When set to 'true' then the
-     * information held by the current attribute is replicated in an appropriate
-     * table used for SQL queries.
+     * Set up the searchable status of an attribute. When set to 'true' then the information held by the current attribute is replicated in
+     * an appropriate table used for SQL queries.
      *
-     * @param searchable True if the attribute is of searchable type, false
-     * otherwise.
+     * @param searchable True if the attribute is of searchable type, false otherwise.
      */
     @Override
     public void setSearchable(boolean searchable) {
@@ -337,14 +332,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     /**
      * Get the attribute matching the given criteria from a XML string.
      *
-     * @param currElement The element where to extract the value of the
-     * attribute from
+     * @param currElement The element where to extract the value of the attribute from
      * @param attributeName Name of the requested attribute.
-     * @param required Select a mandatory condition of the attribute to search
-     * for.
+     * @param required Select a mandatory condition of the attribute to search for.
      * @return The value of the requested attribute.
-     * @throws ApsSystemException when a attribute declared mandatory is not
-     * present in the given XML element.
+     * @throws ApsSystemException when a attribute declared mandatory is not present in the given XML element.
      */
     protected String extractXmlAttribute(Element currElement, String attributeName,
             boolean required) throws ApsSystemException {
@@ -423,13 +415,13 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     @Override
-    public void setDisablingCodes(String[] disablingCodes) {
-        this._disablingCodes = disablingCodes;
+    public String[] getDisablingCodes() {
+        return this._disablingCodes;
     }
 
     @Override
-    public String[] getDisablingCodes() {
-        return this._disablingCodes;
+    public void setDisablingCodes(String[] disablingCodes) {
+        this._disablingCodes = disablingCodes;
     }
 
     @Override
@@ -460,9 +452,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Create and return the Jaxb structure of the attribute. This method return
-     * the object only if the value of the attribute is not null, and it can be
-     * overriten by custom attributes class.
+     * Create and return the Jaxb structure of the attribute. This method return the object only if the value of the attribute is not null,
+     * and it can be overriten by custom attributes class.
      *
      * @param langCode The lang code
      * @return The jaxb structure of the atttribute
@@ -475,8 +466,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Create and return the base Jaxb structure of the attribute. This method
-     * can't be overriten by other attributes class.
+     * Create and return the base Jaxb structure of the attribute. This method can't be overriten by other attributes class.
      *
      * @return The base jaxb structure of the attribute.
      */

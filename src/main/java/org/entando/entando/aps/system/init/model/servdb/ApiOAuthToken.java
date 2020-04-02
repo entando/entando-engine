@@ -11,12 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
 import java.util.Date;
 
 /**
@@ -25,46 +25,35 @@ import java.util.Date;
 @DatabaseTable(tableName = ApiOAuthToken.TABLE_NAME)
 public class ApiOAuthToken {
 
-
+    public static final String TABLE_NAME = "api_oauth_tokens";
     @DatabaseField(columnName = "accesstoken",
             dataType = DataType.STRING,
             width = 100,
             canBeNull = false, id = true)
     private String accessToken;
-
     @DatabaseField(columnName = "clientid",
             dataType = DataType.STRING,
             width = 100,
             canBeNull = false)
     private String clientId;
-
     @DatabaseField(columnName = "expiresin",
             dataType = DataType.DATE,
             width = 100,
             canBeNull = false)
     private Date expiresin;
-
-
     @DatabaseField(columnName = "refreshtoken",
             dataType = DataType.STRING,
             canBeNull = false)
     private String refreshToken;
-
-
     @DatabaseField(columnName = "granttype",
             dataType = DataType.STRING,
             width = 100,
             canBeNull = false)
     private String grantType;
-
-
     @DatabaseField(columnName = "localuser",
             dataType = DataType.STRING,
             width = 100,
             canBeNull = true)
     private String localUser;
-
-
-    public static final String TABLE_NAME = "api_oauth_tokens";
 
 }

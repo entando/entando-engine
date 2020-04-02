@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -30,30 +31,30 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class InitializerManagerTest {
 
-	@Mock
-	private IInitializerManagerCacheWrapper cacheWrapper;
+    @Mock
+    private IInitializerManagerCacheWrapper cacheWrapper;
 
-	@Mock
-	private BeanFactory beanFactory;
+    @Mock
+    private BeanFactory beanFactory;
 
-	@InjectMocks
-	private InitializerManager initializerManager = null;
+    @InjectMocks
+    private InitializerManager initializerManager = null;
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
 
-	@Test
-	public void should_get_currentReport() {
-		when(cacheWrapper.getReport()).thenReturn(createMockReport());
-		SystemInstallationReport report = this.initializerManager.getCurrentReport();
-		assertThat(report, is(not(nullValue())));
-	}
+    @Test
+    public void should_get_currentReport() {
+        when(cacheWrapper.getReport()).thenReturn(createMockReport());
+        SystemInstallationReport report = this.initializerManager.getCurrentReport();
+        assertThat(report, is(not(nullValue())));
+    }
 
-	private SystemInstallationReport createMockReport() {
-		SystemInstallationReport report = new SystemInstallationReport("<report />");
-		return report;
-	}
+    private SystemInstallationReport createMockReport() {
+        SystemInstallationReport report = new SystemInstallationReport("<report />");
+        return report;
+    }
 
 }

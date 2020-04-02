@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -22,31 +22,31 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @author E.Santoboni
  */
 public abstract class AbstractApiResponseResult implements Serializable {
-    
+
+    private Object _mainResult;
+    private String _html;
+
     public abstract Object getResult();
-    
+
     protected Object getMainResult() {
         return this._mainResult;
     }
+
     public void setMainResult(Object mainResult) {
         this._mainResult = mainResult;
     }
-    
+
+    @XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
+    @XmlElement(name = "html", required = true)
+    public String getHtml() {
+        return this._html;
+    }
+
     public void setHtml(String html) {
         if (null == html) {
             html = "";
         }
         this._html = html;
     }
-    
-	@XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
-    @XmlElement(name = "html", required = true)
-    public String getHtml() {
-         return this._html;
-    }
-    
-    private Object _mainResult;
-    
-    private String _html;
-    
+
 }

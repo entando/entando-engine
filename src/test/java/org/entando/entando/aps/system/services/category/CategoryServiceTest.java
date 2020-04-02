@@ -11,7 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.category;
+
+import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -21,8 +24,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.when;
 
 public class CategoryServiceTest {
 

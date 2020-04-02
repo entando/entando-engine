@@ -11,27 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.cache;
 
-import java.util.Map;
-
-import org.entando.entando.aps.system.services.api.model.ApiResource;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.Map;
 import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
 
 public interface IApiResourceCacheWrapper {
 
-	public static final String APICATALOG_RESOURCES_CACHE_NAME = "ApiResourceManager_resources";
+    String APICATALOG_RESOURCES_CACHE_NAME = "ApiResourceManager_resources";
 
-	public static final String APICATALOG_RESOURCE_CACHE_NAME_PREFIX = "ApiResourceManager_resource_";
+    String APICATALOG_RESOURCE_CACHE_NAME_PREFIX = "ApiResourceManager_resource_";
 
-	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException;
+    void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException;
 
-	public ApiResource getMasterResource(String code);
+    ApiResource getMasterResource(String code);
 
-	public Map<String, ApiResource> getMasterResources();
+    Map<String, ApiResource> getMasterResources();
 
-	public void updateResource(ApiResource resource);
+    void updateResource(ApiResource resource);
 
 }

@@ -11,17 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
-
 import org.jdom.CDATA;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -36,6 +35,12 @@ import org.springframework.web.context.ContextLoader;
 public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactoryAware {
 
     private static final Logger _logger = LoggerFactory.getLogger(EnumeratorAttribute.class);
+    private static final String DEFAULT_ITEM_SEPARATOR = ",";
+    private String[] _items;
+    private String _staticItems;
+    private String _extractorBeanName;
+    private String _customSeparator;
+    private transient BeanFactory _beanFactory;
 
     @Override
     public Object getAttributePrototype() {
@@ -197,13 +202,5 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
     public boolean isSearchableOptionSupported() {
         return true;
     }
-
-    private String[] _items;
-    private String _staticItems;
-    private String _extractorBeanName;
-    private String _customSeparator;
-    private final String DEFAULT_ITEM_SEPARATOR = ",";
-
-    private transient BeanFactory _beanFactory;
 
 }

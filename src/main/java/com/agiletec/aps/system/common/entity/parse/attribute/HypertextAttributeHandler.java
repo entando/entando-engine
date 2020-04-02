@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.parse.attribute;
 
 import org.xml.sax.Attributes;
@@ -18,22 +19,23 @@ import org.xml.sax.SAXException;
 
 /**
  * Handler class that interprets the XML defining a 'Hypertext Attribute'
+ *
  * @author E.Santoboni
  */
 public class HypertextAttributeHandler extends TextAttributeHandler {
-	
-	@Override
-	public void startAttribute(Attributes attributes, String qName) throws SAXException {
-		if (qName.equals("hypertext")) {
-			this.startText(attributes, qName);
-		}
-	}
-	
-	@Override
-	public void endAttribute(String qName, StringBuffer textBuffer) {
-		if (qName.equals("hypertext")) {
-			this.endText(textBuffer);
-		}
-	}
-	
+
+    @Override
+    public void startAttribute(Attributes attributes, String qName) throws SAXException {
+        if (qName.equals("hypertext")) {
+            this.startText(attributes, qName);
+        }
+    }
+
+    @Override
+    public void endAttribute(String qName, StringBuffer textBuffer) {
+        if (qName.equals("hypertext")) {
+            this.endText(textBuffer);
+        }
+    }
+
 }

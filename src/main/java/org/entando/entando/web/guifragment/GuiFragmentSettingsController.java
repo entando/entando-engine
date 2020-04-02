@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.guifragment;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -22,7 +23,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.guifragment.model.GuiFragmentSettingsBody;
 import org.slf4j.Logger;
@@ -41,10 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/fragmentsSettings")
 public class GuiFragmentSettingsController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public static final String RESULT_PARAM_NAME = "enableEditingWhenEmptyDefaultGui";
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ConfigInterface configManager;
 
@@ -74,7 +72,8 @@ public class GuiFragmentSettingsController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest,
+            BindingResult bindingResult) throws ApsSystemException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);

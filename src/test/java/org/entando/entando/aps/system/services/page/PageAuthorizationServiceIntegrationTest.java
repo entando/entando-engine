@@ -1,16 +1,17 @@
 /*
  * Copyright 2015-Present Entando Inc. (http://www.entando.com) All rights reserved.
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.page;
 
 import com.agiletec.aps.BaseTestCase;
@@ -22,7 +23,6 @@ import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.junit.Test;
 
 /**
- *
  * @author paddeo
  */
 public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
@@ -39,7 +39,8 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
 
     private void init() throws Exception {
         try {
-            authorizationService = (PageAuthorizationService) this.getApplicationContext().getBean(IAuthorizationService.BEAN_NAME_FOR_PAGE);
+            authorizationService = (PageAuthorizationService) this.getApplicationContext()
+                    .getBean(IAuthorizationService.BEAN_NAME_FOR_PAGE);
             pageService = (IPageService) this.getApplicationContext().getBean(IPageService.BEAN_NAME);
         } catch (Exception e) {
             throw e;

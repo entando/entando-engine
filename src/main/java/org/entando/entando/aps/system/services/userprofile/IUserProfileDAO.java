@@ -11,14 +11,16 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile;
 
 import com.agiletec.aps.system.common.entity.IEntityDAO;
 
 /**
- * Interface for Data Access Object of UserProfile Object. 
+ * Interface for Data Access Object of UserProfile Object.
+ *
  * @author E.Santoboni
  */
 public interface IUserProfileDAO extends IEntityDAO {
-	
+
 }

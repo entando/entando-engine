@@ -1,10 +1,12 @@
 package org.entando.entando.aps.system.services.pagemodel.model;
 
 import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.system.services.pagemodel.*;
+import com.agiletec.aps.system.services.pagemodel.Frame;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.entando.entando.aps.system.services.DtoBuilder;
-
-import java.util.*;
 
 public class PageModelDtoBuilder extends DtoBuilder<PageModel, PageModelDto> {
 
@@ -55,7 +57,7 @@ public class PageModelDtoBuilder extends DtoBuilder<PageModel, PageModelDto> {
         }
         DefaultWidgetDto defaultWidgetDto = new DefaultWidgetDto();
         defaultWidgetDto.setCode(defaultWidget.getType().getCode());
-        defaultWidgetDto.setProperties(defaultWidget.getConfig()); 
+        defaultWidgetDto.setProperties(defaultWidget.getConfig());
         return defaultWidgetDto;
     }
 

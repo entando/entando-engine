@@ -11,32 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.i18n.cache;
 
-import java.util.Map;
+package com.agiletec.aps.system.services.i18n.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Map;
 
 public interface II18nManagerCacheWrapper {
 
-    public static final String I18N_MANAGER_CACHE_NAME = "Entando_I18nManager";
+    String I18N_MANAGER_CACHE_NAME = "Entando_I18nManager";
 
-    public static final String I18N_CACHE_NAME_PREFIX = "I18nManager_labelGroup_";
+    String I18N_CACHE_NAME_PREFIX = "I18nManager_labelGroup_";
 
-    public static final String I18N_CODES_CACHE_NAME = "I18nManager_labelGroups";
+    String I18N_CODES_CACHE_NAME = "I18nManager_labelGroups";
 
-    public void initCache(II18nDAO i18nDAO) throws ApsSystemException;
+    void initCache(II18nDAO i18nDAO) throws ApsSystemException;
 
-    public Map<String, ApsProperties> getLabelGroups();
+    Map<String, ApsProperties> getLabelGroups();
 
-    public ApsProperties getLabelGroup(String key);
+    ApsProperties getLabelGroup(String key);
 
-    public void addLabelGroup(String key, ApsProperties labels);
+    void addLabelGroup(String key, ApsProperties labels);
 
-    public void updateLabelGroup(String key, ApsProperties labels);
+    void updateLabelGroup(String key, ApsProperties labels);
 
-    public void removeLabelGroup(String key);
+    void removeLabelGroup(String key);
 
 }

@@ -11,67 +11,80 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.widgettype;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.util.ApsProperties;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
- * Rappresenta un tipo di oggetto visuale che può essere inserito in una pagina,
- * in uno dei frames specificati dal modello di pagina. A questa
- * rappresentazione corrisponde una jsp che implementa effettivamente l'oggetto
- * visuale.
+ * Rappresenta un tipo di oggetto visuale che può essere inserito in una pagina, in uno dei frames specificati dal modello di pagina. A
+ * questa rappresentazione corrisponde una jsp che implementa effettivamente l'oggetto visuale.
  *
  * @author M.Diana - E.Santoboni
  */
 public class WidgetType implements Serializable {
 
+    public static final String WIDGET_LOCATION = "aps/jsp/widgets/";
     /**
      * Il codice del tipo di widget.
      */
     private String _code;
-
     private ApsProperties _titles;
-
     /**
      * La lista dei parametri previsti per il tipo di widget.
      */
     private List<WidgetTypeParameter> _parameters;
-
     /**
-     * Il nome della action specifica che gestisce questo tipo di widget. null
-     * se non vi è nessun action specifica.
+     * Il nome della action specifica che gestisce questo tipo di widget. null se non vi è nessun action specifica.
      */
     private String _action;
-
     /**
      * The code of the plugin owner of widget type.
      */
     private String _pluginCode;
-
     private String _parentTypeCode;
-
     private WidgetType _parentType;
-
     private ApsProperties _config;
-
     private boolean _locked;
-
     private String _mainGroup;
-
     private String configUi;
-
     private String bundleId;
 
-    public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
+    public static String getJspPath(String code, String pluginCode) {
+        StringBuilder jspPath = new StringBuilder("/WEB-INF/");
+        boolean isWidgetPlugin = (null != pluginCode && pluginCode.trim().length() > 0);
+        if (isWidgetPlugin) {
+            jspPath.append("plugins/").append(pluginCode.trim()).append("/");
+        }
+        jspPath.append(WIDGET_LOCATION).append(code).append(".jsp");
+        return jspPath.toString();
+    }
+
+    public static boolean existsJsp(ServletContext srvCtx, String code, String pluginCode) throws IOException {
+        String jspPath = getJspPath(code, pluginCode);
+        String folderPath = srvCtx.getRealPath("/");
+        boolean existsJsp = (new File(folderPath + jspPath)).exists();
+        if (existsJsp) {
+            return true;
+        }
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources = resolver.getResources("file:**" + jspPath);
+        for (int i = 0; i < resources.length; i++) {
+            Resource resource = resources[i];
+            if (resource.exists()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public WidgetType clone() {
@@ -135,8 +148,8 @@ public class WidgetType implements Serializable {
     }
 
     /**
-     * Imposta la lista dei parametri previsti per il tipo di widget. La lista
-     * deve essere composta da oggetti del tipo WidgetTypeParameter.
+     * Imposta la lista dei parametri previsti per il tipo di widget. La lista deve essere composta da oggetti del tipo
+     * WidgetTypeParameter.
      *
      * @param typeParameters The parameters to set.
      */
@@ -178,11 +191,9 @@ public class WidgetType implements Serializable {
     }
 
     /**
-     * Restituisce il nome della action specifica che gestisce questo tipo di
-     * widget.
+     * Restituisce il nome della action specifica che gestisce questo tipo di widget.
      *
-     * @return Il nome della action specifica, null se non vi è nessun action
-     * specifica.
+     * @return Il nome della action specifica, null se non vi è nessun action specifica.
      */
     public String getAction() {
         return _action;
@@ -198,8 +209,7 @@ public class WidgetType implements Serializable {
     }
 
     /**
-     * Return the code of the plugin owner of widget type. The field is null if
-     * the showlet type belong to Entando Core.
+     * Return the code of the plugin owner of widget type. The field is null if the showlet type belong to Entando Core.
      *
      * @return The plugin code.
      */
@@ -286,34 +296,6 @@ public class WidgetType implements Serializable {
     public String getJspPath() {
         WidgetType widgetType = (this.isLogic()) ? this.getParentType() : this;
         return getJspPath(widgetType.getCode(), widgetType.getPluginCode());
-    }
-
-    public static String getJspPath(String code, String pluginCode) {
-        StringBuilder jspPath = new StringBuilder("/WEB-INF/");
-        boolean isWidgetPlugin = (null != pluginCode && pluginCode.trim().length() > 0);
-        if (isWidgetPlugin) {
-            jspPath.append("plugins/").append(pluginCode.trim()).append("/");
-        }
-        jspPath.append(WIDGET_LOCATION).append(code).append(".jsp");
-        return jspPath.toString();
-    }
-
-    public static boolean existsJsp(ServletContext srvCtx, String code, String pluginCode) throws IOException {
-        String jspPath = getJspPath(code, pluginCode);
-		String folderPath = srvCtx.getRealPath("/");
-		boolean existsJsp = (new File(folderPath + jspPath)).exists();
-		if (existsJsp) {
-			return true;
-		}
-		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		Resource[] resources = resolver.getResources("file:**" + jspPath);
-		for (int i = 0; i < resources.length; i++) {
-			Resource resource = resources[i];
-			if (resource.exists()) {
-				return true;
-			}
-		}
-        return false;
     }
 
     @Override
@@ -405,12 +387,9 @@ public class WidgetType implements Serializable {
             return false;
         }
         if (_titles == null) {
-            if (other._titles != null) {
-                return false;
-            }
-        } else if (!_titles.equals(other._titles)) {
-            return false;
+            return other._titles == null;
+        } else {
+            return _titles.equals(other._titles);
         }
-        return true;
     }
 }

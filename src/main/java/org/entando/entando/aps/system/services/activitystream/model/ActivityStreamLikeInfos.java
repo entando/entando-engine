@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.activitystream.model;
 
 import java.io.Serializable;
@@ -21,16 +22,16 @@ import java.util.Iterator;
  * @author E.Santoboni
  */
 public class ActivityStreamLikeInfos extends ArrayList<ActivityStreamLikeInfo> implements Serializable {
-	
-	public boolean containsUser(String username) {
-		Iterator<ActivityStreamLikeInfo> iter = this.iterator();
-		while (iter.hasNext()) {
-			ActivityStreamLikeInfo asli = iter.next();
-			if (asli.getUsername().equals(username)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
+    public boolean containsUser(String username) {
+        Iterator<ActivityStreamLikeInfo> iter = this.iterator();
+        while (iter.hasNext()) {
+            ActivityStreamLikeInfo asli = iter.next();
+            if (asli.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.servdb;
 
 import com.j256.ormlite.field.DataType;
@@ -22,23 +23,23 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = Role.TABLE_NAME)
 public class Role {
-	
-	public Role() {}
-	
-	@DatabaseField(columnName = "rolename", 
-			dataType = DataType.STRING, 
-			width = 20, 
-			canBeNull = false, id = true)
-	private String _roleName;
-	
-	@DatabaseField(columnName = "descr", 
-			dataType = DataType.STRING, 
-			width = 50, 
-			canBeNull = false)
-	private String _description;
-	
-	public static final String TABLE_NAME = "authroles";
-	
+
+    public static final String TABLE_NAME = "authroles";
+    @DatabaseField(columnName = "rolename",
+            dataType = DataType.STRING,
+            width = 20,
+            canBeNull = false, id = true)
+    private String _roleName;
+
+    @DatabaseField(columnName = "descr",
+            dataType = DataType.STRING,
+            width = 50,
+            canBeNull = false)
+    private String _description;
+
+    public Role() {
+    }
+
 }
 /*
 CREATE TABLE authroles

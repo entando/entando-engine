@@ -11,39 +11,39 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.init.util;
 
-import java.util.List;
+package org.entando.entando.aps.system.init.util;
 
 import com.j256.ormlite.db.OracleDatabaseType;
 import com.j256.ormlite.field.FieldType;
+import java.util.List;
 
 /**
  * @author E.Santoboni
  */
 public class ApsOracleDatabaseType extends OracleDatabaseType {
-	
-	public final static String DATABASE_NAME = "Oracle";
-	
-	@Override
-	protected void configureId(StringBuilder sb, FieldType fieldType, 
-			List<String> statementsBefore, List<String> additionalArgs, List<String> queriesAfter) {
-		//nothing to do
-	}
-	
-	@Override
-	public void appendEscapedEntityName(StringBuilder sb, String name) {
-		sb.append('\"').append(name.toUpperCase()).append('\"');
-	}
-	
-	@Override
-	protected void appendLongStringType(StringBuilder sb, int fieldWidth) {
-		sb.append("CLOB");
-	}
-	
-	@Override
-	protected void appendDateType(StringBuilder sb, int fieldWidth) {
-		sb.append("TIMESTAMP(2)");
-	}
-	
+
+    public static final String DATABASE_NAME = "Oracle";
+
+    @Override
+    protected void configureId(StringBuilder sb, FieldType fieldType,
+            List<String> statementsBefore, List<String> additionalArgs, List<String> queriesAfter) {
+        //nothing to do
+    }
+
+    @Override
+    public void appendEscapedEntityName(StringBuilder sb, String name) {
+        sb.append('\"').append(name.toUpperCase()).append('\"');
+    }
+
+    @Override
+    protected void appendLongStringType(StringBuilder sb, int fieldWidth) {
+        sb.append("CLOB");
+    }
+
+    @Override
+    protected void appendDateType(StringBuilder sb, int fieldWidth) {
+        sb.append("TIMESTAMP(2)");
+    }
+
 }

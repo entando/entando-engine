@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.category;
 
 import java.util.List;
@@ -23,16 +24,16 @@ import org.entando.entando.web.common.model.RestListRequest;
  */
 public interface ICategoryService {
 
-    public List<CategoryDto> getTree(String parentCode);
+    List<CategoryDto> getTree(String parentCode);
 
-    public CategoryDto getCategory(String categoryCode);
+    CategoryDto getCategory(String categoryCode);
 
-    public CategoryDto addCategory(CategoryDto categoryDto);
+    CategoryDto addCategory(CategoryDto categoryDto);
 
-    public CategoryDto updateCategory(CategoryDto categoryDto);
+    CategoryDto updateCategory(CategoryDto categoryDto);
 
-    public void deleteCategory(String categoryCode);
+    void deleteCategory(String categoryCode);
 
-    public PagedMetadata<?> getCategoryReferences(String categoryCode, String managerName, RestListRequest restListRequest);
+    PagedMetadata<?> getCategoryReferences(String categoryCode, String managerName, RestListRequest restListRequest);
 
 }

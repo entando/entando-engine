@@ -11,49 +11,50 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
-
-import java.io.Serializable;
-import java.util.List;
-
-import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.io.Serializable;
+import java.util.List;
+import org.jdom.Element;
 
 /**
  * @author E.Santoboni
  */
 public interface IAttributeValidationRules extends Serializable {
-    
-    public IAttributeValidationRules clone();
-    
-	public boolean isEmpty();
-	
-    public void setConfig(Element attributeElement);
-    
-    public Element getJDOMConfigElement();
-    
-    /**
-     * Set up the required (mandatory) condition for the current attribute.
-     * @param required True if the attribute is mandatory
-     */
-    public void setRequired(boolean required);
-    
+
+    String VALIDATIONS_ELEMENT_NAME = "validations";
+
+    IAttributeValidationRules clone();
+
+    boolean isEmpty();
+
+    void setConfig(Element attributeElement);
+
+    Element getJDOMConfigElement();
+
     /**
      * Test whether this attribute is declared mandatory or not.
+     *
      * @return True if the attribute is mandatory, false otherwise.
      */
-    public boolean isRequired();
-    
-    public OgnlValidationRule getOgnlValidationRule();
+    boolean isRequired();
 
-    public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
-    
-    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager);
-    
-    public static final String VALIDATIONS_ELEMENT_NAME = "validations";
-    
+    /**
+     * Set up the required (mandatory) condition for the current attribute.
+     *
+     * @param required True if the attribute is mandatory
+     */
+    void setRequired(boolean required);
+
+    OgnlValidationRule getOgnlValidationRule();
+
+    void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
+
+    List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager);
+
 }

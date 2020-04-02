@@ -11,22 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.widgettype.api;
-
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-
-import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.entando.entando.aps.system.services.guifragment.GuiFragment;
-import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,18 +21,35 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 /**
  * @author E.Santoboni
  */
 public class TestApiWidgetTypeInterface extends BaseTestCase {
 
+    private IWidgetTypeManager _widgetTypeManager;
+    private IPageManager _pageManager;
+    private IGuiFragmentManager _guiFragmentManager;
+    private ApiWidgetTypeInterface _apiWidgetTypeInterface;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
-    
+
     public void testJaxbWidgetType() throws Throwable {
         this.testJaxbWidgetType("login_form");
         this.testJaxbWidgetType("formAction");
@@ -251,7 +254,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
             assertNull(this._widgetTypeManager.getWidgetType(code));
         }
     }
-    
+
     public void testDeleteJaxbWidgetType_3() throws Throwable {
         String code = "jaxb_test_delete_2";
         String pageCode = "homepage";
@@ -270,7 +273,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
             homepage = this._pageManager.getDraftPage(pageCode);
             assertNotNull(homepage.getWidgets()[frame]);
             assertEquals(code, homepage.getWidgets()[frame].getType().getCode());
-            
+
             this.testInvokeDeleteJaxbNoLogicWidgetType(code, false);
             this.setPageWidgets(pageCode, frame, null);
             homepage = this._pageManager.getDraftPage(pageCode);
@@ -284,7 +287,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
             assertNull(this._widgetTypeManager.getWidgetType(code));
         }
     }
-    
+
     private void setPageWidgets(String pageCode, int frame, Widget widget) throws ApsSystemException {
         IPage page = this._pageManager.getDraftPage(pageCode);
         page.getWidgets()[frame] = widget;
@@ -344,10 +347,5 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
             throw new Exception(t);
         }
     }
-
-    private IWidgetTypeManager _widgetTypeManager;
-    private IPageManager _pageManager;
-    private IGuiFragmentManager _guiFragmentManager;
-    private ApiWidgetTypeInterface _apiWidgetTypeInterface;
 
 }

@@ -11,13 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import java.util.Date;
 import java.util.List;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,59 +28,58 @@ import org.slf4j.LoggerFactory;
  */
 public class IndexLoaderThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(IndexLoaderThread.class);
+    private static final Logger _logger = LoggerFactory.getLogger(IndexLoaderThread.class);
+    private SearchEngineManager _searchEngineManager;
+    private IDataObjectManager _dataObjectManager;
+    private IIndexerDAO _indexerDao;
 
-	public IndexLoaderThread(SearchEngineManager searchEngineManager,
-			IDataObjectManager dataObjectManager, IIndexerDAO indexerDao) {
-		this._dataObjectManager = dataObjectManager;
-		this._searchEngineManager = searchEngineManager;
-		this._indexerDao = indexerDao;
-	}
+    public IndexLoaderThread(SearchEngineManager searchEngineManager,
+            IDataObjectManager dataObjectManager, IIndexerDAO indexerDao) {
+        this._dataObjectManager = dataObjectManager;
+        this._searchEngineManager = searchEngineManager;
+        this._indexerDao = indexerDao;
+    }
 
-	@Override
-	public void run() {
-		LastReloadInfo reloadInfo = new LastReloadInfo();
-		try {
-			this.loadNewIndex();
-			reloadInfo.setResult(LastReloadInfo.ID_SUCCESS_RESULT);
-		} catch (Throwable t) {
-			reloadInfo.setResult(LastReloadInfo.ID_FAILURE_RESULT);
-			_logger.error("error in run", t);
-		} finally {
-			reloadInfo.setDate(new Date());
-			this._searchEngineManager.notifyEndingIndexLoading(reloadInfo, this._indexerDao);
-			this._searchEngineManager.sellOfQueueEvents();
-		}
-	}
+    @Override
+    public void run() {
+        LastReloadInfo reloadInfo = new LastReloadInfo();
+        try {
+            this.loadNewIndex();
+            reloadInfo.setResult(LastReloadInfo.ID_SUCCESS_RESULT);
+        } catch (Throwable t) {
+            reloadInfo.setResult(LastReloadInfo.ID_FAILURE_RESULT);
+            _logger.error("error in run", t);
+        } finally {
+            reloadInfo.setDate(new Date());
+            this._searchEngineManager.notifyEndingIndexLoading(reloadInfo, this._indexerDao);
+            this._searchEngineManager.sellOfQueueEvents();
+        }
+    }
 
-	private void loadNewIndex() throws Throwable {
-		try {
-			List<String> contentsId = this._dataObjectManager.searchId(null);
-			for (int i = 0; i < contentsId.size(); i++) {
-				String id = contentsId.get(i);
-				this.reloadContentIndex(id);
-			}
-			_logger.info("Indicizzazione effettuata");
-		} catch (Throwable t) {
-			_logger.error("error in reloadIndex", t);
-			throw t;
-		}
-	}
+    private void loadNewIndex() throws Throwable {
+        try {
+            List<String> contentsId = this._dataObjectManager.searchId(null);
+            for (int i = 0; i < contentsId.size(); i++) {
+                String id = contentsId.get(i);
+                this.reloadContentIndex(id);
+            }
+            _logger.info("Indicizzazione effettuata");
+        } catch (Throwable t) {
+            _logger.error("error in reloadIndex", t);
+            throw t;
+        }
+    }
 
-	private void reloadContentIndex(String id) {
-		try {
-			DataObject dataObject = this._dataObjectManager.loadDataObject(id, true, false);
-			if (dataObject != null) {
-				this._indexerDao.add(dataObject);
-				_logger.debug("Indexed DataObject {}", dataObject.getId());
-			}
-		} catch (Throwable t) {
-			_logger.error("Error reloading index: DataObject id {}", id, t);
-		}
-	}
-
-	private SearchEngineManager _searchEngineManager;
-	private IDataObjectManager _dataObjectManager;
-	private IIndexerDAO _indexerDao;
+    private void reloadContentIndex(String id) {
+        try {
+            DataObject dataObject = this._dataObjectManager.loadDataObject(id, true, false);
+            if (dataObject != null) {
+                this._indexerDao.add(dataObject);
+                _logger.debug("Indexed DataObject {}", dataObject.getId());
+            }
+        } catch (Throwable t) {
+            _logger.error("Error reloading index: DataObject id {}", id, t);
+        }
+    }
 
 }

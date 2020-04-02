@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api.model;
 
 import java.io.Serializable;
@@ -25,38 +26,38 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {"dataId", "attributeName", "langCode", "value"})
 public class JAXBDataObjectAttribute implements Serializable {
 
-    public JAXBDataObjectAttribute() {
-        super();
-    }
-
     private String _dataId;
     private String _attributeName;
     private String _langCode;
     private String _value;
 
+    public JAXBDataObjectAttribute() {
+        super();
+    }
+
     /*
-	@XmlElement(name = "key", required = true)
-	public String getKey() {
-		return _key;
-	}
+  @XmlElement(name = "key", required = true)
+  public String getKey() {
+    return _key;
+  }
 
-	public void setKey(String key) {
-		this._key = key;
-	}
+  public void setKey(String key) {
+    this._key = key;
+  }
 
-	//modifica per redhat
-	@XmlElement(name = "labels", required = true)
-	//@XmlElementWrapper(name = "labels")
-	public List<JAXBLabel> getLabels() {
-		return _labels;
-	}
+  //modifica per redhat
+  @XmlElement(name = "labels", required = true)
+  //@XmlElementWrapper(name = "labels")
+  public List<JAXBLabel> getLabels() {
+    return _labels;
+  }
 
-	public void setLabels(List<JAXBLabel> labels) {
-		this._labels = labels;
-	}
+  public void setLabels(List<JAXBLabel> labels) {
+    this._labels = labels;
+  }
 
-	private String _key;
-	private List<JAXBLabel> _labels;
+  private String _key;
+  private List<JAXBLabel> _labels;
      */
     @XmlElement(name = "dataId", required = true)
     public String getDataId() {

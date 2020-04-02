@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.user.model;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -34,7 +35,6 @@ import org.entando.entando.aps.system.services.user.IUserService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
- *
  * @author paddeo
  */
 public class UserDto {
@@ -65,13 +65,23 @@ public class UserDto {
                 this.lastLogin = DateConverter.getFormattedDate(entandoUser.getLastAccess(), SystemConstants.API_DATE_FORMAT);
             }
             if (null != entandoUser.getLastPasswordChange()) {
-                this.lastPasswordChange = DateConverter.getFormattedDate(entandoUser.getLastPasswordChange(), SystemConstants.API_DATE_FORMAT);
+                this.lastPasswordChange = DateConverter
+                        .getFormattedDate(entandoUser.getLastPasswordChange(), SystemConstants.API_DATE_FORMAT);
             }
             this.maxMonthsSinceLastAccess = entandoUser.getMaxMonthsSinceLastAccess();
             this.maxMonthsSinceLastPasswordChange = entandoUser.getMaxMonthsSinceLastPasswordChange();
         }
         if (user.getProfile() != null) {
             this.profileAttributes = convertUserProfileAttributes((IUserProfile) user.getProfile());
+        }
+    }
+
+    public static String getEntityFieldName(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "username":
+                return "username";
+            default:
+                return dtoFieldName;
         }
     }
 
@@ -161,15 +171,6 @@ public class UserDto {
 
     public void setProfileType(String profileType) {
         this.profileType = profileType;
-    }
-
-    public static String getEntityFieldName(String dtoFieldName) {
-        switch (dtoFieldName) {
-            case "username":
-                return "username";
-            default:
-                return dtoFieldName;
-        }
     }
 
     private Map<String, Object> convertUserProfileAttributes(IUserProfile profile) {

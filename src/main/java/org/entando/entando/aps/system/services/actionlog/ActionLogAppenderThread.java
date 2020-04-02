@@ -11,38 +11,36 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.actionlog;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-
 /**
  * @author E.Santoboni
  */
 public class ActionLogAppenderThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ActionLogAppenderThread.class);
-	
-	public ActionLogAppenderThread(ActionLogRecord actionRecordToAdd, 
-			ActionLogManager actionLogManager) {
-		this._actionLogManager = actionLogManager;
-		this._actionRecordToAdd = actionRecordToAdd;
-	}
-	
-	@Override
-	public void run() {
-		try {
-			this._actionLogManager.addActionRecordByThread(this._actionRecordToAdd);
-		} catch (Throwable t) {
-			_logger.error("error in run", t);
-			//ApsSystemUtils.logThrowable(t, this, "run");
-		}
-	}
-	
-	private ActionLogRecord _actionRecordToAdd;
-	private ActionLogManager _actionLogManager;
-	
+    private static final Logger _logger = LoggerFactory.getLogger(ActionLogAppenderThread.class);
+    private ActionLogRecord _actionRecordToAdd;
+    private ActionLogManager _actionLogManager;
+
+    public ActionLogAppenderThread(ActionLogRecord actionRecordToAdd,
+            ActionLogManager actionLogManager) {
+        this._actionLogManager = actionLogManager;
+        this._actionRecordToAdd = actionRecordToAdd;
+    }
+
+    @Override
+    public void run() {
+        try {
+            this._actionLogManager.addActionRecordByThread(this._actionRecordToAdd);
+        } catch (Throwable t) {
+            _logger.error("error in run", t);
+            //ApsSystemUtils.logThrowable(t, this, "run");
+        }
+    }
+
 }

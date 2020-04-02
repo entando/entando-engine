@@ -11,33 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.role.cache;
 
-import java.util.List;
+package com.agiletec.aps.system.services.role.cache;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.IPermissionDAO;
 import com.agiletec.aps.system.services.role.Permission;
+import java.util.List;
 
 /**
  * @author E.Santoboni
  */
 public interface IPermissionCacheWrapper {
 
-	public static final String PERMISSION_CACHE_NAME_PREFIX = "RoleManager_permission_";
-	public static final String PERMISSION_CODES_CACHE_NAME = "RoleManager_permissions";
+    String PERMISSION_CACHE_NAME_PREFIX = "RoleManager_permission_";
+    String PERMISSION_CODES_CACHE_NAME = "RoleManager_permissions";
 
-	public void initCache(IPermissionDAO permissionDAO) throws ApsSystemException;
+    void initCache(IPermissionDAO permissionDAO) throws ApsSystemException;
 
-	public List<Permission> getPermissions();
+    List<Permission> getPermissions();
 
-	public Permission getPermission(String code);
+    Permission getPermission(String code);
 
-	public void addPermission(Permission permission);
+    void addPermission(Permission permission);
 
-	public void updatePermission(Permission permission);
+    void updatePermission(Permission permission);
 
-	public void removePermission(String permissionName);
+    void removePermission(String permissionName);
 
     List<String> getPermissionsCodes();
 

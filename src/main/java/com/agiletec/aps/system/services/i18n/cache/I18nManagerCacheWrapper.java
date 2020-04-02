@@ -11,18 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.i18n.cache;
-
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
 
 public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProperties> implements II18nManagerCacheWrapper {
 
@@ -55,7 +54,7 @@ public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProp
     public ApsProperties getLabelGroup(String key) {
         return super.get(this.getCacheKeyPrefix() + key, ApsProperties.class);
     }
-    
+
     @Override
     public void addLabelGroup(String key, ApsProperties labels) {
         this.manage(key, labels, Action.ADD);

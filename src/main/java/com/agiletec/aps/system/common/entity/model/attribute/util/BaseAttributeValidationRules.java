@@ -11,29 +11,30 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.ArrayList;
+import java.util.List;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class BaseAttributeValidationRules implements IAttributeValidationRules {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(BaseAttributeValidationRules.class);
-	
-    @Override 
+    private static final Logger _logger = LoggerFactory.getLogger(BaseAttributeValidationRules.class);
+    private boolean _required;
+    private OgnlValidationRule _ognlValidationRule;
+
+    @Override
     public IAttributeValidationRules clone() {
         BaseAttributeValidationRules clone = null;
         try {
@@ -49,8 +50,8 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
         return clone;
     }
-    
-    @Override 
+
+    @Override
     public Element getJDOMConfigElement() {
         Element configElement = null;
         try {
@@ -79,15 +80,15 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
             }
         }
     }
-    
-    @Override 
+
+    @Override
     public void setConfig(Element attributeElement) {
         Element validationElement = attributeElement.getChild(VALIDATIONS_ELEMENT_NAME);
         if (null != validationElement) {
             this.extractValidationRules(validationElement);
         }
     }
-    
+
     protected void extractValidationRules(Element validationElement) {
         String required = this.extractValue(validationElement, "required");
         this.setRequired(null != required && required.equalsIgnoreCase("true"));
@@ -105,18 +106,18 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
         return null;
     }
-	
-	@Override
+
+    @Override
     public boolean isEmpty() {
         return (!this.isRequired() && null == this.getOgnlValidationRule());
     }
-	
-	@Override 
+
+    @Override
     public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = new ArrayList<>();
         if (this.isEmpty()) {
-			return errors;
-		}
+            return errors;
+        }
         try {
             if (this.isRequired() && attribute.getStatus().equals(AttributeInterface.Status.EMPTY)) {
                 AttributeTracer tracerClone = tracer.clone();
@@ -136,26 +137,25 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
         return errors;
     }
-    
-    @Override 
+
+    @Override
     public boolean isRequired() {
         return this._required;
     }
-    @Override 
+
+    @Override
     public void setRequired(boolean required) {
         this._required = required;
     }
-    
-    @Override 
+
+    @Override
     public OgnlValidationRule getOgnlValidationRule() {
         return _ognlValidationRule;
     }
-    @Override 
+
+    @Override
     public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule) {
         this._ognlValidationRule = ognlValidationRule;
     }
-    
-    private boolean _required;
-    private OgnlValidationRule _ognlValidationRule;
-    
+
 }

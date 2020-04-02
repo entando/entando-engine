@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel.api;
 
 import javax.xml.bind.annotation.XmlElement;
-
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 
@@ -23,10 +23,10 @@ import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
  */
 public class DataObjectModelResponseResult extends AbstractApiResponseResult {
 
-	@Override
-	@XmlElement(name = "dataObjectModel", required = false)
-	public DataObjectModel getResult() {
-		return (DataObjectModel) this.getMainResult();
-	}
+    @Override
+    @XmlElement(name = "dataObjectModel", required = false)
+    public DataObjectModel getResult() {
+        return (DataObjectModel) this.getMainResult();
+    }
 
 }

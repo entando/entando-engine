@@ -11,60 +11,65 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmapper;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper;
-import org.junit.*;
-import org.mockito.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /**
  * @author E.Santoboni
  */
 public class DataObjectMapperManagerTest {
-	
+
     @Mock
     private IPageManager pageManager;
-	
-	@Mock
+
+    @Mock
     private DataObjectMapperCacheWrapper cacheWrapper;
-	
-	@InjectMocks
+
+    @InjectMocks
     private DataObjectPageMapperManager pageMapperManager;
-	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
     public void testInit() throws Throwable {
         pageMapperManager.init();
-		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
+        Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
-	
-	@Test
+
+    @Test
     public void testReload() throws Throwable {
         pageMapperManager.reloadDataObjectPageMapper();
-		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
+        Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
-	
-	@Test
+
+    @Test
     public void testGetPage() {
-		Mockito.when(cacheWrapper.getPageCode(Mockito.anyString())).thenReturn("pageCode");
+        Mockito.when(cacheWrapper.getPageCode(Mockito.anyString())).thenReturn("pageCode");
         String pageCode = this.pageMapperManager.getPageCode("dataId");
-		assertNotNull(pageCode);
-		assertEquals("pageCode", pageCode);
+        assertNotNull(pageCode);
+        assertEquals("pageCode", pageCode);
     }
-	
-	@Test
+
+    @Test
     public void testUpdate() throws Throwable {
         pageMapperManager.updateFromPageChanged(Mockito.any(PageChangedEvent.class));
-		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
+        Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
-	
+
 }

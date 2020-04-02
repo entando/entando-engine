@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
@@ -24,30 +24,30 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 @XmlRootElement(name = "contentType")
 public class JAXBDataObjectType extends JAXBEntityType {
 
-	public JAXBDataObjectType() {
-	}
+    private Integer _defaultModelId;
+    private Integer _listModelId;
 
-	public JAXBDataObjectType(DataObject dataObject) {
-		super(dataObject);
-	}
+    public JAXBDataObjectType() {
+    }
 
-	public Integer getDefaultModelId() {
-		return _defaultModelId;
-	}
+    public JAXBDataObjectType(DataObject dataObject) {
+        super(dataObject);
+    }
 
-	public void setDefaultModelId(Integer defaultModelId) {
-		this._defaultModelId = defaultModelId;
-	}
+    public Integer getDefaultModelId() {
+        return _defaultModelId;
+    }
 
-	public Integer getListModelId() {
-		return _listModelId;
-	}
+    public void setDefaultModelId(Integer defaultModelId) {
+        this._defaultModelId = defaultModelId;
+    }
 
-	public void setListModelId(Integer listModelId) {
-		this._listModelId = listModelId;
-	}
+    public Integer getListModelId() {
+        return _listModelId;
+    }
 
-	private Integer _defaultModelId;
-	private Integer _listModelId;
+    public void setListModelId(Integer listModelId) {
+        this._listModelId = listModelId;
+    }
 
 }

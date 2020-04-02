@@ -11,24 +11,25 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.DataTypeUtilizer;
+import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 public interface IDataTypeHelper {
 
-	public static String BEAN_NAME = "DataTypeHelper";
+    String BEAN_NAME = "DataTypeHelper";
 
-	public Map<String, List<?>> getReferencingObjects(DataObject dataType) throws ApsSystemException;
+    Map<String, List<?>> getReferencingObjects(DataObject dataType) throws ApsSystemException;
 
-	public Map<String, List<?>> getReferencingObjects(DataObject dataType, Collection<DataTypeUtilizer> dataTypeUtilizers) throws ApsSystemException;
+    Map<String, List<?>> getReferencingObjects(DataObject dataType, Collection<DataTypeUtilizer> dataTypeUtilizers)
+            throws ApsSystemException;
 
-	public List<DataTypeUtilizer> getDataTypeUtilizers();
+    List<DataTypeUtilizer> getDataTypeUtilizers();
 
 }

@@ -51,5 +51,4 @@ public class FrameDto {
         this.sketch = sketch;
     }
 
-
 }

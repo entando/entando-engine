@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.api.model;
 
 import com.agiletec.aps.system.common.entity.model.JAXBEntity;
@@ -21,17 +22,14 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttrib
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBNumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-
 import org.entando.entando.aps.system.common.entity.model.attribute.JAXBEnumeratorMapAttribute;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
@@ -40,60 +38,61 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
  */
 @XmlRootElement(name = "dataObject")
 @XmlType(propOrder = {"created", "lastModified", "version", "lastEditor"})
-@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class, JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
+@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class,
+        JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
 public class JAXBDataObject extends JAXBEntity implements Serializable {
 
-	public JAXBDataObject() {
-		super();
-	}
+    private Date _created;
+    private Date _lastModified;
+    private String _version;
+    private String _lastEditor;
 
-	public JAXBDataObject(DataObject mainObject, String langCode) {
-		super(mainObject, langCode);
-		this.setCreated(mainObject.getCreated());
-		this.setLastModified(mainObject.getLastModified());
-		this.setVersion(mainObject.getVersion());
-		this.setLastEditor(mainObject.getLastEditor());
-	}
+    public JAXBDataObject() {
+        super();
+    }
 
-	@XmlElement(name = "created", required = true)
-	public Date getCreated() {
-		return _created;
-	}
+    public JAXBDataObject(DataObject mainObject, String langCode) {
+        super(mainObject, langCode);
+        this.setCreated(mainObject.getCreated());
+        this.setLastModified(mainObject.getLastModified());
+        this.setVersion(mainObject.getVersion());
+        this.setLastEditor(mainObject.getLastEditor());
+    }
 
-	public void setCreated(Date created) {
-		this._created = created;
-	}
+    @XmlElement(name = "created", required = true)
+    public Date getCreated() {
+        return _created;
+    }
 
-	@XmlElement(name = "lastModified", required = true)
-	public Date getLastModified() {
-		return _lastModified;
-	}
+    public void setCreated(Date created) {
+        this._created = created;
+    }
 
-	public void setLastModified(Date lastModified) {
-		this._lastModified = lastModified;
-	}
+    @XmlElement(name = "lastModified", required = true)
+    public Date getLastModified() {
+        return _lastModified;
+    }
 
-	@XmlElement(name = "version", required = true)
-	public String getVersion() {
-		return _version;
-	}
+    public void setLastModified(Date lastModified) {
+        this._lastModified = lastModified;
+    }
 
-	public void setVersion(String version) {
-		this._version = version;
-	}
+    @XmlElement(name = "version", required = true)
+    public String getVersion() {
+        return _version;
+    }
 
-	@XmlElement(name = "lastEditor", required = true)
-	public String getLastEditor() {
-		return _lastEditor;
-	}
+    public void setVersion(String version) {
+        this._version = version;
+    }
 
-	public void setLastEditor(String lastEditor) {
-		this._lastEditor = lastEditor;
-	}
+    @XmlElement(name = "lastEditor", required = true)
+    public String getLastEditor() {
+        return _lastEditor;
+    }
 
-	private Date _created;
-	private Date _lastModified;
-	private String _version;
-	private String _lastEditor;
+    public void setLastEditor(String lastEditor) {
+        this._lastEditor = lastEditor;
+    }
 
 }

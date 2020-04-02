@@ -11,9 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
 public class PageRecord {
+
+    private String code;
+    private String parentCode;
+    private int position;
+    @Deprecated
+    private String group;
+    private PageMetadata metadataDraft;
+    private PageMetadata metadataOnline;
+    private Widget[] widgetsOnline;
+    private Widget[] widgetsDraft;
 
     public IPage createDraftPage() {
         Page page = this.createPage();
@@ -157,16 +168,4 @@ public class PageRecord {
     public void setWidgetsDraft(Widget[] widgetsDraft) {
         this.widgetsDraft = widgetsDraft;
     }
-
-    private String code;
-    private String parentCode;
-    private int position;
-    @Deprecated
-    private String group;
-
-    private PageMetadata metadataDraft;
-    private PageMetadata metadataOnline;
-
-    private Widget[] widgetsOnline;
-    private Widget[] widgetsDraft;
 }

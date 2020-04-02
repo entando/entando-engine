@@ -11,24 +11,31 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.page;
 
-import java.io.IOException;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.List;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import org.entando.entando.aps.system.services.page.PageAuthorizationService;
 import org.entando.entando.aps.system.services.page.PageService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
@@ -46,36 +53,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 /**
- *
  * @author paddeo
  */
 public class PageControllerTest extends AbstractControllerTest {
 
+    private static Validator validator;
     @Mock
     IPageManager pageManager;
-
     @Mock
     private PageService pageService;
-
     @Mock
     private PageAuthorizationService authorizationService;
-
     @InjectMocks
     private PageController controller;
-
-    private static Validator validator;
 
     @Before
     public void setUp() throws Exception {
@@ -168,14 +159,14 @@ public class PageControllerTest extends AbstractControllerTest {
                 + "            \"position\": 7\n"
                 + "        }\n"
                 + "    ]";
-        List<PageDto> mockResult = (List<PageDto>) this.createMetadataList(mockJsonResult);
+        List<PageDto> mockResult = this.createMetadataList(mockJsonResult);
         when(pageService.getPages(any(String.class))).thenReturn(mockResult);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
-                get("/pages").
-                param("parentCode", "service")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken)
+                get("/pages")
+                        .param("parentCode", "service")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken)
         );
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
@@ -213,10 +204,10 @@ public class PageControllerTest extends AbstractControllerTest {
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
-                .sessionAttr("user", user)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mockJsonResult)
-                .header("Authorization", "Bearer " + accessToken)
+                        .sessionAttr("user", user)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mockJsonResult)
+                        .header("Authorization", "Bearer " + accessToken)
         );
 
         String response = result.andReturn().getResponse().getContentAsString();
@@ -235,8 +226,8 @@ public class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/pages/{parentCode}", "mock_page")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken)
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken)
         );
 
         String response = result.andReturn().getResponse().getContentAsString();
@@ -244,7 +235,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePostConflict() throws ApsSystemException, Exception {
+    public void shouldValidatePostConflict() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -257,10 +248,10 @@ public class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 post("/pages")
-                .sessionAttr("user", user)
-                .content(convertObjectToJsonBytes(page))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .content(convertObjectToJsonBytes(page))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isConflict());
         String response = result.andReturn().getResponse().getContentAsString();
@@ -269,15 +260,15 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeleteOnlinePage() throws ApsSystemException, Exception {
+    public void shouldValidateDeleteOnlinePage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getOnlinePage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "online_page")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
         String response = result.andReturn().getResponse().getContentAsString();
@@ -286,7 +277,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeletePageWithChildren() throws ApsSystemException, Exception {
+    public void shouldValidateDeletePageWithChildren() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -297,8 +288,8 @@ public class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(page);
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "page_with_children")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
         String response = result.andReturn().getResponse().getContentAsString();
@@ -307,7 +298,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidRequest() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageInvalidRequest() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -318,19 +309,19 @@ public class PageControllerTest extends AbstractControllerTest {
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
-                .content(convertObjectToJsonBytes(request))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .content(convertObjectToJsonBytes(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(jsonPath("$.errors", hasSize(1)));
         result.andExpect(jsonPath("$.errors[0].code", is("NotBlank")));
     }
-    
+
     @Test
-    public void shouldValidateMovePageNameMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageNameMismatch() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -338,10 +329,10 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setCode("WRONG");
         request.setParentCode("new_parent_page");
         request.setPosition(1);
-        
+
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
-        
+
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
                         .sessionAttr("user", user)
@@ -355,7 +346,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidPosition() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageInvalidPosition() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -363,10 +354,10 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setCode("page_to_move");
         request.setParentCode("new_parent_page");
         request.setPosition(0);
-        
+
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
-        
+
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
                         .sessionAttr("user", user)
@@ -380,7 +371,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageMissingParent() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageMissingParent() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -404,7 +395,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageGroupMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageGroupMismatch() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -427,17 +418,17 @@ public class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
-                .content(convertObjectToJsonBytes(request))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .content(convertObjectToJsonBytes(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(jsonPath("$.errors", hasSize(1)));
         result.andExpect(jsonPath("$.errors[0].code", is(PageValidator.ERRCODE_GROUP_MISMATCH)));
     }
-    
+
     @Test
     public void shouldValidateMoveFreePageUnderReservedPage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -474,7 +465,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageStatusMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageStatusMismatch() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -497,10 +488,10 @@ public class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
-                .content(convertObjectToJsonBytes(request))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
+                        .sessionAttr("user", user)
+                        .content(convertObjectToJsonBytes(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
         String response = result.andReturn().getResponse().getContentAsString();
@@ -508,7 +499,7 @@ public class PageControllerTest extends AbstractControllerTest {
         result.andExpect(jsonPath("$.errors[0].code", is(PageValidator.ERRCODE_STATUS_PAGE_MISMATCH)));
     }
 
-    private List<PageDto> createMetadataList(String json) throws IOException, JsonParseException, JsonMappingException {
+    private List<PageDto> createMetadataList(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<PageDto> result = mapper.readValue(json, new TypeReference<List<PageDto>>() {
         });

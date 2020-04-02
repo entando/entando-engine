@@ -11,44 +11,44 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.parse;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 /**
  * Dom class parser of Attribute disabling codes definitions.
+ *
  * @author E.Santoboni
  */
 public class AttributeDisablingCodesDOM extends AbstractAttributeSupportObjectDOM {
-	
-	public Map<String, String> extractDisablingCodes(String xml, String definitionPath) throws ApsSystemException {
-		this.validate(xml, definitionPath);
-		Document document = this.decodeDOM(xml);
-		return this.extractDisablingCodes(document);
-	}
-	
-	@Override
-	protected String getSchemaFileName() {
-		return "attributeDisablingCodes-4.0.xsd";
-	}
-	
-	private Map<String, String> extractDisablingCodes(Document document) {
-		Map<String, String> roles = new HashMap<>();
-		List<Element> roleElements = document.getRootElement().getChildren("disablingcode");
-		for (int i=0; i<roleElements.size(); i++) {
-			Element roleElement = roleElements.get(i);
-			String name = roleElement.getChildText("name");
-			String description = roleElement.getChildText("description");
-			roles.put(name, description);
-		}
-		return roles;
-	}
-	
+
+    public Map<String, String> extractDisablingCodes(String xml, String definitionPath) throws ApsSystemException {
+        this.validate(xml, definitionPath);
+        Document document = this.decodeDOM(xml);
+        return this.extractDisablingCodes(document);
+    }
+
+    @Override
+    protected String getSchemaFileName() {
+        return "attributeDisablingCodes-4.0.xsd";
+    }
+
+    private Map<String, String> extractDisablingCodes(Document document) {
+        Map<String, String> roles = new HashMap<>();
+        List<Element> roleElements = document.getRootElement().getChildren("disablingcode");
+        for (int i = 0; i < roleElements.size(); i++) {
+            Element roleElement = roleElements.get(i);
+            String name = roleElement.getChildText("name");
+            String description = roleElement.getChildText("description");
+            roles.put(name, description);
+        }
+        return roles;
+    }
+
 }

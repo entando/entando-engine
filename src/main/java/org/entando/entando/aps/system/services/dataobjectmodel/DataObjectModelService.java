@@ -11,11 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.dataobjectmodel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+package org.entando.entando.aps.system.services.dataobjectmodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -23,6 +20,9 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -47,8 +47,8 @@ public class DataObjectModelService implements IDataObjectModelService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//    @Autowired
-//    JsonPatchPatchConverter jsonPatchPatchConverter;
+    //    @Autowired
+    //    JsonPatchPatchConverter jsonPatchPatchConverter;
 
     @Autowired
     private IDataObjectModelManager dataObjectModelManager;
@@ -61,12 +61,11 @@ public class DataObjectModelService implements IDataObjectModelService {
 
     @Autowired
     private IDtoBuilder<DataObjectModel, DataModelDto> dtoBuilder;
+    private JsonPatchService<DataModelDto> jsonPatchService = new JsonPatchService<>(DataModelDto.class);
 
     protected IDataObjectModelManager getDataObjectModelManager() {
         return dataObjectModelManager;
     }
-
-    private JsonPatchService<DataModelDto> jsonPatchService = new JsonPatchService<>(DataModelDto.class);
 
     public void setDataObjectModelManager(IDataObjectModelManager dataObjectModelManager) {
         this.dataObjectModelManager = dataObjectModelManager;
@@ -209,7 +208,8 @@ public class DataObjectModelService implements IDataObjectModelService {
         }
         Map<String, List<IPage>> pages = this.getDataObjectModelManager().getReferencingPages(model.getId());
         if (!bindingResult.hasErrors() && !pages.isEmpty()) {
-            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES, new Object[]{String.valueOf(model.getId())}, "guifragment.cannot.delete.references");
+            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES, new Object[]{String.valueOf(model.getId())},
+                    "guifragment.cannot.delete.references");
         }
         return bindingResult;
     }
@@ -226,6 +226,5 @@ public class DataObjectModelService implements IDataObjectModelService {
         }
         return this.getDictionaryProvider().buildDictionary(prototype);
     }
-
 
 }

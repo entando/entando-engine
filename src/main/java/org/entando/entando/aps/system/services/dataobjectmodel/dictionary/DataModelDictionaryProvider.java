@@ -1,9 +1,8 @@
 package org.entando.entando.aps.system.services.dataobjectmodel.dictionary;
 
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import java.util.List;
 import java.util.Properties;
-
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +60,8 @@ public class DataModelDictionaryProvider {
     }
 
     public IEntityModelDictionary buildDictionary(IApsEntity prototype) {
-        IEntityModelDictionary dictionary = new DataModelDictionary(dataMap, i18nMap, infoMap, commonMap, allowedPublicAttributeMethods, prototype);
+        IEntityModelDictionary dictionary = new DataModelDictionary(dataMap, i18nMap, infoMap, commonMap, allowedPublicAttributeMethods,
+                prototype);
         return dictionary;
     }
 

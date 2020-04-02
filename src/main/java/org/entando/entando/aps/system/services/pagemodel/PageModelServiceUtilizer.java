@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PageModelServiceUtilizer<T> {
 
-    public String getManagerName();
+    String getManagerName();
 
-    public List<T> getPageModelUtilizer(String pageModelCode);
+    List<T> getPageModelUtilizer(String pageModelCode);
 }

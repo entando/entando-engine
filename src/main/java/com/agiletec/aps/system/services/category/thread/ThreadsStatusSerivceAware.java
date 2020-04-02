@@ -11,12 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category.thread;
 
 public interface ThreadsStatusSerivceAware {
 
-	public void onStartReferencesReload();
-	
-	public void onEndReferencesReload();
+    void onStartReferencesReload();
+
+    void onEndReferencesReload();
 
 }

@@ -11,12 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.label;
 
-import java.util.HashMap;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
 import org.entando.entando.aps.system.services.label.LabelService;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -28,9 +31,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class LabelControllerUnitTest extends AbstractControllerTest {
 
@@ -63,7 +63,7 @@ public class LabelControllerUnitTest extends AbstractControllerTest {
         String payload = mapper.writeValueAsString(labelRequest);
 
         ResultActions result = mockMvc
-                .perform(put("/labels/{labelCode}", new Object[]{"PAGE"})
+                .perform(put("/labels/{labelCode}", "PAGE")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -82,7 +82,7 @@ public class LabelControllerUnitTest extends AbstractControllerTest {
         String payload = mapper.writeValueAsString(labelRequest);
 
         ResultActions result = mockMvc
-                .perform(put("/labels/{labelCode}", new Object[]{"PAGE"})
+                .perform(put("/labels/{labelCode}", "PAGE")
                         .content(payload)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));

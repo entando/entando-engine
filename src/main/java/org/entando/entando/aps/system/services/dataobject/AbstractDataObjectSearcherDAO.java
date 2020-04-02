@@ -11,24 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.util.DateConverter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract Data access object used to search dataObjects.
@@ -38,6 +37,7 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecord
 public abstract class AbstractDataObjectSearcherDAO extends AbstractEntitySearcherDAO {
 
     private static final Logger _logger = LoggerFactory.getLogger(AbstractDataObjectSearcherDAO.class);
+    protected static final String DATE_FORMAT = "yyyyMMddHHmmss";
 
     @Override
     protected String getTableFieldName(String metadataFieldKey) {
@@ -230,7 +230,5 @@ public abstract class AbstractDataObjectSearcherDAO extends AbstractEntitySearch
     }
 
     protected abstract String getContentRelationsTableName();
-
-    protected final String DATE_FORMAT = "yyyyMMddHHmmss";
 
 }

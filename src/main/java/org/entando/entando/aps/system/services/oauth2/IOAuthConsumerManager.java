@@ -11,42 +11,42 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-
 import java.util.List;
+import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 
 /**
  * @author E.Santoboni
  */
 public interface IOAuthConsumerManager extends ClientDetailsService {
-    
-    public static final String[] GRANT_TYPES = { "authorization_code", 
-        "client_credentials", "implicit", "password", "refresh_token"};
 
-    public static final String CONSUMER_KEY_FILTER_KEY = "consumerkey";
-    public static final String CONSUMER_SECRET_FILTER_KEY = "consumersecret";
-    public static final String NAME_FILTER_NAME = "name";
-    public static final String CONSUMER_DESCRIPTION_FILTER_KEY = "description";
-    public static final String CONSUMER_CALLBACKURL_FILTER_KEY = "callbackurl";
-    public static final String CONSUMER_EXPIRATIONDATE_FILTER_KEY = "expirationdate";
-    public static final String CONSUMER_ISSUEDDATE_FILTER_KEY = "issueddate";
-    public static final String SCOPE_FILTER_KEY = "scope";
-    public static final String AUTHORIZED_GRANT_TYPE_FILTER_KEY = "authorizedgranttypes";
+    String[] GRANT_TYPES = {"authorization_code",
+            "client_credentials", "implicit", "password", "refresh_token"};
 
-    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException;
+    String CONSUMER_KEY_FILTER_KEY = "consumerkey";
+    String CONSUMER_SECRET_FILTER_KEY = "consumersecret";
+    String NAME_FILTER_NAME = "name";
+    String CONSUMER_DESCRIPTION_FILTER_KEY = "description";
+    String CONSUMER_CALLBACKURL_FILTER_KEY = "callbackurl";
+    String CONSUMER_EXPIRATIONDATE_FILTER_KEY = "expirationdate";
+    String CONSUMER_ISSUEDDATE_FILTER_KEY = "issueddate";
+    String SCOPE_FILTER_KEY = "scope";
+    String AUTHORIZED_GRANT_TYPE_FILTER_KEY = "authorizedgranttypes";
 
-    public ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException;
 
-    public ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
 
-    public void deleteConsumer(String consumerKey) throws ApsSystemException;
+    ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
 
-    public List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws ApsSystemException;
+    void deleteConsumer(String consumerKey) throws ApsSystemException;
 
-    public List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws ApsSystemException;
+    List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws ApsSystemException;
+
+    List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws ApsSystemException;
 }

@@ -11,14 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.userprofile.api;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.group.IGroupManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.ws.rs.core.Response;
-
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -30,21 +37,14 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.FieldError;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.IGroupManager;
-
 /**
  * @author E.Santoboni
  */
 public class ApiUserProfileInterface {
 
     private static final Logger _logger = LoggerFactory.getLogger(ApiUserProfileInterface.class);
+    private IUserProfileManager _userProfileManager;
+    private IGroupManager _groupManager;
 
     public List<String> getUserProfiles(Properties properties) throws Throwable {
         List<String> usernames = null;
@@ -70,7 +70,7 @@ public class ApiUserProfileInterface {
         return usernames;
     }
 
-    public JAXBUserProfile getUserProfile(Properties properties) throws ApiException, Throwable {
+    public JAXBUserProfile getUserProfile(Properties properties) throws Throwable {
         JAXBUserProfile jaxbUserProfile = null;
         try {
             String username = properties.getProperty("username");
@@ -179,7 +179,7 @@ public class ApiUserProfileInterface {
         return errors;
     }
 
-    public void deleteUserProfile(Properties properties) throws ApiException, Throwable {
+    public void deleteUserProfile(Properties properties) throws Throwable {
         StringApiResponse response = new StringApiResponse();
         try {
             String username = properties.getProperty("username");
@@ -215,8 +215,5 @@ public class ApiUserProfileInterface {
     public void setGroupManager(IGroupManager groupManager) {
         this._groupManager = groupManager;
     }
-
-    private IUserProfileManager _userProfileManager;
-    private IGroupManager _groupManager;
 
 }

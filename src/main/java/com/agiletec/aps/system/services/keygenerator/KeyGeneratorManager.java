@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.keygenerator;
 
 import com.agiletec.aps.system.common.AbstractService;
@@ -26,44 +27,43 @@ import org.slf4j.LoggerFactory;
  */
 public class KeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private IKeyGeneratorDAO keyGeneratorDao;
+    private IKeyGeneratorDAO keyGeneratorDao;
 
-	private IKeyGeneratorManagerCacheWrapper cacheWrapper;
+    private IKeyGeneratorManagerCacheWrapper cacheWrapper;
 
-	@Override
-	public void init() throws Exception {
-		this.getCacheWrapper().initCache(this.getKeyGeneratorDAO());
-		logger.debug("{} ready. : last loaded key {}", this.getClass().getName(), this.getCacheWrapper().getUniqueKeyCurrentValue());
-	}
+    @Override
+    public void init() throws Exception {
+        this.getCacheWrapper().initCache(this.getKeyGeneratorDAO());
+        logger.debug("{} ready. : last loaded key {}", this.getClass().getName(), this.getCacheWrapper().getUniqueKeyCurrentValue());
+    }
 
-	/**
-	 * Restituisce la chiave univoca corrente.
-	 *
-	 * @return La chiave univoca corrente.
-	 * @throws ApsSystemException In caso di errore nell'aggiornamento della
-	 * chiave corrente.
-	 */
-	@Override
-	public int getUniqueKeyCurrentValue() throws ApsSystemException {
-		return this.getCacheWrapper().getAndIncrementUniqueKeyCurrentValue(this.getKeyGeneratorDAO());
-	}
+    /**
+     * Restituisce la chiave univoca corrente.
+     *
+     * @return La chiave univoca corrente.
+     * @throws ApsSystemException In caso di errore nell'aggiornamento della chiave corrente.
+     */
+    @Override
+    public int getUniqueKeyCurrentValue() throws ApsSystemException {
+        return this.getCacheWrapper().getAndIncrementUniqueKeyCurrentValue(this.getKeyGeneratorDAO());
+    }
 
-	protected IKeyGeneratorDAO getKeyGeneratorDAO() {
-		return keyGeneratorDao;
-	}
+    protected IKeyGeneratorDAO getKeyGeneratorDAO() {
+        return keyGeneratorDao;
+    }
 
-	public void setKeyGeneratorDAO(IKeyGeneratorDAO generatorDAO) {
-		this.keyGeneratorDao = generatorDAO;
-	}
+    public void setKeyGeneratorDAO(IKeyGeneratorDAO generatorDAO) {
+        this.keyGeneratorDao = generatorDAO;
+    }
 
-	protected IKeyGeneratorManagerCacheWrapper getCacheWrapper() {
-		return cacheWrapper;
-	}
+    protected IKeyGeneratorManagerCacheWrapper getCacheWrapper() {
+        return cacheWrapper;
+    }
 
-	public void setCacheWrapper(IKeyGeneratorManagerCacheWrapper cacheWrapper) {
-		this.cacheWrapper = cacheWrapper;
-	}
+    public void setCacheWrapper(IKeyGeneratorManagerCacheWrapper cacheWrapper) {
+        this.cacheWrapper = cacheWrapper;
+    }
 
 }

@@ -11,61 +11,62 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.searchengine;
 
-import java.util.Collection;
-import java.util.List;
+package org.entando.entando.aps.system.services.searchengine;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
- * di oggetti ricercabili tramite motore di ricerca.
+ * Interfaccia base per i servizi detentori delle operazioni di indicizzazione di oggetti ricercabili tramite motore di ricerca.
+ *
  * @author E.Santoboni
  */
 public interface IEntitySearchEngineManager extends ISearchEngineManager {
-	
-	/**
+
+    /**
      * Aggiorna le indicizzazioni relative ad una entità.
+     *
      * @param entity L'entità di cui aggiornare le indicizzazioni.
      * @throws ApsSystemException In caso di errore
      */
-    public void updateIndexedEntity(IApsEntity entity) throws ApsSystemException;
-    
+    void updateIndexedEntity(IApsEntity entity) throws ApsSystemException;
+
     /**
      * Cancella una entità in base all'identificativo.
+     *
      * @param entityId L'identificativo dell'entità.
      * @throws ApsSystemException In caso di errore
      */
-    public void deleteIndexedEntity(String entityId) throws ApsSystemException;
-    
+    void deleteIndexedEntity(String entityId) throws ApsSystemException;
+
     /**
-     * Aggiunge un documento relativo ad una entità 
-     * nel db del motore di ricerca.
+     * Aggiunge un documento relativo ad una entità nel db del motore di ricerca.
+     *
      * @param entity Il contenuto da cui estrarre il documento.
      * @throws ApsSystemException In caso di errore
      */
-    public void addEntityToIndex(IApsEntity entity) throws ApsSystemException;
-    
+    void addEntityToIndex(IApsEntity entity) throws ApsSystemException;
+
     /**
-     * Ricerca una lista di identificativi di entità in base 
-     * alla chiave lingua corrente ed alla parola immessa.
+     * Ricerca una lista di identificativi di entità in base alla chiave lingua corrente ed alla parola immessa.
+     *
      * @param langCode Il codice della lingua corrente.
-     * @param word La parola in base al quale fare la ricerca. Nel caso venissero 
-     * inserite stringhe di ricerca del tipo "Venice Amsterdam" viene considerato come 
-     * se fosse "Venice OR Amsterdam".
+     * @param word La parola in base al quale fare la ricerca. Nel caso venissero inserite stringhe di ricerca del tipo "Venice Amsterdam"
+     * viene considerato come se fosse "Venice OR Amsterdam".
      * @param allowedGroups I gruppi autorizzati alla visualizzazione.
-	 * @return La lista di identificativi di entità.
+     * @return La lista di identificativi di entità.
      * @throws ApsSystemException In caso di errore
      */
-	public List<String> searchEntityId(String langCode, 
-			String word, Collection<String> allowedGroups) throws ApsSystemException;
-	/*
-	public List<String> searchEntityId(SearchEngineFilter[] filters, 
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
-	
-	public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters, 
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
-	*/
+    List<String> searchEntityId(String langCode,
+            String word, Collection<String> allowedGroups) throws ApsSystemException;
+  /*
+  public List<String> searchEntityId(SearchEngineFilter[] filters,
+      Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+
+  public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters,
+      Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+  */
 }

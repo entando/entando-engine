@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.helper;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -22,41 +23,39 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
  */
 public interface IDataTypeListBean {
 
-	/**
-	 * Restituisce il nome identificativo della lista.
-	 *
-	 * @return Returns Il nome identificativo della lista.
-	 */
-	public String getListName();
+    /**
+     * Restituisce il nome identificativo della lista.
+     *
+     * @return Returns Il nome identificativo della lista.
+     */
+    String getListName();
 
-	/**
-	 * Restituisce il codice dei tipi di DataObject da cercare.
-	 *
-	 * @return Il codice dei tipi di DataObject da cercare.
-	 */
-	public String getDataType();
+    /**
+     * Restituisce il codice dei tipi di DataObject da cercare.
+     *
+     * @return Il codice dei tipi di DataObject da cercare.
+     */
+    String getDataType();
 
-	/**
-	 * Restituisce le categorie dei DataObject da cercare.
-	 *
-	 * @return La categorie dei DataObject da cercare.
-	 */
-	public String[] getCategories();
+    /**
+     * Restituisce le categorie dei DataObject da cercare.
+     *
+     * @return La categorie dei DataObject da cercare.
+     */
+    String[] getCategories();
 
-	/**
-	 * Restituisce la lista di filtri definita nel bean.
-	 *
-	 * @return La lista di filtri definita nel bean.
-	 */
-	public EntitySearchFilter[] getFilters();
+    /**
+     * Restituisce la lista di filtri definita nel bean.
+     *
+     * @return La lista di filtri definita nel bean.
+     */
+    EntitySearchFilter[] getFilters();
 
-	/**
-	 * Indica se nel recupero della lista deve essere utilizzata la cache di
-	 * sistema.
-	 *
-	 * @return True se deve essere utilizzata la cache di sistema, false in caso
-	 * contrario.
-	 */
-	public boolean isCacheable();
+    /**
+     * Indica se nel recupero della lista deve essere utilizzata la cache di sistema.
+     *
+     * @return True se deve essere utilizzata la cache di sistema, false in caso contrario.
+     */
+    boolean isCacheable();
 
 }

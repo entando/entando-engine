@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.user;
 
 import com.agiletec.aps.system.services.authorization.Authorization;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,13 @@ import java.util.List;
  * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractUser implements UserDetails, Serializable {
+
+    private String username;
+    private String password;
+    private Object profile;
+    private String accessToken;
+    private String refreshToken;
+    private List<Authorization> authorizations = new ArrayList<>();
 
     /**
      * Restituisce la username dell'utente.
@@ -80,7 +87,9 @@ public abstract class AbstractUser implements UserDetails, Serializable {
 
     @Override
     public void addAuthorization(Authorization auth) {
-        if (null == auth) return;
+        if (null == auth) {
+            return;
+        }
         if (!this.getAuthorizations().contains(auth)) {
             this.getAuthorizations().add(auth);
         }
@@ -127,18 +136,13 @@ public abstract class AbstractUser implements UserDetails, Serializable {
     }
 
     @Override
-    public void setAccessToken(final String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Override
     public String getAccessToken() {
         return this.accessToken;
     }
 
     @Override
-    public void setRefreshToken(final String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void setAccessToken(final String accessToken) {
+        this.accessToken = accessToken;
     }
 
     @Override
@@ -146,14 +150,9 @@ public abstract class AbstractUser implements UserDetails, Serializable {
         return refreshToken;
     }
 
-    private String username;
-    private String password;
-
-    private Object profile;
-
-    private String accessToken;
-    private String refreshToken;
-
-    private List<Authorization> authorizations = new ArrayList<>();
+    @Override
+    public void setRefreshToken(final String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
 }

@@ -11,12 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.SystemConstants;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.common.tree.ITreeNodeManager;
 import com.agiletec.aps.system.common.tree.TreeNode;
@@ -24,6 +22,8 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is the representation of a portal page
@@ -40,7 +40,7 @@ public class Page extends TreeNode implements IPage, Serializable {
     private boolean online;
     private boolean onlineInstance;
     private boolean changed;
-    
+
     @Override
     public IPage clone() {
         Page clone = (Page) super.clone();
@@ -62,7 +62,6 @@ public class Page extends TreeNode implements IPage, Serializable {
         }
         return clone;
     }
-    
 
     /**
      * Return the related model of page
@@ -76,23 +75,13 @@ public class Page extends TreeNode implements IPage, Serializable {
     }
 
     /**
-     * WARNING: This method is for the page manager service only exclusive use
-     * Assign the given page model to the current object
+     * WARNING: This method is for the page manager service only exclusive use Assign the given page model to the current object
      *
      * @param pageModel the model of the page to assign
      */
     public void setModel(PageModel pageModel) {
         PageMetadata metadata = this.getMetadata();
         metadata.setModel(pageModel);
-    }
-    
-    @Override
-    public void setGroup(String group) {
-        PageMetadata metadata = this.getMetadata();
-        if (null != metadata) {
-            metadata.setGroup(group);
-        }
-        super.setGroup(group);
     }
 
     @Override
@@ -102,6 +91,15 @@ public class Page extends TreeNode implements IPage, Serializable {
             return metadata.getGroup();
         }
         return super.getGroup();
+    }
+
+    @Override
+    public void setGroup(String group) {
+        PageMetadata metadata = this.getMetadata();
+        if (null != metadata) {
+            metadata.setGroup(group);
+        }
+        super.setGroup(group);
     }
 
     @Override
@@ -122,21 +120,20 @@ public class Page extends TreeNode implements IPage, Serializable {
         metadata.getExtraGroups().remove(groupName);
     }
 
-    public void setExtraGroups(Set<String> extraGroups) {
-        PageMetadata metadata = this.getMetadata();
-        metadata.setExtraGroups(extraGroups);
-    }
-
     @Override
     public Set<String> getExtraGroups() {
         PageMetadata metadata = this.getMetadata();
         return metadata.getExtraGroups();
     }
 
+    public void setExtraGroups(Set<String> extraGroups) {
+        PageMetadata metadata = this.getMetadata();
+        metadata.setExtraGroups(extraGroups);
+    }
+
     /**
-     * WARING: this method is reserved to the page manager service only. This
-     * returns a boolean values indicating whether the page is displayed in the
-     * menus or similar.
+     * WARING: this method is reserved to the page manager service only. This returns a boolean values indicating whether the page is
+     * displayed in the menus or similar.
      *
      * @return true if the page must be shown in the menu, false otherwise.
      */
@@ -147,11 +144,9 @@ public class Page extends TreeNode implements IPage, Serializable {
     }
 
     /**
-     * WARING: this method is reserved to the page manager service only. Toggle
-     * the visibility of the current page in the menu or similar.
+     * WARING: this method is reserved to the page manager service only. Toggle the visibility of the current page in the menu or similar.
      *
-     * @param showable a boolean which toggles the visibility on when true, off
-     * otherwise.
+     * @param showable a boolean which toggles the visibility on when true, off otherwise.
      */
     public void setShowable(boolean showable) {
         PageMetadata metadata = this.getMetadata();
@@ -165,14 +160,19 @@ public class Page extends TreeNode implements IPage, Serializable {
     }
 
     @Override
+    public void setTitles(ApsProperties titles) {
+        PageMetadata metadata = this.getMetadata();
+        metadata.setTitles(titles);
+    }
+
+    @Override
     public String getTitle(String langCode) {
         ApsProperties titles = this.getTitles();
         return titles != null ? titles.getProperty(langCode) : null;
     }
 
     /**
-     * Metodo riservato al servizio di gestione pagine. Imposta un titolo alla
-     * pagina
+     * Metodo riservato al servizio di gestione pagine. Imposta un titolo alla pagina
      *
      * @param lang La lingua del titolo
      * @param title Il titolo da impostare
@@ -180,12 +180,6 @@ public class Page extends TreeNode implements IPage, Serializable {
     public void setTitle(Lang lang, String title) {
         PageMetadata metadata = this.getMetadata();
         metadata.setTitle(lang.getCode(), title);
-    }
-
-    @Override
-    public void setTitles(ApsProperties titles) {
-        PageMetadata metadata = this.getMetadata();
-        metadata.setTitles(titles);
     }
 
     /**
@@ -277,10 +271,10 @@ public class Page extends TreeNode implements IPage, Serializable {
     public void setChanged(boolean changed) {
         this.changed = changed;
     }
-    
+
     @Override
     protected ITreeNode getParent(ITreeNode node, ITreeNodeManager treeNodeManager) {
-        return (this.isOnlineInstance()) ? 
+        return (this.isOnlineInstance()) ?
                 ((IPageManager) treeNodeManager).getOnlinePage(node.getParentCode()) :
                 ((IPageManager) treeNodeManager).getDraftPage(node.getParentCode());
     }

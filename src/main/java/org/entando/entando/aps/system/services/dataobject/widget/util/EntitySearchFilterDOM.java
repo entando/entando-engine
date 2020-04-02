@@ -11,14 +11,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject.widget.util;
 
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import java.util.List;
 import java.util.Properties;
-
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFilterBean;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFilterBean;
 
 /**
  * Provides utility methods for dataObject filters.
@@ -28,38 +28,40 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
  */
 public class EntitySearchFilterDOM {
 
-	/**
-	 * Return the showlet parameters in the form of property list
-	 *
-	 * @param showletParam The string to convert into a property list
-	 * @return The property list.
-	 * @deprecated Use {@link FilterUtils}
-	 */
-	public static List<Properties> getPropertiesFilters(String showletParam) {
-		return FilterUtils.getFiltersProperties(showletParam);
-	}
+    /**
+     * Return the showlet parameters in the form of property list
+     *
+     * @param showletParam The string to convert into a property list
+     * @return The property list.
+     * @deprecated Use {@link FilterUtils}
+     */
+    public static List<Properties> getPropertiesFilters(String showletParam) {
+        return FilterUtils.getFiltersProperties(showletParam);
+    }
 
-	@Deprecated
-	public EntitySearchFilter[] getFilters(String dataObjectType, String showletParam, IDataObjectManager dataObjectManager, String langCode) {
-		FilterUtils filterUtils = new FilterUtils();
-		return filterUtils.getFilters(dataObjectManager.getEntityPrototype(dataObjectType), showletParam, langCode);
-	}
+    @Deprecated
+    public static String getShowletParam(List<Properties> properties) {
+        return FilterUtils.getShowletParam(properties);
+    }
 
-	@Deprecated
-	public EntitySearchFilter getFilter(String dataObjectType, IDataTypeListFilterBean bean, IDataObjectManager contentManager, String langCode) {
-		FilterUtils filterUtils = new FilterUtils();
-		return filterUtils.getFilter(contentManager.getEntityPrototype(dataObjectType), bean, langCode);
-	}
+    @Deprecated
+    public EntitySearchFilter[] getFilters(String dataObjectType, String showletParam, IDataObjectManager dataObjectManager,
+            String langCode) {
+        FilterUtils filterUtils = new FilterUtils();
+        return filterUtils.getFilters(dataObjectManager.getEntityPrototype(dataObjectType), showletParam, langCode);
+    }
 
-	@Deprecated
-	public String getShowletParam(EntitySearchFilter[] filters) {
-		FilterUtils filterUtils = new FilterUtils();
-		return filterUtils.getFilterParam(filters);
-	}
+    @Deprecated
+    public EntitySearchFilter getFilter(String dataObjectType, IDataTypeListFilterBean bean, IDataObjectManager contentManager,
+            String langCode) {
+        FilterUtils filterUtils = new FilterUtils();
+        return filterUtils.getFilter(contentManager.getEntityPrototype(dataObjectType), bean, langCode);
+    }
 
-	@Deprecated
-	public static String getShowletParam(List<Properties> properties) {
-		return FilterUtils.getShowletParam(properties);
-	}
+    @Deprecated
+    public String getShowletParam(EntitySearchFilter[] filters) {
+        FilterUtils filterUtils = new FilterUtils();
+        return filterUtils.getFilterParam(filters);
+    }
 
 }

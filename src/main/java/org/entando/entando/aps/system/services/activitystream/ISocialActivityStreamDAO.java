@@ -11,10 +11,10 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.activitystream;
 
 import java.util.List;
-
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
 
@@ -22,21 +22,21 @@ import org.entando.entando.aps.system.services.activitystream.model.ActivityStre
  * @author E.Santoboni - S.Puddu
  */
 public interface ISocialActivityStreamDAO {
-	
-	public void editActionLikeRecord(int id, String username, boolean add);
-	
-	public void addActionLikeRecord(int id, String username);
-	
-	public void deleteActionLikeRecord(int id, String username);
-	
-	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id);
-	
-	public List<ActivityStreamComment> getActionCommentRecords(int id);
-	
-	public void addActionCommentRecord(int id, int recordId, String username, String comment);
-	
-	public void deleteActionCommentRecord(int id);
-	
-	public void deleteSocialRecordsRecord(int streamId);
-	
+
+    void editActionLikeRecord(int id, String username, boolean add);
+
+    void addActionLikeRecord(int id, String username);
+
+    void deleteActionLikeRecord(int id, String username);
+
+    List<ActivityStreamLikeInfo> getActionLikeRecords(int id);
+
+    List<ActivityStreamComment> getActionCommentRecords(int id);
+
+    void addActionCommentRecord(int id, int recordId, String username, String comment);
+
+    void deleteActionCommentRecord(int id);
+
+    void deleteSocialRecordsRecord(int streamId);
+
 }

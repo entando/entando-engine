@@ -11,12 +11,17 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.entity;
 
-import java.util.ArrayList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
 import org.entando.entando.aps.system.services.entity.EntityManagerService;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.Filter;
@@ -33,11 +38,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EntityManagerControllerTest extends AbstractControllerTest {
 
@@ -69,9 +69,9 @@ public class EntityManagerControllerTest extends AbstractControllerTest {
         when(this.entityManagerService.getEntityManagers(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
         ResultActions result = mockMvc.perform(
                 get("/entityManagers")
-                .param("page", "1")
-                .param("pageSize", "4")
-                .header("Authorization", "Bearer " + accessToken)
+                        .param("page", "1")
+                        .param("pageSize", "4")
+                        .header("Authorization", "Bearer " + accessToken)
         );
         result.andExpect(status().isOk());
         RestListRequest restListReq = new RestListRequest();
@@ -87,10 +87,10 @@ public class EntityManagerControllerTest extends AbstractControllerTest {
         when(this.entityManagerService.getEntityManagers(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
         ResultActions result = mockMvc.perform(
                 get("/entityManagers").param("page", "1")
-                .param("pageSize", "4")
-                .param("filter[0].attribute", "code")
-                .param("filter[0].value", "UserProfileManager")
-                .header("Authorization", "Bearer " + accessToken)
+                        .param("pageSize", "4")
+                        .param("filter[0].attribute", "code")
+                        .param("filter[0].value", "UserProfileManager")
+                        .header("Authorization", "Bearer " + accessToken)
         );
         result.andExpect(status().isOk());
         RestListRequest restListReq = new RestListRequest();

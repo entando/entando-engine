@@ -1,11 +1,13 @@
 package org.entando.entando.web.user.validator;
 
-import org.junit.Test;
-import org.springframework.validation.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 public class UserValidatorTest {
 

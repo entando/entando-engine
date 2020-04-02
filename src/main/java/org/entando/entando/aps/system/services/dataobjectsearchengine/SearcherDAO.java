@@ -11,19 +11,41 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.BytesRef;
@@ -32,13 +54,8 @@ import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 /**
- * Data Access Object dedita alle operazioni di ricerca ad uso del motore di
- * ricerca interno.
+ * Data Access Object dedita alle operazioni di ricerca ad uso del motore di ricerca interno.
  *
  * @author E.Santoboni
  */
@@ -85,19 +102,14 @@ public class SearcherDAO implements ISearcherDAO {
     }
 
     /**
-     * Ricerca una lista di identificativi di dataobject in base ai filtri
-     * immessi.
+     * Ricerca una lista di identificativi di dataobject in base ai filtri immessi.
      *
      * @param filters i filtri da applicare alla ricerca.
      * @param categories Le categorie da applicare alla ricerca.
-     * @param allowedGroups I gruppi autorizzati alla visualizzazione. Nel caso
-     * che la collezione sia nulla o vuota, la ricerca sarà effettuata su
-     * contenuti referenziati con il gruppo "Ad accesso libero". Nel caso che
-     * nella collezione sia presente il gruppo degli "Amministratori", la
-     * ricerca produrrà un'insieme di identificativi di contenuto non filtrati
-     * per gruppo.
+     * @param allowedGroups I gruppi autorizzati alla visualizzazione. Nel caso che la collezione sia nulla o vuota, la ricerca sarà
+     * effettuata su contenuti referenziati con il gruppo "Ad accesso libero". Nel caso che nella collezione sia presente il gruppo degli
+     * "Amministratori", la ricerca produrrà un'insieme di identificativi di contenuto non filtrati per gruppo.
      * @return La lista di identificativi dataobject.
-     * @throws ApsSystemException
      */
     @Override
     public List<String> searchContentsId(SearchEngineFilter[] filters,

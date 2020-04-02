@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -19,7 +20,7 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
  * @author E.Santoboni
  */
 public interface IDatabaseInstallerManager {
-	
-	public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStartup) throws Exception;
-	
+
+    SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStartup) throws Exception;
+
 }

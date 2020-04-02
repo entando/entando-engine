@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -21,20 +22,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "response")
 public class StringListApiResponse extends AbstractApiResponse {
-    
-	@Override
+
+    @Override
     @XmlElement(name = "result", required = true)
     public StringListApiResponseResult getResult() {
         return (StringListApiResponseResult) super.getResult();
     }
-	
-	public void setResult(StringListApiResponseResult result) {
-		super.setResult(result);
-	}
-    
-	@Override
+
+    public void setResult(StringListApiResponseResult result) {
+        super.setResult(result);
+    }
+
+    @Override
     protected AbstractApiResponseResult createResponseResultInstance() {
         return new StringListApiResponseResult();
     }
-    
+
 }

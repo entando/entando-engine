@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.servlet.security;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -29,7 +30,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
-    
+
     @Autowired
     @Qualifier(SystemConstants.OAUTH_TOKEN_MANAGER)
     private TokenStore tokenStore;
@@ -45,12 +46,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     @Qualifier(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER)
     private IAuthenticationProviderManager authenticationManager;
-    
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(this.clientDetailsService);
     }
-    
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager)
@@ -59,5 +60,5 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             endpoints.prefix("/api");
         }
     }
-    
+
 }

@@ -11,22 +11,23 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.keygenerator.cache;
 
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorDAO;
 
 public interface IKeyGeneratorManagerCacheWrapper {
 
-	public static final String CACHE_NAME = "Entando_KeyGeneratorManager";
+    String CACHE_NAME = "Entando_KeyGeneratorManager";
 
-	public static final String CURRENT_KEY = "KeyGeneratorManager_key";
+    String CURRENT_KEY = "KeyGeneratorManager_key";
 
-	public void initCache(IKeyGeneratorDAO keyGeneratorDAO);
+    void initCache(IKeyGeneratorDAO keyGeneratorDAO);
 
-	public int getUniqueKeyCurrentValue();
+    int getUniqueKeyCurrentValue();
 
-	public int getAndIncrementUniqueKeyCurrentValue(IKeyGeneratorDAO keyGeneratorDAO);
+    int getAndIncrementUniqueKeyCurrentValue(IKeyGeneratorDAO keyGeneratorDAO);
 
-	public void updateCurrentKey(int val);
+    void updateCurrentKey(int val);
 
 }

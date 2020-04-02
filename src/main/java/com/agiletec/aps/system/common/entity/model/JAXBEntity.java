@@ -11,27 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBBooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBCompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBDateAttribute;
@@ -41,18 +25,40 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBNumberAttribute
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.common.entity.model.attribute.JAXBEnumeratorMapAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "entity")
 @XmlType(propOrder = {"id", "description", "typeCode", "typeDescription", "mainGroup", "categories", "groups", "attributes"})
-@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class, JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
+@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class,
+        JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
 public class JAXBEntity implements Serializable {
 
     private static final Logger _logger = LoggerFactory.getLogger(JAXBEntity.class);
+    private String _id;
+    private String _typeCode;
+    private String _typeDescription;
+    private String _description;
+    private String _mainGroup;
+    private Set<String> _groups;
+    private Set<String> _categories;
+    private List<AbstractJAXBAttribute> _attributes = new ArrayList<>();
 
     public JAXBEntity() {
     }
@@ -111,7 +117,7 @@ public class JAXBEntity implements Serializable {
             }
             for (int i = 0; i < this.getAttributes().size(); i++) {
                 AbstractJAXBAttribute jaxrAttribute = this.getAttributes().get(i);
-                AttributeInterface attribute = (AttributeInterface) prototype.getAttribute(jaxrAttribute.getName());
+                AttributeInterface attribute = prototype.getAttribute(jaxrAttribute.getName());
                 if (null != attribute && attribute.getType().equals(jaxrAttribute.getType())) {
                     attribute.valueFrom(jaxrAttribute, langCode);
                 }
@@ -269,14 +275,5 @@ public class JAXBEntity implements Serializable {
     protected void setAttributes(List<AbstractJAXBAttribute> attributes) {
         this._attributes = attributes;
     }
-
-    private String _id;
-    private String _typeCode;
-    private String _typeDescription;
-    private String _description;
-    private String _mainGroup;
-    private Set<String> _groups;
-    private Set<String> _categories;
-    private List<AbstractJAXBAttribute> _attributes = new ArrayList<>();
 
 }

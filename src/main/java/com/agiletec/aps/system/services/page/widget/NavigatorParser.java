@@ -11,14 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.page.widget;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -26,37 +20,37 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Classe di supporto per l'interpretazione delle espressioni che specificano
- * sottoinsiemi di pagine. Utilizzata dal tag per la generazione di navigatori;
- * il risultato dell'interpretazione è una lista di oggetti NavigatorTarget, che
- * wrappano pagine del portale e possono essere utilizzati dai sub-tag. Le
- * espressioni per la specificazione delle pagine da selezionare possono essere
- * assolute o relative o miste, in riferimento alla pagina visualizzata (pagina
- * corrente) e sono definite in base alla struttura ad albero delle pagine del
- * portale (ogni pagina è un nodo).<BR>
- * Le <b>espressioni</b> supportate seguono la seguente sintassi:<br>
+ * Classe di supporto per l'interpretazione delle espressioni che specificano sottoinsiemi di pagine. Utilizzata dal tag per la generazione
+ * di navigatori; il risultato dell'interpretazione è una lista di oggetti NavigatorTarget, che wrappano pagine del portale e possono essere
+ * utilizzati dai sub-tag. Le espressioni per la specificazione delle pagine da selezionare possono essere assolute o relative o miste, in
+ * riferimento alla pagina visualizzata (pagina corrente) e sono definite in base alla struttura ad albero delle pagine del portale (ogni
+ * pagina è un nodo).<BR> Le <b>espressioni</b> supportate seguono la seguente sintassi:<br>
  * <code>expr1+expr2+ ... +exprn</code><br>
- * dove ogni espressione rappresenta un insieme di pagine e il segno + è
- * l'operatore di unione di insiemi.<br>
- * Ogni espressione in forma di stringa ha la forma:<br>
+ * dove ogni espressione rappresenta un insieme di pagine e il segno + è l'operatore di unione di insiemi.<br> Ogni espressione in forma di
+ * stringa ha la forma:<br>
  * <code>page_spec</code><br>
  * oppure:<br>
  * <code>page_spec.operator</code><br>
- * dove <code>page_spec</code> è una funzione di selezione di una singola pagina
- * e <code>.operator</code> è un operatore che seleziona un sottoinsieme di
- * pagine correlate alla pagina cui è applicato.<br>
+ * dove <code>page_spec</code> è una funzione di selezione di una singola pagina e <code>.operator</code> è un operatore che seleziona un
+ * sottoinsieme di pagine correlate alla pagina cui è applicato.<br>
  * <br>
- * Solo nel caso dell'operatore "Subtree" gli oggetti NavigatorTarget restituiti
- * hanno associato un valore significativo del livello nel sottoalbero; in tutti
- * gli altri casi il livello ha valore zero.
+ * Solo nel caso dell'operatore "Subtree" gli oggetti NavigatorTarget restituiti hanno associato un valore significativo del livello nel
+ * sottoalbero; in tutti gli altri casi il livello ha valore zero.
  *
  * @author M.Diana
  */
 public class NavigatorParser implements INavigatorParser {
 
     private static final Logger _logger = LoggerFactory.getLogger(NavigatorParser.class);
+    private IPageManager _pageManager;
+    private IAuthorizationManager _authManager;
 
     @Override
     public List<NavigatorExpression> getExpressions(String spec) {
@@ -94,11 +88,9 @@ public class NavigatorParser implements INavigatorParser {
     }
 
     /**
-     * Crea e restituisce una lista di oggetti NavigatorTarget, che wrappano
-     * pagine del portale e possono essere utilizzati dai sub-tag.
+     * Crea e restituisce una lista di oggetti NavigatorTarget, che wrappano pagine del portale e possono essere utilizzati dai sub-tag.
      *
-     * @param spec L'espressione usata la specificazione delle pagine da
-     * selezionare; possono essere assolute o relative o miste.
+     * @param spec L'espressione usata la specificazione delle pagine da selezionare; possono essere assolute o relative o miste.
      * @param reqCtx Il contesto della richiesta corrente.
      * @return La lista di oggetti NavigatorTarget.
      */
@@ -110,11 +102,9 @@ public class NavigatorParser implements INavigatorParser {
     }
 
     /**
-     * Crea e restituisce una lista di oggetti NavigatorTarget, che wrappano
-     * pagine del portale e possono essere utilizzati dai sub-tag.
+     * Crea e restituisce una lista di oggetti NavigatorTarget, che wrappano pagine del portale e possono essere utilizzati dai sub-tag.
      *
-     * @param spec L'espressione usata la specificazione delle pagine da
-     * selezionare; possono essere assolute o relative o miste.
+     * @param spec L'espressione usata la specificazione delle pagine da selezionare; possono essere assolute o relative o miste.
      * @param currentPage La pagina corrente dove il tag è inserito.
      * @param currentUser L'utente corrente.
      * @return La lista di oggetti NavigatorTarget.
@@ -181,7 +171,7 @@ public class NavigatorParser implements INavigatorParser {
             if (absLevel >= candidates.size()) {
                 absLevel = candidates.size() - 1;
             }
-            basePage = (IPage) candidates.get(absLevel);
+            basePage = candidates.get(absLevel);
         } else if (specId == NavigatorExpression.SPEC_PAGE_ID) {
             if (null == navExpression.getSpecCode()) {
                 throw new RuntimeException("Page Code not specified : Page " + page.getCode());
@@ -281,8 +271,5 @@ public class NavigatorParser implements INavigatorParser {
     public void setAuthManager(IAuthorizationManager authManager) {
         this._authManager = authManager;
     }
-
-    private IPageManager _pageManager;
-    private IAuthorizationManager _authManager;
 
 }

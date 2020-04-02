@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model;
 
 import org.jdom.Element;
@@ -19,9 +20,9 @@ import org.jdom.Element;
  * @author E.Santoboni
  */
 public interface IPostProcess {
-	
-	public String getCode();
-	
-	public void createConfig(Element element);
-	
+
+    String getCode();
+
+    void createConfig(Element element);
+
 }

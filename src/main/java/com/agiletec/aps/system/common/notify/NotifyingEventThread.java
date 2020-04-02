@@ -11,30 +11,33 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.notify;
 
 /**
  * Thread Class delegate to notify event.
+ *
  * @author E.Santoboni
  */
 public class NotifyingEventThread extends Thread {
-	
-	/**
-	 * Inizializza il thread delegato notificazione eventi.
-	 * @param notifyManager Il servizio gestore notifica eventi.
-	 * @param event l'evento da notificare.
-	 */
-	public NotifyingEventThread(NotifyManager notifyManager, ApsEvent event) {
-		this._notifyManager = notifyManager;
-		this._event = event;
-	}
-	
-	@Override
-	public void run() {
-		this._notifyManager.notify(this._event);
-	}
-	
-	private NotifyManager _notifyManager;
-	private ApsEvent _event;
-	
+
+    private NotifyManager _notifyManager;
+    private ApsEvent _event;
+
+    /**
+     * Inizializza il thread delegato notificazione eventi.
+     *
+     * @param notifyManager Il servizio gestore notifica eventi.
+     * @param event l'evento da notificare.
+     */
+    public NotifyingEventThread(NotifyManager notifyManager, ApsEvent event) {
+        this._notifyManager = notifyManager;
+        this._event = event;
+    }
+
+    @Override
+    public void run() {
+        this._notifyManager.notify(this._event);
+    }
+
 }

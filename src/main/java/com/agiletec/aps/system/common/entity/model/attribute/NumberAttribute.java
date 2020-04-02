@@ -11,16 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
@@ -28,7 +20,14 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
+import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import org.jdom.Element;
 
 /**
  * This class describes a numeric information common for all the languages.
@@ -36,6 +35,9 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author W.Ambu - S.Didaci - E.Santoboni
  */
 public class NumberAttribute extends AbstractAttribute implements IndexableAttributeInterface {
+
+    private BigDecimal _number;
+    private String _failedNumberString;
 
     /**
      * Return the number in the format used for the current language.
@@ -50,9 +52,8 @@ public class NumberAttribute extends AbstractAttribute implements IndexableAttri
     }
 
     /**
-     * Return the number in the format used for the current language, expressed
-     * in form of percentage. Using this method, a fractional number like. eg.,
-     * 0.53 is displayed as 53%.
+     * Return the number in the format used for the current language, expressed in form of percentage. Using this method, a fractional
+     * number like. eg., 0.53 is displayed as 53%.
      *
      * @return The formatted number.
      */
@@ -119,26 +120,23 @@ public class NumberAttribute extends AbstractAttribute implements IndexableAttri
     }
 
     /**
-     * Associate the (numeric) string submitted in the back-office form to the
-     * current attribute. This method is only invoked by the entity handling
-     * routines within the back-office area.
-     *
-     * @param failedNumberString The numeric string submitted in the back-office
-     * form.
-     */
-    public void setFailedNumberString(String failedNumberString) {
-        this._failedNumberString = failedNumberString;
-    }
-
-    /**
-     * Return the numeric string inserted in the back-office form; this method
-     * is only invoked by the entity handling routines within the back-office
-     * area.
+     * Return the numeric string inserted in the back-office form; this method is only invoked by the entity handling routines within the
+     * back-office area.
      *
      * @return The requested numeric string.
      */
     public String getFailedNumberString() {
         return _failedNumberString;
+    }
+
+    /**
+     * Associate the (numeric) string submitted in the back-office form to the current attribute. This method is only invoked by the entity
+     * handling routines within the back-office area.
+     *
+     * @param failedNumberString The numeric string submitted in the back-office form.
+     */
+    public void setFailedNumberString(String failedNumberString) {
+        this._failedNumberString = failedNumberString;
     }
 
     protected Object getJAXBValue(String langCode) {
@@ -187,8 +185,5 @@ public class NumberAttribute extends AbstractAttribute implements IndexableAttri
     public String getIndexeableFieldValue() {
         return String.valueOf(_number);
     }
-
-    private BigDecimal _number;
-    private String _failedNumberString;
 
 }

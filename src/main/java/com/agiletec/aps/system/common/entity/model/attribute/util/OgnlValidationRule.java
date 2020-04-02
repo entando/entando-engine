@@ -11,37 +11,42 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model.attribute.util;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
-
-import org.jdom.CDATA;
-import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import org.jdom.CDATA;
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class OgnlValidationRule implements Serializable {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(OgnlValidationRule.class);
-	
-    public OgnlValidationRule() {}
-    
+    private static final Logger _logger = LoggerFactory.getLogger(OgnlValidationRule.class);
+    private String _expression;
+    private boolean _evalExpressionOnValuedAttribute;
+    private String _errorMessage;
+    private String _errorMessageKey;
+    private String _helpMessage;
+    private String _helpMessageKey;
+
+    public OgnlValidationRule() {
+    }
+
     public OgnlValidationRule(Element element) {
         if (null == element) {
             throw new RuntimeException("null jdom element");
@@ -61,8 +66,8 @@ public class OgnlValidationRule implements Serializable {
             this.setHelpMessageKey(helpMessageElement.getAttributeValue("key"));
         }
     }
-    
-	@Override
+
+    @Override
     protected OgnlValidationRule clone() {
         OgnlValidationRule clone = new OgnlValidationRule();
         clone.setErrorMessage(this.getErrorMessage());
@@ -73,7 +78,7 @@ public class OgnlValidationRule implements Serializable {
         clone.setHelpMessageKey(this.getHelpMessageKey());
         return clone;
     }
-    
+
     public Element getConfigElement() {
         if (null == this.getExpression() || this.getExpression().trim().length() == 0) {
             return null;
@@ -104,7 +109,7 @@ public class OgnlValidationRule implements Serializable {
         exprElement.addContent(helpMessageElement);
         return exprElement;
     }
-    
+
     public AttributeFieldError validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         AttributeFieldError error = null;
         String expression = this.getExpression();
@@ -131,8 +136,9 @@ public class OgnlValidationRule implements Serializable {
         }
         return error;
     }
-    
-    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+
+    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer,
+            ILangManager langManager) {
         OgnlContext context = new OgnlContext();
         Map<String, Lang> langs = new HashMap<>();
         List<Lang> langList = langManager.getLangs();
@@ -156,10 +162,11 @@ public class OgnlValidationRule implements Serializable {
         }
         return context;
     }
-    
+
     public String getExpression() {
         return _expression;
     }
+
     public void setExpression(String expression) {
         this._expression = expression;
     }
@@ -167,6 +174,7 @@ public class OgnlValidationRule implements Serializable {
     public boolean isEvalExpressionOnValuedAttribute() {
         return _evalExpressionOnValuedAttribute;
     }
+
     public void setEvalExpressionOnValuedAttribute(boolean evalExpressionOnValuedAttribute) {
         this._evalExpressionOnValuedAttribute = evalExpressionOnValuedAttribute;
     }
@@ -174,6 +182,7 @@ public class OgnlValidationRule implements Serializable {
     public String getErrorMessage() {
         return _errorMessage;
     }
+
     public void setErrorMessage(String errorMessage) {
         this._errorMessage = errorMessage;
     }
@@ -181,6 +190,7 @@ public class OgnlValidationRule implements Serializable {
     public String getErrorMessageKey() {
         return _errorMessageKey;
     }
+
     public void setErrorMessageKey(String errorMessageKey) {
         this._errorMessageKey = errorMessageKey;
     }
@@ -188,6 +198,7 @@ public class OgnlValidationRule implements Serializable {
     public String getHelpMessage() {
         return _helpMessage;
     }
+
     public void setHelpMessage(String helpMessage) {
         this._helpMessage = helpMessage;
     }
@@ -195,15 +206,9 @@ public class OgnlValidationRule implements Serializable {
     public String getHelpMessageKey() {
         return _helpMessageKey;
     }
+
     public void setHelpMessageKey(String helpMessageKey) {
         this._helpMessageKey = helpMessageKey;
     }
-    
-    private String _expression;
-    private boolean _evalExpressionOnValuedAttribute;
-    private String _errorMessage;
-    private String _errorMessageKey;
-    private String _helpMessage;
-    private String _helpMessageKey;
-    
+
 }

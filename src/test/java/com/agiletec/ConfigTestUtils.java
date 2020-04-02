@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec;
 
 import java.io.FileInputStream;
@@ -21,9 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-
 import javax.servlet.ServletContext;
-
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -32,9 +31,8 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
- * Classe di utilità per i test. Fornisce la lista di file di configurazione di
- * spring e il contesto. La classe và estesa nel caso si intenda modificare od
- * aggiungere file di configurazione di spring esterni.
+ * Classe di utilità per i test. Fornisce la lista di file di configurazione di spring e il contesto. La classe và estesa nel caso si
+ * intenda modificare od aggiungere file di configurazione di spring esterni.
  *
  * @author W.Ambu - E.Santoboni
  */
@@ -85,7 +83,7 @@ public class ConfigTestUtils {
             Iterator<Entry<Object, Object>> configIter = testConfig.entrySet().iterator();
             while (configIter.hasNext()) {
                 Entry<Object, Object> entry = configIter.next();
-                builder.bind("java:comp/env/" + (String) entry.getKey(), (String) entry.getValue());
+                builder.bind("java:comp/env/" + entry.getKey(), entry.getValue());
             }
 
             this.createDatasources(builder, testConfig);
@@ -134,8 +132,7 @@ public class ConfigTestUtils {
     }
 
     /**
-     * Restituisce l'insieme dei file di configurazione dei bean definiti nel
-     * sistema. Il metodo và esteso nel caso si inseriscano file di
+     * Restituisce l'insieme dei file di configurazione dei bean definiti nel sistema. Il metodo và esteso nel caso si inseriscano file di
      * configurazioni esterni al Core ed ai Plugin.
      *
      * @return L'insieme dei file di configurazione definiti nel sistema.
@@ -161,8 +158,7 @@ public class ConfigTestUtils {
      * Effettua la chiusura dei datasource definiti nel contesto.
      *
      * @param applicationContext Il contesto dell'applicazione.
-     * @throws Exception In caso di errore nel recupero o chiusura dei
-     * DataSource.
+     * @throws Exception In caso di errore nel recupero o chiusura dei DataSource.
      */
     public void closeDataSources(ApplicationContext applicationContext) throws Exception {
         String[] dataSourceNames = applicationContext.getBeanNamesForType(BasicDataSource.class);

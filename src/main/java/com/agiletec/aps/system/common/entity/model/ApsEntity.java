@@ -11,8 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.entity.model;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.group.IGroupManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,28 +26,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.group.IGroupManager;
-
 /**
- * This class represents an entity. The structure of the entity, defined during
- * the configuration process, is built invoking the method 'addAttribute', but
- * this procedure is reserved for the Entity Service which invokes this method
- * only during the system initialization. The standard procedure to instantiate
- * an entity, used during the normal execution of the system, is to make a
- * request to the service: it will clone the prototype of the entity previously
- * defined in the configuration.
+ * This class represents an entity. The structure of the entity, defined during the configuration process, is built invoking the method
+ * 'addAttribute', but this procedure is reserved for the Entity Service which invokes this method only during the system initialization.
+ * The standard procedure to instantiate an entity, used during the normal execution of the system, is to make a request to the service: it
+ * will clone the prototype of the entity previously defined in the configuration.
  */
 public class ApsEntity implements IApsEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(ApsEntity.class);
+    private String _id;
+    private String _typeCode;
+    private String _typeDescription;
+    private String _description;
+    private String _mainGroup;
+    private Set<String> _groups;
+    private List<AttributeInterface> _attributeList;
+    private Map<String, AttributeInterface> _attributeMap;
+    private List<Category> _categories;
+    private String _renderingLang;
+    private String _defaultLang;
+    private IApsEntityDOM _entityDom;
 
     /**
      * Initialization of the entity with its related elements.
@@ -147,11 +155,9 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Return the set of codes of the additional groups authorized to view the
-     * entity in the front-end.
+     * Return the set of codes of the additional groups authorized to view the entity in the front-end.
      *
-     * @return The set of codes belonging to the additional group authorized to
-     * access the entity,
+     * @return The set of codes belonging to the additional group authorized to access the entity,
      */
     @Override
     public Set<String> getGroups() {
@@ -286,8 +292,7 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Set up the language to use in the rendering process of the entity and its
-     * attributes.
+     * Set up the language to use in the rendering process of the entity and its attributes.
      *
      * @param langCode The code of the language to use in the rendering process.
      */
@@ -295,7 +300,7 @@ public class ApsEntity implements IApsEntity {
     public void setRenderingLang(String langCode) {
         this._renderingLang = langCode;
         for (int i = 0; i < this._attributeList.size(); i++) {
-            AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
+            AttributeInterface attr = this._attributeList.get(i);
             attr.setRenderingLang(this._renderingLang);
         }
     }
@@ -309,7 +314,7 @@ public class ApsEntity implements IApsEntity {
     public void setDefaultLang(String langCode) {
         this._defaultLang = langCode;
         for (int i = 0; i < this._attributeList.size(); i++) {
-            AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
+            AttributeInterface attr = this._attributeList.get(i);
             attr.setDefaultLangCode(this._defaultLang);
         }
     }
@@ -331,7 +336,7 @@ public class ApsEntity implements IApsEntity {
             entity.setDescription(this.getDescription());
             AttributeInterface attr;
             for (int i = 0; i < this._attributeList.size(); i++) {
-                attr = (AttributeInterface) this._attributeList.get((i));
+                attr = this._attributeList.get((i));
                 attr = (AttributeInterface) attr.getAttributePrototype();
                 attr.setParentEntity(entity);
                 entity.addAttribute(attr);
@@ -353,10 +358,9 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Return the DOM class that generates the XML corresponding to the entity
-     * with its data. This method must be extended to support customized XML
-     * structures; this happen when, for example, a custom entity is based on an
-     * object class which, in turn, extends ApsEntity.
+     * Return the DOM class that generates the XML corresponding to the entity with its data. This method must be extended to support
+     * customized XML structures; this happen when, for example, a custom entity is based on an object class which, in turn, extends
+     * ApsEntity.
      *
      * @return The DOM class that generates the XML
      */
@@ -458,18 +462,5 @@ public class ApsEntity implements IApsEntity {
         }
         return errors;
     }
-
-    private String _id;
-    private String _typeCode;
-    private String _typeDescription;
-    private String _description;
-    private String _mainGroup;
-    private Set<String> _groups;
-    private List<AttributeInterface> _attributeList;
-    private Map<String, AttributeInterface> _attributeMap;
-    private List<Category> _categories;
-    private String _renderingLang;
-    private String _defaultLang;
-    private IApsEntityDOM _entityDom;
 
 }

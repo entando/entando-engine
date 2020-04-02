@@ -11,19 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General  License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-
 import java.util.List;
+import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 
 public interface IOAuthConsumerDAO {
 
     ConsumerRecordVO getConsumer(String clientId);
 
     List<String> getConsumerKeys(FieldSearchFilter<?>[] filters);
-    
+
     List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters);
 
     ConsumerRecordVO addConsumer(ConsumerRecordVO consumer);

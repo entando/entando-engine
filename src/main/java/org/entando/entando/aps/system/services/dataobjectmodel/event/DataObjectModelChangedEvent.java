@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobjectmodel.event;
 
 import com.agiletec.aps.system.common.IManager;
@@ -18,12 +19,17 @@ import com.agiletec.aps.system.common.notify.ApsEvent;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 
 /**
- * Evento specifico da rilanciare in corrispondenza di modifica di un modello di
- * data type.
+ * Evento specifico da rilanciare in corrispondenza di modifica di un modello di data type.
  *
  * @author E.Santoboni - C.Siddi
  */
 public class DataObjectModelChangedEvent extends ApsEvent {
+
+    public static final int INSERT_OPERATION_CODE = 1;
+    public static final int REMOVE_OPERATION_CODE = 2;
+    public static final int UPDATE_OPERATION_CODE = 3;
+    private DataObjectModel _dataObjectModel;
+    private int _operationCode;
 
     @Override
     public void notify(IManager srv) {
@@ -50,15 +56,5 @@ public class DataObjectModelChangedEvent extends ApsEvent {
     public void setOperationCode(int operationCode) {
         this._operationCode = operationCode;
     }
-
-    private DataObjectModel _dataObjectModel;
-
-    private int _operationCode;
-
-    public static final int INSERT_OPERATION_CODE = 1;
-
-    public static final int REMOVE_OPERATION_CODE = 2;
-
-    public static final int UPDATE_OPERATION_CODE = 3;
 
 }

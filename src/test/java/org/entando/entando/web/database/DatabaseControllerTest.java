@@ -11,7 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.web.database;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.init.DatabaseManager;
@@ -32,13 +40,6 @@ import org.mockito.Spy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class DatabaseControllerTest extends AbstractControllerTest {
 
@@ -89,8 +90,8 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
 
         ResultActions result = mockMvc.perform(
-                get("/database/report/{reportCode}", new Object[]{"develop"})
-                .header("Authorization", "Bearer " + accessToken));
+                get("/database/report/{reportCode}", "develop")
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
 
@@ -100,8 +101,8 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
         ResultActions result = mockMvc.perform(
-                get("/database/report/{reportCode}", new Object[]{"develop"})
-                .header("Authorization", "Bearer " + accessToken));
+                get("/database/report/{reportCode}", "develop")
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isNotFound());
     }
 
@@ -114,7 +115,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 post("/database/startBackup").content("{}")
-                .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         Mockito.verify(databaseService, Mockito.times(1)).startDatabaseBackup();
     }
@@ -128,7 +129,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 put("/database/restoreBackup/{reportCode}", "reportCode").content("{}")
-                .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         Mockito.verify(databaseService, Mockito.times(1)).startDatabaseRestore("reportCode");
         Mockito.verify(databaseManager, Mockito.times(1)).dropAndRestoreBackup("reportCode");
@@ -141,7 +142,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
         ResultActions result = mockMvc.perform(
                 put("/database/restoreBackup/{reportCode}", "reportCode").content("{}")
-                .header("Authorization", "Bearer " + accessToken));
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isNotFound());
         Mockito.verify(databaseService, Mockito.times(1)).startDatabaseRestore("reportCode");
         Mockito.verify(databaseManager, Mockito.times(0)).dropAndRestoreBackup("reportCode");
@@ -155,8 +156,8 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
-                delete("/database/report/{reportCode}", new Object[]{"reportCode"})
-                .header("Authorization", "Bearer " + accessToken));
+                delete("/database/report/{reportCode}", "reportCode")
+                        .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         Mockito.verify(databaseService, Mockito.times(1)).deleteDumpReport("reportCode");
     }

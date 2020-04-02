@@ -11,11 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.model;
 
-import java.io.Serializable;
-
 import com.agiletec.aps.util.ApsProperties;
+import java.io.Serializable;
 
 /**
  * The representation of an api service
@@ -24,185 +24,184 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class ApiService implements Serializable {
 
-	protected ApiService() {
-	}
+    private String _key;
+    private ApsProperties _description;
+    private ApiMethod _master;
+    private ApsProperties _parameters;
+    private String[] _freeParameters;
+    private String _tag;
+    private boolean _hidden;
+    private boolean _active;
+    private Boolean _requiredAuth;
+    private String _requiredPermission;
+    private String _requiredGroup;
 
-	public ApiService(String key, ApsProperties description, ApiMethod master, ApsProperties parameters,
-			String[] freeParameters, String tag, boolean isPublic, boolean isActive/*, boolean isMyEntando*/) {
-		this.setKey(key);
-		this.setDescription(description);
-		this.setMaster(master);
-		this.setParameters(parameters);
-		this.setFreeParameters(freeParameters);
-		this.setTag(tag);
-		this.setHidden(!isPublic);
-		this.setActive(isActive);
-		//this.setMyEntando(isMyEntando);
-	}
+    protected ApiService() {
+    }
 
-	@Override
-	public ApiService clone() {
-		ApiService clone = new ApiService();
-		clone.setDescription(this.getDescription());
-		if (null != this.getFreeParameters()) {
-			String[] freeParameters = new String[this.getFreeParameters().length];
-			for (int i = 0; i < this.getFreeParameters().length; i++) {
-				freeParameters[i] = this.getFreeParameters()[i];
-			}
-			clone.setFreeParameters(freeParameters);
-		}
-		clone.setKey(this.getKey());
-		clone.setMaster(this.getMaster().clone());
-		if (null != this.getParameters()) {
-			clone.setParameters(this.getParameters().clone());
-		}
-		clone.setTag(this.getTag());
-		clone.setHidden(this.isHidden());
-		clone.setActive(this.isActive());
-		//clone.setMyEntando(this.isMyEntando());
-		clone.setRequiredAuth(this.getRequiredAuth());
-		clone.setRequiredGroup(this.getRequiredGroup());
-		clone.setRequiredPermission(this.getRequiredPermission());
-		return clone;
-	}
+    public ApiService(String key, ApsProperties description, ApiMethod master, ApsProperties parameters,
+            String[] freeParameters, String tag, boolean isPublic, boolean isActive/*, boolean isMyEntando*/) {
+        this.setKey(key);
+        this.setDescription(description);
+        this.setMaster(master);
+        this.setParameters(parameters);
+        this.setFreeParameters(freeParameters);
+        this.setTag(tag);
+        this.setHidden(!isPublic);
+        this.setActive(isActive);
+        //this.setMyEntando(isMyEntando);
+    }
 
-	public String getKey() {
-		return _key;
-	}
+    @Override
+    public ApiService clone() {
+        ApiService clone = new ApiService();
+        clone.setDescription(this.getDescription());
+        if (null != this.getFreeParameters()) {
+            String[] freeParameters = new String[this.getFreeParameters().length];
+            for (int i = 0; i < this.getFreeParameters().length; i++) {
+                freeParameters[i] = this.getFreeParameters()[i];
+            }
+            clone.setFreeParameters(freeParameters);
+        }
+        clone.setKey(this.getKey());
+        clone.setMaster(this.getMaster().clone());
+        if (null != this.getParameters()) {
+            clone.setParameters(this.getParameters().clone());
+        }
+        clone.setTag(this.getTag());
+        clone.setHidden(this.isHidden());
+        clone.setActive(this.isActive());
+        //clone.setMyEntando(this.isMyEntando());
+        clone.setRequiredAuth(this.getRequiredAuth());
+        clone.setRequiredGroup(this.getRequiredGroup());
+        clone.setRequiredPermission(this.getRequiredPermission());
+        return clone;
+    }
 
-	protected void setKey(String key) {
-		this._key = key;
-	}
+    public String getKey() {
+        return _key;
+    }
 
-	public ApsProperties getDescription() {
-		return _description;
-	}
+    protected void setKey(String key) {
+        this._key = key;
+    }
 
-	protected void setDescription(ApsProperties description) {
-		this._description = description;
-	}
+    public ApsProperties getDescription() {
+        return _description;
+    }
 
-	public ApsProperties getParameters() {
-		return _parameters;
-	}
+    protected void setDescription(ApsProperties description) {
+        this._description = description;
+    }
 
-	public void setParameters(ApsProperties parameters) {
-		this._parameters = parameters;
-	}
+    public ApsProperties getParameters() {
+        return _parameters;
+    }
 
-	public String[] getFreeParameters() {
-		return _freeParameters;
-	}
+    public void setParameters(ApsProperties parameters) {
+        this._parameters = parameters;
+    }
 
-	protected void setFreeParameters(String[] freeParameters) {
-		this._freeParameters = freeParameters;
-	}
+    public String[] getFreeParameters() {
+        return _freeParameters;
+    }
 
-	public boolean isFreeParameter(String paramName) {
-		if (null == this.getFreeParameters() || null == paramName) {
-			return false;
-		}
-		for (int i = 0; i < this.getFreeParameters().length; i++) {
-			String parameter = this.getFreeParameters()[i];
-			if (parameter.equals(paramName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    protected void setFreeParameters(String[] freeParameters) {
+        this._freeParameters = freeParameters;
+    }
 
-	public ApiMethod getMaster() {
-		return _master;
-	}
+    public boolean isFreeParameter(String paramName) {
+        if (null == this.getFreeParameters() || null == paramName) {
+            return false;
+        }
+        for (int i = 0; i < this.getFreeParameters().length; i++) {
+            String parameter = this.getFreeParameters()[i];
+            if (parameter.equals(paramName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	protected void setMaster(ApiMethod master) {
-		this._master = master;
-	}
+    public ApiMethod getMaster() {
+        return _master;
+    }
 
-	public String getTag() {
-		return _tag;
-	}
+    protected void setMaster(ApiMethod master) {
+        this._master = master;
+    }
 
-	protected void setTag(String tag) {
-		this._tag = tag;
-	}
+    public String getTag() {
+        return _tag;
+    }
 
-	@Deprecated
-	public boolean isPublicService() {
-		return !this.isHidden();
-	}
+    protected void setTag(String tag) {
+        this._tag = tag;
+    }
 
-	@Deprecated
-	public void setPublicService(boolean publicService) {
-		this.setHidden(!publicService);
-	}
+    @Deprecated
+    public boolean isPublicService() {
+        return !this.isHidden();
+    }
 
-	public boolean isHidden() {
-		return _hidden;
-	}
+    @Deprecated
+    public void setPublicService(boolean publicService) {
+        this.setHidden(!publicService);
+    }
 
-	public void setHidden(boolean hidden) {
-		this._hidden = hidden;
-	}
+    public boolean isHidden() {
+        return _hidden;
+    }
 
-	public boolean isActive() {
-		return _active;
-	}
+    public void setHidden(boolean hidden) {
+        this._hidden = hidden;
+    }
 
-	public void setActive(boolean active) {
-		this._active = active;
-	}
+    public boolean isActive() {
+        return _active;
+    }
 
-	/*
-	public boolean isMyEntando() {
-		return _myEntando;
-	}
-	protected void setMyEntando(boolean myEntando) {
-		this._myEntando = myEntando;
-	}
-	 */
-	public Boolean getRequiredAuth() {
-		if (null != this.getRequiredGroup() || null != this.getRequiredPermission()) {
-			return true;
-		}
-		if (null == this._requiredAuth) {
-			return false;
-		}
-		return _requiredAuth;
-	}
+    public void setActive(boolean active) {
+        this._active = active;
+    }
 
-	public void setRequiredAuth(Boolean requiredAuth) {
-		this._requiredAuth = requiredAuth;
-	}
+    /*
+    public boolean isMyEntando() {
+        return _myEntando;
+    }
+    protected void setMyEntando(boolean myEntando) {
+        this._myEntando = myEntando;
+    }
+     */
+    public Boolean getRequiredAuth() {
+        if (null != this.getRequiredGroup() || null != this.getRequiredPermission()) {
+            return true;
+        }
+        if (null == this._requiredAuth) {
+            return false;
+        }
+        return _requiredAuth;
+    }
 
-	public String getRequiredGroup() {
-		return _requiredGroup;
-	}
+    public void setRequiredAuth(Boolean requiredAuth) {
+        this._requiredAuth = requiredAuth;
+    }
 
-	public void setRequiredGroup(String requiredGroup) {
-		this._requiredGroup = requiredGroup;
-	}
+    public String getRequiredGroup() {
+        return _requiredGroup;
+    }
+    //private boolean _myEntando;
 
-	public String getRequiredPermission() {
-		return _requiredPermission;
-	}
+    public void setRequiredGroup(String requiredGroup) {
+        this._requiredGroup = requiredGroup;
+    }
 
-	public void setRequiredPermission(String requiredPermission) {
-		this._requiredPermission = requiredPermission;
-	}
+    public String getRequiredPermission() {
+        return _requiredPermission;
+    }
 
-	private String _key;
-	private ApsProperties _description;
-	private ApiMethod _master;
-	private ApsProperties _parameters;
-	private String[] _freeParameters;
-	private String _tag;
-	private boolean _hidden;
-	private boolean _active;
-	//private boolean _myEntando;
-
-	private Boolean _requiredAuth;
-	private String _requiredPermission;
-	private String _requiredGroup;
+    public void setRequiredPermission(String requiredPermission) {
+        this._requiredPermission = requiredPermission;
+    }
 
 }

@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.util.StringUtils;
 import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MessageCodeFormatter;
@@ -18,9 +17,8 @@ import org.springframework.validation.MessageCodeFormatter;
  * When and errorCode is found into <code>validationErrorCodeMapping</code> then the specific value is appended to the returned code array
  * <p>
  * The purpose in to translate {@link javax.validation.constraints} codes into custom codes
- * 
- * @author spuddu
  *
+ * @author spuddu
  */
 public class EntandoMessageCodesResolver extends DefaultMessageCodesResolver {
 

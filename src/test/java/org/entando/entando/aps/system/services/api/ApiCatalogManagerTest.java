@@ -7,10 +7,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper;
 import org.entando.entando.aps.system.services.api.cache.ApiServiceCacheWrapper;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
@@ -20,9 +21,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper;
 
 public class ApiCatalogManagerTest {
 

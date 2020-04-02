@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.guifragment.event;
 
 import com.agiletec.aps.system.common.IManager;
@@ -21,36 +22,37 @@ import org.entando.entando.aps.system.services.guifragment.GuiFragment;
  * @author E.Santoboni
  */
 public class GuiFragmentChangedEvent extends ApsEvent {
-	
-	@Override
-	public void notify(IManager srv) {
-		((GuiFragmentChangedObserver) srv).updateFromGuiFragmentChanged(this);
-	}
-	
-	@Override
-	public Class getObserverInterface() {
-		return GuiFragmentChangedObserver.class;
-	}
-	
-	public int getOperationCode() {
-		return _operationCode;
-	}
-	public void setOperationCode(int operationCode) {
-		this._operationCode = operationCode;
-	}
-	
-	public GuiFragment getGuiFragment() {
-		return _guiFragment;
-	}
-	public void setGuiFragment(GuiFragment guiFragment) {
-		this._guiFragment = guiFragment;
-	}
 
-	private GuiFragment _guiFragment;
-	private int _operationCode;
-	
-	public static final int INSERT_OPERATION_CODE = 1;
-	public static final int REMOVE_OPERATION_CODE = 2;
-	public static final int UPDATE_OPERATION_CODE = 3;
+    public static final int INSERT_OPERATION_CODE = 1;
+    public static final int REMOVE_OPERATION_CODE = 2;
+    public static final int UPDATE_OPERATION_CODE = 3;
+    private GuiFragment _guiFragment;
+    private int _operationCode;
+
+    @Override
+    public void notify(IManager srv) {
+        ((GuiFragmentChangedObserver) srv).updateFromGuiFragmentChanged(this);
+    }
+
+    @Override
+    public Class getObserverInterface() {
+        return GuiFragmentChangedObserver.class;
+    }
+
+    public int getOperationCode() {
+        return _operationCode;
+    }
+
+    public void setOperationCode(int operationCode) {
+        this._operationCode = operationCode;
+    }
+
+    public GuiFragment getGuiFragment() {
+        return _guiFragment;
+    }
+
+    public void setGuiFragment(GuiFragment guiFragment) {
+        this._guiFragment = guiFragment;
+    }
 
 }

@@ -11,13 +11,12 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,9 @@ public class QueryLimitResolver {
     private static final Logger logger = LoggerFactory.getLogger(QueryLimitResolver.class);
 
     @SuppressWarnings("rawtypes")
-    public static String createLimitBlock(FieldSearchFilter filter, DataSource dataSource, String dataSourceClass) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static String createLimitBlock(FieldSearchFilter filter, DataSource dataSource, String dataSourceClass)
+            throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException,
+            InvocationTargetException {
         return createLimitBlock(filter.getOffset(), filter.getLimit(), dataSource, dataSourceClass);
     }
 

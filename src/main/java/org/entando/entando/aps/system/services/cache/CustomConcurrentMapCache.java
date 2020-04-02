@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.cache;
 
 import java.util.concurrent.ConcurrentMap;
@@ -36,10 +37,11 @@ public class CustomConcurrentMapCache extends ConcurrentMapCache {
         super(name, store, allowNullValues);
     }
 
-    public CustomConcurrentMapCache(String name, ConcurrentMap<Object, Object> store, boolean allowNullValues, SerializationDelegate serialization) {
+    public CustomConcurrentMapCache(String name, ConcurrentMap<Object, Object> store, boolean allowNullValues,
+            SerializationDelegate serialization) {
         super(name, store, allowNullValues, serialization);
     }
-    
+
     @Override
     public ValueWrapper get(Object key) {
         ValueWrapper wrapper = super.get(key);
@@ -52,5 +54,5 @@ public class CustomConcurrentMapCache extends ConcurrentMapCache {
             return wrapper;
         }
     }
-    
+
 }

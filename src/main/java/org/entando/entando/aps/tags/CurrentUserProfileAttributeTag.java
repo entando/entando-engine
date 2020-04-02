@@ -11,27 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.tags;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.user.UserDetails;
 import javax.servlet.http.HttpSession;
-
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.user.UserDetails;
-
 /**
- * Current User Profile tag.
- * Return an attribute value of the current user profile.
+ * Current User Profile tag. Return an attribute value of the current user profile.
+ *
  * @author E.Santoboni
  */
 public class CurrentUserProfileAttributeTag extends UserProfileAttributeTag {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(CurrentUserProfileAttributeTag.class);
-	
-	@Override
+    private static final Logger _logger = LoggerFactory.getLogger(CurrentUserProfileAttributeTag.class);
+
+    @Override
     protected IUserProfile getUserProfile() throws Throwable {
         HttpSession session = this.pageContext.getSession();
         UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
@@ -41,5 +40,5 @@ public class CurrentUserProfileAttributeTag extends UserProfileAttributeTag {
         }
         return (IUserProfile) currentUser.getProfile();
     }
-    
+
 }

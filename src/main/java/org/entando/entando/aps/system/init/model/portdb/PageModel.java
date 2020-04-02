@@ -11,44 +11,45 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.init.model.portdb;
 
-import com.j256.ormlite.field.*;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = PageModel.TABLE_NAME)
 public class PageModel {
 
-	public static final String TABLE_NAME = "pagemodels";
+    public static final String TABLE_NAME = "pagemodels";
 
+    @DatabaseField(columnName = "code",
+            dataType = DataType.STRING,
+            width = 40,
+            canBeNull = false, id = true)
+    private String code;
 
-	@DatabaseField(columnName = "code",
-			dataType = DataType.STRING, 
-			width = 40, 
-			canBeNull = false, id = true)
-	private String code;
-	
-	@DatabaseField(columnName = "descr", 
-			dataType = DataType.STRING, 
-			width = 50, 
-			canBeNull = false)
-	private String description;
-	
-	@DatabaseField(columnName = "frames", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String frame;
-	
-	@DatabaseField(columnName = "plugincode", 
-			dataType = DataType.STRING, 
-			width = 30, 
-			canBeNull = true)
-	private String pluginCode;
-	
-	@DatabaseField(columnName = "templategui", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String templateGui;
+    @DatabaseField(columnName = "descr",
+            dataType = DataType.STRING,
+            width = 50,
+            canBeNull = false)
+    private String description;
+
+    @DatabaseField(columnName = "frames",
+            dataType = DataType.LONG_STRING,
+            canBeNull = true)
+    private String frame;
+
+    @DatabaseField(columnName = "plugincode",
+            dataType = DataType.STRING,
+            width = 30,
+            canBeNull = true)
+    private String pluginCode;
+
+    @DatabaseField(columnName = "templategui",
+            dataType = DataType.LONG_STRING,
+            canBeNull = true)
+    private String templateGui;
 }
 /*
 CREATE TABLE pagemodels

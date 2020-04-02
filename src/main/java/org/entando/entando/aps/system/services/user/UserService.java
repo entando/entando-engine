@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.user;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -48,15 +49,12 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 /**
- *
  * @author paddeo
  */
 public class UserService implements IUserService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private static final String ERRCODE_USER_NOT_FOUND = "1";
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private IUserManager userManager;
 
@@ -178,8 +176,8 @@ public class UserService implements IUserService {
                     .filter(i -> ((i.getKey() != null) && (UserDto.getEntityFieldName(i.getKey()) != null)))
                     .forEach(i -> i.setKey(UserDto.getEntityFieldName(i.getKey())));
             List<String> userNames = null;
-            List<UserDetails> users = new ArrayList<>(),
-                    allUsers = new ArrayList<>();
+            List<UserDetails> users = new ArrayList<>();
+            List<UserDetails> allUsers = new ArrayList<>();
 
             //username filter
             List<FieldSearchFilter> usernameFilter = filters.stream().filter(filter

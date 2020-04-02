@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.services.category.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;

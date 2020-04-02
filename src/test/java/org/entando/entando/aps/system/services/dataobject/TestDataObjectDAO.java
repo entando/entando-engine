@@ -11,11 +11,8 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.dataobject;
-
-import java.util.List;
-
-import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -24,6 +21,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.List;
+import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
 
@@ -33,6 +32,9 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecord
  * @author E.Santoboni
  */
 public class TestDataObjectDAO extends BaseTestCase {
+
+    private DataObjectDAO _dataObjectDao;
+    private IDataObjectManager _dataObjectManager;
 
     @Override
     protected void setUp() throws Exception {
@@ -189,9 +191,5 @@ public class TestDataObjectDAO extends BaseTestCase {
             throw new Exception(e);
         }
     }
-
-    private DataObjectDAO _dataObjectDao;
-
-    private IDataObjectManager _dataObjectManager;
 
 }

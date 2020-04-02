@@ -11,11 +11,13 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.agiletec.aps.system.common.notify;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.util.DateConverter;
 import java.io.Serializable;
 import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -27,74 +29,71 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.util.DateConverter;
-
 /**
  * Servizio notificatore eventi.
+ *
  * @author M.Diana - E.Santoboni
  */
-public class NotifyManager implements INotifyManager, ApplicationListener, 
-BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
+public class NotifyManager implements INotifyManager, ApplicationListener,
+        BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(NotifyManager.class);
-	
-	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof ApsEvent) {
-			NotifyingEventThread thread = new NotifyingEventThread(this, (ApsEvent) event);
-			thread.setName(NOTIFYING_THREAD_NAME + "_" + DateConverter.getFormattedDate(new Date(), "yyyy-MM-dd-HH-mm-ss"));
-			thread.start();
-			return;
-		}
-		_logger.debug("Unhandled generic event detected: {}", event.getClass().getName());
-	}
+    public static final String NOTIFYING_THREAD_NAME = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "NotifyingThreadName";
+    private static final Logger _logger = LoggerFactory.getLogger(NotifyManager.class);
+    private ApplicationEventPublisher _eventPublisher;
+    private BeanFactory _beanFactory;
 
-	/**
-	 * Notifica un evento ai corrispondenti servizi osservatori.
-	 * @param event L'evento da notificare.
-	 */
-	protected void notify(ApsEvent event) {
-		ListableBeanFactory factory = (ListableBeanFactory) this._beanFactory;
-		String[] defNames = factory.getBeanNamesForType(event.getObserverInterface());
-		for (int i=0; i<defNames.length; i++) {
-			Object observer = null;
-			try {
-				observer = this._beanFactory.getBean(defNames[i]);
-			} catch (Throwable t) {
-				observer = null;
-			}
-			if (observer != null) {
-				((ObserverService) observer).update(event);
-				_logger.debug("The event {} was notified to the {} service", event.getClass().getName(), observer.getClass().getName());
-			}
-		}
-		_logger.debug("The {} has been notified", event.getClass().getName());
-	}
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        if (event instanceof ApsEvent) {
+            NotifyingEventThread thread = new NotifyingEventThread(this, (ApsEvent) event);
+            thread.setName(NOTIFYING_THREAD_NAME + "_" + DateConverter.getFormattedDate(new Date(), "yyyy-MM-dd-HH-mm-ss"));
+            thread.start();
+            return;
+        }
+        _logger.debug("Unhandled generic event detected: {}", event.getClass().getName());
+    }
 
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this._beanFactory = beanFactory;
-	}
+    /**
+     * Notifica un evento ai corrispondenti servizi osservatori.
+     *
+     * @param event L'evento da notificare.
+     */
+    protected void notify(ApsEvent event) {
+        ListableBeanFactory factory = (ListableBeanFactory) this._beanFactory;
+        String[] defNames = factory.getBeanNamesForType(event.getObserverInterface());
+        for (int i = 0; i < defNames.length; i++) {
+            Object observer = null;
+            try {
+                observer = this._beanFactory.getBean(defNames[i]);
+            } catch (Throwable t) {
+                observer = null;
+            }
+            if (observer != null) {
+                ((ObserverService) observer).update(event);
+                _logger.debug("The event {} was notified to the {} service", event.getClass().getName(), observer.getClass().getName());
+            }
+        }
+        _logger.debug("The {} has been notified", event.getClass().getName());
+    }
 
-	/**
-	 * Notifica un'evento a tutti i listener definiti nel sistema.
-	 * @param event L'evento da notificare.
-	 */
-	@Override
-	public void publishEvent(ApplicationEvent event) {
-		this._eventPublisher.publishEvent(event);
-	}
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this._beanFactory = beanFactory;
+    }
 
-	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
-		this._eventPublisher = eventPublisher;
-	}
+    /**
+     * Notifica un'evento a tutti i listener definiti nel sistema.
+     *
+     * @param event L'evento da notificare.
+     */
+    @Override
+    public void publishEvent(ApplicationEvent event) {
+        this._eventPublisher.publishEvent(event);
+    }
 
-	private ApplicationEventPublisher _eventPublisher;
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
+        this._eventPublisher = eventPublisher;
+    }
 
-	private BeanFactory _beanFactory;
-	
-	public static final String NOTIFYING_THREAD_NAME = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "NotifyingThreadName";
-	
 }

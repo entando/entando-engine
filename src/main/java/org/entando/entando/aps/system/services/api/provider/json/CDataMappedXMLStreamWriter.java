@@ -11,12 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package org.entando.entando.aps.system.services.api.provider.json;
 
 import java.io.Writer;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.codehaus.jettison.mapped.MappedNamespaceConvention;
 import org.codehaus.jettison.mapped.MappedXMLStreamWriter;
 import org.entando.entando.aps.system.services.api.model.CDataAdapter;
@@ -25,12 +24,12 @@ import org.entando.entando.aps.system.services.api.model.CDataAdapter;
  * @author E.Santoboni
  */
 public class CDataMappedXMLStreamWriter extends MappedXMLStreamWriter {
-    
+
     public CDataMappedXMLStreamWriter(MappedNamespaceConvention convention, Writer writer) {
         super(convention, writer);
     }
-    
-	@Override
+
+    @Override
     public void writeCharacters(String text) throws XMLStreamException {
         if (CDataAdapter.isCdata(text)) {
             String parsedCDataText = CDataAdapter.parse(text);
@@ -39,5 +38,5 @@ public class CDataMappedXMLStreamWriter extends MappedXMLStreamWriter {
             super.writeCharacters(text);
         }
     }
-    
+
 }
