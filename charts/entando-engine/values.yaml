@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: draft
-  tag: dev
+  repository: docker.io/entando/entando-engine
+  tag: 6.1.0
   pullPolicy: IfNotPresent
 
 # define environment variables here as a map of key: value
