@@ -39,16 +39,16 @@
         </repository>
     </repositories>
     <properties>
-<!--        <checkstyleConfigLocation>/home/lulu/Code/entando/entando-core-parent/checkstyle.xml</checkstyleConfigLocation>-->
-<!--        <owaspSuppressionFileLocation>/home/lulu/Code/entando/entando-core-parent/owasp-dependency-check-suppression.xml</owaspSuppressionFileLocation>-->
-<!--        <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>-->
+        <!--        <checkstyleConfigLocation>/home/lulu/Code/entando/entando-core-parent/checkstyle.xml</checkstyleConfigLocation>-->
+        <!--        <owaspSuppressionFileLocation>/home/lulu/Code/entando/entando-core-parent/owasp-dependency-check-suppression.xml</owaspSuppressionFileLocation>-->
+        <!--        <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>-->
         <allTestsSuiteClass>com.agiletec.aps.AllTests</allTestsSuiteClass>
     </properties>
     <profiles>
         <profile>
             <id>pre-deployment-verification</id>
             <properties>
-<!--                <preDeploymentTestGroups>org.entando.entando.TestCategory</preDeploymentTestGroups>-->
+                <!--                <preDeploymentTestGroups>org.entando.entando.TestCategory</preDeploymentTestGroups>-->
             </properties>
         </profile>
     </profiles>
@@ -96,7 +96,7 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <pushChanges>false</pushChanges>
-                   <localCheckout>true</localCheckout>
+                    <localCheckout>true</localCheckout>
                 </configuration>
             </plugin>
             <plugin>
@@ -127,19 +127,35 @@
                     </execution>
                 </executions>
             </plugin>
-        
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version></plugin>
-    
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M1</version></plugin>
-    </plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                    <configuration>
+                        <!--                        <argLine>${argLine} -XX:MaxRAMPercentage=90</argLine>-->
+                        <argLine>${argLine}</argLine>
+                        <forkCount>1</forkCount>
+                        <test>${allTestsSuiteClass}</test>
+                        <shutdown>exit</shutdown>
+                        <parallel>methods</parallel>
+                        <threadCount>8</threadCount>
+                    </configuration>
+                </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings
                 only. It has no influence on the Maven build itself. -->
                 <plugin>
