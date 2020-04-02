@@ -6,7 +6,7 @@
     <parent>
         <artifactId>entando-core-parent</artifactId>
         <groupId>org.entando</groupId>
-        <version>6.1.8</version>
+        <version>6.1.10</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine</artifactId>
