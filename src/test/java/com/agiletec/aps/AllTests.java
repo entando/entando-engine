@@ -143,7 +143,7 @@ public class AllTests {
         suite.addTestSuite(LangManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(LangManagerTest.class));
         //
-//        suite.addTestSuite(TestPageManager.class);
+        suite.addTestSuite(TestPageManager.class);
         suite.addTestSuite(TestNavigatorExpression.class);
         suite.addTestSuite(TestNavigatorParser.class);
         //
