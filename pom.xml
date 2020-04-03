@@ -150,7 +150,8 @@
                         <test>${allTestsSuiteClass}</test>
                         <shutdown>exit</shutdown>
                         <parallel>methods</parallel>
-                        <threadCount>1</threadCount>
+                        <threadCount>10</threadCount>
+
                     </configuration>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings
