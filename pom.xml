@@ -6,7 +6,7 @@
     <parent>
         <artifactId>entando-core-parent</artifactId>
         <groupId>org.entando</groupId>
-        <version>6.1.10</version>
+        <version>6.1.11</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine</artifactId>
@@ -40,7 +40,7 @@
     </repositories>
     <properties>
         <!--        <checkstyleConfigLocation>/home/lulu/Code/entando/entando-core-parent/checkstyle.xml</checkstyleConfigLocation>-->
-        <!--        <owaspSuppressionFileLocation>/home/lulu/Code/entando/entando-core-parent/owasp-dependency-check-suppression.xml</owaspSuppressionFileLocation>-->
+<!--                <owaspSuppressionFileLocation>/home/lulu/Code/entando/entando-core-parent/owasp-dependency-check-suppression.xml</owaspSuppressionFileLocation>-->
                 <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>
 <!--        <allTestsSuiteClass>com.agiletec.aps.AllTests</allTestsSuiteClass>-->
     </properties>
