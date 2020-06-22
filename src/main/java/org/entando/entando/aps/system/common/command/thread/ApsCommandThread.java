@@ -45,12 +45,6 @@ public class ApsCommandThread extends Thread {
 	}
 
 	@Override
-	public void destroy() {
-		this.stopCommand();
-		super.destroy();
-	}
-
-	@Override
 	public void interrupt() {
 		this.stopCommand();
 		super.interrupt();

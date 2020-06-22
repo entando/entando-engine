@@ -40,15 +40,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
-        <allTestsSuiteClass></allTestsSuiteClass>
-        <preDeploymentTestGroups></preDeploymentTestGroups>
-        <postDeploymentTestGroups></postDeploymentTestGroups>
-        <checkstyleConfigLocation>
-            /home/ampie/Code/entando/entando-core-parent/checkstyle.xml
-        </checkstyleConfigLocation>
-        <owaspSuppressionFileLocation>
-            /home/ampie/Code/entando/entando-core-parent/owasp-dependency-check-suppression.xml
-        </owaspSuppressionFileLocation>
         <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>
         <!--        <allTestsSuiteClass>com.agiletec.aps.AllTests</allTestsSuiteClass>-->
     </properties>
