@@ -5,5 +5,7 @@ pipelineConfig:
       value: ee
     - name: TEST_DEPLOYMENT
       value: "false"
+    - name: SKIP_CHECKSTYLE
+      value: "true"
     - name: UPDATE_OWASP_DB
       value: "false"
