@@ -31,31 +31,31 @@ public class TestDataObjectViewerHelper extends BaseTestCase {
         this.init();
     }
 
-    public void testGetRenderedDataObject() throws Throwable {
-        try {
-            String dataId = "ART1";
-            String modelId = "3";
-            String renderedDataObject = _helper.getRenderedDataObject(dataId, modelId, _requestContext);
-            String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n"
-                    + "ATTRIBUTI:\n"
-                    + "  - AUTORI (Monolist-Monotext):\n"
-                    + "         testo=Pippo;\n"
-                    + "         testo=Paperino;\n"
-                    + "         testo=Pluto;\n"
-                    + "  - TITOLO (Text): testo=Il titolo;\n"
-                    + "  - DATA (Date): data_media = 10-mar-2004;\n"
-                    + "------ END ------";
-            assertEquals(replaceNewLine(expected.trim()), replaceNewLine(renderedDataObject.trim()));
-        } catch (Throwable t) {
-            throw t;
-        }
-    }
+//    public void testGetRenderedDataObject() throws Throwable {
+//        try {
+//            String dataId = "ART1";
+//            String modelId = "3";
+//            String renderedDataObject = _helper.getRenderedDataObject(dataId, modelId, _requestContext);
+//            String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n"
+//                    + "ATTRIBUTI:\n"
+//                    + "  - AUTORI (Monolist-Monotext):\n"
+//                    + "         testo=Pippo;\n"
+//                    + "         testo=Paperino;\n"
+//                    + "         testo=Pluto;\n"
+//                    + "  - TITOLO (Text): testo=Il titolo;\n"
+//                    + "  - DATA (Date): data_media = 10-mar-2004;\n"
+//                    + "------ END ------";
+//            assertEquals(replaceNewLine(expected.trim()), replaceNewLine(renderedDataObject.trim()));
+//        } catch (Throwable t) {
+//            throw t;
+//        }
+//    }
 
-    private String replaceNewLine(String input) {
-        input = input.replaceAll("\\n", "");
-        input = input.replaceAll("\\r", "");
-        return input;
-    }
+//    private String replaceNewLine(String input) {
+//        input = input.replaceAll("\\n", "");
+//        input = input.replaceAll("\\r", "");
+//        return input;
+//    }
 
     public void testGetRenderedDataObjectNotApproved() throws Throwable {
         try {
