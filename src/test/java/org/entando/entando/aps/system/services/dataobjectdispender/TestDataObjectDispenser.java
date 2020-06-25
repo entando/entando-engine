@@ -33,48 +33,48 @@ public class TestDataObjectDispenser extends BaseTestCase {
         super.setUp();
         this.init();
     }
-
-    public void testGetRenderedContent_1() throws Throwable {
-        RequestContext reqCtx = this.getRequestContext();
-
-        DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        this.setUserOnSession("admin");
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        this.setUserOnSession("editorCoach");
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        this.setUserOnSession("pageManagerCoach");
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-    }
-
-    public void testGetRenderedContent_2() throws Throwable {
-        RequestContext reqCtx = this.getRequestContext();
-        this.setUserOnSession("admin");
-
-        DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART120", 2, "it", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedItART120_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART120", 2, "en", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedEnART120_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART121", 2, "it", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedItART121_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART121", 2, "en", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedEnART121_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-
-        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART122", 2, "en", reqCtx);
-        assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
-    }
+//
+//    public void testGetRenderedContent_1() throws Throwable {
+//        RequestContext reqCtx = this.getRequestContext();
+//
+//        DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        this.setUserOnSession("admin");
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        this.setUserOnSession("editorCoach");
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        this.setUserOnSession("pageManagerCoach");
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//    }
+//
+//    public void testGetRenderedContent_2() throws Throwable {
+//        RequestContext reqCtx = this.getRequestContext();
+//        this.setUserOnSession("admin");
+//
+//        DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART120", 2, "it", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedItART120_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART120", 2, "en", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedEnART120_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART121", 2, "it", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedItART121_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART121", 2, "en", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedEnART121_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//
+//        outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART122", 2, "en", reqCtx);
+//        assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
+//    }
 
     public void testGetRenderedContent_3() throws Throwable {
         DataObject dataobject = this._dataObjectManager.loadDataObject("ART120", true);
