@@ -40,8 +40,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
-        <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>
-<!--        <allTestsSuiteClass>com.agiletec.aps.AllTests</allTestsSuiteClass>-->
+<!--        <allTestsSuiteClass>org.entando.entando.aps.system.init.InitializerManagerTest</allTestsSuiteClass>-->
+        <allTestsSuiteClass>com.agiletec.aps.AllTests</allTestsSuiteClass>
     </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
