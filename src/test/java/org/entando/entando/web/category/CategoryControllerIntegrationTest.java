@@ -61,23 +61,17 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     @Test
     public void testGetCategories() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/categories")
-                        .header("Authorization", "Bearer " + accessToken));
+                .perform(get("/categories"));
         result.andExpect(status().isOk());
         testCors("/categories");
     }
 
     @Test
     public void testGetValidCategoryTree() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
                 .perform(get("/categories")
-                        .param("parentCode", "home")
-                        .header("Authorization", "Bearer " + accessToken));
+                        .param("parentCode", "home"));
         result.andExpect(status().isOk());
     }
 
@@ -278,16 +272,24 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetPermissionsWithoutPermission() throws Exception {
+    public void testGetCategoryWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("cat1", accessToken, status().isForbidden());
     }
 
     @Test
-    public void testGetPermissionsWithEnterBackEndPermission() throws Exception {
+    public void testGetCategoryWithManageCategoriesPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
-                .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND).build();
+                .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_CATEGORIES).build();
+        String accessToken = mockOAuthInterceptor(user);
+        this.executeGet("cat1", accessToken, status().isOk());
+    }
+
+    @Test
+    public void testGetCategoryWithContentEditorPermission() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.CONTENT_EDITOR).build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("cat1", accessToken, status().isOk());
     }
