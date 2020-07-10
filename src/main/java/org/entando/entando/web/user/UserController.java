@@ -107,7 +107,7 @@ public class UserController {
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = Permission.MANAGE_USERS)
+    @RestAccessControl(permission = {Permission.MANAGE_USERS, Permission.MANAGE_USER_PROFILES, Permission.VIEW_USERS})
     @RequestMapping(value = "/{username:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserDto>> getUser(@PathVariable String username) {
         logger.debug("getting user {} details", username);

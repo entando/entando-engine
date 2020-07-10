@@ -80,7 +80,7 @@ public class GroupController {
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RestAccessControl(permission = Permission.ENTER_BACKEND)
     @RequestMapping(value = "/{groupCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GroupDto>> getGroup(@PathVariable String groupCode) {
         GroupDto group = this.getGroupService().getGroup(groupCode);

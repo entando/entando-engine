@@ -262,6 +262,19 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
+    public void testGetGroupDetailsWithEnterBackendPermission() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, Permission.ENTER_BACKEND, Permission.ENTER_BACKEND)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc.perform(
+                get("/groups/{code}", Group.FREE_GROUP_NAME)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
     public void testParamSize() throws ApsSystemException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
