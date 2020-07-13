@@ -118,6 +118,12 @@
                 <entry key="resourceDiskRootFolder">
                     <value>${resourceDiskRootFolder}</value>
                 </entry>
+                <entry key="appBuilderIntegrationEnabled">
+                    <value>${appBuilderIntegrationEnabled}</value>
+                </entry>
+                <entry key="appBuilderBaseURL">
+                    <value>${appBuilderBaseURL}</value>
+                </entry>
             </map>
         </property>
         <property name="securityConfigPath">
