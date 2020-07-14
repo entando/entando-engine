@@ -34,6 +34,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,6 +61,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.validators.WidgetProcessorFactory;
 import org.entando.entando.aps.system.services.widgettype.validators.WidgetValidatorFactory;
 import org.entando.entando.aps.util.PageUtils;
+import org.entando.entando.aps.util.GenericResourceUtils;
 import org.entando.entando.web.common.assembler.PageSearchMapper;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -79,6 +81,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -205,13 +208,21 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
     }
 
     @Override
-    public List<PageDto> getPages(String parentCode) {
+    public List<PageDto> getPages(String parentCode,
+            @Nullable String forLinkingToOwnerGroup, @Nullable Collection<String> forLinkingToExtraGroups) {
         List<PageDto> res = new ArrayList<>();
         IPage parent = this.getPageManager().getDraftPage(parentCode);
-        Optional.ofNullable(parent).ifPresent(root -> Optional.ofNullable(root.getChildrenCodes()).ifPresent(children -> Arrays.asList(children).forEach(childCode -> {
-            IPage childD = this.getPageManager().getDraftPage(childCode);
-            res.add(dtoBuilder.convert(childD));
-        })));
+        Optional.ofNullable(parent).ifPresent(root -> Optional.ofNullable(root.getChildrenCodes())
+                .ifPresent(children -> Arrays.asList(children).forEach(childCode -> {
+                    IPage childD = this.getPageManager().getDraftPage(childCode);
+                    if (forLinkingToOwnerGroup == null ||
+                            GenericResourceUtils.isResourceLinkableByContent(
+                                    childD.getGroup(), childD.getExtraGroups(),
+                                    forLinkingToOwnerGroup, forLinkingToExtraGroups)
+                    ) {
+                        res.add(dtoBuilder.convert(childD));
+                    }
+                })));
         return res;
     }
 

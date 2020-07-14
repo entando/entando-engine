@@ -1,0 +1,44 @@
+[
+  {
+    "code": "parent",
+    "status": null,
+    "displayedInMenu": false,
+    "pageModel": null,
+    "charset": null,
+    "contentType": null,
+    "parentCode": null,
+    "seo": false,
+    "titles": {},
+    "fullTitles": {},
+    "ownerGroup": "a_group",
+    "joinGroups": [],
+    "children": [],
+    "position": 0,
+    "numWidget": 0,
+    "lastModified": null,
+    "fullPath": null,
+    "token": null
+  },
+  {
+    "code": "01",
+    "status": null,
+    "displayedInMenu": false,
+    "pageModel": null,
+    "charset": null,
+    "contentType": null,
+    "parentCode": null,
+    "seo": false,
+    "titles": {},
+    "fullTitles": {},
+    "ownerGroup": "a_group",
+    "joinGroups": [
+      "another_group"
+    ],
+    "children": [],
+    "position": 0,
+    "numWidget": 0,
+    "lastModified": null,
+    "fullPath": null,
+    "token": null
+  }
+]

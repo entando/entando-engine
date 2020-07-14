@@ -17,6 +17,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,12 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.Filter;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PagePositionRequest;
@@ -103,9 +109,22 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<PageDto>, Map<String, String>>> getPages(@ModelAttribute("user") UserDetails user, @RequestParam(value = "parentCode", required = false, defaultValue = "homepage") String parentCode) {
-        logger.debug("getting page tree for parent {}", parentCode);
-        List<PageDto> result = this.getAuthorizationService().filterList(user, this.getPageService().getPages(parentCode));
+    public ResponseEntity<RestResponse<List<PageDto>, Map<String, String>>> getPages(
+            @ModelAttribute("user") UserDetails user,
+            @RequestParam(value = "parentCode", required = false, defaultValue = "homepage") String parentCode,
+            @RequestParam(value = "forLinkingToOwnerGroup", required = false) String forLinkingToOwnerGroup,
+            @RequestParam(value = "forLinkingToExtraGroups", required = false) String forLinkingToExtraGroups) {
+        logger.debug("getting page tree for parent {} ({}|{})", parentCode,
+                forLinkingToOwnerGroup, forLinkingToExtraGroups);
+
+        List<String> exg = (forLinkingToExtraGroups == null) ? null :
+                Arrays.asList(forLinkingToExtraGroups.split(","));
+
+        List<PageDto> result = this.getAuthorizationService().filterList(
+                user,
+                this.getPageService().getPages(parentCode, forLinkingToOwnerGroup, exg)
+        );
+
         Map<String, String> metadata = new HashMap<>();
         metadata.put("parentCode", parentCode);
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
