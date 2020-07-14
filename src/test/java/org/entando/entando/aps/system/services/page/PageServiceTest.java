@@ -13,6 +13,13 @@
  */
 package org.entando.entando.aps.system.services.page;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
@@ -21,6 +28,16 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.apache.commons.lang3.tuple.Pair;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.assertionhelper.PageAssertionHelper;
@@ -41,20 +58,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PageServiceTest {
+    public static final String ADMIN_GROUP_NAME = "administrators";
+    public static final String FREE_GROUP_NAME = "free";
 
     @Mock
     private IPageManager pageManager;
@@ -127,6 +137,110 @@ public class PageServiceTest {
         assertThat(pageDto.getJoinGroups()).containsExactly("free");
     }
 
+    @Test
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public void shouldReturnCompatiblePages() {
+        String A_GROUP_THAT_IS_NOT_PRESENT = "a-group-that-is-not-present";
+        String A_GROUP_THAT_IS_PRESENT = "GROUP1";
+        String ANOTHER_GROUP_THAT_IS_PRESENT = "GROUP2";
+
+        // Mocked Page tree mock generation
+        Page parentPage = mkTestPage("PP", "service", ADMIN_GROUP_NAME, null);
+
+        List<Page> pages = Arrays.asList(
+                parentPage,
+                mkTestPage("FR", "PP", FREE_GROUP_NAME, null),
+                mkTestPage("AD", "PP", ADMIN_GROUP_NAME, null),
+                mkTestPage("G1", "PP", A_GROUP_THAT_IS_PRESENT, null),
+                mkTestPage("FR#", "PP", ANOTHER_GROUP_THAT_IS_PRESENT, Arrays.asList(FREE_GROUP_NAME)),
+                mkTestPage("AD#", "PP", ANOTHER_GROUP_THAT_IS_PRESENT, Arrays.asList(ADMIN_GROUP_NAME)),
+                mkTestPage("G1#", "PP", ANOTHER_GROUP_THAT_IS_PRESENT, Arrays.asList(A_GROUP_THAT_IS_PRESENT))
+        );
+
+        for (Page page : pages) {
+            parentPage.addChildCode(page.getCode());
+            PageDto dto = new PageDto();
+            dto.setCode(page.getCode());
+            dto.setOwnerGroup(page.getGroup());
+            Set<String> eg = page.getExtraGroups();
+            if (eg  != null) {
+                for (String g : eg) { dto.addJoinGroup(g); }
+            }
+            when(dtoBuilder.convert(page)).thenReturn(dto);
+            when(pageManager.getDraftPage(page.getCode())).thenReturn(page);
+        }
+        when(pageManager.getDraftPage(parentPage.getCode())).thenReturn(parentPage);
+
+        // Support lambda for running the tests
+
+        BiPredicate<Pair<String, List<String>>, List<String>> forLinkingTo = (p, exp) -> {
+            List<PageDto> dtoPages = pageService
+                    .getPages("PP", p.getLeft(),
+                            (p.getRight() != null) ? new HashSet<>(p.getRight()) : null);
+
+            for (int i = 0; i < dtoPages.size(); i++) {
+                String es = (i < exp.size()) ? exp.get(i) : null;
+                assertThat(dtoPages.get(i).getCode()).isEqualTo(es);
+            }
+            assertThat(dtoPages.size()).isEqualTo(exp.size());
+            return true;
+        };
+
+        // Test truth tables generation
+        String[] parentOwnerGroup = new String[]{                   // Parent OWNER GROUPS
+                FREE_GROUP_NAME, ADMIN_GROUP_NAME, A_GROUP_THAT_IS_PRESENT, "GROUP2"
+        };
+        List<List<List<String>>> map = new ArrayList<>();
+
+        List<String> pSubCase1 = Arrays.asList(FREE_GROUP_NAME);
+        List<String> pSubCase2 = Arrays.asList(ADMIN_GROUP_NAME);
+        List<String> pSubCase3 = Arrays.asList(A_GROUP_THAT_IS_PRESENT);
+        List<String> pSubCase4 = Arrays.asList(A_GROUP_THAT_IS_NOT_PRESENT);
+        List<String> pSubCase5 = Arrays.asList(FREE_GROUP_NAME, ADMIN_GROUP_NAME);
+        List<String> pSubCase6 = Arrays.asList(FREE_GROUP_NAME, ADMIN_GROUP_NAME, A_GROUP_THAT_IS_PRESENT);
+        List<String> pSubCase7 = Arrays.asList();
+        String O;
+
+        // PARENT OWNER: FREE
+        O = FREE_GROUP_NAME;
+        forLinkingTo.test(Pair.of(O, pSubCase1), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase2), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase3), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase4), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase5), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase6), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase7), Arrays.asList("FR","FR#"));
+
+        // PARENT OWNER: ADMINISTRATORS
+        O = ADMIN_GROUP_NAME;
+        forLinkingTo.test(Pair.of(O, pSubCase1), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase2), Arrays.asList("PP","FR","AD","G1","FR#","AD#","G1#"));
+        forLinkingTo.test(Pair.of(O, pSubCase3), Arrays.asList("FR","G1","FR#","G1#"));
+        forLinkingTo.test(Pair.of(O, pSubCase4), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase5), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase6), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase7), Arrays.asList("PP","FR","AD","G1","FR#","AD#","G1#"));
+
+        // PARENT OWNER: GROUP1
+        O = A_GROUP_THAT_IS_PRESENT;
+        forLinkingTo.test(Pair.of(O, pSubCase1), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase2), Arrays.asList("FR","G1","FR#","G1#"));
+        forLinkingTo.test(Pair.of(O, pSubCase3), Arrays.asList("FR","G1","FR#","G1#"));
+        forLinkingTo.test(Pair.of(O, pSubCase4), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase5), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase6), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase7), Arrays.asList("FR","G1","FR#","G1#"));
+        
+        // PARENT OWNER: GROUP2
+        O = A_GROUP_THAT_IS_NOT_PRESENT;
+        forLinkingTo.test(Pair.of(O, pSubCase1), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase2), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase3), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase4), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase5), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase6), Arrays.asList("FR","FR#"));
+        forLinkingTo.test(Pair.of(O, pSubCase7), Arrays.asList("FR","FR#"));
+    }
 
     /**********************************************************************************
      * PAGE USAGE DETAILS
@@ -309,5 +423,20 @@ public class PageServiceTest {
         } catch (Exception e) {
             Assert.fail("Mock Exception");
         }
+    }
+
+    /**
+     * test page creation helper (for test readability)
+     */
+    private Page mkTestPage(String code, String parentCode, @NonNull String group, @Nullable List<String> extraGroups) {
+        Page p = new Page();
+        p.setOnline(true);
+        p.setCode(code);
+        p.setParentCode(parentCode);
+        p.setGroup(group);
+        if (extraGroups != null) {
+            p.setExtraGroups(new HashSet<>(extraGroups));
+        }
+        return p;
     }
 }

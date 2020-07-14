@@ -13,23 +13,38 @@
  */
 package org.entando.entando.web.page;
 
-import com.agiletec.aps.system.services.role.Permission;
-import java.io.IOException;
-import java.util.List;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.FileTextReader;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import org.entando.entando.aps.system.services.page.PageAuthorizationService;
 import org.entando.entando.aps.system.services.page.PageService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
@@ -46,17 +61,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  *
@@ -94,6 +98,8 @@ public class PageControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldLoadAPageTree() throws Exception {
+        // NOTE: the test only tests the interface logic, the business logic is tested at service level
+
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -172,17 +178,59 @@ public class PageControllerTest extends AbstractControllerTest {
                 + "        }\n"
                 + "    ]";
         List<PageDto> mockResult = (List<PageDto>) this.createMetadataList(mockJsonResult);
-        when(pageService.getPages(any(String.class))).thenReturn(mockResult);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+
+        doReturn(mockResult).when(pageService).getPages(any(String.class), isNull(), isNull());
+        doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
+
         ResultActions result = mockMvc.perform(
                 get("/pages").
-                param("parentCode", "service")
-                .sessionAttr("user", user)
-                .header("Authorization", "Bearer " + accessToken)
+                        param("parentCode", "service")
+                        .sessionAttr("user", user)
+                        .header("Authorization", "Bearer " + accessToken)
         );
-        String response = result.andReturn().getResponse().getContentAsString();
+
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.errors", hasSize(0)));
+        result.andExpect(jsonPath("$.payload", hasSize(4)));
+        result.andExpect(jsonPath("$.payload[0].code", org.hamcrest.Matchers.equalTo("notfound")));
+    }
+
+    @Test
+    public void shouldLoadPageTreeForOwnerGroupAndExtraGroups() throws Exception {
+        // NOTE: the test only tests the interface logic, the business logic is tested at service level
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String mockJsonResult = FileTextReader.getText(
+                this.getClass().getResourceAsStream("/controllers/pages/essential-page-tree.json"));
+        List<PageDto> mockResult = this.createMetadataList(mockJsonResult);
+
+        doReturn(mockResult).when(pageService).getPages(
+                any(String.class),
+                eq("a_group"),
+                eq(Arrays.asList("GROUP1","GROUP2"))
+        );
+
+        doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
+
+        ResultActions result = mockMvc.perform(
+                get("/pages").
+                        param("parentCode", "service").
+                        param("forLinkingToOwnerGroup", "a_group").
+                        param("forLinkingToExtraGroups", "GROUP1,GROUP2").
+                        sessionAttr("user", user).
+                        header("Authorization", "Bearer " + accessToken)
+        );
+
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.errors", hasSize(0)));
+        result.andExpect(jsonPath("$.payload", hasSize(2)));
+        result.andExpect(jsonPath("$.payload[0].code", org.hamcrest.Matchers.equalTo("parent")));
     }
 
     @Test
