@@ -97,13 +97,34 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test 
-    public void get_page_models_reference_return_OK() throws Exception {
+    public void get_page_models_reference_1() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "home", "PageManager")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.metaData.totalItems", is(25)));
+    }
+
+    @Test 
+    public void get_page_models_reference_2() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/pageModels/{code}/references/{manager}", "service", "PageManager")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(10)));
+        
+        result.andExpect(jsonPath("$.payload.size()", is(10)));
+        result.andExpect(jsonPath("$.payload[0].code", is("service")));
+        result.andExpect(jsonPath("$.payload[0].status", is("published")));
+        result.andExpect(jsonPath("$.payload[0].onlineInstance", is(false)));
+        result.andExpect(jsonPath("$.payload[0].titles.it", is("Nodo pagine di servizio")));
+        
+        result.andExpect(jsonPath("$.payload[5].code", is("service")));
+        result.andExpect(jsonPath("$.payload[5].status", is("published")));
+        result.andExpect(jsonPath("$.payload[5].onlineInstance", is(true)));
+        result.andExpect(jsonPath("$.payload[5].titles.it", is("Nodo pagine di servizio")));
     }
 
     @Test

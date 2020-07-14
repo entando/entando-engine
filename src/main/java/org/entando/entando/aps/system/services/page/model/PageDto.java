@@ -34,6 +34,7 @@ public class PageDto {
     private static final String DEFAULT_CONTENT_TYPE= "text/html";
     private String code;
     private String status;
+    private boolean onlineInstance;
     private boolean displayedInMenu;
     private String pageModel;
     private String charset;
@@ -66,22 +67,19 @@ public class PageDto {
     public PageDto(IPage page, IPageManager pageManager) {
         this.setCode(page.getCode());
         this.setStatus(getPageStatus(page));
+        this.setOnlineInstance(page.isOnlineInstance());
         this.setDisplayedInMenu(page.isShowable());
         this.setPageModel(page.getModel().getCode());
-
-        if(page.getCharset() != null) {
+        if (page.getCharset() != null) {
             this.setCharset(page.getCharset());
-        }else {
+        } else {
             this.setCharset(DEFAULT_CHARSET);
         }
-
-        if(page.getMimeType() != null) {
+        if (page.getMimeType() != null) {
             this.setContentType(page.getMimeType());
-        }
-        else{
+        } else {
             this.setContentType(DEFAULT_CONTENT_TYPE);
         }
-
         this.setParentCode(page.getParentCode());
         this.setSeo(page.isUseExtraTitles());
         Optional<ApsProperties> apsTitles = Optional.ofNullable(page.getTitles());
@@ -124,6 +122,14 @@ public class PageDto {
         this.status = status;
     }
 
+    public boolean isOnlineInstance() {
+        return onlineInstance;
+    }
+
+    public void setOnlineInstance(boolean onlineInstance) {
+        this.onlineInstance = onlineInstance;
+    }
+    
     public boolean isDisplayedInMenu() {
         return displayedInMenu;
     }
