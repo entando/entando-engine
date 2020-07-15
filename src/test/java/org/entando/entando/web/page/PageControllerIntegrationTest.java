@@ -118,6 +118,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(jsonPath("$.payload.size()", is(8)));
             result.andExpect(jsonPath("$.payload[7].code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload[7].status", is("unpublished")));
+            result.andExpect(jsonPath("$.payload[7].onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload[7].titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload[7].titles.en", is("Title EN")));
 
@@ -130,6 +131,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(jsonPath("$.payload.size()", is(8)));
             result.andExpect(jsonPath("$.payload[7].code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload[7].status", is("published")));
+            result.andExpect(jsonPath("$.payload[7].onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload[7].titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload[7].titles.en", is("Title EN")));
             
@@ -145,6 +147,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(jsonPath("$.payload.size()", is(8)));
             result.andExpect(jsonPath("$.payload[7].code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload[7].status", is("draft")));
+            result.andExpect(jsonPath("$.payload[7].onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload[7].titles.it", is("DRAFT title IT")));
             result.andExpect(jsonPath("$.payload[7].titles.en", is("DRAFT title EN")));
         } finally {
@@ -220,6 +223,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload.status", is("unpublished")));
+            result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
 
@@ -231,6 +235,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload.status", is("published")));
+            result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
             
@@ -245,6 +250,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload.status", is("draft")));
+            result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.titles.it", is("DRAFT title IT")));
             result.andExpect(jsonPath("$.payload.titles.en", is("DRAFT title EN")));
         } finally {
@@ -298,6 +304,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newPageCode)));
             result.andExpect(jsonPath("$.payload.status", is("unpublished")));
+            result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
 
@@ -318,6 +325,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                              .content(payload));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.displayedInMenu", is(true)));
+            result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.charset", is("utf8")));
             result.andExpect(jsonPath("$.payload.contentType", is("text/html")));
             result.andExpect(jsonPath("$.payload.joinGroups", hasItems("management", "customers")));
