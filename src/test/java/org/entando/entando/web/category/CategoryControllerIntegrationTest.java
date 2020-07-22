@@ -286,6 +286,23 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         this.executeGet("cat1", accessToken, status().isOk());
     }
 
+    @Test
+    public void testDeleteRootCategory() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+
+        String accessToken = mockOAuthInterceptor(user);
+        mockMvc.perform(get("/categories"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Assert.assertNotNull(this.categoryManager.getCategory("home"));
+        this.executeDelete("home", accessToken, status().isBadRequest())
+                .andDo(print())
+                .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED)))
+                .andExpect(jsonPath("$.errors[0].message", is("The Category 'home' cannot be deleted because it is the root")));
+    }
+
     private ResultActions executeGet(String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/categories/{categoryCode}", new Object[]{categoryCode})

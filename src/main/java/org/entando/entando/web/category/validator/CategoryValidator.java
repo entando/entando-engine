@@ -31,6 +31,8 @@ import org.springframework.validation.Validator;
 @Component
 public class CategoryValidator implements Validator {
 
+    public static final String ROOT_CATEGORY = "home";
+
     public static final String ERRCODE_PARENT_CATEGORY_NOT_FOUND = "1";
     public static final String ERRCODE_CATEGORY_NOT_FOUND = "2";
     public static final String ERRCODE_CATEGORY_ALREADY_EXISTS = "3";
@@ -39,6 +41,7 @@ public class CategoryValidator implements Validator {
     public static final String ERRCODE_CATEGORY_REFERENCES = "6";
     public static final String ERRCODE_CATEGORY_HAS_CHILDREN = "7";
     public static final String ERRCODE_CATEGORY_NO_REFERENCES = "8";
+    public static final String ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED = "9";
 
     @Autowired
     private ICategoryManager categoryManager;

@@ -190,6 +190,12 @@ public class CategoryService implements ICategoryService {
             throw new ResourceNotFoundException("category", categoryCode);
         }
 
+        if (categoryCode.equals(CategoryValidator.ROOT_CATEGORY)) {
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
+            bindingResult.reject(CategoryValidator.ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED, new String[]{categoryCode}, "category.cannot.delete.root");
+            throw new ValidationGenericException(bindingResult);
+        }
+
         if (category.getChildrenCodes().length > 0) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
             bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_HAS_CHILDREN, new String[]{categoryCode}, "category.cannot.delete.children");
