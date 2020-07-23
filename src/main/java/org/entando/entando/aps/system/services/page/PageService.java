@@ -553,7 +553,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         return this.getWidgetTypeManager().getWidgetType(typeCode);
     }
 
-    private IPage createPage(PageRequest pageRequest) {
+    protected IPage createPage(PageRequest pageRequest) {
         Page page = new Page();
         page.setCode(pageRequest.getCode());
         page.setShowable(pageRequest.isDisplayedInMenu());
@@ -653,7 +653,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         metadata.setMimeType(StringUtils.isNotBlank(mimetype) ? mimetype : null);
     }
 
-    private IPage loadPage(String pageCode, String status) {
+    protected IPage loadPage(String pageCode, String status) {
         IPage page = null;
         switch (status) {
             case STATUS_DRAFT:
@@ -673,7 +673,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         return page;
     }
 
-    private void validateRequest(PageRequest request) {
+    protected void validateRequest(PageRequest request) {
         if (this.getPageModelManager().getPageModel(request.getPageModel()) == null) {
             throw new ResourceNotFoundException(ERRCODE_PAGEMODEL_NOT_FOUND, "pageModel", request.getPageModel());
         }
@@ -810,7 +810,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
     }
 
 
-    private Map<String, Boolean> getReferencesInfo(IPage page) {
+    protected Map<String, Boolean> getReferencesInfo(IPage page) {
         Map<String, Boolean> references = new HashMap<>();
         try {
             String[] defNames = applicationContext.getBeanNamesForType(PageUtilizer.class);
