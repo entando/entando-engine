@@ -300,8 +300,11 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     @Override
     public Integer getComponentUsage(String componentCode) {
-
-        return this.getWidget(componentCode).getUsed();
+        try {
+            return this.getWidget(componentCode).getUsed();
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
 

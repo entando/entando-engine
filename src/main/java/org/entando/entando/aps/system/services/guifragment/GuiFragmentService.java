@@ -191,8 +191,11 @@ public class GuiFragmentService implements IGuiFragmentService {
 
     @Override
     public Integer getComponentUsage(String componentCode) {
-
-        return this.getGuiFragment(componentCode).getPageModels().size();
+        try {
+            return this.getGuiFragment(componentCode).getPageModels().size();
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
     @Override

@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.page;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -245,6 +246,14 @@ public class PageServiceTest {
     /**********************************************************************************
      * PAGE USAGE DETAILS
      *********************************************************************************/
+
+
+    @Test
+    public void getPageUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = pageService.getComponentUsage("non_existing");
+        assertEquals(0, componentUsage);
+    }
 
     @Test
     public void getPageUsageDetailsWithPublishedPageShouldAddItself() {
