@@ -88,6 +88,13 @@ public class GuiFragmentServiceTest {
 
 
     @Test
+    public void getFragmentUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = guiFragmentService.getComponentUsage("non_existing");
+        assertEquals(0, componentUsage);
+    }
+
+    @Test
     public void getFragmentUsageTest() throws Exception {
 
         Lang lang = new Lang();
