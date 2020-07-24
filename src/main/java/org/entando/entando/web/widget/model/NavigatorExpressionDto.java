@@ -14,7 +14,9 @@
 package org.entando.entando.web.widget.model;
 
 import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
+import java.util.Map;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.common.annotation.ValidateString;
 
 /**
@@ -22,10 +24,10 @@ import org.entando.entando.web.common.annotation.ValidateString;
  */
 public class NavigatorExpressionDto {
     
-    @NotNull(message = "page.navigator.spec.notBlank")
+    @NotNull(message = "widget.navigator.spec.notBlank")
     @ValidateString(acceptedValues = {NavigatorExpression.SPEC_PAGE_CODE, 
         NavigatorExpression.SPEC_ABS_CODE, NavigatorExpression.SPEC_CURRENT_PAGE_CODE, 
-        NavigatorExpression.SPEC_PARENT_PAGE_CODE, NavigatorExpression.SPEC_SUPER_CODE}, message = "page.navigator.spec.invalid")
+        NavigatorExpression.SPEC_PARENT_PAGE_CODE, NavigatorExpression.SPEC_SUPER_CODE}, message = "widget.navigator.spec.invalid")
 	private String spec;
     
     private int specSuperLevel = 0;
@@ -35,10 +37,47 @@ public class NavigatorExpressionDto {
     private String targetCode;
 	
     @ValidateString(acceptedValues = {NavigatorExpression.OPERATOR_CHILDREN_CODE, 
-        NavigatorExpression.OPERATOR_PATH_CODE, NavigatorExpression.OPERATOR_SUBTREE_CODE}, message = "page.navigator.operator.invalid")
+        NavigatorExpression.OPERATOR_PATH_CODE, NavigatorExpression.OPERATOR_SUBTREE_CODE}, message = "widget.navigator.operator.invalid")
 	private String operator;
     
 	private int operatorSubtreeLevel = 0;
+    
+    public NavigatorExpressionDto() {}
+    
+    public NavigatorExpressionDto(NavigatorExpression expression) {
+        Map<Integer, String> operators = NavigatorExpression.getOperators();
+        Map<Integer, String> specifications = NavigatorExpression.getSpecifications();
+        this.setOperator(operators.get(expression.getOperatorId()));
+        this.setOperatorSubtreeLevel(expression.getOperatorSubtreeLevel());
+        this.setSpec(specifications.get(expression.getSpecId()));
+        this.setSpecAbsLevel(expression.getSpecAbsLevel());
+        this.setSpecSuperLevel(expression.getSpecSuperLevel());
+        this.setTargetCode(expression.getSpecCode());
+    }
+    
+    public NavigatorExpression buildExpression() {
+        Map<Integer, String> specifications = NavigatorExpression.getSpecifications();
+        NavigatorExpression expr = new NavigatorExpression();
+        Integer specId = specifications.entrySet().stream().filter(e -> e.getValue().equals(this.getSpec()))
+                .map(Map.Entry::getKey).findFirst().orElse(null);
+        if (specId == null) {
+            throw new RuntimeException("Null specId for spec '" + this.getSpec() + "'");
+        }
+        expr.setSpecId(specId);
+        expr.setSpecCode(this.getTargetCode());
+        expr.setSpecAbsLevel(this.getSpecAbsLevel());
+        expr.setSpecSuperLevel(this.getSpecSuperLevel());
+        if (!StringUtils.isBlank(this.getOperator())) {
+            Map<Integer, String> operators = NavigatorExpression.getOperators();
+            Integer operatorId = operators.entrySet().stream().filter(e -> e.getValue().equals(this.getOperator()))
+                    .map(Map.Entry::getKey).findFirst().orElse(null);
+            if (operatorId == null) {
+                throw new RuntimeException("Null operatorId for operator '" + this.getOperator() + "'");
+            }
+            expr.setOperatorSubtreeLevel(this.getOperatorSubtreeLevel());
+        }
+        return expr;
+    }
 
     public String getSpec() {
         return spec;
