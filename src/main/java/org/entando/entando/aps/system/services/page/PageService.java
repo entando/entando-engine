@@ -587,7 +587,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         return page;
     }
 
-    private IPage updatePage(IPage oldPage, PageRequest pageRequest) {
+    protected IPage updatePage(IPage oldPage, PageRequest pageRequest) {
         Page page = new Page();
         PageMetadata metadata = oldPage.getMetadata();
         if (metadata == null) {
