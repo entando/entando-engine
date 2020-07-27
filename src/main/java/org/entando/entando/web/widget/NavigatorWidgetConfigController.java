@@ -23,7 +23,7 @@ import org.entando.entando.web.widget.model.NavigatorExpressionDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.SimpleRestResponse;
-import org.entando.entando.web.widget.model.NavigatorSpecDto;
+import org.entando.entando.web.widget.model.NavigatorConfigDto;
 import org.entando.entando.web.widget.validator.NavigatorWidgetConfigValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +54,8 @@ public class NavigatorWidgetConfigController {
     
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/navspec", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<NavigatorSpecDto>> getNavSpecByExpressions(@Valid @RequestBody NavigatorSpecDto bodyRequest, BindingResult bindingResult) {
-        logger.debug("Extract Epression -> {}", bodyRequest);
+    public ResponseEntity<SimpleRestResponse<NavigatorConfigDto>> getNavSpecByExpressions(@Valid @RequestBody NavigatorConfigDto bodyRequest, BindingResult bindingResult) {
+        logger.debug("Extract Expression -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -72,8 +72,8 @@ public class NavigatorWidgetConfigController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/expressions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<NavigatorSpecDto>> getExpressionsByNavSpec(@Valid @RequestBody NavigatorSpecDto bodyRequest, BindingResult bindingResult) {
-        logger.debug("Extract Epression -> {}", bodyRequest);
+    public ResponseEntity<SimpleRestResponse<NavigatorConfigDto>> getExpressionsByNavSpec(@Valid @RequestBody NavigatorConfigDto bodyRequest, BindingResult bindingResult) {
+        logger.debug("Extract Expression -> {}", bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -85,7 +85,7 @@ public class NavigatorWidgetConfigController {
         List<NavigatorExpressionDto> expressionsDto = expressions
                 .stream().map(ex -> new NavigatorExpressionDto(ex)).collect(Collectors.toList());
         bodyRequest.setExpressions(expressionsDto);
-        return new ResponseEntity<>(new SimpleRestResponse<>(null), HttpStatus.OK);
+        return new ResponseEntity<>(new SimpleRestResponse<>(bodyRequest), HttpStatus.OK);
     }
 
     public NavigatorWidgetConfigValidator getNavigatorConfigValidator() {

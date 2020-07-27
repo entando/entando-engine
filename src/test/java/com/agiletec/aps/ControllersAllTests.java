@@ -61,6 +61,7 @@ import org.entando.entando.web.userprofile.ProfileTypeControllerTest;
 import org.entando.entando.web.userprofile.UserProfileControllerIntegrationTest;
 import org.entando.entando.web.usersettings.UserSettingsControllerIntegrationTest;
 import org.entando.entando.web.usersettings.UserSettingsControllerUnitTest;
+import org.entando.entando.web.widget.NavigatorWidgetConfigControllerIntegrationTest;
 import org.entando.entando.web.widget.WidgetControllerIntegrationTest;
 import org.entando.entando.web.widget.WidgetControllerTest;
 
@@ -68,7 +69,7 @@ public class ControllersAllTests extends TestCase {
 
     public static Test suite() {
         TestSuite suite = new TestSuite(ControllersAllTests.class.getName());
-
+        
         suite.addTest(new JUnit4TestAdapter(GroupControllerUnitTest.class));
         suite.addTest(new JUnit4TestAdapter(GroupControllerIntegrationTest.class));
 
@@ -87,7 +88,8 @@ public class ControllersAllTests extends TestCase {
         suite.addTest(new JUnit4TestAdapter(PageSettingsControllerTest.class));
         suite.addTest(new JUnit4TestAdapter(PageControllerTest.class));
         suite.addTest(new JUnit4TestAdapter(PageControllerIntegrationTest.class));
-
+        
+        suite.addTest(new JUnit4TestAdapter(NavigatorWidgetConfigControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(WidgetControllerTest.class));
         suite.addTest(new JUnit4TestAdapter(WidgetControllerIntegrationTest.class));
 
@@ -135,7 +137,7 @@ public class ControllersAllTests extends TestCase {
 
         suite.addTest(new JUnit4TestAdapter(ApiConsumerControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ApiConsumerControllerTest.class));
-
+        
         return suite;
     }
 

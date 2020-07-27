@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author E.Santoboni
  */
-public class NavigatorSpecDto {
+public class NavigatorConfigDto {
     
     private String navSpec;
     private List<NavigatorExpressionDto> expressions;

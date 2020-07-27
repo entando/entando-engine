@@ -18,7 +18,7 @@ import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.widget.model.NavigatorExpressionDto;
-import org.entando.entando.web.widget.model.NavigatorSpecDto;
+import org.entando.entando.web.widget.model.NavigatorConfigDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -42,7 +42,7 @@ public class NavigatorWidgetConfigValidator extends AbstractPaginationValidator 
     
     @Override
     public boolean supports(Class<?> paramClass) {
-        return NavigatorSpecDto.class.equals(paramClass);
+        return NavigatorConfigDto.class.equals(paramClass);
     }
 
     @Override
@@ -50,31 +50,32 @@ public class NavigatorWidgetConfigValidator extends AbstractPaginationValidator 
         // nothing to do
     }
     
-    public void validateNavSpec(NavigatorSpecDto bodyRequest, Errors errors) {
+    public void validateNavSpec(NavigatorConfigDto bodyRequest, Errors errors) {
         if (null == bodyRequest.getNavSpec() || StringUtils.isBlank(bodyRequest.getNavSpec())) {
             errors.rejectValue("navSpec", ERRCODE_NAV_SPEC_NOT_FOUND, new String[]{}, "widget.navigator.navSpec.missing");
         }
     }
     
-    public void validateExpressions(NavigatorSpecDto bodyRequest, Errors errors) {
+    public void validateExpressions(NavigatorConfigDto bodyRequest, Errors errors) {
         if (null == bodyRequest.getExpressions() || bodyRequest.getExpressions().isEmpty()) {
             errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_NOT_FOUND, new String[]{}, "widget.navigator.expressions.missing");
+            return;
         }
         for (int i = 0; i < bodyRequest.getExpressions().size(); i++) {
             NavigatorExpressionDto expression = bodyRequest.getExpressions().get(i);
             if (expression.getSpec().equals(NavigatorExpression.SPEC_PAGE_CODE)) {
                 if (StringUtils.isBlank(expression.getTargetCode())) {
-                    errors.rejectValue("targetCode", ERRCODE_EXPRESSIONS_TARGET_NOT_FOUND, new String[]{}, "widget.navigator.targetCode.missing");
+                    errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_TARGET_NOT_FOUND, new String[]{String.valueOf(i+1)}, "widget.navigator.targetCode.missing");
                 } else if (null == this.getPageManager().getOnlinePage(expression.getTargetCode())) {
-                    errors.rejectValue("targetCode", ERRCODE_EXPRESSIONS_TARGET_INVALID, new String[]{expression.getTargetCode()}, "widget.navigator.targetCode.invalid");
+                    errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_TARGET_INVALID, new String[]{String.valueOf(i+1), expression.getTargetCode()}, "widget.navigator.targetCode.invalid");
                 }
-            } else if (expression.getSpec().equals(NavigatorExpression.SPEC_SUPER_CODE) && expression.getSpecSuperLevel() < 0) {
-                errors.rejectValue("specSuper", ERRCODE_EXPRESSIONS_SPEC_SUPER_INVALID, new String[]{}, "widget.navigator.specSuper.invalid");
-            } else if (expression.getSpec().equals(NavigatorExpression.SPEC_ABS_CODE) && expression.getSpecAbsLevel() < 0) {
-                errors.rejectValue("specAbs", ERRCODE_EXPRESSIONS_SPEC_ABS_INVALID, new String[]{}, "widget.navigator.specAbs.invalid");
+            } else if (expression.getSpec().equals(NavigatorExpression.SPEC_SUPER_CODE) && expression.getSpecSuperLevel() < 1) {
+                errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_SPEC_SUPER_INVALID, new String[]{String.valueOf(i+1)}, "widget.navigator.specSuper.invalid");
+            } else if (expression.getSpec().equals(NavigatorExpression.SPEC_ABS_CODE) && expression.getSpecAbsLevel() < 1) {
+                errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_SPEC_ABS_INVALID, new String[]{String.valueOf(i+1)}, "widget.navigator.specAbs.invalid");
             }
             if (NavigatorExpression.OPERATOR_SUBTREE_CODE.equals(expression.getOperator()) && expression.getOperatorSubtreeLevel() < 1) {
-                errors.rejectValue("operatorSub", ERRCODE_EXPRESSIONS_OPERATOR_SUB_INVALID, new String[]{}, "widget.navigator.operatorSub.invalid");
+                errors.rejectValue("expressions", ERRCODE_EXPRESSIONS_OPERATOR_SUB_INVALID, new String[]{String.valueOf(i+1)}, "widget.navigator.operatorSub.invalid");
             }
         }
     }

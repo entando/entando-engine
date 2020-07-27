@@ -74,6 +74,7 @@ public class NavigatorExpressionDto {
             if (operatorId == null) {
                 throw new RuntimeException("Null operatorId for operator '" + this.getOperator() + "'");
             }
+            expr.setOperatorId(operatorId);
             expr.setOperatorSubtreeLevel(this.getOperatorSubtreeLevel());
         }
         return expr;
