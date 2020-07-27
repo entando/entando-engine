@@ -40,7 +40,7 @@ import org.entando.entando.web.widget.model.NavigatorExpressionDto;
 public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
     private ObjectMapper mapper = new ObjectMapper();
-    /*
+    
     @Test
     public void testGetExpressions_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -50,9 +50,6 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
         NavigatorConfigDto dto = new NavigatorConfigDto();
         dto.setNavSpec(navSpec);
         ResultActions result = this.executeCall(accessToken, dto, "expressions", status().isOk());
-        System.out.println("---------");
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        System.out.println("---------");
         result.andExpect(jsonPath("$.payload.expressions", Matchers.hasSize(4)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
         result.andExpect(jsonPath("$.errors.size()", is(0)));
@@ -68,23 +65,14 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
         dto.setNavSpec(navSpec);
         this.executeCall(accessToken, dto, "expressions", status().is5xxServerError());
     }
-    */
+    
     @Test
     public void testGetNavSpec_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
-        /*
-{"spec":"code","specSuperLevel":-1,"specAbsLevel":-1,"targetCode":"homepage","operator":"subtree","operatorSubtreeLevel":2},
-{"spec":"current","specSuperLevel":-1,"specAbsLevel":-1,"targetCode":null,"operator":"children","operatorSubtreeLevel":-1},
-{"spec":"code","specSuperLevel":-1,"specAbsLevel":-1,"targetCode":"administrators_page","operator":"path","operatorSubtreeLevel":-1},
-{"spec":"super","specSuperLevel":1,"specAbsLevel":-1,"targetCode":null,"operator":null,"operatorSubtreeLevel":-1}]
-        */
         NavigatorConfigDto config = this.getExpressionsForTests();
         ResultActions result = this.executeCall(accessToken, config, "navspec", status().isOk());
-        System.out.println("---------");
-        System.out.println(result.andReturn().getResponse().getContentAsString());
-        System.out.println("---------");
         result.andExpect(jsonPath("$.payload.expressions", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
         result.andExpect(jsonPath("$.errors.size()", is(0)));
