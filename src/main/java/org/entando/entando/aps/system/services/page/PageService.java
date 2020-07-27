@@ -388,7 +388,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         boolean moveUp = page.getPosition() > pageRequest.getPosition();
         try {
             if (page.getParentCode().equals(parent.getCode())) {
-                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp)) ;
+                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp));
             } else {
                 this.getPageManager().movePage(page, parent);
             }
