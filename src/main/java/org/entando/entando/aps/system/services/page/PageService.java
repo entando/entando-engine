@@ -32,6 +32,7 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -87,7 +89,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
 /**
- *
  * @author paddeo
  */
 public class PageService implements IPageService, GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>, ApplicationContextAware {
@@ -209,7 +210,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
 
     @Override
     public List<PageDto> getPages(String parentCode,
-            @Nullable String forLinkingToOwnerGroup, @Nullable Collection<String> forLinkingToExtraGroups) {
+                                  @Nullable String forLinkingToOwnerGroup, @Nullable Collection<String> forLinkingToExtraGroups) {
         List<PageDto> res = new ArrayList<>();
         IPage parent = this.getPageManager().getDraftPage(parentCode);
         Optional.ofNullable(parent).ifPresent(root -> Optional.ofNullable(root.getChildrenCodes())
@@ -768,8 +769,11 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
 
     @Override
     public Integer getComponentUsage(String pageCode) {
-
-        return this.getComponentUsageDetails(pageCode, new RestListRequest()).getTotalItems();
+        try {
+            return this.getComponentUsageDetails(pageCode, new RestListRequest()).getTotalItems();
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
 

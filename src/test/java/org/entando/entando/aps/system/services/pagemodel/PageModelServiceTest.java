@@ -26,6 +26,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +93,13 @@ public class PageModelServiceTest {
         PagedMetadata<PageModelDto> result = pageModelService.getPageModels(EMPTY_REQUEST, null);
         PagedMetadata<PageModelDto> expected = resultPagedMetadata();
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    public void getPageModelUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = pageModelService.getComponentUsage("non_existing");
+        assertEquals(0, componentUsage);
     }
 
     @Test
