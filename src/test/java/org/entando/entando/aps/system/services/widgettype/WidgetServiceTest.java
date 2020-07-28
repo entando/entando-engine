@@ -61,6 +61,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -306,6 +307,15 @@ public class WidgetServiceTest {
         widgetRequest.setBundleId(BUNDLE_1);
         return widgetRequest;
     }
+
+
+    @Test
+    public void getWidgetUsageForNonExistingCodeShouldReturnZero() {
+
+        int componentUsage = widgetService.getComponentUsage("non_existing");
+        assertEquals(0, componentUsage);
+    }
+
 
 
     @Test
