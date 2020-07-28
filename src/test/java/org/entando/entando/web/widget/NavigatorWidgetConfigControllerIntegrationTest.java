@@ -90,8 +90,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
         NavigatorExpressionDto dto2 = new NavigatorExpressionDto(NavigatorExpression.SPEC_CURRENT_PAGE_CODE, null);
         dto2.setOperator(NavigatorExpression.OPERATOR_CHILDREN_CODE);
         list.add(dto2);
-        NavigatorExpressionDto dto3 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, null);
-        dto3.setTargetCode("administrators_page");
+        NavigatorExpressionDto dto3 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, "administrators_page");
         dto3.setOperator(NavigatorExpression.OPERATOR_PATH_CODE);
         list.add(dto3);
         NavigatorExpressionDto dto4 = new NavigatorExpressionDto(NavigatorExpression.SPEC_SUPER_CODE, null);
@@ -126,7 +125,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_ABS_CODE, null);
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, null);
         dto1.setOperator(NavigatorExpression.OPERATOR_SUBTREE_CODE);
         dto1.setOperatorSubtreeLevel(2);
         list.add(dto1);
@@ -206,6 +205,42 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
         result.andExpect(jsonPath("$.errors.size()", is(1)));
         result.andExpect(jsonPath("$.errors[0].code", is("6")));
+    }
+    
+    @Test
+    public void testGetNavSpec_8() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
+        String accessToken = mockOAuthInterceptor(user);
+        List<NavigatorExpressionDto> list = new ArrayList<>();
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto("invalid", null);
+        dto1.setOperator(NavigatorExpression.OPERATOR_SUBTREE_CODE);
+        list.add(dto1);
+        NavigatorConfigDto config = new NavigatorConfigDto();
+        config.setExpressions(list);
+        ResultActions result = this.executeCall(accessToken, config, "navspec", status().isBadRequest());
+        result.andExpect(jsonPath("$.payload.size()", is(0)));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
+        result.andExpect(jsonPath("$.errors.size()", is(1)));
+        result.andExpect(jsonPath("$.errors[0].code", is("57")));
+    }
+    
+    @Test
+    public void testGetNavSpec_9() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
+        String accessToken = mockOAuthInterceptor(user);
+        List<NavigatorExpressionDto> list = new ArrayList<>();
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, "homepage");
+        dto1.setOperator("invalid");
+        list.add(dto1);
+        NavigatorConfigDto config = new NavigatorConfigDto();
+        config.setExpressions(list);
+        ResultActions result = this.executeCall(accessToken, config, "navspec", status().isBadRequest());
+        result.andExpect(jsonPath("$.payload.size()", is(0)));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
+        result.andExpect(jsonPath("$.errors.size()", is(1)));
+        result.andExpect(jsonPath("$.errors[0].code", is("57")));
     }
     
     private ResultActions executeCall(String accessToken, NavigatorConfigDto request, String subpath, ResultMatcher resultMatcher) throws Exception {

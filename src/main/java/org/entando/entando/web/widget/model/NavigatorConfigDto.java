@@ -14,6 +14,7 @@
 package org.entando.entando.web.widget.model;
 
 import java.util.List;
+import javax.validation.Valid;
 
 /**
  * @author E.Santoboni
@@ -30,10 +31,10 @@ public class NavigatorConfigDto {
         this.navSpec = navSpec;
     }
 
-    public List<NavigatorExpressionDto> getExpressions() {
+    public List<@Valid NavigatorExpressionDto> getExpressions() {
         return expressions;
     }
-    public void setExpressions(List<NavigatorExpressionDto> expressions) {
+    public void setExpressions(List<@Valid NavigatorExpressionDto> expressions) {
         this.expressions = expressions;
     }
     

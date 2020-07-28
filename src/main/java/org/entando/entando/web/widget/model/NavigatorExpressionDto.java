@@ -42,6 +42,10 @@ public class NavigatorExpressionDto {
     
 	private int operatorSubtreeLevel = 0;
     
+    private NavigatorExpressionDto() {
+        this.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
+    }
+    
     public NavigatorExpressionDto(String spec, String targetCode) {
         this.setSpec(spec);
         this.setTargetCode(targetCode);
