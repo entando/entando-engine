@@ -73,7 +73,6 @@ public class PageController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("PageService")
     private IPageService pageService;
 
     @Autowired
