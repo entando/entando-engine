@@ -83,27 +83,21 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     
     private NavigatorConfigDto getExpressionsForTests() {
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
-        dto1.setTargetCode("homepage");
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, "homepage");
         dto1.setOperator(NavigatorExpression.OPERATOR_SUBTREE_CODE);
         dto1.setOperatorSubtreeLevel(2);
         list.add(dto1);
-        NavigatorExpressionDto dto2 = new NavigatorExpressionDto();
-        dto2.setSpec(NavigatorExpression.SPEC_CURRENT_PAGE_CODE);
+        NavigatorExpressionDto dto2 = new NavigatorExpressionDto(NavigatorExpression.SPEC_CURRENT_PAGE_CODE, null);
         dto2.setOperator(NavigatorExpression.OPERATOR_CHILDREN_CODE);
         list.add(dto2);
-        NavigatorExpressionDto dto3 = new NavigatorExpressionDto();
-        dto3.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
+        NavigatorExpressionDto dto3 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, null);
         dto3.setTargetCode("administrators_page");
         dto3.setOperator(NavigatorExpression.OPERATOR_PATH_CODE);
         list.add(dto3);
-        NavigatorExpressionDto dto4 = new NavigatorExpressionDto();
-        dto4.setSpec(NavigatorExpression.SPEC_SUPER_CODE);
+        NavigatorExpressionDto dto4 = new NavigatorExpressionDto(NavigatorExpression.SPEC_SUPER_CODE, null);
         dto4.setSpecSuperLevel(1);
         list.add(dto4);
-        NavigatorExpressionDto dto5 = new NavigatorExpressionDto();
-        dto5.setSpec(NavigatorExpression.SPEC_ABS_CODE);
+        NavigatorExpressionDto dto5 = new NavigatorExpressionDto(NavigatorExpression.SPEC_ABS_CODE, null);
         dto5.setSpecAbsLevel(2);
         dto5.setOperator(NavigatorExpression.OPERATOR_CHILDREN_CODE);
         list.add(dto5);
@@ -132,9 +126,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
-        dto1.setTargetCode(null);
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_ABS_CODE, null);
         dto1.setOperator(NavigatorExpression.OPERATOR_SUBTREE_CODE);
         dto1.setOperatorSubtreeLevel(2);
         list.add(dto1);
@@ -153,9 +145,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
-        dto1.setTargetCode("invalid");
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, "invalid");
         list.add(dto1);
         NavigatorConfigDto config = new NavigatorConfigDto();
         config.setExpressions(list);
@@ -172,8 +162,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_SUPER_CODE);
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_SUPER_CODE, null);
         list.add(dto1);
         NavigatorConfigDto config = new NavigatorConfigDto();
         config.setExpressions(list);
@@ -190,8 +179,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_ABS_CODE);
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_ABS_CODE, null);
         list.add(dto1);
         NavigatorConfigDto config = new NavigatorConfigDto();
         config.setExpressions(list);
@@ -208,9 +196,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
         List<NavigatorExpressionDto> list = new ArrayList<>();
-        NavigatorExpressionDto dto1 = new NavigatorExpressionDto();
-        dto1.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
-        dto1.setTargetCode("homepage");
+        NavigatorExpressionDto dto1 = new NavigatorExpressionDto(NavigatorExpression.SPEC_PAGE_CODE, "homepage");
         dto1.setOperator(NavigatorExpression.OPERATOR_SUBTREE_CODE);
         list.add(dto1);
         NavigatorConfigDto config = new NavigatorConfigDto();

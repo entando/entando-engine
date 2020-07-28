@@ -42,14 +42,15 @@ public class NavigatorExpressionDto {
     
 	private int operatorSubtreeLevel = 0;
     
-    public NavigatorExpressionDto() {}
+    public NavigatorExpressionDto(String spec, String targetCode) {
+        this.setSpec(spec);
+        this.setTargetCode(targetCode);
+    }
     
     public NavigatorExpressionDto(NavigatorExpression expression) {
-        Map<Integer, String> operators = NavigatorExpression.getOperators();
-        Map<Integer, String> specifications = NavigatorExpression.getSpecifications();
-        this.setOperator(operators.get(expression.getOperatorId()));
+        this.setSpec(NavigatorExpression.getSpecifications().get(expression.getSpecId()));
+        this.setOperator(NavigatorExpression.getOperators().get(expression.getOperatorId()));
         this.setOperatorSubtreeLevel(expression.getOperatorSubtreeLevel());
-        this.setSpec(specifications.get(expression.getSpecId()));
         this.setSpecAbsLevel(expression.getSpecAbsLevel());
         this.setSpecSuperLevel(expression.getSpecSuperLevel());
         this.setTargetCode(expression.getSpecCode());
