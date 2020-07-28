@@ -43,21 +43,21 @@ public class NavigatorExpressionDto {
 	private int operatorSubtreeLevel = 0;
     
     private NavigatorExpressionDto() {
-        this.setSpec(NavigatorExpression.SPEC_PAGE_CODE);
+        this.spec = NavigatorExpression.SPEC_PAGE_CODE;
     }
     
     public NavigatorExpressionDto(String spec, String targetCode) {
-        this.setSpec(spec);
-        this.setTargetCode(targetCode);
+        this.spec = spec;
+        this.targetCode = targetCode;
     }
     
     public NavigatorExpressionDto(NavigatorExpression expression) {
-        this.setSpec(NavigatorExpression.getSpecifications().get(expression.getSpecId()));
-        this.setOperator(NavigatorExpression.getOperators().get(expression.getOperatorId()));
-        this.setOperatorSubtreeLevel(expression.getOperatorSubtreeLevel());
-        this.setSpecAbsLevel(expression.getSpecAbsLevel());
-        this.setSpecSuperLevel(expression.getSpecSuperLevel());
-        this.setTargetCode(expression.getSpecCode());
+        this.spec = NavigatorExpression.getSpecifications().get(expression.getSpecId());
+        this.operator = NavigatorExpression.getOperators().get(expression.getOperatorId());
+        this.operatorSubtreeLevel = expression.getOperatorSubtreeLevel();
+        this.specAbsLevel = expression.getSpecAbsLevel();
+        this.specSuperLevel = expression.getSpecSuperLevel();
+        this.targetCode = expression.getSpecCode();
     }
     
     public NavigatorExpression buildExpression() {
