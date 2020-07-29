@@ -412,4 +412,12 @@ public interface SystemConstants {
 
     public static final Integer OAUTH2_REFRESH_TOKEN_DEFAULT_VALIDITY_SECOND = 86400;
 
+
+
+    public static final String ENTANDO_CRSF_FILTER = "EntandoCsrfFilter";
+    public static final String ENTANDO_CSRF_PROTECTION = "ENTANDO_CSRF_PROTECTION";
+    public static final String ENTANDO_CSRF_ALLOWED_DOMAINS = "ENTANDO_CSRF_ALLOWED_DOMAINS";
+    public static final String SEPARATOR_DOMAINS = ",";
+
+
 }
