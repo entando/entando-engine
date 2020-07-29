@@ -84,7 +84,7 @@
         <property name="authorizationManager" ref="AuthorizationManager"/>
     </bean>
 
-    <bean id="PageService" class="org.entando.entando.aps.system.services.page.PageService" >
+    <bean id="PageService" primary="true" class="org.entando.entando.aps.system.services.page.PageService" >
         <property name="dtoBuilder" ref="PageDtoBuilder" />
         <property name="pageManager" ref="PageManager" />
         <property name="pageModelManager" ref="PageModelManager" />
