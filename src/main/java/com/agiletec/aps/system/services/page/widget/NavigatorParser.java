@@ -60,7 +60,7 @@ public class NavigatorParser implements INavigatorParser {
 
     @Override
     public List<NavigatorExpression> getExpressions(String spec) {
-        List<NavigatorExpression> navExpressions = new ArrayList<NavigatorExpression>();
+        List<NavigatorExpression> navExpressions = new ArrayList<>();
         if (null != spec && spec.length() > 0) {
             String[] expressions = spec.split("\\+");
             for (int i = 0; i < expressions.length; i++) {
@@ -76,7 +76,7 @@ public class NavigatorParser implements INavigatorParser {
 
     @Override
     public String getSpec(List<NavigatorExpression> expressions) {
-        if (null == expressions || expressions.size() == 0) {
+        if (null == expressions || expressions.isEmpty()) {
             return "";
         }
         StringBuilder buffer = new StringBuilder();
@@ -121,7 +121,7 @@ public class NavigatorParser implements INavigatorParser {
      */
     @Override
     public List<NavigatorTarget> parseSpec(String spec, IPage currentPage, UserDetails currentUser) {
-        List<NavigatorTarget> targets = new ArrayList<NavigatorTarget>();
+        List<NavigatorTarget> targets = new ArrayList<>();
         if (null != spec && spec.length() > 0) {
             String[] expressions = spec.split("\\" + EXPRESSION_SEPARATOR);
             for (int i = 0; i < expressions.length; i++) {

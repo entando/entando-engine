@@ -13,6 +13,9 @@
  */
 package com.agiletec.aps.system.services.page.widget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Oggetto di utilità per la configurazione dei widget navigatore.
  * Ogni espressione in forma di stringa ha la forma:<br>
@@ -282,6 +285,24 @@ public class NavigatorExpression {
 
 	public static final String OPERATOR_SUBTREE_CODE = "subtree";
 
+    public static Map<Integer, String> getOperators() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(OPERATOR_CHILDREN_ID, OPERATOR_CHILDREN_CODE);
+        map.put(OPERATOR_PATH_ID, OPERATOR_PATH_CODE);
+        map.put(OPERATOR_SUBTREE_ID, OPERATOR_SUBTREE_CODE);
+        return map;
+    }
+    
+	public static Map<Integer, String> getSpecifications() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(SPEC_ABS_ID, SPEC_ABS_CODE);
+        map.put(SPEC_CURRENT_PAGE_ID, SPEC_CURRENT_PAGE_CODE);
+        map.put(SPEC_PAGE_ID, SPEC_PAGE_CODE);
+        map.put(SPEC_PARENT_PAGE_ID, SPEC_PARENT_PAGE_CODE);
+        map.put(SPEC_SUPER_ID, SPEC_SUPER_CODE);
+        return map;
+    }
+    
 	private int _specId;
 	private int _specSuperLevel = -1;
 	private int _specAbsLevel = -1;
