@@ -36,6 +36,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -58,8 +59,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     private PagedMetadataMapper pagedMetadataMapper;
 
     @Autowired
-    public PageModelService(IPageModelManager pageModelManager, 
-            IWidgetTypeManager widgetTypeManager, IDtoBuilder<PageModel, PageModelDto> dtoBuilder) {
+    public PageModelService(IPageModelManager pageModelManager,
+                            IWidgetTypeManager widgetTypeManager, IDtoBuilder<PageModel, PageModelDto> dtoBuilder) {
         this.pageModelManager = pageModelManager;
         this.widgetTypeManager = widgetTypeManager;
         this.dtoBuilder = dtoBuilder;
@@ -76,8 +77,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
             //transforms the filters by overriding the key specified in the request with the correct one known by the dto
             List<FieldSearchFilter> filters = new ArrayList<>(restListReq.buildFieldSearchFilters());
             filters.stream()
-                   .filter(i -> i.getKey() != null)
-                   .forEach(i -> i.setKey(PageModelDto.getEntityFieldName(i.getKey())));
+                    .filter(i -> i.getKey() != null)
+                    .forEach(i -> i.setKey(PageModelDto.getEntityFieldName(i.getKey())));
             SearcherDaoPaginatedResult<PageModel> pageModels = pageModelManager.searchPageModels(filters);
             List<PageModelDto> dtoList = null;
             if (null != pageModels) {
@@ -184,8 +185,12 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
 
     @Override
     public Integer getComponentUsage(String pageModelCode) {
-        RestListRequest request = new RestListRequest(1, 1);
-        return getPageModelReferences(pageModelCode, "PageManager", request).getTotalItems();
+        try {
+            RestListRequest request = new RestListRequest(1, 1);
+            return getPageModelReferences(pageModelCode, "PageManager", request).getTotalItems();
+        } catch (ResourceNotFoundException e) {
+            return 0;
+        }
     }
 
     @Override
@@ -218,8 +223,8 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
             return destConfiguration;
         }
         return frameRequestList.stream()
-                               .map(this::createFrame)
-                               .toArray(Frame[]::new);
+                .map(this::createFrame)
+                .toArray(Frame[]::new);
     }
 
     protected Frame createFrame(PageModelFrameReq pageModelFrameReq) {
@@ -245,7 +250,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         }
         return defaultWidget;
     }
-    
+
     protected BeanPropertyBindingResult validateAdd(PageModelRequest pageModelRequest) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(pageModelRequest, "pageModel");
         PageModel pageModel = pageModelManager.getPageModel(pageModelRequest.getCode());
@@ -266,7 +271,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         this.validateDefaultWidgets(pageModelRequest, bindingResult);
         return bindingResult;
     }
-    
+
     protected BeanPropertyBindingResult validateDelete(PageModel pageModel) throws ApsSystemException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(pageModel, "pageModel");
         Map<String, List<Object>> references = this.getReferencingObjects(pageModel);
@@ -362,9 +367,9 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     private PageModelServiceUtilizer<?> getPageModelServiceUtilizer(String managerName) {
         Map<String, PageModelServiceUtilizer> beans = applicationContext.getBeansOfType(PageModelServiceUtilizer.class);
         Optional<PageModelServiceUtilizer> defName = beans.values().stream()
-                                                          .filter(service -> service.getManagerName().equals(managerName))
-                                                          .findFirst();
+                .filter(service -> service.getManagerName().equals(managerName))
+                .findFirst();
         return defName.orElse(null);
     }
-    
+
 }
