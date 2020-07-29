@@ -35,6 +35,8 @@ public class WidgetDto {
     private boolean hasConfig = false;
     private String bundleId;
     private Map<String, Object> configUi;
+    private List<WidgetParameter> parameters = new ArrayList<>();
+    private String action;
 
     protected class GuiFragmentRef {
 
@@ -65,6 +67,27 @@ public class WidgetDto {
         public void setDefaultUi(String defaultUi) {
             this.defaultUi = defaultUi;
         }
+    }
+    
+    protected class WidgetParameter {
+        
+        private String code;
+        private String description;
+
+        public String getCode() {
+            return code;
+        }
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+        public void setDescription(String description) {
+            this.description = description;
+        }
+        
     }
 
     public void addGuiFragmentRef(String code, String customUi, String defaultUi) {
@@ -166,4 +189,19 @@ public class WidgetDto {
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
     }
+
+    public List<WidgetParameter> getParameters() {
+        return parameters;
+    }
+    public void setParameters(List<WidgetParameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    public String getAction() {
+        return action;
+    }
+    public void setAction(String action) {
+        this.action = action;
+    }
+    
 }
