@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.widgettype;
 
 import java.util.List;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -32,7 +31,6 @@ import javax.servlet.ServletContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -41,7 +39,6 @@ import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.page.IPageService;
-import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDetails;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
@@ -50,13 +47,10 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
-import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.context.ServletContextAware;
@@ -135,8 +129,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         try {
             List<WidgetType> types = this.getWidgetManager().getWidgetTypes();
             List<WidgetDto> dtoList = dtoBuilder.convert(types);
-            List<WidgetDto> resultList = new WidgetTypeListProcessor(restListReq, dtoList)
-                    .filterAndSort().toList();
+            List<WidgetDto> resultList = new WidgetTypeListProcessor(restListReq, dtoList).filterAndSort().toList();
             List<WidgetDto> sublist = restListReq.getSublist(resultList);
             SearcherDaoPaginatedResult<WidgetDto> paginatedResult = new SearcherDaoPaginatedResult<>(resultList.size(), sublist);
             PagedMetadata<WidgetDto> pagedMetadata = new PagedMetadata<>(restListReq, paginatedResult);

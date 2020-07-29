@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 public class WidgetDto {
 
@@ -47,7 +48,6 @@ public class WidgetDto {
         public String getCode() {
             return code;
         }
-
         public void setCode(String code) {
             this.code = code;
         }
@@ -55,7 +55,6 @@ public class WidgetDto {
         public String getCustomUi() {
             return customUi;
         }
-
         public void setCustomUi(String customUi) {
             this.customUi = customUi;
         }
@@ -63,10 +62,10 @@ public class WidgetDto {
         public String getDefaultUi() {
             return defaultUi;
         }
-
         public void setDefaultUi(String defaultUi) {
             this.defaultUi = defaultUi;
         }
+        
     }
     
     protected class WidgetParameter {
@@ -96,6 +95,15 @@ public class WidgetDto {
         ref.customUi = customUi;
         ref.defaultUi = defaultUi;
         guiFragments.add(ref);
+    }
+
+    public void addWidgetParameter(String code, String description) {
+        WidgetParameter param = new WidgetParameter();
+        param.setCode(code);
+        if (!StringUtils.isBlank(description)) {
+            param.setDescription(description);
+        }
+        this.getParameters().add(param);
     }
 
     public static String getEntityFieldName(String dtoFieldName) {
@@ -185,7 +193,7 @@ public class WidgetDto {
     public Map<String, Object> getConfigUi() {
         return configUi;
     }
-
+    
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
     }
@@ -193,6 +201,7 @@ public class WidgetDto {
     public List<WidgetParameter> getParameters() {
         return parameters;
     }
+    
     public void setParameters(List<WidgetParameter> parameters) {
         this.parameters = parameters;
     }
@@ -200,6 +209,7 @@ public class WidgetDto {
     public String getAction() {
         return action;
     }
+    
     public void setAction(String action) {
         this.action = action;
     }
