@@ -1,6 +1,7 @@
 package org.entando.entando.aps.servlet.security;
 
 import com.agiletec.aps.system.SystemConstants;
+import org.entando.entando.aps.system.exception.CSRFProtectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -22,8 +23,7 @@ public class CsrfFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsrfFilter.class);
 
-    private final String WILDCARD = "*.";
-
+    private static final String JOLLY_CHARACTER = "*.";
 
     private Environment env;
 
@@ -34,7 +34,7 @@ public class CsrfFilter extends OncePerRequestFilter {
         this.env = env;
     }
 
-    public String getEnv(String key){
+    public String getEnv(String key) {
         return System.getenv(key) != null ? System.getenv(key) : env.getProperty(key);
     }
 
@@ -43,30 +43,30 @@ public class CsrfFilter extends OncePerRequestFilter {
 
         boolean isCsfrProtectionActive = "basic".equals(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
 
-        if(isCsfrProtectionActive && req.getHeader("Cookie") != null && req.getHeader("Cookie").contains("JSESSIONID") ) {
-            if (check(req)) {
+        String origin = req.getHeader(SystemConstants.ORIGIN);
+        String referer = req.getHeader(SystemConstants.REFERER);
+
+        String url = Optional.ofNullable(origin)
+                .orElse(Optional.ofNullable(referer).orElse(""));
+
+        if (!"".equals(url) && isCsfrProtectionActive && req.getHeader(SystemConstants.COOKIE) != null && req.getHeader(SystemConstants.COOKIE).contains(SystemConstants.JSESSIONID)) {
+            if (check(url)) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
             }
         }
         filterChain.doFilter(req, response);
     }
 
-    private boolean check(HttpServletRequest request) {
-        String origin = request.getHeader("Origin");
-        String referer = request.getHeader("Referer");
-
-        // Get url form origin or referer
-        String url = Optional.ofNullable(origin)
-                .orElse(Optional.ofNullable(referer).orElse(""));
-
+    private boolean check(String url) {
         try {
             URI uri = new URI(url);
             url = uri.getScheme().concat("://").concat(uri.getHost());
         } catch (URISyntaxException e) {
-            LOGGER.error("URISyntaxException --> ",e);
-            throw new RuntimeException();
+            LOGGER.error("URISyntaxException --> ", e);
+            throw new CSRFProtectionException("URISyntaxException --> ",e);
         }
 
         String finalUrl = url;
@@ -78,15 +78,15 @@ public class CsrfFilter extends OncePerRequestFilter {
     private List<String> getWhiteList() {
         return getDomais(getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
                 .stream()
-                .filter(rs -> !rs.startsWith(WILDCARD))
+                .filter(rs -> !rs.startsWith(JOLLY_CHARACTER))
                 .collect(Collectors.toList());
     }
 
     private List<String> getSubDomainFromWildCard() {
         return getDomais(getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
                 .stream()
-                .filter(rs -> rs.startsWith(WILDCARD))
-                .map(rs->rs.replace("*.","").trim())
+                .filter(rs -> rs.startsWith(JOLLY_CHARACTER))
+                .map(rs -> rs.replace("*.", "").trim())
                 .collect(Collectors.toList());
     }
 
