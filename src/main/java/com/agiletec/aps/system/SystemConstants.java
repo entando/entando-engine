@@ -414,10 +414,13 @@ public interface SystemConstants {
 
 
 
-    public static final String ENTANDO_CRSF_FILTER = "EntandoCsrfFilter";
     public static final String ENTANDO_CSRF_PROTECTION = "ENTANDO_CSRF_PROTECTION";
     public static final String ENTANDO_CSRF_ALLOWED_DOMAINS = "ENTANDO_CSRF_ALLOWED_DOMAINS";
     public static final String SEPARATOR_DOMAINS = ",";
+    public static final String JSESSIONID = "JSESSIONID";
+    public static final String COOKIE = "Cookie";
+    public static final String ORIGIN = "Origin";
+    public static final String REFERER = "Referer";
 
 
 }
