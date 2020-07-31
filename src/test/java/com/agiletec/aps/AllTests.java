@@ -40,11 +40,7 @@ import com.agiletec.aps.system.services.role.TestPermissionDAO;
 import com.agiletec.aps.system.services.role.TestRoleDAO;
 import com.agiletec.aps.system.services.role.TestRoleManager;
 import com.agiletec.aps.system.services.url.TestURLManager;
-import com.agiletec.aps.system.services.user.AuthenticationProviderManagerIntegrationTest;
-import com.agiletec.aps.system.services.user.AuthenticationProviderManagerTest;
-import com.agiletec.aps.system.services.user.UserDAOIntegrationTest;
-import com.agiletec.aps.system.services.user.UserManagerIntegrationTest;
-import com.agiletec.aps.system.services.user.UserManagerTest;
+import com.agiletec.aps.system.services.user.*;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
@@ -53,6 +49,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.entando.entando.aps.servlet.security.AuthorizationServerConfigurationTest;
+import org.entando.entando.aps.servlet.security.CsrfFilter;
 import org.entando.entando.aps.system.init.DatabaseManagerTest;
 import org.entando.entando.aps.system.init.InitializerManagerTest;
 import org.entando.entando.aps.system.init.util.TestQueryExtractor;
@@ -62,12 +59,7 @@ import org.entando.entando.aps.system.services.api.ApiCatalogManagerIntegrationT
 import org.entando.entando.aps.system.services.api.ApiCatalogManagerTest;
 import org.entando.entando.aps.system.services.cache.CacheInfoManagerIntegrationTest;
 import org.entando.entando.aps.system.services.cache.CacheInfoManagerTest;
-import org.entando.entando.aps.system.services.dataobject.DataObjectManagerTest;
-import org.entando.entando.aps.system.services.dataobject.TestDataObjectDAO;
-import org.entando.entando.aps.system.services.dataobject.TestDataObjectManager;
-import org.entando.entando.aps.system.services.dataobject.TestDataObjectSearcherDAO;
-import org.entando.entando.aps.system.services.dataobject.TestUtilizer;
-import org.entando.entando.aps.system.services.dataobject.TestValidateDataObject;
+import org.entando.entando.aps.system.services.dataobject.*;
 import org.entando.entando.aps.system.services.dataobject.api.TestApiDataObjectInterface;
 import org.entando.entando.aps.system.services.dataobject.authorization.TestDataObjectAuthorization;
 import org.entando.entando.aps.system.services.dataobject.entity.TestDataObjectEntityManager;
@@ -84,11 +76,7 @@ import org.entando.entando.aps.system.services.dataobjectsearchengine.TestSearch
 import org.entando.entando.aps.system.services.entity.AbstractEntityTypeServiceTest;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentManagerIntegrationTest;
 import org.entando.entando.aps.system.services.i18n.TestApiI18nLabelInterface;
-import org.entando.entando.aps.system.services.oauth2.ApiOAuth2TokenManagerTest;
-import org.entando.entando.aps.system.services.oauth2.OAuth2TokenDAOTest;
-import org.entando.entando.aps.system.services.oauth2.OAuthConsumerDAOTest;
-import org.entando.entando.aps.system.services.oauth2.OAuthConsumerManagerIntegrationTest;
-import org.entando.entando.aps.system.services.oauth2.OAuthConsumerManagerTest;
+import org.entando.entando.aps.system.services.oauth2.*;
 import org.entando.entando.aps.system.services.storage.LocalStorageManagerIntegrationTest;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtilTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerAspectTest;
@@ -97,8 +85,8 @@ import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTes
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
 import org.entando.entando.aps.util.FilterUtilsTest;
-import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
+import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccessTest;
 
 /**
@@ -108,7 +96,7 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
-        
+
         //
         suite.addTest(new JUnit4TestAdapter(InitializerManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(DatabaseManagerTest.class));
@@ -213,7 +201,7 @@ public class AllTests {
         suite.addTestSuite(TestDataObjectDispenser.class);
 
         suite.addTestSuite(TestSearchEngineManager.class);
-        
+
         suite.addTestSuite(OAuthConsumerManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(OAuthConsumerManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(OAuthConsumerDAOTest.class));
@@ -226,10 +214,12 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(FilterUtilsTest.class));
         suite.addTest(new JUnit4TestAdapter(AbstractEntityTypeServiceTest.class));
-        
+
         suite.addTest(new JUnit4TestAdapter(DefaultTextEncryptorTest.class));
         suite.addTest(new JUnit4TestAdapter(CompatiblePasswordEncoderTest.class));
         suite.addTest(new JUnit4TestAdapter(IgnoreJacksonWriteOnlyAccessTest.class));
+
+        suite.addTest(new JUnit4TestAdapter(CsrfFilter.class));
 
         return suite;
     }
