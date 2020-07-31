@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 
 public class CsrfFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsrfFilter.class);
-
     private static final String JOLLY_CHARACTER = "*.";
 
     private Environment env;
