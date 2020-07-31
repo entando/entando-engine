@@ -50,6 +50,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.entando.entando.aps.servlet.security.AuthorizationServerConfigurationTest;
 import org.entando.entando.aps.servlet.security.CsrfFilter;
+import org.entando.entando.aps.servlet.security.CsrfFilterTest;
 import org.entando.entando.aps.system.init.DatabaseManagerTest;
 import org.entando.entando.aps.system.init.InitializerManagerTest;
 import org.entando.entando.aps.system.init.util.TestQueryExtractor;
@@ -219,7 +220,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(CompatiblePasswordEncoderTest.class));
         suite.addTest(new JUnit4TestAdapter(IgnoreJacksonWriteOnlyAccessTest.class));
 
-        suite.addTest(new JUnit4TestAdapter(CsrfFilter.class));
+        suite.addTest(new JUnit4TestAdapter(CsrfFilterTest.class));
 
         return suite;
     }
