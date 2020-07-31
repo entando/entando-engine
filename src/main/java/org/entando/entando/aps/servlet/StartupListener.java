@@ -45,10 +45,11 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
 
         if (!isActive || !"basic".equals(System.getenv(SystemConstants.ENTANDO_CSRF_PROTECTION)))
             LOGGER.warn("CSRF protection is not enabled");
-        else if("basic".equals(System.getenv(SystemConstants.ENTANDO_CSRF_PROTECTION))){
-            if (whiteList != null && !whiteList.equals(""))
-                LOGGER.info("################### CSRF protection is enabled Domains --> ".concat(whiteList));
-            else {
+        else if ("basic".equals(System.getenv(SystemConstants.ENTANDO_CSRF_PROTECTION))) {
+            if (whiteList != null && !whiteList.equals("")) {
+                String message = "CSRF protection is enabled Domains --> ".concat(whiteList);
+                LOGGER.info(message);
+            } else {
                 LOGGER.error("CSRF protection is enabled but the domains are initialized. Please initialize the domains");
                 throw new CSRFProtectionException("CSRF protection is enabled but the domains are not initialized. Please initialize the domains");
             }
