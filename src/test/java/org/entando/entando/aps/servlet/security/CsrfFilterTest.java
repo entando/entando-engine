@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+
 public class CsrfFilterTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsrfFilterTest.class);
@@ -24,7 +25,6 @@ public class CsrfFilterTest {
     private MockHttpServletResponse response;
     private MockFilterChain filterChain;
     private MockEnvironment mockEnvironment;
-
 
 
     @Before
@@ -43,6 +43,7 @@ public class CsrfFilterTest {
         testFilter("http://xxxx.it", null);
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
+
     //ORIGIN
     //Domain contained in the environment variable
     @Test
@@ -86,17 +87,17 @@ public class CsrfFilterTest {
     // ENTANDO_CSRF_PROTECTION environment variable other than basic
     @Test
     public void csrfProtectionNotEnabled() {
-        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "test");
-        testFilter("http://organization.it", null);
+        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "basic");
+        testFilter("http://test.it", null);
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
 
 
     private void testFilter(String origin, String referer) {
 
-        CsrfFilter csrfFilter =new CsrfFilter(mockEnvironment);
+        CsrfFilter csrfFilter = new CsrfFilter(mockEnvironment);
         MockFilterConfig filterConfig = new MockFilterConfig();
-        request.addHeader("Cookie","JSESSIONID=xxxxxxxxxxxx");
+        request.addHeader("Cookie", "JSESSIONID=xxxxxxxxxxxx");
         if (origin != null) {
             request.addHeader("origin", origin);
         }
