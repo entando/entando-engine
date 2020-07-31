@@ -65,7 +65,6 @@ public class CsrfFilter extends OncePerRequestFilter {
             URI uri = new URI(url);
             url = uri.getScheme().concat("://").concat(uri.getHost());
         } catch (URISyntaxException e) {
-            LOGGER.error("URISyntaxException --> ", e);
             throw new CSRFProtectionException("URISyntaxException --> ",e);
         }
 
