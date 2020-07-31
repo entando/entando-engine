@@ -158,6 +158,11 @@ public class ApsEntity implements IApsEntity {
         return _groups;
     }
 
+    @Override
+    public void setGroups(Set<String> groupList) {
+        this._groups = groupList;
+    }
+
     /**
      * Add a group (code) authorized to view/access the entity in the Front-end.
      *
