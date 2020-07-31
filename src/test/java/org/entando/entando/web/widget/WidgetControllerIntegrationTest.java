@@ -90,9 +90,27 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String accessToken = mockOAuthInterceptor(user);
         // @formatter:off
         ResultActions result = this.executeWidgetGet("login_form", accessToken, status().isOk());
-        result.andExpect(jsonPath("$.payload.code", is("login_form")));
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
+        result.andExpect(jsonPath("$.payload.code", is("login_form")));
+        result.andExpect(jsonPath("$.payload.parameters.size()", is(0)));
+    }
+    
+    @Test
+    public void testGetWidget_3() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        // @formatter:off
+        ResultActions result = this.executeWidgetGet("formAction", accessToken, status().isOk());
+        String response = result.andReturn().getResponse().getContentAsString();
+        assertNotNull(response);
+        result.andExpect(jsonPath("$.payload.code", is("formAction")));        
+        result.andExpect(jsonPath("$.payload.action", is("configSimpleParameter")));
+        result.andExpect(jsonPath("$.payload.parameters.size()", is(1)));
+        result.andExpect(jsonPath("$.payload.parameters[0].code", is("actionPath")));
+        result.andExpect(jsonPath("$.payload.parameters[0].description", is("Path relativo di una action o una Jsp")));
     }
 
     @Test
