@@ -2,9 +2,8 @@ package org.entando.entando.aps.servlet.security;
 
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -47,7 +46,7 @@ public class CsrfFilter extends OncePerRequestFilter {
         String url = Optional.ofNullable(origin)
                 .orElse(Optional.ofNullable(referer).orElse(""));
 
-        if (!"".equals(url) && isCsfrProtectionActive && req.getHeader(SystemConstants.COOKIE) != null && req.getHeader(SystemConstants.COOKIE).contains(SystemConstants.JSESSIONID)) {
+        if (isCsfrProtectionActive && !"".equals(url) && !isSafeVerbs(req) && req.getHeader(SystemConstants.COOKIE) != null && req.getHeader(SystemConstants.COOKIE).contains(SystemConstants.JSESSIONID)) {
             if (check(url)) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
@@ -62,8 +61,8 @@ public class CsrfFilter extends OncePerRequestFilter {
         try {
             URI uri = new URI(url);
             url = uri.getScheme().concat("://").concat(uri.getHost());
-        } catch (URISyntaxException e) {
-            throw new CSRFProtectionException("URISyntaxException --> ",e);
+        } catch (Exception e) {
+            throw new CSRFProtectionException("URISyntaxException --> ", e);
         }
 
         String finalUrl = url;
@@ -89,5 +88,9 @@ public class CsrfFilter extends OncePerRequestFilter {
 
     private List<String> getDomais(String allowedDomainsString) {
         return Arrays.asList(allowedDomainsString.split(SystemConstants.SEPARATOR_DOMAINS));
+    }
+
+    private boolean isSafeVerbs(HttpServletRequest request) {
+        return HttpMethod.GET.matches(request.getMethod()) || HttpMethod.HEAD.matches(request.getMethod()) || HttpMethod.OPTIONS.matches(request.getMethod());
     }
 }
