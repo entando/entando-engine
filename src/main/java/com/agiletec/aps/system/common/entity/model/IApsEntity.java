@@ -177,6 +177,11 @@ public interface IApsEntity extends Serializable {
     public Set<String> getGroups();
 
     /**
+     * Set the list of the groups
+     */
+    public void setGroups(Set<String> groupList);
+
+    /**
      * Add an additional group to those authorized.
      *
      * @param groupName The code of the group to add.
