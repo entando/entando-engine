@@ -38,7 +38,7 @@ public class CsrfFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        boolean isCsfrProtectionActive = "basic".equals(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
+        boolean isCsfrProtectionActive = SystemConstants.CSRF_BASIC_PROTECTION.equals(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
 
         String origin = req.getHeader(SystemConstants.ORIGIN);
         String referer = req.getHeader(SystemConstants.REFERER);

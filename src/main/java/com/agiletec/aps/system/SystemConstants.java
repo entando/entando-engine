@@ -421,6 +421,7 @@ public interface SystemConstants {
     public static final String COOKIE = "Cookie";
     public static final String ORIGIN = "Origin";
     public static final String REFERER = "Referer";
+    public static final String CSRF_BASIC_PROTECTION = "basic";
 
 
 }
