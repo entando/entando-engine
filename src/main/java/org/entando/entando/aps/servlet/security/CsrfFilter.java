@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +19,8 @@ import java.util.stream.Collectors;
 
 public class CsrfFilter extends OncePerRequestFilter {
 
-    private static final String JOLLY_CHARACTER = "*.";
 
+    private static final String JOLLY_CHARACTER = "*.";
     private Environment env;
 
     public CsrfFilter() {
@@ -32,17 +31,19 @@ public class CsrfFilter extends OncePerRequestFilter {
     }
 
     public String getEnv(String key) {
-        return System.getenv(key) != null ? System.getenv(key) : env.getProperty(key);
+        String activation = System.getenv(key);
+        if (null != activation) {
+            return activation;
+        }
+        return (this.env != null) ? env.getProperty(key) : null;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        boolean isCsfrProtectionActive = SystemConstants.CSRF_BASIC_PROTECTION.equals(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
+        boolean isCsfrProtectionActive = SystemConstants.CSRF_BASIC_PROTECTION.equalsIgnoreCase(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
 
         String origin = req.getHeader(SystemConstants.ORIGIN);
         String referer = req.getHeader(SystemConstants.REFERER);
-
         String url = Optional.ofNullable(origin)
                 .orElse(Optional.ofNullable(referer).orElse(""));
 
@@ -64,22 +65,21 @@ public class CsrfFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             throw new CSRFProtectionException("URISyntaxException --> ", e);
         }
-
         String finalUrl = url;
-        return getWhiteList().stream().anyMatch(domain -> domain.equals(finalUrl))
+        return this.getWhiteList().stream().anyMatch(domain -> domain.equals(finalUrl))
                 ||
-                getSubDomainFromWildCard().stream().anyMatch(url::endsWith);
+                this.getSubDomainFromWildCard().stream().anyMatch(url::endsWith);
     }
 
     private List<String> getWhiteList() {
-        return getDomais(getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
+        return getDomais(this.getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
                 .stream()
                 .filter(rs -> !rs.startsWith(JOLLY_CHARACTER))
                 .collect(Collectors.toList());
     }
 
     private List<String> getSubDomainFromWildCard() {
-        return getDomais(getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
+        return getDomais(this.getEnv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS))
                 .stream()
                 .filter(rs -> rs.startsWith(JOLLY_CHARACTER))
                 .map(rs -> rs.replace("*.", "").trim())
@@ -93,4 +93,5 @@ public class CsrfFilter extends OncePerRequestFilter {
     private boolean isSafeVerbs(HttpServletRequest request) {
         return HttpMethod.GET.matches(request.getMethod()) || HttpMethod.HEAD.matches(request.getMethod()) || HttpMethod.OPTIONS.matches(request.getMethod());
     }
+
 }
