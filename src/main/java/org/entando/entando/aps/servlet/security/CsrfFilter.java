@@ -39,16 +39,23 @@ public class CsrfFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        boolean isCsfrProtectionActive = SystemConstants.CSRF_BASIC_PROTECTION.equalsIgnoreCase(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        boolean isCsfrProtectionActive = SystemConstants.CSRF_BASIC_PROTECTION
+                .equalsIgnoreCase(getEnv(SystemConstants.ENTANDO_CSRF_PROTECTION));
 
         String origin = req.getHeader(SystemConstants.ORIGIN);
         String referer = req.getHeader(SystemConstants.REFERER);
-        String url = Optional.ofNullable(origin)
-                .orElse(Optional.ofNullable(referer).orElse(""));
 
-        if (isCsfrProtectionActive && !"".equals(url) && !isSafeVerbs(req) && req.getHeader(SystemConstants.COOKIE) != null && req.getHeader(SystemConstants.COOKIE).contains(SystemConstants.JSESSIONID)) {
-            if (check(url)) {
+        String url = getUrl(origin, referer);
+
+        String headerCookie = req.getHeader(SystemConstants.COOKIE);
+        String method = req.getMethod();
+
+        if (shouldRequestBeCsrfChecked(isCsfrProtectionActive, headerCookie, method)) {
+
+            if (!url.equals("") && checkUrlInWhiteList(url)) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -58,7 +65,44 @@ public class CsrfFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, response);
     }
 
-    private boolean check(String url) {
+    private String getUrl(String origin, String referer) {
+
+        String url;
+
+        if (origin != null && origin.equals("null")) {
+            origin = "";
+        }
+        if (referer != null && referer.equals("null")) {
+            referer = "";
+        }
+
+        if (origin != null) {
+            url = origin.trim();
+        } else if (referer != null) {
+            url = referer.trim();
+        } else {
+            url = "";
+        }
+
+        return url;
+    }
+
+    public static boolean shouldRequestBeCsrfChecked(boolean isCsfrProtectionActive, String cookieHeader,String method) {
+
+        if (!isCsfrProtectionActive) {
+            return false;
+        }
+
+        boolean isAuthenticated = cookieHeader != null && cookieHeader.contains(SystemConstants.JSESSIONID);
+
+        if (isAuthenticated) {
+            return !isSafeVerbs(method);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean checkUrlInWhiteList(String url) {
         try {
             URI uri = new URI(url);
             url = uri.getScheme().concat("://").concat(uri.getHost());
@@ -90,8 +134,8 @@ public class CsrfFilter extends OncePerRequestFilter {
         return Arrays.asList(allowedDomainsString.split(SystemConstants.SEPARATOR_DOMAINS));
     }
 
-    private boolean isSafeVerbs(HttpServletRequest request) {
-        return HttpMethod.GET.matches(request.getMethod()) || HttpMethod.HEAD.matches(request.getMethod()) || HttpMethod.OPTIONS.matches(request.getMethod());
+    private static boolean isSafeVerbs(String method) {
+        return HttpMethod.GET.matches(method) || HttpMethod.HEAD.matches(method) || HttpMethod.OPTIONS.matches(method);
     }
 
 }
