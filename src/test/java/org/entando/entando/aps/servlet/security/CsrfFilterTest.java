@@ -116,51 +116,63 @@ public class CsrfFilterTest {
 
     @Test
     public void shouldRequestBeCsrfChecked() {
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         boolean result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "POST");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "PUT");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "DELETE");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "GET");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "HEAD");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Not authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "OPTIONS");
         assertFalse(result);
 
-        //Non origin non referer and authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "GET");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "HEAD");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "OPTIONS");
         assertFalse(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "POST");
         assertTrue(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "PUT");
         assertTrue(result);
 
-        //Non origin non referer and not authenticated
+        //Origin and Referer not initialized
+        //Authenticated
         result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "DELETE");
         assertTrue(result);
     }
