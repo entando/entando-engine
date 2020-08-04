@@ -1,6 +1,14 @@
 package org.entando.entando.aps.servlet.security;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.agiletec.aps.system.SystemConstants;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,15 +20,6 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class CsrfFilterTest {
 
