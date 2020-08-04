@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CsrfFilterTest {
 
@@ -97,22 +99,77 @@ public class CsrfFilterTest {
 
     // referer not valid
     @Test(expected = CSRFProtectionException.class)
-    public void refererNotValid(){
+    public void refererNotValid() {
         testFilter(null, "xxxxxx", HttpMethod.POST.name());
     }
+
     // origin not valid
     @Test(expected = CSRFProtectionException.class)
-    public void originNotValid(){
-        testFilter("xxxxx",null, HttpMethod.POST.name());
+    public void originNotValid() {
+        testFilter("xxxxx", null, HttpMethod.POST.name());
     }
 
     @Test
-    public void instanceFilter(){
+    public void instanceFilter() {
         CsrfFilter csrfFilter = new CsrfFilter();
         assertNotNull(csrfFilter);
     }
 
-    private void testFilter(String origin, String referer,String method) {
+    @Test
+    public void shouldRequestBeCsrfChecked() {
+        //Non origin non referer and not authenticated
+        boolean result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "POST");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "PUT");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "DELETE");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "GET");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "HEAD");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "OPTIONS");
+        assertFalse(result);
+
+        //Non origin non referer and authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "GET");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "HEAD");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "OPTIONS");
+        assertFalse(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "POST");
+        assertTrue(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "PUT");
+        assertTrue(result);
+
+        //Non origin non referer and not authenticated
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "DELETE");
+        assertTrue(result);
+    }
+
+
+
+
+    private void testFilter(String origin, String referer, String method) {
 
         CsrfFilter csrfFilter = new CsrfFilter(mockEnvironment);
         MockFilterConfig filterConfig = new MockFilterConfig();
@@ -139,7 +196,8 @@ public class CsrfFilterTest {
     //Set enviroments for test
     private void setEnvironments(MockEnvironment mockEnvironment) {
         mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "basic");
-        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS, "http://organization.it,https://organization.it,*.entando.com");
+        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS,
+                "http://organization.it,https://organization.it,*.entando.com");
     }
 
 }
