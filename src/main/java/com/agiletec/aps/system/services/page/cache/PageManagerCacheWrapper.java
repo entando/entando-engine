@@ -229,6 +229,8 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     
     @Override
     public void updateDraftPage(IPage page) {
+        IPage cachedPage = this.getDraftPage(page.getCode());
+        boolean alreadyChanged = cachedPage.isChanged();
         IPage onlinepage = this.getOnlinePage(page.getCode());
         PageMetadata onlineMeta = (null != onlinepage) ? onlinepage.getMetadata() : null;
         Widget[] widgetsOnline = (null != onlinepage) ? onlinepage.getWidgets() : new Widget[0];
@@ -239,7 +241,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         cache.put(DRAFT_PAGE_CACHE_NAME_PREFIX + page.getCode(), page);
         this.checkRootModification(page, false, cache);
         this.cleanLocalCache(cache);
-        if (isChanged) {
+        if (isChanged && !alreadyChanged) {
             PagesStatus status = this.getPagesStatus();
             status.setLastUpdate(new Date());
             status.setOnlineWithChanges(status.getOnlineWithChanges() + 1);
@@ -254,10 +256,9 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         IPage page = this.getDraftPage(pageCode);
         if (null != page) {
             this.addCodeFromCachedList(cache, ONLINE_PAGE_CODES_CACHE_NAME, page.getCode());
+            boolean alreadyChanged = page.isChanged();
             IPage onlinepage = this.getOnlinePage(page.getCode());
             boolean alreadyOnline = null != onlinepage;
-            boolean changed = (alreadyOnline
-                    && this.isChanged(page.getMetadata(), onlinepage.getMetadata(), page.getWidgets(), onlinepage.getWidgets()));
             ((Page) page).setOnline(true);
             ((Page) page).setChanged(false);
             IPage newOnlinePage = page.clone();
@@ -284,16 +285,15 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
                     this.checkRootModification(parentOnLine, true, cache);
                 }
             }
-            if (!alreadyOnline || changed) {
+            if (!alreadyOnline || alreadyChanged) {
                 PagesStatus status = this.getPagesStatus();
                 status.setLastUpdate(new Date());
-                if (!alreadyOnline) {
-                    status.setOnline(status.getOnline() + 1);
+                if (alreadyChanged) {
+                    status.setOnlineWithChanges(status.getOnlineWithChanges() - 1);
+                } else if (!alreadyOnline) {
                     status.setUnpublished(status.getUnpublished() - 1);
-                } else if (changed) {
-                    status.setOnlineWithChanges(status.getOnlineWithChanges() + 1);
-                    status.setOnline(status.getOnline() - 1);
                 }
+                status.setOnline(status.getOnline() + 1);
                 cache.put(PAGE_STATUS_CACHE_NAME, status);
             }
         }
