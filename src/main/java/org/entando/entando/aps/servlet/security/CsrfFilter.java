@@ -53,7 +53,7 @@ public class CsrfFilter extends OncePerRequestFilter {
 
         if (shouldRequestBeCsrfChecked(isCsfrProtectionActive, headerCookie, method)) {
 
-            if (!url.equals("") && checkUrlInWhiteList(url)) {
+            if (url != null && checkUrlInWhiteList(url)) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -63,23 +63,16 @@ public class CsrfFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, response);
     }
 
-    private String getUrl(String origin, String referer) {
+    public static String getUrl(String origin, String referer) {
 
         String url;
 
-        if (origin != null && origin.equals("null")) {
-            origin = "";
-        }
-        if (referer != null && referer.equals("null")) {
-            referer = "";
-        }
-
-        if (origin != null) {
+        if (origin != null && !origin.equals("")) {
             url = origin.trim();
-        } else if (referer != null) {
+        } else if (referer != null && !referer.equals("")) {
             url = referer.trim();
         } else {
-            url = "";
+            url = null;
         }
 
         return url;
