@@ -20,12 +20,24 @@
     <bean id="ApsSystemUtils" class="com.agiletec.aps.system.ApsSystemUtils" init-method="init" >
         <property name="systemParams">
             <map>
-                <entry key="logActiveFileOutput"><value>${logActiveFileOutput}</value></entry>
-                <entry key="logName"><value>${logName}</value></entry>
-                <entry key="logFileRotatePattern"><value>${logFileRotatePattern}</value></entry>
-                <entry key="logLevel"><value>${logLevel}</value></entry>
-                <entry key="logFileSize"><value>${logFileSize}</value></entry>
-                <entry key="logFilesCount"><value>${logFilesCount}</value></entry>
+                <entry key="logActiveFileOutput">
+                    <value>${logActiveFileOutput}</value>
+                </entry>
+                <entry key="logName">
+                    <value>${logName}</value>
+                </entry>
+                <entry key="logFileRotatePattern">
+                    <value>${logFileRotatePattern}</value>
+                </entry>
+                <entry key="logLevel">
+                    <value>${logLevel}</value>
+                </entry>
+                <entry key="logFileSize">
+                    <value>${logFileSize}</value>
+                </entry>
+                <entry key="logFilesCount">
+                    <value>${logFilesCount}</value>
+                </entry>
             </map>
         </property>
     </bean>
@@ -72,8 +84,8 @@
         <value>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</value>
         <value>org.entando.entando.aps.system.init.model.servdb.ActionLogRecord</value>
         <value>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</value>
-		<value>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</value>
-		<value>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</value>
+        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</value>
+        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</value>
         <value>org.entando.entando.aps.system.init.model.servdb.DataObjectModel</value>
         <value>org.entando.entando.aps.system.init.model.servdb.DataObject</value>
         <value>org.entando.entando.aps.system.init.model.servdb.DataObjectRelation</value>
@@ -232,11 +244,9 @@
                 </entry>
             </map>
         </property>
-		<property name="cacheWrapper">
-			<bean class="org.entando.entando.aps.system.init.cache.InitializerManagerCacheWrapper">
-				<property name="springCacheManager" ref="springCacheManager" />
-			</bean>
-		</property>
+        <property name="cacheWrapper">
+            <bean class="org.entando.entando.aps.system.init.cache.InitializerManagerCacheWrapper" />
+        </property>
     </bean>
 
     <bean class="org.entando.entando.aps.system.init.SystemPostProcessor" />
