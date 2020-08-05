@@ -67,6 +67,10 @@ public class CsrfFilter extends OncePerRequestFilter {
 
         String url;
 
+        if("null".equals(origin) || "null".equals(referer)){
+            return null;
+        }
+
         if (origin != null && !origin.equals("")) {
             url = origin.trim();
         } else if (referer != null && !referer.equals("")) {
