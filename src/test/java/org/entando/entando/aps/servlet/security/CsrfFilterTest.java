@@ -117,6 +117,16 @@ public class CsrfFilterTest {
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
 
+    //REFERER and Origin null
+    @Test
+    public void refererAndOriginNullAsString() {
+        testFilter("null", null, HttpMethod.POST.name());
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+
+        testFilter(null, "null", HttpMethod.POST.name());
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    }
+
     @Test
     public void instanceFilter() {
         CsrfFilter csrfFilter = new CsrfFilter();
@@ -188,7 +198,7 @@ public class CsrfFilterTest {
 
     @Test
     public void getUrlFromOriginReferer() {
-        String result = CsrfFilter.getUrl(null, null);
+        String result = CsrfFilter.getUrl("null", "null");
         assertNull(result);
 
         result =  CsrfFilter.getUrl("http://origin.it", null);
@@ -196,6 +206,9 @@ public class CsrfFilterTest {
 
         result =  CsrfFilter.getUrl(null, "http://referer");
         assertNotNull(result);
+
+        result =  CsrfFilter.getUrl(null, null);
+        assertNull(result);
     }
 
 
