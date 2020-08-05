@@ -127,6 +127,17 @@ public class CsrfFilterTest {
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
 
+    //REFERER and Origin null
+    @Test
+    public void refererAndOriginNullAsStringAndMethodGET() {
+        testFilter("null", null, HttpMethod.GET.name());
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+
+        testFilter(null, "null", HttpMethod.GET.name());
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    }
+
+
     @Test
     public void instanceFilter() {
         CsrfFilter csrfFilter = new CsrfFilter();
@@ -137,81 +148,76 @@ public class CsrfFilterTest {
     public void shouldRequestBeCsrfChecked() {
         //Origin and Referer not initialized
         //Not authenticated
-        boolean result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "POST");
+        boolean result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "POST");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Not authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "PUT");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "PUT");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Not authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "DELETE");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "DELETE");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Not authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "GET");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "GET");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Not authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "HEAD");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "HEAD");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Not authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "", "OPTIONS");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "OPTIONS");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "GET");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "GET");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "HEAD");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "HEAD");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "OPTIONS");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "OPTIONS");
         assertFalse(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "POST");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "POST");
         assertTrue(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "PUT");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "PUT");
         assertTrue(result);
 
         //Origin and Referer not initialized
         //Authenticated
-        result = CsrfFilter.shouldRequestBeCsrfChecked(true,  "JSESSIONID=xxxxxxxxxxxx", "DELETE");
+        result = CsrfFilter.shouldRequestBeCsrfChecked(true, "JSESSIONID=xxxxxxxxxxxx", "DELETE");
         assertTrue(result);
     }
 
     @Test
     public void getUrlFromOriginReferer() {
-        String result = CsrfFilter.getUrl("null", "null");
-        assertNull(result);
-
-        result =  CsrfFilter.getUrl("http://origin.it", null);
+        String result = CsrfFilter.getUrl("http://origin.it", null);
         assertNotNull(result);
 
-        result =  CsrfFilter.getUrl(null, "http://referer");
+        result = CsrfFilter.getUrl(null, "http://referer");
         assertNotNull(result);
 
-        result =  CsrfFilter.getUrl(null, null);
+        result = CsrfFilter.getUrl(null, null);
         assertNull(result);
     }
-
-
 
 
     private void testFilter(String origin, String referer, String method) {
@@ -241,7 +247,8 @@ public class CsrfFilterTest {
     //Set enviroments for test
     private void setEnvironments(MockEnvironment mockEnvironment) {
         mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "basic");
-        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS,"http://organization.it,https://organization.it,*.entando.com");
+        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS,
+                "http://organization.it,https://organization.it,*.entando.com");
     }
 
 }
