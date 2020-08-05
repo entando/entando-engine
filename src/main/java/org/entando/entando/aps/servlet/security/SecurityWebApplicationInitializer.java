@@ -15,6 +15,8 @@ package org.entando.entando.aps.servlet.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
+import javax.servlet.ServletContext;
+
 /**
  * Inizializer Class for Spring Security
  *
@@ -22,4 +24,9 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
  */
 public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 
+    @Override
+    protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
+        super.beforeSpringSecurityFilterChain(servletContext);
+        super.insertFilters(servletContext, new CsrfFilter());
+    }
 }
