@@ -51,6 +51,11 @@ public class CsrfFilter extends OncePerRequestFilter {
         String headerCookie = req.getHeader(SystemConstants.COOKIE);
         String method = req.getMethod();
 
+        if("null".equals(origin) || "null".equals(referer)){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         if (shouldRequestBeCsrfChecked(isCsfrProtectionActive, headerCookie, method)) {
 
             if (url != null && checkUrlInWhiteList(url)) {
@@ -66,10 +71,6 @@ public class CsrfFilter extends OncePerRequestFilter {
     public static String getUrl(String origin, String referer) {
 
         String url;
-
-        if("null".equals(origin) || "null".equals(referer)){
-            return null;
-        }
 
         if (origin != null && !origin.equals("")) {
             url = origin.trim();
