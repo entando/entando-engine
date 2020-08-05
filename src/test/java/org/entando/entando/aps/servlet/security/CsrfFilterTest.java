@@ -3,6 +3,7 @@ package org.entando.entando.aps.servlet.security;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -108,6 +109,14 @@ public class CsrfFilterTest {
         testFilter("xxxxx", null, HttpMethod.POST.name());
     }
 
+
+    //REFERER and Origin null
+    @Test
+    public void refererAndOriginNull() {
+        testFilter(null, null, HttpMethod.POST.name());
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    }
+
     @Test
     public void instanceFilter() {
         CsrfFilter csrfFilter = new CsrfFilter();
@@ -177,6 +186,18 @@ public class CsrfFilterTest {
         assertTrue(result);
     }
 
+    @Test
+    public void getUrlFromOriginReferer() {
+        String result = CsrfFilter.getUrl(null, null);
+        assertNull(result);
+
+        result =  CsrfFilter.getUrl("http://origin.it", null);
+        assertNotNull(result);
+
+        result =  CsrfFilter.getUrl(null, "http://referer");
+        assertNotNull(result);
+    }
+
 
 
 
@@ -207,8 +228,7 @@ public class CsrfFilterTest {
     //Set enviroments for test
     private void setEnvironments(MockEnvironment mockEnvironment) {
         mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "basic");
-        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS,
-                "http://organization.it,https://organization.it,*.entando.com");
+        mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS,"http://organization.it,https://organization.it,*.entando.com");
     }
 
 }
