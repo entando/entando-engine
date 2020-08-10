@@ -9,3 +9,9 @@ pipelineConfig:
       value: "true"
     - name: UPDATE_OWASP_DB
       value: "false"
+  pipelines:
+      release:
+        promote:
+          steps:
+            - name: update bom
+              sh: update-bom
