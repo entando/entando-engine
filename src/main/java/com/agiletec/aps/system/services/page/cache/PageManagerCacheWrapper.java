@@ -226,7 +226,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         status.setUnpublished(status.getUnpublished()+1);
         cache.put(PAGE_STATUS_CACHE_NAME, status);
     }
-    
+
     @Override
     public void updateDraftPage(IPage page) {
         IPage cachedPage = this.getDraftPage(page.getCode());
@@ -241,11 +241,23 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         cache.put(DRAFT_PAGE_CACHE_NAME_PREFIX + page.getCode(), page);
         this.checkRootModification(page, false, cache);
         this.cleanLocalCache(cache);
+
+        int online = 0;
+        int onlineWithChanges = 0;
+
         if (isChanged && !alreadyChanged) {
+            online = -1;
+            onlineWithChanges = 1;
+        } else if (! isChanged && alreadyChanged) {
+            online = 1;
+            onlineWithChanges = -1;
+        }
+
+        if (online != 0 || onlineWithChanges != 0) {
             PagesStatus status = this.getPagesStatus();
             status.setLastUpdate(new Date());
-            status.setOnlineWithChanges(status.getOnlineWithChanges() + 1);
-            status.setOnline(status.getOnline()-1);
+            status.setOnlineWithChanges(status.getOnlineWithChanges() + onlineWithChanges);
+            status.setOnline(status.getOnline() + online);
             cache.put(PAGE_STATUS_CACHE_NAME, status);
         }
     }
