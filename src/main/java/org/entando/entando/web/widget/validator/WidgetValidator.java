@@ -46,7 +46,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
     @Override
     public void validate(Object target, Errors errors) {
         WidgetRequest widgetRequest = (WidgetRequest) target;
-        if (StringUtils.isEmpty(widgetRequest.getCustomUi())) {
+        if (StringUtils.isEmpty(widgetRequest.getCustomUi()) && StringUtils.isEmpty(widgetRequest.getParentType())) {
             errors.rejectValue("customUi", ERRCODE_NOT_BLANK, new String[]{}, "widgettype.customUi.notBlank");
         }
         this.validateTitles(widgetRequest, errors);

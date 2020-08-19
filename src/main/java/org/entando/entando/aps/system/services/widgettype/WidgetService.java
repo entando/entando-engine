@@ -201,7 +201,14 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
         try {
             this.getWidgetManager().addWidgetType(widgetType);
-            this.createAndAddFragment(widgetType, widgetRequest);
+            String customUi = widgetRequest.getCustomUi();
+            if (StringUtils.isEmpty(customUi) && widgetType.getParentType() != null) {
+                GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetType.getParentTypeCode());
+                if (guiFragment != null) {
+                    customUi = guiFragment.getCurrentGui();
+                }
+            }
+            this.createAndAddFragment(widgetType, customUi);
             WidgetDto widgetDto = this.dtoBuilder.convert(widgetType);
             this.addFragments(widgetDto);
             return widgetDto;
@@ -224,23 +231,34 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
                 bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()}, "widgettype.group.invalid");
                 throw new ValidationGenericException(bindingResult);
             }
+
+            this.processWidgetType(type, widgetRequest);
+
+            String customUi = widgetRequest.getCustomUi();
+            if (StringUtils.isEmpty(customUi) && type.getParentType() != null) {
+                GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(type.getParentTypeCode());
+                if (guiFragment != null) {
+                    customUi = guiFragment.getCurrentGui();
+                }
+            }
+
             if (type.isUserType()
-                    && StringUtils.isBlank(widgetRequest.getCustomUi())
+                    && StringUtils.isBlank(customUi)
                     && !WidgetType.existsJsp(this.srvCtx, widgetCode, widgetCode)) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");
                 bindingResult.reject(WidgetValidator.ERRCODE_NOT_BLANK, new String[]{type.getCode()}, "widgettype.customUi.notBlank");
                 throw new ValidationGenericException(bindingResult);
             }
-            this.processWidgetType(type, widgetRequest);
+
             widgetDto = dtoBuilder.convert(type);
             this.getWidgetManager().updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId());
             if (!StringUtils.isEmpty(widgetCode)) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetCode);
                 if (null == guiFragment) {
-                    this.createAndAddFragment(type, widgetRequest);
+                    this.createAndAddFragment(type, customUi);
                 } else {
-                    guiFragment.setGui(widgetRequest.getCustomUi());
+                    guiFragment.setGui(customUi);
                     this.getGuiFragmentManager().updateGuiFragment(guiFragment);
                 }
             }
@@ -333,12 +351,12 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         return uniqueCode;
     }
 
-    private void createAndAddFragment(WidgetType widgetType, WidgetRequest widgetRequest) throws Exception {
+    private void createAndAddFragment(WidgetType widgetType, String customUi) throws Exception {
         GuiFragment guiFragment = new GuiFragment();
         String code = this.extractUniqueGuiFragmentCode(widgetType.getCode());
         guiFragment.setCode(code);
         guiFragment.setPluginCode(widgetType.getPluginCode());
-        guiFragment.setGui(widgetRequest.getCustomUi());
+        guiFragment.setGui(customUi);
         guiFragment.setWidgetTypeCode(widgetType.getCode());
         this.getGuiFragmentManager().addGuiFragment(guiFragment);
     }
@@ -350,6 +368,16 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
+        if (widgetRequest.getParentType() != null) {
+            type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
+        }
+
+        if (widgetRequest.getParameters() != null) {
+            type.setTypeParameters(widgetRequest.getParameters().entrySet().stream()
+                .map(e -> new WidgetTypeParameter(e.getKey(), e.getValue()))
+                .collect(Collectors.toList()));
+        }
+
         try {
             if (widgetRequest.getConfigUi() != null) {
                 type.setConfigUi(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));

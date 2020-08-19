@@ -20,13 +20,19 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public class WidgetTypeParameter implements Serializable {
+
+	public WidgetTypeParameter() {
+
+	}
+
+	public WidgetTypeParameter(String name, String descr) {
+		this._name = name;
+		this._descr = descr;
+	}
 	
 	@Override
 	public WidgetTypeParameter clone() {
-		WidgetTypeParameter clone = new WidgetTypeParameter();
-		clone.setDescr(this.getDescr());
-		clone.setName(this.getName());
-		return clone;
+		return new WidgetTypeParameter(this.getName(), this.getDescr());
 	}
 	
 	/**

@@ -44,7 +44,7 @@ public class WidgetType implements Serializable {
     /**
      * La lista dei parametri previsti per il tipo di widget.
      */
-    private List<WidgetTypeParameter> _parameters;
+    private List<WidgetTypeParameter> _parameters = new ArrayList<>();
 
     /**
      * Il nome della action specifica che gestisce questo tipo di widget. null
@@ -132,6 +132,16 @@ public class WidgetType implements Serializable {
      */
     public List<WidgetTypeParameter> getTypeParameters() {
         return _parameters;
+    }
+
+    public boolean hasTypeParameter(WidgetTypeParameter param) {
+        for (WidgetTypeParameter parameter : getTypeParameters()) {
+            if (parameter.getName().equals(param.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -248,7 +258,7 @@ public class WidgetType implements Serializable {
     }
 
     public boolean isUserType() {
-        return (this.isLogic() && !this.isLocked() || (!this.isLogic() && !this.isLocked()));
+        return !this.isLocked();
     }
 
     public boolean isLocked() {
