@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.widget.model;
 
+import java.util.HashMap;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -35,6 +36,10 @@ public class WidgetRequest {
     private String bundleId;
 
     private Map<String, Object> configUi;
+
+    private String parentType;
+
+    private Map<String, String> parameters = new HashMap<>();
 
     public String getCode() {
         return code;
@@ -82,5 +87,21 @@ public class WidgetRequest {
 
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
+    }
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
     }
 }

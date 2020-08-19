@@ -37,6 +37,7 @@ public class WidgetDto {
     private String bundleId;
     private Map<String, Object> configUi;
     private List<WidgetParameter> parameters = new ArrayList<>();
+    private String parentType;
     private String action;
 
     protected class GuiFragmentRef {
@@ -213,5 +214,12 @@ public class WidgetDto {
     public void setAction(String action) {
         this.action = action;
     }
-    
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
+    }
 }

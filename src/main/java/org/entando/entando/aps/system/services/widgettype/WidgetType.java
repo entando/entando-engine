@@ -134,6 +134,16 @@ public class WidgetType implements Serializable {
         return _parameters;
     }
 
+    public boolean hasTypeParameter(WidgetTypeParameter param) {
+        for (WidgetTypeParameter parameter : getTypeParameters()) {
+            if (parameter.getName().equals(param.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Imposta la lista dei parametri previsti per il tipo di widget. La lista
      * deve essere composta da oggetti del tipo WidgetTypeParameter.

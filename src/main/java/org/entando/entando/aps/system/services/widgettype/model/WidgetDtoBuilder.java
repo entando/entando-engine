@@ -50,6 +50,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         dest.setCode(src.getCode());
         dest.setGroup(src.getMainGroup());
         dest.setTitles((Hashtable) src.getTitles());
+        dest.setParentType(src.getParentTypeCode());
         Integer count = 0;
         try {
             List<IPage> onLinePages = this.getPageManager().getOnlineWidgetUtilizers(src.getCode());
