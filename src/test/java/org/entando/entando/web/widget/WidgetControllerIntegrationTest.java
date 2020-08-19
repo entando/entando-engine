@@ -28,6 +28,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
@@ -342,6 +343,76 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             Assert.assertNull(this.pageManager.getDraftPage(pageCode));
             this.widgetTypeManager.deleteWidgetType(newWidgetCode);
             Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+        }
+    }
+
+    @Test
+    public void testAddUpdateWidgetWithParentAndParameters() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String parentCode = "test_new_type_1";
+        String parentCustomUi = "<h1>Parent Custom UI</h1>";
+        String childCustomUi = "<h1>Child Custom UI</h1>";
+        String childCode = "test_new_type_2";
+        Assert.assertNull(this.widgetTypeManager.getWidgetType(parentCode));
+        try {
+            WidgetRequest request = new WidgetRequest();
+            request.setCode(parentCode);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            Map<String, String> titles = new HashMap<>();
+            titles.put("it", "Titolo ITA");
+            titles.put("en", "Title EN");
+            request.setTitles(titles);
+            request.setCustomUi(parentCustomUi);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.code", is(parentCode)));
+            WidgetType widgetType = this.widgetTypeManager.getWidgetType(parentCode);
+            Assert.assertNotNull(widgetType);
+            Assert.assertEquals("Title EN", widgetType.getTitles().getProperty("en"));
+
+            request = new WidgetRequest();
+            request.setCode(childCode);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            titles = new HashMap<>();
+            titles.put("it", "Titolo ITA");
+            titles.put("en", "Title EN");
+            request.setTitles(titles);
+            request.setCustomUi(null); //Should use parent
+            request.setGroup(Group.FREE_GROUP_NAME);
+            request.setParentType(parentCode);
+            request.setParameters(Collections.singletonMap("key", "value"));
+
+            executeWidgetPost(request, accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.code", is(childCode)))
+                    .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("key")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("value")));
+
+            widgetType = this.widgetTypeManager.getWidgetType(childCode);
+            Assert.assertNotNull(widgetType);
+
+            request.setCustomUi(childCustomUi);
+            request.setParameters(Collections.singletonMap("key2", "value2"));
+
+            executeWidgetPut(request, childCode, accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.code", is(childCode)))
+                    .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(childCustomUi)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("key2")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("value2")));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.widgetTypeManager.deleteWidgetType(parentCode);
+            this.widgetTypeManager.deleteWidgetType(childCode);
         }
     }
 
