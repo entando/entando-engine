@@ -14,6 +14,7 @@
 package org.entando.entando.web.widget;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,6 +35,7 @@ import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.model.WidgetDto.WidgetParameter;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
@@ -364,12 +366,21 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("en", "Title EN");
             request.setTitles(titles);
             request.setCustomUi(parentCustomUi);
+            request.setParameters(Collections.singletonList(new WidgetParameter("parentKey", "parentValue")));
             request.setGroup(Group.FREE_GROUP_NAME);
-            ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
-            result.andExpect(jsonPath("$.payload.code", is(parentCode)));
+
+            executeWidgetPost(request, accessToken, status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.code", is(parentCode)))
+                    .andExpect(jsonPath("$.payload.parentType", nullValue()))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")));
+
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(parentCode);
             Assert.assertNotNull(widgetType);
-            Assert.assertEquals("Title EN", widgetType.getTitles().getProperty("en"));
 
             request = new WidgetRequest();
             request.setCode(childCode);
@@ -381,7 +392,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setCustomUi(null); //Should use parent
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
-            request.setParameters(Collections.singletonMap("key", "value"));
+            request.setParameters(Collections.singletonList(new WidgetParameter("key", "value")));
 
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
@@ -389,15 +400,17 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
                     .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("key")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("value")));
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")))
+                    .andExpect(jsonPath("$.payload.parameters[1].code", is("key")))
+                    .andExpect(jsonPath("$.payload.parameters[1].description", is("value")));
 
             widgetType = this.widgetTypeManager.getWidgetType(childCode);
             Assert.assertNotNull(widgetType);
 
             request.setCustomUi(childCustomUi);
-            request.setParameters(Collections.singletonMap("key2", "value2"));
+            request.setParameters(Collections.singletonList(new WidgetParameter("key2", "value2")));
 
             executeWidgetPut(request, childCode, accessToken, status().isOk())
                     .andDo(print())
