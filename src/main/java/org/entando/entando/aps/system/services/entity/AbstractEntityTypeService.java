@@ -169,17 +169,26 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
         try {
             IDtoBuilder<I, O> builder = this.getEntityTypeFullDtoBuilder(entityManager);
-            if (null != entityManager.getEntityPrototype(bodyRequest.getCode())) {
+            I existing = (I) entityManager.getEntityPrototype(bodyRequest.getCode());
+            I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
+
+            boolean isEqual = existing != null && builder.convert(entityPrototype)
+                    .equals(builder.convert(existing));
+
+            if (existing != null && !isEqual) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS,
                         bindingResult, new String[]{bodyRequest.getCode()}, "entityType.exists");
                 throw new ValidationConflictException(bindingResult);
             }
-            I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
             if (bindingResult.hasErrors()) {
                 return response;
             } else {
-                ((IEntityTypesConfigurer) entityManager).addEntityPrototype(entityPrototype);
-                response = builder.convert(entityPrototype);
+                if (existing != null) {
+                    response = builder.convert(existing);
+                } else {
+                    ((IEntityTypesConfigurer) entityManager).addEntityPrototype(entityPrototype);
+                    response = builder.convert(entityPrototype);
+                }
             }
         } catch (ValidationConflictException vce) {
             throw vce;
