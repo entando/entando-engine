@@ -69,7 +69,13 @@ public class WidgetDto {
         
     }
     
-    protected class WidgetParameter {
+    public static class WidgetParameter {
+
+        public WidgetParameter() { }
+        public WidgetParameter(String code, String description) {
+            this.code = code;
+            this.description = description;
+        }
         
         private String code;
         private String description;
