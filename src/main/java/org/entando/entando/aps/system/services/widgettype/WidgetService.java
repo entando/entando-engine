@@ -370,11 +370,13 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
-        if (type.getTypeParameters() == null && widgetRequest.getParentType() != null) {
+
+        boolean isNew = type.getTypeParameters() == null;
+        type.setTypeParameters(new ArrayList<>());
+
+        if (isNew && widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
-            type.setTypeParameters(type.getParentType().getTypeParameters());
-        } else {
-            type.setTypeParameters(new ArrayList<>());
+            type.getTypeParameters().addAll(type.getParentType().getTypeParameters());
         }
 
         if (widgetRequest.getParameters() != null) {
