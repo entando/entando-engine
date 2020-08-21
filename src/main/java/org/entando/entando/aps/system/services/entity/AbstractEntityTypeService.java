@@ -178,10 +178,10 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             I existing = (I) entityManager.getEntityPrototype(bodyRequest.getCode());
             I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
 
-            boolean isEqual = existing != null && (!idempotent || builder.convert(entityPrototype)
+            boolean isConflict = existing != null && (!idempotent || !builder.convert(entityPrototype)
                     .equals(builder.convert(existing)));
 
-            if (isEqual) {
+            if (isConflict) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS,
                         bindingResult, new String[]{bodyRequest.getCode()}, "entityType.exists");
                 throw new ValidationConflictException(bindingResult);
