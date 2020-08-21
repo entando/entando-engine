@@ -193,8 +193,12 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         WidgetType widgetType = new WidgetType();
         this.processWidgetType(widgetType, widgetRequest);
         WidgetType oldWidgetType = this.getWidgetManager().getWidgetType(widgetType.getCode());
+
+        boolean isEqual = dtoBuilder.convert(widgetType)
+                .equals(dtoBuilder.convert(oldWidgetType));
+
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
-        if (null != oldWidgetType) {
+        if (null != oldWidgetType && !isEqual) {
             bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_ALREADY_EXISTS, new String[]{widgetType.getCode()}, "widgettype.exists");
             throw new ValidationGenericException(bindingResult);
         } else if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
@@ -370,11 +374,13 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
-        if (type.getTypeParameters() == null && widgetRequest.getParentType() != null) {
+
+        boolean isNew = type.getTypeParameters() == null;
+        type.setTypeParameters(new ArrayList<>());
+
+        if (isNew && widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
-            type.setTypeParameters(type.getParentType().getTypeParameters());
-        } else {
-            type.setTypeParameters(new ArrayList<>());
+            type.getTypeParameters().addAll(type.getParentType().getTypeParameters());
         }
 
         if (widgetRequest.getParameters() != null) {
