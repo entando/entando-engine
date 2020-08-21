@@ -193,12 +193,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         WidgetType widgetType = new WidgetType();
         this.processWidgetType(widgetType, widgetRequest);
         WidgetType oldWidgetType = this.getWidgetManager().getWidgetType(widgetType.getCode());
-
-        boolean isEqual = dtoBuilder.convert(widgetType)
-                .equals(dtoBuilder.convert(oldWidgetType));
-
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
-        if (null != oldWidgetType && !isEqual) {
+        if (null != oldWidgetType) {
             bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_ALREADY_EXISTS, new String[]{widgetType.getCode()}, "widgettype.exists");
             throw new ValidationGenericException(bindingResult);
         } else if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
