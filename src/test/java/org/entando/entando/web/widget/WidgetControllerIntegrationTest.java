@@ -369,7 +369,6 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setParameters(Collections.singletonList(new WidgetParameter("parentKey", "parentValue")));
             request.setGroup(Group.FREE_GROUP_NAME);
 
-            //Create a parent, with parameters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.code", is(parentCode)))
@@ -380,7 +379,6 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
                     .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")));
 
-            //Create a child widget
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(parentCode);
             Assert.assertNotNull(widgetType);
 
@@ -396,7 +394,6 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setParentType(parentCode);
             request.setParameters(Collections.singletonList(new WidgetParameter("key", "value")));
 
-            //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
@@ -412,11 +409,9 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             widgetType = this.widgetTypeManager.getWidgetType(childCode);
             Assert.assertNotNull(widgetType);
 
-            //Update a child widget
             request.setCustomUi(childCustomUi);
             request.setParameters(Collections.singletonList(new WidgetParameter("key2", "value2")));
 
-            //When updating, request parameters override everything
             executeWidgetPut(request, childCode, accessToken, status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
@@ -426,14 +421,6 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
                     .andExpect(jsonPath("$.payload.parameters[0].code", is("key2")))
                     .andExpect(jsonPath("$.payload.parameters[0].description", is("value2")));
-
-            //Parent should remain unchanged
-            executeWidgetGet(parentCode, accessToken, status().isOk())
-                    .andDo(print())
-                    .andExpect(jsonPath("$.payload.code", is(parentCode)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")));
         } catch (Exception e) {
             throw e;
         } finally {
