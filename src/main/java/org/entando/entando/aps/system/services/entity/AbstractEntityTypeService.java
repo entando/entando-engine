@@ -164,22 +164,37 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
 
     protected abstract IDtoBuilder<I, O> getEntityTypeFullDtoBuilder(IEntityManager masterManager);
 
-    protected synchronized O addEntityType(String entityManagerCode, EntityTypeDtoRequest bodyRequest, BindingResult bindingResult) {
+    protected synchronized O addEntityType(String entityManagerCode, EntityTypeDtoRequest bodyRequest,
+            BindingResult bindingResult) {
+        return addEntityType(entityManagerCode, bodyRequest, bindingResult, false);
+    }
+
+    protected synchronized O addEntityType(String entityManagerCode, EntityTypeDtoRequest bodyRequest,
+            BindingResult bindingResult, boolean idempotent) {
         O response = null;
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
         try {
             IDtoBuilder<I, O> builder = this.getEntityTypeFullDtoBuilder(entityManager);
-            if (null != entityManager.getEntityPrototype(bodyRequest.getCode())) {
+            I existing = (I) entityManager.getEntityPrototype(bodyRequest.getCode());
+            I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
+
+            boolean isConflict = existing != null && (!idempotent || !builder.convert(entityPrototype)
+                    .equals(builder.convert(existing)));
+
+            if (isConflict) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS,
                         bindingResult, new String[]{bodyRequest.getCode()}, "entityType.exists");
                 throw new ValidationConflictException(bindingResult);
             }
-            I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
             if (bindingResult.hasErrors()) {
                 return response;
             } else {
-                ((IEntityTypesConfigurer) entityManager).addEntityPrototype(entityPrototype);
-                response = builder.convert(entityPrototype);
+                if (existing != null) {
+                    response = builder.convert(existing);
+                } else {
+                    ((IEntityTypesConfigurer) entityManager).addEntityPrototype(entityPrototype);
+                    response = builder.convert(entityPrototype);
+                }
             }
         } catch (ValidationConflictException vce) {
             throw vce;
