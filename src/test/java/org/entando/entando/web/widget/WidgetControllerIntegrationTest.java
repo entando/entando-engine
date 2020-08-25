@@ -155,9 +155,9 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                 get("/widgets").param("pageSize", "100")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(6)));
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(7)));
         result.andExpect(jsonPath("$.metaData.pageSize", is(100)));
-        result.andExpect(jsonPath("$.metaData.totalItems", is(6)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(7)));
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
@@ -176,9 +176,9 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.metaData.pageSize", is(5)));
-        result.andExpect(jsonPath("$.metaData.totalItems", is(6)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(7)));
         String response = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(jsonPath("$.payload[0].code", is("messages_system")));
+        result.andExpect(jsonPath("$.payload[0].code", is("parent_widget")));
         assertNotNull(response);
     }
 
@@ -352,11 +352,11 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
     public void testAddUpdateWidgetWithParentAndParameters() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        String parentCode = "test_new_type_1";
+        String parentCode = "parent_widget";
         String parentCustomUi = "<h1>Parent Custom UI</h1>";
         String childCustomUi = "<h1>Child Custom UI</h1>";
         String childCode = "test_new_type_2";
-        Assert.assertNull(this.widgetTypeManager.getWidgetType(parentCode));
+        Assert.assertNotNull(this.widgetTypeManager.getWidgetType(parentCode));
         try {
             WidgetRequest request = new WidgetRequest();
             request.setCode(parentCode);
@@ -366,19 +366,18 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("en", "Title EN");
             request.setTitles(titles);
             request.setCustomUi(parentCustomUi);
-            request.setParameters(Collections.singletonList(new WidgetParameter("parentKey", "parentValue")));
             request.setGroup(Group.FREE_GROUP_NAME);
 
-            //Create a parent, with parameters
-            executeWidgetPost(request, accessToken, status().isOk())
+            //Update parent, with parameters
+            executeWidgetPut(request, parentCode, accessToken, status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.code", is(parentCode)))
                     .andExpect(jsonPath("$.payload.parentType", nullValue()))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
                     .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")));
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentCode")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of the Widget Parameter")));
 
             //Create a child widget
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(parentCode);
@@ -394,7 +393,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setCustomUi(null); //Should use parent
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
-            request.setParameters(Collections.singletonList(new WidgetParameter("key", "value")));
+            request.setConfig(Collections.singletonMap("parentCode", "configValue"));
 
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
@@ -403,18 +402,16 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
                     .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(2)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")))
-                    .andExpect(jsonPath("$.payload.parameters[1].code", is("key")))
-                    .andExpect(jsonPath("$.payload.parameters[1].description", is("value")));
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.hasConfig", is(false)))
+                    .andExpect(jsonPath("$.payload.config.parentCode", is("configValue")));
 
             widgetType = this.widgetTypeManager.getWidgetType(childCode);
             Assert.assertNotNull(widgetType);
 
             //Update a child widget
             request.setCustomUi(childCustomUi);
-            request.setParameters(Collections.singletonList(new WidgetParameter("key2", "value2")));
+            request.setConfig(Collections.singletonMap("parentCode", "anotherConfigValue"));
 
             //When updating, request parameters override everything
             executeWidgetPut(request, childCode, accessToken, status().isOk())
@@ -423,17 +420,17 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
                     .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(childCustomUi)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("key2")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("value2")));
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.hasConfig", is(false)))
+                    .andExpect(jsonPath("$.payload.config.parentCode", is("anotherConfigValue")));
 
             //Parent should remain unchanged
             executeWidgetGet(parentCode, accessToken, status().isOk())
                     .andDo(print())
                     .andExpect(jsonPath("$.payload.code", is(parentCode)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentKey")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("parentValue")));
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentCode")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of the Widget Parameter")));
         } catch (Exception e) {
             throw e;
         } finally {

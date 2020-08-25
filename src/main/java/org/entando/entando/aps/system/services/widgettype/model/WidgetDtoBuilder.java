@@ -69,6 +69,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         List<WidgetTypeParameter> params = src.getTypeParameters();
         Map<String, Object> configUi = parseConfigUi(src);
         dest.setHasConfig((null != params && params.size() > 0) || (configUi != null && !configUi.isEmpty()));
+        dest.setConfig(src.getConfig());
         dest.setConfigUi(configUi);
         dest.setBundleId(src.getBundleId());
         if (null != pluginCode && pluginCode.trim().length() > 0) {

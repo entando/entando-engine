@@ -435,7 +435,16 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="navSpec">code(homepage)</property>
 </properties>', 0, NULL);
-
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('parent_widget', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Parent Widget</property>
+<property key="it">Parent Widget em Italiano</property>
+</properties>', '<config>
+	<parameter name="parentCode">
+		Description of the Widget Parameter
+	</parameter>
+	<action name="configSimpleParameter"/>
+</config>', NULL, NULL, NULL, 1, NULL);
 
 
 

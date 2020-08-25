@@ -14,7 +14,6 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.agiletec.aps.system.common.IManager;
@@ -371,18 +370,12 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
 
-        boolean isNew = type.getTypeParameters() == null;
-        type.setTypeParameters(new ArrayList<>());
-
-        if (isNew && widgetRequest.getParentType() != null) {
+        if (widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
-            type.getTypeParameters().addAll(type.getParentType().getTypeParameters());
         }
 
-        if (widgetRequest.getParameters() != null) {
-            type.getTypeParameters().addAll(widgetRequest.getParameters().stream()
-                    .map(p -> new WidgetTypeParameter(p.getCode(), p.getDescription()))
-                    .collect(Collectors.toList()));
+        if (widgetRequest.getConfig() != null) {
+            type.setConfig(ApsProperties.fromMap(widgetRequest.getConfig()));
         }
 
         try {

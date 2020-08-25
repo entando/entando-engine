@@ -14,6 +14,7 @@
 package com.agiletec.aps.util;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -35,6 +36,14 @@ public class ApsProperties extends Properties {
 	 */
 	public ApsProperties(Properties defaults) {
 		super(defaults);
+	}
+
+	public static ApsProperties fromMap(Map<String, String> map) {
+		ApsProperties properties = new ApsProperties();
+		if (map != null) {
+			map.forEach(properties::setProperty);
+		}
+		return properties;
 	}
 	
 	@Override
