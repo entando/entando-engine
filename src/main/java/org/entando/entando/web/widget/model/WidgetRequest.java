@@ -13,11 +13,8 @@
  */
 package org.entando.entando.web.widget.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.entando.entando.aps.system.services.widgettype.model.WidgetDto.WidgetParameter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -41,7 +38,7 @@ public class WidgetRequest {
 
     private String parentType;
 
-    private List<WidgetParameter> parameters = new ArrayList<>();
+    private Map<String, String> config = new HashMap<>();
 
     public String getCode() {
         return code;
@@ -99,11 +96,11 @@ public class WidgetRequest {
         this.parentType = parentType;
     }
 
-    public List<WidgetParameter> getParameters() {
-        return parameters;
+    public Map<String, String> getConfig() {
+        return config;
     }
 
-    public void setParameters(List<WidgetParameter> parameters) {
-        this.parameters = parameters;
+    public void setConfig(Map<String, String> config) {
+        this.config = config;
     }
 }

@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.widgettype.model;
 
+import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class WidgetDto {
     private String bundleId;
     private Map<String, Object> configUi;
     private List<WidgetParameter> parameters = new ArrayList<>();
+    private ApsProperties config;
     private String parentType;
     private String action;
 
@@ -227,5 +229,13 @@ public class WidgetDto {
 
     public void setParentType(String parentType) {
         this.parentType = parentType;
+    }
+
+    public ApsProperties getConfig() {
+        return config;
+    }
+
+    public void setConfig(ApsProperties config) {
+        this.config = config;
     }
 }
