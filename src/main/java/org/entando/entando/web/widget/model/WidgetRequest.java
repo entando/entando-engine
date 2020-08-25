@@ -38,7 +38,7 @@ public class WidgetRequest {
 
     private String parentType;
 
-    private Map<String, String> config = new HashMap<>();
+    private Map<String, String> config;
 
     public String getCode() {
         return code;
