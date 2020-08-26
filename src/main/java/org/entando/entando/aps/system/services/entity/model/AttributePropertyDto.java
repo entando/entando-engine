@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
+import java.util.Objects;
 
 /**
  * Generic property of attribute
@@ -51,6 +52,20 @@ public class AttributePropertyDto {
 
     public void setDescr(String descr) {
         this.descr = descr;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AttributePropertyDto other = (AttributePropertyDto) o;
+        return Objects.equals(getCode(), other.getCode())
+                && Objects.equals(getDescr(), other.getDescr());
     }
 
 }
