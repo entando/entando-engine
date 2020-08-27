@@ -18,6 +18,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -118,6 +119,25 @@ public class EntityTypeAttributeDto {
 
     public void setListFilter(boolean listFilter) {
         this.listFilter = listFilter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EntityTypeAttributeDto other = (EntityTypeAttributeDto) o;
+        return Objects.equals(getRoles(), other.getRoles())
+                && Objects.equals(getDisablingCodes(), other.getDisablingCodes())
+                && Objects.equals(getCode(), other.getCode())
+                && Objects.equals(getType(), other.getType())
+                && Objects.equals(getName(), other.getName())
+                && isMandatory() == other.isMandatory()
+                && isListFilter() == other.isListFilter();
     }
 
 }
