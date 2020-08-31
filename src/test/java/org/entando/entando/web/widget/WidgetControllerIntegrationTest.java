@@ -127,7 +127,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                 .andDo(print())
                 .andExpect(jsonPath("$.payload.type", is(WidgetController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(4)))
+                .andExpect(jsonPath("$.payload.usage", is(2)))
                 .andReturn();
     }
 

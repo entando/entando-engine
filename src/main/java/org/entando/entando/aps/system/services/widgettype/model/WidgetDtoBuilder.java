@@ -18,6 +18,10 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IComponentManager;
@@ -27,10 +31,6 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 
 public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
 
@@ -51,17 +51,15 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         dest.setGroup(src.getMainGroup());
         dest.setTitles((Hashtable) src.getTitles());
         dest.setParentType(src.getParentTypeCode());
-        Integer count = 0;
+        Map<String, IPage> usedMap = new HashMap<>();
         try {
-            List<IPage> onLinePages = this.getPageManager().getOnlineWidgetUtilizers(src.getCode());
-            count += onLinePages.size();
-            List<IPage> draftPages = this.getPageManager().getDraftWidgetUtilizers(src.getCode());
-            count += draftPages.size();
+            getPageManager().getOnlineWidgetUtilizers(src.getCode()).forEach(p -> usedMap.put(p.getCode(), p));
+            getPageManager().getDraftWidgetUtilizers(src.getCode()).forEach(p -> usedMap.put(p.getCode(), p));
         } catch (Exception e) {
             logger.error("Error extracting utilizers for widget {}", src.getCode(), e);
             throw new RestServerError("Error extracting utilizers for widget " + src.getCode(), e);
         }
-        dest.setUsed(count);
+        dest.setUsed(usedMap.keySet().size());
         String pluginCode = src.getPluginCode();
         Component plugin = this.getComponentManager().getInstalledComponent(pluginCode);
         dest.setPluginCode(pluginCode);
