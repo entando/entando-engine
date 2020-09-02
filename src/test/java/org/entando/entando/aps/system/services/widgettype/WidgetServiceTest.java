@@ -147,11 +147,10 @@ public class WidgetServiceTest {
 
     @Test
     public void shouldFilterByUsed() {
-
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("used");
-        filter.setValue("2");
+        filter.setValue("1");
         filter.setOperator(FilterOperator.EQUAL.getValue());
         requestList.addFilter(filter);
 
