@@ -56,7 +56,7 @@ public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
 
     public void testReferences() throws Exception {
         List<String> codes = this._guiFragmentManager.searchGuiFragments(null);
-        assertEquals(1, codes.size());
+        assertEquals(2, codes.size());
         String codeMaster = "masterCode_1";
         String codeSlave = "mockCrud_2";
         try {
