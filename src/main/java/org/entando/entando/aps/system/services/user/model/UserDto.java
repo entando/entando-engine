@@ -46,7 +46,7 @@ public class UserDto {
     private String status;
     private boolean accountNotExpired;
     private boolean credentialsNotExpired;
-    private String profileType;
+    private ProfileTypeDto profileType;
     private Map<String, Object> profileAttributes = new HashMap<>();
     private int maxMonthsSinceLastAccess;
     private int maxMonthsSinceLastPasswordChange;
@@ -71,7 +71,9 @@ public class UserDto {
             this.maxMonthsSinceLastPasswordChange = entandoUser.getMaxMonthsSinceLastPasswordChange();
         }
         if (user.getProfile() != null) {
-            this.profileAttributes = convertUserProfileAttributes((IUserProfile) user.getProfile());
+            IUserProfile userProfile = (IUserProfile) user.getProfile();
+            this.profileAttributes = convertUserProfileAttributes(userProfile);
+            profileType = new ProfileTypeDto(userProfile.getTypeCode(), userProfile.getTypeDescription());
         }
     }
 
@@ -155,11 +157,11 @@ public class UserDto {
         this.maxMonthsSinceLastPasswordChange = maxMonthsSinceLastPasswordChange;
     }
 
-    public String getProfileType() {
+    public ProfileTypeDto getProfileType() {
         return profileType;
     }
 
-    public void setProfileType(String profileType) {
+    public void setProfileType(ProfileTypeDto profileType) {
         this.profileType = profileType;
     }
 
