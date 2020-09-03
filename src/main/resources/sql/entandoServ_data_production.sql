@@ -2,8 +2,6 @@ INSERT INTO authgroups (groupname, descr) VALUES ('administrators', 'Administrat
 INSERT INTO authgroups (groupname, descr) VALUES ('free', 'Free Access');
 
 
-
-
 INSERT INTO authpermissions (permissionname, descr) VALUES ('superuser', 'All functions');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Supervision of contents');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('manageResources', 'Operations on Resources');
@@ -17,23 +15,37 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', '
 
 
 
-
 INSERT INTO authroles (rolename, descr) VALUES ('admin', 'Administrator');
-
+INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Editor');
+INSERT INTO authroles (rolename, descr) VALUES ('approver', 'Approver');
 
 
 
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('admin', 'superuser');
 
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'enterBackend');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'editContents');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'manageResources');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'manageCategories');
+
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'enterBackend');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'editContents');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'managePages');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'manageResources');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'manageCategories');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'validateContents');
 
 
 
 INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('admin', 'administrators', 'admin');
-
+INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('editor', 'free', 'editor');
+INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('approver', 'free', 'approver');
 
 
 
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', 'adminadmin', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editor', 'editoreditor', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('approver', 'approverapprover', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
 
 
 
