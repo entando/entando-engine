@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +34,7 @@ import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.jayway.jsonpath.JsonPath;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
@@ -90,10 +92,12 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .perform(get("/users")
                         .param("withProfile", "1")
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
-        result.andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")));
-        System.out.println("with profile: " + result.andReturn().getResponse().getContentAsString());
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(1))))
+                .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
+                .andExpect(jsonPath("$.payload[1].profileType.typeCode", is("PFL")))
+                .andExpect(jsonPath("$.payload[1].profileType.typeDescription", is("Default user profile")));
     }
 
     @Test
@@ -124,12 +128,25 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                         .param("filter[1].operator", "eq")
                         .param("filter[1].value", "All")
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(status().isOk());
-        System.out.println("with profile attr: " + result.andReturn().getResponse().getContentAsString());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))));
-        result.andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")));
-        result.andExpect(jsonPath("$.payload[0].profileAttributes.fullname", Matchers.containsString("s")));
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))))
+                .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
+                .andExpect(jsonPath("$.payload[0].profileType.typeCode", is("PFL")))
+                .andExpect(jsonPath("$.payload[0].profileType.typeDescription", is("Default user profile")))
+                .andExpect(jsonPath("$.payload[0].profileAttributes.fullname", Matchers.containsString("s")));
 
+        String username = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].username");
+
+        result = mockMvc
+                .perform(get("/users/" + username)
+                .header("Authorization", "Bearer " + accessToken));
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.username", is(username)))
+                .andExpect(jsonPath("$.payload.profileType.typeCode", is("PFL")))
+                .andExpect(jsonPath("$.payload.profileType.typeDescription", is("Default user profile")));
     }
 
     @Test
