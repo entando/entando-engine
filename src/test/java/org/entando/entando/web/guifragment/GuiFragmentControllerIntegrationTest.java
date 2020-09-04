@@ -38,11 +38,11 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
                         .header("Authorization", "Bearer " + accessToken));
         result.andDo(print());
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(2)));
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(1)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.metaData.page", is(1)));
         result.andExpect(jsonPath("$.metaData.pageSize", is(100)));
-        result.andExpect(jsonPath("$.metaData.totalItems", is(2)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(1)));
 
         result.andExpect(jsonPath("$.payload[0].widgetType.code", is("login_form")));
         result.andExpect(jsonPath("$.payload[0].widgetType.title", is("Widget di Login")));
