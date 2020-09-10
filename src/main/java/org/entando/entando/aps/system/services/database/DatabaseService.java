@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.database;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.util.FileTextReader;
+import java.security.SecureRandom;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IComponentManager;
@@ -35,7 +36,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author E.Santoboni
@@ -157,7 +157,7 @@ public class DatabaseService implements IDatabaseService {
                 throw new ResourceNotFoundException("code - dataSource - table",
                         "'" + safeReportCode + "' - '" + dataSource + "' - '" + tableName + "'");
             }
-            tempFile = FileTextReader.createTempFile(new Random().nextInt(100) + safeReportCode + "_" + dataSource + "_" + tableName, stream);
+            tempFile = FileTextReader.createTempFile(new SecureRandom().nextInt(100) + safeReportCode + "_" + dataSource + "_" + tableName, stream);
             bytes = FileTextReader.fileToByteArray(tempFile);
         } catch (ResourceNotFoundException r) {
             throw r;
