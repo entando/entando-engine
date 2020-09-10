@@ -1,0 +1,21 @@
+{
+    "code": "TSU",
+    "name": "Profile Type TSU",
+    "attributes": [
+        {
+            "code": "Title",
+            "type": "Monotext",
+            "name": "Description of text attribute",
+            "mandatory": false
+        },{
+            "code": "Number",
+            "type": "Number",
+            "name": "Description of number attribute",
+            "mandatory": false
+        },{
+            "code": "Boolean",
+            "type": "Boolean",
+            "name": "Description of Boolean attribute"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "id": "new_user",
+    "typeCode":"TSU",
+    "typeDescription":"Type for test TSU",
+    "description":"Profile of user",
+    "mainGroup":"free",
+    "groups":[
+        "group1",
+        "group2"
+    ],
+    "attributes": [
+        {
+            "code": "Title",
+            "value": "Mio titolo tsu"
+        }, {
+            "code": "Number",
+            "value": 7
+        },
+        {
+            "code": "Boolean",
+            "value": true
+        }
+    ]
+}
