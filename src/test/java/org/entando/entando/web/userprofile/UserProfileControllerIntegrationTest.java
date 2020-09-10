@@ -216,7 +216,6 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
 
             Assert.assertNull(this.userProfileManager.getProfile("new_user"));
             this.executeProfilePost("5_POST_valid.json", accessToken, status().isOk())
-                    .andDo(print())
                     .andExpect(jsonPath("$.payload.id", is("new_user")))
                     .andExpect(jsonPath("$.payload.typeCode", is("TST")))
                     .andExpect(jsonPath("$.payload.typeDescription", is("Type for test")))
@@ -268,7 +267,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                     .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].code", is("TitleSub")))
                     .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].value", is("Mio titolo")));
 
-            this.executeProfilePut("6_PUT_valid.json", "new_user", accessToken, status().isOk()).andDo(print())
+            this.executeProfilePut("6_PUT_valid.json", "new_user", accessToken, status().isOk())
                     .andExpect(jsonPath("$.payload.id", is("new_user")))
                     .andExpect(jsonPath("$.payload.typeCode", is("TST")))
                     .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TST")))
@@ -291,19 +290,13 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                     .andExpect(jsonPath("$.payload.attributes[5].code", is("Date")))
                     .andExpect(jsonPath("$.payload.attributes[5].value", is("2017-09-21 21:24:19")))
                     .andExpect(jsonPath("$.payload.attributes[6].code", is("monolist")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements.size()", is(2)))
                     .andExpect(jsonPath("$.payload.attributes[6].elements[0].code", is("monolist")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.en", is("multilingual EN_1")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.it", is("multilingua IT_1")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.en", is("multilingual EN_12")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.it", is("multilingua IT_12")))
                     .andExpect(jsonPath("$.payload.attributes[6].elements[1].code", is("monolist")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.en", is("multilingual EN_2")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.it", is("multilingua IT_2")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[2].code", is("monolist")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[2].values.en", is("multilingual EN_12")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[2].values.it", is("multilingua IT_12")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[3].code", is("monolist")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[3].values.en", is("multilingual EN_22")))
-                    .andExpect(jsonPath("$.payload.attributes[6].elements[3].values.it", is("multilingua IT_22")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.en", is("multilingual EN_22")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.it", is("multilingua IT_22")))
                     .andExpect(jsonPath("$.payload.attributes[7].code", is("list")))
                     .andExpect(jsonPath("$.payload.attributes[7].value", nullValue()))
                     .andExpect(jsonPath("$.payload.attributes[8].code", is("multilist")))
@@ -326,7 +319,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                     .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].code", is("TitleSub")))
                     .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].value", is("Mio titolo 2")));
 
-            this.executeProfilePut("7_PUT_valid.json", "new_user", accessToken, status().isOk()).andDo(print())
+            this.executeProfilePut("7_PUT_valid.json", "new_user", accessToken, status().isOk())
                     .andExpect(jsonPath("$.payload.id", is("new_user")))
                     .andExpect(jsonPath("$.payload.typeCode", is("TSU")))
                     .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TSU")))
@@ -334,7 +327,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                     .andExpect(jsonPath("$.payload.mainGroup", is("free")))
                     .andExpect(jsonPath("$.errors.size()", is(0)))
                     .andExpect(jsonPath("$.metaData.size()", is(0)))
-                    .andExpect(jsonPath("$.payload.attributes.size()", is(10)))
+                    .andExpect(jsonPath("$.payload.attributes.size()", is(3)))
                     .andExpect(jsonPath("$.payload.attributes[0].code", is("Title")))
                     .andExpect(jsonPath("$.payload.attributes[0].value", is("Mio titolo tsu")))
                     .andExpect(jsonPath("$.payload.attributes[1].code", is("Number")))
@@ -365,7 +358,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{username})
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -377,7 +370,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -389,7 +382,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -401,7 +394,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 

@@ -114,6 +114,10 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
                 throw new ValidationConflictException(bindingResult);
             }
 
+            if (!typeCode.equals(entity.getTypeCode())) {
+                entity = this.getEntityPrototype(entityManager, request.getTypeCode());
+            }
+
             request.fillEntity(entity, this.getCategoryManager(), bindingResult);
             this.scanEntity(entity, bindingResult);
             if (!bindingResult.hasErrors()) {

@@ -86,7 +86,6 @@ public class EntityDto implements Serializable {
         prototype.setId(this.getId());
         prototype.setDescription(getDescription() == null ? prototype.getDescription() : getDescription());
         prototype.setMainGroup(getMainGroup() == null ? prototype.getMainGroup() : getMainGroup());
-        prototype.setTypeCode(this.getTypeCode());
         prototype.setTypeDescription(getTypeDescription() == null ? prototype.getTypeDescription() : getTypeDescription());
         if (null != this.getGroups()) {
             prototype.setGroups(this.getGroups());
@@ -100,19 +99,6 @@ public class EntityDto implements Serializable {
                 }
             });
         }
-        List<EntityAttributeDto> attributeDtos = this.getAttributes();
-        if (null == attributeDtos) {
-            return;
-        }
-        /*for (EntityAttributeDto attributeDto : attributeDtos) {
-            String code = attributeDto.getCode();
-            AttributeInterface attribute = prototype.getAttribute(code);
-            if (null != attribute) {
-                attributeDto.fillEntityAttribute(attribute, bindingResult);
-            } else {
-                //ADD LOG
-            }
-        }*/
         fillAttributeData(bindingResult, prototype.getAttributeMap());
     }
 
@@ -175,7 +161,7 @@ public class EntityDto implements Serializable {
         for (EntityAttributeDto attributeDto : this.getAttributes()) {
             AttributeInterface attribute = attributeMap.get(attributeDto.getCode());
             if (attribute != null) {
-                fillAttribute(attribute, attributeDto);
+                fillAttribute(attribute, attributeDto, bindingResult);
             } else {
                 rejectAttributeNotFound(bindingResult, attributeDto);
             }
@@ -186,14 +172,15 @@ public class EntityDto implements Serializable {
         bindingResult.reject(EntityValidator.ERRCODE_ATTRIBUTE_INVALID, new String[]{attributeDto.getCode()}, "entity.attribute.code.invalid");
     }
 
-    protected void fillAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
-        fillDateAttribute(attribute, attributeDto);
-        fillListAttribute(attribute, attributeDto);
-        fillMonolistAttribute(attribute, attributeDto);
-        fillCompositeAttribute(attribute, attributeDto);
+    protected void fillAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto, BindingResult bindingResult) {
+        attributeDto.fillEntityAttribute(attribute, bindingResult);
+        fillDateAttribute(attribute, attributeDto, bindingResult);
+        fillListAttribute(attribute, attributeDto, bindingResult);
+        fillMonolistAttribute(attribute, attributeDto, bindingResult);
+        fillCompositeAttribute(attribute, attributeDto, bindingResult);
     }
 
-    private void fillDateAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+    private void fillDateAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto, BindingResult bindingResult) {
         if (DateAttribute.class.isAssignableFrom(attribute.getClass())) {
             DateAttribute dateAttribute = (DateAttribute)attribute;
             if (dateAttribute.getDate() != null) {
@@ -220,37 +207,38 @@ public class EntityDto implements Serializable {
         }
     }
 
-    private void fillListAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+    private void fillListAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto,
+            BindingResult bindingResult) {
         if (ListAttribute.class.isAssignableFrom(attribute.getClass())) {
             ListAttribute listAttribute = (ListAttribute) attribute;
-            int index = 0;
             for (Entry<String, List<EntityAttributeDto>> entry : attributeDto.getListElements().entrySet()) {
+                int index = 0;
                 for (EntityAttributeDto element : entry.getValue()) {
-                    fillAttribute(listAttribute.getAttributes().get(index), element);
+                    fillAttribute(listAttribute.getAttributeList(entry.getKey()).get(index), element, bindingResult);
                     index++;
                 }
             }
         }
     }
 
-    private void fillMonolistAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+    private void fillMonolistAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto, BindingResult bindingResult) {
         if (MonoListAttribute.class.isAssignableFrom(attribute.getClass())) {
             MonoListAttribute monolistAttribute = (MonoListAttribute) attribute;
             int index = 0;
             for (EntityAttributeDto element : attributeDto.getElements()) {
-                fillAttribute(monolistAttribute.getAttribute(index), element);
+                fillAttribute(monolistAttribute.getAttribute(index), element, bindingResult);
                 index++;
             }
         }
     }
 
-    private void fillCompositeAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto) {
+    private void fillCompositeAttribute(AttributeInterface attribute, EntityAttributeDto attributeDto, BindingResult bindingResult) {
         if (CompositeAttribute.class.isAssignableFrom(attribute.getClass())) {
             CompositeAttribute compositeAttribute = (CompositeAttribute) attribute;
             for (EntityAttributeDto element : attributeDto.getCompositeElements()) {
                 for (AttributeInterface att : compositeAttribute.getAttributes()) {
                     if (element.getCode().equals(att.getName())) {
-                        fillAttribute(att, element);
+                        fillAttribute(att, element, bindingResult);
                         break;
                     }
                 }
