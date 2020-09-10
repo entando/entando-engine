@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.services.database.IDatabaseService;
 import org.entando.entando.aps.system.services.database.model.ComponentDto;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
 import org.entando.entando.aps.system.services.database.model.ShortDumpReportDto;
+import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -97,19 +98,21 @@ public class DatabaseController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/restoreBackup/{reportCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map>> restoreBackup(@PathVariable String reportCode) throws Throwable {
-        logger.debug("Starting database restore -> code {}", reportCode);
-        this.getDatabaseService().startDatabaseRestore(reportCode);
+        String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
+        logger.debug("Starting database restore -> code {}", safeReportCode);
+        this.getDatabaseService().startDatabaseRestore(safeReportCode);
         Map<String, String> response = new HashMap<>();
         response.put("status", String.valueOf(this.getDatabaseService().getStatus()));
-        logger.debug("Database restore started -> code {}", reportCode);
+        logger.debug("Database restore started -> code {}", safeReportCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/report/{reportCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<DumpReportDto>> getDumpReport(@PathVariable String reportCode) {
-        logger.debug("Required dump report -> code {}", reportCode);
-        DumpReportDto result = this.getDatabaseService().getDumpReportDto(reportCode);
+        String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
+        logger.debug("Required dump report -> code {}", safeReportCode);
+        DumpReportDto result = this.getDatabaseService().getDumpReportDto(safeReportCode);
         logger.debug("Extracted dump report -> {}", result);
         return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
@@ -117,24 +120,29 @@ public class DatabaseController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/report/{reportCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map>> deleteDumpReport(@PathVariable String reportCode) {
-        logger.debug("Deleting dump report -> code {}", reportCode);
-        this.getDatabaseService().deleteDumpReport(reportCode);
-        logger.debug("Deleted dump report -> {}", reportCode);
+        String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
+        logger.debug("Deleting dump report -> code {}", safeReportCode);
+        this.getDatabaseService().deleteDumpReport((safeReportCode));
+        logger.debug("Deleted dump report -> {}", safeReportCode);
         Map<String, String> response = new HashMap<>();
-        response.put("code", reportCode);
+        response.put("code", safeReportCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/report/{reportCode}/dump/{dataSource}/{tableName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> getTableDump(@PathVariable String reportCode,
-            @PathVariable String dataSource, @PathVariable String tableName) {
-        logger.debug("Required dump report -> code {} - database {} - table {}", reportCode, dataSource, tableName);
-        byte[] base64 = this.getDatabaseService().getTableDump(reportCode, dataSource, tableName);
+    public ResponseEntity<RestResponse<Map, Map>> getTableDump(
+            @PathVariable String reportCode,
+            @PathVariable String dataSource,
+            @PathVariable String tableName
+    ) {
+        String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
+        logger.debug("Required dump report -> code {} - database {} - table {}", safeReportCode, dataSource, tableName);
+        byte[] base64 = this.getDatabaseService().getTableDump(safeReportCode, dataSource, tableName);
         Map<String, Object> response = new HashMap<>();
         response.put("base64", base64);
         Map<String, String> metadata = new HashMap<>();
-        metadata.put("reportCode", reportCode);
+        metadata.put("reportCode", safeReportCode);
         metadata.put("dataSource", dataSource);
         metadata.put("tableName", tableName);
         return new ResponseEntity<>(new RestResponse<>(response, metadata), HttpStatus.OK);

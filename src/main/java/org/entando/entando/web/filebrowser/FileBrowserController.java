@@ -17,6 +17,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.storage.IFileBrowserService;
+import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -34,7 +35,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,17 +56,23 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map>> browseFolder(@RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
+    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map>> browseFolder(
+            @RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
             @RequestParam(value = "protectedFolder", required = false) Boolean protectedFolder) {
-        logger.debug("browsing folder {} - protected {}", currentPath, protectedFolder);
-        List<BasicFileAttributeViewDto> result = this.getFileBrowserService().browseFolder(currentPath, protectedFolder);
+
+        String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
+
+        logger.debug("browsing folder {} - protected {}", safeCurrentPath, protectedFolder);
+        List<BasicFileAttributeViewDto> result = this.getFileBrowserService()
+                .browseFolder(safeCurrentPath, protectedFolder);
+
         Map<String, Object> metadata = new HashMap<>();
         if (null != protectedFolder) {
             metadata.put("protectedFolder", protectedFolder);
         }
-        metadata.put("currentPath", currentPath);
-        String prevPath = this.getPrevFolderName(currentPath);
-        if (null != currentPath) {
+        metadata.put("currentPath", safeCurrentPath);
+        String prevPath = this.getPrevFolderName(safeCurrentPath);
+        if (null != safeCurrentPath) {
             metadata.put("prevPath", prevPath);
         }
         logger.debug("Content folder -> {}", result);
@@ -142,13 +148,14 @@ public class FileBrowserController {
     @RequestMapping(value = "/file", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> deleteFile(@RequestParam String currentPath, @RequestParam Boolean protectedFolder) {
         logger.debug("delete file {} - protected {}", currentPath, protectedFolder);
-        this.getFileBrowserService().deleteFile(currentPath, protectedFolder);
+        String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
+        this.getFileBrowserService().deleteFile(safeCurrentPath, protectedFolder);
         Map<String, Object> result = new HashMap<>();
         result.put("protectedFolder", protectedFolder);
-        result.put("path", currentPath);
-        result.put("filename", this.getFilename(currentPath));
+        result.put("path", safeCurrentPath);
+        result.put("filename", this.getFilename(safeCurrentPath));
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("prevPath", this.getPrevFolderName(currentPath));
+        metadata.put("prevPath", this.getPrevFolderName(safeCurrentPath));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
     }
 
