@@ -13,26 +13,27 @@
  */
 package org.entando.entando.aps.system.services.page;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.EntRuntimeException;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
 import java.util.Map;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
-import org.apache.commons.lang.*;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
-import java.util.Base64;
 
 public class PageTokenManager extends AbstractService implements IPageTokenManager {
 
@@ -40,6 +41,9 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 
 	private static final int SALT_LENGTH = 8;
 	private static final int HASH_LENGTH = 20;
+	public static final String KEYGEN_CIPHER = "PBEWithHmacSHA256AndAES_256";
+	// Best we can do with a plain openjdk8
+	public static final String ENCRYPTION_CIPHER = "PBEWithHmacSHA256AndAES_256";
 
 	private String salt;
 	private String password;
@@ -72,31 +76,33 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 	}
 
 	@Override
-	public String encrypt(String property) {
+	public String encrypt(String pageCode) {
 		SecretKeyFactory keyFactory;
 		try {
-			keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+			keyFactory = SecretKeyFactory.getInstance(KEYGEN_CIPHER);
 			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(this.getPasswordCharArray()));
-			Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
-
+			// Good enough for the page token although the salt generation can be better
+			Cipher pbeCipher = Cipher.getInstance(ENCRYPTION_CIPHER);	//NOSONAR
 			pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20));
-			return base64Encode(pbeCipher.doFinal(property.getBytes("UTF-8")));
-
-		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
-			logger.error("Error in encrypt", e);
+			return base64Encode(pbeCipher.doFinal(pageCode.getBytes(StandardCharsets.UTF_8)));
+		} catch (GeneralSecurityException e) {
+			logger.error("Error during token generation for page code: {}", pageCode, e);
+			throw new EntRuntimeException(
+					String.format("Error during token generation for page code: \"%s\"", pageCode),
+					e);
 		}
-		return null;
 	}
 
 	@Override
 	public String decrypt(String property) {
 		SecretKeyFactory keyFactory;
 		try {
-			keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+			keyFactory = SecretKeyFactory.getInstance(KEYGEN_CIPHER);
 			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(this.getPasswordCharArray()));
-			Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+			// Good enough for the page token although the salt generation can be better
+			Cipher pbeCipher = Cipher.getInstance(ENCRYPTION_CIPHER);	//NOSONAR
 			pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20));
-			return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
+			return new String(pbeCipher.doFinal(base64Decode(property)), StandardCharsets.UTF_8);
 		} catch (GeneralSecurityException | IOException e) {
 			logger.error("Error in decrypt", e);
 		}
@@ -108,7 +114,7 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 		this.password = StringUtils.substring(param, SALT_LENGTH);
 	}
 
-	protected String generateRandomHash() throws Exception  {
+	protected String generateRandomHash() throws EntException {
 		String param = "";
 		try {
 			String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
@@ -121,7 +127,7 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 			}
 			logger.info("Successfully created a random page_preview_hash");
 		} catch (Throwable t) {
-			throw new Exception("Error occurred generating a random page_preview_hash", t);
+			throw new EntException("Error occurred generating a random page_preview_hash", t);
 		}
 		return param;
 	}
