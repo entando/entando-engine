@@ -15,6 +15,7 @@ package com.agiletec.aps.system.common.entity.parse;
 
 import org.entando.entando.ent.exception.EntException;
 
+import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +45,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
 	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractAttributeSupportObjectDOM.class);
 	
 	protected void validate(String xmlText, String definitionPath) throws EntException {
-		SchemaFactory factory = 
-            SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		SchemaFactory factory = EntSafeXmlUtils.newSafeSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		InputStream schemaIs = null;
 		InputStream xmlIs = null;
 		try {

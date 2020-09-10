@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity;
 
+import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.cache.IEntityManagerCacheWrapper;
@@ -184,8 +184,7 @@ public abstract class ApsEntityManager extends AbstractService
     protected IApsEntity createEntityFromXml(String entityTypeCode, String xml) throws EntException {
         try {
             IApsEntity entityPrototype = this.getEntityPrototype(entityTypeCode);
-            SAXParserFactory parseFactory = SAXParserFactory.newInstance();
-            SAXParser parser = parseFactory.newSAXParser();
+            SAXParser parser = EntSafeXmlUtils.newSafeSAXParser();
             InputSource is = new InputSource(new StringReader(xml));
             EntityHandler handler = this.getEntityHandler();
             handler.initHandler(entityPrototype, this.getXmlAttributeRootElementName(), this.getCategoryManager());

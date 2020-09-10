@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.api;
 
+import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,11 +54,11 @@ public class ApiResourcesDefDOM {
     }
     
     private void validate(String xmlText, String definitionPath) throws EntException {
-        SchemaFactory factory =
-                SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream schemaIs = null;
         InputStream xmlIs = null;
+
         try {
+            SchemaFactory factory = EntSafeXmlUtils.newSafeSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schemaIs = this.getClass().getResourceAsStream("apiMethodsDef-4.0.xsd");
             Source schemaSource = new StreamSource(schemaIs);
             Schema schema = factory.newSchema(schemaSource);
@@ -79,7 +80,7 @@ public class ApiResourcesDefDOM {
                     xmlIs.close();
                 }
             } catch (IOException e) {
-            	_logger.error("error in validate", e);
+                _logger.error("error in validate", e);
             }
         }
     }
