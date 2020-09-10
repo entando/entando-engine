@@ -40,12 +40,15 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.CoreMatchers.is;
 import org.hamcrest.Matchers;
+
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -192,6 +195,158 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
         }
     }
 
+    @Test
+    public void testGetProfileForNewUserAndUpdateIt() throws Exception {
+        try {
+            Assert.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            Assert.assertNull(this.userProfileManager.getEntityPrototype("TSU"));
+
+            String accessToken = this.createAccessToken();
+
+            this.executeProfileTypePost("5_POST_type_valid.json", accessToken, status().isOk());
+            this.executeProfileTypePost("6_POST_type_valid.json", accessToken, status().isOk());
+            Assert.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
+            Assert.assertNotNull(this.userProfileManager.getEntityPrototype("TSU"));
+
+            Assert.assertNull(this.userManager.getUser("new_user"));
+            User user = new User();
+            user.setUsername("new_user");
+            user.setPassword("new_user");
+            this.userManager.addUser(user);
+
+            Assert.assertNull(this.userProfileManager.getProfile("new_user"));
+            this.executeProfilePost("5_POST_valid.json", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("TST")))
+                    .andExpect(jsonPath("$.payload.typeDescription", is("Type for test")))
+                    .andExpect(jsonPath("$.payload.description", is("Profile of user")))
+                    .andExpect(jsonPath("$.payload.mainGroup", is("free")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.attributes.size()", is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[0].code", is("Title")))
+                    .andExpect(jsonPath("$.payload.attributes[0].value", is("Mio titolo")))
+                    .andExpect(jsonPath("$.payload.attributes[1].code", is("Subtitle")))
+                    .andExpect(jsonPath("$.payload.attributes[1].values.en", is("multilingual EN")))
+                    .andExpect(jsonPath("$.payload.attributes[1].values.it", is("multilingua IT")))
+                    .andExpect(jsonPath("$.payload.attributes[2].code", is("Number")))
+                    .andExpect(jsonPath("$.payload.attributes[2].value", is("2")))
+                    .andExpect(jsonPath("$.payload.attributes[3].code", is("Boolean")))
+                    .andExpect(jsonPath("$.payload.attributes[3].value", is(true)))
+                    .andExpect(jsonPath("$.payload.attributes[4].code", is("ThreeState")))
+                    .andExpect(jsonPath("$.payload.attributes[4].value", nullValue()))
+                    .andExpect(jsonPath("$.payload.attributes[5].code", is("Date")))
+                    .andExpect(jsonPath("$.payload.attributes[5].value", is("2017-09-21 21:24:18")))
+                    .andExpect(jsonPath("$.payload.attributes[6].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.en", is("multilingual EN_1")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.it", is("multilingua IT_1")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.en", is("multilingual EN_2")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.it", is("multilingua IT_2")))
+                    .andExpect(jsonPath("$.payload.attributes[7].code", is("list")))
+                    .andExpect(jsonPath("$.payload.attributes[7].value", nullValue()))
+                    .andExpect(jsonPath("$.payload.attributes[8].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[0].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[0].value", is("value_en_1")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[1].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[1].value", is("value_en_2")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[2].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[2].value", is("value_en_3")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[0].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[0].value", is("value_it_1")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[1].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[1].value", is("value_it_2")))
+                    .andExpect(jsonPath("$.payload.attributes[9].code", is("composite")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].code", is("SubtitleSub")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].values.en", is("multilingual EN")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].values.it", is("multilingua IT")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].code", is("TitleSub")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].value", is("Mio titolo")));
+
+            this.executeProfilePut("6_PUT_valid.json", "new_user", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("TST")))
+                    .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TST")))
+                    .andExpect(jsonPath("$.payload.description", is("Profile of user")))
+                    .andExpect(jsonPath("$.payload.mainGroup", is("free")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.attributes.size()", is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[0].code", is("Title")))
+                    .andExpect(jsonPath("$.payload.attributes[0].value", is("Mio titolo 2")))
+                    .andExpect(jsonPath("$.payload.attributes[1].code", is("Subtitle")))
+                    .andExpect(jsonPath("$.payload.attributes[1].values.en", is("multilingual EN 2")))
+                    .andExpect(jsonPath("$.payload.attributes[1].values.it", is("multilingua IT 2")))
+                    .andExpect(jsonPath("$.payload.attributes[2].code", is("Number")))
+                    .andExpect(jsonPath("$.payload.attributes[2].value", is("3")))
+                    .andExpect(jsonPath("$.payload.attributes[3].code", is("Boolean")))
+                    .andExpect(jsonPath("$.payload.attributes[3].value", is(false)))
+                    .andExpect(jsonPath("$.payload.attributes[4].code", is("ThreeState")))
+                    .andExpect(jsonPath("$.payload.attributes[4].value", is(true)))
+                    .andExpect(jsonPath("$.payload.attributes[5].code", is("Date")))
+                    .andExpect(jsonPath("$.payload.attributes[5].value", is("2017-09-21 21:24:19")))
+                    .andExpect(jsonPath("$.payload.attributes[6].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.en", is("multilingual EN_12")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[0].values.it", is("multilingua IT_12")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].code", is("monolist")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.en", is("multilingual EN_22")))
+                    .andExpect(jsonPath("$.payload.attributes[6].elements[1].values.it", is("multilingua IT_22")))
+                    .andExpect(jsonPath("$.payload.attributes[7].code", is("list")))
+                    .andExpect(jsonPath("$.payload.attributes[7].value", nullValue()))
+                    .andExpect(jsonPath("$.payload.attributes[8].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[0].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[0].value", is("value_en_12")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[1].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[1].value", is("value_en_22")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[2].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.en[2].value", is("value_en_32")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[0].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[0].value", is("value_it_12")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[1].code", is("multilist")))
+                    .andExpect(jsonPath("$.payload.attributes[8].listelements.it[1].value", is("value_it_22")))
+                    .andExpect(jsonPath("$.payload.attributes[9].code", is("composite")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].code", is("SubtitleSub")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].values.en", is("multilingual EN 2")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[0].values.it", is("multilingua IT 2")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].code", is("TitleSub")))
+                    .andExpect(jsonPath("$.payload.attributes[9].compositeelements[1].value", is("Mio titolo 2")));
+
+            this.executeProfilePut("7_PUT_valid.json", "new_user", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("TSU")))
+                    .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TSU")))
+                    .andExpect(jsonPath("$.payload.description", is("Profile of user")))
+                    .andExpect(jsonPath("$.payload.mainGroup", is("free")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.attributes.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.attributes[0].code", is("Title")))
+                    .andExpect(jsonPath("$.payload.attributes[0].value", is("Mio titolo tsu")))
+                    .andExpect(jsonPath("$.payload.attributes[1].code", is("Number")))
+                    .andExpect(jsonPath("$.payload.attributes[1].value", is("7")))
+                    .andExpect(jsonPath("$.payload.attributes[2].code", is("Boolean")))
+                    .andExpect(jsonPath("$.payload.attributes[2].value", is(true)));
+
+        } finally {
+            this.userProfileManager.deleteProfile("new_user");
+            this.userManager.removeUser("new_user");
+            if (null != this.userProfileManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            }
+            if (null != this.userProfileManager.getEntityPrototype("TSU")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TSU");
+            }
+        }
+    }
+
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageUserProfile", Permission.MANAGE_USER_PROFILES)
@@ -203,7 +358,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{username})
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -215,7 +370,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -227,7 +382,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
@@ -239,7 +394,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 

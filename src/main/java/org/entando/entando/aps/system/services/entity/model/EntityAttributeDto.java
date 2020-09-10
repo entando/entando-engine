@@ -69,6 +69,8 @@ public class EntityAttributeDto {
         if (src.isSimple()) {
             if ((value instanceof String) || (value instanceof Number)) {
                 this.setValue(value.toString());
+            } else if (value instanceof Boolean) {
+                this.setValue(value);
             } else if (value instanceof Date) {
                 String stringDate = DateConverter.getFormattedDate((Date) value, SystemConstants.API_DATE_FORMAT);
                 this.setValue(stringDate);

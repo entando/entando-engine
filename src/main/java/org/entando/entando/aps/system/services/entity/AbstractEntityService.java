@@ -108,10 +108,14 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
                 throw new ResourceNotFoundException(bindingResult);
             }
             String typeCode = request.getTypeCode();
-            if (!entity.getTypeCode().equals(typeCode)) {
+            if (this.getEntityPrototype(entityManager, typeCode) == null) {
                 bindingResult.reject(EntityValidator.ERRCODE_TYPE_MISMATCH,
                         new String[]{entity.getTypeCode(), typeCode}, "entity.type.invalid");
                 throw new ValidationConflictException(bindingResult);
+            }
+
+            if (!typeCode.equals(entity.getTypeCode())) {
+                entity = this.getEntityPrototype(entityManager, request.getTypeCode());
             }
 
             request.fillEntity(entity, this.getCategoryManager(), bindingResult);
