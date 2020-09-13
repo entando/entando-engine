@@ -17,7 +17,7 @@ package com.agiletec.aps.system.exception;
  * Eccezione generica
  * @author W.Ambu
  *
- * @deprecated use EntException instead
+ * @deprecated use {@link org.entando.entando.ent.exception.EntException} instead
  */
 @Deprecated
 public class ApsException extends Exception {
