@@ -48,6 +48,10 @@ public class FileBrowserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public static final String PROTECTED_FOLDER = "protectedFolder";
+    public static final String PREV_PATH = "prevPath";
+    public static final String CURRENT_PATH = "currentPath";
+
     @Autowired
     private IFileBrowserService fileBrowserService;
 
@@ -56,9 +60,9 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map>> browseFolder(
-            @RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
-            @RequestParam(value = "protectedFolder", required = false) Boolean protectedFolder) {
+    public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map<String, Object>>> browseFolder(
+            @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
+            @RequestParam(value = PROTECTED_FOLDER, required = false) Boolean protectedFolder) {
 
         String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
 
@@ -68,12 +72,12 @@ public class FileBrowserController {
 
         Map<String, Object> metadata = new HashMap<>();
         if (null != protectedFolder) {
-            metadata.put("protectedFolder", protectedFolder);
+            metadata.put(PROTECTED_FOLDER, protectedFolder);
         }
-        metadata.put("currentPath", safeCurrentPath);
+        metadata.put(CURRENT_PATH, safeCurrentPath);
         String prevPath = this.getPrevFolderName(safeCurrentPath);
         if (null != safeCurrentPath) {
-            metadata.put("prevPath", prevPath);
+            metadata.put(PREV_PATH, prevPath);
         }
         logger.debug("Content folder -> {}", result);
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
@@ -92,17 +96,18 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> getFile(@RequestParam(value = "currentPath", required = false, defaultValue = "") String currentPath,
-            @RequestParam(value = "protectedFolder", required = false, defaultValue = "false") Boolean protectedFolder) {
+    public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> getFile(
+            @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
+            @RequestParam(value = PROTECTED_FOLDER, required = false, defaultValue = "false") Boolean protectedFolder) {
         logger.debug("required file {} - protected {}", currentPath, protectedFolder);
         byte[] base64 = this.getFileBrowserService().getFileStream(currentPath, protectedFolder);
         Map<String, Object> result = new HashMap<>();
-        result.put("protectedFolder", protectedFolder);
+        result.put(PROTECTED_FOLDER, protectedFolder);
         result.put("path", currentPath);
         result.put("filename", this.getFilename(currentPath));
         result.put("base64", base64);
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("prevPath", this.getPrevFolderName(currentPath));
+        metadata.put(PREV_PATH, this.getPrevFolderName(currentPath));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
     }
 
@@ -136,11 +141,11 @@ public class FileBrowserController {
 
     public ResponseEntity<RestResponse<Map, Map>> executeFilePostPutRespose(FileBrowserRequest request) {
         Map<String, Object> result = new HashMap<>();
-        result.put("protectedFolder", request.isProtectedFolder());
+        result.put(PROTECTED_FOLDER, request.isProtectedFolder());
         result.put("path", request.getPath());
         result.put("filename", this.getFilename(request.getPath()));
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("prevPath", this.getPrevFolderName(request.getPath()));
+        metadata.put(PREV_PATH, this.getPrevFolderName(request.getPath()));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
     }
 
@@ -151,11 +156,11 @@ public class FileBrowserController {
         String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
         this.getFileBrowserService().deleteFile(safeCurrentPath, protectedFolder);
         Map<String, Object> result = new HashMap<>();
-        result.put("protectedFolder", protectedFolder);
+        result.put(PROTECTED_FOLDER, protectedFolder);
         result.put("path", safeCurrentPath);
         result.put("filename", this.getFilename(safeCurrentPath));
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("prevPath", this.getPrevFolderName(safeCurrentPath));
+        metadata.put(PREV_PATH, this.getPrevFolderName(safeCurrentPath));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
     }
 
@@ -186,10 +191,10 @@ public class FileBrowserController {
         if (path.endsWith("/")) {
             path = path.substring(0, path.length() - 1);
         }
-        result.put("protectedFolder", protectedFolder);
+        result.put(PROTECTED_FOLDER, protectedFolder);
         result.put("path", path);
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("prevPath", this.getPrevFolderName(path));
+        metadata.put(PREV_PATH, this.getPrevFolderName(path));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
     }
 

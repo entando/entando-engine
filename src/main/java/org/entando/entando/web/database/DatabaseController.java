@@ -97,7 +97,8 @@ public class DatabaseController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/restoreBackup/{reportCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> restoreBackup(@PathVariable String reportCode) throws Throwable {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> restoreBackup(
+            @PathVariable String reportCode) {
         String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
         logger.debug("Starting database restore -> code {}", safeReportCode);
         this.getDatabaseService().startDatabaseRestore(safeReportCode);
@@ -119,7 +120,7 @@ public class DatabaseController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/report/{reportCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteDumpReport(@PathVariable String reportCode) {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteDumpReport(@PathVariable String reportCode) {
         String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
         logger.debug("Deleting dump report -> code {}", safeReportCode);
         this.getDatabaseService().deleteDumpReport((safeReportCode));
@@ -131,7 +132,7 @@ public class DatabaseController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/report/{reportCode}/dump/{dataSource}/{tableName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> getTableDump(
+    public ResponseEntity<RestResponse<Map<String, Object>, Map<String, String>>> getTableDump(
             @PathVariable String reportCode,
             @PathVariable String dataSource,
             @PathVariable String tableName
