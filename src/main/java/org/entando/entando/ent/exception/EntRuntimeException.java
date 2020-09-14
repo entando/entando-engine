@@ -11,30 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.exception;
+package org.entando.entando.ent.exception;
 
 /**
- * Eccezione di di sistema
- * @author W.Ambu
- *
- * @deprecated use {@link org.entando.entando.ent.exception.EntException} instead
+ * Generic Entando Runtime Exception
  */
-@Deprecated
-public class ApsSystemException extends ApsException {
-	/**
-	 * Costruttore con solo messaggio
-	 * @param message Il messaggio associato all'eccezione
-	 */
-	public ApsSystemException(String message){
+public class EntRuntimeException extends RuntimeException {
+
+	public EntRuntimeException(String message) {
 		super(message);
 	}
-	
-	/**
-	 * Costruttore con messaggio e causa (precedente eccezione).
-	 * @param message Il messaggio associato all'eccezione
-	 * @param cause L'eccezione che ha causato l'eccezione originale 
-	 */
-	public ApsSystemException(String message, Throwable cause){
+
+	public EntRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 }
