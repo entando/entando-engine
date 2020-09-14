@@ -616,7 +616,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 	</ExtendendPrivacyModule>
 </Params>');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfileTypes', 'User Profile Types Definitions', '<profiletypes>
-	<profiletype typecode="PFL" typedescr="Default user profile" >
+	<profiletype typecode="PFL" typedescr="Default user profile type" >
 		<attributes>
 			<attribute name="fullname" attributetype="Monotext" searchable="true" >
 				<validations>
@@ -639,6 +639,34 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 			<attribute name="language" attributetype="Monotext" required="true"/>
 			<attribute name="boolean1" attributetype="Boolean" searchable="true"/>
 			<attribute name="boolean2" attributetype="Boolean" searchable="true"/>
+		</attributes>
+	</profiletype>
+	<profiletype typecode="TST" typedescr="Other user profile" >
+		<attributes>
+			<attribute name="firstname" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:firstname</role>
+				</roles>
+			</attribute>
+			<attribute name="surname" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:surname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Email" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:email</role>
+				</roles>
+			</attribute>
 		</attributes>
 	</profiletype>
 </profiletypes>');
