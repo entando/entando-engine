@@ -27,7 +27,7 @@ public class EmailAttribute extends MonoTextAttribute {
     public Object getAttributePrototype() {
         EmailAttribute attribute = (EmailAttribute) super.getAttributePrototype();
         attribute.setEmailRegexp(this.getEmailRegexp());
-        ((TextAttributeValidationRules) this.getValidationRules()).setRegexp(this.getEmailRegexp());
+        ((TextAttributeValidationRules) attribute.getValidationRules()).setRegexp(this.getEmailRegexp());
         return attribute;
     }
 

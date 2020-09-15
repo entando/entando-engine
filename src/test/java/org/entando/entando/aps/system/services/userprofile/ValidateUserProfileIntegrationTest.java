@@ -18,7 +18,6 @@ import java.util.List;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import java.util.Arrays;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -39,12 +38,16 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 			IUserProfile profile = this.userProfileManager.getDefaultProfileType();
 			List<FieldError> errors = profile.validate(this._groupManager);
 			assertNotNull(errors);
-            String[] requiredFields = {"fullname", "email", "birthdate"};
+            String[] requiredFields = {"fullname", "email", "birthdate", "language"};
 			assertEquals(requiredFields.length, errors.size());
             for (int i = 0; i < requiredFields.length; i++) {
                 String requiredField = requiredFields[i];
                 FieldError error = errors.get(i);
-                assertEquals("Monotext:it_" + requiredField, error.getFieldCode());
+                if (error.getFieldCode().startsWith("Date")) {
+                    assertEquals("Date:" + requiredField, error.getFieldCode());
+                } else {
+                    assertEquals("Monotext:" + requiredField, error.getFieldCode());
+                }
                 assertEquals(FieldError.MANDATORY, error.getErrorCode());
             }
             ITextAttribute textAttribute = (ITextAttribute) profile.getAttribute("email");
@@ -53,7 +56,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
             assertNotNull(errors);
             assertEquals(requiredFields.length, errors.size());
             errors.stream().forEach(error -> {
-                if (error.getFieldCode().equals("Monotext:it_email")) {
+                if (error.getFieldCode().equals("Monotext:email")) {
                     assertEquals(FieldError.INVALID_FORMAT, error.getErrorCode());
                 }
             });
@@ -72,12 +75,15 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
             for (int i = 0; i < requiredFields.length; i++) {
                 String requiredField = requiredFields[i];
                 FieldError error = errors.get(i);
-                assertEquals("Monotext:it_" + requiredField, error.getFieldCode());
+                if (error.getFieldCode().startsWith("Email")) {
+                    assertEquals("Email:" + requiredField, error.getFieldCode());
+                } else {
+                    assertEquals("Monotext:" + requiredField, error.getFieldCode());
+                }
                 assertEquals(FieldError.MANDATORY, error.getErrorCode());
             }
             ITextAttribute textAttribute = (ITextAttribute) profile.getAttribute("email");
-            
-            String[] invalidEmails = {"j.brown@entando", "j.brown@entando com", "j.brown@@entando.com", 
+            String[] invalidEmails = {"j.brown@entando", "j.brown@entando com", "j.brown@ent@ando.com", 
                 "@j.brownentando.com", "j.brown@ent ando.com", "j.brown@ent$ando.com", "j.brown@@entando.com", "j.brown.entando.com"};
             Arrays.stream(invalidEmails).forEach(email -> {
                 textAttribute.setText(email, "it");
@@ -85,7 +91,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
                 assertEquals(requiredFields.length, errors_adv.size());
                 for (int i = 0; i < errors_adv.size(); i++) {
                     FieldError error_adv = errors_adv.get(i);
-                    if (error_adv.getFieldCode().equals("Monotext:it_email")) {
+                    if (error_adv.getFieldCode().startsWith("Email")) {
                         assertEquals(FieldError.INVALID_FORMAT, error_adv.getErrorCode());
                     } else {
                         assertEquals(FieldError.MANDATORY, error_adv.getErrorCode());
