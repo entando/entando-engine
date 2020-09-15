@@ -13,9 +13,11 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
 import java.util.List;
 
+import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -50,6 +52,20 @@ public interface AttributeInterface extends Serializable {
      * @param name The name to set
      */
     public void setName(String name);
+
+    /**
+     * Return the names of the attribute in different languages
+     *
+     * @return The names of the attribute
+     */
+    public ApsProperties getNames();
+
+    /**
+     * Set up the names of the attribute in different languages
+     *
+     * @param names The names to set
+     */
+    public void setNames(ApsProperties names);
 
     /**
      * Return the description of the attribute

@@ -15,10 +15,14 @@ package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
+import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -32,6 +36,7 @@ public class EntityTypeAttributeDto {
     @NotEmpty(message = "entityType.attribute.type.notEmpty")
     private String type;
     private String name;
+    private Map<String, String> names = new HashMap<>();
     private List<AttributePropertyDto> roles = new ArrayList<>();
     private List<String> disablingCodes = new ArrayList<>();
     private boolean mandatory;
@@ -44,6 +49,10 @@ public class EntityTypeAttributeDto {
         this.code = attribute.getName();
         this.type = attribute.getType();
         this.name = attribute.getDescription();
+        Optional<ApsProperties> apsNames = Optional.ofNullable(attribute.getNames());
+        apsNames.ifPresent(values -> values.keySet().forEach((lang) -> {
+            this.getNames().put((String) lang, (String) values.get(lang));
+        }));
         String[] roleCodes = attribute.getRoles();
         if (null != roleCodes) {
             for (String roleCode : roleCodes) {
@@ -87,6 +96,14 @@ public class EntityTypeAttributeDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Map<String, String> getNames() {
+        return names;
+    }
+
+    public void setNames(Map<String, String> names) {
+        this.names = names;
     }
 
     public List<AttributePropertyDto> getRoles() {

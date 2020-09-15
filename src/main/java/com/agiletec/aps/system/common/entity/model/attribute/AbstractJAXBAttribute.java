@@ -15,6 +15,7 @@ package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.List;
 
+import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
@@ -22,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author E.Santoboni
  */
-@XmlType(propOrder = {"name", "description", "type", "roles"})
+@XmlType(propOrder = {"name", "description", "type", "roles", "names"})
 public class AbstractJAXBAttribute {
     
     @XmlElement(name = "name", required = true)
@@ -32,7 +33,15 @@ public class AbstractJAXBAttribute {
     public void setName(String name) {
         this._name = name;
     }
-	
+
+    @XmlElement(name = "names", required = false)
+    public Map<String, String> getNames() {
+        return _names;
+    }
+    public void setNames(Map<String, String> names) {
+        this._names = names;
+    }
+
 	@XmlElement(name = "description", required = false)
     public String getDescription() {
 		return _description;
@@ -59,7 +68,8 @@ public class AbstractJAXBAttribute {
     }
     
     private String _name;
-	private String _description;
+    private Map<String, String> _names;
+    private String _description;
     private String _type;
     private List<String> _roles;
     
