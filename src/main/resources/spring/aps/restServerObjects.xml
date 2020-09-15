@@ -55,7 +55,7 @@
 
     <beans profile="swagger">
         <bean id="swagger" class="org.entando.entando.web.swagger.SwaggerConfig">
-            <constructor-arg ref="BaseConfigManager"/>
+<!--            <constructor-arg ref="BaseConfigManager"/>-->
         </bean>
 
         <bean id="swaggerMvc" class="org.entando.entando.web.swagger.SwaggerMvcAdapter" />
