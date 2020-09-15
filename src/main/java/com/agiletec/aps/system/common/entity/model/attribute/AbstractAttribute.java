@@ -13,12 +13,18 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.aps.util.ApsPropertiesDOM;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
+import java.util.Optional;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +49,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     private static final Logger _logger = LoggerFactory.getLogger(AbstractAttribute.class);
 
     private String _name;
+    private ApsProperties _names;
     private String _description;
     private String _type;
     private String _defaultLangCode;
@@ -73,6 +80,16 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     @Override
     public String getName() {
         return _name;
+    }
+
+    @Override
+    public ApsProperties getNames() {
+        return _names;
+    }
+
+    @Override
+    public void setNames(ApsProperties _names) {
+        this._names = _names;
     }
 
     @Override
@@ -181,6 +198,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
             Class attributeClass = Class.forName(this.getClass().getName());
             clone = (AbstractAttribute) attributeClass.newInstance();
             clone.setName(this.getName());
+            clone.setNames(this.getNames());
             clone.setDescription(this.getDescription());
             clone.setType(this.getType());
             clone.setSearchable(this.isSearchable());
@@ -219,6 +237,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
+            String namesXml = (new XMLOutputter()).outputString(attributeElement.getChild("names").getChild("properties"));
+            ApsProperties names = new ApsProperties();
+            names.loadFromXml(namesXml);
+            this.setNames(names);
             String description = this.extractXmlAttribute(attributeElement, "description", false);
             this.setDescription(description);
             String searchable = this.extractXmlAttribute(attributeElement, "searchable", false);
@@ -293,6 +315,13 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     @Override
     public Element getJDOMConfigElement() {
         Element configElement = this.createRootElement(this.getTypeConfigElementName());
+        if (null != this.getNames()) {
+            Element names = new Element("names");
+            ApsPropertiesDOM propertiesDom = new ApsPropertiesDOM();
+            propertiesDom.buildJDOM(this.getNames());
+            names.addContent(propertiesDom.getRootElement());
+            configElement.addContent(names);
+        }
         if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
             configElement.setAttribute("description", this.getDescription());
         }
@@ -483,6 +512,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     protected final AbstractJAXBAttribute createBaseJAXBAttribute() {
         AbstractJAXBAttribute jaxbAttribute = this.getJAXBAttributeInstance();
         jaxbAttribute.setDescription(this.getDescription());
+        jaxbAttribute.setNames(new HashMap<>());
+        Optional<ApsProperties> apsNames = Optional.ofNullable(this.getNames());
+        apsNames.ifPresent(values -> values.keySet().forEach((lang) -> {
+            jaxbAttribute.getNames().put((String) lang, (String) values.get(lang));
+        }));
         jaxbAttribute.setName(this.getName());
         jaxbAttribute.setType(this.getType());
         if (null != this.getRoles() && this.getRoles().length > 0) {
@@ -503,6 +537,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     public DefaultJAXBAttributeType getJAXBAttributeType() {
         DefaultJAXBAttributeType jaxbAttributeType = this.getJAXBAttributeTypeInstance();
         jaxbAttributeType.setName(this.getName());
+        jaxbAttributeType.setNames(new HashMap<>());
+        Optional<ApsProperties> apsNames = Optional.ofNullable(this.getNames());
+        apsNames.ifPresent(values -> values.keySet().forEach((lang) -> {
+            jaxbAttributeType.getNames().put((String) lang, (String) values.get(lang));
+        }));
         jaxbAttributeType.setDescription(this.getDescription());
         jaxbAttributeType.setType(this.getType());
         if (this.isSearchable()) {
