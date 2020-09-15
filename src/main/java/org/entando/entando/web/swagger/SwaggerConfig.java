@@ -33,7 +33,6 @@ import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
 @ComponentScan
 @EnableSwagger2
 public class SwaggerConfig {
@@ -49,21 +48,23 @@ public class SwaggerConfig {
 
     public SwaggerConfig() {
 
-        this.authServer = ofNullable(System.getenv("KEYCLOAK_AUTH_URL"))
-                .map(authServer -> authServer.replace("/auth", ""))
-                .orElse("http://localhost:8081");
-
-        System.err.println("AUTH SERVER URL: " + this.authServer);
-
-        this.clientId = System.getenv("KEYCLOAK_CLIENT_ID");
-        this.clientSecret = System.getenv("KEYCLOAK_CLIENT_SECRET");
+        boolean kcEnabled = Boolean.getBoolean("keycloak.enabled");
+        if (kcEnabled) {
+            String kcRealm = System.getProperty("keycloak.realm");
+            String kcUrl = System.getProperty("keycloak.auth.url");
+            this.authServer = String.format("%s/realms/%s/protocol/openid-connect", kcUrl, kcRealm);
+        } else {
+            this.authServer = "http://localhost:8081";
+        }
+        this.clientId = System.getProperty("keycloak.client.id");
+        this.clientSecret = System.getProperty("keycloak.client.secret");
     }
 
     @Bean
     public Docket api() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-//                .groupName("entando")
+                .groupName("entando")
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
