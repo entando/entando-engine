@@ -49,7 +49,6 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.entando.entando.aps.servlet.security.AuthorizationServerConfigurationTest;
-import org.entando.entando.aps.servlet.security.CsrfFilter;
 import org.entando.entando.aps.servlet.security.CsrfFilterTest;
 import org.entando.entando.aps.system.init.DatabaseManagerTest;
 import org.entando.entando.aps.system.init.InitializerManagerTest;
@@ -85,6 +84,7 @@ import org.entando.entando.aps.system.services.userprofile.UserProfileManagerInt
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
+import org.entando.entando.ent.util.EntLoggingTest;
 import org.entando.entando.aps.util.FilterUtilsTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
 import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
@@ -99,6 +99,8 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
 
+        //
+        suite.addTestSuite(EntLoggingTest.class);
         //
         suite.addTest(new JUnit4TestAdapter(EntSafeXmlUtilsTest.class));
         //
