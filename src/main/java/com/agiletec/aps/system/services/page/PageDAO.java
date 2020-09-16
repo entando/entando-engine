@@ -31,6 +31,8 @@ import org.entando.entando.aps.system.init.model.portdb.WidgetConfig;
 import org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -773,18 +775,28 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     private void updatePageMetatataUpdate(String pageCode, Date date, String tablename, Connection conn) throws SQLException {
         PreparedStatement stat = null;
         try {
-            String query = "UPDATE " + tablename + " SET updatedat = ? WHERE code = ?";
+            String query = "UPDATE " + mustBeValidMetadataTableName(tablename) + " SET updatedat = ? WHERE code = ?";
             stat = conn.prepareStatement(query);
             stat.setTimestamp(1, new Timestamp(date.getTime()));
             stat.setString(2, pageCode);
             stat.executeUpdate();
         } catch (Throwable t) {
-            _logger.error("Error while updating the page metadata record for table {} and page {}", PageMetadataDraft.TABLE_NAME, pageCode,
-                    t);
-            throw new RuntimeException("Error while updating the page metadata record for table " + PageMetadataDraft.TABLE_NAME
-                    + " and page " + pageCode, t);
+            _logger.error("Error while updating the page metadata record for table {} and page {}",
+                    tablename, pageCode, t);
+            throw new EntRuntimeException("Error while updating the page metadata record for table " +
+                    tablename + " and page " + pageCode, t);
         } finally {
             closeDaoResources(null, stat);
+        }
+    }
+
+    public static String mustBeValidMetadataTableName(String tablename) throws EntException {
+        switch (tablename) {
+            case PageMetadataOnline.TABLE_NAME:
+            case PageMetadataDraft.TABLE_NAME:
+                return tablename;
+            default:
+                throw new EntException("Invalid metadata table name" + tablename);
         }
     }
 

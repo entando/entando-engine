@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.database;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.util.FileTextReader;
+import java.security.SecureRandom;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IComponentManager;
@@ -23,6 +24,7 @@ import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.services.database.model.ComponentDto;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
 import org.entando.entando.aps.system.services.database.model.ShortDumpReportDto;
+import static org.entando.entando.aps.system.services.storage.StorageManagerUtil.mustBeValidFilename;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.database.validator.DatabaseValidator;
@@ -34,7 +36,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author E.Santoboni
@@ -147,14 +148,16 @@ public class DatabaseService implements IDatabaseService {
         byte[] bytes = null;
         try {
             InputStream stream = this.getDatabaseManager().getTableDump(tableName, dataSource, reportCode);
+            String safeReportCode = mustBeValidFilename(reportCode);
+
             if (null == stream) {
                 logger.warn("no dump found with code {}, dataSource {}, table {}", reportCode, dataSource, tableName);
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableName, "tableName");
                 bindingResult.reject(DatabaseValidator.ERRCODE_NO_TABLE_DUMP_FOUND, new Object[]{reportCode, dataSource, tableName}, "database.dump.table.notFound");
                 throw new ResourceNotFoundException("code - dataSource - table",
-                        "'" + reportCode + "' - '" + dataSource + "' - '" + tableName + "'");
+                        "'" + safeReportCode + "' - '" + dataSource + "' - '" + tableName + "'");
             }
-            tempFile = FileTextReader.createTempFile(new Random().nextInt(100) + reportCode + "_" + dataSource + "_" + tableName, stream);
+            tempFile = FileTextReader.createTempFile(new SecureRandom().nextInt(100) + safeReportCode + "_" + dataSource + "_" + tableName, stream);
             bytes = FileTextReader.fileToByteArray(tempFile);
         } catch (ResourceNotFoundException r) {
             throw r;
