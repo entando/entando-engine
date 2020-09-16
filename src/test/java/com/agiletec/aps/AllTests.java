@@ -88,6 +88,7 @@ import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeI
 import org.entando.entando.aps.util.FilterUtilsTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
 import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
+import org.entando.entando.ent.exception.EntExceptionTest;
 import org.entando.entando.ent.util.EntSafeXmlUtilsTest;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccessTest;
 
@@ -99,6 +100,8 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
 
+        //
+        suite.addTest(new JUnit4TestAdapter(EntExceptionTest.class));
         //
         suite.addTest(new JUnit4TestAdapter(EntSafeXmlUtilsTest.class));
         //
