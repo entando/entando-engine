@@ -13,20 +13,6 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.aps.util.ApsPropertiesDOM;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import java.util.Optional;
-import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -35,8 +21,20 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeV
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.aps.util.ApsPropertiesDOM;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import org.entando.entando.ent.exception.EntException;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This abstract class must be used when implementing Entity Attributes.
@@ -236,12 +234,17 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
+
             if (null != attributeElement.getChild("names") && null != attributeElement.getChild("names").getChild("properties")) {
                 String namesXml = (new XMLOutputter()).outputString(attributeElement.getChild("names").getChild("properties"));
                 ApsProperties names = new ApsProperties();
                 names.loadFromXml(namesXml);
                 this.setNames(names);
             }
+
+            fallbackFromNamesToName();
+            fallbackFromNameToNames();
+
             String description = this.extractXmlAttribute(attributeElement, "description", false);
             this.setDescription(description);
             String searchable = this.extractXmlAttribute(attributeElement, "searchable", false);
@@ -288,6 +291,29 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
                     + this.getName() + "' type '" + this.getType() + "'";
             _logger.error("Error detected while creating the attribute config '{}' type '{}'", this.getName(), this.getType(), t);
             throw new RuntimeException(message, t);
+        }
+    }
+
+    private void fallbackFromNameToNames() {
+        if (null != this.getName() && (null == this.getNames() || this.getNames().size() == 0)) {
+            ApsProperties names = new ApsProperties();
+            names.put(_langManager.getDefaultLang().getCode(), this.getName());
+            this.setNames(names);
+        }
+    }
+
+    private void fallbackFromNamesToName() {
+        if (null == this.getName() && null != this.getNames() && this.getNames().size() > 0) {
+            String defaultName = (String)this.getNames().get(_langManager.getDefaultLang().getCode());
+            if (null == defaultName) {
+                for (String lang : getNames().stringPropertyNames()) {
+                    if (null != getNames().get(lang)) {
+                        defaultName = (String)getNames().get(lang);
+                        break;
+                    }
+                }
+            }
+            this.setName(defaultName);
         }
     }
 
