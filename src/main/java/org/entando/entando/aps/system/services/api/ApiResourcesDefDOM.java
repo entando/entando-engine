@@ -36,7 +36,7 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -46,13 +46,13 @@ public class ApiResourcesDefDOM {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(ApiResourcesDefDOM.class);
 	
-    public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
+    public ApiResourcesDefDOM(String xmlText, String definitionPath) throws EntException {
         this.validate(xmlText, definitionPath);
         _logger.debug("Loading Resources from file : {}", definitionPath);
         this.decodeDOM(xmlText);
     }
     
-    private void validate(String xmlText, String definitionPath) throws ApsSystemException {
+    private void validate(String xmlText, String definitionPath) throws EntException {
         SchemaFactory factory =
                 SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream schemaIs = null;
@@ -69,7 +69,7 @@ public class ApiResourcesDefDOM {
         } catch (Throwable t) {
             String message = "Error validating api methods definition : " + definitionPath;
             _logger.error("Error validating api methods definition : {}", definitionPath, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         } finally {
             try {
                 if (null != schemaIs) {
@@ -164,7 +164,7 @@ public class ApiResourcesDefDOM {
         }
     }
     
-    private void decodeDOM(String xmlText) throws ApsSystemException {
+    private void decodeDOM(String xmlText) throws EntException {
         SAXBuilder builder = new SAXBuilder();
         builder.setValidation(false);
         StringReader reader = new StringReader(xmlText);
@@ -172,7 +172,7 @@ public class ApiResourcesDefDOM {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
             _logger.error("Error while parsing xml: {}", xmlText, t);
-            throw new ApsSystemException("Error detected while parsing the XML", t);
+            throw new EntException("Error detected while parsing the XML", t);
         }
     }
     

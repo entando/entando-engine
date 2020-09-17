@@ -34,7 +34,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -71,7 +71,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("error in extractDataObjects", t);
-            throw new ApsSystemException("Error into API method", t);
+            throw new EntException("Error into API method", t);
         }
         return contentsId;
     }
@@ -96,7 +96,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("error in buildSearchBean", t);
-            throw new ApsSystemException("Error into API method", t);
+            throw new EntException("Error into API method", t);
         }
         return bean;
     }
@@ -130,7 +130,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("error in getDataObjectsToHtml", t);
-            throw new ApsSystemException("Error into API method", t);
+            throw new EntException("Error into API method", t);
         }
         return render.toString();
     }
@@ -153,7 +153,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("error in getDataObject", t);
-            throw new ApsSystemException("Error into API method", t);
+            throw new EntException("Error into API method", t);
         }
         return jaxbDataObject;
     }
@@ -180,7 +180,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("error in getDataObjectToHtml", t);
-            throw new ApsSystemException("Error into API method", t);
+            throw new EntException("Error into API method", t);
         }
         return render;
     }
@@ -205,7 +205,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("Error extracting DataObject by id '{}'", id, t);
-            throw new ApsSystemException("Error extracting DataObject by id '" + id + "'", t);
+            throw new EntException("Error extracting DataObject by id '" + id + "'", t);
         }
         return dataObject;
     }
@@ -251,7 +251,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("Error checking model id '{}'", modelId, t);
-            throw new ApsSystemException("Error checking model id '" + modelId + "'", t);
+            throw new EntException("Error checking model id '" + modelId + "'", t);
         }
         return modelIdInteger;
     }
@@ -276,7 +276,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
             _logger.error("Error adding DataObject", t);
-            throw new ApsSystemException("Error adding DataObject", t);
+            throw new EntException("Error adding DataObject", t);
         }
         return response;
     }
@@ -304,7 +304,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
             _logger.error("Error updating DataObject", t);
-            throw new ApsSystemException("Error updating DataObject", t);
+            throw new EntException("Error updating DataObject", t);
         }
         return response;
     }
@@ -340,12 +340,12 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
             _logger.error("error in validateAndSaveDataObject", t);
-            throw new ApsSystemException("Error adding dataObject", t);
+            throw new EntException("Error adding dataObject", t);
         }
         return response;
     }
 
-    private List<ApiError> validate(DataObject dataObject) throws ApsSystemException {
+    private List<ApiError> validate(DataObject dataObject) throws EntException {
         List<ApiError> errors = new ArrayList<ApiError>();
         try {
             if (null == dataObject.getMainGroup()) {
@@ -365,7 +365,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             }
         } catch (Throwable t) {
             _logger.error("Error validating DataObject", t);
-            throw new ApsSystemException("Error validating DataObject", t);
+            throw new EntException("Error validating DataObject", t);
         }
         return errors;
     }
@@ -396,7 +396,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
             _logger.error("Error deleting DataObject", t);
-            throw new ApsSystemException("Error deleting DataObject", t);
+            throw new EntException("Error deleting DataObject", t);
         }
         return response;
     }
@@ -430,7 +430,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("Error updating DataObject attribute", t);
-            throw new ApsSystemException("Error updating DataObject attribute", t);
+            throw new EntException("Error updating DataObject attribute", t);
         }
     }
 

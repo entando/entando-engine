@@ -22,7 +22,7 @@ import java.util.Map;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -87,7 +87,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
     }
 
     @Override
-    public void addDataObjectModel(DataObjectModel model) throws ApsSystemException {
+    public void addDataObjectModel(DataObjectModel model) throws EntException {
         try {
             this.getDataModelDAO().addDataModel(model);
             //Long wrapLongId = new Long(model.getId());
@@ -95,35 +95,35 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
             this.notifyDataModelChanging(model, DataObjectModelChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error saving a dataObjectModel", t);
-            throw new ApsSystemException("Error saving a dataObjectModel", t);
+            throw new EntException("Error saving a dataObjectModel", t);
         }
     }
 
     @Override
-    public void removeDataObjectModel(DataObjectModel model) throws ApsSystemException {
+    public void removeDataObjectModel(DataObjectModel model) throws EntException {
         try {
             this.getDataModelDAO().deleteDataModel(model);
             this.getCacheWrapper().removeModel(model);
             this.notifyDataModelChanging(model, DataObjectModelChangedEvent.REMOVE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error deleting a dataObject model", t);
-            throw new ApsSystemException("Error deleting a dataObject model", t);
+            throw new EntException("Error deleting a dataObject model", t);
         }
     }
 
     @Override
-    public void updateDataObjectModel(DataObjectModel model) throws ApsSystemException {
+    public void updateDataObjectModel(DataObjectModel model) throws EntException {
         try {
             this.getDataModelDAO().updateDataModel(model);
             this.getCacheWrapper().updateModel(model);
             this.notifyDataModelChanging(model, DataObjectModelChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error updating a dataObject model", t);
-            throw new ApsSystemException("Error updating a dataObject model", t);
+            throw new EntException("Error updating a dataObject model", t);
         }
     }
 
-    private void notifyDataModelChanging(DataObjectModel dataObjectModel, int operationCode) throws ApsSystemException {
+    private void notifyDataModelChanging(DataObjectModel dataObjectModel, int operationCode) throws EntException {
         DataObjectModelChangedEvent event = new DataObjectModelChangedEvent();
         event.setDataObjectModel(dataObjectModel);
         event.setOperationCode(operationCode);
@@ -220,7 +220,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
     }
 
     @Override
-    public SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> filters) throws ApsSystemException {
+    public SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> filters) throws EntException {
         SearcherDaoPaginatedResult<DataObjectModel> pagedResult = null;
         try {
             List<DataObjectModel> dataObjectModels = new ArrayList<>();
@@ -233,19 +233,19 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
             pagedResult = new SearcherDaoPaginatedResult<>(count, dataObjectModels);
         } catch (Throwable t) {
             logger.error("Error searching models", t);
-            throw new ApsSystemException("Error searching models", t);
+            throw new EntException("Error searching models", t);
         }
         return pagedResult;
     }
 
     @Override
-    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws ApsSystemException {
+    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws EntException {
         List<Long> models = null;
         try {
             models = this.getDataModelDAO().searchDataObjectModels(filters);
         } catch (Throwable t) {
             logger.error("Error searching models", t);
-            throw new ApsSystemException("Error searching models", t);
+            throw new EntException("Error searching models", t);
         }
         return models;
     }

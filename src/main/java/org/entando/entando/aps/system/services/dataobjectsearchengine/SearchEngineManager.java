@@ -22,7 +22,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.notify.ApsEvent;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
 
 import java.util.ArrayList;
@@ -105,13 +105,13 @@ public class SearchEngineManager extends AbstractService
 	}
 
 	@Override
-	public Thread startReloadDataObjectsReferences() throws ApsSystemException {
+	public Thread startReloadDataObjectsReferences() throws EntException {
 		String newTempSubDirectory = "indexdir" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
 		return this.startReloadDataObjectsReferences(newTempSubDirectory);
 	}
 
 	@Override
-	public Thread startReloadDataObjectsReferences(String subDirectory) throws ApsSystemException {
+	public Thread startReloadDataObjectsReferences(String subDirectory) throws EntException {
 		IndexLoaderThread loaderThread = null;
 		if (this.getStatus() == STATUS_READY || this.getStatus() == STATUS_NEED_TO_RELOAD_INDEXES) {
 			try {
@@ -124,7 +124,7 @@ public class SearchEngineManager extends AbstractService
 				loaderThread.start();
 				_logger.info("Reload Contents References job started");
 			} catch (Throwable t) {
-				throw new ApsSystemException("Error reloading Contents References", t);
+				throw new EntException("Error reloading Contents References", t);
 			}
 		} else {
 			_logger.info("Reload Contents References job suspended: current status: {}", this.getStatus());
@@ -167,20 +167,20 @@ public class SearchEngineManager extends AbstractService
 	}
 
 	@Override
-	public void addEntityToIndex(IApsEntity entity) throws ApsSystemException {
+	public void addEntityToIndex(IApsEntity entity) throws EntException {
 		try {
 			this._indexerDao.add(entity);
-		} catch (ApsSystemException e) {
+		} catch (EntException e) {
 			_logger.error("Error saving content to index", e);
 			throw e;
 		}
 	}
 
 	@Override
-	public void deleteIndexedEntity(String entityId) throws ApsSystemException {
+	public void deleteIndexedEntity(String entityId) throws EntException {
 		try {
 			this._indexerDao.delete(IIndexerDAO.DATAOBJECT_ID_FIELD_NAME, entityId);
-		} catch (ApsSystemException e) {
+		} catch (EntException e) {
 			_logger.error("Error deleting content {} from index", entityId, e);
 			throw e;
 		}
@@ -214,13 +214,13 @@ public class SearchEngineManager extends AbstractService
 
 	@Override
 	public List<String> searchId(String sectionCode, String langCode,
-			String word, Collection<String> allowedGroups) throws ApsSystemException {
+			String word, Collection<String> allowedGroups) throws EntException {
 		return this.searchEntityId(langCode, word, allowedGroups);
 	}
 
 	@Override
 	public List<String> searchEntityId(String langCode, String word,
-			Collection<String> allowedGroups) throws ApsSystemException {
+			Collection<String> allowedGroups) throws EntException {
 		SearchEngineFilter[] filters = new SearchEngineFilter[0];
 		if (StringUtils.isNotEmpty(langCode) && StringUtils.isNotEmpty(word)) {
 			SearchEngineFilter filter = new SearchEngineFilter(langCode, word);
@@ -241,30 +241,30 @@ public class SearchEngineManager extends AbstractService
 	}
 
 	//@Override
-	public List<String> searchId(String sectionCode, SearchEngineFilter[] filters, Collection<String> allowedGroups) throws ApsSystemException {
+	public List<String> searchId(String sectionCode, SearchEngineFilter[] filters, Collection<String> allowedGroups) throws EntException {
 		return this.searchEntityId(filters, null, allowedGroups);
 	}
 
 	//@Override
-	public List<String> searchEntityId(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException {
+	public List<String> searchEntityId(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws EntException {
 		List<String> contentsId = null;
 		try {
 			contentsId = _searcherDao.searchContentsId(filters, categories, allowedGroups);
 		} catch (Throwable t) {
 			_logger.error("Error searching content id list. ", t);
-			throw new ApsSystemException("Error searching content id list", t);
+			throw new EntException("Error searching content id list", t);
 		}
 		return contentsId;
 	}
 
 	//@Override
-	public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException {
+	public FacetedContentsResult searchFacetedEntities(SearchEngineFilter[] filters, Collection<ITreeNode> categories, Collection<String> allowedGroups) throws EntException {
 		FacetedContentsResult contentsId = null;
 		try {
 			contentsId = _searcherDao.searchFacetedContents(filters, categories, allowedGroups);
 		} catch (Throwable t) {
 			_logger.error("Error searching faceted dataobject", t);
-			throw new ApsSystemException("Error searching faceted dataobject", t);
+			throw new EntException("Error searching faceted dataobject", t);
 		}
 		return contentsId;
 	}
@@ -279,11 +279,11 @@ public class SearchEngineManager extends AbstractService
 	}
 
 	@Override
-	public void updateIndexedEntity(IApsEntity entity) throws ApsSystemException {
+	public void updateIndexedEntity(IApsEntity entity) throws EntException {
 		try {
 			this.deleteIndexedEntity(entity.getId());
 			this.addEntityToIndex(entity);
-		} catch (ApsSystemException e) {
+		} catch (EntException e) {
 			_logger.error("Error updating content", e);
 			throw e;
 		}

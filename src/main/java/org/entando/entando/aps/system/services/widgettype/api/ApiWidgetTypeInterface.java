@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 
@@ -258,12 +258,12 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			}
 		} catch (Throwable t) {
 			_logger.error("error checking and saving fragment", t);
-			throw new ApsSystemException("error checking and saving fragment", t);
+			throw new EntException("error checking and saving fragment", t);
 		}
 	}
 
 	// duplicated code
-	protected String extractUniqueGuiFragmentCode(String widgetTypeCode) throws ApsSystemException {
+	protected String extractUniqueGuiFragmentCode(String widgetTypeCode) throws EntException {
 		String uniqueCode = widgetTypeCode;
 		if (null != this.getGuiFragmentManager().getGuiFragment(uniqueCode)) {
 			int index = 0;

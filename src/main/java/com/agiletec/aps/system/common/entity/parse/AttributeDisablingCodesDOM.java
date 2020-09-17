@@ -20,7 +20,7 @@ import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Dom class parser of Attribute disabling codes definitions.
@@ -28,7 +28,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class AttributeDisablingCodesDOM extends AbstractAttributeSupportObjectDOM {
 	
-	public Map<String, String> extractDisablingCodes(String xml, String definitionPath) throws ApsSystemException {
+	public Map<String, String> extractDisablingCodes(String xml, String definitionPath) throws EntException {
 		this.validate(xml, definitionPath);
 		Document document = this.decodeDOM(xml);
 		return this.extractDisablingCodes(document);

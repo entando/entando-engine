@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -295,7 +295,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePostConflict() throws ApsSystemException, Exception {
+    public void shouldValidatePostConflict() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -320,7 +320,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeleteOnlinePage() throws ApsSystemException, Exception {
+    public void shouldValidateDeleteOnlinePage() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
@@ -337,7 +337,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeletePageWithChildren() throws ApsSystemException, Exception {
+    public void shouldValidateDeletePageWithChildren() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -358,7 +358,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidRequest() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageInvalidRequest() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -381,7 +381,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void shouldValidateMovePageNameMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageNameMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -406,7 +406,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidPosition() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageInvalidPosition() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -431,7 +431,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageMissingParent() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageMissingParent() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -455,7 +455,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageGroupMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageGroupMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -527,7 +527,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageStatusMismatch() throws ApsSystemException, Exception {
+    public void shouldValidateMovePageStatusMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();

@@ -28,7 +28,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.I18nManagerWrapper;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -60,7 +60,7 @@ public abstract class BaseEntityRenderer extends DefaultVelocityRenderer impleme
 			StringWriter stringWriter = new StringWriter();
 			boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", velocityTemplate);
 			if (!isEvaluated) {
-				throw new ApsSystemException("Rendering error");
+				throw new EntException("Rendering error");
 			}
 			stringWriter.flush();
 			renderedEntity = stringWriter.toString();

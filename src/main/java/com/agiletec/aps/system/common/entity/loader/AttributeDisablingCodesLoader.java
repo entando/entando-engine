@@ -15,7 +15,7 @@ package com.agiletec.aps.system.common.entity.loader;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
@@ -71,7 +71,7 @@ public final class AttributeDisablingCodesLoader {
 					if (loader != null) {
 						((ExtraAttributeDisablingCodesWrapper) loader).executeLoading(disablingCodes, this.getEntityManager());
 					}
-				} catch (BeansException | ApsSystemException t) {
+				} catch (BeansException | EntException t) {
 					_logger.error("Error extracting attribute support object : bean {}", defNames[i], t);
 				}
 			}

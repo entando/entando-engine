@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.role.Permission;
@@ -151,30 +151,30 @@ public interface IAuthorizationManager {
 	 */
 	public List<Role> getUserRoles(UserDetails user);
 	
-	public void addUserAuthorization(String username, String groupName, String roleName) throws ApsSystemException;
+	public void addUserAuthorization(String username, String groupName, String roleName) throws EntException;
 	
-	public void addUserAuthorization(String username, Authorization authorization) throws ApsSystemException;
+	public void addUserAuthorization(String username, Authorization authorization) throws EntException;
 	
-	public void addUserAuthorizations(String username, List<Authorization> authorizations) throws ApsSystemException;
+	public void addUserAuthorizations(String username, List<Authorization> authorizations) throws EntException;
 	
-	public void updateUserAuthorizations(String username, List<Authorization> authorizations) throws ApsSystemException;
+	public void updateUserAuthorizations(String username, List<Authorization> authorizations) throws EntException;
 	
-	public void deleteUserAuthorization(String username, String groupname, String rolename) throws ApsSystemException;
+	public void deleteUserAuthorization(String username, String groupname, String rolename) throws EntException;
 	
-	public List<Authorization> getUserAuthorizations(String username) throws ApsSystemException;
+	public List<Authorization> getUserAuthorizations(String username) throws EntException;
 	
-	public void deleteUserAuthorizations(String username) throws ApsSystemException;
+	public void deleteUserAuthorizations(String username) throws EntException;
 	
-	public List<String> getUsersByAuthority(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByAuthority(IApsAuthority authority, boolean includeAdmin) throws EntException;
 	
-	public List<String> getUsersByAuthorities(String groupName, String roleName, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByAuthorities(String groupName, String roleName, boolean includeAdmin) throws EntException;
 	
-	public List<String> getUsersByRole(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByRole(IApsAuthority authority, boolean includeAdmin) throws EntException;
 	
-	public List<String> getUsersByRole(String roleName, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByRole(String roleName, boolean includeAdmin) throws EntException;
 	
-	public List<String> getUsersByGroup(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByGroup(IApsAuthority authority, boolean includeAdmin) throws EntException;
 	
-	public List<String> getUsersByGroup(String groupName, boolean includeAdmin) throws ApsSystemException;
+	public List<String> getUsersByGroup(String groupName, boolean includeAdmin) throws EntException;
 	
 }

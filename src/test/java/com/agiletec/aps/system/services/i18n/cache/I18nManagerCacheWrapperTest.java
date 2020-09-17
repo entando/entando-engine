@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.i18n.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -75,7 +75,7 @@ public class I18nManagerCacheWrapperTest {
         Mockito.verify(fakeCache, Mockito.times(1)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
     }
     
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void testInitCacheWithErrors() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
         when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);

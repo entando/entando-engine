@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi gestori dei gruppi.
@@ -29,23 +29,23 @@ public interface IGroupManager {
 	/**
 	 * Aggiunge un gruppo nel sistema.
 	 * @param group Il gruppo da aggiungere.
-	 * @throws ApsSystemException In caso di errori in accesso al db.
+	 * @throws EntException In caso di errori in accesso al db.
 	 */
-	public void addGroup(Group group) throws ApsSystemException;
+	public void addGroup(Group group) throws EntException;
 	
 	/**
 	 * Rimuove un gruppo dal sistema.
 	 * @param group Il gruppo da rimuovere.
-	 * @throws ApsSystemException In caso di errori in accesso al db.
+	 * @throws EntException In caso di errori in accesso al db.
 	 */
-	public void removeGroup(Group group) throws ApsSystemException;
+	public void removeGroup(Group group) throws EntException;
 	
 	/**
 	 * Aggiorna un gruppo di sistema.
 	 * @param group Il gruppo da aggiornare.
-	 * @throws ApsSystemException In caso di errori in accesso al db.
+	 * @throws EntException In caso di errori in accesso al db.
 	 */
-	public void updateGroup(Group group) throws ApsSystemException;
+	public void updateGroup(Group group) throws EntException;
 	
 	/**
 	 * Restituisce la lista ordinata dei gruppi presenti nel sistema.
@@ -67,8 +67,8 @@ public interface IGroupManager {
 	 */
 	public Group getGroup(String groupName);
 
-    public SearcherDaoPaginatedResult<Group> getGroups(FieldSearchFilter[] fieldSearchFilters) throws ApsSystemException;
+    public SearcherDaoPaginatedResult<Group> getGroups(FieldSearchFilter[] fieldSearchFilters) throws EntException;
 
-    public SearcherDaoPaginatedResult<Group> getGroups(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+    public SearcherDaoPaginatedResult<Group> getGroups(List<FieldSearchFilter> fieldSearchFilters) throws EntException;
 	
 }

@@ -23,7 +23,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Base interface for the entity managers.
@@ -45,9 +45,9 @@ public interface IEntityManager extends IManager {
      * @param filters The filters used to find an sort the entities IDs that
      * match the given criteria.
      * @return The list of the IDs found.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
-    public List<String> searchId(EntitySearchFilter[] filters) throws ApsSystemException;
+    public List<String> searchId(EntitySearchFilter[] filters) throws EntException;
 
     /**
      * Search entities.
@@ -55,18 +55,18 @@ public interface IEntityManager extends IManager {
      * @param typeCode The code of the Entity Types to look for.
      * @param filters The search filters to apply to find and sort the ID found.
      * @return The list of the ID found.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
-    public List<String> searchId(String typeCode, EntitySearchFilter[] filters) throws ApsSystemException;
+    public List<String> searchId(String typeCode, EntitySearchFilter[] filters) throws EntException;
 
     /**
      * Search the entity record
      *
      * @param filters The filters applied to
      * @return a list of entity records
-     * @throws ApsSystemException
+     * @throws EntException
      */
-    public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) throws ApsSystemException;
+    public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) throws EntException;
 
     /**
      * Create an object from the prototype.
@@ -81,9 +81,9 @@ public interface IEntityManager extends IManager {
      *
      * @param entityId The ID of the entity.
      * @return The requested entity.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
-    public IApsEntity getEntity(String entityId) throws ApsSystemException;
+    public IApsEntity getEntity(String entityId) throws EntException;
 
     /**
      * Return the map of entity prototypes.

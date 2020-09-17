@@ -21,7 +21,7 @@ import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import com.agiletec.aps.system.common.entity.parse.attribute.MonoTextAttributeHandler;
 import com.agiletec.aps.system.common.notify.INotifyManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
@@ -78,7 +78,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testGetDefaultProfileType() throws ApsSystemException {
+    public void testGetDefaultProfileType() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,
@@ -96,7 +96,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testAddProfile() throws ApsSystemException {
+    public void testAddProfile() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,

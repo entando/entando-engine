@@ -41,7 +41,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.common.renderer.IVelocityRenderer;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -54,7 +54,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 	
 	@Override
     @Deprecated
-    public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException {
+    public Object createResponse(String resourceName, Properties parameters) throws EntException {
         Object apiResponse = null;
         try {
             ApiMethod method = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
@@ -70,12 +70,12 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     }
     
 	@Override
-    public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException {
+    public Object createResponse(ApiMethod method, Properties parameters) throws EntException {
         return createResponse(method, null, parameters);
     }
     
 	@Override
-    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException {
+    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws EntException {
         AbstractApiResponse response = null;
         try {
             this.checkParameter(method, parameters);
@@ -205,7 +205,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             throw t;
         } catch (Throwable t) {
         	_logger.error("Error checking api parameters", t);
-            throw new ApsSystemException("Internal Error", t);
+            throw new EntException("Internal Error", t);
         }
     }
 
@@ -222,7 +222,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     
     @Override
     @Deprecated
-	public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
+	public Object invoke(String resourceName, Properties parameters) throws ApiException, EntException {
         Object result = null;
         try {
             ApiMethod api = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
@@ -234,7 +234,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             throw ae;
         } catch (Throwable t) {
         	_logger.error("Error invoking method GET for resource '{}'", resourceName, t);
-            throw new ApsSystemException("Error invoking method GET for resource '" + resourceName + "'", t);
+            throw new EntException("Error invoking method GET for resource '" + resourceName + "'", t);
         }
         return result;
     }
@@ -276,7 +276,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return buffer.toString();
     }
     
-    protected Object extractBean(ApiMethod api) throws ApsSystemException, ApiException {
+    protected Object extractBean(ApiMethod api) throws EntException, ApiException {
         Object bean = this.getBeanFactory().getBean(api.getSpringBean());
         if (null == bean) {
             _logger.error("Null bean '{}' for api {}", api.getSpringBean(), this.buildApiSignature(api));

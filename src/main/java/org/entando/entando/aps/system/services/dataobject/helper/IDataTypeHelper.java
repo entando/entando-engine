@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.DataTypeUtilizer;
 
@@ -25,9 +25,9 @@ public interface IDataTypeHelper {
 
 	public static String BEAN_NAME = "DataTypeHelper";
 
-	public Map<String, List<?>> getReferencingObjects(DataObject dataType) throws ApsSystemException;
+	public Map<String, List<?>> getReferencingObjects(DataObject dataType) throws EntException;
 
-	public Map<String, List<?>> getReferencingObjects(DataObject dataType, Collection<DataTypeUtilizer> dataTypeUtilizers) throws ApsSystemException;
+	public Map<String, List<?>> getReferencingObjects(DataObject dataType, Collection<DataTypeUtilizer> dataTypeUtilizers) throws EntException;
 
 	public List<DataTypeUtilizer> getDataTypeUtilizers();
 

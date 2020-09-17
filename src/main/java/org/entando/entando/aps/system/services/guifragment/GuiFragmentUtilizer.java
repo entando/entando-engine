@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.guifragment;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Basic interface for those services whose handled elements are based on fragment.
@@ -33,8 +33,8 @@ public interface GuiFragmentUtilizer {
 	 * Return the list of the objects that use the fragment with the given name.
 	 * @param guiFragmentCode The name of the fragment
 	 * @return The list of the objects that use the fragment with the given code.
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException;
+	public List getGuiFragmentUtilizers(String guiFragmentCode) throws EntException;
 	
 }

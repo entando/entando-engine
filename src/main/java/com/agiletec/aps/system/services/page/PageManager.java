@@ -21,8 +21,7 @@ import java.util.List;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.Category;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -58,7 +57,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         _logger.debug("{} ready. : Initialized", this.getClass().getName());
     }
 
-    private void initCache() throws ApsSystemException {
+    private void initCache() throws EntException {
         this.getCacheWrapper().initCache(this.getPageDAO());
     }
 
@@ -75,10 +74,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * Delete a page and eventually the association with the widgets.
      *
      * @param pageCode the code of the page to delete
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
     @Override
-    public void deletePage(String pageCode) throws ApsSystemException {
+    public void deletePage(String pageCode) throws EntException {
         IPage page = this.getDraftPage(pageCode);
         if (null != page && page.getChildrenCodes().length <= 0) {
             try {
@@ -86,7 +85,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 this.getCacheWrapper().deleteDraftPage(pageCode);
             } catch (Throwable t) {
                 _logger.error("Error detected while deleting page {}", pageCode, t);
-                throw new ApsSystemException("Error detected while deleting a page", t);
+                throw new EntException("Error detected while deleting a page", t);
             }
         }
         this.notifyPageChangedEvent(page, PageChangedEvent.REMOVE_OPERATION_CODE, null);
@@ -96,10 +95,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * Add a new page to the database.
      *
      * @param page The page to add
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
     @Override
-    public void addPage(IPage page) throws ApsSystemException {
+    public void addPage(IPage page) throws EntException {
         try {
             IPage parent = this.getDraftPage(page.getParentCode());
             if (null == parent) {
@@ -121,7 +120,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             this.getCacheWrapper().addDraftPage(page);
         } catch (Throwable t) {
             _logger.error("Error adding a page", t);
-            throw new ApsSystemException("Error adding a page", t);
+            throw new EntException("Error adding a page", t);
         }
         this.notifyPageChangedEvent(this.getDraftPage(page.getCode()), PageChangedEvent.INSERT_OPERATION_CODE, null);
     }
@@ -130,40 +129,40 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * Update a page record in the database.
      *
      * @param page The modified page.
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
     @Override
-    public void updatePage(IPage page) throws ApsSystemException {
+    public void updatePage(IPage page) throws EntException {
         try {
             this.getPageDAO().updatePage(page);
             this.getCacheWrapper().updateDraftPage(page);
         } catch (Throwable t) {
             _logger.error("Error updating a page", t);
-            throw new ApsSystemException("Error updating a page", t);
+            throw new EntException("Error updating a page", t);
         }
         this.notifyPageChangedEvent(page, PageChangedEvent.UPDATE_OPERATION_CODE, null);
     }
 
     @Override
-    public void setPageOnline(String pageCode) throws ApsSystemException {
+    public void setPageOnline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOnline(pageCode);
             this.getCacheWrapper().setPageOnline(pageCode);
         } catch (Throwable t) {
             _logger.error("Error updating a page as online", t);
-            throw new ApsSystemException("Error updating a page as online", t);
+            throw new EntException("Error updating a page as online", t);
         }
         this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_ONLINE);
     }
 
     @Override
-    public void setPageOffline(String pageCode) throws ApsSystemException {
+    public void setPageOffline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOffline(pageCode);
             this.getCacheWrapper().setPageOffline(pageCode);
         } catch (Throwable t) {
             _logger.error("Error updating a page as offline", t);
-            throw new ApsSystemException("Error updating a page as offline", t);
+            throw new EntException("Error updating a page as offline", t);
         }
         this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
     }
@@ -204,15 +203,15 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * otherwise to a lower level.
      * @return The result of the operation: false if the move request could not
      * be satisfied, true otherwise.
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
     @Override
-    public boolean movePage(String pageCode, boolean moveUp) throws ApsSystemException {
+    public boolean movePage(String pageCode, boolean moveUp) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
             if (null == currentPage) {
-                throw new ApsSystemException("The page '" + pageCode + "' does not exist!");
+                throw new EntException("The page '" + pageCode + "' does not exist!");
             }
             IPage parent = this.getDraftPage(currentPage.getParentCode());
             String[] sisterPageCodes = parent.getChildrenCodes();
@@ -232,7 +231,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             }
         } catch (Throwable t) {
             _logger.error("Error while moving  page {}", pageCode, t);
-            throw new ApsSystemException("Error while moving a page", t);
+            throw new EntException("Error while moving a page", t);
         }
         return resultOperation;
     }
@@ -242,9 +241,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      *
      * @param pageDown
      * @param pageUp
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
-    private void moveUpDown(String pageDown, String pageUp) throws ApsSystemException {
+    private void moveUpDown(String pageDown, String pageUp) throws EntException {
         try {
             IPage draftToMoveDown = this.getDraftPage(pageDown);
             IPage draftToMoveUp = this.getDraftPage(pageUp);
@@ -258,22 +257,22 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             }
         } catch (Throwable t) {
             _logger.error("Error while moving a page", t);
-            throw new ApsSystemException("Error while moving a page", t);
+            throw new EntException("Error while moving a page", t);
         }
     }
 
     @Override
-    public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws ApsSystemException {
+    public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
             if (null == currentPage) {
-                throw new ApsSystemException("The page '" + pageCode + "' does not exist!");
+                throw new EntException("The page '" + pageCode + "' does not exist!");
             }
             Widget[] widgets = currentPage.getWidgets();
             Widget currentWidget = widgets[frameToMove];
             if (null == currentWidget) {
-                throw new ApsSystemException("No widget found in frame '" + frameToMove + "' and page '" + pageCode + "'");
+                throw new EntException("No widget found in frame '" + frameToMove + "' and page '" + pageCode + "'");
             }
             boolean movementEnabled = isMovementEnabled(frameToMove, destFrame, widgets.length);
             if (!movementEnabled) {
@@ -289,7 +288,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, frameToMove, destFrame, PageChangedEvent.EVENT_TYPE_MOVE_WIDGET);
         } catch (Throwable t) {
             _logger.error("Error while moving widget. page {} from position {} to position {}", pageCode, frameToMove, destFrame, t);
-            throw new ApsSystemException("Error while moving a widget", t);
+            throw new EntException("Error while moving a widget", t);
         }
         return resultOperation;
     }
@@ -342,11 +341,11 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      *
      * @param pageCode the code of the page
      * @param pos The position in the page to free
-     * @throws ApsSystemException In case of error
+     * @throws EntException In case of error
      * @deprecated Use {@link #removeWidget(String,int)} instead
      */
     @Override
-    public void removeShowlet(String pageCode, int pos) throws ApsSystemException {
+    public void removeShowlet(String pageCode, int pos) throws EntException {
         this.removeWidget(pageCode, pos);
     }
 
@@ -355,10 +354,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      *
      * @param pageCode the code of the page
      * @param pos The position in the page to free
-     * @throws ApsSystemException In case of error
+     * @throws EntException In case of error
      */
     @Override
-    public void removeWidget(String pageCode, int pos) throws ApsSystemException {
+    public void removeWidget(String pageCode, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -373,7 +372,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error removing the widget from the page '" + pageCode + "' in the frame " + pos;
             _logger.error("Error removing the widget from the page '{}' in the frame {}", pageCode, pos, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
     }
 
@@ -381,11 +380,11 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @param pageCode
      * @param widget
      * @param pos
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
      */
     @Override
-    public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException {
+    public void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
         this.joinWidget(pageCode, widget, pos);
     }
 
@@ -397,13 +396,13 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @param pageCode the code of the page where to set the widget
      * @param widget The widget to set
      * @param pos The position where to place the widget in
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public void joinWidget(String pageCode, Widget widget, int pos) throws ApsSystemException {
+    public void joinWidget(String pageCode, Widget widget, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         if (null == widget || null == widget.getType()) {
-            throw new ApsSystemException("Invalid null value found in either the Widget or the widgetType");
+            throw new EntException("Invalid null value found in either the Widget or the widgetType");
         }
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -418,7 +417,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error during the assignation of a widget to the frame " + pos + " in the page code " + pageCode;
             _logger.error("Error during the assignation of a widget to the frame {} in the page code {}", pos, pageCode, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
     }
 
@@ -428,16 +427,16 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      *
      * @param pageCode The code of the page
      * @param pos The given position
-     * @throws ApsSystemException In case of database access error.
+     * @throws EntException In case of database access error.
      */
-    private void checkPagePos(String pageCode, int pos) throws ApsSystemException {
+    private void checkPagePos(String pageCode, int pos) throws EntException {
         IPage currentPage = this.getDraftPage(pageCode);
         if (null == currentPage) {
-            throw new ApsSystemException("The page '" + pageCode + "' does not exist!");
+            throw new EntException("The page '" + pageCode + "' does not exist!");
         }
         PageModel model = currentPage.getMetadata().getModel();
         if (pos < 0 || pos >= model.getFrames().length) {
-            throw new ApsSystemException("The Position '" + pos + "' is not defined in the model '" + model.getDescription() + "' of the page '" + pageCode + "'!");
+            throw new EntException("The Position '" + pos + "' is not defined in the model '" + model.getDescription() + "' of the page '" + pageCode + "'!");
         }
     }
 
@@ -473,7 +472,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public List<IPage> searchOnlinePages(String pageCodeToken, List<String> allowedGroups) throws ApsSystemException {
+    public List<IPage> searchOnlinePages(String pageCodeToken, List<String> allowedGroups) throws EntException {
         List<IPage> searchResult = new ArrayList<>();
         try {
             if (null == allowedGroups || allowedGroups.isEmpty()) {
@@ -484,13 +483,13 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error during searching pages online with token " + pageCodeToken;
             _logger.error("Error during searching online pages with token {}", pageCodeToken, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
         return searchResult;
     }
 
     @Override
-    public List<IPage> searchPages(String pageCodeToken, List<String> allowedGroups) throws ApsSystemException {
+    public List<IPage> searchPages(String pageCodeToken, List<String> allowedGroups) throws EntException {
         List<IPage> searchResult = new ArrayList<>();
         try {
             if (null == allowedGroups || allowedGroups.isEmpty()) {
@@ -501,7 +500,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error during searching pages with token " + pageCodeToken;
             _logger.error("Error during searching pages with token {}", pageCodeToken, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
         return searchResult;
     }
@@ -524,7 +523,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public List<IPage> getGroupUtilizers(String groupName) throws ApsSystemException {
+    public List<IPage> getGroupUtilizers(String groupName) throws EntException {
         List<IPage> pageUtilizers = new ArrayList<>();
         try {
             IPage root = this.getDraftRoot();
@@ -540,7 +539,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error during searching page utilizers of group " + groupName;
             _logger.error("Error during searching page utilizers of group {}", groupName, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
 
         return pageUtilizers;
@@ -566,30 +565,30 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public List<String> getOnlineWidgetUtilizerCodes(String widgetTypeCode) throws ApsSystemException {
+    public List<String> getOnlineWidgetUtilizerCodes(String widgetTypeCode) throws EntException {
         return this.getCacheWrapper().getOnlineWidgetUtilizers(widgetTypeCode);
     }
 
     @Override
-    public List<IPage> getOnlineWidgetUtilizers(String widgetTypeCode) throws ApsSystemException {
+    public List<IPage> getOnlineWidgetUtilizers(String widgetTypeCode) throws EntException {
         List<String> codes = this.getOnlineWidgetUtilizerCodes(widgetTypeCode);
         return codes.stream().map(code -> this.getOnlinePage(code)).collect(Collectors.toList());
     }
 
     @Override
-    public List<String> getDraftWidgetUtilizerCodes(String widgetTypeCode) throws ApsSystemException {
+    public List<String> getDraftWidgetUtilizerCodes(String widgetTypeCode) throws EntException {
         return this.getCacheWrapper().getDraftWidgetUtilizers(widgetTypeCode);
     }
 
     @Override
-    public List<IPage> getDraftWidgetUtilizers(String widgetTypeCode) throws ApsSystemException {
+    public List<IPage> getDraftWidgetUtilizers(String widgetTypeCode) throws EntException {
         List<String> codes = this.getDraftWidgetUtilizerCodes(widgetTypeCode);
         return codes.stream().map(code -> this.getDraftPage(code)).collect(Collectors.toList());
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List getPageModelUtilizers(String pageModelCode) throws ApsSystemException {
+    public List getPageModelUtilizers(String pageModelCode) throws EntException {
         List<IPage> pages = new ArrayList<>();
         try {
             if (null == pageModelCode) {
@@ -602,7 +601,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         } catch (Throwable t) {
             String message = "Error during searching page utilizers of page template with code " + pageModelCode;
             _logger.error("Error during searching page utilizers of page template with code {}", pageModelCode, t);
-            throw new ApsSystemException(message, t);
+            throw new EntException(message, t);
         }
         return pages;
     }
@@ -646,12 +645,12 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
     
     @Override
-	public boolean movePage(IPage currentPage, IPage newParent) throws ApsSystemException {
+	public boolean movePage(IPage currentPage, IPage newParent) throws EntException {
         return this.movePage(currentPage.getCode(), newParent.getCode());
     }
 
 	@Override
-	public boolean movePage(String pageCode, String newParentCode) throws ApsSystemException {
+	public boolean movePage(String pageCode, String newParentCode) throws EntException {
         IPage pageToMove = this.getDraftPage(pageCode);
         IPage newParent = this.getDraftPage(newParentCode);
 		boolean resultOperation = false;
@@ -674,13 +673,13 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             resultOperation = true;
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "movePage");
-            throw new ApsSystemException("Error while moving a page under a root node", t);
+            throw new EntException("Error while moving a page under a root node", t);
         }
         return resultOperation;
     }
 
     @Override
-    public List<IPage> loadLastUpdatedPages(int size) throws ApsSystemException {
+    public List<IPage> loadLastUpdatedPages(int size) throws EntException {
         List<IPage> pages = new ArrayList<>();
         try {
             List<String> paceCodes = this.getPageDAO().loadLastUpdatedPages(size);
@@ -694,7 +693,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadLastUpdatedPages");
-            throw new ApsSystemException("Error loading loadLastUpdatedPages", t);
+            throw new EntException("Error loading loadLastUpdatedPages", t);
         }
         return pages;
     }

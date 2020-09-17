@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
@@ -96,11 +96,11 @@ public interface IDataObjectManager extends IEntityManager {
      * @param onLine Specifica quale DataObject deve caricare, true carica il
      * DataObject online, false carica il contenuto libero.
      * @return Il DataObject OnLine.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
-    public DataObject loadDataObject(String id, boolean onLine) throws ApsSystemException;
+    public DataObject loadDataObject(String id, boolean onLine) throws EntException;
 
-    public DataObject loadDataObject(String id, boolean onLine, boolean cacheable) throws ApsSystemException;
+    public DataObject loadDataObject(String id, boolean onLine, boolean cacheable) throws EntException;
 
     /**
      * Restituisce un VO contenente le informazioni del record su db
@@ -108,9 +108,9 @@ public interface IDataObjectManager extends IEntityManager {
      *
      * @param id L'identificativo del DataObject.
      * @return L'oggetto VO corrispondente al DataObject cercato.
-     * @throws ApsSystemException In caso di errore in accesso al db.
+     * @throws EntException In caso di errore in accesso al db.
      */
-    public DataObjectRecordVO loadDataObjectVO(String id) throws ApsSystemException;
+    public DataObjectRecordVO loadDataObjectVO(String id) throws EntException;
 
     /**
      * Salva un DataObject sul DB. Il metodo viene utilizzato sia nel caso di
@@ -119,27 +119,27 @@ public interface IDataObjectManager extends IEntityManager {
      * nullo).
      *
      * @param dataObject Il DataObject da aggiungere o modificare.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
-    public void saveDataObject(DataObject dataObject) throws ApsSystemException;
+    public void saveDataObject(DataObject dataObject) throws EntException;
 
-    public void saveDataObjectAndContinue(DataObject dataObject) throws ApsSystemException;
+    public void saveDataObjectAndContinue(DataObject dataObject) throws EntException;
 
     /**
      * Save a DataObject in the DB.
      *
      * @param dataObject The DataObject to add.
-     * @throws ApsSystemException in case of error.
+     * @throws EntException in case of error.
      */
-    public void addDataObject(DataObject dataObject) throws ApsSystemException;
+    public void addDataObject(DataObject dataObject) throws EntException;
 
     /**
      * Inserisce il DataObject OnLine.
      *
      * @param dataObject Il DataObject da rendere visibile online.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
-    public void insertDataObject(DataObject dataObject) throws ApsSystemException;
+    public void insertDataObject(DataObject dataObject) throws EntException;
 
     /**
      * Rimuove un DataObject OnLine. L'operazione non cancella il DataObject ma
@@ -147,17 +147,17 @@ public interface IDataObjectManager extends IEntityManager {
      * ancora presente verrà messo in stato cancellato.
      *
      * @param content Il DataObject da rimuovere.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
-    public void removeDataObject(DataObject content) throws ApsSystemException;
+    public void removeDataObject(DataObject content) throws EntException;
 
     /**
      * Cancella un DataObject dal db.
      *
      * @param dataObject Il DataObject da cancellare.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
-    public void deleteDataObject(DataObject dataObject) throws ApsSystemException;
+    public void deleteDataObject(DataObject dataObject) throws EntException;
 
     /**
      * Carica una lista di identificativi di DataObject publici in base ai
@@ -173,13 +173,13 @@ public interface IDataObjectManager extends IEntityManager {
      * libero". Nel caso nella collezione sia presente il codice del gruppo
      * degli amministratori, non sarà applicato alcun il filtro sul gruppo.
      * @return La lista degli id dei DataObject cercati.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     public List<String> loadDataObjectsId(String dataType, String[] categories,
-            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws EntException;
 
     public List<String> loadDataObjectsId(String dataType, String[] categories, boolean orClauseCategoryFilter,
-            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws EntException;
 
     /**
      * Carica una lista di identificativi di DataObject publici in base ai
@@ -194,13 +194,13 @@ public interface IDataObjectManager extends IEntityManager {
      * libero". Nel caso nella collezione sia presente il codice del gruppo
      * degli amministratori, non sarà applicato alcun il filtro sul gruppo.
      * @return La lista degli id dei DataObject cercati.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     public List<String> loadDataObjectsId(String[] categories,
-            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws EntException;
 
     public List<String> loadDataObjectsId(String[] categories, boolean orClauseCategoryFilter,
-            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+            EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws EntException;
 
     public DataObjectsStatus getDataObjectsStatus();
 

@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.api;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import java.io.ByteArrayInputStream;
@@ -88,7 +88,7 @@ public class UnmarshalUtils {
             }
 		} catch (Throwable t) {
 			_logger.error("Error unmarshalling request body", t);
-			throw new ApsSystemException("Error unmarshalling request body", t);
+			throw new EntException("Error unmarshalling request body", t);
 		}
 		return bodyObject;
 	}

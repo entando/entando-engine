@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.i18n.inlinediting;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -57,7 +57,7 @@ public class ApiI18nLabelInterface extends org.entando.entando.aps.system.servic
                 this.getI18nManager().addLabelGroup(key, labelGroups);
                 _logger.info("*** ADD DONE *** -> {}", labelGroups);
             }
-        } catch (ApiException | ApsSystemException t) {
+        } catch (ApiException | EntException t) {
             _logger.error("Error updating label {} ", t);
             throw new ApiException("Error updating labels", t);
         }

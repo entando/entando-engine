@@ -32,7 +32,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
 
 /**
@@ -384,7 +384,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 						dataType = DATA_TYPE_NUMBER;
 					}
 					setValues(filter, props, dataType);
-				} else throw new ApsSystemException("ERROR: Entity type '" + prototype.getTypeCode() 
+				} else throw new EntException("ERROR: Entity type '" + prototype.getTypeCode()
 						+ "' and attribute '" + key + "' not recognized");
 			}
 			if (isDateAttribute) {
@@ -399,7 +399,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 			}
 			String order = props.getProperty(EntitySearchFilter.ORDER_PARAM);
 			filter.setOrder(order);
-		} catch (ApsSystemException | NumberFormatException t) {
+		} catch (EntException | NumberFormatException t) {
 			_logger.error("Error on creation of filter instance", t);
 			throw new RuntimeException("Error on creation of filter instance", t);
 		}

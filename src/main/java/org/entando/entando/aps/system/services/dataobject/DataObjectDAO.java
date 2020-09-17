@@ -34,7 +34,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
@@ -224,7 +224,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         this.addDataObjectRelationsRecord(dataobject, conn);
     }
 
-    protected void addDataObjectSearchRecord(String id, IApsEntity entity, Connection conn) throws ApsSystemException {
+    protected void addDataObjectSearchRecord(String id, IApsEntity entity, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(ADD_DATAOBJECT_SEARCH_RECORD);
@@ -237,11 +237,11 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    protected void updateDataObjectRecordForInsert(DataObject dataobject, Connection conn) throws ApsSystemException {
+    protected void updateDataObjectRecordForInsert(DataObject dataobject, Connection conn) throws EntException {
         this.updateDataObjectRecordForInsert(dataobject, true, conn);
     }
 
-    protected void updateDataObjectRecordForInsert(DataObject dataobject, boolean updateDate, Connection conn) throws ApsSystemException {
+    protected void updateDataObjectRecordForInsert(DataObject dataobject, boolean updateDate, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             int index = 1;
@@ -383,7 +383,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         super.executeDeleteEntity(entityId, conn);
     }
 
-    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat) throws ApsSystemException {
+    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat) throws EntException {
         if (dataobject.getCategories().size() > 0) {
             try {
                 Set<String> codes = new HashSet<String>();
@@ -426,7 +426,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    private void addGroupRelationsRecord(DataObject dataobject, PreparedStatement stat) throws ApsSystemException {
+    private void addGroupRelationsRecord(DataObject dataobject, PreparedStatement stat) throws EntException {
         try {
             dataobject.addGroup(dataobject.getMainGroup());
             Iterator<String> groupIter = dataobject.getGroups().iterator();
@@ -455,9 +455,9 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
      *
      * @param dataobject The current dataobject.
      * @param conn The connection to the database.
-     * @throws ApsSystemException when connection error are detected.
+     * @throws EntException when connection error are detected.
      */
-    protected void addDataObjectRelationsRecord(DataObject dataobject, Connection conn) throws ApsSystemException {
+    protected void addDataObjectRelationsRecord(DataObject dataobject, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(ADD_DATAOBJECT_REL_RECORD);
@@ -479,7 +479,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    protected void addDataObjectAttributeRoleRecord(String id, IApsEntity entity, String query, Connection conn) throws ApsSystemException {
+    protected void addDataObjectAttributeRoleRecord(String id, IApsEntity entity, String query, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(query);

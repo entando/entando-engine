@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.dataobjectmodel.cache;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelDAO;
 
@@ -27,7 +27,7 @@ public interface IDataObjectModelCacheWrapper {
 
     public static final String CODES_CACHE_NAME = "DataObjectModelManager_codes";
 
-    public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws ApsSystemException;
+    public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws EntException;
 
     public DataObjectModel getModel(String code);
 

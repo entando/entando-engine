@@ -24,12 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
@@ -51,7 +46,7 @@ public class ApiMyUserProfileInterface {
         } catch (Throwable t) {
         	_logger.error("Error extracting userprofile", t);
             //ApsSystemUtils.logThrowable(t, this, "getMyUserProfile");
-            throw new ApsSystemException("Error extracting userprofile", t);
+            throw new EntException("Error extracting userprofile", t);
         }
     }
     

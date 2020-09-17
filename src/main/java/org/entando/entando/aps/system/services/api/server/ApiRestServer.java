@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.api.server;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.role.Role;
@@ -310,7 +310,7 @@ public class ApiRestServer {
             } else if (apiMethod.getRequiredAuth()) {
                 throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
             }
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             _logger.error("System exception {}", ex);
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, ex.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }

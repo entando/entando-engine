@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.user;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -177,9 +177,9 @@ public class AuthenticationProviderManagerTest {
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void getUser_8() throws Exception {
-        when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new ApsSystemException("System error"));
+        when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
         this.authenticationProviderManager.getUser("test_user", "password");
     }
 
@@ -234,7 +234,7 @@ public class AuthenticationProviderManagerTest {
 
     @Test(expected = AuthenticationServiceException.class)
     public void failAuthenticate_serviceError() throws Exception {
-        when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new ApsSystemException("System error"));
+        when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("username", "password");
         try {
             Authentication auth = this.authenticationProviderManager.authenticate(authTest);
@@ -281,7 +281,7 @@ public class AuthenticationProviderManagerTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void failLoadUserByUsername_2() throws Exception {
-        when(this.userManager.getUser(Mockito.anyString())).thenThrow(new ApsSystemException("System error"));
+        when(this.userManager.getUser(Mockito.anyString())).thenThrow(new EntException("System error"));
         try {
             org.springframework.security.core.userdetails.UserDetails userDetails
                     = this.authenticationProviderManager.loadUserByUsername("username");

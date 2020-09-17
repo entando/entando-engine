@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.*;
 import com.agiletec.aps.util.ApsProperties;
@@ -272,7 +272,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         return bindingResult;
     }
 
-    protected BeanPropertyBindingResult validateDelete(PageModel pageModel) throws ApsSystemException {
+    protected BeanPropertyBindingResult validateDelete(PageModel pageModel) throws EntException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(pageModel, "pageModel");
         Map<String, List<Object>> references = this.getReferencingObjects(pageModel);
         if (references.size() > 0) {
@@ -308,7 +308,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<Object>> getReferencingObjects(PageModel pageModel) throws ApsSystemException {
+    public Map<String, List<Object>> getReferencingObjects(PageModel pageModel) throws EntException {
         Map<String, List<Object>> references = new HashMap<>();
         try {
             String[] defNames = applicationContext.getBeanNamesForType(PageModelUtilizer.class);
@@ -329,7 +329,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
                 }
             }
         } catch (Throwable t) {
-            throw new ApsSystemException("Error on getReferencingObjects methods", t);
+            throw new EntException("Error on getReferencingObjects methods", t);
         }
         return references;
     }
@@ -356,7 +356,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
                     }
                 }
             }
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("error loading references for pageModel {}", pageModel.getCode(), ex);
             throw new RestServerError("error in getReferencingObjects ", ex);
         }

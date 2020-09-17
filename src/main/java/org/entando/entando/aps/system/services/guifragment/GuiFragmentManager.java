@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.guifragment;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,19 +52,19 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
-    public GuiFragment getGuiFragment(String code) throws ApsSystemException {
+    public GuiFragment getGuiFragment(String code) throws EntException {
         GuiFragment guiFragment = null;
         try {
             guiFragment = this.getGuiFragmentDAO().loadGuiFragment(code);
         } catch (Throwable t) {
             logger.error("Error loading guiFragment with code '{}'", code, t);
-            throw new ApsSystemException("Error loading guiFragment with code: " + code, t);
+            throw new EntException("Error loading guiFragment with code: " + code, t);
         }
         return guiFragment;
     }
 
     @Override
-    public SearcherDaoPaginatedResult<GuiFragment> getGuiFragments(List<FieldSearchFilter> filters) throws ApsSystemException {
+    public SearcherDaoPaginatedResult<GuiFragment> getGuiFragments(List<FieldSearchFilter> filters) throws EntException {
         SearcherDaoPaginatedResult<GuiFragment> pagedResult = null;
         try {
             List<GuiFragment> fragments = new ArrayList<>();
@@ -77,18 +77,18 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             pagedResult = new SearcherDaoPaginatedResult<>(count, fragments);
         } catch (Throwable t) {
             logger.error("Error searching GuiFragments", t);
-            throw new ApsSystemException("Error searching GuiFragments", t);
+            throw new EntException("Error searching GuiFragments", t);
         }
         return pagedResult;
     }
 
     @Override
-    public List<String> getGuiFragments() throws ApsSystemException {
+    public List<String> getGuiFragments() throws EntException {
         return this.searchGuiFragments(null);
     }
 
     @Override
-    public List<String> searchGuiFragments(FieldSearchFilter[] filters) throws ApsSystemException {
+    public List<String> searchGuiFragments(FieldSearchFilter[] filters) throws EntException {
         List<String> guiFragments = null;
         try {
             FieldSearchFilter filter = new FieldSearchFilter("code");
@@ -97,7 +97,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             guiFragments = this.getGuiFragmentDAO().searchGuiFragments(filters);
         } catch (Throwable t) {
             logger.error("Error searching GuiFragments", t);
-            throw new ApsSystemException("Error searching GuiFragments", t);
+            throw new EntException("Error searching GuiFragments", t);
         }
         return guiFragments;
     }
@@ -117,40 +117,40 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
-    public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
+    public void addGuiFragment(GuiFragment guiFragment) throws EntException {
         try {
             this.getGuiFragmentDAO().insertGuiFragment(guiFragment);
             this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error adding GuiFragment", t);
-            throw new ApsSystemException("Error adding GuiFragment", t);
+            throw new EntException("Error adding GuiFragment", t);
         }
     }
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
-    public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
+    public void updateGuiFragment(GuiFragment guiFragment) throws EntException {
         try {
             this.getGuiFragmentDAO().updateGuiFragment(guiFragment);
             this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error updating GuiFragment", t);
-            throw new ApsSystemException("Error updating GuiFragment " + guiFragment, t);
+            throw new EntException("Error updating GuiFragment " + guiFragment, t);
         }
     }
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
-    public void deleteGuiFragment(String code) throws ApsSystemException {
+    public void deleteGuiFragment(String code) throws EntException {
         try {
             GuiFragment guiFragment = this.getGuiFragment(code);
             this.getGuiFragmentDAO().removeGuiFragment(code);
             this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.REMOVE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error deleting GuiFragment with code {}", code, t);
-            throw new ApsSystemException("Error deleting GuiFragment with code:" + code, t);
+            throw new EntException("Error deleting GuiFragment with code:" + code, t);
         }
     }
 
@@ -164,7 +164,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_uniqueByWidgetType_'.concat(#widgetTypeCode)")
     @CacheableInfo(groups = "'GuiFragment_uniqueByWidgetTypeGroup'")//TODO improve group handling
-    public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws ApsSystemException {
+    public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws EntException {
         GuiFragment guiFragment = null;
         try {
             List<String> fragmentCodes = this.getGuiFragmentCodesByWidgetType(widgetTypeCode);
@@ -176,7 +176,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             }
         } catch (Throwable t) {
             logger.error("Error loading guiFragment by widget '{}'", widgetTypeCode, t);
-            throw new ApsSystemException("Error loading guiFragment by widget " + widgetTypeCode, t);
+            throw new EntException("Error loading guiFragment by widget " + widgetTypeCode, t);
         }
         return guiFragment;
     }
@@ -184,7 +184,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_codesByWidgetType_'.concat(#widgetTypeCode)")
     @CacheableInfo(groups = "'GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
-    public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws ApsSystemException {
+    public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws EntException {
         List<String> codes = null;
         try {
             FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
@@ -193,13 +193,13 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             codes = this.searchGuiFragments(filters);
         } catch (Throwable t) {
             logger.error("Error loading fragments code by widget '{}'", widgetTypeCode, t);
-            throw new ApsSystemException("Error loading fragment codes by widget " + widgetTypeCode, t);
+            throw new EntException("Error loading fragment codes by widget " + widgetTypeCode, t);
         }
         return codes;
     }
 
     @Override
-    public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
+    public List getGuiFragmentUtilizers(String guiFragmentCode) throws EntException {
         List<GuiFragment> utilizers = new ArrayList<GuiFragment>();
         try {
             String strToSearch = "code=\"" + guiFragmentCode + "\"";
@@ -219,7 +219,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             }
         } catch (Throwable t) {
             logger.error("Error extracting utilizers", t);
-            throw new ApsSystemException("Error extracting utilizers", t);
+            throw new EntException("Error extracting utilizers", t);
         }
         return utilizers;
     }
@@ -235,7 +235,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
         return check;
     }
 
-    protected Set<String> searchFragments(String strToSearch, String column) throws ApsSystemException {
+    protected Set<String> searchFragments(String strToSearch, String column) throws EntException {
         FieldSearchFilter filterTag = new FieldSearchFilter(column, "<@wp.fragment", true);
         FieldSearchFilter[] filters1 = new FieldSearchFilter[]{filterTag};
         List<String> result1 = this.searchGuiFragments(filters1);
@@ -250,13 +250,13 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_pluginCodes'")
-    public List<String> loadGuiFragmentPluginCodes() throws ApsSystemException {
+    public List<String> loadGuiFragmentPluginCodes() throws EntException {
         List<String> codes = null;
         try {
             codes = this.getGuiFragmentDAO().loadGuiFragmentPluginCodes();
         } catch (Throwable t) {
             logger.error("Error loading guiFragment plugin codes", t);
-            throw new ApsSystemException("Error loading guiFragment plugin codes", t);
+            throw new EntException("Error loading guiFragment plugin codes", t);
         }
         return codes;
     }

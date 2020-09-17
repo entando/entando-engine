@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.init.cache.IInitializerManagerCacheWrapper;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -41,7 +41,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void should_uninstall_component() throws ApsSystemException, IOException {
+    public void should_uninstall_component() throws EntException, IOException {
         Component component = ComponentUtils.getEntandoComponent("test_component");
 
         when(beanFactory.getBeanNamesForType(DataSource.class)).thenReturn(new String[]{"portDataSource", "servDataSource"});

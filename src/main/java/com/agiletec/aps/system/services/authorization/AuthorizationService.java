@@ -19,13 +19,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.user.model.UserDto;
@@ -84,14 +82,14 @@ public class AuthorizationService implements IAuthorizationService, GroupService
                 usernames.stream().forEach(i -> {
                     try {
                         dtoList.add(this.getDtoBuilder().convert(this.getUserManager().getUser(i)));
-                    } catch (ApsSystemException e) {
+                    } catch (EntException e) {
                         logger.error("error loading {}", i, e);
 
                     }
                 });
             }
             return dtoList;
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading user references for group {}", groupCode, ex);
             throw new RestServerError("Error loading user references by group", ex);
         }
@@ -106,14 +104,14 @@ public class AuthorizationService implements IAuthorizationService, GroupService
                 usernames.stream().forEach(i -> {
                     try {
                         dtoList.add(this.getDtoBuilder().convert(this.getUserManager().getUser(i)));
-                    } catch (ApsSystemException e) {
+                    } catch (EntException e) {
                         logger.error("error loading {}", i, e);
 
                     }
                 });
             }
             return dtoList;
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading user references for role {}", roleCode, ex);
             throw new RestServerError("Error loading user references by role", ex);
         }

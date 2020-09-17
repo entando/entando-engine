@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.i18n.cache;
 
 import java.util.Map;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -27,7 +27,7 @@ public interface II18nManagerCacheWrapper {
 
     public static final String I18N_CODES_CACHE_NAME = "I18nManager_labelGroups";
 
-    public void initCache(II18nDAO i18nDAO) throws ApsSystemException;
+    public void initCache(II18nDAO i18nDAO) throws EntException;
 
     public Map<String, ApsProperties> getLabelGroups();
 

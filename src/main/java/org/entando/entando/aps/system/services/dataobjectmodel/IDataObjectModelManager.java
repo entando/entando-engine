@@ -18,7 +18,7 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
 
@@ -29,11 +29,11 @@ import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
  */
 public interface IDataObjectModelManager {
 
-    public void addDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    public void addDataObjectModel(DataObjectModel model) throws EntException;
 
-    public void removeDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    public void removeDataObjectModel(DataObjectModel model) throws EntException;
 
-    public void updateDataObjectModel(DataObjectModel model) throws ApsSystemException;
+    public void updateDataObjectModel(DataObjectModel model) throws EntException;
 
     public DataObjectModel getDataObjectModel(long dataObjectModelId);
 
@@ -45,8 +45,8 @@ public interface IDataObjectModelManager {
 
     public SmallDataType getDefaultUtilizer(long modelId);
 
-    public SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+    public SearcherDaoPaginatedResult<DataObjectModel> getDataObjectModels(List<FieldSearchFilter> fieldSearchFilters) throws EntException;
 
-    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws ApsSystemException;
+    public List<Long> searchDataObjectModels(FieldSearchFilter[] filters) throws EntException;
 
 }

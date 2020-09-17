@@ -23,7 +23,7 @@ import org.entando.entando.aps.system.init.util.ComponentLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -47,7 +47,7 @@ public class ComponentManager implements IComponentManager {
         }
     }
 
-    protected void loadComponents() throws ApsSystemException {
+    protected void loadComponents() throws EntException {
         try {
             ComponentLoader loader
                     = new ComponentLoader(this.getLocationPatterns(), this.getPostProcessClasses());
@@ -58,7 +58,7 @@ public class ComponentManager implements IComponentManager {
             this.setComponents(orderedComponents);
         } catch (Throwable t) {
             _logger.error("Error loading components definitions", t);
-            throw new ApsSystemException("Error loading components definitions", t);
+            throw new EntException("Error loading components definitions", t);
         }
     }
 

@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione
@@ -30,12 +30,12 @@ public interface IDataObjectSearchEngineManager extends IEntitySearchEngineManag
 	 * diverse ricerche sui DataObject.
 	 *
 	 * @return Il thread lanciato in esecuzione.
-	 * @throws ApsSystemException in caso di errore in inizializzazione
+	 * @throws EntException in caso di errore in inizializzazione
 	 * processo.
 	 */
-	public Thread startReloadDataObjectsReferences() throws ApsSystemException;
+	public Thread startReloadDataObjectsReferences() throws EntException;
 
-	public Thread startReloadDataObjectsReferences(String subDirectory) throws ApsSystemException;
+	public Thread startReloadDataObjectsReferences(String subDirectory) throws EntException;
 
 	/**
 	 * Return the service status id.

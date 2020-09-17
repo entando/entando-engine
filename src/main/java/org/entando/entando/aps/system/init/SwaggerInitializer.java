@@ -1,7 +1,7 @@
 package org.entando.entando.aps.system.init;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import org.entando.entando.aps.system.services.oauth2.OAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
@@ -29,12 +29,12 @@ public class SwaggerInitializer  implements ApplicationListener<ContextRefreshed
         try {
             ConsumerRecordVO swaggerConsumer = consumerManager.getConsumerRecord("swagger");
             if (swaggerConsumer == null) createSwaggerConsumer();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.warn("Can't configure Swagger.", e);
         }
     }
 
-    private void createSwaggerConsumer() throws ApsSystemException {
+    private void createSwaggerConsumer() throws EntException {
         logger.info("Creating Swagger consumer");
 
         ConsumerRecordVO swaggerConsumer;

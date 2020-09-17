@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.category;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.services.category.ICategoryService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
@@ -97,7 +97,7 @@ public class CategoryController {
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<CategoryDto>> addCategory(@Valid @RequestBody CategoryDto categoryRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<CategoryDto>> addCategory(@Valid @RequestBody CategoryDto categoryRequest, BindingResult bindingResult) throws EntException {
         //field validations
         this.getCategoryValidator().validate(categoryRequest, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -128,7 +128,7 @@ public class CategoryController {
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
     @RequestMapping(value = "/{categoryCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteCategory(@PathVariable String categoryCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteCategory(@PathVariable String categoryCode) throws EntException {
         logger.debug("Deleting category -> " + categoryCode);
         this.getCategoryService().deleteCategory(categoryCode);
         Map<String, String> payload = new HashMap<>();

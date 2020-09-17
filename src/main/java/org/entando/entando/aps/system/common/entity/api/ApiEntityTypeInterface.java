@@ -32,7 +32,7 @@ import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -53,7 +53,7 @@ public abstract class ApiEntityTypeInterface {
 		} catch (Throwable t) {
 			_logger.error("Error extracting entity type codes", t);
 			//ApsSystemUtils.logThrowable(t, this, "getEntityTypes");
-			throw new ApsSystemException("Error extracting entity type codes", t);
+			throw new EntException("Error extracting entity type codes", t);
 		}
 		return response;
 	}
@@ -73,7 +73,7 @@ public abstract class ApiEntityTypeInterface {
 		} catch (Throwable t) {
 			_logger.error("Error extracting entity type", t);
 			//ApsSystemUtils.logThrowable(t, this, "getEntityType");
-			throw new ApsSystemException("Error extracting entity type", t);
+			throw new EntException("Error extracting entity type", t);
 		}
 		return jaxbEntityType;
 	}
@@ -105,7 +105,7 @@ public abstract class ApiEntityTypeInterface {
 		} catch (Throwable t) {
 			_logger.error("Error extracting entity type", t);
 			//ApsSystemUtils.logThrowable(t, this, "getEntityType");
-			throw new ApsSystemException("Error extracting entity type", t);
+			throw new EntException("Error extracting entity type", t);
 		}
 		return response;
 	}
@@ -134,7 +134,7 @@ public abstract class ApiEntityTypeInterface {
 		} catch (Throwable t) {
 			_logger.error("Error updating entity type", t);
 			//ApsSystemUtils.logThrowable(t, this, "updateEntityType");
-			throw new ApsSystemException("Error updating entity type", t);
+			throw new EntException("Error updating entity type", t);
 		}
 		return response;
 	}
@@ -163,7 +163,7 @@ public abstract class ApiEntityTypeInterface {
 		} catch (Throwable t) {
 			_logger.error("Error deleting Entity type", t);
 			//ApsSystemUtils.logThrowable(t, this, "deleteEntityType");
-			throw new ApsSystemException("Error deleting Entity type", t);
+			throw new EntException("Error deleting Entity type", t);
 		}
 	}
 	

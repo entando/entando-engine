@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.cache.IPermissionCacheWrapper;
 import com.agiletec.aps.system.services.role.cache.IRoleCacheWrapper;
 import org.slf4j.Logger;
@@ -71,16 +71,16 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Rimuove un ruolo dal db e dalla mappa dei ruoli.
 	 *
 	 * @param role Oggetto di tipo Role relativo al ruolo da rimuovere.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void removeRole(Role role) throws ApsSystemException {
+	public void removeRole(Role role) throws EntException {
 		try {
 			this.getRoleDAO().deleteRole(role);
 			this.getRoleCacheWrapper().removeRole(role);
 		} catch (Throwable t) {
 			logger.error("Error while removing a role", t);
-			throw new ApsSystemException("Error while removing a role", t);
+			throw new EntException("Error while removing a role", t);
 		}
 	}
 
@@ -88,16 +88,16 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Aggiorna un ruolo sul db ed sulla mappa dei ruoli.
 	 *
 	 * @param role Il ruolo da aggiornare.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void updateRole(Role role) throws ApsSystemException {
+	public void updateRole(Role role) throws EntException {
 		try {
 			this.getRoleDAO().updateRole(role);
 			this.getRoleCacheWrapper().updateRole(role);
 		} catch (Throwable t) {
 			logger.error("Error while updating a role", t);
-			throw new ApsSystemException("Error while updating a role", t);
+			throw new EntException("Error while updating a role", t);
 		}
 	}
 
@@ -105,16 +105,16 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Aggiunge un ruolo al db ed alla mappa dei ruoli.
 	 *
 	 * @param role Oggetto di tipo Role relativo al ruolo da aggiungere.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void addRole(Role role) throws ApsSystemException {
+	public void addRole(Role role) throws EntException {
 		try {
 			this.getRoleDAO().addRole(role);
 			this.getRoleCacheWrapper().addRole(role);
 		} catch (Throwable t) {
 			logger.error("Error while adding a role", t);
-			throw new ApsSystemException("Error while adding a role", t);
+			throw new EntException("Error while adding a role", t);
 		}
 	}
 
@@ -147,10 +147,10 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Rimuove il permesso specificato dal db e dai ruoli.
 	 *
 	 * @param permissionName Il permesso da rimuovere dal ruolo.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void removePermission(String permissionName) throws ApsSystemException {
+	public void removePermission(String permissionName) throws EntException {
 		try {
 			this.getPermissionDAO().deletePermission(permissionName);
 			this.getPermissionCacheWrapper().removePermission(permissionName);
@@ -163,7 +163,7 @@ public class RoleManager extends AbstractService implements IRoleManager {
 			}
 		} catch (Throwable t) {
 			logger.error("Error while deleting permission {}", permissionName, t);
-			throw new ApsSystemException("Error while deleting a permission", t);
+			throw new EntException("Error while deleting a permission", t);
 		}
 	}
 
@@ -171,16 +171,16 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Aggiorna un permesso di autorizzazione nel db.
 	 *
 	 * @param permission Il permesso da aggiornare nel db.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void updatePermission(Permission permission) throws ApsSystemException {
+	public void updatePermission(Permission permission) throws EntException {
 		try {
 			this.getPermissionDAO().updatePermission(permission);
 			this.getPermissionCacheWrapper().updatePermission(permission);
 		} catch (Throwable t) {
 			logger.error("Error updating permission", t);
-			throw new ApsSystemException("Error while updating perrmission", t);
+			throw new EntException("Error while updating perrmission", t);
 		}
 	}
 
@@ -188,16 +188,16 @@ public class RoleManager extends AbstractService implements IRoleManager {
 	 * Aggiunge un permesso di autorizzazione nel db.
 	 *
 	 * @param permission Il permesso da aggiungere nel db.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void addPermission(Permission permission) throws ApsSystemException {
+	public void addPermission(Permission permission) throws EntException {
 		try {
 			this.getPermissionDAO().addPermission(permission);
 			this.getPermissionCacheWrapper().addPermission(permission);
 		} catch (Throwable t) {
 			logger.error("Error while adding a permission", t);
-			throw new ApsSystemException("Error while adding a permission", t);
+			throw new EntException("Error while adding a permission", t);
 		}
 	}
 

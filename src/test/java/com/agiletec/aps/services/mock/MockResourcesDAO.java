@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author M.Casari
@@ -32,9 +32,9 @@ public class MockResourcesDAO extends AbstractDAO {
     /**
      * 
      * @param descr Codice contenuto.
-     * @throws ApsSystemException In caso di errore nell'accesso al db.
+     * @throws EntException In caso di errore nell'accesso al db.
      */
-    public int deleteResource(String descr) throws ApsSystemException {
+    public int deleteResource(String descr) throws EntException {
     	Connection conn = null;
         PreparedStatement stat = null;
         int res = -1;

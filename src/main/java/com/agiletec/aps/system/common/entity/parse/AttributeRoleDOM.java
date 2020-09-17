@@ -22,7 +22,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Dom class parser of Attribute Role definitions.
@@ -30,7 +30,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class AttributeRoleDOM extends AbstractAttributeSupportObjectDOM {
 	
-	public Map<String, AttributeRole> extractRoles(String xml, String definitionPath) throws ApsSystemException {
+	public Map<String, AttributeRole> extractRoles(String xml, String definitionPath) throws EntException {
 		this.validate(xml, definitionPath);
 		Document document = this.decodeDOM(xml);
 		return this.extractRoles(document);

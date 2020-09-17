@@ -15,7 +15,7 @@ package org.entando.entando.web.activitystream;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -326,11 +326,11 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
         }
     }
 
-    private void deleteCommentsByRecordId(Integer i) throws ApsSystemException {
+    private void deleteCommentsByRecordId(Integer i) throws EntException {
         this.socialActivityStreamManager.getActionCommentRecords(i).forEach(k -> {
             try {
                 this.socialActivityStreamManager.deleteActionCommentRecord(k.getId(), i);
-            } catch (ApsSystemException e) {
+            } catch (EntException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

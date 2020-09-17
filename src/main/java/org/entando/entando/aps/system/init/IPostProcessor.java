@@ -16,13 +16,13 @@ package org.entando.entando.aps.system.init;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
  */
 public interface IPostProcessor {
 	
-	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, ApsSystemException;
+	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, EntException;
 	
 }

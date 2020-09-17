@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.userprofile;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +25,6 @@ import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.entity.validator.EntityValidator;
 import org.entando.entando.web.userprofile.validator.ProfileValidator;
 import org.slf4j.Logger;
@@ -99,7 +98,7 @@ public class ProfileController {
     private boolean userExists(String username) {
         try {
             return userManager.getUser(username) != null;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in checking user existence {}", username, e);
             throw new RestServerError("Error in loading user", e);
         }
@@ -110,7 +109,7 @@ public class ProfileController {
             IUserProfile userProfile = userProfileManager.getDefaultProfileType();
             userProfileManager.addProfile(username, userProfile);
             return userProfile;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in creating empty user profile {}", username, e);
             throw new RestServerError("Error in loading user", e);
         }

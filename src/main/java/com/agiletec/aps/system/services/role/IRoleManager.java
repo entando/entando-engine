@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.role;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per il servizio di gestione dei ruoli.
@@ -45,25 +45,25 @@ public interface IRoleManager {
      * Rimuove un ruolo.
      *
      * @param role Oggetto di tipo Role relativo al ruolo da rimuovere.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void removeRole(Role role) throws ApsSystemException;
+    public void removeRole(Role role) throws EntException;
 
     /**
      * Aggiorna un ruolo.
      *
      * @param role Il ruolo da aggiornare.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void updateRole(Role role) throws ApsSystemException;
+    public void updateRole(Role role) throws EntException;
 
     /**
      * Aggiunge un ruolo.
      *
      * @param role Oggetto di tipo Role relativo al ruolo da aggiungere.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void addRole(Role role) throws ApsSystemException;
+    public void addRole(Role role) throws EntException;
 
     /**
      * Restituisce la lista ordinata dei permessi di autorizzazione.
@@ -84,25 +84,25 @@ public interface IRoleManager {
      * Rimuove il permesso specificato e dai ruoli.
      *
      * @param permissionName Il permesso da rimuovere dal ruolo.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void removePermission(String permissionName) throws ApsSystemException;
+    public void removePermission(String permissionName) throws EntException;
 
     /**
      * Aggiorna un permesso di autorizzazione.
      *
      * @param permission Il permesso da aggiornare.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void updatePermission(Permission permission) throws ApsSystemException;
+    public void updatePermission(Permission permission) throws EntException;
 
     /**
      * Aggiunge un permesso di autorizzazione.
      *
      * @param permission Il permesso da aggiungere.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void addPermission(Permission permission) throws ApsSystemException;
+    public void addPermission(Permission permission) throws EntException;
 
     /**
      * Restituisce la lista di ruoli comprendente il permesso specificato.

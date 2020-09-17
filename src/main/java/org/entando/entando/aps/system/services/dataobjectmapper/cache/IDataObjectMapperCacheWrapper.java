@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPageManager;
 
 /**
@@ -24,7 +24,7 @@ public interface IDataObjectMapperCacheWrapper {
 	public static final String OBJECT_MAPPER_CACHE_NAME = "Entando_DataObjectPageMapperManager";
 	public static final String OBJECT_MAPPER_CACHE_KEY = "DataObjectMapper_mapper";
 
-	public void initCache(IPageManager pageManager) throws ApsSystemException;
+	public void initCache(IPageManager pageManager) throws EntException;
 
 	public String getPageCode(String dataId);
 

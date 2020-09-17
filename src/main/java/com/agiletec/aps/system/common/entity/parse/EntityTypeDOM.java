@@ -38,7 +38,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +70,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	private BeanFactory _beanFactory;
 
 	@Override
-	public List<SmallEntityType> extractSmallEntityTypes(String xml) throws ApsSystemException {
+	public List<SmallEntityType> extractSmallEntityTypes(String xml) throws EntException {
 		List<SmallEntityType> list = new ArrayList<>();
 		Document document = this.decodeDOM(xml);
 		List<Element> entityElements = document.getRootElement().getChildren();
@@ -85,19 +85,19 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 
 	@Override
 	public Map<String, IApsEntity> extractEntityTypes(String xml, Class entityClass,
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException {
 		Document document = this.initDom(xml, entityManagerName);
 		return this.doParsing(document, entityClass, entityDom);
 	}
 
 	@Override
 	public IApsEntity extractEntityType(String typeCode, String xml, Class entityClass,
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException {
 		Document document = this.initDom(xml, entityManagerName);
 		return this.doParsing(typeCode, document, entityClass, entityDom);
 	}
 
-	protected Document initDom(String xml, String entityManagerName) throws ApsSystemException {
+	protected Document initDom(String xml, String entityManagerName) throws EntException {
 		if (null != entityManagerName) {
 			ExtraAttributeLoader loader = new ExtraAttributeLoader();
 			Map<String, AttributeInterface> extraAttributes = loader.extractAttributes(this.getBeanFactory(), entityManagerName);
@@ -110,7 +110,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	}
 
 	@Override
-	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException {
+	public String getXml(Map<String, IApsEntity> entityTypes) throws EntException {
 		XMLOutputter out = new XMLOutputter();
 		Document document = new Document();
 		try {
@@ -128,13 +128,13 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			out.setFormat(format);
 		} catch (Throwable t) {
 			_logger.error("Error building xml", t);
-			throw new ApsSystemException("Error building xml", t);
+			throw new EntException("Error building xml", t);
 		}
 		return out.outputString(document);
 	}
 
 	@Override
-	public String getXml(IApsEntity entityType) throws ApsSystemException {
+	public String getXml(IApsEntity entityType) throws EntException {
 		XMLOutputter out = new XMLOutputter();
 		Document document = new Document();
 		try {
@@ -145,20 +145,20 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			out.setFormat(format);
 		} catch (Throwable t) {
 			_logger.error("Error building xml", t);
-			throw new ApsSystemException("Error building xml", t);
+			throw new EntException("Error building xml", t);
 		}
 		return out.outputString(document);
 	}
 
 	@Override
 	public IApsEntity extractEntityType(String entityTypeXml, Class entityClass,
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException {
 		try {
 			Document document = this.decodeDOM(entityTypeXml);
 			return this.doParsing(document.getRootElement(), entityClass, entityDom);
 		} catch (Throwable t) {
 			_logger.error("Error extracting single entity type from xml {}", entityTypeXml, t);
-			throw new ApsSystemException("Error extracting single entity type", t);
+			throw new EntException("Error extracting single entity type", t);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 		return typeElement;
 	}
 
-	private Document decodeDOM(String xmlText) throws ApsSystemException {
+	private Document decodeDOM(String xmlText) throws EntException {
 		Document doc = null;
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
@@ -189,7 +189,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 		try {
 			doc = builder.build(reader);
 		} catch (JDOMException | IOException ex) {
-			throw new ApsSystemException("Error while parsing: " + ex.getMessage(), ex);
+			throw new EntException("Error while parsing: " + ex.getMessage(), ex);
 		}
 		return doc;
 	}
@@ -206,9 +206,9 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 * @param entityDom L'elemento xml della definizione del singolo tipo di
 	 * entità.
 	 * @return The map of the Entity Types
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-	protected Map<String, IApsEntity> doParsing(Document document, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
+	protected Map<String, IApsEntity> doParsing(Document document, Class entityClass, IApsEntityDOM entityDom) throws EntException {
 		Map<String, IApsEntity> entityTypes = new HashMap<>();
 		List<Element> contentElements = document.getRootElement().getChildren();
 		for (int i = 0; i < contentElements.size(); i++) {
@@ -219,7 +219,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 		return entityTypes;
 	}
 
-	protected IApsEntity doParsing(String typeCode, Document document, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
+	protected IApsEntity doParsing(String typeCode, Document document, Class entityClass, IApsEntityDOM entityDom) throws EntException {
 		if (StringUtils.isEmpty(typeCode)) {
 			return null;
 		}
@@ -234,7 +234,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 		return null;
 	}
 
-	protected IApsEntity doParsing(Element element, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
+	protected IApsEntity doParsing(Element element, Class entityClass, IApsEntityDOM entityDom) throws EntException {
 		IApsEntity entity = null;
 		try {
 			entity = this.createEntityType(element, entityClass);
@@ -244,7 +244,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			_logger.debug("Entity Type '{}' defined", entity.getTypeCode());
 		} catch (Throwable t) {
 			_logger.error("Error extracting entity type", t);
-			throw new ApsSystemException("Configuration error of the Entity Type detected", t);
+			throw new EntException("Configuration error of the Entity Type detected", t);
 		}
 		return entity;
 	}
@@ -258,10 +258,10 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 *
 	 * @param entityType The entity type to map.
 	 * @param currentContentElem The XML that configures the Entity Type.
-	 * @throws ApsSystemException If errors are detected during the parsing
+	 * @throws EntException If errors are detected during the parsing
 	 * process.
 	 */
-	protected void fillEntityType(IApsEntity entityType, Element currentContentElem) throws ApsSystemException {
+	protected void fillEntityType(IApsEntity entityType, Element currentContentElem) throws EntException {
 		try {
 			if (null == currentContentElem.getChild("attributes")) {
 				return;
@@ -274,7 +274,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 				_logger.debug("The Attribute {} of type {} was successfully inserted in the Entity Type {}", attribute.getName(), attribute.getType(), entityType.getTypeCode());
 			}
 		} catch (Throwable t) {
-			throw new ApsSystemException("Configuration error of the Entity Type " + entityType.getTypeCode() + " detected", t);
+			throw new EntException("Configuration error of the Entity Type " + entityType.getTypeCode() + " detected", t);
 		}
 	}
 
@@ -285,9 +285,9 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 * @param entityElem The element of the Entity Type to initialize.
 	 * @param entityClass The class of the Entity Type.
 	 * @return The initialized Entity Type.
-	 * @throws ApsSystemException If parsing errors are detected.
+	 * @throws EntException If parsing errors are detected.
 	 */
-	protected IApsEntity createEntityType(Element entityElem, Class entityClass) throws ApsSystemException {
+	protected IApsEntity createEntityType(Element entityElem, Class entityClass) throws EntException {
 		try {
 			IApsEntity entity = (IApsEntity) entityClass.newInstance();
 			entity.setId(null);
@@ -296,8 +296,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			String typeDescr = this.extractXmlAttribute(entityElem, "typedescr", true);
 			entity.setTypeDescription(typeDescr);
 			return entity;
-		} catch (InstantiationException | IllegalAccessException | ApsSystemException t) {
-			throw new ApsSystemException("Error detected while creating a new entity", t);
+		} catch (InstantiationException | IllegalAccessException | EntException t) {
+			throw new EntException("Error detected while creating a new entity", t);
 		}
 	}
 
@@ -307,13 +307,13 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 *
 	 * @param attributeElem The element of the Attribute Type to generate.
 	 * @return The built attribute.
-	 * @throws ApsSystemException If parsing errors are detected.
+	 * @throws EntException If parsing errors are detected.
 	 */
-	private AttributeInterface createAttribute(Element attributeElem) throws ApsSystemException {
+	private AttributeInterface createAttribute(Element attributeElem) throws EntException {
 		String typeCode = this.extractXmlAttribute(attributeElem, "attributetype", true);
 		AttributeInterface attr = (AttributeInterface) getAttributeTypes().get(typeCode);
 		if (null == attr) {
-			throw new ApsSystemException("Wrong Attribute Type: " + typeCode + ", "
+			throw new EntException("Wrong Attribute Type: " + typeCode + ", "
 					+ "found in the tag <" + attributeElem.getName() + ">");
 		}
 		attr = (AttributeInterface) attr.getAttributePrototype();
@@ -332,13 +332,13 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 * @param attributeName The name of the requested attribute.
 	 * @param required Distinguish between mandatory and optional attributes.
 	 * @return The value of the requested attribute.
-	 * @throws ApsSystemException When a mandatory attribute is not found.
+	 * @throws EntException When a mandatory attribute is not found.
 	 */
 	protected String extractXmlAttribute(Element currElement, String attributeName,
-			boolean required) throws ApsSystemException {
+			boolean required) throws EntException {
 		String value = currElement.getAttributeValue(attributeName);
 		if (required && value == null) {
-			throw new ApsSystemException("Attribute '" + attributeName + "' not found in the tag <" + currElement.getName() + ">");
+			throw new EntException("Attribute '" + attributeName + "' not found in the tag <" + currElement.getName() + ">");
 		}
 		return value;
 	}

@@ -18,7 +18,7 @@ import org.jdom.Element;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -34,7 +34,7 @@ public abstract class AbstractTextAttribute extends AbstractAttribute implements
 	
 	@Override
 	@Deprecated (/** to guaranted compatibility with previsous version of jAPS 2.0.12 */)
-	public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
+	public void setAttributeConfig(Element attributeElement) throws EntException {
 		super.setAttributeConfig(attributeElement);
 		String maxLength = this.extractXmlAttribute(attributeElement, "maxlength", false);
 		if (null != maxLength) {

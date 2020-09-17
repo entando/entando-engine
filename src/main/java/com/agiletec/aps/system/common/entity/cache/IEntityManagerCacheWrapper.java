@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -23,7 +23,7 @@ public interface IEntityManagerCacheWrapper {
 	public static final String ENTITY_MANAGER_CACHE_NAME_PREFIX = "Entando_";
 	public static final String ENTITY_STATUS_CACHE_NAME = "EntityManager_status";
 
-	public void initCache(String managerName) throws ApsSystemException;
+	public void initCache(String managerName) throws EntException;
 
 	public Integer getEntityTypeStatus(String typeCode);
 

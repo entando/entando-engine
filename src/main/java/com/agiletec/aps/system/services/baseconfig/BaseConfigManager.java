@@ -22,7 +22,7 @@ import javax.servlet.ServletContext;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.cache.IConfigManagerCacheWrapper;
 import de.mkammerer.argon2.Argon2Factory;
 import java.util.HashMap;
@@ -88,17 +88,17 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
      *
      * @param itemName Il nome dell'item da aggiornare.
      * @param config La nuova configurazione.
-     * @throws ApsSystemException
+     * @throws EntException
      */
     @Override
-    public void updateConfigItem(String itemName, String config) throws ApsSystemException {
+    public void updateConfigItem(String itemName, String config) throws EntException {
         String version = this.getSystemParams().get(SystemConstants.INIT_PROP_CONFIG_VERSION);
         try {
             this.getConfigDAO().updateConfigItem(itemName, config, version);
             this.refresh();
         } catch (Throwable t) {
             logger.error("Error while updating item {}", itemName, t);
-            throw new ApsSystemException("Error while updating item", t);
+            throw new EntException("Error while updating item", t);
         }
     }
 
@@ -178,7 +178,7 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
     }
 
     @Override
-    public void updateParam(String name, String value) throws ApsSystemException {
+    public void updateParam(String name, String value) throws EntException {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(value)) {
             return;
         }
@@ -188,7 +188,7 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
     }
 
     @Override
-    public void updateParams(Map<String, String> params) throws ApsSystemException {
+    public void updateParams(Map<String, String> params) throws EntException {
         if (null == params) {
             return;
         }
@@ -198,7 +198,7 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
             this.updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
         } catch (Exception e) {
             logger.error("Error while updating parameters {}", params, e);
-            throw new ApsSystemException("Error while updating parameters", e);
+            throw new EntException("Error while updating parameters", e);
         }
     }
 

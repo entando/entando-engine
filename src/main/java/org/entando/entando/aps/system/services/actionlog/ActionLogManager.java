@@ -21,7 +21,7 @@ import java.util.Set;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -57,7 +57,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
     }
 
     @Override
-    public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException {
+    public void addActionRecord(ActionLogRecord actionRecord) throws EntException {
         try {
             ActionLogAppenderThread thread = new ActionLogAppenderThread(actionRecord, this);
             String threadName = LOG_APPENDER_THREAD_NAME_PREFIX + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
@@ -65,21 +65,21 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
             thread.start();
         } catch (Throwable t) {
             _logger.error("Error adding an actionlogger record", t);
-            throw new ApsSystemException("Error adding an actionlogger record", t);
+            throw new EntException("Error adding an actionlogger record", t);
         }
     }
 
     @Override
-    public void updateRecordDate(int id) throws ApsSystemException {
+    public void updateRecordDate(int id) throws EntException {
         try {
             this.getActionLogDAO().updateRecordDate(id);
         } catch (Throwable t) {
             _logger.error("Error updating data record", t);
-            throw new ApsSystemException("Error updating data record", t);
+            throw new EntException("Error updating data record", t);
         }
     }
 
-    protected synchronized void addActionRecordByThread(ActionLogRecord actionRecord) throws ApsSystemException {
+    protected synchronized void addActionRecordByThread(ActionLogRecord actionRecord) throws EntException {
         try {
             Integer key = null;
             List<Integer> ids = null;
@@ -94,35 +94,35 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
             this.getActionLogDAO().addActionRecord(actionRecord);
         } catch (Throwable t) {
             _logger.error("Error adding an actionlogger record", t);
-            throw new ApsSystemException("Error adding an actionlogger record", t);
+            throw new EntException("Error adding an actionlogger record", t);
         }
     }
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
-    public void deleteActionRecord(int id) throws ApsSystemException {
+    public void deleteActionRecord(int id) throws EntException {
         try {
             this.getActionLogDAO().deleteActionRecord(id);
         } catch (Throwable t) {
             _logger.error("Error deleting the actionlogger record: {}", id, t);
-            throw new ApsSystemException("Error deleting the actionlogger record: " + id, t);
+            throw new EntException("Error deleting the actionlogger record: " + id, t);
         }
     }
 
     @Override
-    public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException {
+    public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws EntException {
         List<Integer> records = new ArrayList<>();
         try {
             records = this.getActionLogDAO().getActionRecords(searchBean);
         } catch (Throwable t) {
             _logger.error("Error loading actionlogger records", t);
-            throw new ApsSystemException("Error loading actionlogger records", t);
+            throw new EntException("Error loading actionlogger records", t);
         }
         return records;
     }
 
     @Override
-    public SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException {
+    public SearcherDaoPaginatedResult<ActionLogRecord> getPaginatedActionRecords(IActionLogRecordSearchBean searchBean) throws EntException {
         SearcherDaoPaginatedResult<ActionLogRecord> pagedResult = null;
         try {
             List<ActionLogRecord> actionLogRecords = new ArrayList<>();
@@ -134,31 +134,31 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
             pagedResult = new SearcherDaoPaginatedResult<>(count, actionLogRecords);
         } catch (Throwable t) {
             _logger.error("Error searching ActionLogRecord", t);
-            throw new ApsSystemException("Error searching ActionLogRecord", t);
+            throw new EntException("Error searching ActionLogRecord", t);
         }
         return pagedResult;
     }
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
-    public ActionLogRecord getActionRecord(int id) throws ApsSystemException {
+    public ActionLogRecord getActionRecord(int id) throws EntException {
         ActionLogRecord record = null;
         try {
             record = this.getActionLogDAO().getActionRecord(id);
         } catch (Throwable t) {
             _logger.error("Error loading actionlogger record with id: {}", id, t);
-            throw new ApsSystemException("Error loading actionlogger record with id: " + id, t);
+            throw new EntException("Error loading actionlogger record with id: " + id, t);
         }
         return record;
     }
     
     @Override
-    public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException {
+    public List<Integer> getActivityStream(List<String> userGroupCodes) throws EntException {
         return this.getActivityStream(null, userGroupCodes);
     }
     
     @Override
-    public List<Integer> getActivityStream(FieldSearchFilter[] filters, List<String> userGroupCodes) throws ApsSystemException {
+    public List<Integer> getActivityStream(FieldSearchFilter[] filters, List<String> userGroupCodes) throws EntException {
         if (null == filters) {
             filters = new FieldSearchFilter[0];
         }
@@ -183,7 +183,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
             }
         } catch (Throwable t) {
             _logger.error("Error loading activity stream records", t);
-            throw new ApsSystemException("Error loading activity stream records", t);
+            throw new EntException("Error loading activity stream records", t);
         }
         return recordIds;
     }
@@ -199,18 +199,18 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
     }
 
     @Override
-    public List<Integer> getActivityStream(FieldSearchFilter[] filters, UserDetails loggedUser) throws ApsSystemException {
+    public List<Integer> getActivityStream(FieldSearchFilter[] filters, UserDetails loggedUser) throws EntException {
         List<String> userGroupCodes = this.extractUserGroupCodes(loggedUser);
         return this.getActivityStream(filters, userGroupCodes);
     }
 
     @Override
-    public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException {
+    public List<Integer> getActivityStream(UserDetails loggedUser) throws EntException {
         return this.getActivityStream(null, loggedUser);
     }
 
     @Override
-    public Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException {
+    public Date lastUpdateDate(UserDetails loggedUser) throws EntException {
         Date lastUpdate = new Date();
         try {
             ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
@@ -219,7 +219,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
             lastUpdate = this.getActionLogDAO().getLastUpdate(searchBean);
         } catch (Throwable t) {
             _logger.error("Error on loading updated activities", t);
-            throw new ApsSystemException("Error on loading updated activities", t);
+            throw new EntException("Error on loading updated activities", t);
         }
         return lastUpdate;
     }
@@ -238,13 +238,13 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
     }
 
     @Override
-    public Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup) throws ApsSystemException {
+    public Set<Integer> extractOldRecords(Integer maxActivitySizeByGroup) throws EntException {
         Set<Integer> actionRecordIds = null;
         try {
             actionRecordIds = this.getActionLogDAO().extractOldRecords(maxActivitySizeByGroup);
         } catch (Throwable t) {
             _logger.error("Error extracting old records", t);
-            throw new ApsSystemException("Error extracting old records", t);
+            throw new EntException("Error extracting old records", t);
         }
         return actionRecordIds;
     }

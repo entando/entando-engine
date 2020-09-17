@@ -30,7 +30,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -285,7 +285,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         }
     }
     
-    private void setPageWidgets(String pageCode, int frame, Widget widget) throws ApsSystemException {
+    private void setPageWidgets(String pageCode, int frame, Widget widget) throws EntException {
         IPage page = this._pageManager.getDraftPage(pageCode);
         page.getWidgets()[frame] = widget;
         this._pageManager.updatePage(page);

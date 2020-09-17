@@ -26,7 +26,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -157,7 +157,7 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
 		return birthdate;
 	}
 	
-	public void testRemoveInsesistentUser() throws ApsSystemException {
+	public void testRemoveInsesistentUser() throws EntException {
 		assertNull(this.profileManager.getProfile("missing_user"));
 		this.profileManager.deleteProfile("missing_user");
 	}

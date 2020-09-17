@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.guifragment;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.HashMap;
@@ -122,7 +122,7 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> addGuiFragment(@Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> addGuiFragment(@Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest, BindingResult bindingResult) throws EntException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -157,7 +157,7 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteGuiFragment(@PathVariable String fragmentCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteGuiFragment(@PathVariable String fragmentCode) throws EntException {
         logger.info("deleting {}", fragmentCode);
         this.getGuiFragmentService().removeGuiFragment(fragmentCode);
         Map<String, String> result = new HashMap<>();
@@ -167,7 +167,7 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/info/plugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<String>>> getPluginCodes() throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<List<String>>> getPluginCodes() throws EntException {
         logger.info("loading plugin list");
         List<String> plugins = this.getGuiFragmentService().getPluginCodes();
 

@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.widgettype.cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class WidgetTypeManagerCacheWrapper extends AbstractGenericCacheWrapper<W
     private static final Logger _logger = LoggerFactory.getLogger(WidgetTypeManagerCacheWrapper.class);
 
     @Override
-    public void initCache(IWidgetTypeDAO widgetTypeDAO) throws ApsSystemException {
+    public void initCache(IWidgetTypeDAO widgetTypeDAO) throws EntException {
         try {
             Cache cache = this.getCache();
             Map<String, WidgetType> widgetTypes = widgetTypeDAO.loadWidgetTypes();
@@ -47,7 +47,7 @@ public class WidgetTypeManagerCacheWrapper extends AbstractGenericCacheWrapper<W
             this.insertAndCleanCache(cache, widgetTypes);
         } catch (Throwable t) {
             _logger.error("Error loading widgets types", t);
-            throw new ApsSystemException("Error loading widgets types", t);
+            throw new EntException("Error loading widgets types", t);
         }
     }
 
