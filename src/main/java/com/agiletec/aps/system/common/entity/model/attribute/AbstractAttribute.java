@@ -237,12 +237,17 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
+
             if (null != attributeElement.getChild("names") && null != attributeElement.getChild("names").getChild("properties")) {
                 String namesXml = (new XMLOutputter()).outputString(attributeElement.getChild("names").getChild("properties"));
                 ApsProperties names = new ApsProperties();
                 names.loadFromXml(namesXml);
                 this.setNames(names);
             }
+
+            fallbackFromNamesToName();
+            fallbackFromNameToNames();
+
             String description = this.extractXmlAttribute(attributeElement, "description", false);
             this.setDescription(description);
             String searchable = this.extractXmlAttribute(attributeElement, "searchable", false);
@@ -289,6 +294,24 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
                     + this.getName() + "' type '" + this.getType() + "'";
             _logger.error("Error detected while creating the attribute config '{}' type '{}'", this.getName(), this.getType(), t);
             throw new RuntimeException(message, t);
+        }
+    }
+
+    private void fallbackFromNameToNames() {
+        if (null != this.getName() && (null == this.getNames() || this.getNames().size() == 0)) {
+            ApsProperties names = new ApsProperties();
+            names.put(_langManager.getDefaultLang().getCode(), this.getName());
+            this.setNames(names);
+        }
+    }
+
+    private void fallbackFromNamesToName() {
+        if (null == this.getName() && null != this.getNames() && this.getNames().size() > 0) {
+            String defaultName = (String)this.getNames().get(_langManager.getDefaultLang().getCode());
+            if (null == defaultName) {
+                defaultName = (String)getNames().get(0);
+            }
+            this.setName(defaultName);
         }
     }
 

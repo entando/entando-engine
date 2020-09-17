@@ -19,6 +19,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.system.common.entity.model.attribute.util.*;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.beanutils.*;
 import org.apache.commons.lang.ArrayUtils;
@@ -54,6 +55,9 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private BeanFactory beanFactory;
+
+    @Autowired
+    protected ILangManager languageManager;
 
     @Autowired
     private List<IEntityManager> entityManagers;
@@ -277,8 +281,10 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         attribute.setName(attributeDto.getCode());
         ApsProperties names = new ApsProperties();
         names.putAll(attributeDto.getNames());
-        attribute.setNames(names);
-        attribute.setDescription(attributeDto.getName());
+
+        setDescriptionWithFallbackFromNames(attribute, attributeDto, names);
+        setNamesWithFallbackFromDescription(attribute, names);
+
         attribute.setIndexingType(attributeDto.isIndexable() ? IndexableAttributeInterface.INDEXING_TYPE_TEXT : null);
         List<AttributePropertyDto> dtoRoles = attributeDto.getRoles();
         if (!CollectionUtils.isEmpty(dtoRoles)) {
@@ -323,6 +329,26 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             }
         }
         return attribute;
+    }
+
+    private void setNamesWithFallbackFromDescription(AttributeInterface attribute, ApsProperties names) {
+        if (null != attribute.getDescription() && names.size() == 0) {
+            names.put(languageManager.getDefaultLang().getCode(), attribute.getDescription());
+        }
+        attribute.setNames(names);
+    }
+
+    private void setDescriptionWithFallbackFromNames(AttributeInterface attribute, EntityTypeAttributeFullDto attributeDto, ApsProperties names) {
+        String description = attributeDto.getName();
+
+        if (null == description && names.size() > 0) {
+            String defaultLangCode = languageManager.getDefaultLang().getCode();
+            description = (String)names.get(defaultLangCode);
+            if (null == description) {
+                description = (String)names.get(0);
+            }
+        }
+        attribute.setDescription(description);
     }
 
     protected void deleteEntityType(String entityManagerCode, String entityTypeCode) {
