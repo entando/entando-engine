@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.baseconfig;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.Map;
 
 /**
@@ -48,9 +48,9 @@ public interface ConfigInterface {
      *
      * @param name Il codice della voceda aggiornare.
      * @param config Il testo della voce di configurazione da aggiornare.
-     * @throws ApsSystemException In caso di errore nell'aggiornamento
+     * @throws EntException In caso di errore nell'aggiornamento
      */
-    public void updateConfigItem(String name, String config) throws ApsSystemException;
+    public void updateConfigItem(String name, String config) throws EntException;
 
     /**
      * Restituisce un parametro di configurazione. Un parametro è una stringa
@@ -61,9 +61,9 @@ public interface ConfigInterface {
      */
     public String getParam(String name);
 
-    public void updateParam(String name, String value) throws ApsSystemException;
+    public void updateParam(String name, String value) throws EntException;
 
-    public void updateParams(Map<String, String> params) throws ApsSystemException;
+    public void updateParams(Map<String, String> params) throws EntException;
 
     public boolean areLegacyPasswordsUpdated();
 

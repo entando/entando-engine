@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -120,7 +120,7 @@ public class ActivityStreamService implements IActivityStreamService {
             this.getSocialActivityStreamManager().editActionLikeRecord(recordId, userDetails.getUsername(), true);
             ActionLogRecordDto dto = getFullDto(recordId);
             return dto;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error add add like for id {}", recordId, t);
             throw new RestServerError("error in add like ", t);
         }
@@ -151,7 +151,7 @@ public class ActivityStreamService implements IActivityStreamService {
                     this.getSocialActivityStreamManager().getActionLikeRecords(recordId),
                     this.getSocialActivityStreamManager().getActionCommentRecords(recordId));
             return dto;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in add comment for id {}", commentRequest.getRecordId(), t);
             throw new RestServerError("error in add comment", t);
         }
@@ -177,7 +177,7 @@ public class ActivityStreamService implements IActivityStreamService {
         }
     }
 
-    protected ActionLogRecordDto getFullDto(int recordId) throws ApsSystemException {
+    protected ActionLogRecordDto getFullDto(int recordId) throws EntException {
         ActionLogRecordDto dto = this.getDtoBuilder().toDto(this.getActionLogManager().getActionRecord(recordId),
                 this.getSocialActivityStreamManager().getActionLikeRecords(recordId),
                 this.getSocialActivityStreamManager().getActionCommentRecords(recordId));

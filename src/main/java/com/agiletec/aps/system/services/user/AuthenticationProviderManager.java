@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -55,20 +55,20 @@ public class AuthenticationProviderManager extends AbstractService
     }
 
     @Override
-    public UserDetails getUser(String username) throws ApsSystemException {
+    public UserDetails getUser(String username) throws EntException {
         return this.extractUser(username, null);
     }
 
     @Override
-    public UserDetails getUser(String username, String password) throws ApsSystemException {
+    public UserDetails getUser(String username, String password) throws EntException {
         return this.extractUser(username, password);
     }
 
-    protected UserDetails extractUser(String username, String password) throws ApsSystemException {
+    protected UserDetails extractUser(String username, String password) throws EntException {
         return this.extractUser(username, password, true);
     }
 
-    protected UserDetails extractUser(String username, String password, boolean addToken) throws ApsSystemException {
+    protected UserDetails extractUser(String username, String password, boolean addToken) throws EntException {
         UserDetails user = null;
         try {
             if (null == password) {
@@ -98,12 +98,12 @@ public class AuthenticationProviderManager extends AbstractService
             }
         } catch (Exception e) {
             logger.error("Error detected during the authentication of the user '{}'", username, e);
-            throw new ApsSystemException("Error detected during the authentication of the user " + username, e);
+            throw new EntException("Error detected during the authentication of the user " + username, e);
         }
         return user;
     }
 
-    protected void addUserAuthorizations(UserDetails user) throws ApsSystemException {
+    protected void addUserAuthorizations(UserDetails user) throws EntException {
         if (null == user) {
             return;
         }
@@ -154,7 +154,7 @@ public class AuthenticationProviderManager extends AbstractService
                     "", !localUser.isDisabled(), localUser.isAccountNotExpired(),
                     localUser.isCredentialsNotExpired(), true, localUser.getAuthorizations());
             return user;
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error extracting user {}", username, ex);
             throw new UsernameNotFoundException("Error extracting user " + username, ex);
         }

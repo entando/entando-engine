@@ -26,7 +26,7 @@ import javax.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Abstract config Loader Class.
@@ -55,7 +55,7 @@ public abstract class AbstractConfigLoader {
 		} catch (Throwable t) {
 			_logger.error("Error loading definition paths", t);
 			//ApsSystemUtils.logThrowable(t, this, "loadDefinitionPaths", "Error loading definition paths");
-			throw new ApsSystemException("Error loading definition paths", t);
+			throw new EntException("Error loading definition paths", t);
 		}
 		return filenames;
 	}

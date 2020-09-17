@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.util.FileTextReader;
+import java.security.SecureRandom;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
@@ -32,7 +33,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -91,7 +91,7 @@ public class FileBrowserService implements IFileBrowserService {
         try {
             String[] sections = currentPath.split("/");
             InputStream stream = this.getStorageManager().getStream(currentPath, protectedFolder);
-            tempFile = FileTextReader.createTempFile(new Random().nextInt(100) + sections[sections.length - 1], stream);
+            tempFile = FileTextReader.createTempFile(new SecureRandom().nextInt(100) + sections[sections.length - 1], stream);
             bytes = FileTextReader.fileToByteArray(tempFile);
         } catch (Throwable t) {
             logger.error("error extracting stream for path {} - type {}", currentPath, protectedFolder);

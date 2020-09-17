@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
@@ -29,24 +29,24 @@ public interface IEntitySearchEngineManager extends ISearchEngineManager {
 	/**
      * Aggiorna le indicizzazioni relative ad una entità.
      * @param entity L'entità di cui aggiornare le indicizzazioni.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
-    public void updateIndexedEntity(IApsEntity entity) throws ApsSystemException;
+    public void updateIndexedEntity(IApsEntity entity) throws EntException;
     
     /**
      * Cancella una entità in base all'identificativo.
      * @param entityId L'identificativo dell'entità.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
-    public void deleteIndexedEntity(String entityId) throws ApsSystemException;
+    public void deleteIndexedEntity(String entityId) throws EntException;
     
     /**
      * Aggiunge un documento relativo ad una entità 
      * nel db del motore di ricerca.
      * @param entity Il contenuto da cui estrarre il documento.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
-    public void addEntityToIndex(IApsEntity entity) throws ApsSystemException;
+    public void addEntityToIndex(IApsEntity entity) throws EntException;
     
     /**
      * Ricerca una lista di identificativi di entità in base 
@@ -57,10 +57,10 @@ public interface IEntitySearchEngineManager extends ISearchEngineManager {
      * se fosse "Venice OR Amsterdam".
      * @param allowedGroups I gruppi autorizzati alla visualizzazione.
 	 * @return La lista di identificativi di entità.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
 	public List<String> searchEntityId(String langCode, 
-			String word, Collection<String> allowedGroups) throws ApsSystemException;
+			String word, Collection<String> allowedGroups) throws EntException;
 	/*
 	public List<String> searchEntityId(SearchEngineFilter[] filters, 
 			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;

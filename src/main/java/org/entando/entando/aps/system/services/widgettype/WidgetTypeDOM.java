@@ -26,7 +26,7 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
@@ -40,19 +40,19 @@ public class WidgetTypeDOM {
 	/**
 	 * Costruttore della classe.
 	 * @param xmlText La stringa xml da interpretare.
-	 * @throws ApsSystemException In caso di errore 
+	 * @throws EntException In caso di errore
 	 * nell'interpretazione dell'xml di configurazione.
 	 */
-	public WidgetTypeDOM(String xmlText) throws ApsSystemException {
+	public WidgetTypeDOM(String xmlText) throws EntException {
 		this.decodeDOM(xmlText);
 	}
 	
-	public WidgetTypeDOM(String xmlText, List<Lang> langs) throws ApsSystemException {
+	public WidgetTypeDOM(String xmlText, List<Lang> langs) throws EntException {
 		this.decodeDOM(xmlText);
 		this.setLangs(langs);
 	}
 	
-	public WidgetTypeDOM(List<WidgetTypeParameter> parameters, String action) throws ApsSystemException {
+	public WidgetTypeDOM(List<WidgetTypeParameter> parameters, String action) throws EntException {
 		this.setDoc(new Document());
 		Element root = new Element("config");
 		if (null != parameters && parameters.size() > 0) {
@@ -141,7 +141,7 @@ public class WidgetTypeDOM {
 		return out.outputString(this.getDoc());
 	}
 	
-	private void decodeDOM(String xmlText) throws ApsSystemException {
+	private void decodeDOM(String xmlText) throws EntException {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
 		StringReader reader = new StringReader(xmlText);
@@ -150,7 +150,7 @@ public class WidgetTypeDOM {
 		} catch (Throwable t) {
 			_logger.error("Error detected while parsing the XML {}", xmlText, t);
 			//ApsSystemUtils.logThrowable(t, this, "decodeDOM");
-			throw new ApsSystemException("Error detected while parsing the XML", t);
+			throw new EntException("Error detected while parsing the XML", t);
 		}
 	}
 	

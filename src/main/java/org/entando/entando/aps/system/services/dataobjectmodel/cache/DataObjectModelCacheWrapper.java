@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelDAO;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class DataObjectModelCacheWrapper extends AbstractGenericCacheWrapper<Dat
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
-	public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws ApsSystemException {
+	public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -39,7 +39,7 @@ public class DataObjectModelCacheWrapper extends AbstractGenericCacheWrapper<Dat
 			super.insertObjectsOnCache(cache, modelsMap);
 		} catch (Throwable t) {
 			logger.error("Error bootstrapping data object models map cache", t);
-			throw new ApsSystemException("Error bootstrapping data object models map cache", t);
+			throw new EntException("Error bootstrapping data object models map cache", t);
 		}
 	}
 

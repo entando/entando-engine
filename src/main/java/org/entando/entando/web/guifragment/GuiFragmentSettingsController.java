@@ -14,7 +14,7 @@
 package org.entando.entando.web.guifragment;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.role.Permission;
 import java.util.HashMap;
@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.guifragment.model.GuiFragmentSettingsBody;
 import org.slf4j.Logger;
@@ -74,7 +73,7 @@ public class GuiFragmentSettingsController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest, BindingResult bindingResult) throws EntException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);

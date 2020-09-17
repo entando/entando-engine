@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.role.cache;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IPermissionDAO;
 import com.agiletec.aps.system.services.role.Permission;
 
@@ -27,7 +27,7 @@ public interface IPermissionCacheWrapper {
 	public static final String PERMISSION_CACHE_NAME_PREFIX = "RoleManager_permission_";
 	public static final String PERMISSION_CODES_CACHE_NAME = "RoleManager_permissions";
 
-	public void initCache(IPermissionDAO permissionDAO) throws ApsSystemException;
+	public void initCache(IPermissionDAO permissionDAO) throws EntException;
 
 	public List<Permission> getPermissions();
 

@@ -27,7 +27,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.cache.ICategoryManagerCacheWrapper;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.DateConverter;
@@ -53,7 +53,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		_logger.debug("{} initialized", this.getClass().getName());
 	}
 
-	private void initCache() throws ApsSystemException {
+	private void initCache() throws EntException {
 		this.getCacheWrapper().initCache(this.getCategoryDAO(), this.getLangManager());
 	}
 
@@ -61,16 +61,16 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	 * Aggiunge una categoria al db.
 	 *
 	 * @param category La categoria da aggiungere.
-	 * @throws ApsSystemException In caso di errore nell'accesso al db.
+	 * @throws EntException In caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void addCategory(Category category) throws ApsSystemException {
+	public void addCategory(Category category) throws EntException {
 		try {
 			this.getCategoryDAO().addCategory(category);
             this.getCacheWrapper().addCategory(category);
 		} catch (Throwable t) {
 			_logger.error("Error detected while adding a category", t);
-			throw new ApsSystemException("Error detected while adding a category", t);
+			throw new EntException("Error detected while adding a category", t);
 		}
 	}
 
@@ -78,13 +78,13 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	 * Cancella una categoria.
 	 *
 	 * @param code Il codice della categoria da eliminare.
-	 * @throws ApsSystemException in caso di errore nell'accesso al db.
+	 * @throws EntException in caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void deleteCategory(String code) throws ApsSystemException {
+	public void deleteCategory(String code) throws EntException {
 		Category cat = this.getCategory(code);
 		if (cat == null || cat.getChildrenCodes().length > 0) {
-			throw new ApsSystemException("Error detected while removing a category");
+			throw new EntException("Error detected while removing a category");
 		}
 
 		try {
@@ -92,7 +92,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 			this.getCacheWrapper().deleteCategory(code);
 		} catch (Throwable t) {
 			_logger.error("Error detected while removing the category {}", code, t);
-			throw new ApsSystemException("Error detected while removing a category", t);
+			throw new EntException("Error detected while removing a category", t);
 		}
 	}
 
@@ -100,16 +100,16 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	 * Aggiorna una categoria nel db.
 	 *
 	 * @param category La categoria da modificare.
-	 * @throws ApsSystemException In caso di errore nell'accesso al db.
+	 * @throws EntException In caso di errore nell'accesso al db.
 	 */
 	@Override
-	public void updateCategory(Category category) throws ApsSystemException {
+	public void updateCategory(Category category) throws EntException {
 		try {
 			this.getCategoryDAO().updateCategory(category);
             this.getCacheWrapper().updateCategory(category);
 		} catch (Throwable t) {
 			_logger.error("Error detected while updating a category", t);
-			throw new ApsSystemException("Error detected while updating a category", t);
+			throw new EntException("Error detected while updating a category", t);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	}
 
 	@Override
-	public List<Category> searchCategories(String categoryCodeToken) throws ApsSystemException {
+	public List<Category> searchCategories(String categoryCodeToken) throws EntException {
 		List<Category> searchResult = new ArrayList<>();
 		try {
 			Category root = this.getRoot();
@@ -174,18 +174,18 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		} catch (Throwable t) {
 			String message = "Error during searching categories with token " + categoryCodeToken;
 			_logger.error("Error during searching categories with token {}", categoryCodeToken, t);
-			throw new ApsSystemException(message, t);
+			throw new EntException(message, t);
 		}
 		return searchResult;
 	}
     
     @Override
-	public boolean moveCategory(Category currentCategory, Category newParent) throws ApsSystemException {
+	public boolean moveCategory(Category currentCategory, Category newParent) throws EntException {
         return this.moveCategory(currentCategory.getCode(), newParent.getCode());
     }
 
 	@Override
-	public boolean moveCategory(String categoryCode, String newParentCode) throws ApsSystemException {
+	public boolean moveCategory(String categoryCode, String newParentCode) throws EntException {
         Category currentCategory = this.getCategory(categoryCode);
         Category newParent = this.getCategory(newParentCode);
 		boolean resultOperation = false;
@@ -208,7 +208,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 			resultOperation = true;
 		} catch (Throwable t) {
 			_logger.error("Error while moving  page {} under the node {}", currentCategory, newParent, t);
-			throw new ApsSystemException("Error while moving a category under a different node", t);
+			throw new EntException("Error while moving a category under a different node", t);
 		}
 		this.startReloadCategoryReferences(currentCategory.getCode());
 		return resultOperation;
@@ -314,9 +314,9 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		return reloadThread;
 	}
 
-	protected synchronized void reloadCategoryReferencesByBeanName(String beanName, String categoryCode) throws ApsSystemException {
+	protected synchronized void reloadCategoryReferencesByBeanName(String beanName, String categoryCode) throws EntException {
 		if (StringUtils.isBlank(beanName)) {
-			throw new ApsSystemException("Error: null beanName");
+			throw new EntException("Error: null beanName");
 		}
 		this.getCacheWrapper().updateMoveNodeStatus(beanName, STATUS_RELOADING_REFERENCES_IN_PROGRESS);
 		try {
@@ -330,7 +330,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 			}
 		} catch (Throwable t) {
 			_logger.error("Reload category references for: {} caused an error", beanName, t);
-			throw new ApsSystemException("Error reloading entity references by bean: " + beanName, t);
+			throw new EntException("Error reloading entity references by bean: " + beanName, t);
 		}
 	}
 

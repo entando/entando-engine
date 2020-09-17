@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.init.util;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
 
 import java.io.BufferedReader;
@@ -27,9 +27,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -49,7 +47,7 @@ public class TableDataUtils {
     private static final Logger _logger = LoggerFactory.getLogger(TableDataUtils.class);
     
     public static void valueDatabase(String script, String databaseName,
-            DataSource dataSource, DataInstallationReport schemaReport) throws ApsSystemException {
+            DataSource dataSource, DataInstallationReport schemaReport) throws EntException {
         try {
             String[] queries = (null != script) ? QueryExtractor.extractInsertQueries(script) : null;
             if (null == queries || queries.length == 0) {
@@ -68,11 +66,11 @@ public class TableDataUtils {
                 schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
             }
             _logger.error("Error executing script into db {} ", databaseName, t);
-            throw new ApsSystemException("Error executing script into db " + databaseName, t);
+            throw new EntException("Error executing script into db " + databaseName, t);
         }
     }
     
-    public static void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
+    public static void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws EntException {
         if (null == queries || queries.length == 0) {
             return;
         }
@@ -101,7 +99,7 @@ public class TableDataUtils {
             if (traceException) {
                 _logger.error("Error executing script - QUERY:\n{}", currentQuery, t);
             }
-            throw new ApsSystemException(errorMessage, t);
+            throw new EntException(errorMessage, t);
         } finally {
             try {
                 if (stat != null) {
@@ -120,7 +118,7 @@ public class TableDataUtils {
         }
     }
     
-    public static TableDumpReport dumpTable(BufferedWriter br, DataSource dataSource, String tableName) throws ApsSystemException {
+    public static TableDumpReport dumpTable(BufferedWriter br, DataSource dataSource, String tableName) throws EntException {
         TableDumpReport report = new TableDumpReport(tableName);
         StringBuilder scriptPrefix = new StringBuilder("INSERT INTO ").append(tableName).append(" (");
         Connection conn = null;
@@ -175,7 +173,7 @@ public class TableDataUtils {
             report.setRows(rows);
         } catch (Throwable t) {
             _logger.error("Error creating backup", t);
-            throw new ApsSystemException("Error creating backup", t);
+            throw new EntException("Error creating backup", t);
         } finally {
             try {
                 if (res != null) {

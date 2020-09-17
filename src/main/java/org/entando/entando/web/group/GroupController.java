@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.group;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.services.group.IGroupService;
@@ -23,7 +23,6 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.slf4j.Logger;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
@@ -112,7 +110,7 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(@Valid @RequestBody GroupRequest groupRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(@Valid @RequestBody GroupRequest groupRequest, BindingResult bindingResult) throws EntException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -128,7 +126,7 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) throws EntException {
         logger.info("deleting {}", groupName);
         this.getGroupService().removeGroup(groupName);
         Map<String, String> result = new HashMap<>();

@@ -27,7 +27,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * This class describes the Entity of a Composed Attribute. This attribute is
@@ -150,7 +150,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     @Override
-    public void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
+    public void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException {
         Element compositeAttributesElement = attributeElement.getChild("attributes");
         if (null == compositeAttributesElement) {
             this.setOldComplexAttributeConfig(attributeElement, attrTypes);
@@ -168,7 +168,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
              * jAPS 2.0.12
              */
             )
-    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
+    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException {
         List<Element> attributeElements = attributeElement.getChildren();
         for (int j = 0; j < attributeElements.size(); j++) {
             Element currentAttrJdomElem = attributeElements.get(j);
@@ -176,11 +176,11 @@ public class CompositeAttribute extends AbstractComplexAttribute {
         }
     }
 
-    private void extractAttributeCompositeElement(Map<String, AttributeInterface> attrTypes, Element currentAttrJdomElem) throws ApsSystemException {
+    private void extractAttributeCompositeElement(Map<String, AttributeInterface> attrTypes, Element currentAttrJdomElem) throws EntException {
         String typeCode = this.extractXmlAttribute(currentAttrJdomElem, "attributetype", true);
         AttributeInterface compositeAttrElem = (AttributeInterface) attrTypes.get(typeCode);
         if (compositeAttrElem == null) {
-            throw new ApsSystemException("The type " + typeCode
+            throw new EntException("The type " + typeCode
                     + " of the attribute element found in the tag <" + currentAttrJdomElem.getName() + "> of the composite attribute is not a valid one");
         }
         compositeAttrElem = (AttributeInterface) compositeAttrElem.getAttributePrototype();

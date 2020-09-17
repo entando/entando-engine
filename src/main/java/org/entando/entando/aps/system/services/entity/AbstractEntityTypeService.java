@@ -18,7 +18,8 @@ import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.system.common.entity.model.attribute.util.*;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
+import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.beanutils.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -274,6 +275,9 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         }
         AttributeInterface attribute = (AttributeInterface) prototype.getAttributePrototype();
         attribute.setName(attributeDto.getCode());
+        ApsProperties names = new ApsProperties();
+        names.putAll(attributeDto.getNames());
+        attribute.setNames(names);
         attribute.setDescription(attributeDto.getName());
         attribute.setIndexingType(attributeDto.isIndexable() ? IndexableAttributeInterface.INDEXING_TYPE_TEXT : null);
         List<AttributePropertyDto> dtoRoles = attributeDto.getRoles();
@@ -335,7 +339,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
                 throw new ValidationConflictException(bindingResult);
             }
             ((IEntityTypesConfigurer) entityManager).removeEntityPrototype(entityTypeCode);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete entityType {}", entityTypeCode, e);
             throw new RestServerError("error in delete entityType", e);
         }

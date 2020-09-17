@@ -29,12 +29,10 @@
 		<jaxrs:extensionMappings>
 			<entry key="json" value="application/json" />
 			<entry key="xml" value="application/xml" />
-			<entry key="jsonp" value="application/javascript" />
 		</jaxrs:extensionMappings>
 		<jaxrs:providers>
 			<ref bean="jaxbProvider"/>
 			<ref bean="jsonProvider"/>
-			<ref bean="jsonpProvider"/>
 		</jaxrs:providers>
 	</jaxrs:server>
     

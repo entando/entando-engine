@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
 
 public interface IApiResourceCacheWrapper {
@@ -26,7 +26,7 @@ public interface IApiResourceCacheWrapper {
 
 	public static final String APICATALOG_RESOURCE_CACHE_NAME_PREFIX = "ApiResourceManager_resource_";
 
-	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException;
+	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws EntException;
 
 	public ApiResource getMasterResource(String code);
 

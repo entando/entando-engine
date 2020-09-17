@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -117,7 +117,7 @@ public class URLManager extends AbstractURLManager {
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params) {
         try {
             return this.createURL(requiredPage, requiredLang, params, false, null);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -126,14 +126,14 @@ public class URLManager extends AbstractURLManager {
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp) {
         try {
             return this.createURL(requiredPage, requiredLang, params, escapeAmp, null);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RuntimeException("Error creating url", ex);
         }
     }
 
     @Override
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
-                            HttpServletRequest request) throws ApsSystemException {
+                            HttpServletRequest request) throws EntException {
         StringBuilder url = null;
         try {
             url = new StringBuilder(this.getApplicationBaseURL(request));
@@ -150,13 +150,13 @@ public class URLManager extends AbstractURLManager {
             url.append(queryString);
         } catch (Throwable t) {
             _logger.error("Error creating url", t);
-            throw new ApsSystemException("Error creating url", t);
+            throw new EntException("Error creating url", t);
         }
         return url.toString();
     }
 
     @Override
-    public String getApplicationBaseURL(HttpServletRequest request) throws ApsSystemException {
+    public String getApplicationBaseURL(HttpServletRequest request) throws EntException {
         StringBuilder baseUrl = new StringBuilder();
         this.addBaseURL(baseUrl, request);
         if (!baseUrl.toString().endsWith("/")) {
@@ -165,7 +165,7 @@ public class URLManager extends AbstractURLManager {
         return baseUrl.toString();
     }
 
-    protected void addBaseURL(StringBuilder link, HttpServletRequest request) throws ApsSystemException {
+    protected void addBaseURL(StringBuilder link, HttpServletRequest request) throws EntException {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;

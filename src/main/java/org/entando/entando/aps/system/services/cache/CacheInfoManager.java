@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.cache;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
@@ -110,7 +110,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
             }
         } catch (Throwable t) {
             logger.error("Error while evaluating cacheableInfo annotation", t);
-            throw new ApsSystemException("Error while evaluating cacheableInfo annotation", t);
+            throw new EntException("Error while evaluating cacheableInfo annotation", t);
         }
         return result;
     }
@@ -134,7 +134,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
             }
         } catch (Throwable t) {
             logger.error("Error while flushing group", t);
-            throw new ApsSystemException("Error while flushing group", t);
+            throw new EntException("Error while flushing group", t);
         }
         return pjp.proceed();
     }

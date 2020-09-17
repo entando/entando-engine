@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.servlet;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +29,8 @@ public interface IProtectedResourceProvider {
 	 * @param request The servlet request.
 	 * @param response 
 	 * @return true if the resource was provided and the response was committed.
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-	public boolean provideProtectedResource(HttpServletRequest request, HttpServletResponse response) throws ApsSystemException;
+	public boolean provideProtectedResource(HttpServletRequest request, HttpServletResponse response) throws EntException;
 	
 }

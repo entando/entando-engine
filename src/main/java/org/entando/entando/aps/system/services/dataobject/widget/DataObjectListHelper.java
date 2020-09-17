@@ -31,7 +31,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
@@ -109,7 +109,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
             dataObjectsId = this.executeFullTextSearch(bean, dataObjectsId, reqCtx);
         } catch (Throwable t) {
             _logger.error("Error extracting dataObjects id", t);
-            throw new ApsSystemException("Error extracting dataObjects id", t);
+            throw new EntException("Error extracting dataObjects id", t);
         }
         return dataObjectsId;
     }
@@ -127,7 +127,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
         return false;
     }
 
-    protected List<String> extractContentsId(IDataObjectListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
+    protected List<String> extractContentsId(IDataObjectListTagBean bean, RequestContext reqCtx) throws EntException {
         List<String> contentsId = null;
         try {
             List<UserFilterOptionBean> userFilters = bean.getUserFilterOptions();
@@ -137,7 +137,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
                 bean.setContentType(config.getProperty(WIDGET_PARAM_CONTENT_TYPE));
             }
             if (null == bean.getDataType()) {
-                throw new ApsSystemException("Tipo contenuto non definito");
+                throw new EntException("Tipo contenuto non definito");
             }
             if (null == bean.getCategory() && null != config && null != config.getProperty(SHOWLET_PARAM_CATEGORY)) {
                 bean.setCategory(config.getProperty(SHOWLET_PARAM_CATEGORY));
@@ -159,7 +159,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
                     categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
         } catch (Throwable t) {
             _logger.error("Error extracting contents id", t);
-            throw new ApsSystemException("Error extracting contents id", t);
+            throw new EntException("Error extracting contents id", t);
         }
         return contentsId;
     }
@@ -176,7 +176,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     }
 
     protected List<String> executeFullTextSearch(IDataObjectListTagBean bean,
-            List<String> masterContentsId, RequestContext reqCtx) throws ApsSystemException {
+            List<String> masterContentsId, RequestContext reqCtx) throws EntException {
         UserFilterOptionBean fullTextUserFilter = null;
         List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
         if (null != userFilterOptions) {
@@ -337,7 +337,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
     }
 
     @Override
-    public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
+    public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx) throws EntException {
         List<UserFilterOptionBean> userEntityFilters = null;
         try {
             Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
@@ -359,7 +359,7 @@ public class DataObjectListHelper extends BaseDataListHelper implements IDataObj
             }
         } catch (Throwable t) {
             _logger.error("Error extracting user filters", t);
-            throw new ApsSystemException("Error extracting user filters", t);
+            throw new EntException("Error extracting user filters", t);
         }
         return userEntityFilters;
     }

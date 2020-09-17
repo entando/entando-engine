@@ -23,7 +23,7 @@ import java.util.Set;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -466,7 +466,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<Authorization> getUserAuthorizations(String username) throws ApsSystemException {
+    public List<Authorization> getUserAuthorizations(String username) throws EntException {
         List<Authorization> authorizations = null;
         try {
             Map<String, Group> groups = (Map<String, Group>) this.getAuthorityMap(this.getGroupManager().getGroups());
@@ -474,7 +474,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             authorizations = this.getAuthorizationDAO().getUserAuthorizations(username, groups, roles);
         } catch (Throwable t) {
             _logger.error("Error extracting user authorizations for user '{}'", username, t);
-            throw new ApsSystemException("Error extracting user authorizations for user " + username, t);
+            throw new EntException("Error extracting user authorizations for user " + username, t);
         }
         return authorizations;
     }
@@ -489,7 +489,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public void addUserAuthorization(String username, String groupName, String roleName) throws ApsSystemException {
+    public void addUserAuthorization(String username, String groupName, String roleName) throws EntException {
         try {
             Group group = (null != groupName) ? this.getGroupManager().getGroup(groupName) : null;
             if (null != groupName && null == group) {
@@ -505,12 +505,12 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             this.addUserAuthorization(username, authorization);
         } catch (Throwable t) {
             _logger.error("Error adding user authorization for user '{}'", username, t);
-            throw new ApsSystemException("Error adding user authorization for user " + username, t);
+            throw new EntException("Error adding user authorization for user " + username, t);
         }
     }
 
     @Override
-    public void addUserAuthorization(String username, Authorization authorization) throws ApsSystemException {
+    public void addUserAuthorization(String username, Authorization authorization) throws EntException {
         if (null == username || null == authorization) {
             return;
         }
@@ -520,12 +520,12 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             }
         } catch (Throwable t) {
             _logger.error("Error adding user authorization for user '{}'", username, t);
-            throw new ApsSystemException("Error adding user authorization for user " + username, t);
+            throw new EntException("Error adding user authorization for user " + username, t);
         }
     }
 
     @Override
-    public void addUserAuthorizations(String username, List<Authorization> authorizations) throws ApsSystemException {
+    public void addUserAuthorizations(String username, List<Authorization> authorizations) throws EntException {
         if (null == username) {
             return;
         }
@@ -537,12 +537,12 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             this.getAuthorizationDAO().addUserAuthorizations(username, toAdd);
         } catch (Throwable t) {
             _logger.error("Error adding user authorizations for user '{}'", username, t);
-            throw new ApsSystemException("Error adding user authorizations for user " + username, t);
+            throw new EntException("Error adding user authorizations for user " + username, t);
         }
     }
 
     @Override
-    public void updateUserAuthorizations(String username, List<Authorization> authorizations) throws ApsSystemException {
+    public void updateUserAuthorizations(String username, List<Authorization> authorizations) throws EntException {
         if (null == username) {
             return;
         }
@@ -554,7 +554,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             this.getAuthorizationDAO().updateUserAuthorizations(username, toSet);
         } catch (Throwable t) {
             _logger.error("Error updating user authorizations for user '{}'", username, t);
-            throw new ApsSystemException("Error updating user authorizations for user " + username, t);
+            throw new EntException("Error updating user authorizations for user " + username, t);
         }
     }
 
@@ -595,22 +595,22 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public void deleteUserAuthorization(String username, String groupname, String rolename) throws ApsSystemException {
+    public void deleteUserAuthorization(String username, String groupname, String rolename) throws EntException {
         try {
             this.getAuthorizationDAO().deleteUserAuthorization(username, groupname, rolename);
         } catch (Throwable t) {
             _logger.error("Error deleting user authorization for user '{}'", username, t);
-            throw new ApsSystemException("Error deleting user authorization for user " + username, t);
+            throw new EntException("Error deleting user authorization for user " + username, t);
         }
     }
 
     @Override
-    public void deleteUserAuthorizations(String username) throws ApsSystemException {
+    public void deleteUserAuthorizations(String username) throws EntException {
         try {
             this.getAuthorizationDAO().deleteUserAuthorizations(username);
         } catch (Throwable t) {
             _logger.error("Error deleting user authorizations for user '{}'", username, t);
-            throw new ApsSystemException("Error deleting user authorizations for user " + username, t);
+            throw new EntException("Error deleting user authorizations for user " + username, t);
         }
     }
 
@@ -633,7 +633,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<String> getUsersByRole(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByRole(IApsAuthority authority, boolean includeAdmin) throws EntException {
         if (null == authority || !(authority instanceof Role) || null == this.getRoleManager().getRole(authority.getAuthority())) {
             return null;
         }
@@ -641,7 +641,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<String> getUsersByRole(String roleName, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByRole(String roleName, boolean includeAdmin) throws EntException {
         Role role = this.getRoleManager().getRole(roleName);
         if (null == role) {
             return null;
@@ -650,7 +650,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<String> getUsersByGroup(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByGroup(IApsAuthority authority, boolean includeAdmin) throws EntException {
         if (null == authority || !(authority instanceof Group) || null == this.getGroupManager().getGroup(authority.getAuthority())) {
             return null;
         }
@@ -658,7 +658,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<String> getUsersByGroup(String groupName, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByGroup(String groupName, boolean includeAdmin) throws EntException {
         Group group = this.getGroupManager().getGroup(groupName);
         if (null == group) {
             return null;
@@ -667,7 +667,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
     @Override
-    public List<String> getUsersByAuthorities(String groupName, String roleName, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByAuthorities(String groupName, String roleName, boolean includeAdmin) throws EntException {
         List<String> usernames = null;
         try {
             List<String> groupNames = null;
@@ -697,13 +697,13 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             usernames = this.getAuthorizationDAO().getUsersByAuthorities(groupNames, roleNames);
         } catch (Throwable t) {
             _logger.error("Error extracting usernames by authorities - group '{}' : role {}", groupName, roleName, t);
-            throw new ApsSystemException("Error extracting usernames by authorities", t);
+            throw new EntException("Error extracting usernames by authorities", t);
         }
         return usernames;
     }
 
     @Override
-    public List<String> getUsersByAuthority(IApsAuthority authority, boolean includeAdmin) throws ApsSystemException {
+    public List<String> getUsersByAuthority(IApsAuthority authority, boolean includeAdmin) throws EntException {
         if (authority instanceof Group) {
             return this.getUsersByGroup(authority, includeAdmin);
         } else {
@@ -712,7 +712,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     }
 
 	@Override
-    public List<String> getGroupUtilizers(String groupName) throws ApsSystemException {
+    public List<String> getGroupUtilizers(String groupName) throws EntException {
 		return this.getUsersByGroup(groupName, false);
 	}
 

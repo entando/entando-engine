@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.guifragment.api;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,7 +174,7 @@ public class ApiGuiFragmentInterface implements BeanFactoryAware, IApiExportable
 					service = this.getBeanFactory().getBean(defNames[i]);
 				} catch (Throwable t) {
 					_logger.error("error extracting bean with name '{}'", defNames[i], t);
-					throw new ApsSystemException("error extracting bean with name '" + defNames[i] + "'", t);
+					throw new EntException("error extracting bean with name '" + defNames[i] + "'", t);
 				}
 				if (service != null) {
 					GuiFragmentUtilizer guiFragUtilizer = (GuiFragmentUtilizer) service;

@@ -31,11 +31,13 @@ import org.entando.entando.aps.system.init.model.portdb.WidgetConfig;
 import org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
@@ -139,7 +141,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     }
 
     protected void readWidget(PageRecord page, int numOfFrames, Widget widgets[],
-            int startIndex, ResultSet res) throws ApsSystemException, SQLException {
+            int startIndex, ResultSet res) throws EntException, SQLException {
         Object posObj = res.getObject(startIndex);
         if (posObj != null) {
             int pos = res.getInt(startIndex);
@@ -167,7 +169,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         return page;
     }
 
-    protected Widget createWidget(PageRecord page, int pos, ResultSet res, int startIndex) throws ApsSystemException, SQLException {
+    protected Widget createWidget(PageRecord page, int pos, ResultSet res, int startIndex) throws EntException, SQLException {
         String typeCode = res.getString(startIndex++);
         if (null == typeCode) {
             return null;
@@ -185,7 +187,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
                         .getCode(), t);
                 String msg = "IO error detected while parsing the configuration of the widget in position " + pos + " of the page '" + page
                         .getCode() + "'";
-                throw new ApsSystemException(msg, t);
+                throw new EntException(msg, t);
             }
         } else {
             config = type.getConfig();
@@ -224,7 +226,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void addPageRecord(IPage page, Connection conn) throws ApsSystemException {
+    protected void addPageRecord(IPage page, Connection conn) throws EntException {
         String parentCode = page.getParentCode();
         // a new page is always inserted in the last position,
         // to avoid changes of the position of the "sister" pages.
@@ -275,7 +277,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void deletePageRecord(String pageCode, Connection conn) throws ApsSystemException {
+    protected void deletePageRecord(String pageCode, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE_PAGE);
@@ -294,9 +296,9 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
      *
      * @param pageCode The code of the page containing the widget to delete.
      * @param conn The database connection
-     * @throws ApsSystemException In case of database error
+     * @throws EntException In case of database error
      */
-    protected void deleteOnlineWidgets(String pageCode, Connection conn) throws ApsSystemException {
+    protected void deleteOnlineWidgets(String pageCode, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE_WIDGETS_FOR_PAGE_ONLINE);
@@ -315,9 +317,9 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
      *
      * @param pageCode The code of the page containing the widget to delete.
      * @param conn The database connection
-     * @throws ApsSystemException In case of database error
+     * @throws EntException In case of database error
      */
-    protected void deleteDraftWidgets(String pageCode, Connection conn) throws ApsSystemException {
+    protected void deleteDraftWidgets(String pageCode, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE_WIDGETS_FOR_PAGE_DRAFT);
@@ -338,9 +340,9 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
      * @param parentCode the code of the parent of the pages to compact.
      * @param position The empty position which needs to be compacted.
      * @param conn The connection to the database
-     * @throws ApsSystemException In case of database error
+     * @throws EntException In case of database error
      */
-    protected void shiftPages(String parentCode, int position, Connection conn) throws ApsSystemException {
+    protected void shiftPages(String parentCode, int position, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(SHIFT_PAGE);
@@ -465,7 +467,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void updatePageRecord(IPage page, Connection conn) throws ApsSystemException {
+    protected void updatePageRecord(IPage page, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE_PAGE);
@@ -522,24 +524,24 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void addOnlinePageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws ApsSystemException {
+    protected void addOnlinePageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws EntException {
         this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataOnline.TABLE_NAME, conn);
     }
 
-    protected void addDraftPageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws ApsSystemException {
+    protected void addDraftPageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws EntException {
         this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataDraft.TABLE_NAME, conn);
     }
 
-    protected void deleteOnlinePageMetadata(String pageCode, Connection conn) throws ApsSystemException {
+    protected void deleteOnlinePageMetadata(String pageCode, Connection conn) throws EntException {
         this.executeQueryWithoutResultset(conn, DELETE_ONLINE_PAGE_METADATA, pageCode);
     }
 
-    protected void deleteDraftPageMetadata(String pageCode, Connection conn) throws ApsSystemException {
+    protected void deleteDraftPageMetadata(String pageCode, Connection conn) throws EntException {
         this.executeQueryWithoutResultset(conn, DELETE_DRAFT_PAGE_METADATA, pageCode);
     }
 
     protected void savePageMetadata(String pageCode, PageMetadata pageMetadata, boolean isAdd, String tableName, Connection conn)
-            throws ApsSystemException {
+            throws EntException {
         if (pageMetadata != null) {
             PreparedStatement stat = null;
             try {
@@ -586,7 +588,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         } catch (Throwable t) {
             _logger.error("IO error detected while parsing the titles of the page {}", code, t);
             String msg = "IO error detected while parsing the titles of the page '" + code + "'";
-            throw new ApsSystemException(msg, t);
+            throw new EntException(msg, t);
         }
         pageMetadata.setTitles(titles);
         pageMetadata.setModel(this.getPageModelManager().getPageModel(res.getString(index++)));
@@ -600,7 +602,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
             } catch (Throwable t) {
                 _logger.error("IO error detected while parsing the extra config of the page {}", code, t);
                 String msg = "IO error detected while parsing the extra config of the page '" + code + "'";
-                throw new ApsSystemException(msg, t);
+                throw new EntException(msg, t);
             }
         }
         Timestamp date = res.getTimestamp(index++);
@@ -617,7 +619,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         return new PageExtraConfigDOM();
     }
 
-    protected void addWidgetForPage(IPage page, WidgetConfigDest dest, Connection conn) throws ApsSystemException {
+    protected void addWidgetForPage(IPage page, WidgetConfigDest dest, Connection conn) throws EntException {
         PreparedStatement stat = null;
         try {
             Widget[] widgets = null;
@@ -773,18 +775,28 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     private void updatePageMetatataUpdate(String pageCode, Date date, String tablename, Connection conn) throws SQLException {
         PreparedStatement stat = null;
         try {
-            String query = "UPDATE " + tablename + " SET updatedat = ? WHERE code = ?";
+            String query = "UPDATE " + mustBeValidMetadataTableName(tablename) + " SET updatedat = ? WHERE code = ?";
             stat = conn.prepareStatement(query);
             stat.setTimestamp(1, new Timestamp(date.getTime()));
             stat.setString(2, pageCode);
             stat.executeUpdate();
         } catch (Throwable t) {
-            _logger.error("Error while updating the page metadata record for table {} and page {}", PageMetadataDraft.TABLE_NAME, pageCode,
-                    t);
-            throw new RuntimeException("Error while updating the page metadata record for table " + PageMetadataDraft.TABLE_NAME
-                    + " and page " + pageCode, t);
+            _logger.error("Error while updating the page metadata record for table {} and page {}",
+                    tablename, pageCode, t);
+            throw new EntRuntimeException("Error while updating the page metadata record for table " +
+                    tablename + " and page " + pageCode, t);
         } finally {
             closeDaoResources(null, stat);
+        }
+    }
+
+    public static String mustBeValidMetadataTableName(String tablename) throws EntException {
+        switch (tablename) {
+            case PageMetadataOnline.TABLE_NAME:
+            case PageMetadataDraft.TABLE_NAME:
+                return tablename;
+            default:
+                throw new EntException("Invalid metadata table name" + tablename);
         }
     }
 

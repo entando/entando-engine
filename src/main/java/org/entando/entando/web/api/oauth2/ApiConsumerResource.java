@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.api.oauth2;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +46,7 @@ public interface ApiConsumerResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ApiConsumer>> get(@PathVariable("consumerKey") String consumerKey) throws ApsSystemException;
+    ResponseEntity<SimpleRestResponse<ApiConsumer>> get(@PathVariable("consumerKey") String consumerKey) throws EntException;
 
 
     @ApiOperation(value = "List consumers")
@@ -55,7 +55,7 @@ public interface ApiConsumerResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<PagedRestResponse<ApiConsumer>> list(@Valid RestListRequest request) throws ApsSystemException;
+    ResponseEntity<PagedRestResponse<ApiConsumer>> list(@Valid RestListRequest request) throws EntException;
 
 
     @ApiOperation(value = "Create a consumer")
@@ -64,7 +64,7 @@ public interface ApiConsumerResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<ApiConsumer>> create(@RequestBody @Valid ApiConsumer consumer) throws ApsSystemException;
+    ResponseEntity<SimpleRestResponse<ApiConsumer>> create(@RequestBody @Valid ApiConsumer consumer) throws EntException;
 
 
     @ApiOperation(value = "Update a consumer")
@@ -75,7 +75,7 @@ public interface ApiConsumerResource {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PutMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SimpleRestResponse<ApiConsumer>> update(@PathVariable("consumerKey") String consumerKey,
-            @RequestBody @Valid ApiConsumer consumer) throws ApsSystemException;
+            @RequestBody @Valid ApiConsumer consumer) throws EntException;
 
 
     @ApiOperation(value = "Delete a consumer")
@@ -84,5 +84,5 @@ public interface ApiConsumerResource {
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
     @DeleteMapping(value = "/{consumerKey}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("consumerKey") String consumerKey) throws ApsSystemException;
+    ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("consumerKey") String consumerKey) throws EntException;
 }

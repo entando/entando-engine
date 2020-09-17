@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -97,7 +97,7 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 		}
 	}
 
-	private void addLabelGroup(String key, ApsProperties labels, Connection conn) throws ApsSystemException {
+	private void addLabelGroup(String key, ApsProperties labels, Connection conn) throws EntException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(ADD_LABEL);
@@ -142,7 +142,7 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 		}
 	}
 
-	private void deleteLabelGroup(String key, Connection conn) throws ApsSystemException {
+	private void deleteLabelGroup(String key, Connection conn) throws EntException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(DELETE_LABEL);
@@ -161,10 +161,10 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 	 * Metodo di servizio: legge tutte le label. 
 	 * @param res Il resultset ottenuto dall'estrazione delle labels.
 	 * @throws SQLException
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
 	private Map<String, ApsProperties> createLabels(ResultSet res) 
-	throws SQLException, ApsSystemException {
+	throws SQLException, EntException {
 		//1  l.key,  2 l.langcode, 3  l.value"
 		Map<String, ApsProperties> labels = new HashMap<String, ApsProperties>();
 		while (res.next()) {

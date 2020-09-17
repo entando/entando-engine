@@ -15,12 +15,12 @@ package org.entando.entando.aps.system.services.dataobject;
 
 import java.util.Set;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 public interface IDataObjectUpdaterService {
 
 	public void reloadCategoryReferences(String categoryCode);
 
-	public Set<String> getDataObjectsId(String categoryCode) throws ApsSystemException;
+	public Set<String> getDataObjectsId(String categoryCode) throws EntException;
 
 }

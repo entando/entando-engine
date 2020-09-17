@@ -13,7 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.I18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -110,14 +110,14 @@ public class LabelServiceTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void testGetLabelGroupNotFound() throws ApsSystemException {
+    public void testGetLabelGroupNotFound() throws EntException {
         when(i18nManager.getLabelGroup(eq("not_found"))).thenReturn(null);
         labelService.getLabelGroup("not_found");
         verify(i18nManager, times(1)).getLabelGroup(eq("not_found"));
     }
 
     @Test
-    public void testGetLabelGroup() throws ApsSystemException {
+    public void testGetLabelGroup() throws EntException {
         when(i18nManager.getLabelGroup(eq("lab"))).thenReturn(create(singletonMap("EN", "some_value")));
         final LabelDto label = labelService.getLabelGroup("lab");
         assertThat(label.getKey()).isEqualTo("lab");
@@ -127,19 +127,19 @@ public class LabelServiceTest {
     }
 
     @Test(expected = RestServerError.class)
-    public void testAddLabelGroupError() throws ApsSystemException {
+    public void testAddLabelGroupError() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));
 
-        doThrow(ApsSystemException.class).when(i18nManager).addLabelGroup(anyString(), any(ApsProperties.class));
+        doThrow(EntException.class).when(i18nManager).addLabelGroup(anyString(), any(ApsProperties.class));
 
         final LabelDto label = new LabelDto("lab", singletonMap("EN", "some_value"));
         labelService.addLabelGroup(label);
     }
 
     @Test(expected = ValidationConflictException.class)
-    public void testAddLabelGroupNotAssignableLang() throws ApsSystemException {
+    public void testAddLabelGroupNotAssignableLang() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(Collections.emptyList());
         when(langManager.getLangs()).thenReturn(singletonList(lang));
@@ -149,7 +149,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testAddLabelGroup() throws ApsSystemException {
+    public void testAddLabelGroup() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));
@@ -209,7 +209,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testUpdateLabelGroup() throws ApsSystemException {
+    public void testUpdateLabelGroup() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));

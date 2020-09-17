@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -48,10 +48,10 @@ public class PagerTagHelper {
 	 * @param offset Campo offset, considerato solo nel caso di paginatore avanzato.
 	 * @param request La request.
 	 * @return L'oggetto necessario per fornire gli elementi necessari a determinare l'item corrente.
-	 * @throws ApsSystemException In caso di errori nella costruzione dell'oggetto richiesto.
+	 * @throws EntException In caso di errori nella costruzione dell'oggetto richiesto.
 	 */
 	public IPagerVO getPagerVO(Collection collection, String pagerId, boolean pagerIdFromFrame, 
-			int max, boolean isAdvanced, int offset, ServletRequest request) throws ApsSystemException {
+			int max, boolean isAdvanced, int offset, ServletRequest request) throws EntException {
 		IPagerVO pagerVo = null;
 		try {
 			String truePagerId = this.getPagerId(pagerId, pagerIdFromFrame, request);
@@ -61,7 +61,7 @@ public class PagerTagHelper {
 		} catch (Throwable t) {
 			_logger.error("Error while preparing the pagerVo object", t);
 			//ApsSystemUtils.logThrowable(t, this, "getPagerVO");
-			throw new ApsSystemException("Error while preparing the pagerVo object", t);
+			throw new EntException("Error while preparing the pagerVo object", t);
 		}
 		return pagerVo;
 	}

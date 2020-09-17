@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi gestori della mappa dei datatype pubblicati
@@ -26,9 +26,9 @@ public interface IDataObjectPageMapperManager {
     /**
      * Effettua il caricamento della mappa dataobject pubblicati / pagine
      *
-     * @throws ApsSystemException
+     * @throws EntException
      */
-    public void reloadDataObjectPageMapper() throws ApsSystemException;
+    public void reloadDataObjectPageMapper() throws EntException;
 
     /**
      * Restituisce il codice pagina nel quale è stato publicato il dataobject

@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.common.entity;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -24,22 +24,22 @@ public interface IEntityTypesConfigurer {
 	/**
 	 * Add a new entity prototype on the catalog.
 	 * @param entityType The entity type to add.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void addEntityPrototype(IApsEntity entityType) throws ApsSystemException;
+	public void addEntityPrototype(IApsEntity entityType) throws EntException;
 	
 	/**
 	 * Update an entity prototype on the catalog.
 	 * @param entityType The entity type to update
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void updateEntityPrototype(IApsEntity entityType) throws ApsSystemException;
+	public void updateEntityPrototype(IApsEntity entityType) throws EntException;
 	
 	/**
 	 * Remove an entity type from the catalog.
 	 * @param entityTypeCode The code of the entity type to remove.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void removeEntityPrototype(String entityTypeCode) throws ApsSystemException;
+	public void removeEntityPrototype(String entityTypeCode) throws EntException;
 	
 }

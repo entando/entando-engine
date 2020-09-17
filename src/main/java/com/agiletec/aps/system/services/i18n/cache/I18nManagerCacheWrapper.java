@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -34,7 +34,7 @@ public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProp
     }
 
     @Override
-    public void initCache(II18nDAO i18nDAO) throws ApsSystemException {
+    public void initCache(II18nDAO i18nDAO) throws EntException {
         try {
             Cache cache = this.getCache();
             this.releaseCachedObjects(cache);
@@ -42,7 +42,7 @@ public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProp
             this.insertObjectsOnCache(cache, labels);
         } catch (Throwable t) {
             logger.error("Error loading labels", t);
-            throw new ApsSystemException("Error loading labels", t);
+            throw new EntException("Error loading labels", t);
         }
     }
 

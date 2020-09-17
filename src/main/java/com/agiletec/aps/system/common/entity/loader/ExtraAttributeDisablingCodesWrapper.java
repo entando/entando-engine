@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * The Class of the extra attribute disabling codes.
@@ -33,7 +33,7 @@ public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeS
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeDisablingCodesWrapper.class);
 	
-	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
+	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws EntException {
 		String managerName = ((IManager) entityManager).getName();
 		if (!managerName.equals(super.getEntityManagerNameDest())) {
 			return;

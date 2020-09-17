@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IPermissionDAO;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -34,7 +34,7 @@ public class PermissionCacheWrapper extends AbstractGenericCacheWrapper<Permissi
 	private static final Logger _logger = LoggerFactory.getLogger(PermissionCacheWrapper.class);
 
 	@Override
-	public void initCache(IPermissionDAO permissionDAO) throws ApsSystemException {
+	public void initCache(IPermissionDAO permissionDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -42,7 +42,7 @@ public class PermissionCacheWrapper extends AbstractGenericCacheWrapper<Permissi
 			this.insertObjectsOnCache(cache, permissions);
 		} catch (Throwable t) {
 			_logger.error("Error loading permissions", t);
-			throw new ApsSystemException("Error loading permissions", t);
+			throw new EntException("Error loading permissions", t);
 		}
 	}
 

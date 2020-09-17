@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 
 import java.io.File;
@@ -36,12 +36,12 @@ public interface ISearcherDAO {
 	 * Inizializzazione del searcher.
 	 *
 	 * @param dir La cartella locale contenitore dei dati persistenti.
-	 * @throws ApsSystemException In caso di errore
+	 * @throws EntException In caso di errore
 	 */
-	public void init(File dir) throws ApsSystemException;
+	public void init(File dir) throws EntException;
 
 	public FacetedContentsResult searchFacetedContents(SearchEngineFilter[] filters,
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws EntException;
 
 	/**
 	 * Ricerca una lista di identificativi di dataobject in base ai filtri
@@ -56,10 +56,10 @@ public interface ISearcherDAO {
 	 * ricerca produrrà un'insieme di identificativi di contenuto non filtrati
 	 * per gruppo.
 	 * @return La lista di identificativi contenuto.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
 	public List<String> searchContentsId(SearchEngineFilter[] filters,
-			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws ApsSystemException;
+			Collection<ITreeNode> categories, Collection<String> allowedGroups) throws EntException;
 
 	public void close();
         

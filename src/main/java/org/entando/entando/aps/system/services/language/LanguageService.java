@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -79,7 +79,7 @@ public class LanguageService implements ILanguageService {
                 throw new ResourceNotFoundException(LanguageValidator.ERRCODE_LANGUAGE_DOES_NOT_EXISTS, "language", code);
             }
             return this.getLanguageDtoBuilder().convert(lang);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RestServerError("error in getting language " + code, ex);
         }
     }
@@ -110,7 +110,7 @@ public class LanguageService implements ILanguageService {
             }
             this.getLangManager().removeLang(code);
             return this.getLanguageDtoBuilder().convert(sysLang);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RestServerError("error disabling language " + code, ex);
         }
     }
@@ -128,7 +128,7 @@ public class LanguageService implements ILanguageService {
                 this.getLangManager().addLang(lang.getCode());
             }
             return this.getLanguageDtoBuilder().convert(lang);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RestServerError("error enabling lang " + code, ex);
         }
     }

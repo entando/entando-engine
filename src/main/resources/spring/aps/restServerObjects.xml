@@ -44,13 +44,6 @@
         <value>application/javascript</value>
     </util:list>
     
-    <bean id="jsonpProvider" class="org.entando.entando.aps.system.services.api.provider.jsonp.JSONPProvider">
-        <property name="produceMediaTypes" ref="ApiJsonpTypes" />
-        <!-- <property name="consumeMediaTypes" ref="ApiJsonpTypes"/> -->
-		<!-- <property name="dropCollectionWrapperElement" value="true" /> -->
-		<!-- <property name="serializeAsArray" value="true" /> -->
-    </bean>
-
     <context:component-scan base-package="org.entando.entando.web.*,org.entando.entando.plugins.*.web.*" />
 
     <beans profile="swagger">

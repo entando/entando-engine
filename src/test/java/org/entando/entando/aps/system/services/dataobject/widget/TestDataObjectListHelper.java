@@ -22,7 +22,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -200,7 +200,7 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		return reqCtx;
 	}
 
-	private void setPageWidgets(String pageCode, int frame, Widget widget) throws ApsSystemException {
+	private void setPageWidgets(String pageCode, int frame, Widget widget) throws EntException {
 		IPage page = this._pageManager.getDraftPage(pageCode);
 		page.getWidgets()[frame] = widget;
 		page.getWidgets()[frame] = widget;

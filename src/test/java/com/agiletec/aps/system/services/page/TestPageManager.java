@@ -30,7 +30,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetsDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
@@ -490,7 +490,7 @@ public class TestPageManager extends BaseTestCase {
             Widget widget = this.getWidgetForTest("login", null);
             this._pageManager.joinWidget(pageCode, widget, frame);
             fail();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             // Errore per pagina inesistente
         } catch (Throwable t) {
             throw t;
@@ -506,7 +506,7 @@ public class TestPageManager extends BaseTestCase {
             Widget widget = this.getWidgetForTest("login", null);
             this._pageManager.joinWidget(pageCode, widget, frame);
             fail();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             // Errore per frame errato in modello
         } catch (Throwable t) {
             throw t;
@@ -521,7 +521,7 @@ public class TestPageManager extends BaseTestCase {
         try {
             this._pageManager.removeWidget(pageCode, frame);
             fail();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             // Errore per pagina inesistente
         } catch (Throwable t) {
             throw t;
@@ -536,7 +536,7 @@ public class TestPageManager extends BaseTestCase {
         try {
             this._pageManager.removeWidget(pageCode, frame);
             fail();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             // Errore per frame errato in modello
         } catch (Throwable t) {
             throw t;
@@ -669,7 +669,7 @@ public class TestPageManager extends BaseTestCase {
         assertEquals("pagina_1", pageUtilizers3.get(0).getCode());
     }
 
-    public void testPageStatus() throws ApsSystemException {
+    public void testPageStatus() throws EntException {
         String testCode = "testcode";
         PagesStatus status = this._pageManager.getPagesStatus();
         try {

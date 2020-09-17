@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -37,13 +37,13 @@ public class ApiConsumerServiceImpl implements ApiConsumerService {
     }
 
     @Override
-    public ApiConsumer create(ApiConsumer consumer) throws ApsSystemException {
+    public ApiConsumer create(ApiConsumer consumer) throws EntException {
         validateForCreate(consumer);
         return new ApiConsumer(consumerManager.addConsumer(consumer.toConsumerRecordVO()));
     }
 
     @Override
-    public ApiConsumer get(String consumerKey) throws ApsSystemException {
+    public ApiConsumer get(String consumerKey) throws EntException {
         ConsumerRecordVO record = consumerManager.getConsumerRecord(consumerKey);
         if (record == null) {
             throw new ResourceNotFoundException(ApiConsumer.class.getName(), consumerKey);
@@ -52,7 +52,7 @@ public class ApiConsumerServiceImpl implements ApiConsumerService {
     }
 
     @Override
-    public ApiConsumer update(ApiConsumer consumer) throws ApsSystemException {
+    public ApiConsumer update(ApiConsumer consumer) throws EntException {
         ConsumerRecordVO record = consumerManager.getConsumerRecord(consumer.getKey());
         if (record == null) {
             throw new ResourceNotFoundException(ApiConsumer.class.getName(), consumer.getKey());
@@ -63,7 +63,7 @@ public class ApiConsumerServiceImpl implements ApiConsumerService {
     }
 
     @Override
-    public PagedMetadata<ApiConsumer> list(RestListRequest request) throws ApsSystemException {
+    public PagedMetadata<ApiConsumer> list(RestListRequest request) throws EntException {
 
         FieldSearchFilter<?>[] filters
                 = request.buildFieldSearchFilters().stream()
@@ -87,11 +87,11 @@ public class ApiConsumerServiceImpl implements ApiConsumerService {
     }
 
     @Override
-    public void delete(String consumerKey) throws ApsSystemException {
+    public void delete(String consumerKey) throws EntException {
         consumerManager.deleteConsumer(consumerKey);
     }
 
-    private void validateForCreate(ApiConsumer consumer) throws ApsSystemException {
+    private void validateForCreate(ApiConsumer consumer) throws EntException {
 
         if (consumerManager.getConsumerRecord(consumer.getKey()) != null) {
             DataBinder binder = new DataBinder(consumer);

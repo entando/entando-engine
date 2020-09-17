@@ -24,10 +24,8 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInf
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -37,7 +35,7 @@ public class ActivityStreamInfoDOM {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamInfoDOM.class);
 	
-	public static String marshalInfo(ActivityStreamInfo activityStreamInfo) throws ApsSystemException {
+	public static String marshalInfo(ActivityStreamInfo activityStreamInfo) throws EntException {
 		StringWriter writer = new StringWriter();
 		try {
 			JAXBContext context = JAXBContext.newInstance(ActivityStreamInfo.class);
@@ -47,12 +45,12 @@ public class ActivityStreamInfoDOM {
 		} catch (Throwable t) {
 			_logger.error("Error binding object", t);
 			//ApsSystemUtils.logThrowable(t, ActivityStreamInfoDOM.class, "bindInfo", "Error binding object");
-			throw new ApsSystemException("Error binding object", t);
+			throw new EntException("Error binding object", t);
 		}
 		return writer.toString();
 	}
 	
-	public static ActivityStreamInfo unmarshalInfo(String xml) throws ApsSystemException {
+	public static ActivityStreamInfo unmarshalInfo(String xml) throws EntException {
 		ActivityStreamInfo bodyObject = null;
 		try {
 			JAXBContext context = JAXBContext.newInstance(ActivityStreamInfo.class);
@@ -62,7 +60,7 @@ public class ActivityStreamInfoDOM {
 		} catch (Throwable t) {
 			_logger.error("Error unmarshalling activity stream info config. xml: {}", xml, t);
 			//ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshalInfo");
-			throw new ApsSystemException("Error unmarshalling activity stream info config", t);
+			throw new EntException("Error unmarshalling activity stream info config", t);
 		}
 		return bodyObject;
 	}

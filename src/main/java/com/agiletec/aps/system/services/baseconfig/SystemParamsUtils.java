@@ -27,7 +27,7 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * DOM support class used to handle the configuration parameters.
@@ -145,7 +145,7 @@ public class SystemParamsUtils {
         return null;
     }
 
-    private static Document decodeDOM(String xmlText) throws ApsSystemException {
+    private static Document decodeDOM(String xmlText) throws EntException {
         Document doc = null;
         try {
             SAXBuilder builder = new SAXBuilder();
@@ -154,7 +154,7 @@ public class SystemParamsUtils {
             doc = builder.build(reader);
         } catch (Throwable t) {
             _logger.error("Error parsing xml: {} ", xmlText, t);
-            throw new ApsSystemException("Error parsing document", t);
+            throw new EntException("Error parsing document", t);
         }
         return doc;
     }

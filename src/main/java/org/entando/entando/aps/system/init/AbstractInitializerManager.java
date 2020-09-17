@@ -22,7 +22,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -31,7 +31,7 @@ public abstract class AbstractInitializerManager implements BeanFactoryAware {
 
 	private static final Logger _logger = LoggerFactory.getLogger(AbstractInitializerManager.class);
 	
-	protected SystemInstallationReport extractReport() throws ApsSystemException {
+	protected SystemInstallationReport extractReport() throws EntException {
 		SystemInstallationReport report = null;
 		try {
 			InstallationReportDAO dao = new InstallationReportDAO();
@@ -40,7 +40,7 @@ public abstract class AbstractInitializerManager implements BeanFactoryAware {
 			report = dao.loadReport(this.getConfigVersion());
 		} catch (Throwable t) {
 			_logger.error("error Error extracting report", t);
-			throw new ApsSystemException("Error extracting report", t);
+			throw new EntException("Error extracting report", t);
 		}
 		return report;
 	}

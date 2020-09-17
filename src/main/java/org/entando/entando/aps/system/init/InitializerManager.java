@@ -18,7 +18,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.init.cache.IInitializerManagerCacheWrapper;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentEnvironment;
@@ -120,7 +120,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
         }
     }
 
-    public void executeComponentPostInitProcesses(Component component, SystemInstallationReport report) throws ApsSystemException {
+    public void executeComponentPostInitProcesses(Component component, SystemInstallationReport report) throws EntException {
         ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
         SystemInstallationReport.Status postProcessStatus = componentReport.getPostProcessStatus();
         if (!postProcessStatus.equals(SystemInstallationReport.Status.INIT)) {
@@ -144,7 +144,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
         report.setUpdated();
     }
 
-    protected SystemInstallationReport.Status executePostProcesses(List<IPostProcess> postProcesses) throws ApsSystemException {
+    protected SystemInstallationReport.Status executePostProcesses(List<IPostProcess> postProcesses) throws EntException {
         if (null == postProcesses || postProcesses.isEmpty()) {
             return SystemInstallationReport.Status.NOT_AVAILABLE;
         }
