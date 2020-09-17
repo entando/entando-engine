@@ -346,8 +346,10 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             description = (String)names.get(defaultLangCode);
             if (null == description) {
                 for (String lang : names.stringPropertyNames()) {
-                    description = (String)names.get(lang);
-                    break;
+                    if (null != names.get(lang)) {
+                        description = (String)names.get(lang);
+                        break;
+                    }
                 }
             }
         }

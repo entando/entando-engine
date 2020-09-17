@@ -307,8 +307,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
             String defaultName = (String)this.getNames().get(_langManager.getDefaultLang().getCode());
             if (null == defaultName) {
                 for (String lang : getNames().stringPropertyNames()) {
-                    defaultName = (String)getNames().get(lang);
-                    break;
+                    if (null != getNames().get(lang)) {
+                        defaultName = (String)getNames().get(lang);
+                        break;
+                    }
                 }
             }
             this.setName(defaultName);
