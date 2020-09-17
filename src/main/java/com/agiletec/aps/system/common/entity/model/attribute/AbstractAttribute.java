@@ -13,20 +13,6 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.aps.util.ApsPropertiesDOM;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import java.util.Optional;
-import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -35,8 +21,20 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeV
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.aps.util.ApsPropertiesDOM;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import org.entando.entando.ent.exception.EntException;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This abstract class must be used when implementing Entity Attributes.

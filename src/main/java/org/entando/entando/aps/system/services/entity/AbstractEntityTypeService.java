@@ -18,7 +18,6 @@ import com.agiletec.aps.system.common.entity.model.*;
 import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.system.common.entity.model.attribute.util.*;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
