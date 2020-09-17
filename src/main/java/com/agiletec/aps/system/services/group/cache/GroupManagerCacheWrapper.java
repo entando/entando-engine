@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupDAO;
 
@@ -32,7 +32,7 @@ public class GroupManagerCacheWrapper extends AbstractGenericCacheWrapper<Group>
 	private static final Logger _logger = LoggerFactory.getLogger(GroupManagerCacheWrapper.class);
 
 	@Override
-	public void initCache(IGroupDAO groupDAO) throws ApsSystemException {
+	public void initCache(IGroupDAO groupDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -40,7 +40,7 @@ public class GroupManagerCacheWrapper extends AbstractGenericCacheWrapper<Group>
 			this.insertObjectsOnCache(cache, groups);
 		} catch (Throwable t) {
 			_logger.error("Error loading groups", t);
-			throw new ApsSystemException("Error loading groups", t);
+			throw new EntException("Error loading groups", t);
 		}
 	}
 

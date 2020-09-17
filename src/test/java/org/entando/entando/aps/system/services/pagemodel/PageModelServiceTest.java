@@ -1,7 +1,7 @@
 package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.*;
 import org.entando.entando.aps.system.services.assertionhelper.PageModelAssertionHelper;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
@@ -88,7 +88,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void get_page_models_returns_page_models() throws ApsSystemException {
+    public void get_page_models_returns_page_models() throws EntException {
         when(pageModelManager.searchPageModels(any())).thenReturn(pageModels());
         PagedMetadata<PageModelDto> result = pageModelService.getPageModels(EMPTY_REQUEST, null);
         PagedMetadata<PageModelDto> expected = resultPagedMetadata();

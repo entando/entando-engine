@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.dataobject;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Basic interface for the services whose handled elements may have references
@@ -37,8 +37,8 @@ public interface DataTypeUtilizer {
 	 *
 	 * @param dataTypeId The code of the DataType to inspect.
 	 * @return the list of the objects which reference the DataType.
-	 * @throws ApsSystemException in case of error.
+	 * @throws EntException in case of error.
 	 */
-	public List getDataTypeUtilizers(String dataTypeId) throws ApsSystemException;
+	public List getDataTypeUtilizers(String dataTypeId) throws EntException;
 
 }

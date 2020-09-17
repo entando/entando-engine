@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.storage;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class LocalStorageManager implements IStorageManager {
 	}
 
 	@Override
-	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException, IOException {
+	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws EntException, IOException {
 		subPath = (null == subPath) ? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		FileOutputStream outStream = null;
@@ -56,7 +56,7 @@ public class LocalStorageManager implements IStorageManager {
 			}
 		} catch (Throwable t) {
 			logger.error("Error on saving file", t);
-			throw new ApsSystemException("Error on saving file", t);
+			throw new EntException("Error on saving file", t);
 		} finally {
 			if (null != outStream) {
 				outStream.close();
@@ -119,7 +119,7 @@ public class LocalStorageManager implements IStorageManager {
 	}
 
 	@Override
-	public InputStream getStream(String subPath, boolean isProtectedResource) throws ApsSystemException {
+	public InputStream getStream(String subPath, boolean isProtectedResource) throws EntException {
 		try {
 			subPath = (null == subPath) ? "" : subPath;
 			String fullPath = this.createFullPath(subPath, isProtectedResource);
@@ -129,7 +129,7 @@ public class LocalStorageManager implements IStorageManager {
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting stream", t);
-			throw new ApsSystemException("Error extracting stream", t);
+			throw new EntException("Error extracting stream", t);
 		}
 		return null;
 	}
@@ -154,7 +154,7 @@ public class LocalStorageManager implements IStorageManager {
 	}
 
 	@Override
-	public String readFile(String subPath, boolean isProtectedResource) throws ApsSystemException {
+	public String readFile(String subPath, boolean isProtectedResource) throws EntException {
 		subPath = (null == subPath) ? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		File file = new File(fullPath);
@@ -162,12 +162,12 @@ public class LocalStorageManager implements IStorageManager {
 			return FileUtils.readFileToString(file, CharEncoding.UTF_8);
 		} catch (Throwable t) {
 			logger.error("Error reading File with path {}", subPath, t);
-			throw new ApsSystemException("Error reading file", t);
+			throw new EntException("Error reading file", t);
 		}
 	}
 
 	@Override
-	public void editFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException {
+	public void editFile(String subPath, boolean isProtectedResource, InputStream is) throws EntException {
 		subPath = (null == subPath) ? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		String tempFilePath = null;
@@ -188,7 +188,7 @@ public class LocalStorageManager implements IStorageManager {
 				logger.error("Error restoring File from path {} to path", tempFilePath, fullPath, tr);
 			}
 			logger.error("Error writing File with path {}", subPath, t);
-			throw new ApsSystemException("Error editing file", t);
+			throw new EntException("Error editing file", t);
 		} finally {
 			if (null != tempFilePath) {
 				boolean deleted = new File(tempFilePath).delete();

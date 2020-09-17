@@ -21,7 +21,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.CheckFormatUtil;
 import com.agiletec.aps.util.DateConverter;
@@ -53,14 +53,14 @@ public class UserFilterOptionBean implements Serializable {
     public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
         this.setKey(properties.getProperty(PARAM_KEY));
         if (null == this.getKey()) {
-            throw new ApsSystemException("Null option key");
+            throw new EntException("Null option key");
         }
         String isAttributeFilter = properties.getProperty(PARAM_IS_ATTRIBUTE_FILTER);
         this.setAttributeFilter(null != isAttributeFilter && isAttributeFilter.equalsIgnoreCase("true"));
         if (this.isAttributeFilter()) {
             this.setAttribute((AttributeInterface) prototype.getAttribute(this.getKey()));
             if (null == this.getAttribute()) {
-                throw new ApsSystemException("Null attribute by key '" + this.getKey() + "'");
+                throw new EntException("Null attribute by key '" + this.getKey() + "'");
             }
         } else if (this.getKey().equals(KEY_CATEGORY)) {
             String catCode = properties.getProperty(PARAM_CATEGORY_CODE);
@@ -68,7 +68,7 @@ public class UserFilterOptionBean implements Serializable {
                 this.setUserFilterCategoryCode(catCode);
             }
         } else if (!this.getKey().equals(KEY_FULLTEXT) && !this.getKey().equals(KEY_CATEGORY)) {
-            throw new ApsSystemException("Invalid metadata key '" + this.getKey() + "'");
+            throw new EntException("Invalid metadata key '" + this.getKey() + "'");
         }
     }
 
@@ -164,7 +164,7 @@ public class UserFilterOptionBean implements Serializable {
             }
         } catch (Throwable t) {
             _logger.error("Error extracting form parameters", t);
-            throw new ApsSystemException("Error extracting form parameters", t);
+            throw new EntException("Error extracting form parameters", t);
         }
         this.setFormFieldNames(formFieldNames);
     }
@@ -243,7 +243,7 @@ public class UserFilterOptionBean implements Serializable {
         }
     }
 
-    public EntitySearchFilter getEntityFilter() throws ApsSystemException {
+    public EntitySearchFilter getEntityFilter() throws EntException {
         EntitySearchFilter filter = null;
         try {
             if (!this.isAttributeFilter() || null == this.getFormFieldValues()) {
@@ -293,7 +293,7 @@ public class UserFilterOptionBean implements Serializable {
             }
         } catch (Throwable t) {
             _logger.error("Error extracting entity search filters", t);
-            throw new ApsSystemException("Error extracting entity search filters", t);
+            throw new EntException("Error extracting entity search filters", t);
         }
         return filter;
     }

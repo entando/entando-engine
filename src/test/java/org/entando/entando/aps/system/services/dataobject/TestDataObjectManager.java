@@ -36,7 +36,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -522,12 +522,12 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(xml.indexOf("<category id=\"19\" />") != -1);
     }
 
-    public void testLoadDataObjects() throws ApsSystemException {
+    public void testLoadDataObjects() throws EntException {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId(null, null, null);
         assertEquals(15, dataObjects.size());
     }
 
-    public void testLoadEvents_1() throws ApsSystemException {
+    public void testLoadEvents_1() throws EntException {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, null, null);
         String[] expectedFreeDataObjectsId = {"EVN194", "EVN193",
             "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
@@ -548,7 +548,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(dataObjects.contains("EVN41"));
     }
 
-    public void testLoadEvents_2() throws ApsSystemException {
+    public void testLoadEvents_2() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add("coach");
         groups.add(Group.ADMINS_GROUP_NAME);
@@ -586,7 +586,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_2_1() throws ApsSystemException {
+    public void testLoadEvents_2_1() throws EntException {
         //forcing case insensitive search
         DataObjectSearcherDAO searcherDao = (DataObjectSearcherDAO) this.getApplicationContext().getBean("DataObjectSearcherDAO");
 
@@ -606,7 +606,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals("EVN192", dataObjects.get(1));
     }
 
-    public void testLoadEvents_2_2() throws ApsSystemException {
+    public void testLoadEvents_2_2() throws EntException {
         //forcing case sensitive search
         DataObjectSearcherDAO searcherDao = (DataObjectSearcherDAO) this.getApplicationContext().getBean("DataObjectSearcherDAO");
 
@@ -633,7 +633,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals("EVN192", dataObjects.get(1));
     }
 
-    public void testLoadEvents_3() throws ApsSystemException {
+    public void testLoadEvents_3() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         Date value = DateConverter.parseDate("1999-04-14", "yyyy-MM-dd");
@@ -645,12 +645,12 @@ public class TestDataObjectManager extends BaseTestCase {
         assertEquals("EVN192", dataObjects.get(0));
     }
 
-    public void testLoadEvents_4() throws ApsSystemException {
+    public void testLoadEvents_4() throws EntException {
         this.testLoadEvents_4(true);
         this.testLoadEvents_4(false);
     }
 
-    protected void testLoadEvents_4(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_4(boolean useRoleFilter) throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter1 = (useRoleFilter)
@@ -677,7 +677,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_5() throws ApsSystemException {
+    public void testLoadEvents_5() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<Date> allowedDates = new ArrayList<Date>();
@@ -694,12 +694,12 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_6() throws ApsSystemException {
+    public void testLoadEvents_6() throws EntException {
         this.testLoadEvents_6(true);
         this.testLoadEvents_6(false);
     }
 
-    protected void testLoadEvents_6(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_6(boolean useRoleFilter) throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<String> allowedDescription = new ArrayList<String>();
@@ -719,12 +719,12 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_7() throws ApsSystemException {
+    public void testLoadEvents_7() throws EntException {
         this.testLoadEvents_7(true);
         this.testLoadEvents_7(false);
     }
 
-    protected void testLoadEvents_7(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_7(boolean useRoleFilter) throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<String> allowedDescription = new ArrayList<String>();
@@ -745,12 +745,12 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_8() throws ApsSystemException {
+    public void testLoadEvents_8() throws EntException {
         this.testLoadEvents_8(true);
         this.testLoadEvents_8(false);
     }
 
-    protected void testLoadEvents_8(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_8(boolean useRoleFilter) throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         List<String> allowedDescription = new ArrayList<String>();
@@ -770,13 +770,13 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_9_a() throws ApsSystemException {
+    public void testLoadEvents_9_a() throws EntException {
         this.testLoadEvents_9_a(true);
         this.testLoadEvents_9_a(false);
     }
 
 
-    protected void testLoadEvents_9_a(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_9_a(boolean useRoleFilter) throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter = (useRoleFilter)
@@ -793,12 +793,12 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents_9_b() throws ApsSystemException {
+    public void testLoadEvents_9_b() throws EntException {
         this.testLoadEvents_9_b(true);
         this.testLoadEvents_9_b(false);
     }
 
-    protected void testLoadEvents_9_b(boolean useRoleFilter) throws ApsSystemException {
+    protected void testLoadEvents_9_b(boolean useRoleFilter) throws EntException {
         //forcing case insensitive search
         DataObjectSearcherDAO searcherDao = (DataObjectSearcherDAO) this.getApplicationContext().getBean("DataObjectSearcherDAO");
         List<String> groups = new ArrayList<String>();
@@ -821,7 +821,7 @@ public class TestDataObjectManager extends BaseTestCase {
 
 
 
-    public void testLoadEvents_1_b() throws ApsSystemException {
+    public void testLoadEvents_1_b() throws EntException {
         //forcing case insensitive search
         DataObjectSearcherDAO searcherDao = (DataObjectSearcherDAO) this.getApplicationContext().getBean("DataObjectSearcherDAO");
 
@@ -843,7 +843,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadOrderedEvents_1() throws ApsSystemException {
+    public void testLoadOrderedEvents_1() throws EntException {
         EntitySearchFilter filterForDescr = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false);
         filterForDescr.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filterForDescr};
@@ -865,7 +865,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadOrderedEvents_2() throws ApsSystemException {
+    public void testLoadOrderedEvents_2() throws EntException {
         EntitySearchFilter filterForCreation = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CREATION_DATE_FILTER_KEY, false);
         filterForCreation.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filterForCreation};
@@ -886,7 +886,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadOrderedEvents_3() throws ApsSystemException {
+    public void testLoadOrderedEvents_3() throws EntException {
         EntitySearchFilter filterForCreation = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CREATION_DATE_FILTER_KEY, false);
         filterForCreation.setOrder(EntitySearchFilter.DESC_ORDER);
         EntitySearchFilter filterForDate = new EntitySearchFilter("DataInizio", true);
@@ -943,7 +943,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents_1() throws ApsSystemException {
+    public void testLoadFutureEvents_1() throws EntException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, today, null);
         filter.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -957,7 +957,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents_2() throws ApsSystemException {
+    public void testLoadFutureEvents_2() throws EntException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, today, null);
         filter.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -971,7 +971,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents_3() throws ApsSystemException {
+    public void testLoadFutureEvents_3() throws EntException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
         List<String> groups = new ArrayList<String>();
         groups.add("coach");
@@ -987,7 +987,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadPastEvents_1() throws ApsSystemException {
+    public void testLoadPastEvents_1() throws EntException {
         Date today = DateConverter.parseDate("2008-10-01", "yyyy-MM-dd");
 
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, null, today);
@@ -1003,7 +1003,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadPastEvents_2() throws ApsSystemException {
+    public void testLoadPastEvents_2() throws EntException {
         Date today = DateConverter.parseDate("2008-10-01", "yyyy-MM-dd");
 
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, null, today);
@@ -1019,7 +1019,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadPastEvents_3() throws ApsSystemException {
+    public void testLoadPastEvents_3() throws EntException {
         Date today = DateConverter.parseDate("2008-02-13", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, null, today);
         filter.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -1036,7 +1036,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadDataObjectsForCategory_1() throws ApsSystemException {
+    public void testLoadDataObjectsForCategory_1() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
@@ -1056,7 +1056,7 @@ public class TestDataObjectManager extends BaseTestCase {
 //        assertTrue(dataObjects.contains("ART179"));
     }
 
-    public void testLoadDataObjectsForCategory_2() throws ApsSystemException {
+    public void testLoadDataObjectsForCategory_2() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
@@ -1125,7 +1125,7 @@ public class TestDataObjectManager extends BaseTestCase {
 //        assertTrue(dataObjects.contains("ART179"));
     }
 
-    public void testLoadDataObjectsForCategory() throws ApsSystemException {
+    public void testLoadDataObjectsForCategory() throws EntException {
         String[] categories1 = {"evento"};
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId(categories1, null, null);
         assertEquals(2, dataObjects.size());
@@ -1138,7 +1138,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(dataObjects.contains("ART180"));
     }
 
-    public void testLoadEventsForCategory_1() throws ApsSystemException {
+    public void testLoadEventsForCategory_1() throws EntException {
         String[] categories = {"evento"};
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", categories, null, null);
         assertEquals(2, dataObjects.size());
@@ -1154,7 +1154,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(dataObjects.contains("EVN192"));
     }
 
-    public void testLoadEventsForCategory_2() throws ApsSystemException {
+    public void testLoadEventsForCategory_2() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         String[] categories1 = {"general_cat1"};
@@ -1208,7 +1208,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(dataObjects.contains("ART122"));
     }
 
-    public void testLoadEventsForGroup() throws ApsSystemException {
+    public void testLoadEventsForGroup() throws EntException {
         List<String> dataObjects = _dataObjectManager.loadDataObjectsId("EVN", null, null, null);
         String[] expectedFreeDataObjectsId = {"EVN191", "EVN192", "EVN193", "EVN194",
             "EVN20", "EVN23", "EVN21", "EVN24", "EVN25"};
@@ -1242,7 +1242,7 @@ public class TestDataObjectManager extends BaseTestCase {
         assertTrue(dataObjects.contains("EVN41"));
     }
 
-    public void testLoadDataObjectsByAttribute_1() throws ApsSystemException {
+    public void testLoadDataObjectsByAttribute_1() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
 
@@ -1272,7 +1272,7 @@ public class TestDataObjectManager extends BaseTestCase {
         }
     }
 
-    public void testLoadDataObjectsByAttribute_2() throws ApsSystemException {
+    public void testLoadDataObjectsByAttribute_2() throws EntException {
         List<String> groups = new ArrayList<String>();
         groups.add(Group.ADMINS_GROUP_NAME);
         EntitySearchFilter filter0 = new EntitySearchFilter(IDataObjectManager.ENTITY_ID_FILTER_KEY, false);

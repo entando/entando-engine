@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -80,7 +80,7 @@ public class WidgetTypeManager extends AbstractService
     }
 
     @Override
-    public void addWidgetType(WidgetType widgetType) throws ApsSystemException {
+    public void addWidgetType(WidgetType widgetType) throws EntException {
         try {
             if (null == widgetType) {
                 logger.error("Null Widget Type");
@@ -93,25 +93,25 @@ public class WidgetTypeManager extends AbstractService
             }
             String parentTypeCode = widgetType.getParentTypeCode();
             if (null != parentTypeCode && null == this.getWidgetType(parentTypeCode)) {
-                throw new ApsSystemException("ERROR : Parent type '" + parentTypeCode + "' doesn't exists");
+                throw new EntException("ERROR : Parent type '" + parentTypeCode + "' doesn't exists");
             }
             if (null == parentTypeCode && null != widgetType.getConfig()) {
-                throw new ApsSystemException("ERROR : Parent type null and default config not null");
+                throw new EntException("ERROR : Parent type null and default config not null");
             }
             if (null != widgetType.getTypeParameters() && null != widgetType.getConfig()) {
-                throw new ApsSystemException("ERROR : Params not null and config not null");
+                throw new EntException("ERROR : Params not null and config not null");
             }
             this.getWidgetTypeDAO().addWidgetType(widgetType);
             this.getCacheWrapper().addWidgetType(widgetType);
             this.notifyWidgetTypeChanging(widgetType.getCode(), WidgetTypeChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error adding a Widget Type", t);
-            throw new ApsSystemException("Error adding a Widget Type", t);
+            throw new EntException("Error adding a Widget Type", t);
         }
     }
 
     @Override
-    public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException {
+    public void deleteWidgetType(String widgetTypeCode) throws EntException {
         List<GuiFragment> deletedFragments = new ArrayList<GuiFragment>();
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
@@ -143,13 +143,13 @@ public class WidgetTypeManager extends AbstractService
                 }
             }
             logger.error("Error deleting widget type", t);
-            throw new ApsSystemException("Error deleting widget type", t);
+            throw new EntException("Error deleting widget type", t);
         }
     }
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws ApsSystemException {
+                                 String configUi, String bundleId) throws EntException {
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
@@ -169,12 +169,12 @@ public class WidgetTypeManager extends AbstractService
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
-            throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
+            throw new EntException("Error updating Widget type titles : type code" + widgetTypeCode, t);
         }
     }
 
     @Override
-    public List<WidgetType> getGroupUtilizers(String groupName) throws ApsSystemException {
+    public List<WidgetType> getGroupUtilizers(String groupName) throws EntException {
         List<WidgetType> utilizers = null;
         try {
             boolean freeTypes = (null == groupName || groupName.equals(Group.FREE_GROUP_NAME));
@@ -191,13 +191,13 @@ public class WidgetTypeManager extends AbstractService
             }
         } catch (Throwable t) {
             logger.error("Error extracting utilizers", t);
-            throw new ApsSystemException("Error extracting utilizers", t);
+            throw new EntException("Error extracting utilizers", t);
         }
         return utilizers;
     }
 
     @Override
-    public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
+    public List getGuiFragmentUtilizers(String guiFragmentCode) throws EntException {
         List<WidgetType> utilizers = new ArrayList<WidgetType>();
         try {
             FieldSearchFilter codeFilter = new FieldSearchFilter("code", guiFragmentCode, false);
@@ -216,12 +216,12 @@ public class WidgetTypeManager extends AbstractService
             }
         } catch (Throwable t) {
             logger.error("Error extracting utilizers", t);
-            throw new ApsSystemException("Error extracting utilizers", t);
+            throw new EntException("Error extracting utilizers", t);
         }
         return utilizers;
     }
 
-    private void notifyWidgetTypeChanging(String widgetTypeCode, int operationCode) throws ApsSystemException {
+    private void notifyWidgetTypeChanging(String widgetTypeCode, int operationCode) throws EntException {
         WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
         event.setWidgetTypeCode(widgetTypeCode);
         event.setOperationCode(operationCode);

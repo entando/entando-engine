@@ -25,7 +25,7 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Classe di supporto all'interpretazione dell'XML indicante le lingue del sistema.
@@ -51,9 +51,9 @@ public class LangDOM {
 	/**
 	 * Costruttore della classe dom.
 	 * @param xmlText L'xml delle lingue tramite inizializzare il cocumento.
-	 * @throws ApsSystemException In caso di errore nell'interpretazione del documento.
+	 * @throws EntException In caso di errore nell'interpretazione del documento.
 	 */
-	public LangDOM(String xmlText) throws ApsSystemException {
+	public LangDOM(String xmlText) throws EntException {
 		this.decodeDOM(xmlText);
 	}
 	
@@ -126,7 +126,7 @@ public class LangDOM {
 		return xml;
 	}
 	
-	private void decodeDOM(String xmlText) throws ApsSystemException {
+	private void decodeDOM(String xmlText) throws EntException {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
 		StringReader reader = new StringReader(xmlText);
@@ -134,7 +134,7 @@ public class LangDOM {
 			this.doc = builder.build(reader);
 		} catch (Throwable t) {
 			logger.error("Error while parsing xml : {}", xmlText, t);
-			throw new ApsSystemException("Error detected while parsing the XML", t);
+			throw new EntException("Error detected while parsing the XML", t);
 		}
 	}
 

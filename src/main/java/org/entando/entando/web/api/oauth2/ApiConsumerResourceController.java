@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.api.oauth2;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.oauth2.ApiConsumerService;
 import org.entando.entando.aps.system.services.oauth2.model.ApiConsumer;
@@ -49,12 +49,12 @@ public class ApiConsumerResourceController implements ApiConsumerResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ApiConsumer>> get(@PathVariable("consumerKey") String consumerKey) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<ApiConsumer>> get(@PathVariable("consumerKey") String consumerKey) throws EntException {
         return ResponseEntity.ok(new SimpleRestResponse<>(service.get(consumerKey)));
     }
 
     @Override
-    public ResponseEntity<PagedRestResponse<ApiConsumer>> list(@Valid RestListRequest request) throws ApsSystemException {
+    public ResponseEntity<PagedRestResponse<ApiConsumer>> list(@Valid RestListRequest request) throws EntException {
         validator.validateRestListRequest(request, ApiConsumer.class);
         PagedMetadata<ApiConsumer> pagedMetadata = service.list(request);
         validator.validateRestListResult(request, pagedMetadata);
@@ -62,20 +62,20 @@ public class ApiConsumerResourceController implements ApiConsumerResource {
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<ApiConsumer>> create(@RequestBody @Valid ApiConsumer consumer) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<ApiConsumer>> create(@RequestBody @Valid ApiConsumer consumer) throws EntException {
         validator.validateForCreate(consumer);
         return new ResponseEntity<>(new SimpleRestResponse<>(service.create(consumer)), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<SimpleRestResponse<ApiConsumer>> update(@PathVariable("consumerKey") String consumerKey,
-            @RequestBody @Valid ApiConsumer consumer) throws ApsSystemException {
+            @RequestBody @Valid ApiConsumer consumer) throws EntException {
         validator.validateForUpdate(consumerKey, consumer);
         return ResponseEntity.ok(new SimpleRestResponse<>(service.update(consumer)));
     }
 
     @Override
-    public ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("consumerKey") String consumerKey) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<String>> delete(@PathVariable("consumerKey") String consumerKey) throws EntException {
         service.delete(consumerKey);
         return ResponseEntity.ok(new SimpleRestResponse<>(consumerKey));
     }

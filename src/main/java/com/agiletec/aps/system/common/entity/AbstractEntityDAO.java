@@ -29,7 +29,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import java.sql.SQLException;
 
@@ -190,7 +190,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		this.addEntityAttributeRoleRecord(id, entity, conn);
 	}
 	
-	protected void addEntitySearchRecord(String id, IApsEntity entity, Connection conn) throws ApsSystemException {
+	protected void addEntitySearchRecord(String id, IApsEntity entity, Connection conn) throws EntException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(this.getAddingSearchRecordQuery());
@@ -229,7 +229,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		stat.executeBatch();
 	}
 	
-	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) throws ApsSystemException {
+	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) throws EntException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(this.getAddingAttributeRoleRecordQuery());
@@ -261,7 +261,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		stat.executeBatch();
 	}
 	
-	protected void deleteEntitySearchRecord(String id, Connection conn) throws ApsSystemException {
+	protected void deleteEntitySearchRecord(String id, Connection conn) throws EntException {
 		this.deleteRecordsByEntityId(id, this.getRemovingSearchRecordQuery(), conn);
 	}
 	
@@ -301,7 +301,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			while (res.next()) {
 				entitiesId.add(res.getString(1));
 			}
-		} catch (ApsSystemException | SQLException t) {
+		} catch (EntException | SQLException t) {
 			_logger.error("Error retrieving the list of entity IDs",  t);
 			throw new RuntimeException("Error retrieving the list of entity IDs", t);
 		} finally {

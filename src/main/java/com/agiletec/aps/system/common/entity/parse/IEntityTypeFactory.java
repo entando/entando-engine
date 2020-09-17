@@ -17,7 +17,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface IEntityTypeFactory {
 	
-	public List<SmallEntityType> extractSmallEntityTypes(String configItemName, IEntityTypeDOM entityTypeDom) throws ApsSystemException;
+	public List<SmallEntityType> extractSmallEntityTypes(String configItemName, IEntityTypeDOM entityTypeDom) throws EntException;
 	
 	/**
 	 * Return a prototype of an Entity Type by its code that the
@@ -40,10 +40,10 @@ public interface IEntityTypeFactory {
 	 * @param entityDom The DOM class that parses the XML representing the single (implemented) entity.
 	 * @param entityManagerName The entity manager name
 	 * @return the required Entity Type Prototype
-	 * @throws ApsSystemException If errors occurs during the parsing process of the XML. 
+	 * @throws EntException If errors occurs during the parsing process of the XML.
 	 */
 	public IApsEntity extractEntityType(String typeCode, Class entityClass, String configItemName, 
-			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws ApsSystemException;
+			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws EntException;
 	
 	/**
 	 * Return the Map of the prototypes of the Entity Types (indexed by their code) that the
@@ -55,18 +55,18 @@ public interface IEntityTypeFactory {
 	 * @param entityDom The DOM class that parses the XML representing the single (implemented) entity.
 	 * @param entityManagerName The entity manager name
 	 * @return The map of the Entity Types Prototypes, indexed by code. 
-	 * @throws ApsSystemException If errors occurs during the parsing process of the XML. 
+	 * @throws EntException If errors occurs during the parsing process of the XML.
 	 */
 	public Map<String, IApsEntity> extractEntityTypes(Class entityClass, String configItemName, 
-			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws ApsSystemException;
+			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws EntException;
 	
 	/**
 	 * Update the Entity Type prototypes in the configuration.
 	 * @param entityTypes The map of the Entity Type Prototypes.
 	 * @param configItemName The configuration item where the Entity Types to update are defined.
 	 * @param entityTypeDom The DOM class that parses the configuration XML.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
-	public void updateEntityTypes(Map<String, IApsEntity> entityTypes, String configItemName, IEntityTypeDOM entityTypeDom) throws ApsSystemException;
+	public void updateEntityTypes(Map<String, IApsEntity> entityTypes, String configItemName, IEntityTypeDOM entityTypeDom) throws EntException;
 	
 }

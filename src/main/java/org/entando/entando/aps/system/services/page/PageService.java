@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.page;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -253,7 +253,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             this.getPageManager().addPage(page);
             IPage addedPage = this.getPageManager().getDraftPage(page.getCode());
             return this.getDtoBuilder().convert(addedPage);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error adding page", e);
             throw new RestServerError("error add page", e);
         }
@@ -266,7 +266,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             if (null != page) {
                 this.getPageManager().deletePage(pageCode);
             }
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete page {}", pageCode, e);
             throw new RestServerError("error in delete page", e);
         }
@@ -303,7 +303,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             PageDto page = this.getDtoBuilder().convert(updatePage);
             page.setPosition(oldPage.getPosition());
             return page;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating page {}", pageCode, e);
             throw new RestServerError("error in update page", e);
         }
@@ -364,7 +364,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             return this.getDtoBuilder().convert(newPage);
         } catch (ValidationGenericException e) {
             throw e;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating page {} status", pageCode, e);
             throw new RestServerError("error in update page status", e);
         }
@@ -393,7 +393,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                 this.getPageManager().movePage(page, parent);
             }
             page = this.getPageManager().getDraftPage(pageCode);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error moving page {}", pageCode, e);
             throw new RestServerError("error in moving page", e);
         }
@@ -429,7 +429,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             this.getPageManager().updatePage(pageD);
             PageConfigurationDto pageConfigurationDto = new PageConfigurationDto(pageO, STATUS_ONLINE);
             return pageConfigurationDto;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error restoring page {} configuration", pageCode, e);
             throw new RestServerError("error in restoring page configuration", e);
         }
@@ -477,7 +477,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
 
             ApsProperties outProperties = this.getWidgetProcessorFactory().get(widgetReq.getCode()).extractConfiguration(widget.getConfig());
             return new WidgetConfigurationDto(widget.getType().getCode(), outProperties);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in update widget configuration {}", pageCode, e);
             throw new RestServerError("error in update widget configuration", e);
         }
@@ -496,7 +496,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                 return;
             }
             this.pageManager.removeWidget(pageCode, frameId);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete widget configuration for page {} and frame {}", pageCode, frameId, e);
             throw new RestServerError("error in delete widget configuration", e);
         }
@@ -521,7 +521,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             this.getPageManager().updatePage(page);
             return new PageConfigurationDto(page, STATUS_DRAFT);
 
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error setting default widgets for page {}", pageCode, e);
             throw new RestServerError("Error setting default widgets for page " + pageCode, e);
         }
@@ -702,7 +702,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         try {
             List<IPage> pages = ((GroupUtilizer<IPage>) this.getPageManager()).getGroupUtilizers(groupName);
             return this.getDtoBuilder().convert(pages);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading page references for group {}", groupName, ex);
             throw new RestServerError("Error loading page references for group", ex);
         }
@@ -714,7 +714,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         try {
             List<IPage> pages = ((PageModelUtilizer) this.getPageManager()).getPageModelUtilizers(pageModelCode);
             return this.getDtoBuilder().convert(pages);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading page references for pagemodel {}", pageModelCode, ex);
             throw new RestServerError("Error loading page references for pagemodel " + pageModelCode, ex);
         }
@@ -727,7 +727,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             List<IPage> rawPages = this.getPageManager().searchPages(request.getPageCodeToken(), allowedGroups);
             List<PageDto> pages = this.getDtoBuilder().convert(rawPages);
             return pageSearchMapper.toPageSearchDto(request, pages);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error searching pages with token {}", request.getPageCodeToken(), ex);
             throw new RestServerError("Error searching pages", ex);
         }
@@ -761,7 +761,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             List<IPage> rawPages = this.getPageManager().searchOnlinePages(null, groups);
             List<PageDto> pages = this.getDtoBuilder().convert(rawPages);
             return pageSearchMapper.toPageSearchDto(request, pages);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error searching free online pages ", ex);
             throw new RestServerError("Error searching free online pages", ex);
         }
@@ -836,7 +836,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                     }
                 }
             }
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("error loading references for page {}", page.getCode(), ex);
             throw new RestServerError("error in getReferencingObjects ", ex);
         }

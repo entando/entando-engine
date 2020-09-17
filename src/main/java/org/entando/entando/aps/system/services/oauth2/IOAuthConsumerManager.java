@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 
 import java.util.List;
@@ -38,15 +38,15 @@ public interface IOAuthConsumerManager extends ClientDetailsService {
     public static final String SCOPE_FILTER_KEY = "scope";
     public static final String AUTHORIZED_GRANT_TYPE_FILTER_KEY = "authorizedgranttypes";
 
-    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException;
+    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws EntException;
 
-    public ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    public ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws EntException;
 
-    public ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    public ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws EntException;
 
-    public void deleteConsumer(String consumerKey) throws ApsSystemException;
+    public void deleteConsumer(String consumerKey) throws EntException;
 
-    public List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws ApsSystemException;
+    public List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws EntException;
 
-    public List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws ApsSystemException;
+    public List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws EntException;
 }

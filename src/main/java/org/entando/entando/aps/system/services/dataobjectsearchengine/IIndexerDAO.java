@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.dataobjectsearchengine;
 import java.io.File;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 
@@ -31,17 +31,17 @@ public interface IIndexerDAO {
 	 * Inizializzazione dell'indicizzatore.
 	 *
 	 * @param dir La cartella locale contenitore dei dati persistenti.
-	 * @throws ApsSystemException In caso di errori.
+	 * @throws EntException In caso di errori.
 	 */
-	public void init(File dir) throws ApsSystemException;
+	public void init(File dir) throws EntException;
 
 	/**
 	 * Aggiunge un dataobject nel db del motore di ricerca.
 	 *
 	 * @param entity Il dataobject da aggiungere.
-	 * @throws ApsSystemException In caso di errori.
+	 * @throws EntException In caso di errori.
 	 */
-	public void add(IApsEntity entity) throws ApsSystemException;
+	public void add(IApsEntity entity) throws EntException;
 
 	/**
 	 * Cancella un documento indicizzato.
@@ -50,9 +50,9 @@ public interface IIndexerDAO {
 	 * documento.
 	 * @param value La chiave mediante il quale è stato indicizzato il
 	 * documento.
-	 * @throws ApsSystemException In caso di errori.
+	 * @throws EntException In caso di errori.
 	 */
-	public void delete(String name, String value) throws ApsSystemException;
+	public void delete(String name, String value) throws EntException;
 
 	public void close();
 

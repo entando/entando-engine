@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -49,7 +49,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
     }
 
     @Override
-    public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
+    public void setAttributeConfig(Element attributeElement) throws EntException {
         super.setAttributeConfig(attributeElement);
         String separator = this.extractXmlAttribute(attributeElement, "separator", false);
         if (null == separator || separator.trim().length() == 0) {

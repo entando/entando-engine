@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.init;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.FileTextReader;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
 		} catch (Throwable t) {
 			_logger.error("Error initializing oracle schema ", t);
-			throw new ApsSystemException("Error initializing oracle schema", t);
+			throw new EntException("Error initializing oracle schema", t);
 		}
 	}
 
@@ -58,18 +58,18 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
 		} catch (Throwable t) {
 			_logger.info("Error creating derby schema" + t);
-			throw new ApsSystemException("Error creating derby schema", t);
+			throw new EntException("Error creating derby schema", t);
 		}
 		try {
 			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
 			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
 		} catch (Throwable t) {
 			_logger.error("Error initializating Derby Schema", t);
-			throw new ApsSystemException("Error initializating Derby Schema", t);
+			throw new EntException("Error initializating Derby Schema", t);
 		}
 	}
 
-	protected void dropAndRestoreBackup(String backupSubFolder) throws ApsSystemException {
+	protected void dropAndRestoreBackup(String backupSubFolder) throws EntException {
 		try {
 			List<Component> components = this.getComponents();
 			int size = components.size();
@@ -81,11 +81,11 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
 			_logger.error("Error while restoring backup: {}", backupSubFolder, t);
-			throw new ApsSystemException("Error while restoring backup", t);
+			throw new EntException("Error while restoring backup", t);
 		}
 	}
 
-	private void dropTables(Map<String, List<String>> tableMapping) throws ApsSystemException {
+	private void dropTables(Map<String, List<String>> tableMapping) throws EntException {
 		if (null == tableMapping) {
 			return;
 		}
@@ -113,7 +113,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 		}
 	}
 
-	protected void restoreBackup(String backupSubFolder) throws ApsSystemException {
+	protected void restoreBackup(String backupSubFolder) throws EntException {
 		try {
 			this.restoreLocalDump(this.getEntandoTableMapping(), backupSubFolder);
 			List<Component> components = this.getComponents();
@@ -123,11 +123,11 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while restoring local backup", t);
-			throw new ApsSystemException("Error while restoring local backup", t);
+			throw new EntException("Error while restoring local backup", t);
 		}
 	}
 
-	private void restoreLocalDump(Map<String, List<String>> tableMapping, String backupSubFolder) throws ApsSystemException {
+	private void restoreLocalDump(Map<String, List<String>> tableMapping, String backupSubFolder) throws EntException {
 		if (null == tableMapping) {
 			return;
 		}

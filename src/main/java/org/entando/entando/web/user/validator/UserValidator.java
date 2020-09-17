@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.user.validator;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -234,7 +234,7 @@ public class UserValidator extends AbstractPaginationValidator {
             if (user != null) {
                 return true;
             }
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Invalid password for username {}", username, e);
         }
         return false;
@@ -244,7 +244,7 @@ public class UserValidator extends AbstractPaginationValidator {
         UserDetails user = null;
         try {
             user = this.getUserManager().getUser(username);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error loading user {}", username, e);
             throw new RestServerError("Error loading user", e);
         }

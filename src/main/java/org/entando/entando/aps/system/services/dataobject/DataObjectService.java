@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -243,7 +243,7 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
             DataObjectManager entityManager = (DataObjectManager) this.extractEntityManager(this.getManagerName());
             List<String> idList = ((GroupUtilizer<String>) entityManager).getGroupUtilizers(groupCode);
             return this.buildDtoList(idList, entityManager);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading dataobject references for group {}", groupCode, ex);
             throw new RestServerError("Error loading dataobject references for group", ex);
         }
@@ -255,7 +255,7 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
             DataObjectManager entityManager = (DataObjectManager) this.extractEntityManager(this.getManagerName());
             List<String> idList = ((CategoryUtilizer) entityManager).getCategoryUtilizers(categoryCode);
             return this.buildDtoList(idList, entityManager);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading dataobject references for category {}", categoryCode, ex);
             throw new RestServerError("Error loading dataobject references for category", ex);
         }
@@ -267,7 +267,7 @@ public class DataObjectService extends AbstractEntityTypeService<DataObject, Dat
             idList.stream().forEach(i -> {
                 try {
                     dtoList.add(this.getDtoBuilder().convert(entityManager.loadDataObject(i, true)));
-                } catch (ApsSystemException ex) {
+                } catch (EntException ex) {
                     logger.warn("error loading data object {}", i, ex);
                 }
             });

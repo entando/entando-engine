@@ -15,7 +15,7 @@ package org.entando.entando.aps.tags;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import freemarker.template.Template;
@@ -70,7 +70,7 @@ public class GuiFragmentTag extends ExtendedTagSupport {
         return super.doStartTag();
     }
 	
-	protected String extractFragmentOutput(RequestContext reqCtx) throws ApsSystemException {
+	protected String extractFragmentOutput(RequestContext reqCtx) throws EntException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			IGuiFragmentManager guiFragmentManager = (IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, this.pageContext);
@@ -86,7 +86,7 @@ public class GuiFragmentTag extends ExtendedTagSupport {
 		} catch (Throwable t) {
 			String msg = "Error creating fragment output - code '" + this.getCode() + "'";
 			_logger.error(msg, t);
-			throw new ApsSystemException(msg, t);
+			throw new EntException(msg, t);
 		}
 		return baos.toString();
 	}

@@ -21,7 +21,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
@@ -56,13 +56,13 @@ public class TestDataObjectDAO extends BaseTestCase {
         }
     }
 
-    private void deleteDataObject(DataObject dataObject) throws ApsSystemException {
+    private void deleteDataObject(DataObject dataObject) throws EntException {
         this._dataObjectDao.deleteEntity(dataObject.getId());
         DataObjectRecordVO dataObjectRecord = (DataObjectRecordVO) this._dataObjectDao.loadEntityRecord(dataObject.getId());
         assertNull(dataObjectRecord);
     }
 
-    private void addDataObject(DataObject mockDataObject) throws ApsSystemException {
+    private void addDataObject(DataObject mockDataObject) throws EntException {
         _dataObjectDao.addEntity(mockDataObject);
         DataObjectRecordVO dataObjectRecord = (DataObjectRecordVO) this._dataObjectDao.loadEntityRecord(mockDataObject.getId());
         assertEquals(mockDataObject.getDescription(), dataObjectRecord.getDescription());
@@ -91,18 +91,18 @@ public class TestDataObjectDAO extends BaseTestCase {
         }
     }
 
-    private void insertOnLineDataObject(DataObject mockDataObject) throws ApsSystemException {
+    private void insertOnLineDataObject(DataObject mockDataObject) throws EntException {
         this._dataObjectDao.insertDataObject(mockDataObject);
         DataObjectRecordVO dataObjectRecord = (DataObjectRecordVO) this._dataObjectDao.loadEntityRecord(mockDataObject.getId());
         assertTrue(dataObjectRecord.isOnLine());
     }
 
-    private void getAllDataObjectsOnLine(DataObject mockDataObject) throws ApsSystemException {
+    private void getAllDataObjectsOnLine(DataObject mockDataObject) throws EntException {
         List<String> list = this._dataObjectDao.getAllEntityId();
         assertTrue(list.contains(mockDataObject.getId()));
     }
 
-    private void removeOnLineDataObject(DataObject dataObject) throws ApsSystemException {
+    private void removeOnLineDataObject(DataObject dataObject) throws EntException {
         this._dataObjectDao.removeDataObject(dataObject);
         DataObjectRecordVO dataObjectRecord = (DataObjectRecordVO) this._dataObjectDao.loadEntityRecord(dataObject.getId());
         assertFalse(dataObjectRecord.isOnLine());
@@ -130,7 +130,7 @@ public class TestDataObjectDAO extends BaseTestCase {
         assertTrue(dataObjectIds.contains("ART112"));
     }
 
-    private void updateDataObject(DataObject mockDataObject) throws ApsSystemException {
+    private void updateDataObject(DataObject mockDataObject) throws EntException {
         this._dataObjectDao.updateEntity(mockDataObject);
         DataObjectRecordVO dataObjectRecord = (DataObjectRecordVO) this._dataObjectDao.loadEntityRecord(mockDataObject.getId());
         assertEquals(mockDataObject.getDescription(), dataObjectRecord.getDescription());

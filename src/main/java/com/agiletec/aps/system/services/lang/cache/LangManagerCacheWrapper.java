@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.lang.LangDOM;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class LangManagerCacheWrapper extends AbstractGenericCacheWrapper<Lang> i
     private static final Logger logger = LoggerFactory.getLogger(LangManagerCacheWrapper.class);
 
     @Override
-    public void initCache(String xmlConfig) throws ApsSystemException {
+    public void initCache(String xmlConfig) throws EntException {
         try {
             Cache cache = this.getCache();
             LangDOM langDom = new LangDOM(xmlConfig);
@@ -50,7 +50,7 @@ public class LangManagerCacheWrapper extends AbstractGenericCacheWrapper<Lang> i
             this.insertAndCleanCache(cache, langMap);
         } catch (Throwable t) {
             logger.error("Error loading the system langs", t);
-            throw new ApsSystemException("Error loading the system langs", t);
+            throw new EntException("Error loading the system langs", t);
         }
     }
 

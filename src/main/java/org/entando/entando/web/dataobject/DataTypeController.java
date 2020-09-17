@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.dataobject;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.StringUtils;
@@ -146,7 +146,7 @@ public class DataTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes/{dataTypeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteDataType(@PathVariable String dataTypeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteDataType(@PathVariable String dataTypeCode) throws EntException {
         logger.debug("Deleting data type -> {}", dataTypeCode);
         this.getDataObjectService().deleteDataType(dataTypeCode);
         Map<String, String> payload = new HashMap<>();
@@ -226,7 +226,7 @@ public class DataTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteDataTypeAttribute(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteDataTypeAttribute(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Deleting attribute {} from data type {}", attributeCode, dataTypeCode);
         this.getDataObjectService().deleteDataTypeAttribute(dataTypeCode, attributeCode);
         Map<String, String> result = new HashMap<>();
@@ -271,19 +271,19 @@ public class DataTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveUp", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeUp(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeUp(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Move UP attribute {} from data type {}", attributeCode, dataTypeCode);
         return this.moveDataTypeAttribute(dataTypeCode, attributeCode, true);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/dataTypes/{dataTypeCode}/attribute/{attributeCode}/moveDown", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeDown(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttributeDown(@PathVariable String dataTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Move DOWN attribute {} from data type {}", attributeCode, dataTypeCode);
         return this.moveDataTypeAttribute(dataTypeCode, attributeCode, false);
     }
 
-    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttribute(String dataTypeCode, String attributeCode, boolean moveUp) throws ApsSystemException {
+    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveDataTypeAttribute(String dataTypeCode, String attributeCode, boolean moveUp) throws EntException {
         this.getDataObjectService().moveDataTypeAttribute(dataTypeCode, attributeCode, moveUp);
         Map<String, String> result = new HashMap<>();
         result.put("dataTypeCode", dataTypeCode);

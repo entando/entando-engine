@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
@@ -124,7 +124,7 @@ public class DatabaseManager extends AbstractInitializerManager
         return report;
     }
 
-    private void initMasterDatabases(SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
+    private void initMasterDatabases(SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         System.out.println("+ [ Component: Core ] :: SCHEMA\n" + LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport("entandoCore", true);
         DataSourceInstallationReport dataSourceReport = componentReport.getDataSourceReport();
@@ -168,11 +168,11 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
             logger.error("Error initializating master databases", t);
-            throw new ApsSystemException("Error initializating master databases", t);
+            throw new EntException("Error initializating master databases", t);
         }
     }
 
-    private void initMasterDatabase(String databaseName, DataSource dataSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
+    private void initMasterDatabase(String databaseName, DataSource dataSource, DataSourceInstallationReport schemaReport) throws EntException {
         try {
             DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
             if (type.equals(DatabaseType.DERBY)) {
@@ -188,11 +188,11 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Throwable t) {
             schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
             logger.error("Error creating master tables to db {}", databaseName, t);
-            throw new ApsSystemException("Error creating master tables to db " + databaseName, t);
+            throw new EntException("Error creating master tables to db " + databaseName, t);
         }
     }
 
-    public void initComponentDatabases(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
+    public void initComponentDatabases(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: SCHEMA\n" + LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
@@ -250,24 +250,24 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
             logger.error("Error initializating component {}", componentConfiguration.getCode(), t);
-            throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
+            throw new EntException("Error initializating component " + componentConfiguration.getCode(), t);
         }
     }
 
     private void createTables(String databaseName, List<String> tableClassNames,
-            DataSource dataSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
+            DataSource dataSource, DataSourceInstallationReport schemaReport) throws EntException {
         try {
             DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
             TableFactory tableFactory = new TableFactory(databaseName, dataSource, type);
             tableFactory.createTables(tableClassNames, schemaReport);
         } catch (Throwable t) {
             logger.error("Error creating tables to db {}", databaseName, t);
-            throw new ApsSystemException("Error creating tables to db " + databaseName, t);
+            throw new EntException("Error creating tables to db " + databaseName, t);
         }
     }
 
     //---------------- DATA ------------------- START
-    private void initMasterDefaultResource(SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
+    private void initMasterDefaultResource(SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         System.out.println("+ [ Component: Core ] :: DATA\n" + LOG_PREFIX);
         ComponentInstallationReport coreComponentReport = report.getComponentReport("entandoCore", false);
         if (coreComponentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
@@ -322,12 +322,12 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
             logger.error("Error initializating master DefaultResource", t);
-            throw new ApsSystemException("Error initializating master DefaultResource", t);
+            throw new EntException("Error initializating master DefaultResource", t);
         }
     }
 
     public void initComponentDefaultResources(Component componentConfiguration,
-            SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
+            SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: DATA\n" + LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
@@ -385,12 +385,12 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
             logger.error("Error restoring default resources of component {}", componentConfiguration.getCode(), t);
-            throw new ApsSystemException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
+            throw new EntException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
         }
     }
 
     public void uninstallComponentResources(Component componentConfiguration,
-                                            SystemInstallationReport report) throws ApsSystemException {
+                                            SystemInstallationReport report) throws EntException {
         System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: DATA\n" + LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
@@ -435,12 +435,12 @@ public class DatabaseManager extends AbstractInitializerManager
                 logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Uninstall complete\n" + LOG_PREFIX);
             } catch (Throwable t) {
                 logger.error("Error removing component {}", componentConfiguration.getCode(), t);
-                throw new ApsSystemException("Error removing component " + componentConfiguration.getCode(), t);
+                throw new EntException("Error removing component " + componentConfiguration.getCode(), t);
             }
         }
     }
 
-    private void restoreDefaultDump() throws ApsSystemException {
+    private void restoreDefaultDump() throws EntException {
         try {
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             Map<String, Resource> defaultDump = this.getDefaultSqlDump();
@@ -458,7 +458,7 @@ public class DatabaseManager extends AbstractInitializerManager
             }
         } catch (Throwable t) {
             logger.error("Error restoring default Dump", t);
-            throw new ApsSystemException("Error restoring default Dump", t);
+            throw new EntException("Error restoring default Dump", t);
         }
     }
 
@@ -476,7 +476,7 @@ public class DatabaseManager extends AbstractInitializerManager
             text = FileTextReader.getText(is, "UTF-8");
         } catch (Throwable t) {
             logger.error("Error reading resource", t);
-            throw new ApsSystemException("Error reading resource", t);
+            throw new EntException("Error reading resource", t);
         } finally {
             if (null != is) {
                 is.close();
@@ -487,7 +487,7 @@ public class DatabaseManager extends AbstractInitializerManager
 
     //---------------- DATA ------------------- END
     @Override
-    public void createBackup() throws ApsSystemException {
+    public void createBackup() throws EntException {
         if (this.getStatus() != STATUS_READY) {
             return;
         }
@@ -500,34 +500,34 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Throwable t) {
             this.setStatus(DatabaseManager.STATUS_READY);
             logger.error("Error while creating backup", t);
-            throw new ApsSystemException("Error while creating backup", t);
+            throw new EntException("Error while creating backup", t);
         }
     }
 
-    protected void executeBackup() throws ApsSystemException {
+    protected void executeBackup() throws EntException {
         try {
 
             this.getDatabaseDumper().createBackup(this.getEnvironment(), this.extractReport());
         } catch (Throwable t) {
             logger.error("Error while creating backup", t);
-            throw new ApsSystemException("Error while creating backup", t);
+            throw new EntException("Error while creating backup", t);
         } finally {
             this.setStatus(DatabaseManager.STATUS_READY);
         }
     }
 
     @Override
-    public void deleteBackup(String subFolderName) throws ApsSystemException {
+    public void deleteBackup(String subFolderName) throws EntException {
         try {
             String directoryName = this.getLocalBackupsFolder() + subFolderName;
             this.getStorageManager().deleteDirectory(directoryName, true);
         } catch (Throwable t) {
             logger.error("Error while deleting backup", t);
-            throw new ApsSystemException("Error while deleting backup", t);
+            throw new EntException("Error while deleting backup", t);
         }
     }
 
-    protected DataSourceDumpReport getLastDumpReport() throws ApsSystemException {
+    protected DataSourceDumpReport getLastDumpReport() throws EntException {
         if (Environment.develop.equals(this.getEnvironment())) {
             return this.getBackupReport(this.getEnvironment().toString());
         }
@@ -539,7 +539,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException {
+    public DataSourceDumpReport getBackupReport(String subFolderName) throws EntException {
         try {
             if (this.checkBackupFolder(subFolderName)) {
                 return this.getDumpReport(subFolderName);
@@ -552,7 +552,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException {
+    public List<DataSourceDumpReport> getBackupReports() throws EntException {
         List<DataSourceDumpReport> reports = new ArrayList<DataSourceDumpReport>();
         try {
             String[] children = this.getStorageManager().listDirectory(this.getLocalBackupsFolder(), true); //backupsFolder.list();
@@ -573,7 +573,7 @@ public class DatabaseManager extends AbstractInitializerManager
         return reports;
     }
 
-    private boolean checkBackupFolder(String subFolderName) throws ApsSystemException {
+    private boolean checkBackupFolder(String subFolderName) throws EntException {
         String dirName = this.getLocalBackupsFolder();
         /* shouldn't be no need to check if there is a folder for each Data Source defined
 		String[] dataSourceNames = this.extractBeanNames(DataSource.class);
@@ -593,7 +593,7 @@ public class DatabaseManager extends AbstractInitializerManager
         return true;
     }
 
-    private DataSourceDumpReport getDumpReport(String subFolderName) throws ApsSystemException {
+    private DataSourceDumpReport getDumpReport(String subFolderName) throws EntException {
         InputStream is = null;
         DataSourceDumpReport report = null;
         try {
@@ -616,7 +616,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException {
+    public boolean dropAndRestoreBackup(String subFolderName) throws EntException {
         try {
             if (!this.checkBackupFolder(subFolderName)) {
                 logger.error("backup not available - subfolder '{}'", subFolderName);
@@ -629,13 +629,13 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Throwable t) {
             //TODO future improvement - restore 'lifeline' backup
             logger.error("Error while restoring backup - subfolder {}", subFolderName, t);
-            throw new ApsSystemException("Error while restoring backup - subfolder " + subFolderName, t);
+            throw new EntException("Error while restoring backup - subfolder " + subFolderName, t);
         } finally {
             //TODO future improvement - delete 'lifeline' backup
         }
     }
 
-    private boolean restoreBackup(String subFolderName) throws ApsSystemException {
+    private boolean restoreBackup(String subFolderName) throws EntException {
         try {
             if (!this.checkBackupFolder(subFolderName)) {
                 logger.error("backup not available - subfolder '{}'", subFolderName);
@@ -645,7 +645,7 @@ public class DatabaseManager extends AbstractInitializerManager
             return true;
         } catch (Throwable t) {
             logger.error("Error while restoring local backup", t);
-            throw new ApsSystemException("Error while restoring local backup", t);
+            throw new EntException("Error while restoring local backup", t);
         }
     }
 
@@ -655,7 +655,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws ApsSystemException {
+    public InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws EntException {
         try {
             if (null == subFolderName) {
                 return null;
@@ -671,7 +671,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public DatabaseType getDatabaseType(DataSource dataSource) throws ApsSystemException {
+    public DatabaseType getDatabaseType(DataSource dataSource) throws EntException {
         return this.getDatabaseRestorer().getType(dataSource);
     }
 

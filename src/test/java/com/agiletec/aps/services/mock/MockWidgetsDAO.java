@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author M.Casari
@@ -35,9 +35,9 @@ public class MockWidgetsDAO  extends AbstractDAO {
      * showlet con il codice dato dal parametro code.
      * @param code Codice della showlet
      * @return true se la showlet esiste, false in caso contrario.
-     * @throws ApsSystemException In caso di errore nell'accesso al db.
+     * @throws EntException In caso di errore nell'accesso al db.
      */
-    public boolean exists(String code) throws ApsSystemException {
+    public boolean exists(String code) throws EntException {
     	Connection conn = null;
         PreparedStatement stat = null;
         ResultSet res = null;

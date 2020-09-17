@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.cache.IApiResourceCacheWrapper;
 import org.entando.entando.aps.system.services.api.cache.IApiServiceCacheWrapper;
 
@@ -86,7 +86,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 	}
 
 	@Override
-	public ApiMethod getRelatedMethod(String showletCode) throws ApsSystemException {
+	public ApiMethod getRelatedMethod(String showletCode) throws EntException {
 		List<ApiMethod> masterMethods = this.getMasterMethods(ApiMethod.HttpMethod.GET);
 		for (int i = 0; i < masterMethods.size(); i++) {
 			ApiMethod apiMethod = masterMethods.get(i);
@@ -100,12 +100,12 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 
 	@Override
 	@Deprecated
-	public Map<String, ApiMethod> getRelatedShowletMethods() throws ApsSystemException {
+	public Map<String, ApiMethod> getRelatedShowletMethods() throws EntException {
 		return this.getRelatedWidgetMethods();
 	}
 
 	@Override
-	public Map<String, ApiMethod> getRelatedWidgetMethods() throws ApsSystemException {
+	public Map<String, ApiMethod> getRelatedWidgetMethods() throws EntException {
 		Map<String, ApiMethod> mapping = new HashMap<String, ApiMethod>();
 		try {
 			List<ApiMethod> masterMethods = this.getMasterMethods(ApiMethod.HttpMethod.GET);
@@ -125,13 +125,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error loading related widget methods", t);
-			throw new ApsSystemException("Error loading related widget methods", t);
+			throw new EntException("Error loading related widget methods", t);
 		}
 		return mapping;
 	}
 
 	@Override
-	public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException {
+	public void updateMethodConfig(ApiMethod apiMethod) throws EntException {
 		try {
 			ApiMethod masterMethod = this.checkMethod(apiMethod);
 			this.getApiCatalogDAO().saveApiStatus(apiMethod);
@@ -149,12 +149,12 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			this.getResourceCacheWrapper().updateResource(resource);
 		} catch (Throwable t) {
 			logger.error("Error error updating api status : resource '{}' method '{}'", apiMethod.getResourceName(), apiMethod.getHttpMethod(), t);
-			throw new ApsSystemException("Error updating api status", t);
+			throw new EntException("Error updating api status", t);
 		}
 	}
 
 	@Override
-	public void resetMethodConfig(ApiMethod apiMethod) throws ApsSystemException {
+	public void resetMethodConfig(ApiMethod apiMethod) throws EntException {
 		try {
 			ApiMethod masterMethod = this.checkMethod(apiMethod);
 			String resourceCode = ApiResource.getCode(masterMethod.getNamespace(), masterMethod.getResourceName());
@@ -162,17 +162,17 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			masterMethod.resetConfiguration();
 		} catch (Throwable t) {
 			logger.error("Error error resetting api status : resource '{}' method '{}'", apiMethod.getResourceName(), apiMethod.getHttpMethod(), t);
-			throw new ApsSystemException("Error resetting api status", t);
+			throw new EntException("Error resetting api status", t);
 		}
 	}
 
-	private ApiMethod checkMethod(ApiMethod apiMethod) throws ApsSystemException {
+	private ApiMethod checkMethod(ApiMethod apiMethod) throws EntException {
 		if (null == apiMethod) {
-			throw new ApsSystemException("Null api method");
+			throw new EntException("Null api method");
 		}
 		ApiMethod masterMethod = this.getMasterMethod(apiMethod.getHttpMethod(), apiMethod.getNamespace(), apiMethod.getResourceName());
 		if (null == masterMethod) {
-			throw new ApsSystemException("Api namespace '" + apiMethod.getNamespace() + "' "
+			throw new EntException("Api namespace '" + apiMethod.getNamespace() + "' "
 					+ "resource '" + apiMethod.getResourceName() + "' "
 					+ "method '" + apiMethod.getHttpMethod() + "' does not exist");
 		}
@@ -181,17 +181,17 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 
 	@Deprecated
 	@Override
-	public ApiMethod getMethod(String resourceName) throws ApsSystemException {
+	public ApiMethod getMethod(String resourceName) throws EntException {
 		return this.getMethod(ApiMethod.HttpMethod.GET, resourceName);
 	}
 
 	@Override
-	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException {
+	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws EntException {
 		return this.getMethod(ApiMethod.HttpMethod.GET, null, resourceName);
 	}
 
 	@Override
-	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException {
+	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws EntException {
 		ApiMethod masterMethod = this.getMasterMethod(httpMethod, namespace, resourceName);
 		if (null != masterMethod) {
 			return masterMethod.clone();
@@ -199,7 +199,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 		return null;
 	}
 
-	protected ApiMethod getMasterMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException {
+	protected ApiMethod getMasterMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws EntException {
 		try {
 			String resourceCode = ApiResource.getCode(namespace, resourceName);
 			ApiResource resource = this.getResourceCacheWrapper().getMasterResource(resourceCode);
@@ -208,14 +208,14 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting methods", t);
-			throw new ApsSystemException("Error extracting methods", t);
+			throw new EntException("Error extracting methods", t);
 		}
 		return null;
 	}
 
 	@Deprecated
 	@Override
-	public Map<String, ApiMethod> getMethods() throws ApsSystemException {
+	public Map<String, ApiMethod> getMethods() throws EntException {
 		Map<String, ApiMethod> map = new HashMap<>();
 		List<ApiMethod> list = this.getMethods(ApiMethod.HttpMethod.GET);
 		for (int i = 0; i < list.size(); i++) {
@@ -226,7 +226,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 	}
 
 	@Override
-	public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException {
+	public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws EntException {
 		List<ApiMethod> clonedMethods = new ArrayList<>();
 		try {
 			List<ApiMethod> masterMethods = this.getMasterMethods(httpMethod);
@@ -236,12 +236,12 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting methods", t);
-			throw new ApsSystemException("Error extracting methods", t);
+			throw new EntException("Error extracting methods", t);
 		}
 		return clonedMethods;
 	}
 
-	protected List<ApiMethod> getMasterMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException {
+	protected List<ApiMethod> getMasterMethods(ApiMethod.HttpMethod httpMethod) throws EntException {
 		List<ApiMethod> apiMethods = new ArrayList<>();
 		try {
 			List<ApiResource> resourceList = new ArrayList<>(this.getResourceCacheWrapper().getMasterResources().values());
@@ -253,13 +253,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error loading Master Methods definitions", t);
-			throw new ApsSystemException("Error loading Master Methods definitions", t);
+			throw new EntException("Error loading Master Methods definitions", t);
 		}
 		return apiMethods;
 	}
 
 	@Override
-	public Map<String, ApiResource> getResources() throws ApsSystemException {
+	public Map<String, ApiResource> getResources() throws EntException {
 		Map<String, ApiResource> clonedApiResources = new HashMap<String, ApiResource>();
 		try {
 			Map<String, ApiResource> resources = this.getResourceCacheWrapper().getMasterResources();
@@ -271,13 +271,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting resources", t);
-			throw new ApsSystemException("Error extracting resources", t);
+			throw new EntException("Error extracting resources", t);
 		}
 		return clonedApiResources;
 	}
 
 	@Override
-	public ApiResource getResource(String namespace, String resourceName) throws ApsSystemException {
+	public ApiResource getResource(String namespace, String resourceName) throws EntException {
 		try {
 			String resourceCode = ApiResource.getCode(namespace, resourceName);
 			ApiResource apiResource = this.getResourceCacheWrapper().getMasterResource(resourceCode);
@@ -286,13 +286,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting resource by name '{}'", resourceName, t);
-			throw new ApsSystemException("Error extracting resource", t);
+			throw new EntException("Error extracting resource", t);
 		}
 		return null;
 	}
 
 	@Override
-	public ApiService getApiService(String key) throws ApsSystemException {
+	public ApiService getApiService(String key) throws EntException {
 		ApiService service = this.getServiceCacheWrapper().getMasterServices().get(key);
 		if (null == service) {
 			return null;
@@ -301,7 +301,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 	}
 
 	@Override
-	public Map<String, ApiService> getServices() throws ApsSystemException {
+	public Map<String, ApiService> getServices() throws EntException {
 		Map<String, ApiService> clonedServices = new HashMap<>();
 		try {
 			if (null != this.getServiceCacheWrapper().getMasterServices()) {
@@ -313,13 +313,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting services", t);
-			throw new ApsSystemException("Error extracting services", t);
+			throw new EntException("Error extracting services", t);
 		}
 		return clonedServices;
 	}
 
 	@Override
-	public Map<String, ApiService> getServices(String tag) throws ApsSystemException {
+	public Map<String, ApiService> getServices(String tag) throws EntException {
 		Map<String, ApiService> services = this.getServices();
 		if (null == tag || tag.trim().length() == 0) {
 			return services;
@@ -337,20 +337,20 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			}
 		} catch (Throwable t) {
 			logger.error("Error extracting services", t);
-			throw new ApsSystemException("Error extracting services", t);
+			throw new EntException("Error extracting services", t);
 		}
 		return servicesToReturn;
 	}
 
 	@Override
-	public void saveService(ApiService service) throws ApsSystemException {
+	public void saveService(ApiService service) throws EntException {
 		try {
 			if (null == service) {
-				throw new ApsSystemException("Null api service to save");
+				throw new EntException("Null api service to save");
 			}
 			ApiMethod master = service.getMaster();
 			if (null == master || null == this.getMethod(master.getHttpMethod(), master.getNamespace(), master.getResourceName())) {
-				throw new ApsSystemException("null or invalid master method of service to save");
+				throw new EntException("null or invalid master method of service to save");
 			}
 			if (null != this.getServiceCacheWrapper().getMasterServices().get(service.getKey())) {
 				this.getApiCatalogDAO().updateService(service);
@@ -360,30 +360,30 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			this.getServiceCacheWrapper().addService(service);
 		} catch (Throwable t) {
 			logger.error("Error saving service", t);
-			throw new ApsSystemException("Error saving service", t);
+			throw new EntException("Error saving service", t);
 		}
 	}
 
 	@Override
-	public void deleteService(String key) throws ApsSystemException {
+	public void deleteService(String key) throws EntException {
 		try {
 			this.getApiCatalogDAO().deleteService(key);
 			this.getServiceCacheWrapper().removeService(key);
 		} catch (Throwable t) {
 			logger.error("Error deleting api service by key '{}'", key, t);
-			throw new ApsSystemException("Error deleting service '" + key + "'", t);
+			throw new EntException("Error deleting service '" + key + "'", t);
 		}
 	}
 
 	@Override
-	public void updateService(ApiService service) throws ApsSystemException {
+	public void updateService(ApiService service) throws EntException {
 		try {
 			if (null == service) {
-				throw new ApsSystemException("Null api service to update");
+				throw new EntException("Null api service to update");
 			}
 			ApiService masterService = this.getServiceCacheWrapper().getMasterServices().get(service.getKey());
 			if (null == masterService) {
-				throw new ApsSystemException("Api service '" + service.getKey() + "' does not exist");
+				throw new EntException("Api service '" + service.getKey() + "' does not exist");
 			}
 			masterService.setActive(service.isActive());
 			masterService.setHidden(service.isHidden());
@@ -391,7 +391,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 			this.getServiceCacheWrapper().updateService(service);
 		} catch (Throwable t) {
 			logger.error("Error updating api service with key '{}'", service.getKey(), t);
-			throw new ApsSystemException("Error updating service '" + service.getKey() + "'", t);
+			throw new EntException("Error updating service '" + service.getKey() + "'", t);
 		}
 	}
 

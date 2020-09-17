@@ -20,7 +20,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.FieldSearchFilter.LikeOptionType;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang3.ArrayUtils;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -96,7 +96,7 @@ public class TestGroupManager extends BaseTestCase {
     }
 
     @SuppressWarnings("rawtypes")
-    public void test_search_should_return_all_results() throws ApsSystemException {
+    public void test_search_should_return_all_results() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = null;
         SearcherDaoPaginatedResult<Group> result = this._groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(6));
@@ -109,7 +109,7 @@ public class TestGroupManager extends BaseTestCase {
     }
 
     @SuppressWarnings("rawtypes")
-    public void test_search_by_filter() throws ApsSystemException {
+    public void test_search_by_filter() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = new FieldSearchFilter[0];
 
         FieldSearchFilter groupNameFilter = new FieldSearchFilter<>("groupname", "s", true, LikeOptionType.COMPLETE);

@@ -13,7 +13,6 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
@@ -23,16 +22,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.init.IComponentManager;
-import org.entando.entando.aps.system.services.assertionhelper.PageAssertionHelper;
 import org.entando.entando.aps.system.services.assertionhelper.WidgetAssertionHelper;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.mockhelper.WidgetMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
-import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.entando.entando.aps.system.services.page.model.PageSearchDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDtoBuilder;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
@@ -53,11 +48,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

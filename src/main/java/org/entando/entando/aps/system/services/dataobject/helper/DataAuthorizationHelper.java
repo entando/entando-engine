@@ -20,7 +20,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -38,7 +38,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     private static final Logger _logger = LoggerFactory.getLogger(DataAuthorizationHelper.class);
 
     @Override
-    public boolean isAuth(UserDetails user, DataObject dataObject) throws ApsSystemException {
+    public boolean isAuth(UserDetails user, DataObject dataObject) throws EntException {
         if (null == dataObject) {
             _logger.error("Null content");
             return false;
@@ -49,13 +49,13 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     }
 
     @Override
-    public boolean isAuth(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException {
+    public boolean isAuth(UserDetails user, PublicDataTypeAuthorizationInfo info) throws EntException {
         List<Group> userGroups = this.getAuthorizationManager().getUserGroups(user);
         return info.isUserAllowed(userGroups);
     }
 
     @Override
-    public boolean isAuth(UserDetails user, String dataObjectId, boolean publicVersion) throws ApsSystemException {
+    public boolean isAuth(UserDetails user, String dataObjectId, boolean publicVersion) throws EntException {
         if (publicVersion) {
             PublicDataTypeAuthorizationInfo authorizationInfo = this.getAuthorizationInfo(dataObjectId);
             return this.isAuth(user, authorizationInfo);
@@ -64,7 +64,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
         return this.isAuth(user, content);
     }
 
-    protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws ApsSystemException {
+    protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws EntException {
         if (null == user) {
             _logger.error("Null user");
             return false;
@@ -73,7 +73,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     }
 
     @Override
-    public boolean isAuthToEdit(UserDetails user, DataObject dataObject) throws ApsSystemException {
+    public boolean isAuthToEdit(UserDetails user, DataObject dataObject) throws EntException {
         if (null == dataObject) {
             _logger.error("Null content");
             return false;
@@ -85,12 +85,12 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     }
 
     @Override
-    public boolean isAuthToEdit(UserDetails user, PublicDataTypeAuthorizationInfo info) throws ApsSystemException {
+    public boolean isAuthToEdit(UserDetails user, PublicDataTypeAuthorizationInfo info) throws EntException {
         String mainGroupName = info.getMainGroup();
         return this.isAuthToEdit(user, mainGroupName);
     }
 
-    private boolean isAuthToEdit(UserDetails user, String mainGroupName) throws ApsSystemException {
+    private boolean isAuthToEdit(UserDetails user, String mainGroupName) throws EntException {
         if (null == user) {
             _logger.error("Null user");
             return false;
@@ -100,7 +100,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
     }
 
     @Override
-    public boolean isAuthToEdit(UserDetails user, String dataObjectId, boolean publicVersion) throws ApsSystemException {
+    public boolean isAuthToEdit(UserDetails user, String dataObjectId, boolean publicVersion) throws EntException {
         DataObject content = this.getDataObjectManager().loadDataObject(dataObjectId, publicVersion);
         return this.isAuth(user, content);
     }

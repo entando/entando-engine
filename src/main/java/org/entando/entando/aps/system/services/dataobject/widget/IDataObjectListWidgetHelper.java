@@ -18,7 +18,7 @@ import java.util.List;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFilterBean;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 
@@ -104,9 +104,9 @@ public interface IDataObjectListWidgetHelper extends org.entando.entando.aps.sys
 	 * @param bean The container of the base informations.
 	 * @param reqCtx The request context.
 	 * @return The list of the filter options.
-	 * @throws ApsSystemException in case of error.
+	 * @throws EntException in case of error.
 	 */
-	public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx) throws ApsSystemException;
+	public List<UserFilterOptionBean> getConfiguredUserFilters(IDataObjectListTagBean bean, RequestContext reqCtx) throws EntException;
 
 	public static final String[] allowedMetadataFilterKeys
 			= {IDataObjectManager.ENTITY_TYPE_CODE_FILTER_KEY, IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, IDataObjectManager.DATA_OBJECT_STATUS_FILTER_KEY,

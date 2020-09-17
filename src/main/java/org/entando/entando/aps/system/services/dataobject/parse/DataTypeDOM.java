@@ -17,13 +17,13 @@ import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.parse.EntityTypeDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
 public class DataTypeDOM extends EntityTypeDOM {
 
 	@Override
-	protected IApsEntity createEntityType(Element contentElem, Class entityClass) throws ApsSystemException {
+	protected IApsEntity createEntityType(Element contentElem, Class entityClass) throws EntException {
 		DataObject dataObject = (DataObject) super.createEntityType(contentElem, entityClass);
 		dataObject.setId(null);
 		String viewPage = this.extractXmlAttribute(contentElem, "viewpage", true);

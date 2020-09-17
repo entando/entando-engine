@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.group;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -144,7 +144,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         try {
             this.getGroupManager().updateGroup(group);
             return this.getDtoBuilder().convert(group);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating group {}", groupCode, e);
             throw new RestServerError("error in update group", e);
         }
@@ -156,7 +156,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
             Group group = this.createGroup(groupRequest);
             this.getGroupManager().addGroup(group);
             return this.getDtoBuilder().convert(group);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error adding group", e);
             throw new RestServerError("error add group", e);
         }
@@ -175,7 +175,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
             if (null != group) {
                 this.getGroupManager().removeGroup(group);
             }
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete group {}", groupName, e);
             throw new RestServerError("error in delete group", e);
         }
@@ -209,7 +209,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         return group;
     }
 
-    protected BeanPropertyBindingResult checkGroupForDelete(Group group) throws ApsSystemException {
+    protected BeanPropertyBindingResult checkGroupForDelete(Group group) throws EntException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(group, "group");
 
         if (null == group) {
@@ -260,8 +260,8 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                     }
                 }
             }
-        } catch (ApsSystemException ex) {
-            logger.error("error loading references for group {}", groupName, ex);
+        } catch (EntException ex) {
+            logger.error("error loading references for group {}", group.getName(), ex);
             throw new RestServerError("error in getReferencingObjects ", ex);
         }
         return references;

@@ -18,7 +18,7 @@ import java.util.Map;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.SmallEntityType;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface IEntityTypeDOM {
 	
-	public List<SmallEntityType> extractSmallEntityTypes(String xml) throws ApsSystemException;
+	public List<SmallEntityType> extractSmallEntityTypes(String xml) throws EntException;
 	
 	/**
 	 * Return the Map of the prototypes of the Entity Types (indexed by their code) that the
@@ -38,13 +38,13 @@ public interface IEntityTypeDOM {
 	 * @param entityDom The DOM class that creates the XML of the entity instances. 
 	 * @param entityManagerName The entity manager name
 	 * @return The map of the Entity Types Prototypes, indexed by code. 
-	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
+	 * @throws EntException If errors are detected while parsing the configuration XML.
 	 */
 	public Map<String, IApsEntity> extractEntityTypes(String xml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException;
 	
 	public IApsEntity extractEntityType(String typeCode, String xml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException;
 	
 	/**
 	 * Prepare the map with the Attribute Types.
@@ -57,11 +57,11 @@ public interface IEntityTypeDOM {
 	
 	public Map<String, AttributeInterface> getAttributeTypes();
 	
-	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException;
+	public String getXml(Map<String, IApsEntity> entityTypes) throws EntException;
 	
-	public String getXml(IApsEntity entityType) throws ApsSystemException;
+	public String getXml(IApsEntity entityType) throws EntException;
 	
 	public IApsEntity extractEntityType(String entityTypeXml, Class entityClass, 
-			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+			IApsEntityDOM entityDom, String entityManagerName) throws EntException;
 	
 }

@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
@@ -91,7 +91,7 @@ public class I18nManager extends AbstractService implements II18nManager {
 
     @Override
     public String renderLabel(String key, String renderingLang,
-            boolean keyIfEmpty) throws ApsSystemException {
+            boolean keyIfEmpty) throws EntException {
         String label = null;
         ApsProperties labelsProp = this.getLabelGroup(key);
         if (labelsProp != null) {
@@ -108,7 +108,7 @@ public class I18nManager extends AbstractService implements II18nManager {
 
     @Override
     public String renderLabel(String key, String renderingLang,
-            boolean keyIfEmpty, Map<String, String> params) throws ApsSystemException {
+            boolean keyIfEmpty, Map<String, String> params) throws EntException {
         String value = this.renderLabel(key, renderingLang, keyIfEmpty);
         if (params != null && !params.isEmpty() && value != null) {
             value = this.parseText(value, params);
@@ -139,7 +139,7 @@ public class I18nManager extends AbstractService implements II18nManager {
     }
 
     @Override
-    public ApsProperties getLabelGroup(String key) throws ApsSystemException {
+    public ApsProperties getLabelGroup(String key) throws EntException {
         ApsProperties labelsProp = this.getCacheWrapper().getLabelGroup(key);
         if (null == labelsProp) {
             return null;
@@ -152,16 +152,16 @@ public class I18nManager extends AbstractService implements II18nManager {
      *
      * @param key The key of the labels.
      * @param labels The labels to add.
-     * @throws ApsSystemException In case of Exception.
+     * @throws EntException In case of Exception.
      */
     @Override
-    public void addLabelGroup(String key, ApsProperties labels) throws ApsSystemException {
+    public void addLabelGroup(String key, ApsProperties labels) throws EntException {
         try {
             this.getI18nDAO().addLabelGroup(key, labels);
             this.getCacheWrapper().addLabelGroup(key, labels);
         } catch (Throwable t) {
             logger.error("Error while adding a group of labels by key '{}'", key, t);
-            throw new ApsSystemException("Error while adding a group of labels", t);
+            throw new EntException("Error while adding a group of labels", t);
         }
     }
 
@@ -169,16 +169,16 @@ public class I18nManager extends AbstractService implements II18nManager {
      * Delete a group of labels from db.
      *
      * @param key The key of the labels to delete.
-     * @throws ApsSystemException In case of Exception.
+     * @throws EntException In case of Exception.
      */
     @Override
-    public void deleteLabelGroup(String key) throws ApsSystemException {
+    public void deleteLabelGroup(String key) throws EntException {
         try {
             this.getI18nDAO().deleteLabelGroup(key);
             this.getCacheWrapper().removeLabelGroup(key);
         } catch (Throwable t) {
             logger.error("Error while deleting a label by key {}", key, t);
-            throw new ApsSystemException("Error while deleting a label", t);
+            throw new EntException("Error while deleting a label", t);
         }
     }
 
@@ -187,16 +187,16 @@ public class I18nManager extends AbstractService implements II18nManager {
      *
      * @param key The key of the labels.
      * @param labels The key of the labels to update.
-     * @throws ApsSystemException In case of Exception.
+     * @throws EntException In case of Exception.
      */
     @Override
-    public void updateLabelGroup(String key, ApsProperties labels) throws ApsSystemException {
+    public void updateLabelGroup(String key, ApsProperties labels) throws EntException {
         try {
             this.getI18nDAO().updateLabelGroup(key, labels);
             this.getCacheWrapper().updateLabelGroup(key, labels);
         } catch (Throwable t) {
             logger.error("Error while updating label with key {}", key, t);
-            throw new ApsSystemException("Error while updating a label", t);
+            throw new EntException("Error while updating a label", t);
         }
     }
 

@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity.parse;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(AbstractAttributeSupportObjectDOM.class);
 	
-	protected void validate(String xmlText, String definitionPath) throws ApsSystemException {
+	protected void validate(String xmlText, String definitionPath) throws EntException {
 		SchemaFactory factory = 
             SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		InputStream schemaIs = null;
@@ -60,7 +60,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
         } catch (SAXException | IOException t) {
         	String message = "Error validating definition : " + definitionPath;
         	_logger.error("Error validating definition : {}", definitionPath, t);
-        	throw new ApsSystemException(message, t);
+        	throw new EntException(message, t);
         } finally {
         	try {
 				if (null != schemaIs) schemaIs.close();
@@ -71,7 +71,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
         }
 	}
 	
-	protected Document decodeDOM(String xmlText) throws ApsSystemException {
+	protected Document decodeDOM(String xmlText) throws EntException {
 		Document doc = null;
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
@@ -79,7 +79,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
 		try {
 			doc = builder.build(reader);
 		} catch (JDOMException | IOException ex) {
-			throw new ApsSystemException("Error while parsing: " + ex.getMessage(), ex);
+			throw new EntException("Error while parsing: " + ex.getMessage(), ex);
 		}
 		return doc;
 	}

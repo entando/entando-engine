@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.group;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -130,7 +130,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidateOnUpdateWithInvalidPathAndPayload() throws ApsSystemException, Exception {
+    public void testValidateOnUpdateWithInvalidPathAndPayload() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -152,7 +152,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidateOnDeleteReservedGroups() throws ApsSystemException, Exception {
+    public void testValidateOnDeleteReservedGroups() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -173,7 +173,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testParamSize() throws ApsSystemException, Exception {
+    public void testParamSize() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

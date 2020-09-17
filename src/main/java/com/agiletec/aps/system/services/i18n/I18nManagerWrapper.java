@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.i18n;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.wrapper.I18nLabelBuilder;
 
 /**
@@ -39,9 +39,9 @@ public class I18nManagerWrapper {
 	 * Restituisce la label data la chiave. 
 	 * @param key La chiave tramite il quele estrarre la label.
 	 * @return La label cercata.
-	 * @throws ApsSystemException in caso di errori di parsing.
+	 * @throws EntException in caso di errori di parsing.
 	 */
-	public String getLabel(String key) throws ApsSystemException {
+	public String getLabel(String key) throws EntException {
 		String label = null;
 		if (key != null) {
 			label = this._i18nManager.getLabel(key, this._lang);
@@ -53,9 +53,9 @@ public class I18nManagerWrapper {
 	 * Returns a {@link I18nLabelBuilder} from a given key, that allows to translate a label containing parameters. 
 	 * @param key The key of the desired label.
 	 * @return A {@link I18nLabelBuilder} that allows you to replace the params of the label.
-	 * @throws ApsSystemException in case of parsing errors.
+	 * @throws EntException in case of parsing errors.
 	 */
-	public I18nLabelBuilder getLabelWithParams(String key) throws ApsSystemException {
+	public I18nLabelBuilder getLabelWithParams(String key) throws EntException {
 		String label = null;
 		if (key != null) {
 			label = this._i18nManager.getLabel(key, this._lang);

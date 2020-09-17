@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -67,7 +67,7 @@ public class QueryExtractor {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error reading lines", t);
-			throw new ApsSystemException("Error reading lines", t);
+			throw new EntException("Error reading lines", t);
 		} finally {
 			if (null != is) is.close();
 		}

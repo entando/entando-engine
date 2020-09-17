@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -81,55 +81,55 @@ public class OAuthConsumerManager extends AbstractOAuthManager implements IOAuth
     }
 
     @Override
-    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException {
+    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws EntException {
         ConsumerRecordVO consumer = null;
         try {
             consumer = this.getConsumerDAO().getConsumer(consumerKey);
         } catch (Exception t) {
             logger.error("Error extracting consumer record by key {}", consumerKey, t);
-            throw new ApsSystemException("Error extracting consumer record by key " + consumerKey, t);
+            throw new EntException("Error extracting consumer record by key " + consumerKey, t);
         }
         return consumer;
     }
 
     @Override
-    public ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws ApsSystemException {
+    public ConsumerRecordVO addConsumer(ConsumerRecordVO consumer) throws EntException {
         try {
             return this.getConsumerDAO().addConsumer(consumer);
         } catch (Throwable t) {
             logger.error("Error adding consumer", t);
-            throw new ApsSystemException("Error adding consumer", t);
+            throw new EntException("Error adding consumer", t);
         }
     }
 
     @Override
-    public ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException {
+    public ConsumerRecordVO updateConsumer(ConsumerRecordVO consumer) throws EntException {
         try {
             return this.getConsumerDAO().updateConsumer(consumer);
         } catch (Throwable t) {
             logger.error("Error updating consumer", t);
-            throw new ApsSystemException("Error updating consumer", t);
+            throw new EntException("Error updating consumer", t);
         }
     }
 
     @Override
-    public void deleteConsumer(String clientId) throws ApsSystemException {
+    public void deleteConsumer(String clientId) throws EntException {
         try {
             this.getConsumerDAO().deleteConsumer(clientId);
         } catch (Throwable t) {
             logger.error("Error deleting consumer record by key {}", clientId, t);
-            throw new ApsSystemException("Error deleting consumer record by key " + clientId, t);
+            throw new EntException("Error deleting consumer record by key " + clientId, t);
         }
     }
 
     @Override
-    public List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws ApsSystemException {
+    public List<String> getConsumerKeys(FieldSearchFilter<?>[] filters) throws EntException {
         List<String> consumerKeys = null;
         try {
             consumerKeys = this.getConsumerDAO().getConsumerKeys(filters);
         } catch (Throwable t) {
             logger.error("Error extracting consumer keys", t);
-            throw new ApsSystemException("Error extracting consumer keys", t);
+            throw new EntException("Error extracting consumer keys", t);
         }
         return consumerKeys;
     }
@@ -143,12 +143,12 @@ public class OAuthConsumerManager extends AbstractOAuthManager implements IOAuth
     }
 
     @Override
-    public List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws ApsSystemException {
+    public List<ConsumerRecordVO> getConsumers(FieldSearchFilter<?>[] filters) throws EntException {
         try {
             return consumerDAO.getConsumers(filters);
         } catch (Throwable t) {
             logger.error("Error retrieving consumers", t);
-            throw new ApsSystemException("Error retrieving consumers", t);
+            throw new EntException("Error retrieving consumers", t);
         }
     }
 }

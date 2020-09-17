@@ -27,7 +27,7 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.db.MysqlDatabaseType;
@@ -51,14 +51,14 @@ public class TableFactory {
 		this.setType(type);
 	}
 	
-	public void createTables(List<String> tableClassNames, DataSourceInstallationReport schemaReport) throws ApsSystemException {
+	public void createTables(List<String> tableClassNames, DataSourceInstallationReport schemaReport) throws EntException {
 		ConnectionSource connectionSource = null;
 		try {
 			connectionSource = this.createConnectionSource();
 			this.createTables(tableClassNames, connectionSource, schemaReport);
 		} catch (Throwable t) {
 			_logger.error("Error creating tables to db {}", this.getDatabaseName(), t);
-			throw new ApsSystemException("Error creating tables to db " + this.getDatabaseName(), t);
+			throw new EntException("Error creating tables to db " + this.getDatabaseName(), t);
 		} finally {
 			if (connectionSource != null) {
 				try {
@@ -68,14 +68,14 @@ public class TableFactory {
 		}
 	}
 	
-	public void dropTables(List<String> tableClassNames) throws ApsSystemException {
+	public void dropTables(List<String> tableClassNames) throws EntException {
 		ConnectionSource connectionSource = null;
 		try {
 			connectionSource = this.createConnectionSource();
 			this.dropTables(tableClassNames, connectionSource);
 		} catch (Throwable t) {
 			_logger.error("Error dropping tables to db {}", this.getDatabaseName(), t);
-			throw new ApsSystemException("Error dropping tables to db " + this.getDatabaseName(), t);
+			throw new EntException("Error dropping tables to db " + this.getDatabaseName(), t);
 		} finally {
 			if (connectionSource != null) {
 				try {
@@ -85,7 +85,7 @@ public class TableFactory {
 		}
 	}
 
-	private ConnectionSource createConnectionSource() throws ApsSystemException {
+	private ConnectionSource createConnectionSource() throws EntException {
 		ConnectionSource connectionSource = null;
 		try {
 			DataSource dataSource = this.getDataSource();
@@ -112,7 +112,7 @@ public class TableFactory {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error creating connectionSource to db {}", this.getDatabaseName(), t);
-			throw new ApsSystemException("Error creating connectionSource to db " + this.getDatabaseName(), t);
+			throw new EntException("Error creating connectionSource to db " + this.getDatabaseName(), t);
 		}
 		return connectionSource;
 	}
@@ -123,7 +123,7 @@ public class TableFactory {
 	}
 	
 	private void createTables(List<String> tableClassNames,
-			ConnectionSource connectionSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
+			ConnectionSource connectionSource, DataSourceInstallationReport schemaReport) throws EntException {
 		try {
 			List<String> tables = schemaReport.getDataSourceTables().get(this.getDatabaseName());
 			if (null == tables) {
@@ -145,13 +145,13 @@ public class TableFactory {
 					schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
 					String message = "Error creating table " + this.getDatabaseName() + "/" + tableClassName + " - " + t.getMessage();
 					_logger.error("Error creating table {}/{}",this.getDatabaseName(), tableClassName, t);
-					throw new ApsSystemException(message, t);
+					throw new EntException(message, t);
 				}
 			}
 		} catch (Throwable t) {
 			schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
 			_logger.error("Error on setup Database - {}", this.getDatabaseName(), t);
-			throw new ApsSystemException("Error on setup Database", t);
+			throw new EntException("Error on setup Database", t);
 		}
 	}
 
@@ -181,12 +181,12 @@ public class TableFactory {
 			if (result > 0) {
 				TableUtils.dropTable(connectionSource, tableClass, true);
 			}
-			throw new ApsSystemException("Error creating table " + logTableName, t);
+			throw new EntException("Error creating table " + logTableName, t);
 		}
 	}
 	
 	private void dropTables(List<String> tableClassNames,
-			ConnectionSource connectionSource) throws ApsSystemException {
+			ConnectionSource connectionSource) throws EntException {
 		try {
 			for (int i = 0; i < tableClassNames.size(); i++) {
 				String tableClassName = tableClassNames.get(i);
@@ -196,12 +196,12 @@ public class TableFactory {
 				} catch (Throwable t) {
 					String message = "Error dropping table " + this.getDatabaseName() + "/" + tableClassName + " - " + t.getMessage();
 					_logger.error("Error dropping table {}/{}",this.getDatabaseName(), tableClassName, t);
-					throw new ApsSystemException(message, t);
+					throw new EntException(message, t);
 				}
 			}
 		} catch (Throwable t) {
 			_logger.error("Error on setup Database - {}", this.getDatabaseName(), t);
-			throw new ApsSystemException("Error on setup Database", t);
+			throw new EntException("Error on setup Database", t);
 		}
 	}
 

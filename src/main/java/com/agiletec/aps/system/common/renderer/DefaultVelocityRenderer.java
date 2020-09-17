@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Entities rendering service.
@@ -43,7 +43,7 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 		} catch (Throwable t) {
 			_logger.error("Error initializing the VelocityEngine", t);
 			//ApsSystemUtils.logThrowable(t, this, "init");
-			throw new ApsSystemException("Error initializing the VelocityEngine", t);
+			throw new EntException("Error initializing the VelocityEngine", t);
 		}
 		_logger.debug("{} ready.", this.getName());
 	}
@@ -57,7 +57,7 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 			StringWriter stringWriter = new StringWriter();
 			boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", velocityTemplate);
 			if (!isEvaluated) {
-				throw new ApsSystemException("Rendering error");
+				throw new EntException("Rendering error");
 			}
 			stringWriter.flush();
 			renderedObject = stringWriter.toString();

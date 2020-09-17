@@ -26,7 +26,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -98,9 +98,9 @@ public class RoleDAO extends AbstractDAO implements IRoleDAO {
 	 * Cancella da db tutti i permessi assegnati ad un ruolo.
 	 * @param role L'oggetto che rappresenta il ruolo
 	 * @param conn La connessione al db
-	 * @throws ApsSystemException In caso di eccezione nell'accesso al db.
+	 * @throws EntException In caso di eccezione nell'accesso al db.
 	 */
-	private void deleteRolePermission(Role role, Connection conn) throws ApsSystemException {
+	private void deleteRolePermission(Role role, Connection conn) throws EntException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(DELETE_ROLE_PERMISSIONS);
@@ -118,9 +118,9 @@ public class RoleDAO extends AbstractDAO implements IRoleDAO {
 	 * Salva su db i permessi di un ruolo.
 	 * @param role Il ruolo 
 	 * @param conn La connessione al db
-	 * @throws ApsSystemException In caso di eccezione nell'accesso al db.
+	 * @throws EntException In caso di eccezione nell'accesso al db.
 	 */
-	private void addRolePermissions(Role role, Connection conn) throws ApsSystemException {
+	private void addRolePermissions(Role role, Connection conn) throws EntException {
 		Set<String> permissions = role.getPermissions();
 		if (permissions != null && permissions.size()>0) {
 			PreparedStatement stat = null;

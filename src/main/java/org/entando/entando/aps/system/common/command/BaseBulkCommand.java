@@ -25,7 +25,7 @@ import org.entando.entando.aps.system.common.command.tracer.BulkCommandTracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * A base class for the execution of a {@link ApsCommand} on multiple items.
@@ -98,9 +98,9 @@ public abstract class BaseBulkCommand<I, A, C extends BulkCommandContext<I>> imp
 	 * 
 	 * @param item The item on which to apply the command.
 	 * @return The result of the command. True in case of success (also with warnings), error instead.
-	 * @throws ApsSystemException In case of error during the execution of the command.
+	 * @throws EntException In case of error during the execution of the command.
 	 */
-	protected abstract boolean apply(I item) throws ApsSystemException;
+	protected abstract boolean apply(I item) throws EntException;
 
 	@Override
 	public synchronized void stopCommand() {

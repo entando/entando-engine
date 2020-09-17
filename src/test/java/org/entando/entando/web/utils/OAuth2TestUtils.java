@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.utils;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.Calendar;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.AuthorizationManager;
@@ -101,7 +101,7 @@ public class OAuth2TestUtils {
                 return new AuthorizationManager().isAuthOnPermission(user1, permissionName);
             });
             return accessToken;
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             throw new RuntimeException(ex);
         }
     }

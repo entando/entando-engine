@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.sql.PreparedStatement;
 
 /**
@@ -53,15 +53,15 @@ public abstract class AbstractDAO implements Serializable {
 	/**
 	 * Restituisce una connessione SQL relativa al datasource.
 	 * @return La connessione richiesta.
-	 * @throws ApsSystemException In caso di errore in apertura di connessione.
+	 * @throws EntException In caso di errore in apertura di connessione.
 	 */
-	protected Connection getConnection() throws ApsSystemException {
+	protected Connection getConnection() throws EntException {
 		Connection conn = null;
 		try {
 			conn = this.getDataSource().getConnection();
 		} catch (SQLException e) {
 			_logger.error("Error getting connection to the datasource", e);
-			throw new ApsSystemException("Error getting connection to the datasource", e);
+			throw new EntException("Error getting connection to the datasource", e);
 		}
 		return conn;
 	}

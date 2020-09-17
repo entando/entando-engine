@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.pagemodel.cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelDAO;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class PageModelManagerCacheWrapper extends AbstractGenericCacheWrapper<Pa
 	private static final Logger _logger = LoggerFactory.getLogger(PageModelManagerCacheWrapper.class);
 
 	@Override
-	public void initCache(IPageModelDAO pageModelDAO) throws ApsSystemException {
+	public void initCache(IPageModelDAO pageModelDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -39,7 +39,7 @@ public class PageModelManagerCacheWrapper extends AbstractGenericCacheWrapper<Pa
 			this.insertObjectsOnCache(cache, models);
 		} catch (Throwable t) {
 			_logger.error("Error loading page templates", t);
-			throw new ApsSystemException("Error loading page templates", t);
+			throw new EntException("Error loading page templates", t);
 		}
 	}
 

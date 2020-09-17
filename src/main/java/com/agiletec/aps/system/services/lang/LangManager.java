@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.lang;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.cache.ILangManagerCacheWrapper;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -59,10 +59,10 @@ public class LangManager extends AbstractService implements ILangManager {
 	 * description.
 	 *
 	 * @return The List of assignable langs.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
 	@Override
-	public List<Lang> getAssignableLangs() throws ApsSystemException {
+	public List<Lang> getAssignableLangs() throws EntException {
 		if (assignableLangs == null) {
 			this.loadAssignableLangs();
 		}
@@ -71,7 +71,7 @@ public class LangManager extends AbstractService implements ILangManager {
 		return assignables;
 	}
 
-	private void loadAssignableLangs() throws ApsSystemException {
+	private void loadAssignableLangs() throws EntException {
 		try {
 			InputStream is = this.getClass().getResourceAsStream("ISO_639-1_langs.xml");
 			String xmlConfig = FileTextReader.getText(is);
@@ -81,9 +81,9 @@ public class LangManager extends AbstractService implements ILangManager {
 			for (Lang lang : langs) {
 				this.assignableLangs.put(lang.getCode(), lang);
 			}
-		} catch (ApsSystemException | IOException e) {
+		} catch (EntException | IOException e) {
 			logger.error("Error loading langs from iso definition", e);
-			throw new ApsSystemException("Error loading langs from iso definition", e);
+			throw new EntException("Error loading langs from iso definition", e);
 		}
 	}
 
@@ -91,10 +91,10 @@ public class LangManager extends AbstractService implements ILangManager {
 	 * Add a lang on system.
 	 *
 	 * @param code The code of the lang to add.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
 	@Override
-	public void addLang(String code) throws ApsSystemException {
+	public void addLang(String code) throws EntException {
 		if (this.assignableLangs == null) {
 			this.loadAssignableLangs();
 		}
@@ -110,10 +110,10 @@ public class LangManager extends AbstractService implements ILangManager {
 	 *
 	 * @param code The code of the lang to update.
 	 * @param description The new description.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
 	@Override
-	public void updateLang(String code, String description) throws ApsSystemException {
+	public void updateLang(String code, String description) throws EntException {
 		Lang lang = this.getLang(code);
 		if (lang != null) {
 			lang.setDescr(description);
@@ -126,10 +126,10 @@ public class LangManager extends AbstractService implements ILangManager {
 	 * Remove a lang from the system.
 	 *
 	 * @param code The code of the lang to remove.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
 	@Override
-	public void removeLang(String code) throws ApsSystemException {
+	public void removeLang(String code) throws EntException {
 		Lang lang = this.getLang(code);
 		if (lang != null) {
 			this.getCacheWrapper().removeLang(lang);
@@ -137,7 +137,7 @@ public class LangManager extends AbstractService implements ILangManager {
 		}
 	}
 
-	private void updateConfig() throws ApsSystemException {
+	private void updateConfig() throws EntException {
 		LangDOM langDom = new LangDOM();
 		langDom.addLangs(this.getLangs());
 		String xml = langDom.getXMLDocument();

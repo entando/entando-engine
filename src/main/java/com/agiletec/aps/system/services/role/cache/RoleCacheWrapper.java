@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IRoleDAO;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Role;
@@ -35,7 +35,7 @@ public class RoleCacheWrapper extends AbstractGenericCacheWrapper<Role> implemen
 	private static final Logger _logger = LoggerFactory.getLogger(RoleCacheWrapper.class);
 
 	@Override
-	public void initCache(IRoleDAO roleDAO) throws ApsSystemException {
+	public void initCache(IRoleDAO roleDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -43,7 +43,7 @@ public class RoleCacheWrapper extends AbstractGenericCacheWrapper<Role> implemen
 			this.insertObjectsOnCache(cache, roles);
 		} catch (Throwable t) {
 			_logger.error("Error loading roles", t);
-			throw new ApsSystemException("Error loading roles", t);
+			throw new EntException("Error loading roles", t);
 		}
 	}
 

@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,11 +38,11 @@ public class FileTextReader {
 
     private static final Logger logger = LoggerFactory.getLogger(FileTextReader.class);
 
-    public static String getText(InputStream is) throws ApsSystemException, IOException {
+    public static String getText(InputStream is) throws EntException, IOException {
         return getText(is, null);
     }
 
-    public static String getText(InputStream is, String charset) throws ApsSystemException, IOException {
+    public static String getText(InputStream is, String charset) throws EntException, IOException {
         Reader reader = null;
         BufferedReader br = null;
         try {
@@ -50,7 +50,7 @@ public class FileTextReader {
             br = new BufferedReader(reader);
             return getText(br);
         } catch (Throwable t) {
-            throw new ApsSystemException("Error reading text", t);
+            throw new EntException("Error reading text", t);
         } finally {
             if (null != br) {
                 br.close();
@@ -61,7 +61,7 @@ public class FileTextReader {
         }
     }
 
-    public static String getText(String filename) throws ApsSystemException, IOException {
+    public static String getText(String filename) throws EntException, IOException {
         Reader reader = null;
         BufferedReader br = null;
         try {
@@ -69,7 +69,7 @@ public class FileTextReader {
             br = new BufferedReader(reader);
             return getText(br);
         } catch (FileNotFoundException t) {
-            throw new ApsSystemException("Error reading text", t);
+            throw new EntException("Error reading text", t);
         } finally {
             if (null != br) {
                 br.close();

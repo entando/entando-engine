@@ -19,7 +19,7 @@ import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
@@ -71,8 +71,8 @@ public abstract class AbstractComplexAttribute extends AbstractAttribute {
 	 * Set up the configuration of the Complex Attributes.
 	 * @param attributeElement The JDOM element of the attribute. 
 	 * @param attrTypes The list of the attributes available. 
-	 * @throws ApsSystemException in case of error.
+	 * @throws EntException in case of error.
 	 */
-	public abstract void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException;
+	public abstract void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException;
 	
 }

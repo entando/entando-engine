@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Base interface for the services whose elements can directly reference the page templates
@@ -33,8 +33,8 @@ public interface PageModelUtilizer {
 	 * Return the list of the objects which reference the given page template.
 	 * @param pageModelCode The code of the page
 	 * @return The list of the object referencing the given page template
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-	public List getPageModelUtilizers(String pageModelCode) throws ApsSystemException;
+	public List getPageModelUtilizers(String pageModelCode) throws EntException;
 	
 }

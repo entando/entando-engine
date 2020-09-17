@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.user;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.*;
@@ -124,7 +124,7 @@ public class UserService implements IUserService {
             if (null != auths) {
                 auths.forEach(auth -> dtos.add(new UserAuthorityDto(auth)));
             }
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error extracting auths for user {}", username, e);
             throw new RestServerError("Error extracting auths for user " + username, e);
         }
@@ -143,7 +143,7 @@ public class UserService implements IUserService {
                 if (!this.getAuthorizationManager().isAuthOnGroupAndRole(user, authorization.getGroup(), authorization.getRole(), true)) {
                     this.getAuthorizationManager().addUserAuthorization(username, authorization.getGroup(), authorization.getRole());
                 }
-            } catch (ApsSystemException ex) {
+            } catch (EntException ex) {
                 logger.error("Error in add authorities for {}", username, ex);
                 throw new RestServerError("Error in add authorities", ex);
             }
@@ -162,7 +162,7 @@ public class UserService implements IUserService {
     public void deleteUserAuthorities(String username) {
         try {
             this.getAuthorizationManager().deleteUserAuthorizations(username);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete authorities for {}", username, e);
             throw new RestServerError("Error in delete authorities", e);
         }
@@ -229,7 +229,7 @@ public class UserService implements IUserService {
                 if (userNames.size() == 0 || !userNames.contains(user.getUsername())) {
                     return false;
                 }
-            } catch (ApsSystemException ex) {
+            } catch (EntException ex) {
                 logger.error("error in filter users by profile attribute", ex);
                 throw new RestServerError("error in filter users by profile attribute", ex);
             }
@@ -258,7 +258,7 @@ public class UserService implements IUserService {
             }
             UserDetails modifiedUser = this.getUserManager().getUser(userRequest.getUsername());
             return dtoBuilder.convert(modifiedUser);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in updating user {}", userRequest.getUsername(), e);
             throw new RestServerError("Error in updating user", e);
         }
@@ -277,7 +277,7 @@ public class UserService implements IUserService {
             this.getUserManager().addUser(newUser);
             UserDetails addedUser = this.getUserManager().getUser(username);
             return dtoBuilder.convert(addedUser);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in adding user {}", userRequest.getUsername(), e);
             throw new RestServerError("Error in adding user", e);
         }
@@ -287,7 +287,7 @@ public class UserService implements IUserService {
     public void removeUser(String username) {
         try {
             this.getUserManager().removeUser(username);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in deleting user {}", username, e);
             throw new RestServerError("Error in deleting user", e);
         }
@@ -299,7 +299,7 @@ public class UserService implements IUserService {
             this.getUserManager().changePassword(passwordRequest.getUsername(), passwordRequest.getNewPassword());
             UserDetails user = this.loadUser(passwordRequest.getUsername());
             return dtoBuilder.convert(user);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in updating password for user {}", passwordRequest.getUsername(), e);
             throw new RestServerError("Error in updating password", e);
         }
@@ -328,7 +328,7 @@ public class UserService implements IUserService {
             return user;
         } catch (ResourceNotFoundException e) {
             throw e;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in loading user {}", username, e);
             throw new RestServerError("Error in loading user", e);
         }

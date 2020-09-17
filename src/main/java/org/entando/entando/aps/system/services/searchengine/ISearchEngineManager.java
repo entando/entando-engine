@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.searchengine;
 import java.util.Collection;
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -24,7 +24,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public interface ISearchEngineManager {
 	
 	public List<String> searchId(String sectionCode, 
-			String langCode, String word, Collection<String> allowedGroups) throws ApsSystemException;
+			String langCode, String word, Collection<String> allowedGroups) throws EntException;
 	/*
 	public List<String> searchId(String sectionCode, 
 			SearchEngineFilter[] filters, Collection<String> allowedGroups) throws ApsSystemException;

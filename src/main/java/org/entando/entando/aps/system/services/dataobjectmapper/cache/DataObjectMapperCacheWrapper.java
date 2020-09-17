@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
@@ -32,7 +32,7 @@ public class DataObjectMapperCacheWrapper extends AbstractCacheWrapper implement
 	private static final Logger logger = LoggerFactory.getLogger(DataObjectMapperCacheWrapper.class);
 
 	@Override
-	public void initCache(IPageManager pageManager) throws ApsSystemException {
+	public void initCache(IPageManager pageManager) throws EntException {
 		try {
 			DataObjectPageMapper dataObjectPageMapper = new DataObjectPageMapper();
 			IPage root = pageManager.getOnlineRoot();
@@ -40,7 +40,7 @@ public class DataObjectMapperCacheWrapper extends AbstractCacheWrapper implement
 			this.getCache().put(OBJECT_MAPPER_CACHE_KEY, dataObjectPageMapper);
 		} catch (Throwable t) {
 			logger.error("Error loading data object mapper", t);
-			throw new ApsSystemException("Error loading data object mapper", t);
+			throw new EntException("Error loading data object mapper", t);
 		}
 	}
 

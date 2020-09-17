@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.guifragment;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -25,24 +25,24 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
  */
 public interface IGuiFragmentManager {
 
-	public GuiFragment getGuiFragment(String code) throws ApsSystemException;
+	public GuiFragment getGuiFragment(String code) throws EntException;
 
-	public List<String> getGuiFragments() throws ApsSystemException;
+	public List<String> getGuiFragments() throws EntException;
 
-	public List<String> searchGuiFragments(FieldSearchFilter filters[]) throws ApsSystemException;
+	public List<String> searchGuiFragments(FieldSearchFilter filters[]) throws EntException;
 
-	public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
+	public void addGuiFragment(GuiFragment guiFragment) throws EntException;
 
-	public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
+	public void updateGuiFragment(GuiFragment guiFragment) throws EntException;
 
-	public void deleteGuiFragment(String code) throws ApsSystemException;
+	public void deleteGuiFragment(String code) throws EntException;
 
-	public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws ApsSystemException;
+	public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws EntException;
 
-	public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws ApsSystemException;
+	public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws EntException;
 
-	public List<String> loadGuiFragmentPluginCodes() throws ApsSystemException;
+	public List<String> loadGuiFragmentPluginCodes() throws EntException;
 
-	public SearcherDaoPaginatedResult<GuiFragment> getGuiFragments(List<FieldSearchFilter> fieldSearchFilters) throws ApsSystemException;
+	public SearcherDaoPaginatedResult<GuiFragment> getGuiFragments(List<FieldSearchFilter> fieldSearchFilters) throws EntException;
 
 }

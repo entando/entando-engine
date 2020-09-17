@@ -31,15 +31,7 @@ import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -62,7 +54,7 @@ public class ApiUserProfileTypeInterface {
         } catch (Throwable t) {
         	_logger.error("Error extracting user profile type", t);
             //ApsSystemUtils.logThrowable(t, this, "getProfileType");
-            throw new ApsSystemException("Error extracting user profile type", t);
+            throw new EntException("Error extracting user profile type", t);
         }
         return jaxbProfileType;
     }
@@ -88,7 +80,7 @@ public class ApiUserProfileTypeInterface {
         } catch (Throwable t) {
         	_logger.error("Error adding user profile type", t);
             //ApsSystemUtils.logThrowable(t, this, "addProfileType");
-            throw new ApsSystemException("Error adding user profile type", t);
+            throw new EntException("Error adding user profile type", t);
         }
         return response;
     }
@@ -111,7 +103,7 @@ public class ApiUserProfileTypeInterface {
         } catch (Throwable t) {
         	_logger.error("Error updating user profile type", t);
             //ApsSystemUtils.logThrowable(t, this, "updateProfileType");
-            throw new ApsSystemException("Error updating user profile type", t);
+            throw new EntException("Error updating user profile type", t);
         }
         return response;
     }
@@ -134,7 +126,7 @@ public class ApiUserProfileTypeInterface {
         } catch (Throwable t) {
         	_logger.error("Error deleting user Profile type", t);
             //ApsSystemUtils.logThrowable(t, this, "deleteProfileType");
-            throw new ApsSystemException("Error deleting user Profile type", t);
+            throw new EntException("Error deleting user Profile type", t);
         }
     }
     

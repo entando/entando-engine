@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import java.util.*;
 
@@ -39,12 +39,12 @@ public interface IPageModelManager {
 	 */
 	Collection<PageModel> getPageModels();
 
-	void addPageModel(PageModel pageModel) throws ApsSystemException;
+	void addPageModel(PageModel pageModel) throws EntException;
 
-	void updatePageModel(PageModel pageModel) throws ApsSystemException;
+	void updatePageModel(PageModel pageModel) throws EntException;
 
-	void deletePageModel(String code) throws ApsSystemException;
+	void deletePageModel(String code) throws EntException;
 
-    SearcherDaoPaginatedResult<PageModel> searchPageModels(List<FieldSearchFilter> filters) throws ApsSystemException;
+    SearcherDaoPaginatedResult<PageModel> searchPageModels(List<FieldSearchFilter> filters) throws EntException;
 
 }
