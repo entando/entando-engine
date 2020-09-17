@@ -261,7 +261,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                 }
             }
         } catch (EntException ex) {
-            logger.error("error loading references for group {}", group.getName(), ex);
+            logger.error("error loading references for group {}", groupName, ex);
             throw new RestServerError("error in getReferencingObjects ", ex);
         }
         return references;
