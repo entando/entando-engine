@@ -13,6 +13,9 @@
  */
 package org.entando.entando.web.category;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.services.category.ICategoryService;
@@ -20,9 +23,13 @@ import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.web.category.validator.CategoryValidator;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.page.model.PageSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +53,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
+    public static final String COMPONENT_ID = "category";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -94,6 +102,24 @@ public class CategoryController {
         PagedMetadata<?> result = this.getCategoryService().getCategoryReferences(categoryCode, holder, requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
+
+    @ApiOperation("Retrieve categories usage count")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request")
+    })
+    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RequestMapping(value = "/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String code) {
+        logger.trace("get {} usage by code {}", COMPONENT_ID, code);
+        ComponentUsage usage = ComponentUsage.builder()
+                .type(COMPONENT_ID)
+                .code(code)
+                .usage(categoryService.getComponentUsage(code))
+                .build();
+        return new ResponseEntity<>(new SimpleRestResponse<>(usage), HttpStatus.OK);
+    }
+
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
