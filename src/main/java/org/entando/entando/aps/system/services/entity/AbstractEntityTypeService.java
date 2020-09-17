@@ -20,6 +20,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.*;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.beanutils.*;
 import org.apache.commons.lang.ArrayUtils;
@@ -368,7 +369,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
                 throw new ValidationConflictException(bindingResult);
             }
             ((IEntityTypesConfigurer) entityManager).removeEntityPrototype(entityTypeCode);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete entityType {}", entityTypeCode, e);
             throw new RestServerError("error in delete entityType", e);
         }

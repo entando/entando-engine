@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.springframework.cache.Cache;
 
 /**
@@ -29,7 +29,7 @@ public class EntityManagerCacheWrapper extends AbstractCacheWrapper implements I
 	private String entityManagerName;
 
 	@Override
-	public void initCache(String managerName) throws ApsSystemException {
+	public void initCache(String managerName) throws EntException {
 		this.setEntityManagerName(managerName);
 	}
 

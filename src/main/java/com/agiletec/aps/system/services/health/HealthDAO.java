@@ -1,6 +1,6 @@
 package com.agiletec.aps.system.services.health;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -61,15 +61,15 @@ public class HealthDAO implements IHealthDAO {
     /**
      * Restituisce una connessione SQL relativa al datasource.
      * @return La connessione richiesta.
-     * @throws ApsSystemException In caso di errore in apertura di connessione.
+     * @throws EntException In caso di errore in apertura di connessione.
      */
-    private Connection getConnection(DataSource dataSource) throws ApsSystemException {
+    private Connection getConnection(DataSource dataSource) throws EntException {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
         } catch (SQLException e) {
             logger.error("Error getting connection to the datasource {}", dataSource, e);
-            throw new ApsSystemException("Error getting connection to the datasource " + dataSource.toString(), e);
+            throw new EntException("Error getting connection to the datasource " + dataSource.toString(), e);
         }
         return conn;
     }

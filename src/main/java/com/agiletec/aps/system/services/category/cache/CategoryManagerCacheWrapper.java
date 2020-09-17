@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.category.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryDAO;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -39,7 +39,7 @@ public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements
     private static final Logger logger = LoggerFactory.getLogger(CategoryManagerCacheWrapper.class);
 
     @Override
-    public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws ApsSystemException {
+    public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws EntException {
         List<Category> categories = null;
         try {
             categories = categoryDAO.loadCategories(langManager);
@@ -52,7 +52,7 @@ public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements
             this.initCache(cache, categories);
         } catch (Throwable t) {
             logger.error("Error loading the category tree", t);
-            throw new ApsSystemException("Error loading the category tree.", t);
+            throw new EntException("Error loading the category tree.", t);
         }
     }
 
@@ -69,7 +69,7 @@ public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements
         return root;
     }
 
-    private void initCache(Cache cache, List<Category> categories) throws ApsSystemException {
+    private void initCache(Cache cache, List<Category> categories) throws EntException {
         Category root = null;
         Map<String, Category> categoryMap = new HashMap<>();
         for (Category cat : categories) {
@@ -86,7 +86,7 @@ public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements
             cat.setParentCode(parent.getCode());
         }
         if (root == null) {
-            throw new ApsSystemException("Error found in the category tree: undefined root");
+            throw new EntException("Error found in the category tree: undefined root");
         }
         this.insertObjectsOnCache(cache, root, categoryMap);
     }

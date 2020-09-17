@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.dataobjectsearchengine;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -36,22 +36,22 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
     public void init() throws Exception {
         this._subDirectory = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR);
         if (_subDirectory == null) {
-            throw new ApsSystemException("Item configurazione assente: " + SystemConstants.CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR);
+            throw new EntException("Item configurazione assente: " + SystemConstants.CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR);
         }
     }
 
     @Override
-    public IIndexerDAO getIndexer() throws ApsSystemException {
+    public IIndexerDAO getIndexer() throws EntException {
         return this.getIndexer(this._subDirectory);
     }
 
     @Override
-    public ISearcherDAO getSearcher() throws ApsSystemException {
+    public ISearcherDAO getSearcher() throws EntException {
         return this.getSearcher(this._subDirectory);
     }
 
     @Override
-    public IIndexerDAO getIndexer(String subDir) throws ApsSystemException {
+    public IIndexerDAO getIndexer(String subDir) throws EntException {
         IIndexerDAO indexerDao = null;
         try {
             Class indexerClass = Class.forName(this.getIndexerClassName());
@@ -61,13 +61,13 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             indexerDao.init(this.getDirectory(subDir));
         } catch (Throwable t) {
             _logger.error("Error getting indexer", t);
-            throw new ApsSystemException("Error creating new indexer", t);
+            throw new EntException("Error creating new indexer", t);
         }
         return indexerDao;
     }
 
     @Override
-    public ISearcherDAO getSearcher(String subDir) throws ApsSystemException {
+    public ISearcherDAO getSearcher(String subDir) throws EntException {
         ISearcherDAO searcherDao = null;
         try {
             Class searcherClass = Class.forName(this.getSearcherClassName());
@@ -76,20 +76,20 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             searcherDao.init(this.getDirectory(subDir));
         } catch (Throwable t) {
             _logger.error("Error creating new searcher", t);
-            throw new ApsSystemException("Error creating new searcher", t);
+            throw new EntException("Error creating new searcher", t);
         }
         return searcherDao;
     }
 
     @Override
-    public void updateSubDir(String newSubDirectory) throws ApsSystemException {
+    public void updateSubDir(String newSubDirectory) throws EntException {
         this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR, newSubDirectory);
         String oldDir = _subDirectory;
         this._subDirectory = newSubDirectory;
         this.deleteSubDirectory(oldDir);
     }
 
-    private File getDirectory(String subDirectory) throws ApsSystemException {
+    private File getDirectory(String subDirectory) throws EntException {
         String dirName = this.getIndexDiskRootFolder();
         if (!dirName.endsWith("/")) {
             dirName += "/";
@@ -102,7 +102,7 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
             _logger.debug("Index Directory created");
         }
         if (!dir.canRead() || !dir.canWrite()) {
-            throw new ApsSystemException(dirName + " does not have r/w rights");
+            throw new EntException(dirName + " does not have r/w rights");
         }
         return dir;
     }

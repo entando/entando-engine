@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.dataobject.widget;
 
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.helper.PublicDataTypeAuthorizationInfo;
 import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
 
@@ -32,14 +32,14 @@ public interface IDataObjectViewerHelper {
      * @param modelId Il modello del dataObject ricavato dal tag.
      * @param reqCtx Il contesto della richiesta.
      * @return Il dataObject da visualizzare nella showlet.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
-    public String getRenderedDataObject(String dataObjectId, String modelId, RequestContext reqCtx) throws ApsSystemException;
+    public String getRenderedDataObject(String dataObjectId, String modelId, RequestContext reqCtx) throws EntException;
 
-    public String getRenderedDataObject(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
+    public String getRenderedDataObject(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws EntException;
 
-    public DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
+    public DataObjectRenderizationInfo getRenderizationInfo(String dataObjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws EntException;
 
-    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId, RequestContext reqCtx) throws ApsSystemException;
+    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataObjectId, RequestContext reqCtx) throws EntException;
 
 }

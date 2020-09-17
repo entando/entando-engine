@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.pagemodel.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelDAO;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.Collection;
@@ -27,7 +27,7 @@ public interface IPageModelManagerCacheWrapper {
 	public static final String PAGE_MODEL_CACHE_NAME_PREFIX = "PageModelManager_model_";
 	public static final String PAGE_MODEL_CODES_CACHE_NAME = "PageModelManager_codes";
 
-	public void initCache(IPageModelDAO pageModelDAO) throws ApsSystemException;
+	public void initCache(IPageModelDAO pageModelDAO) throws EntException;
 
 	public PageModel getPageModel(String name);
 

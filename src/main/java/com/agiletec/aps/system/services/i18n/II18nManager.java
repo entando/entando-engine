@@ -16,7 +16,7 @@ package com.agiletec.aps.system.services.i18n;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -38,9 +38,9 @@ public interface II18nManager {
 	 * @param renderingLang The code of the rendering language.
 	 * @param keyIfEmpty If the label is empty or not exists, returns the label key
 	 * @return The value of the label, in the rendering language.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
-	public String renderLabel(String key, String renderingLang, boolean keyIfEmpty) throws ApsSystemException;
+	public String renderLabel(String key, String renderingLang, boolean keyIfEmpty) throws EntException;
 	
 	/**
 	 * Renders a label, according to a given key, in the desired language.
@@ -57,43 +57,43 @@ public interface II18nManager {
 	 * @param params The parameters to be replaced into the label.
 	 * The parameters, in the label text, must be as ${param_name}
 	 * @return The value of the label, in the rendering language.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
-	public String renderLabel(String key, String renderingLang, boolean keyIfEmpty, Map<String, String> params) throws ApsSystemException;
+	public String renderLabel(String key, String renderingLang, boolean keyIfEmpty, Map<String, String> params) throws EntException;
 	
 	/**
 	 * Restituisce una label in base alla chiave ed alla lingua specificata.
 	 * @param key The key.
 	 * @param langCode The code of the language.
 	 * @return La label richiesta.
-	 * @throws ApsSystemException
+	 * @throws EntException
 	 */
-	public String getLabel(String key, String langCode) throws ApsSystemException;
+	public String getLabel(String key, String langCode) throws EntException;
 	
-	public ApsProperties getLabelGroup(String key) throws ApsSystemException;
+	public ApsProperties getLabelGroup(String key) throws EntException;
 	
 	/**
 	 * Add a group of labels on db.
 	 * @param key The key of the labels.
 	 * @param labels The labels to add.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void addLabelGroup(String key, ApsProperties labels) throws ApsSystemException;
+	public void addLabelGroup(String key, ApsProperties labels) throws EntException;
 	
 	/**
 	 * Delete a group of labels from db.
 	 * @param key The key of the labels to delete.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void deleteLabelGroup(String key) throws ApsSystemException;
+	public void deleteLabelGroup(String key) throws EntException;
 	
 	/**
 	 * Update a group of labels on db.
 	 * @param key The key of the labels.
 	 * @param labels The key of the labels to update.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void updateLabelGroup(String key, ApsProperties labels) throws ApsSystemException;
+	public void updateLabelGroup(String key, ApsProperties labels) throws EntException;
 	
 	/**
 	 * Restituisce la lista di chiavi di gruppi di labels 

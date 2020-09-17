@@ -25,7 +25,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.common.entity.parse.AttributeRoleDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.FileTextReader;
 import org.springframework.beans.BeansException;
 
@@ -72,7 +72,7 @@ public class AttributeRolesLoader {
 					if (loader != null) {
 						((ExtraAttributeRolesWrapper) loader).executeLoading(attributeRoles, this.getEntityManager());
 					}
-				} catch (BeansException | ApsSystemException t) {
+				} catch (BeansException | EntException t) {
 					_logger.error("Error extracting attribute support object : bean {}", defNames[i], t);
 				}
 			}

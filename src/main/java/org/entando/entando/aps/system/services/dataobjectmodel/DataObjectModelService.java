@@ -20,7 +20,7 @@ import java.util.Map;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
@@ -138,7 +138,7 @@ public class DataObjectModelService implements IDataObjectModelService {
             DataObjectModel dataModel = this.createDataObjectModel(dataObjectModelRequest);
             this.getDataObjectModelManager().addDataObjectModel(dataModel);
             return this.getDtoBuilder().convert(dataModel);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error adding DataObjectModel", e);
             throw new RestServerError("error add DataObjectModel", e);
         }
@@ -161,7 +161,7 @@ public class DataObjectModelService implements IDataObjectModelService {
             return this.getDtoBuilder().convert(dataObjectModel);
         } catch (ResourceNotFoundException e) {
             throw e;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating DataObjectModel {}", code, e);
             throw new RestServerError("error in update DataObjectModel", e);
         }
@@ -186,7 +186,7 @@ public class DataObjectModelService implements IDataObjectModelService {
                 throw new ValidationConflictException(validationResult);
             }
             this.getDataObjectModelManager().removeDataObjectModel(dataObjectModel);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete DataObjectModel {}", dataModelId, e);
             throw new RestServerError("error in delete DataObjectModel", e);
         }
@@ -202,7 +202,7 @@ public class DataObjectModelService implements IDataObjectModelService {
         return model;
     }
 
-    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) throws ApsSystemException {
+    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) throws EntException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(model, "dataObjectModel");
         if (null == model) {
             return bindingResult;

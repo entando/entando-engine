@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.user;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi di gestione utenti.
@@ -24,17 +24,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface IUserManager {
 
-    public List<String> getUsernames() throws ApsSystemException;
+    public List<String> getUsernames() throws EntException;
 
-    public List<String> searchUsernames(String text) throws ApsSystemException;
+    public List<String> searchUsernames(String text) throws EntException;
 
     /**
      * Restituisce la lista completa degli utenti (in oggetti User).
      *
      * @return La lista completa degli utenti (in oggetti User).
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public List<UserDetails> getUsers() throws ApsSystemException;
+    public List<UserDetails> getUsers() throws EntException;
 
     /**
      * Restituisce la lista di utenti ricavata dalla ricerca sulla username (o
@@ -43,59 +43,59 @@ public interface IUserManager {
      * @param text Il testo tramite il quale effettuare la ricerca sulla
      * username.
      * @return La lista di utenti ricavati.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public List<UserDetails> searchUsers(String text) throws ApsSystemException;
+    public List<UserDetails> searchUsers(String text) throws EntException;
 
     /**
      * Elimina un utente.
      *
      * @param user L'utente da eliminare dal db.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void removeUser(UserDetails user) throws ApsSystemException;
+    public void removeUser(UserDetails user) throws EntException;
 
     /**
      * Elimina un utente.
      *
      * @param username La username dell'utente da eliminare.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void removeUser(String username) throws ApsSystemException;
+    public void removeUser(String username) throws EntException;
 
     /**
      * Aggiorna un utente.
      *
      * @param user L'utente da aggiornare.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void updateUser(UserDetails user) throws ApsSystemException;
+    public void updateUser(UserDetails user) throws EntException;
 
     /**
      * Aggiorna la data (a quella odierna) di ultimo accesso dell'utente
      * specificato.
      *
      * @param user L'utente a cui aggiornare la data di ultimo accesso.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public void updateLastAccess(UserDetails user) throws ApsSystemException;
+    public void updateLastAccess(UserDetails user) throws EntException;
 
     /**
      * Effettua l'operazione di cambio password.
      *
      * @param username Lo username al quale cambiare la password.
      * @param password La nuova password.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public void changePassword(String username, String password) throws ApsSystemException;
+    public void changePassword(String username, String password) throws EntException;
 
     /**
      * Aggiunge un utente.
      *
      * @param user L'utente da aggiungere.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public void addUser(UserDetails user) throws ApsSystemException;
+    public void addUser(UserDetails user) throws EntException;
 
     /**
      * Restituisce un utente. Se la userName non corrisponde ad un utente
@@ -104,9 +104,9 @@ public interface IUserManager {
      * @param username Lo username dell'utente da restituire.
      * @return L'utente cercato, null se non vi è nessun utente corrispondente
      * alla username immessa.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public UserDetails getUser(String username) throws ApsSystemException;
+    public UserDetails getUser(String username) throws EntException;
 
     /**
      * Restituisce un utente. Se userName e password non corrispondono ad un
@@ -116,9 +116,9 @@ public interface IUserManager {
      * @param password La password dell'utente da restituire.
      * @return L'utente cercato, null se non vi è nessun utente corrispondente
      * alla username e password immessa.
-     * @throws ApsSystemException in caso di errore.
+     * @throws EntException in caso di errore.
      */
-    public UserDetails getUser(String username, String password) throws ApsSystemException;
+    public UserDetails getUser(String username, String password) throws EntException;
 
     /**
      * Restituisce l'utente di default di sistema. L'utente di default

@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.FileTextReader;
 
 /**
@@ -36,7 +36,7 @@ public class ComponentLoader {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ComponentLoader.class);
 	
-	public ComponentLoader(String locationPatterns, Map<String, String> postProcessClasses) throws ApsSystemException {
+	public ComponentLoader(String locationPatterns, Map<String, String> postProcessClasses) throws EntException {
         try {
             StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
             while (tokenizer.hasMoreTokens()) {
@@ -45,7 +45,7 @@ public class ComponentLoader {
             }
         } catch (Throwable t) {
         	_logger.error("Error loading component definitions", t);
-            throw new ApsSystemException("Error loading component definitions", t);
+            throw new EntException("Error loading component definitions", t);
         }
     }
     

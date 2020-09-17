@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.init.cache;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 public interface IInitializerManagerCacheWrapper {
 
@@ -23,7 +23,7 @@ public interface IInitializerManagerCacheWrapper {
 
 	public static final String INITIALIZER_REPORT_CACHE_NAME = "I18nManager_report";
 
-	public void initCache(SystemInstallationReport report) throws ApsSystemException;
+	public void initCache(SystemInstallationReport report) throws EntException;
 
 	public SystemInstallationReport getReport();
 

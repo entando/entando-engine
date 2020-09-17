@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -65,7 +65,7 @@ public class CacheInfoManagerTest {
 		Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
 	}
 	
-	@Test(expected = ApsSystemException.class)
+	@Test(expected = EntException.class)
     public void testAroundCacheableMethod() throws Throwable {
 		CacheableInfo cacheableInfo = new CacheableInfo() {
 			@Override
@@ -89,7 +89,7 @@ public class CacheInfoManagerTest {
 				.setExpirationTime(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(Date.class));
     }
 	
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void testAroundCacheInfoEvictMethod() throws Throwable {
 		CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
 			@Override

@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.io.Serializable;
 import java.util.Map;
 import org.jdom.Element;
@@ -35,7 +35,7 @@ public class ComponentEnvironmentImpl extends AbstractComponentModule implements
             super.createPostProcesses(postProcessesElement, postProcessClasses);
         } catch (Throwable t) {
             logger.error("Error creating ComponentEnvironment", t);
-            throw new ApsSystemException("Error creating ComponentEnvironment", t);
+            throw new EntException("Error creating ComponentEnvironment", t);
         }
     }
 

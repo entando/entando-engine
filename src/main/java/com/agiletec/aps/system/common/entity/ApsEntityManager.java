@@ -48,7 +48,7 @@ import com.agiletec.aps.system.common.entity.parse.EntityHandler;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
 import org.apache.commons.beanutils.BeanComparator;
@@ -178,10 +178,10 @@ public abstract class ApsEntityManager extends AbstractService
      * @param entityTypeCode The Entity Type code.
      * @param xml The XML of the associated entity.
      * @return The populated entity.
-     * @throws ApsSystemException If errors detected while retrieving the
+     * @throws EntException If errors detected while retrieving the
      * entity.
      */
-    protected IApsEntity createEntityFromXml(String entityTypeCode, String xml) throws ApsSystemException {
+    protected IApsEntity createEntityFromXml(String entityTypeCode, String xml) throws EntException {
         try {
             IApsEntity entityPrototype = this.getEntityPrototype(entityTypeCode);
             SAXParserFactory parseFactory = SAXParserFactory.newInstance();
@@ -193,7 +193,7 @@ public abstract class ApsEntityManager extends AbstractService
             return entityPrototype;
         } catch (ParserConfigurationException | SAXException | IOException t) {
             logger.error("Error detected while creating the entity. typecode: {} - xml: {}", entityTypeCode, xml, t);
-            throw new ApsSystemException("Error detected while creating the entity", t);
+            throw new EntException("Error detected while creating the entity", t);
         }
     }
 
@@ -242,12 +242,12 @@ public abstract class ApsEntityManager extends AbstractService
      * Add a new entity prototype on the catalog.
      *
      * @param entityType The entity type to add.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public void addEntityPrototype(IApsEntity entityType) throws ApsSystemException {
+    public void addEntityPrototype(IApsEntity entityType) throws EntException {
         if (null == entityType) {
-            throw new ApsSystemException("Invalid entity type to add");
+            throw new EntException("Invalid entity type to add");
         }
         Map<String, IApsEntity> newEntityTypes = this.getEntityTypes();
         newEntityTypes.put(entityType.getTypeCode(), entityType);
@@ -259,17 +259,17 @@ public abstract class ApsEntityManager extends AbstractService
      * Update an entity prototype on the catalog.
      *
      * @param entityType The entity type to update.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public void updateEntityPrototype(IApsEntity entityType) throws ApsSystemException {
+    public void updateEntityPrototype(IApsEntity entityType) throws EntException {
         if (null == entityType) {
-            throw new ApsSystemException("Invalid entity type to update");
+            throw new EntException("Invalid entity type to update");
         }
         Map<String, IApsEntity> entityTypes = this.getEntityTypes();
         IApsEntity oldEntityType = entityTypes.get(entityType.getTypeCode());
         if (null == oldEntityType) {
-            throw new ApsSystemException("No entity type to update with code '" + entityType.getTypeCode() + "' where found");
+            throw new EntException("No entity type to update with code '" + entityType.getTypeCode() + "' where found");
         }
         entityTypes.put(entityType.getTypeCode(), entityType);
         this.updateEntityPrototypes(entityTypes);
@@ -314,14 +314,14 @@ public abstract class ApsEntityManager extends AbstractService
      * Remove an entity type from the catalog.
      *
      * @param entityTypeCode The code of the entity type to remove.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public void removeEntityPrototype(String entityTypeCode) throws ApsSystemException {
+    public void removeEntityPrototype(String entityTypeCode) throws EntException {
         Map<String, IApsEntity> entityTypes = this.getEntityTypes();
         IApsEntity entityTypeToRemove = entityTypes.get(entityTypeCode);
         if (null == entityTypeToRemove) {
-            throw new ApsSystemException("No entity type to remove with code '" + entityTypeCode + "' were found");
+            throw new EntException("No entity type to remove with code '" + entityTypeCode + "' were found");
         }
         entityTypes.remove(entityTypeCode);
         this.updateEntityPrototypes(entityTypes);
@@ -333,19 +333,19 @@ public abstract class ApsEntityManager extends AbstractService
      *
      * @param newEntityTypes the map, indexed by code, containing the new
      * entities.
-     * @throws ApsSystemException If errors are detected during the process.
+     * @throws EntException If errors are detected during the process.
      */
-    private void updateEntityPrototypes(Map<String, IApsEntity> newEntityTypes) throws ApsSystemException {
+    private void updateEntityPrototypes(Map<String, IApsEntity> newEntityTypes) throws EntException {
         try {
             this.getEntityTypeFactory().updateEntityTypes(newEntityTypes, this.getConfigItemName(), this.getEntityTypeDom());
             this.refresh();
         } catch (Throwable t) {
             logger.error("Error detected while updating entity prototypes", t);
-            throw new ApsSystemException("Error detected while updating entity prototypes", t);
+            throw new EntException("Error detected while updating entity prototypes", t);
         }
     }
 
-    private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) throws ApsSystemException {
+    private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) throws EntException {
         EntityTypesChangingEvent event = new EntityTypesChangingEvent();
         event.setOperationCode(operationCode);
         event.setNewEntityType(newEntityType);
@@ -550,16 +550,16 @@ public abstract class ApsEntityManager extends AbstractService
      * @param filters The filters used to find an sort the entities ID that
      * match the given criteria.
      * @return The list of the IDs found.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public List<String> searchId(EntitySearchFilter[] filters) throws ApsSystemException {
+    public List<String> searchId(EntitySearchFilter[] filters) throws EntException {
         List<String> idList = null;
         try {
             idList = this.getEntitySearcherDao().searchId(filters);
         } catch (Throwable t) {
             logger.error("Error detected while searching entities", t);
-            throw new ApsSystemException("Error detected while searching entities", t);
+            throw new EntException("Error detected while searching entities", t);
         }
         return idList;
     }
@@ -570,28 +570,28 @@ public abstract class ApsEntityManager extends AbstractService
      * @param typeCode The code of the Entity Types to look for.
      * @param filters The search filters to apply to find and sort the ID found.
      * @return The list of the ID found.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
     @Override
-    public List<String> searchId(String typeCode, EntitySearchFilter[] filters) throws ApsSystemException {
+    public List<String> searchId(String typeCode, EntitySearchFilter[] filters) throws EntException {
         List<String> idList = null;
         try {
             idList = this.getEntitySearcherDao().searchId(typeCode, filters);
         } catch (Throwable t) {
             logger.error("Error detected while searching entities with typeCode {}", typeCode, t);
-            throw new ApsSystemException("Error detected while searching entities", t);
+            throw new EntException("Error detected while searching entities", t);
         }
         return idList;
     }
 
     @Override
-    public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) throws ApsSystemException {
+    public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) throws EntException {
         List<ApsEntityRecord> records = null;
         try {
             records = this.getEntitySearcherDao().searchRecords(filters);
         } catch (Throwable t) {
             logger.error("Error searching entity records", t);
-            throw new ApsSystemException("Error searching entity records", t);
+            throw new EntException("Error searching entity records", t);
         }
         return records;
     }
@@ -631,11 +631,11 @@ public abstract class ApsEntityManager extends AbstractService
      *
      * @param typeCode The type Code of entities to reload references. If null,
      * will reload all entities.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      */
-    protected synchronized void reloadEntitySearchReferencesByType(String typeCode) throws ApsSystemException {
+    protected synchronized void reloadEntitySearchReferencesByType(String typeCode) throws EntException {
         if (null == typeCode) {
-            throw new ApsSystemException("Error: invalid type code detected");
+            throw new EntException("Error: invalid type code detected");
         }
         this.setStatus(ApsEntityManager.STATUS_RELOADING_REFERENCES_IN_PROGRESS, typeCode);
         try {
@@ -648,7 +648,7 @@ public abstract class ApsEntityManager extends AbstractService
             }
         } catch (Throwable t) {
             logger.error("Error reloading entity references of type: {}", typeCode, t);
-            throw new ApsSystemException("Error reloading entity references of type: " + typeCode, t);
+            throw new EntException("Error reloading entity references of type: " + typeCode, t);
         } finally {
             this.setStatus(ApsEntityManager.STATUS_READY, typeCode);
         }
@@ -670,17 +670,17 @@ public abstract class ApsEntityManager extends AbstractService
      * Load the complete list of the entities.
      *
      * @return The complete list of entity IDs.
-     * @throws ApsSystemException In case of error.
+     * @throws EntException In case of error.
      * @deprecated From jAPS 2.0 version 2.0.9, use {@link IEntitySearcherDAO}
      * searchId(EntitySearchFilter[]) method
      */
-    protected List<String> getAllEntityId() throws ApsSystemException {
+    protected List<String> getAllEntityId() throws EntException {
         List<String> entitiesId = new ArrayList<>();
         try {
             entitiesId = this.getEntityDao().getAllEntityId();
         } catch (Throwable t) {
             logger.error("Error while loading the complete list of entity IDs", t);
-            throw new ApsSystemException("Error while loading the complete list of entity IDs", t);
+            throw new EntException("Error while loading the complete list of entity IDs", t);
         }
         return entitiesId;
     }

@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.database;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.io.ByteArrayInputStream;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -74,7 +74,7 @@ public class DatabaseServiceTest {
     @Test(expected = RestServerError.class)
     public void getInValidTableDump_2() throws Throwable {
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
-                .thenThrow(new ApsSystemException("Error"));
+                .thenThrow(new EntException("Error"));
         this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
     }
 

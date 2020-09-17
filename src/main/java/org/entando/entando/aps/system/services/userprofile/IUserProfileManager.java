@@ -16,7 +16,7 @@ package org.entando.entando.aps.system.services.userprofile;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interface for Manager of UserProfile Object. 
@@ -43,32 +43,32 @@ public interface IUserProfileManager extends IEntityManager {
 	 * Return a UserProfile by username.
 	 * @param username The username of the profile to return.
 	 * @return The UserProfile required.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public IUserProfile getProfile(String username)	throws ApsSystemException;
+	public IUserProfile getProfile(String username)	throws EntException;
 	
 	/**
 	 * Add a UserProfile.
 	 * @param username The username of the Profile owner.
 	 * @param profile The UserProfile to add.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void addProfile(String username, IUserProfile profile) throws ApsSystemException;
+	public void addProfile(String username, IUserProfile profile) throws EntException;
 	
 	/**
 	 * Delete a UserProfile by username.
 	 * @param username The username of the Profile owner that you must delete the profile.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void deleteProfile(String username) throws ApsSystemException;
+	public void deleteProfile(String username) throws EntException;
 	
 	/**
 	 * Update a UserProfile.
 	 * @param username The username of the user that you must update the profile.
 	 * @param profile The profile to update.
-	 * @throws ApsSystemException In case of Exception.
+	 * @throws EntException In case of Exception.
 	 */
-	public void updateProfile(String username, IUserProfile profile) throws ApsSystemException;
+	public void updateProfile(String username, IUserProfile profile) throws EntException;
 	
 	public static final String PUBLIC_PROFILE_FILTER_KEY = "publicprofile";
 	

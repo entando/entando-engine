@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.page.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageDAO;
 import com.agiletec.aps.system.services.page.PagesStatus;
@@ -36,7 +36,7 @@ public interface IPageManagerCacheWrapper {
     public static final String ONLINE_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_onlineUtilizer_";
     public static final String DRAFT_WIDGET_UTILIZER_CACHE_NAME_PREFIX = "PageManager_draftUtilizer_";
 
-    public void initCache(IPageDAO pageDao) throws ApsSystemException;
+    public void initCache(IPageDAO pageDao) throws EntException;
 
     public PagesStatus getPagesStatus();
 
@@ -48,9 +48,9 @@ public interface IPageManagerCacheWrapper {
 
     public IPage getDraftRoot();
     
-    public List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
+    public List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws EntException;
 
-    public List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
+    public List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws EntException;
     
     public void deleteDraftPage(String pageCode);
     

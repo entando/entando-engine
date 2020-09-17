@@ -26,7 +26,7 @@ import org.entando.entando.aps.system.services.api.model.StringListApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.api.AbstractApiDataObjectInterface;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 
@@ -63,7 +63,7 @@ public class ApiDataObjectModelInterface extends AbstractApiDataObjectInterface 
 			response.setResult(list, null);
 		} catch (Throwable t) {
 			_logger.error("Error loading models", t);
-			throw new ApsSystemException("Error loading models", t);
+			throw new EntException("Error loading models", t);
 		}
 		return response;
 	}
@@ -94,7 +94,7 @@ public class ApiDataObjectModelInterface extends AbstractApiDataObjectInterface 
 			this.getDataObjectModelManager().addDataObjectModel(model);
 		} catch (Throwable t) {
 			_logger.error("Error adding model", t);
-			throw new ApsSystemException("Error adding model", t);
+			throw new EntException("Error adding model", t);
 		}
 	}
 
@@ -111,7 +111,7 @@ public class ApiDataObjectModelInterface extends AbstractApiDataObjectInterface 
 			this.getDataObjectModelManager().updateDataObjectModel(model);
 		} catch (Throwable t) {
 			_logger.error("Error updating model", t);
-			throw new ApsSystemException("Error updating model", t);
+			throw new EntException("Error updating model", t);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ApiDataObjectModelInterface extends AbstractApiDataObjectInterface 
 			this.getDataObjectModelManager().removeDataObjectModel(model);
 		} catch (Throwable t) {
 			_logger.error("Error deleting model", t);
-			throw new ApsSystemException("Error deleting model", t);
+			throw new EntException("Error deleting model", t);
 		}
 	}
 

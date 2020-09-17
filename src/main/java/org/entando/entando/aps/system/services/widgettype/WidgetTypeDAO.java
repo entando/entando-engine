@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 import java.util.HashMap;
@@ -77,7 +77,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
         return widgetTypes;
     }
 
-    protected WidgetType createWidgetTypeFromResultSet(ResultSet res) throws ApsSystemException {
+    protected WidgetType createWidgetTypeFromResultSet(ResultSet res) throws EntException {
         WidgetType widgetType = new WidgetType();
         String code = null;
         try {
@@ -102,7 +102,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 widgetType.setConfig(defaultConfig);
             }
             if ((null != widgetType.getConfig() && null == widgetType.getParentTypeCode())) {
-                throw new ApsSystemException("Default configuration found in the type '"
+                throw new EntException("Default configuration found in the type '"
                         + code + "' with no parent type assigned");
             }
             int isLocked = res.getInt(7);
@@ -121,7 +121,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             }
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
-            throw new ApsSystemException("Error in the parsing in the Widget Type '" + code + "'", t);
+            throw new EntException("Error in the parsing in the Widget Type '" + code + "'", t);
         }
         return widgetType;
     }

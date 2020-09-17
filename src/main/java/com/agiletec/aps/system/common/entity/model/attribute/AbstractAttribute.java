@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.Map;
 import java.util.Optional;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -36,7 +35,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeV
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
@@ -233,7 +232,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     @Override
-    public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
+    public void setAttributeConfig(Element attributeElement) throws EntException {
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
@@ -400,14 +399,14 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
      * @param required Select a mandatory condition of the attribute to search
      * for.
      * @return The value of the requested attribute.
-     * @throws ApsSystemException when a attribute declared mandatory is not
+     * @throws EntException when a attribute declared mandatory is not
      * present in the given XML element.
      */
     protected String extractXmlAttribute(Element currElement, String attributeName,
-            boolean required) throws ApsSystemException {
+            boolean required) throws EntException {
         String value = currElement.getAttributeValue(attributeName);
         if (required && value == null) {
-            throw new ApsSystemException("Attribute '" + attributeName + "' not found in the tag <" + currElement.getName() + ">");
+            throw new EntException("Attribute '" + attributeName + "' not found in the tag <" + currElement.getName() + ">");
         }
         return value;
     }

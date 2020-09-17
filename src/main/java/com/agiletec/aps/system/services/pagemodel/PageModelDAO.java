@@ -23,7 +23,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.slf4j.Logger;
@@ -92,9 +92,9 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 	 * Build and return a page template by a resultset.
 	 * @param res The resultset to read.
 	 * @return The built page template.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	protected PageModel getPageModelFromResultSet(ResultSet res) throws ApsSystemException {
+	protected PageModel getPageModelFromResultSet(ResultSet res) throws EntException {
 		PageModel pageModel = new PageModel();
 		String code = null;
 		try {

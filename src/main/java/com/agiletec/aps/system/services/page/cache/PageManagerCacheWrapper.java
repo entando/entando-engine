@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.page.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageDAO;
 import com.agiletec.aps.system.services.page.Page;
@@ -46,7 +46,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     private List<String> localObject = new CopyOnWriteArrayList<>();
 
     @Override
-    public void initCache(IPageDAO pageDao) throws ApsSystemException {
+    public void initCache(IPageDAO pageDao) throws EntException {
         PagesStatus status = new PagesStatus();
         IPage newDraftRoot = null;
         IPage newOnLineRoot = null;
@@ -79,7 +79,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
                 this.buildTreeHierarchy(newOnLineRoot, newOnlineMap, pageListO.get(i));
             }
             if (newDraftRoot == null) {
-                throw new ApsSystemException("Error in the page tree: root page undefined");
+                throw new EntException("Error in the page tree: root page undefined");
             }
             Cache cache = this.getCache();
             //this.releaseCachedObjects(cache);
@@ -89,11 +89,11 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             List<String> onlinePageCodes = pageListO.stream().map(p -> p.getCode()).collect(Collectors.toList());
             cache.put(ONLINE_PAGE_CODES_CACHE_NAME, onlinePageCodes);
             this.insertObjectsOnCache(cache, status, newDraftRoot, newOnLineRoot, pageListD, pageListO);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } catch (Throwable t) {
             _logger.error("Error while building the tree of pages", t);
-            throw new ApsSystemException("Error while building the tree of pages", t);
+            throw new EntException("Error while building the tree of pages", t);
         }
     }
 
@@ -536,16 +536,16 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     }
 
     @Override
-    public List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws ApsSystemException {
+    public List<String> getOnlineWidgetUtilizers(String widgetTypeCode) throws EntException {
         return this.getWidgetUtilizers(widgetTypeCode, false);
     }
 
     @Override
-    public List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws ApsSystemException {
+    public List<String> getDraftWidgetUtilizers(String widgetTypeCode) throws EntException {
         return this.getWidgetUtilizers(widgetTypeCode, true);
     }
 
-    private List<String> getWidgetUtilizers(String widgetTypeCode, boolean draft) throws ApsSystemException {
+    private List<String> getWidgetUtilizers(String widgetTypeCode, boolean draft) throws EntException {
         if (null == widgetTypeCode) {
             return new ArrayList<>();
         }
@@ -560,7 +560,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             } catch (Throwable t) {
                 String message = "Error during searching draft page utilizers";
                 _logger.error(message, t);
-                throw new ApsSystemException(message, t);
+                throw new EntException(message, t);
             }
             utilizersMap.keySet().stream().forEach(cacheKey -> {
                 cache.put(cacheKey, utilizersMap.get(cacheKey));

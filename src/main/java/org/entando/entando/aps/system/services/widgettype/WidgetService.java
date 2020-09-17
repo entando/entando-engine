@@ -13,12 +13,11 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
@@ -170,7 +169,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             publishedUtilizer.stream().forEach(page -> info.addPublishedUtilizer(getWidgetDetails(page, widgetCode)));
             draftUtilizer.stream().forEach(page -> info.addDraftUtilizer(getWidgetDetails(page, widgetCode)));
             return info;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Failed to load widget info for widgetCode {} ", widgetCode);
             throw new RestServerError("error in loading widget info", e);
         }
@@ -287,7 +286,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
                 this.getGuiFragmentManager().deleteGuiFragment(fragmentCode);
             }
             this.getWidgetManager().deleteWidgetType(widgetCode);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Failed to remove widget type for request {} ", widgetCode);
             throw new RestServerError("failed to update widget type by code ", e);
         }
@@ -303,7 +302,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         try {
             List<WidgetType> list = ((GroupUtilizer<WidgetType>) this.getWidgetManager()).getGroupUtilizers(groupCode);
             return this.getDtoBuilder().convert(list);
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("Error loading WidgetType references for group {}", groupCode, ex);
             throw new RestServerError("Error loading WidgetType references for group", ex);
         }
@@ -338,7 +337,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
 
-    protected String extractUniqueGuiFragmentCode(String widgetTypeCode) throws ApsSystemException {
+    protected String extractUniqueGuiFragmentCode(String widgetTypeCode) throws EntException {
         String uniqueCode = widgetTypeCode;
         if (null != this.getGuiFragmentManager().getGuiFragment(uniqueCode)) {
             int index = 0;
@@ -400,7 +399,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
     }
 
-    private BeanPropertyBindingResult checkWidgetForDelete(WidgetType widgetType) throws ApsSystemException {
+    private BeanPropertyBindingResult checkWidgetForDelete(WidgetType widgetType) throws EntException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
         if (null == widgetType) {
             return bindingResult;

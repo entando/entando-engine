@@ -24,7 +24,7 @@ import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.common.entity.parse.AttributeRoleDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * The Wrapper Class of the extra attribute roles.
@@ -34,7 +34,7 @@ public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObj
 
 	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeRolesWrapper.class);
 	
-	public void executeLoading(Map<String, AttributeRole> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
+	public void executeLoading(Map<String, AttributeRole> collectionToFill, IEntityManager entityManager) throws EntException {
 		String managerName = ((IManager) entityManager).getName();
 		if (!managerName.equals(super.getEntityManagerNameDest())) {
 			return;

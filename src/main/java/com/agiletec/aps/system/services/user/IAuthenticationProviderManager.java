@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.user;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -29,17 +29,17 @@ public interface IAuthenticationProviderManager extends AuthenticationManager, U
      * Restituisce un'utente (comprensivo delle autorizzazioni) in base ad username. 
      * @param username La Username dell'utente da restituire.
      * @return L'utente cercato o null se non vi è nessun utente corrispondente ai parametri immessi.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public UserDetails getUser(String username) throws ApsSystemException;
+    public UserDetails getUser(String username) throws EntException;
     
     /**
      * Restituisce un'utente (comprensivo delle autorizzazioni) in base ad username e password. 
      * @param username La Username dell'utente da restituire.
      * @param password La password dell'utente da restituire.
      * @return L'utente cercato o null se non vi è nessun utente corrispondente ai parametri immessi.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
-    public UserDetails getUser(String username, String password) throws ApsSystemException;
+    public UserDetails getUser(String username, String password) throws EntException;
     
 }

@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.lang;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi di gestione delle lingue.
@@ -26,31 +26,31 @@ public interface ILangManager {
 	/**
 	 * Return the list of assignable langs to system ordered by lang's description.
 	 * @return The List of assignable langs.
-	 * @throws ApsSystemException 
+	 * @throws EntException
 	 */
-	public List<Lang> getAssignableLangs() throws ApsSystemException;
+	public List<Lang> getAssignableLangs() throws EntException;
 	
 	/**
 	 * Add a lang on system.
 	 * @param code The code of the lang to add.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
-	public void addLang(String code) throws ApsSystemException;
+	public void addLang(String code) throws EntException;
 	
 	/**
 	 * Update the description of a system langs.
 	 * @param code The code of the lang to update.
 	 * @param descr The new description.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
-	public void updateLang(String code, String descr) throws ApsSystemException;
+	public void updateLang(String code, String descr) throws EntException;
 	
 	/**
 	 * Remove a lang from the system.
 	 * @param code The code of the lang to remove.
-	 * @throws ApsSystemException In case of error on update config.
+	 * @throws EntException In case of error on update config.
 	 */
-	public void removeLang(String code) throws ApsSystemException;
+	public void removeLang(String code) throws EntException;
 	
 	/**
 	 * Restituisce un oggetto lingua in base al codice

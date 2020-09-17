@@ -18,7 +18,7 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import com.agiletec.aps.system.common.notify.INotifyManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.parse.DataObjectDOM;
@@ -49,7 +49,7 @@ public class DataObjectManagerTest {
 		}
 
 		@Override
-		public int getUniqueKeyCurrentValue() throws ApsSystemException {
+		public int getUniqueKeyCurrentValue() throws EntException {
 			return key++;
 		}
 
@@ -89,7 +89,7 @@ public class DataObjectManagerTest {
 	}
 
 	@Test
-	public void testCreateDataObject() throws ApsSystemException {
+	public void testCreateDataObject() throws EntException {
 		String typeCode = "ART";
 		// @formatter:off
 		when(entityTypeFactory.extractEntityType(
@@ -106,7 +106,7 @@ public class DataObjectManagerTest {
 	}
 
 	@Test
-	public void testCrateWithDefaultModel() throws ApsSystemException {
+	public void testCrateWithDefaultModel() throws EntException {
 		String typeCode = "ART";
 		// @formatter:off
 		when(entityTypeFactory.extractEntityType(
@@ -126,7 +126,7 @@ public class DataObjectManagerTest {
 	}
 
 	@Test
-	public void testCrateWithDefaultViewPage() throws ApsSystemException {
+	public void testCrateWithDefaultViewPage() throws EntException {
 		String typeCode = "ART";
 		// @formatter:off
 		when(entityTypeFactory.extractEntityType(
@@ -144,7 +144,7 @@ public class DataObjectManagerTest {
 	}
 
 	@Test
-	public void testSave() throws ApsSystemException {
+	public void testSave() throws EntException {
 		String typeCode = "ART";
 		// @formatter:off
 		when(beanFactory.getBean(SystemConstants.KEY_GENERATOR_MANAGER)).thenReturn(new FakeKeyGeneratorManager()); 

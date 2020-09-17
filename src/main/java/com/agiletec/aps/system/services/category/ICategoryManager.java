@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.aps.system.common.tree.ITreeNodeManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Base interface for the manager class for handling categories,
@@ -30,25 +30,25 @@ public interface ICategoryManager extends ITreeNodeManager {
 	 * Add a category.
 	 *
 	 * @param category The category to add
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void addCategory(Category category) throws ApsSystemException;
+	public void addCategory(Category category) throws EntException;
 
 	/**
 	 * Cancella una categoria.
 	 *
 	 * @param code Il codice della categoria da eliminare.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void deleteCategory(String code) throws ApsSystemException;
+	public void deleteCategory(String code) throws EntException;
 
 	/**
 	 * Update a category.
 	 *
 	 * @param category The category to add.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public void updateCategory(Category category) throws ApsSystemException;
+	public void updateCategory(Category category) throws EntException;
 
 	/**
 	 * Return the root of the category tree.
@@ -82,9 +82,9 @@ public interface ICategoryManager extends ITreeNodeManager {
 	 * @return A list of candidates containing the given token. If the
 	 * categoryCodeToken is null then this method will return a set containing
 	 * all the pages.
-	 * @throws ApsSystemException in case of error.
+	 * @throws EntException in case of error.
 	 */
-	public List<Category> searchCategories(String categoryCodeToken) throws ApsSystemException;
+	public List<Category> searchCategories(String categoryCodeToken) throws EntException;
 
 	/**
 	 * Moves a category under another node
@@ -92,11 +92,11 @@ public interface ICategoryManager extends ITreeNodeManager {
 	 * @param currentCategory the category to move
 	 * @param newParent the new parent
 	 * @return true if the the operation succeeds
-     * @throws com.agiletec.aps.system.exception.ApsSystemException
+     * @throws EntException
 	 */
-	public boolean moveCategory(Category currentCategory, Category newParent) throws ApsSystemException;
+	public boolean moveCategory(Category currentCategory, Category newParent) throws EntException;
 
-	public boolean moveCategory(String categoryCode, String newParentCode) throws ApsSystemException;
+	public boolean moveCategory(String categoryCode, String newParentCode) throws EntException;
 
 	public int getMoveTreeStatus();
 

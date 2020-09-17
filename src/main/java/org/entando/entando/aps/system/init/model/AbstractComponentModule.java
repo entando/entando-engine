@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 public class AbstractComponentModule implements ComponentModule {
 
@@ -34,7 +34,7 @@ public class AbstractComponentModule implements ComponentModule {
 
     private List<IPostProcess> postProcesses;
 
-    protected void extractSqlResources(Element sqlResourcesElement) throws ApsSystemException {
+    protected void extractSqlResources(Element sqlResourcesElement) throws EntException {
         if (null != sqlResourcesElement) {
             List<Element> datasourceElements = sqlResourcesElement.getChildren("datasource");
             for (int j = 0; j < datasourceElements.size(); j++) {
@@ -46,7 +46,7 @@ public class AbstractComponentModule implements ComponentModule {
         }
     }
 
-    protected void createPostProcesses(Element postProcessesElement, Map<String, String> postProcessClasses) throws ApsSystemException {
+    protected void createPostProcesses(Element postProcessesElement, Map<String, String> postProcessClasses) throws EntException {
         if (null != postProcessesElement) {
             List<Element> postProcessElements = postProcessesElement.getChildren();
             if (null != postProcessElements && !postProcessElements.isEmpty()) {
@@ -58,7 +58,7 @@ public class AbstractComponentModule implements ComponentModule {
         }
     }
 
-    private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses) throws ApsSystemException {
+    private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses) throws EntException {
         try {
             String name = postProcessElement.getName();
             String className = postProcessClasses.get(name);
@@ -75,7 +75,7 @@ public class AbstractComponentModule implements ComponentModule {
             }
         } catch (Throwable t) {
             logger.error("Error creating Post Process", t);
-            throw new ApsSystemException("Error creating Post Process", t);
+            throw new EntException("Error creating Post Process", t);
         }
     }
 

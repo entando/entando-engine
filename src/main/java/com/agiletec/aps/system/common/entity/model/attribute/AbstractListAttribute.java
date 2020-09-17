@@ -19,7 +19,7 @@ import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
     }
 
     @Override
-    public void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
+    public void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException {
         Element nestedTypeRootElement = attributeElement.getChild("nestedtype");
         if (null == nestedTypeRootElement) {
             this.setOldComplexAttributeConfig(attributeElement, attrTypes);
@@ -46,13 +46,13 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         }
         List<Element> nestedTypeAttributeElements = nestedTypeRootElement.getChildren();
         if (nestedTypeAttributeElements == null || nestedTypeAttributeElements.size() != 1) {
-            throw new ApsSystemException("Wrong list attribute element detected: Wrong number of nested type in attribute list " + this.getName());
+            throw new EntException("Wrong list attribute element detected: Wrong number of nested type in attribute list " + this.getName());
         }
         Element nestedTypeAttributeElement = nestedTypeAttributeElements.get(0);
         String nestedTypeCode = this.extractXmlAttribute(nestedTypeAttributeElement, "attributetype", true);
         AttributeInterface nestedType = (AttributeInterface) attrTypes.get(nestedTypeCode);
         if (nestedType == null) {
-            throw new ApsSystemException("Wrong list attribute element detected: "
+            throw new EntException("Wrong list attribute element detected: "
                     + nestedType + ", in attribute list " + this.getName());
         }
         nestedType = (AttributeInterface) nestedType.getAttributePrototype();
@@ -69,11 +69,11 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
              * jAPS 2.0.12
              */
             )
-    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
+    private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException {
         String nestedTypeCode = this.extractXmlAttribute(attributeElement, "nestedtype", true);
         AttributeInterface nestedType = (AttributeInterface) attrTypes.get(nestedTypeCode);
         if (nestedType == null) {
-            throw new ApsSystemException("Wrong list attribute element detected: "
+            throw new EntException("Wrong list attribute element detected: "
                     + nestedType + ", in attribute list " + this.getName());
         }
         nestedType = (AttributeInterface) nestedType.getAttributePrototype();

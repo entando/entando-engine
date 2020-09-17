@@ -28,7 +28,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -42,7 +42,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
         this.init();
     }
 
-    public void testGetWidgetTypes() throws ApsSystemException {
+    public void testGetWidgetTypes() throws EntException {
         List<WidgetType> list = _widgetTypeManager.getWidgetTypes();
         Iterator<WidgetType> iter = list.iterator();
         Map<String, String> widgetTypes = new HashMap<>();
@@ -60,7 +60,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertTrue(containsValue);
     }
 
-    public void testGetWidgetType_1() throws ApsSystemException {
+    public void testGetWidgetType_1() throws EntException {
         WidgetType widgetType = _widgetTypeManager.getWidgetType("leftmenu");
         assertEquals("leftmenu", widgetType.getCode());
         assertEquals("Menu di navigazione verticale", widgetType.getTitles().get("it"));
@@ -83,7 +83,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertTrue(parameters.containsValue("Rules for the Page List auto-generation"));
     }
 
-    public void testGetWidgetType_2() throws ApsSystemException {
+    public void testGetWidgetType_2() throws EntException {
         WidgetType widgetType = _widgetTypeManager.getWidgetType("entando_apis");
         assertEquals("entando_apis", widgetType.getCode());
         assertEquals("APIs", widgetType.getTitles().get("it"));

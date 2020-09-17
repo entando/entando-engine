@@ -20,7 +20,7 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -34,27 +34,27 @@ public interface IApiCatalogManager {
 	 *
 	 * @param widgetCode The widget code.
 	 * @return The api method related.
-	 * @throws ApsSystemException In case of error.
+	 * @throws EntException In case of error.
 	 */
-	public ApiMethod getRelatedMethod(String widgetCode) throws ApsSystemException;
+	public ApiMethod getRelatedMethod(String widgetCode) throws EntException;
 
 	@Deprecated
-	public Map<String, ApiMethod> getRelatedShowletMethods() throws ApsSystemException;
+	public Map<String, ApiMethod> getRelatedShowletMethods() throws EntException;
 
-	public Map<String, ApiMethod> getRelatedWidgetMethods() throws ApsSystemException;
+	public Map<String, ApiMethod> getRelatedWidgetMethods() throws EntException;
 
 	/**
 	 * Return the map of GET methods indexed by api method name.
 	 *
 	 * @return The map of GET methods indexed by api method name.
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 * @deprecated use getMethods(ApiMethod.HttpMethod) method
 	 */
-	public Map<String, ApiMethod> getMethods() throws ApsSystemException;
+	public Map<String, ApiMethod> getMethods() throws EntException;
 
-	public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException;
+	public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws EntException;
 
-	public Map<String, ApiResource> getResources() throws ApsSystemException;
+	public Map<String, ApiResource> getResources() throws EntException;
 
 	/**
 	 * Return an API resource
@@ -62,38 +62,38 @@ public interface IApiCatalogManager {
 	 * @param namespace The namespace.
 	 * @param resourceName The resource name.
 	 * @return The resource.
-	 * @throws ApsSystemException In case of exception.
+	 * @throws EntException In case of exception.
 	 */
-	public ApiResource getResource(String namespace, String resourceName) throws ApsSystemException;
+	public ApiResource getResource(String namespace, String resourceName) throws EntException;
 
 	/**
 	 * Return a GET methods by name.
 	 *
 	 * @param resourceName the resource name
 	 * @return a GET methods.
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 * @deprecated use getMethod(ApiMethod.HttpMethod, resourceName) method
 	 */
-	public ApiMethod getMethod(String resourceName) throws ApsSystemException;
+	public ApiMethod getMethod(String resourceName) throws EntException;
 
-	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException;
+	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws EntException;
 
-	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException;
+	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws EntException;
 
-	public Map<String, ApiService> getServices() throws ApsSystemException;
+	public Map<String, ApiService> getServices() throws EntException;
 
-	public Map<String, ApiService> getServices(String tag/*, Boolean myentando*/) throws ApsSystemException;
+	public Map<String, ApiService> getServices(String tag/*, Boolean myentando*/) throws EntException;
 
-	public ApiService getApiService(String key) throws ApsSystemException;
+	public ApiService getApiService(String key) throws EntException;
 
-	public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException;
+	public void updateMethodConfig(ApiMethod apiMethod) throws EntException;
 
-	public void resetMethodConfig(ApiMethod apiMethod) throws ApsSystemException;
+	public void resetMethodConfig(ApiMethod apiMethod) throws EntException;
 
-	public void saveService(ApiService service) throws ApsSystemException;
+	public void saveService(ApiService service) throws EntException;
 
-	public void deleteService(String key) throws ApsSystemException;
+	public void deleteService(String key) throws EntException;
 
-	public void updateService(ApiService service) throws ApsSystemException;
+	public void updateService(ApiService service) throws EntException;
 
 }

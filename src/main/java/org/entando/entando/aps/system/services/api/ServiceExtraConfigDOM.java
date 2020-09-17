@@ -24,7 +24,7 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -33,13 +33,13 @@ public class ServiceExtraConfigDOM {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(ServiceExtraConfigDOM.class);
 	
-    protected ServiceExtraConfigDOM() throws ApsSystemException {
+    protected ServiceExtraConfigDOM() throws EntException {
         this._doc = new Document();
         Element elementRoot = new Element("config");
         this._doc.setRootElement(elementRoot);
     }
     
-    protected ServiceExtraConfigDOM(String xml) throws ApsSystemException {
+    protected ServiceExtraConfigDOM(String xml) throws EntException {
         if (null == xml || xml.trim().length() == 0) {
             return;
         }
@@ -61,7 +61,7 @@ public class ServiceExtraConfigDOM {
         return freeParameters;
     }
     
-    private void decodeDOM(String xml) throws ApsSystemException {
+    private void decodeDOM(String xml) throws EntException {
         SAXBuilder builder = new SAXBuilder();
         builder.setValidation(false);
         StringReader reader = new StringReader(xml);
@@ -69,7 +69,7 @@ public class ServiceExtraConfigDOM {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
             _logger.error("Error while parsing xml. {} ", xml, t);
-            throw new ApsSystemException("Error detected while parsing the XML", t);
+            throw new EntException("Error detected while parsing the XML", t);
         }
     }
     

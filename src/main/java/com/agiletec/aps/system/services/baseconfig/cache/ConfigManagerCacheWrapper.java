@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.baseconfig.cache;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.IConfigItemDAO;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class ConfigManagerCacheWrapper extends AbstractCacheWrapper implements I
     private static final Logger logger = LoggerFactory.getLogger(ConfigManagerCacheWrapper.class);
 
     @Override
-    public void initCache(IConfigItemDAO configItemDAO, String version) throws ApsSystemException {
+    public void initCache(IConfigItemDAO configItemDAO, String version) throws EntException {
         try {
             Cache cache = this.getCache();
             Map<String, String> configItems = configItemDAO.loadVersionItems(version);
@@ -43,7 +43,7 @@ public class ConfigManagerCacheWrapper extends AbstractCacheWrapper implements I
             this.insertAndCleanObjectsOnCache(cache, configItems, params);
         } catch (Exception t) {
             logger.error("Error loading configuration params", t);
-            throw new ApsSystemException("Error loading configuration params", t);
+            throw new EntException("Error loading configuration params", t);
         }
     }
 

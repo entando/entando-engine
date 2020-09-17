@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -111,7 +111,7 @@ public class GuiFragmentService implements IGuiFragmentService {
             GuiFragment fragment = this.createGuiFragment(guiFragmentRequest);
             this.getGuiFragmentManager().addGuiFragment(fragment);
             return this.getDtoBuilder().convert(fragment);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error adding fragment", e);
             throw new RestServerError("error add fragment", e);
         }
@@ -130,7 +130,7 @@ public class GuiFragmentService implements IGuiFragmentService {
             return this.getDtoBuilder().convert(fragment);
         } catch (ResourceNotFoundException e) {
             throw e;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating fragment {}", code, e);
             throw new RestServerError("error in update fragment", e);
         }
@@ -149,7 +149,7 @@ public class GuiFragmentService implements IGuiFragmentService {
                 throw new ValidationGenericException(validationResult);
             }
             this.getGuiFragmentManager().deleteGuiFragment(guiFragmentCode);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete guiFragmentCode {}", guiFragmentCode, e);
             throw new RestServerError("error in delete guiFragmentCode", e);
         }
@@ -159,7 +159,7 @@ public class GuiFragmentService implements IGuiFragmentService {
     public List<String> getPluginCodes() {
         try {
             return this.getGuiFragmentManager().loadGuiFragmentPluginCodes();
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error loading plugin codes", e);
             throw new RestServerError("Error loading plugin codes", e);
         }
@@ -172,7 +172,7 @@ public class GuiFragmentService implements IGuiFragmentService {
         return fragment;
     }
 
-    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) throws ApsSystemException {
+    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) throws EntException {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(fragment, "fragment");
         if (null == fragment) {
             return bindingResult;

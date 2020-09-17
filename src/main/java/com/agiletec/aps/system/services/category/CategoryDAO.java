@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -70,10 +70,10 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
 	 * @param res Il resultset da leggere
 	 * @param langManager Il manager delle lingue.
 	 * @return La categoria generata.
-	 * @throws ApsSystemException 
+	 * @throws EntException
 	 */
 	protected Category loadCategory(ResultSet res, ILangManager langManager) 
-			throws ApsSystemException {
+			throws EntException {
 		Category category = new Category();
 		try {
 			category.setCode(res.getString(1));
@@ -83,7 +83,7 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
 			category.setTitles(prop);
 			category.setDefaultLang(langManager.getDefaultLang().getCode());
 		} catch (Throwable t) {
-			throw new ApsSystemException("Error while loading a category", t);
+			throw new EntException("Error while loading a category", t);
 		}
 	    return category;
 	}

@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper;
 
 public class ApiCatalogManagerTest {
@@ -44,7 +44,7 @@ public class ApiCatalogManagerTest {
     }
 
     @Test
-    public void testResources() throws ApsSystemException {
+    public void testResources() throws EntException {
         when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiResource> resources = this.apiCatalogManager.getResources();
         assertThat(resources.size(), is(23));
@@ -84,7 +84,7 @@ public class ApiCatalogManagerTest {
         assertTrue(services.isEmpty());
     }
 
-    private Map<String, ApiResource> createResources() throws ApsSystemException {
+    private Map<String, ApiResource> createResources() throws EntException {
         ApiResourceLoader loader = new ApiResourceLoader(ApiCatalogManager.DEFAULT_LOCATION_PATTERN);
         Map<String, ApiResource> res = loader.getResources();
         Map<String, ApiResource> resources = new HashMap<>();
@@ -94,7 +94,7 @@ public class ApiCatalogManagerTest {
         return resources;
     }
 
-    private ApiResource createResource(String namespace, String resourceName) throws ApsSystemException {
+    private ApiResource createResource(String namespace, String resourceName) throws EntException {
         ApiResourceLoader loader = new ApiResourceLoader(ApiCatalogManager.DEFAULT_LOCATION_PATTERN);
         Map<String, ApiResource> resources = loader.getResources();
         String resourceCode = ApiResource.getCode(namespace, resourceName);

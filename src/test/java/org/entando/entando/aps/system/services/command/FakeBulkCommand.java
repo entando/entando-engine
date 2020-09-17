@@ -21,7 +21,7 @@ import org.entando.entando.aps.system.common.command.constants.ApsCommandErrorCo
 import org.entando.entando.aps.system.common.command.constants.ApsCommandWarningCode;
 import org.entando.entando.aps.system.common.command.context.BaseBulkCommandContext;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 public class FakeBulkCommand extends BaseBulkCommand<String, Object, BaseBulkCommandContext<String>> {
 
@@ -60,7 +60,7 @@ public class FakeBulkCommand extends BaseBulkCommand<String, Object, BaseBulkCom
 	}
 
 	@Override
-	protected boolean apply(String item) throws ApsSystemException {
+	protected boolean apply(String item) throws EntException {
 		boolean result = true;
 		if (item.contains("err")) {
 			this.getTracer().traceError(item, ApsCommandErrorCode.ERROR);

@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.widgettype;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -47,17 +47,17 @@ public interface IWidgetTypeManager {
      * Add a widget type into the catalogue
      *
      * @param widgetType The type to add
-     * @throws ApsSystemException in case of error
+     * @throws EntException in case of error
      */
-    public void addWidgetType(WidgetType widgetType) throws ApsSystemException;
+    public void addWidgetType(WidgetType widgetType) throws EntException;
 
     /**
      * Delete a widget type from the catalogue
      *
      * @param widgetTypeCode The code of the type to delete
-     * @throws ApsSystemException in case of error
+     * @throws EntException in case of error
      */
-    public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException;
+    public void deleteWidgetType(String widgetTypeCode) throws EntException;
 
     /**
      * Update a Widget type on the catalogue.
@@ -68,9 +68,9 @@ public interface IWidgetTypeManager {
      * @param mainGroup The main group of the widget type to update.
      * @param configUi The config UI of the widget type to update.
      * @param bundleId The bundle id of the widget type to update.
-     * @throws ApsSystemException in case of error
+     * @throws EntException in case of error
      */
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws ApsSystemException;
+                                 String configUi, String bundleId) throws EntException;
 
 }

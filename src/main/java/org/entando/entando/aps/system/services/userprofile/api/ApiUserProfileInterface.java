@@ -36,7 +36,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.IGroupManager;
 
 /**
@@ -65,7 +65,7 @@ public class ApiUserProfileInterface {
         } catch (Throwable t) {
             _logger.error("Error searching usernames", t);
             //ApsSystemUtils.logThrowable(t, this, "getUserProfiles");
-            throw new ApsSystemException("Error searching usernames", t);
+            throw new EntException("Error searching usernames", t);
         }
         return usernames;
     }
@@ -84,7 +84,7 @@ public class ApiUserProfileInterface {
             throw ae;
         } catch (Throwable t) {
             _logger.error("Error extracting user profile", t);
-            throw new ApsSystemException("Error extracting user profile", t);
+            throw new EntException("Error extracting user profile", t);
         }
         return jaxbUserProfile;
     }
@@ -116,7 +116,7 @@ public class ApiUserProfileInterface {
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
             _logger.error("Error adding user profile", t);
-            throw new ApsSystemException("Error adding user profile", t);
+            throw new EntException("Error adding user profile", t);
         }
         return response;
     }
@@ -149,12 +149,12 @@ public class ApiUserProfileInterface {
         } catch (Throwable t) {
             _logger.error("Error updating user profile", t);
             //ApsSystemUtils.logThrowable(t, this, "updateUserProfile");
-            throw new ApsSystemException("Error updating user profile", t);
+            throw new EntException("Error updating user profile", t);
         }
         return response;
     }
 
-    private List<ApiError> validate(IUserProfile userProfile) throws ApsSystemException {
+    private List<ApiError> validate(IUserProfile userProfile) throws EntException {
         List<ApiError> errors = new ArrayList<ApiError>();
         try {
             List<FieldError> fieldErrors = userProfile.validate(this.getGroupManager());
@@ -174,7 +174,7 @@ public class ApiUserProfileInterface {
         } catch (Throwable t) {
             _logger.error("Error validating profile", t);
             //ApsSystemUtils.logThrowable(t, this, "validate");
-            throw new ApsSystemException("Error validating profile", t);
+            throw new EntException("Error validating profile", t);
         }
         return errors;
     }
@@ -196,7 +196,7 @@ public class ApiUserProfileInterface {
         } catch (Throwable t) {
             _logger.error("Error deleting user Profile", t);
             //ApsSystemUtils.logThrowable(t, this, "deleteUserProfile");
-            throw new ApsSystemException("Error deleting user Profile", t);
+            throw new EntException("Error deleting user Profile", t);
         }
     }
 
