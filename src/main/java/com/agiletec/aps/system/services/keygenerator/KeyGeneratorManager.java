@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.keygenerator;
 
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.keygenerator.cache.IKeyGeneratorManagerCacheWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +42,11 @@ public class KeyGeneratorManager extends AbstractService implements IKeyGenerato
 	 * Restituisce la chiave univoca corrente.
 	 *
 	 * @return La chiave univoca corrente.
-	 * @throws ApsSystemException In caso di errore nell'aggiornamento della
+	 * @throws EntException In caso di errore nell'aggiornamento della
 	 * chiave corrente.
 	 */
 	@Override
-	public int getUniqueKeyCurrentValue() throws ApsSystemException {
+	public int getUniqueKeyCurrentValue() throws EntException {
 		return this.getCacheWrapper().getAndIncrementUniqueKeyCurrentValue(this.getKeyGeneratorDAO());
 	}
 

@@ -27,7 +27,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.renderer.BaseEntityRenderer;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
 import com.agiletec.aps.system.common.renderer.TextAttributeCharReplaceInfo;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.I18nManagerWrapper;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
@@ -61,7 +61,7 @@ public class BaseDataObjectRenderer extends BaseEntityRenderer implements IDataO
 			StringWriter stringWriter = new StringWriter();
 			boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", contentModel);
 			if (!isEvaluated) {
-				throw new ApsSystemException("Error rendering DataObject");
+				throw new EntException("Error rendering DataObject");
 			}
 			stringWriter.flush();
 			renderedEntity = stringWriter.toString();

@@ -20,14 +20,14 @@ import org.entando.entando.aps.system.services.widgettype.WidgetTypeDOM;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author M.Diana
  */
 public class TestWidgetTypeDOM extends BaseTestCase {
 	
-    public void testParseConfig() throws ApsSystemException {
+    public void testParseConfig() throws EntException {
 		String framesXml = "<config>" +
 							"<parameter name=\"contentType\">" +
 							"Tipo di contenuto (obbligatorio)" +
@@ -45,7 +45,7 @@ public class TestWidgetTypeDOM extends BaseTestCase {
         assertEquals(3, params.size());
 	}
     
-    public void testCreateConfig() throws ApsSystemException {
+    public void testCreateConfig() throws EntException {
     	WidgetTypeParameter params1 = new WidgetTypeParameter();
     	params1.setName("param1");
     	params1.setDescr("Param1 Descr");

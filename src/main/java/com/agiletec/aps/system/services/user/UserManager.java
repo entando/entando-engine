@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import java.util.HashMap;
@@ -62,18 +62,18 @@ public class UserManager extends AbstractService implements IUserManager {
     }
 
     @Override
-    public List<String> getUsernames() throws ApsSystemException {
+    public List<String> getUsernames() throws EntException {
         return this.searchUsernames(null);
     }
 
     @Override
-    public List<String> searchUsernames(String text) throws ApsSystemException {
+    public List<String> searchUsernames(String text) throws EntException {
         List<String> usernames = null;
         try {
             usernames = this.getUserDAO().searchUsernames(text);
         } catch (Throwable t) {
             logger.error("Error searching usernames by text '{}'", text, t);
-            throw new ApsSystemException("Error loading the username list", t);
+            throw new EntException("Error loading the username list", t);
         }
         return usernames;
     }
@@ -82,15 +82,15 @@ public class UserManager extends AbstractService implements IUserManager {
      * Restituisce la lista completa degli utenti (in oggetti User).
      *
      * @return La lista completa degli utenti (in oggetti User).
-     * @throws ApsSystemException In caso di errore in accesso al db.
+     * @throws EntException In caso di errore in accesso al db.
      */
     @Override
-    public List<UserDetails> getUsers() throws ApsSystemException {
+    public List<UserDetails> getUsers() throws EntException {
         return this.searchUsers(null);
     }
 
     @Override
-    public List<UserDetails> searchUsers(String text) throws ApsSystemException {
+    public List<UserDetails> searchUsers(String text) throws EntException {
         List<UserDetails> users = null;
         try {
             users = this.getUserDAO().searchUsers(text);
@@ -99,7 +99,7 @@ public class UserManager extends AbstractService implements IUserManager {
             }
         } catch (Throwable t) {
             logger.error("Error searching users by text '{}'", text, t);
-            throw new ApsSystemException("Error loading the user list", t);
+            throw new EntException("Error loading the user list", t);
         }
         return users;
     }
@@ -108,25 +108,25 @@ public class UserManager extends AbstractService implements IUserManager {
      * Elimina un'utente dal db.
      *
      * @param user L'utente da eliminare dal db.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     @Override
-    public void removeUser(UserDetails user) throws ApsSystemException {
+    public void removeUser(UserDetails user) throws EntException {
         try {
             this.getUserDAO().deleteUser(user);
         } catch (Throwable t) {
             logger.error("Error deleting user '{}'", user, t);
-            throw new ApsSystemException("Error deleting a user", t);
+            throw new EntException("Error deleting a user", t);
         }
     }
 
     @Override
-    public void removeUser(String username) throws ApsSystemException {
+    public void removeUser(String username) throws EntException {
         try {
             this.getUserDAO().deleteUser(username);
         } catch (Throwable t) {
             logger.error("Error deleting user '{}'", username, t);
-            throw new ApsSystemException("Error deleting a user", t);
+            throw new EntException("Error deleting a user", t);
         }
     }
 
@@ -134,30 +134,30 @@ public class UserManager extends AbstractService implements IUserManager {
      * Aggiorna un utente nel db.
      *
      * @param user L'utente da aggiornare nel db.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     @Override
-    public void updateUser(UserDetails user) throws ApsSystemException {
+    public void updateUser(UserDetails user) throws EntException {
         try {
             this.getUserDAO().updateUser(user);
         } catch (Throwable t) {
             logger.error("Error updating user '{}'", user, t);
-            throw new ApsSystemException("Error updating the User", t);
+            throw new EntException("Error updating the User", t);
         }
     }
 
     @Override
-    public void changePassword(String username, String password) throws ApsSystemException {
+    public void changePassword(String username, String password) throws EntException {
         try {
             this.getUserDAO().changePassword(username, password);
         } catch (Throwable t) {
             logger.error("Error on change password for user '{}'", username, t);
-            throw new ApsSystemException("Error updating the password of the User" + username, t);
+            throw new EntException("Error updating the password of the User" + username, t);
         }
     }
 
     @Override
-    public void updateLastAccess(UserDetails user) throws ApsSystemException {
+    public void updateLastAccess(UserDetails user) throws EntException {
         if (!user.isEntandoUser()) {
             return;
         }
@@ -165,7 +165,7 @@ public class UserManager extends AbstractService implements IUserManager {
             this.getUserDAO().updateLastAccess(user.getUsername());
         } catch (Throwable t) {
             logger.error("Error on update last access for user '{}'", user, t);
-            throw new ApsSystemException("Error while refreshing the last access date of the User " + user.getUsername(), t);
+            throw new EntException("Error while refreshing the last access date of the User " + user.getUsername(), t);
         }
     }
 
@@ -173,15 +173,15 @@ public class UserManager extends AbstractService implements IUserManager {
      * Aggiunge un utente nel db.
      *
      * @param user L'utente da aggiungere nel db.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     @Override
-    public void addUser(UserDetails user) throws ApsSystemException {
+    public void addUser(UserDetails user) throws EntException {
         try {
             this.getUserDAO().addUser(user);
         } catch (Throwable t) {
             logger.error("Error on add user '{}'", user, t);
-            throw new ApsSystemException("Error adding a new user ", t);
+            throw new EntException("Error adding a new user ", t);
         }
     }
 
@@ -192,16 +192,16 @@ public class UserManager extends AbstractService implements IUserManager {
      * @param username Lo username dell'utente da restituire.
      * @return L'utente cercato, null se non vi è nessun utente corrispondente
      * alla username immessa.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     @Override
-    public UserDetails getUser(String username) throws ApsSystemException {
+    public UserDetails getUser(String username) throws EntException {
         UserDetails user = null;
         try {
             user = this.getUserDAO().loadUser(username);
         } catch (Throwable t) {
             logger.error("Error loading user by username '{}'", username, t);
-            throw new ApsSystemException("Error loading user", t);
+            throw new EntException("Error loading user", t);
         }
         this.setUserCredentialCheckParams(user);
         return user;
@@ -215,16 +215,16 @@ public class UserManager extends AbstractService implements IUserManager {
      * @param password La password dell'utente da restituire.
      * @return L'utente cercato, null se non vi è nessun utente corrispondente
      * alla username e password immessa.
-     * @throws ApsSystemException in caso di errore nell'accesso al db.
+     * @throws EntException in caso di errore nell'accesso al db.
      */
     @Override
-    public UserDetails getUser(String username, String password) throws ApsSystemException {
+    public UserDetails getUser(String username, String password) throws EntException {
         UserDetails user = null;
         try {
             user = this.getUserDAO().loadUser(username, password);
         } catch (Throwable t) {
             logger.error("Error loading user by username and password. username: '{}'", username, t);
-            throw new ApsSystemException("Error loading user", t);
+            throw new EntException("Error loading user", t);
         }
         this.setUserCredentialCheckParams(user);
         return user;
@@ -267,7 +267,7 @@ public class UserManager extends AbstractService implements IUserManager {
         return value;
     }
 
-    private void updateLegacyPassword(UserDetails user) throws ApsSystemException {
+    private void updateLegacyPassword(UserDetails user) throws EntException {
         String pwd = user.getPassword();
         if (!isBCryptEncoded(pwd) && !isArgon2Encoded(pwd)) {
             try {

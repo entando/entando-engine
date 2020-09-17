@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @version 1.0
@@ -48,7 +48,7 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
     /*
      * Controllo che stia correttamente incrementando di uno la sequence
      */
-    public void testGetUniqueKeyCurrentValueWithRightIncrement() throws ApsSystemException{
+    public void testGetUniqueKeyCurrentValueWithRightIncrement() throws EntException {
         int uniqueKeyCurrentValue = 0;
         uniqueKeyCurrentValue = keyGeneratorManager.getUniqueKeyCurrentValue();
         int expectedUniqueKeyCurrentValue = currentKey + 1;

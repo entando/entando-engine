@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.category.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryDAO;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -30,7 +30,7 @@ public interface ICategoryManagerCacheWrapper {
 	public static final String CATEGORY_CODES_CACHE_NAME = "CategoryManager_codes";
 	public static final String CATEGORY_STATUS_CACHE_NAME = "CategoryManager_status";
 
-	public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws ApsSystemException;
+	public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws EntException;
 
 	public Category getRoot();
 

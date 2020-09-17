@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelManager;
@@ -75,7 +75,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         accessToken = mockOAuthInterceptor(user);
     }
 
-    private void deletePageModelsFromPreviousTests() throws ApsSystemException {
+    private void deletePageModelsFromPreviousTests() throws EntException {
         pageModelManager.deletePageModel(PAGE_MODEL_CODE);
     }
     

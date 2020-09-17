@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.role.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IRoleDAO;
 import com.agiletec.aps.system.services.role.Role;
 import java.util.List;
@@ -26,7 +26,7 @@ public interface IRoleCacheWrapper {
 	public static final String ROLE_CACHE_NAME_PREFIX = "RoleManager_role_";
 	public static final String ROLE_CODES_CACHE_NAME = "RoleManager_roles";
 
-	public void initCache(IRoleDAO roleDAO) throws ApsSystemException;
+	public void initCache(IRoleDAO roleDAO) throws EntException;
 
 	public List<Role> getRoles();
 

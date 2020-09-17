@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.baseconfig.cache;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.IConfigItemDAO;
 
 /**
@@ -28,7 +28,7 @@ public interface IConfigManagerCacheWrapper {
 	public static final String CONFIG_PARAM_CACHE_NAME_PREFIX = "ConfigManager_param_";
 	public static final String CONFIG_PARAMS_CODES_CACHE_NAME = "ConfigManager_params";
 
-	public void initCache(IConfigItemDAO configItemDAO, String version) throws ApsSystemException;
+	public void initCache(IConfigItemDAO configItemDAO, String version) throws EntException;
 
 	public String getConfigItem(String name);
 

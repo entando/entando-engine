@@ -17,7 +17,7 @@ import com.agiletec.aps.system.SystemConstants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -97,13 +97,13 @@ public class EntandoOauth2Interceptor extends HandlerInterceptorAdapter {
             request.getSession().setAttribute("user", user);
             request.getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
             return user;
-        } catch (ApsSystemException ex) {
+        } catch (EntException ex) {
             logger.error("System exception {}", ex.getMessage());
             throw new EntandoTokenException("error parsing OAuth parameters", request, "guest");
         }
     }
 
-    protected void checkAuthorization(UserDetails user, String[] permissions, HttpServletRequest request) throws ApsSystemException {
+    protected void checkAuthorization(UserDetails user, String[] permissions, HttpServletRequest request) throws EntException {
         if (null == user) {
             throw new EntandoTokenException("no access token found", request, null);
         }

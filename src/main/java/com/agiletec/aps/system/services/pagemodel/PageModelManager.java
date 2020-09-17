@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.*;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.cache.IPageModelManagerCacheWrapper;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import org.apache.commons.lang.StringUtils;
@@ -63,7 +63,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
     }
 
     @Override
-    public void addPageModel(PageModel pageModel) throws ApsSystemException {
+    public void addPageModel(PageModel pageModel) throws EntException {
         if (null == pageModel) {
             logger.debug("Null page template can be add");
             return;
@@ -74,12 +74,12 @@ public class PageModelManager extends AbstractService implements IPageModelManag
             this.notifyPageModelChangedEvent(pageModel, PageModelChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error adding page templates", t);
-            throw new ApsSystemException("Error adding page templates", t);
+            throw new EntException("Error adding page templates", t);
         }
     }
 
     @Override
-    public void updatePageModel(PageModel pageModel) throws ApsSystemException {
+    public void updatePageModel(PageModel pageModel) throws EntException {
         if (null == pageModel) {
             logger.debug("Null page template can be update");
             return;
@@ -102,12 +102,12 @@ public class PageModelManager extends AbstractService implements IPageModelManag
             this.notifyPageModelChangedEvent(pageModelToUpdate, PageModelChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error updating page template {}", pageModel.getCode(), t);
-            throw new ApsSystemException("Error updating page template " + pageModel.getCode(), t);
+            throw new EntException("Error updating page template " + pageModel.getCode(), t);
         }
     }
 
     @Override
-    public void deletePageModel(String code) throws ApsSystemException {
+    public void deletePageModel(String code) throws EntException {
         try {
             PageModel model = this.getPageModel(code);
             this.getPageModelDAO().deleteModel(code);
@@ -115,7 +115,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
             this.notifyPageModelChangedEvent(model, PageModelChangedEvent.REMOVE_OPERATION_CODE);
         } catch (Throwable t) {
             logger.error("Error deleting page templates", t);
-            throw new ApsSystemException("Error deleting page templates", t);
+            throw new EntException("Error deleting page templates", t);
         }
     }
 
@@ -127,7 +127,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
     }
 
     @Override
-    public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
+    public List getGuiFragmentUtilizers(String guiFragmentCode) throws EntException {
         List<PageModel> utilizers = new ArrayList<>();
         try {
             for (PageModel pModel : this.getPageModels()) {
@@ -142,7 +142,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
             }
         } catch (Throwable t) {
             logger.error("Error extracting utilizers", t);
-            throw new ApsSystemException("Error extracting utilizers", t);
+            throw new EntException("Error extracting utilizers", t);
         }
         return utilizers;
     }
@@ -164,7 +164,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
     }
 
     @Override
-    public SearcherDaoPaginatedResult<PageModel> searchPageModels(List<FieldSearchFilter> filtersList) throws ApsSystemException {
+    public SearcherDaoPaginatedResult<PageModel> searchPageModels(List<FieldSearchFilter> filtersList) throws EntException {
         SearcherDaoPaginatedResult<PageModel> pagedResult = null;
         try {
             FieldSearchFilter[] filters = null;
@@ -181,7 +181,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
             pagedResult = new SearcherDaoPaginatedResult<>(count, pageModels);
         } catch (Throwable t) {
             logger.error("Error searching groups", t);
-            throw new ApsSystemException("Error searching groups", t);
+            throw new EntException("Error searching groups", t);
         }
         return pagedResult;
     }

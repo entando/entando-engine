@@ -19,7 +19,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -61,21 +61,21 @@ public class IndexerDAO implements IIndexerDAO {
      * Inizializzazione dell'indicizzatore.
      *
      * @param dir La cartella locale contenitore dei dati persistenti.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
     @Override
-    public void init(File dir) throws ApsSystemException {
+    public void init(File dir) throws EntException {
         try {
             this.dir = FSDirectory.open(dir.toPath(), SimpleFSLockFactory.INSTANCE);
         } catch (Throwable t) {
             logger.error("Error creating directory", t);
-            throw new ApsSystemException("Error creating directory", t);
+            throw new EntException("Error creating directory", t);
         }
         logger.debug("Indexer: search engine index ok.");
     }
 
     @Override
-    public synchronized void add(IApsEntity entity) throws ApsSystemException {
+    public synchronized void add(IApsEntity entity) throws EntException {
         IndexWriter writer = null;
         try {
             writer = new IndexWriter(this.dir, this.getIndexWriterConfig());
@@ -83,7 +83,7 @@ public class IndexerDAO implements IIndexerDAO {
             writer.addDocument(document);
         } catch (Throwable t) {
             logger.error("Errore saving entity {}", entity.getId(), t);
-            throw new ApsSystemException("Error saving entity", t);
+            throw new EntException("Error saving entity", t);
         } finally {
             if (null != writer) {
                 try {
@@ -101,9 +101,9 @@ public class IndexerDAO implements IIndexerDAO {
      *
      * @param entity Il dataobject dal quale ricavare il Document.
      * @return L'oggetto Document ricavato dal dataobject.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
-    protected Document createDocument(IApsEntity entity) throws ApsSystemException {
+    protected Document createDocument(IApsEntity entity) throws EntException {
         Document document = new Document();
         document.add(new StringField(DATAOBJECT_ID_FIELD_NAME,
                 entity.getId(), Field.Store.YES));
@@ -136,7 +136,7 @@ public class IndexerDAO implements IIndexerDAO {
             }
         } catch (Throwable t) {
             logger.error("Error creating document", t);
-            throw new ApsSystemException("Error creating document", t);
+            throw new EntException("Error creating document", t);
         }
         return document;
     }
@@ -152,7 +152,7 @@ public class IndexerDAO implements IIndexerDAO {
     }
 
     private void indexAttribute(Document document,
-            AttributeInterface attribute, Lang lang) throws ApsSystemException {
+            AttributeInterface attribute, Lang lang) throws EntException {
         attribute.setRenderingLang(lang.getCode());
         if (attribute instanceof IndexableAttributeInterface) {
             String valueToIndex = ((IndexableAttributeInterface) attribute).getIndexeableFieldValue();
@@ -204,17 +204,17 @@ public class IndexerDAO implements IIndexerDAO {
      * documento.
      * @param value La chiave mediante il quale è stato indicizzato il
      * documento.
-     * @throws ApsSystemException In caso di errore
+     * @throws EntException In caso di errore
      */
     @Override
-    public synchronized void delete(String name, String value) throws ApsSystemException {
+    public synchronized void delete(String name, String value) throws EntException {
         try {
             IndexWriter writer = new IndexWriter(this.dir, this.getIndexWriterConfig());
             writer.deleteDocuments(new Term(name, value));
             writer.close();
         } catch (IOException e) {
             logger.error("Error deleting document", e);
-            throw new ApsSystemException("Error deleting document", e);
+            throw new EntException("Error deleting document", e);
         }
     }
 

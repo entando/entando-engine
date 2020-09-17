@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
@@ -42,7 +42,7 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
     private static final Logger _logger = LoggerFactory.getLogger(DataObjectViewerHelper.class);
 
     @Override
-    public String getRenderedDataObject(String dataobjectId, String modelId, RequestContext reqCtx) throws ApsSystemException {
+    public String getRenderedDataObject(String dataobjectId, String modelId, RequestContext reqCtx) throws EntException {
         return this.getRenderedDataObject(dataobjectId, modelId, false, reqCtx);
     }
 
@@ -54,11 +54,11 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
      * @param publishExtraTitle
      * @param reqCtx Il contesto della richiesta.
      * @return Il dataObject da visualizzare nella widget.
-     * @throws ApsSystemException In caso di errore.
+     * @throws EntException In caso di errore.
      */
     @Override
     public String getRenderedDataObject(String dataobjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx)
-            throws ApsSystemException {
+            throws EntException {
         String renderedDataObject = null;
         DataObjectRenderizationInfo renderInfo = this.getRenderizationInfo(dataobjectId, modelId, publishExtraTitle, reqCtx);
         if (null != renderInfo) {
@@ -72,7 +72,7 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
 
     @Override
     public DataObjectRenderizationInfo getRenderizationInfo(String dataobjectId, String modelId, boolean publishExtraTitle, RequestContext reqCtx)
-            throws ApsSystemException {
+            throws EntException {
         DataObjectRenderizationInfo renderizationInfo = null;
         try {
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
@@ -95,13 +95,13 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
             }
         } catch (Throwable t) {
             _logger.error("Error extracting renderization info", t);
-            throw new ApsSystemException("Error extracting renderization info", t);
+            throw new EntException("Error extracting renderization info", t);
         }
         return renderizationInfo;
     }
 
     @Override
-    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataobjectId, RequestContext reqCtx) throws ApsSystemException {
+    public PublicDataTypeAuthorizationInfo getAuthorizationInfo(String dataobjectId, RequestContext reqCtx) throws EntException {
         PublicDataTypeAuthorizationInfo authInfo = null;
         try {
             Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
@@ -116,7 +116,7 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
             }
         } catch (Throwable t) {
             _logger.error("Error extracting dataobject authorization info by dataobject {}", dataobjectId, t);
-            throw new ApsSystemException("Error extracting dataobject authorization info by dataobject '" + dataobjectId + "'", t);
+            throw new EntException("Error extracting dataobject authorization info by dataobject '" + dataobjectId + "'", t);
         }
         return authInfo;
     }

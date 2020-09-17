@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import org.aspectj.lang.annotation.Before;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
@@ -49,20 +49,20 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
-    public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException {
+    public void editActionLikeRecord(int id, String username, boolean add) throws EntException {
         try {
             this.getSocialActivityStreamDAO().editActionLikeRecord(id, username, add);
             this.getActionLogManager().updateRecordDate(id);
         } catch (Throwable t) {
             _logger.error("Error editing activity stream like records", t);
-            throw new ApsSystemException("Error editing activity stream like records", t);
+            throw new EntException("Error editing activity stream like records", t);
         }
     }
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
     @CacheableInfo(groups = "'ActivityStreamLikeRecords_cacheGroup'")
-    public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException {
+    public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws EntException {
         List<ActivityStreamLikeInfo> infos = null;
         try {
             infos = this.getSocialActivityStreamDAO().getActionLikeRecords(id);
@@ -77,7 +77,7 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
             }
         } catch (Throwable t) {
             _logger.error("Error extracting activity stream like records", t);
-            throw new ApsSystemException("Error extracting activity stream like records", t);
+            throw new EntException("Error extracting activity stream like records", t);
         }
         return infos;
     }
@@ -94,7 +94,7 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
-    public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException {
+    public void addActionCommentRecord(String username, String commentText, int streamId) throws EntException {
         try {
             Integer key = null;
             ActionLogRecord record = null;
@@ -106,26 +106,26 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
             this.getActionLogManager().updateRecordDate(streamId);
         } catch (Throwable t) {
             _logger.error("Error adding a comment record to stream with id:{}", streamId, t);
-            throw new ApsSystemException("Error adding a comment record", t);
+            throw new EntException("Error adding a comment record", t);
         }
     }
 
     @Override
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
-    public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException {
+    public void deleteActionCommentRecord(int id, int streamId) throws EntException {
         try {
             this.getSocialActivityStreamDAO().deleteActionCommentRecord(id);
             this.getActionLogManager().updateRecordDate(streamId);
         } catch (Throwable t) {
             _logger.error("Error deleting comment with id {} from stream with id {}", id, streamId, t);
-            throw new ApsSystemException("Error deleting comment", t);
+            throw new EntException("Error deleting comment", t);
         }
     }
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
     @CacheableInfo(groups = "'ActivityStreamCommentRecords_cacheGroup'")
-    public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException {
+    public List<ActivityStreamComment> getActionCommentRecords(int id) throws EntException {
         List<ActivityStreamComment> infos = null;
         try {
             infos = this.getSocialActivityStreamDAO().getActionCommentRecords(id);
@@ -140,7 +140,7 @@ public class SocialActivityStreamManager extends AbstractService implements ISoc
             }
         } catch (Throwable t) {
             _logger.error("Error extracting activity stream like records for stream with id {}", id, t);
-            throw new ApsSystemException("Error extracting activity stream like records", t);
+            throw new EntException("Error extracting activity stream like records", t);
         }
         return infos;
     }

@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +55,12 @@ public class OAuthConsumerManagerTest {
         Mockito.verify(consumerDAO, Mockito.times(1)).getConsumer(Mockito.anyString());
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void failGetConsumer() throws Exception {
         Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).getConsumer(Mockito.anyString());
         try {
             ConsumerRecordVO extracted = this.consumerManager.getConsumerRecord("key");
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } finally {
             Mockito.verify(consumerDAO, Mockito.times(1)).getConsumer(Mockito.anyString());
@@ -74,13 +74,13 @@ public class OAuthConsumerManagerTest {
         Mockito.verify(consumerDAO, Mockito.times(1)).addConsumer(Mockito.any(ConsumerRecordVO.class));
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void failAddConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_2", "secret", false);
         Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).addConsumer(record);
         try {
             this.consumerManager.addConsumer(record);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } finally {
             Mockito.verify(consumerDAO, Mockito.times(1)).addConsumer(Mockito.any(ConsumerRecordVO.class));
@@ -94,13 +94,13 @@ public class OAuthConsumerManagerTest {
         Mockito.verify(consumerDAO, Mockito.times(1)).updateConsumer(Mockito.any(ConsumerRecordVO.class));
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void failUpdateConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_2", "secret", false);
         Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).updateConsumer(record);
         try {
             this.consumerManager.updateConsumer(record);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } finally {
             Mockito.verify(consumerDAO, Mockito.times(1)).updateConsumer(Mockito.any(ConsumerRecordVO.class));
@@ -113,12 +113,12 @@ public class OAuthConsumerManagerTest {
         Mockito.verify(consumerDAO, Mockito.times(1)).deleteConsumer(Mockito.anyString());
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void failDeleteConsumer() throws Exception {
         Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).deleteConsumer(Mockito.anyString());
         try {
             this.consumerManager.deleteConsumer("key_test_2");
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } finally {
             Mockito.verify(consumerDAO, Mockito.times(1)).deleteConsumer(Mockito.anyString());
@@ -136,12 +136,12 @@ public class OAuthConsumerManagerTest {
         Mockito.verify(consumerDAO, Mockito.times(1)).getConsumerKeys(Mockito.any(FieldSearchFilter[].class));
     }
 
-    @Test(expected = ApsSystemException.class)
+    @Test(expected = EntException.class)
     public void failGetConsumerKeys_2() throws Exception {
         Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).getConsumerKeys(Mockito.any(FieldSearchFilter[].class));
         try {
             List<String> keys = this.consumerManager.getConsumerKeys(new FieldSearchFilter[]{});
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             throw e;
         } finally {
             Mockito.verify(consumerDAO, Mockito.times(1)).getConsumerKeys(Mockito.any(FieldSearchFilter[].class));

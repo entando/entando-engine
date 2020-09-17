@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.page;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Base interface for the services whose elements can directly reference the pages in the portal
@@ -33,8 +33,8 @@ public interface PageUtilizer {
 	 * Return the list of the objects which reference the given page.
 	 * @param pageCode The code of the page
 	 * @return The list of the object referencing the given page 
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-	public List getPageUtilizers(String pageCode) throws ApsSystemException;
+	public List getPageUtilizers(String pageCode) throws EntException;
 	
 }

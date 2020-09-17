@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.widget;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.services.widgettype.IWidgetService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
@@ -90,7 +90,7 @@ public class WidgetController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/widgets/{widgetCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteWidget(@PathVariable String widgetCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteWidget(@PathVariable String widgetCode) throws EntException {
         logger.info("deleting widget {}", widgetCode);
         this.widgetService.removeWidget(widgetCode);
         Map<String, String> result = new HashMap<>();
@@ -116,7 +116,7 @@ public class WidgetController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/widgets", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
-    public ResponseEntity<SimpleRestResponse<WidgetDto>> addWidget(@Valid @RequestBody WidgetRequest widgetRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<WidgetDto>> addWidget(@Valid @RequestBody WidgetRequest widgetRequest, BindingResult bindingResult) throws EntException {
         logger.trace("add widget. body {}: ", widgetRequest);
         //field validations
         if (bindingResult.hasErrors()) {

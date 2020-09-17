@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.dataobjectmodel;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -119,7 +119,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_validate_put_path_mismatch() throws ApsSystemException, Exception {
+    public void should_validate_put_path_mismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ObjectMapper mapper = new ObjectMapper();

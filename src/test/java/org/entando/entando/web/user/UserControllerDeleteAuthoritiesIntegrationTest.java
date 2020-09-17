@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -148,7 +148,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
         }
     }
 
-    protected void addUserWithAuthorization(String username, String password, String groupName, String roleName) throws ApsSystemException {
+    protected void addUserWithAuthorization(String username, String password, String groupName, String roleName) throws EntException {
         User testUser = new User();
         testUser.setUsername(username);
         testUser.setPassword(password);

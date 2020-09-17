@@ -25,7 +25,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.DataTypeUtilizer;
 
@@ -34,14 +34,14 @@ public class DataObjectHelper implements IDataTypeHelper, ApplicationContextAwar
 	private static final Logger _logger = LoggerFactory.getLogger(DataObjectHelper.class);
 
 	@Override
-	public Map<String, List<?>> getReferencingObjects(DataObject content) throws ApsSystemException {
+	public Map<String, List<?>> getReferencingObjects(DataObject content) throws EntException {
 		Collection<DataTypeUtilizer> contentUtilizers = this.getDataTypeUtilizers();
 		Map<String, List<?>> references = this.getReferencingObjects(content, contentUtilizers);
 		return references;
 	}
 
 	@Override
-	public Map<String, List<?>> getReferencingObjects(DataObject content, Collection<DataTypeUtilizer> contentUtilizers) throws ApsSystemException {
+	public Map<String, List<?>> getReferencingObjects(DataObject content, Collection<DataTypeUtilizer> contentUtilizers) throws EntException {
 		Map<String, List<?>> references = new HashMap<String, List<?>>();
 		try {
 			for (DataTypeUtilizer contentUtilizer : contentUtilizers) {
@@ -54,7 +54,7 @@ public class DataObjectHelper implements IDataTypeHelper, ApplicationContextAwar
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting referencing object", t);
-			throw new ApsSystemException("Error searching content referencing objects", t);
+			throw new EntException("Error searching content referencing objects", t);
 		}
 		return references;
 	}

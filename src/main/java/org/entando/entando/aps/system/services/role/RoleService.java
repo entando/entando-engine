@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationService;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -194,7 +194,7 @@ public class RoleService implements IRoleService {
             this.getRoleManager().updateRole(role);
             RoleDto dto = this.getDtoBuilder().toDto(role, this.getRoleManager().getPermissionsCodes());
             return dto;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error updating a role", e);
             throw new RestServerError("error in update role", e);
         }
@@ -211,7 +211,7 @@ public class RoleService implements IRoleService {
             this.getRoleManager().addRole(role);
             RoleDto dto = this.getDtoBuilder().toDto(role, this.getRoleManager().getPermissionsCodes());
             return dto;
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error adding a role", e);
             throw new RestServerError("error in add role", e);
         }
@@ -230,7 +230,7 @@ public class RoleService implements IRoleService {
                 throw new ValidationGenericException(validationResult);
             }
             this.getRoleManager().removeRole(role);
-        } catch (ApsSystemException e) {
+        } catch (EntException e) {
             logger.error("Error in delete role {}", roleCode, e);
             throw new RestServerError("error in delete role", e);
         }
@@ -350,7 +350,7 @@ public class RoleService implements IRoleService {
         return permissions;
     }
 
-    protected List<UserDto> userReferences(String code) throws ApsSystemException {
+    protected List<UserDto> userReferences(String code) throws EntException {
         return this.getAuthorizationService().getRoleUtilizer(code);
 
     }

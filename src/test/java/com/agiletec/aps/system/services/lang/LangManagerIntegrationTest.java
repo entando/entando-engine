@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @version 1.0
@@ -33,7 +33,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		this.init();
 	}
 
-	public void testGetLang() throws ApsSystemException {
+	public void testGetLang() throws EntException {
 		Lang lang = this.langManager.getLang("en");
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
@@ -41,7 +41,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		assertEquals(langDescr, "English");
 	}
 
-	public void testGetDefaultLang() throws ApsSystemException {
+	public void testGetDefaultLang() throws EntException {
 		Lang lang = this.langManager.getDefaultLang();
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
@@ -49,7 +49,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		assertEquals(langDescr, "Italiano");
 	}
 
-	public void testGetLangs() throws ApsSystemException {
+	public void testGetLangs() throws EntException {
 		List<Lang> langs = this.langManager.getLangs();
 		assertEquals(2, langs.size());
 		for (Lang lang : langs) {

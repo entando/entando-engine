@@ -13,20 +13,20 @@
  */
 package org.entando.entando.aps.system.services.oauth2;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.oauth2.model.ApiConsumer;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
 public interface ApiConsumerService {
 
-    ApiConsumer create(ApiConsumer consumer) throws ApsSystemException;
+    ApiConsumer create(ApiConsumer consumer) throws EntException;
 
-    ApiConsumer get(String consumerKey) throws ApsSystemException;
+    ApiConsumer get(String consumerKey) throws EntException;
 
-    PagedMetadata<ApiConsumer> list(RestListRequest request) throws ApsSystemException;
+    PagedMetadata<ApiConsumer> list(RestListRequest request) throws EntException;
 
-    ApiConsumer update(ApiConsumer consumer) throws ApsSystemException;
+    ApiConsumer update(ApiConsumer consumer) throws EntException;
 
-    void delete(String consumerKey) throws ApsSystemException;
+    void delete(String consumerKey) throws EntException;
 }

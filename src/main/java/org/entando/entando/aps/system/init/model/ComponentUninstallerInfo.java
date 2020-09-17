@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,11 +41,11 @@ public class ComponentUninstallerInfo extends AbstractComponentModule implements
 			super.createPostProcesses(postProcessesElement, postProcessClasses);
 		} catch (Throwable t) {
 			_logger.error("Error creating ComponentUninstallerInfo", t);
-			throw new ApsSystemException("Error creating ComponentUninstallerInfo", t);
+			throw new EntException("Error creating ComponentUninstallerInfo", t);
 		}
 	}
 	
-	private void extractResources(Element resourcesElement) throws ApsSystemException {
+	private void extractResources(Element resourcesElement) throws EntException {
 		if (null != resourcesElement) {
 			List<Element> resourceElements = resourcesElement.getChildren("resource");
 			for (int j = 0; j < resourceElements.size(); j++) {

@@ -18,7 +18,7 @@ import java.util.Properties;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -28,14 +28,14 @@ public interface IResponseBuilder {
     public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException;
     
     @Deprecated
-    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException;
+    public Object invoke(String resourceName, Properties parameters) throws ApiException, EntException;
     
     @Deprecated
-    public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException;
+    public Object createResponse(String resourceName, Properties parameters) throws EntException;
     
-    public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException;
+    public Object createResponse(ApiMethod method, Properties parameters) throws EntException;
     
-    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException;
+    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws EntException;
     
     public static final String SUCCESS = "SUCCESS";
     public static final String FAILURE = "FAILURE";

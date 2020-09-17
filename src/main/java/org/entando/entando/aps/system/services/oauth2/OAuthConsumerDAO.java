@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,7 +83,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             if (res.next()) {
                 consumer = consumerFromResultSet(res);
             }
-        } catch (SQLException | ApsSystemException t) {
+        } catch (SQLException | EntException t) {
             logger.error("Error while loading consumer by clientid {}", clientId, t);
             throw new RuntimeException("Error while loading consumer by key " + clientId, t);
         } finally {
@@ -118,7 +118,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
                         consumers.add(consumerFromResultSet(rs));
                     }
                 }
-            } catch (SQLException | ApsSystemException ex) {
+            } catch (SQLException | EntException ex) {
                 logger.error("Error while loading consumers", ex);
                 throw new RuntimeException("Error while loading consumers", ex);
             }
@@ -159,7 +159,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             this.fillStatement(consumer, index, true, stat);
             stat.executeUpdate();
             conn.commit();
-        } catch (SQLException | ApsSystemException t) {
+        } catch (SQLException | EntException t) {
             this.executeRollback(conn);
             logger.error("Error while adding a consumer", t);
             throw new RuntimeException("Error while adding a consumer", t);
@@ -183,7 +183,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             stat.setString(index++, consumer.getKey());
             stat.executeUpdate();
             conn.commit();
-        } catch (SQLException | ApsSystemException t) {
+        } catch (SQLException | EntException t) {
             this.executeRollback(conn);
             logger.error("Error while updating a consumer", t);
             throw new RuntimeException("Error while updating a consumer", t);
@@ -226,7 +226,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             super.executeQueryWithoutResultset(conn, DELETE_CONSUMER_TOKENS, clientId);
             super.executeQueryWithoutResultset(conn, DELETE_CONSUMER, clientId);
             conn.commit();
-        } catch (SQLException | ApsSystemException t) {
+        } catch (SQLException | EntException t) {
             this.executeRollback(conn);
             logger.error("Error while deleting consumer '{}' and its tokens", clientId, t);
             throw new RuntimeException("Error while deleting a consumer and its tokens", t);

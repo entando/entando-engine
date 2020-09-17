@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.keygenerator;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i servizi gestori di sequenze univoche.
@@ -24,9 +24,9 @@ public interface IKeyGeneratorManager {
 	/**
 	 * Restituisce la chiave univoca corrente.
 	 * @return La chiave univoca corrente.
-	 * @throws ApsSystemException In caso di errore 
+	 * @throws EntException In caso di errore
 	 * nell'aggiornamento della chiave corrente.
 	 */
-	public int getUniqueKeyCurrentValue() throws ApsSystemException;
+	public int getUniqueKeyCurrentValue() throws EntException;
 
 }

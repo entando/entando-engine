@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import javax.sql.DataSource;
 
 /**
@@ -27,23 +27,23 @@ import javax.sql.DataSource;
  */
 public interface IDatabaseManager {
 	
-	public void createBackup() throws ApsSystemException;
+	public void createBackup() throws EntException;
 	
-	public void deleteBackup(String subFolderName) throws ApsSystemException;
+	public void deleteBackup(String subFolderName) throws EntException;
 	
 	public int getStatus();
 	
-	public InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws ApsSystemException;
+	public InputStream getTableDump(String tableName, String dataSourceName, String subFolderName) throws EntException;
 	
-	public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException;
+	public boolean dropAndRestoreBackup(String subFolderName) throws EntException;
 	
-	public DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
+	public DataSourceDumpReport getBackupReport(String subFolderName) throws EntException;
 	
-	public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException;
+	public List<DataSourceDumpReport> getBackupReports() throws EntException;
 	
 	public Map<String, List<String>> getEntandoTableMapping();
 	
-	public DatabaseType getDatabaseType(DataSource dataSource) throws ApsSystemException;
+	public DatabaseType getDatabaseType(DataSource dataSource) throws EntException;
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}
 	

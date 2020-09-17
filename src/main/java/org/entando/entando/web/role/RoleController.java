@@ -18,7 +18,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -138,7 +138,7 @@ public class RoleController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) throws EntException {
         logger.debug("adding role");
         //field validations
         if (bindingResult.hasErrors()) {
@@ -150,7 +150,7 @@ public class RoleController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{roleCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteRole(@PathVariable String roleCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteRole(@PathVariable String roleCode) throws EntException {
         logger.info("deleting {}", roleCode);
         this.getRoleService().removeRole(roleCode);
         Map<String, String> result = new HashMap<>();

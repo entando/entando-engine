@@ -15,7 +15,7 @@ package org.entando.entando.aps.system.services.activitystream;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
 
@@ -24,14 +24,14 @@ import org.entando.entando.aps.system.services.activitystream.model.ActivityStre
  */
 public interface ISocialActivityStreamManager {
 	
-	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException;
+	public void editActionLikeRecord(int id, String username, boolean add) throws EntException;
 	
-	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException;
+	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws EntException;
 	
-	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException;
+	public void addActionCommentRecord(String username, String commentText, int streamId) throws EntException;
 	
-	public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException;
+	public void deleteActionCommentRecord(int id, int streamId) throws EntException;
 	
-	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
+	public List<ActivityStreamComment> getActionCommentRecords(int id) throws EntException;
 	
 }

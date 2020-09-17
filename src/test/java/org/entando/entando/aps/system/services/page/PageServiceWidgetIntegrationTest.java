@@ -2,7 +2,7 @@ package org.entando.entando.aps.system.services.page;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -47,7 +47,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pageConfigurationDto);
     }
 
-    public void testUpdatePageWidget() throws JsonProcessingException, ApsSystemException {
+    public void testUpdatePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();
@@ -73,7 +73,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     }
 
-    public void testRemovePageWidget() throws JsonProcessingException, ApsSystemException {
+    public void testRemovePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();

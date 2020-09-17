@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -73,7 +73,7 @@ public class I18nTag extends ExtendedTagSupport implements IParameterParentTag {
 		return super.doStartTag();
 	}
 
-	private String extractLabel(Lang currentLang) throws ApsSystemException {
+	private String extractLabel(Lang currentLang) throws EntException {
 		String label = null;
 		II18nManager i18nManager = (II18nManager) ApsWebApplicationUtils.getBean(SystemConstants.I18N_MANAGER, this.pageContext);
 		try {
@@ -88,7 +88,7 @@ public class I18nTag extends ExtendedTagSupport implements IParameterParentTag {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error getting label", t);
-			throw new ApsSystemException("Error getting label", t);
+			throw new EntException("Error getting label", t);
 		}
 		return label;
 	}

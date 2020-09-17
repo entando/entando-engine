@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -93,13 +93,13 @@ public class BaseDataListHelper implements IDataTypeListHelper {
         List<String> contentsId = null;
         try {
             if (null == bean.getDataType()) {
-                throw new ApsSystemException("DataObject type not defined");
+                throw new EntException("DataObject type not defined");
             }
             Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
             contentsId = this.getDataObjectManager().loadDataObjectsId(bean.getDataType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
         } catch (Throwable t) {
             _logger.error("Error extracting DataObjects id", t);
-            throw new ApsSystemException("Error extracting DataObjects id", t);
+            throw new EntException("Error extracting DataObjects id", t);
         }
         return contentsId;
     }

@@ -1,6 +1,6 @@
 package org.entando.entando.aps.system.services.actionlog.model;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.activitystream.ISocialActivityStreamManager;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
@@ -43,7 +43,7 @@ public class ActionLogRecordDtoBuilder extends DtoBuilder<ActionLogRecord, Actio
         list.stream().forEach(i -> {
             try {
                 out.add(toDto(i, socialActivityStreamManager.getActionLikeRecords(i.getId()), socialActivityStreamManager.getActionCommentRecords(i.getId())));
-            } catch (ApsSystemException e) {
+            } catch (EntException e) {
                 logger.error("error converting list ",e);
             }
         });

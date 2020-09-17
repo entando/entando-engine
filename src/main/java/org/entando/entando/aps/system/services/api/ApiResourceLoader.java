@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.FileTextReader;
 
 /**
@@ -36,7 +36,7 @@ public class ApiResourceLoader {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(ApiResourceLoader.class);
 	
-    protected ApiResourceLoader(String locationPatterns) throws ApsSystemException {
+    protected ApiResourceLoader(String locationPatterns) throws EntException {
         try {
             StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
             while (tokenizer.hasMoreTokens()) {
@@ -46,7 +46,7 @@ public class ApiResourceLoader {
         } catch (Throwable t) {
         	_logger.error("Error loading Api Method definitions", t);
             //ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
-            throw new ApsSystemException("Error loading Api Method definitions", t);
+            throw new EntException("Error loading Api Method definitions", t);
         }
     }
     

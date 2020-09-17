@@ -15,7 +15,7 @@ package com.agiletec.aps.system.services.group;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Basic interface for those services whose handled elements are based on groups.
@@ -33,8 +33,8 @@ public interface GroupUtilizer<T> {
 	 * Return the list of the objects members of the group identified by the given name.
 	 * @param groupName The name of the group
 	 * @return The list of the objects members of the given group.
-	 * @throws ApsSystemException In case of error
+	 * @throws EntException In case of error
 	 */
-    public List<T> getGroupUtilizers(String groupName) throws ApsSystemException;
+    public List<T> getGroupUtilizers(String groupName) throws EntException;
 	
 }

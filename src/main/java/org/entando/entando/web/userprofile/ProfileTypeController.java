@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.userprofile;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.StringUtils;
@@ -134,7 +134,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileType(@PathVariable String profileTypeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileType(@PathVariable String profileTypeCode) throws EntException {
         logger.debug("Deleting profile type -> {}", profileTypeCode);
         this.getUserProfileTypeService().deleteUserProfileType(profileTypeCode);
         Map<String, String> result = new HashMap<>();
@@ -214,7 +214,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Deleting attribute {} from profile type {}", attributeCode, profileTypeCode);
         this.getUserProfileTypeService().deleteUserProfileAttribute(profileTypeCode, attributeCode);
         Map<String, String> result = new HashMap<>();
@@ -259,19 +259,19 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}/moveUp", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttributeUp(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttributeUp(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Move UP attribute {} from profile type {}", attributeCode, profileTypeCode);
         return this.moveUserProfileAttribute(profileTypeCode, attributeCode, true);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}/moveDown", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttributeDown(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttributeDown(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws EntException {
         logger.debug("Move DOWN attribute {} from profile type {}", attributeCode, profileTypeCode);
         return this.moveUserProfileAttribute(profileTypeCode, attributeCode, false);
     }
 
-    private ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttribute(String profileTypeCode, String attributeCode, boolean moveUp) throws ApsSystemException {
+    private ResponseEntity<SimpleRestResponse<Map>> moveUserProfileAttribute(String profileTypeCode, String attributeCode, boolean moveUp) throws EntException {
         this.getUserProfileTypeService().moveUserProfileAttribute(profileTypeCode, attributeCode, moveUp);
         Map<String, String> result = new HashMap<>();
         result.put("profileTypeCode", profileTypeCode);

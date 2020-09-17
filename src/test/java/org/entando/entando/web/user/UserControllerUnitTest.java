@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
@@ -421,14 +421,14 @@ public class UserControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test(expected = ValidationGenericException.class)
-    public void deleteAdminReturnsError() throws ApsSystemException {
+    public void deleteAdminReturnsError() throws EntException {
         when(user.getUsername()).thenReturn("admin");
         MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
         new UserController().deleteUser(user,"admin", bindingResult);
     }
 
     @Test(expected = ValidationGenericException.class)
-    public void selfDeleteReturnsError() throws ApsSystemException {
+    public void selfDeleteReturnsError() throws EntException {
         when(user.getUsername()).thenReturn("test");
         MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
         new UserController().deleteUser(user,"test", bindingResult);

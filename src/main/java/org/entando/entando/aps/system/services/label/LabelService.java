@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.label;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
@@ -83,7 +83,7 @@ public class LabelService implements ILabelService {
                 throw new ResourceNotFoundException(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND, "label", code);
             }
             return this.getDtoBuilder().convert(code, labelGroup);
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in get label group with code {}", code, t);
             throw new RestServerError("error in get label group", t);
         }
@@ -106,7 +106,7 @@ public class LabelService implements ILabelService {
             languages.putAll(labelRequest.getTitles());
             this.getI18nManager().updateLabelGroup(code, languages);
             return labelRequest;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in update label group with code {}", labelRequest.getKey(), t);
             throw new RestServerError("error in update label group", t);
         }
@@ -124,7 +124,7 @@ public class LabelService implements ILabelService {
             languages.putAll(labelRequest.getTitles());
             this.getI18nManager().addLabelGroup(code, languages);
             return labelRequest;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in add label group with code {}", labelRequest.getKey(), t);
             throw new RestServerError("error in add label group", t);
         }
@@ -139,7 +139,7 @@ public class LabelService implements ILabelService {
                 return;
             }
             this.getI18nManager().deleteLabelGroup(code);
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in delete label group with code {}", code, t);
             throw new RestServerError("error in delete label group", t);
         }
@@ -155,7 +155,7 @@ public class LabelService implements ILabelService {
             }
             validateLabelEntry(labelDto, defaultLang, bindingResult);
             return bindingResult;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in validate add label group with code {}", labelDto.getKey(), t);
             throw new RestServerError("error in validate add label group", t);
         }
@@ -177,13 +177,13 @@ public class LabelService implements ILabelService {
             }
             this.validateLabelEntry(labelDto, defaultLangCode, bindingResult);
             return bindingResult;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             logger.error("error in validate add label group with code {}", labelDto.getKey(), t);
             throw new RestServerError("error in validate add label group", t);
         }
     }
 
-    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult) throws ApsSystemException {
+    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult) throws EntException {
         List<String> configuredLangs = this.getLangManager().getLangs().stream().map(i -> i.getCode()).collect(Collectors.toList());
         List<String> systemLangs = this.getLangManager().getAssignableLangs().stream()
                                        .map(i -> i.getCode()).collect(Collectors.toList());

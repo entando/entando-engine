@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 
 public class ApiResourceCacheWrapper extends AbstractGenericCacheWrapper<ApiResource> implements IApiResourceCacheWrapper {
@@ -35,7 +35,7 @@ public class ApiResourceCacheWrapper extends AbstractGenericCacheWrapper<ApiReso
 	}
 
 	@Override
-	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws ApsSystemException {
+	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
@@ -43,7 +43,7 @@ public class ApiResourceCacheWrapper extends AbstractGenericCacheWrapper<ApiReso
 			this.insertObjectsOnCache(cache, resources);
 		} catch (Throwable t) {
 			logger.error("Error bootstrapping ApiCatalog cache", t);
-			throw new ApsSystemException("Error bootstrapping ApiCatalog cache", t);
+			throw new EntException("Error bootstrapping ApiCatalog cache", t);
 		}
 	}
 

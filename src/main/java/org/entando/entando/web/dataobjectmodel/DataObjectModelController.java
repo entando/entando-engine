@@ -18,7 +18,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -190,7 +190,7 @@ public class DataObjectModelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{dataModelId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteDataObjectModel(@PathVariable String dataModelId) throws ApsSystemException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteDataObjectModel(@PathVariable String dataModelId) throws EntException {
         logger.info("deleting data object model -> {}", dataModelId);
         MapBindingResult bindingResult = new MapBindingResult(new HashMap<>(), "dataModels");
         Long dataId = this.getDataObjectModelValidator().checkValidModelId(dataModelId, bindingResult);

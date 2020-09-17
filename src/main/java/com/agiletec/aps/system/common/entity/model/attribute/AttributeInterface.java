@@ -17,7 +17,6 @@ import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
 import java.util.List;
 
-import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -26,7 +25,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
@@ -251,9 +250,9 @@ public interface AttributeInterface extends Serializable {
      *
      * @param attributeElement The JDOM element as extracted from the XML which
      * configures the Entity Type.
-     * @throws ApsSystemException in case of error
+     * @throws EntException in case of error
      */
-    public void setAttributeConfig(Element attributeElement) throws ApsSystemException;
+    public void setAttributeConfig(Element attributeElement) throws EntException;
 
     /**
      * Set up the the reference to the entity that includes the attribute.

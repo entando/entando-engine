@@ -39,7 +39,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -53,7 +53,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 	private static final Logger _logger = LoggerFactory.getLogger(SelfRestCaller.class);
 	
 	@Override
-	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, ApsSystemException {
+	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, EntException {
 		if (!(postProcess instanceof SelfRestCallPostProcess)) {
 			return 0;
 		}
@@ -81,12 +81,12 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 		} catch (Throwable t) {
 			_logger.error("Error invoking api method", t);
 			//ApsSystemUtils.logThrowable(t, this, "executePostProcess", "Error invoking api method");
-			throw new ApsSystemException("Error invoking api method", t);
+			throw new EntException("Error invoking api method", t);
         }
 		return 1;
 	}
 	
-	protected Properties extractParameters(SelfRestCallPostProcess selfRestCall) throws ApsSystemException {
+	protected Properties extractParameters(SelfRestCallPostProcess selfRestCall) throws EntException {
 		Properties properties = new Properties();
 		try {
 			ILangManager langManager = this.getLangManager();
@@ -107,7 +107,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 		} catch (Throwable t) {
 			_logger.error("Error extracting parameters", t);
 			//ApsSystemUtils.logThrowable(t, this, "extractParameters", "Error extracting parameters");
-			throw new ApsSystemException("Error extracting parameters", t);
+			throw new EntException("Error extracting parameters", t);
 		}
 		return properties;
 	}

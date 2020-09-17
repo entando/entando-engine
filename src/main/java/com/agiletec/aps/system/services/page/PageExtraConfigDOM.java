@@ -26,7 +26,7 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Dom class for parse the xml of extra page config
@@ -36,7 +36,7 @@ public class PageExtraConfigDOM {
 
 	private static final Logger _logger = LoggerFactory.getLogger(PageExtraConfigDOM.class);
 	
-	public void addExtraConfig(PageMetadata page, String xml) throws ApsSystemException {
+	public void addExtraConfig(PageMetadata page, String xml) throws EntException {
 		Document doc = this.decodeDOM(xml);
 		this.addExtraConfig(page, doc);
 	}
@@ -110,7 +110,7 @@ public class PageExtraConfigDOM {
 		}
 	}
 	
-	private Document decodeDOM(String xml) throws ApsSystemException {
+	private Document decodeDOM(String xml) throws EntException {
 		Document doc = null;
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
@@ -119,7 +119,7 @@ public class PageExtraConfigDOM {
 			doc = builder.build(reader);
 		} catch (Throwable t) {
 			_logger.error("Error while parsing xml: {} ", xml, t);
-			throw new ApsSystemException("Error detected while parsing the XML", t);
+			throw new EntException("Error detected while parsing the XML", t);
 		}
 		return doc;
 	}

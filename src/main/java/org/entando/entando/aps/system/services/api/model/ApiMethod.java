@@ -24,7 +24,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -97,7 +97,7 @@ public class ApiMethod implements Serializable {
 				Element expectedTypeElement = element.getChild("expectedType");
 				String className = (null != expectedTypeElement) ? expectedTypeElement.getText() : null;
 				if (null == className || className.trim().length() == 0) {
-					throw new ApsSystemException("Expected Class required for Http Methods POST and PUT");
+					throw new EntException("Expected Class required for Http Methods POST and PUT");
 				}
 				Class beanClass = Class.forName(className);
 				this.setExpectedType(beanClass);

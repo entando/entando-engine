@@ -13,7 +13,7 @@
  */
 package com.agiletec.aps.system.services.pagemodel;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsPropertiesDOM;
@@ -48,14 +48,14 @@ public class PageModelDOM {
 	 * for create a page template from xml.
 	 * @param xmlText The xml tring to parse.
 	 * @param widgetTypeManager The manager of widget types.
-	 * @throws ApsSystemException in case of errors.
+	 * @throws EntException in case of errors.
 	 */
-	public PageModelDOM(String xmlText, IWidgetTypeManager widgetTypeManager) throws ApsSystemException {
+	public PageModelDOM(String xmlText, IWidgetTypeManager widgetTypeManager) throws EntException {
 		this.decodeDOM(xmlText);
 		this.buildFrames(widgetTypeManager);
 	}
 	
-	public PageModelDOM(PageModel pageModel) throws ApsSystemException {
+	public PageModelDOM(PageModel pageModel) throws EntException {
 		this._doc = new Document();
 		Element root = new Element("frames");
 		this._doc.setRootElement(root);
@@ -106,7 +106,7 @@ public class PageModelDOM {
 		return null;
 	}
 
-	private void decodeDOM(String xmlText) throws ApsSystemException {
+	private void decodeDOM(String xmlText) throws EntException {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
 		StringReader reader = new StringReader(xmlText);
@@ -114,7 +114,7 @@ public class PageModelDOM {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
 			_logger.error("Error parsing the page template XML: {}", xmlText, t);
-			throw new ApsSystemException("Error parsing the page template XML", t);
+			throw new EntException("Error parsing the page template XML", t);
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class PageModelDOM {
 		return prop;
 	}
 	
-	private void buildFrames(IWidgetTypeManager widgetTypeManager) throws ApsSystemException {
+	private void buildFrames(IWidgetTypeManager widgetTypeManager) throws EntException {
 		List<Element> frameElements = this._doc.getRootElement().getChildren(TAB_FRAME);
 		if (null != frameElements && frameElements.size() > 0) {
 			int framesNumber = frameElements.size();
@@ -144,7 +144,7 @@ public class PageModelDOM {
 				Element frameElement = frameElements.get(i);
 				int pos = Integer.parseInt(frameElement.getAttributeValue(ATTRIBUTE_POS));
 				if (pos >= framesNumber) {
-					throw new ApsSystemException("The position '" + pos + "' exceeds the number of frames defined in the page template");
+					throw new EntException("The position '" + pos + "' exceeds the number of frames defined in the page template");
 				}
 				Frame frame = new Frame();
 				frame.setPos(pos);

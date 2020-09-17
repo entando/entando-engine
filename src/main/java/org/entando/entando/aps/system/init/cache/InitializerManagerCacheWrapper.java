@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 public class InitializerManagerCacheWrapper extends AbstractCacheWrapper implements IInitializerManagerCacheWrapper {
 
@@ -31,14 +31,14 @@ public class InitializerManagerCacheWrapper extends AbstractCacheWrapper impleme
 	}
 
 	@Override
-	public void initCache(SystemInstallationReport report) throws ApsSystemException {
+	public void initCache(SystemInstallationReport report) throws EntException {
 		try {
 			Cache cache = this.getCache();
 			this.releaseCachedObjects(cache);
 			this.insertObjectsOnCache(cache, report);
 		} catch (Throwable t) {
 			logger.error("Error bootstrapping InitializerManager cache", t);
-			throw new ApsSystemException("Error bootstrapping InitializerManager cache", t);
+			throw new EntException("Error bootstrapping InitializerManager cache", t);
 		}
 	}
 

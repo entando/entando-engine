@@ -20,7 +20,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -42,7 +42,7 @@ public class TestPageModelManager extends BaseTestCase {
         this.init();
     }
 
-    public void testSearch_with_null_empty_filters() throws ApsSystemException {
+    public void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
         assertThat(result.getCount(), is(3));
@@ -54,7 +54,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(3));
     }
 
-    public void testSearch_with_page_filter() throws ApsSystemException {
+    public void testSearch_with_page_filter() throws EntException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
         restListRequest.setPage(1);
@@ -75,7 +75,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(2));
     }
 
-    public void testGetPageModel() throws ApsSystemException {
+    public void testGetPageModel() throws EntException {
         PageModel pageModel = this._pageModelManager.getPageModel("home");
         String code = pageModel.getCode();
         String descr = pageModel.getDescription();
@@ -92,7 +92,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertEquals(mainFrame, 3);
     }
 
-    public void testGetPageModels() throws ApsSystemException {
+    public void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
         assertEquals(3, pageModels.size());
         for (int i = 0; i < pageModels.size(); i++) {

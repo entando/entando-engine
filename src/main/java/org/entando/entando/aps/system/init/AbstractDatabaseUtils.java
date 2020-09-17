@@ -30,7 +30,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author E.Santoboni
@@ -39,7 +39,7 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 
 	private static final Logger _logger = LoggerFactory.getLogger(AbstractDatabaseUtils.class);
 	
-	protected IDatabaseManager.DatabaseType getType(DataSource dataSource) throws ApsSystemException {
+	protected IDatabaseManager.DatabaseType getType(DataSource dataSource) throws EntException {
 		String typeString = null;
 		try {
 			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
@@ -59,7 +59,7 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 			return Enum.valueOf(IDatabaseManager.DatabaseType.class, typeString.toUpperCase());
 		} catch (Throwable t) {
 			_logger.error("Invalid type for db - '{}' - ", typeString, t);
-			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
+			throw new EntException("Invalid type for db - '" + typeString + "'", t);
 		}
 	}
 	
@@ -74,7 +74,7 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 		return dirName.toString();
 	}
 	
-	protected List<Component> getComponents() throws ApsSystemException {
+	protected List<Component> getComponents() throws EntException {
 		return this.getComponentManager().getCurrentComponents();
 	}
 	

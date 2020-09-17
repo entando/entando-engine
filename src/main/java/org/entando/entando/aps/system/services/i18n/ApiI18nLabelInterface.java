@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.i18n;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -35,7 +35,7 @@ public class ApiI18nLabelInterface {
 
     private static final Logger _logger = LoggerFactory.getLogger(ApiI18nLabelInterface.class);
 
-    public JAXBI18nLabel getLabel(Properties properties) throws ApiException, ApsSystemException {
+    public JAXBI18nLabel getLabel(Properties properties) throws ApiException, EntException {
         JAXBI18nLabel jaxbI18nLabel = null;
         try {
             String key = properties.getProperty("key");
@@ -47,14 +47,14 @@ public class ApiI18nLabelInterface {
             jaxbI18nLabel = new JAXBI18nLabel(key, labelGroups);
         } catch (ApiException ae) {
             throw ae;
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             _logger.error("error loading labels", t);
-            throw new ApsSystemException("Error loading labels", t);
+            throw new EntException("Error loading labels", t);
         }
         return jaxbI18nLabel;
     }
 
-    public void addLabel(JAXBI18nLabel jaxbI18nLabel) throws ApiException, ApsSystemException {
+    public void addLabel(JAXBI18nLabel jaxbI18nLabel) throws ApiException, EntException {
         try {
             this.checkLabels(jaxbI18nLabel);
             String key = jaxbI18nLabel.getKey();
@@ -65,13 +65,13 @@ public class ApiI18nLabelInterface {
             }
             ApsProperties labels = jaxbI18nLabel.extractLabels();
             this.getI18nManager().addLabelGroup(key, labels);
-        } catch (ApiException | ApsSystemException ae) {
+        } catch (ApiException | EntException ae) {
             _logger.error("Error adding label", ae);
-            throw new ApsSystemException("Error adding labels", ae);
+            throw new EntException("Error adding labels", ae);
         }
     }
 
-    public void updateLabel(JAXBI18nLabel jaxbI18nLabel) throws ApiException, ApsSystemException {
+    public void updateLabel(JAXBI18nLabel jaxbI18nLabel) throws ApiException, EntException {
         try {
             this.checkLabels(jaxbI18nLabel);
             String key = jaxbI18nLabel.getKey();
@@ -84,13 +84,13 @@ public class ApiI18nLabelInterface {
             this.getI18nManager().updateLabelGroup(key, labels);
         } catch (ApiException ae) {
             throw new ApiException("Error updating label", ae);
-        } catch (ApsSystemException t) {
+        } catch (EntException t) {
             _logger.error("Error updating label", t);
-            throw new ApsSystemException("Error updating labels", t);
+            throw new EntException("Error updating labels", t);
         }
     }
 
-    public void deleteLabel(Properties properties) throws ApsSystemException, ApiException {
+    public void deleteLabel(Properties properties) throws EntException, ApiException {
         try {
             String key = properties.getProperty("key");
             ApsProperties labelGroups = this.getI18nManager().getLabelGroup(key);
@@ -99,9 +99,9 @@ public class ApiI18nLabelInterface {
                         "Label with key '" + key + "' does not exist", Response.Status.CONFLICT);
             }
             this.getI18nManager().deleteLabelGroup(key);
-        } catch (ApiException | ApsSystemException ae) {
+        } catch (ApiException | EntException ae) {
             _logger.error("Error deleting label", ae);
-            throw new ApsSystemException("Error deleting labels", ae);
+            throw new EntException("Error deleting labels", ae);
         }
     }
 

@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.filebrowser;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.storage.IFileBrowserService;
@@ -113,7 +113,7 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<RestResponse<Map, Map>> addFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) throws EntException {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -166,7 +166,7 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/directory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addDirectory(@Valid @RequestBody FileBrowserRequest request, BindingResult bindingResult) throws ApsSystemException {
+    public ResponseEntity<RestResponse<Map, Map>> addDirectory(@Valid @RequestBody FileBrowserRequest request, BindingResult bindingResult) throws EntException {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

@@ -16,7 +16,7 @@ package com.agiletec.aps.system.services.url;
 import java.util.Map;
 
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 
@@ -75,11 +75,11 @@ public interface IURLManager {
      * @param request The object that allows extracting the information from baseUrl (based on the configuration of the url style); 
      * if null, the base url will be the one statically inserted by the context configuration
      * @return The required url.
-     * @throws ApsSystemException In case of error
+     * @throws EntException In case of error
      */
-	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp, HttpServletRequest request) throws ApsSystemException;
+	public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp, HttpServletRequest request) throws EntException;
 	
-	public String getApplicationBaseURL(HttpServletRequest request) throws ApsSystemException;
+	public String getApplicationBaseURL(HttpServletRequest request) throws EntException;
 	
 	public static final String ENCODING_CHARSET = "UTF-8";
 	

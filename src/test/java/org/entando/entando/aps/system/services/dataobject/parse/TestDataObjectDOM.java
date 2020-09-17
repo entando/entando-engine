@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.dataobject.parse;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 
@@ -26,7 +26,7 @@ public class TestDataObjectDOM extends BaseTestCase {
 		this.init();
 	}
 
-	public void testGetXMLDocument() throws ApsSystemException {
+	public void testGetXMLDocument() throws EntException {
 		DataObject dataObjectTest = this._dataObjectManager.createDataObject("ART");
 		assertNotNull(dataObjectTest);
 		dataObjectTest.addGroup("tempGroupName");
