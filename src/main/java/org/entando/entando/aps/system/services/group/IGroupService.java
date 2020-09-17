@@ -14,12 +14,13 @@
 package org.entando.entando.aps.system.services.group;
 
 
+import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.group.model.GroupRequest;
 
-public interface IGroupService {
+public interface IGroupService extends IComponentUsageService {
 
     String BEAN_NAME = "GroupService";
 

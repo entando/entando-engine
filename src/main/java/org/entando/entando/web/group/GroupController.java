@@ -16,14 +16,22 @@ package org.entando.entando.web.group;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.slf4j.Logger;
@@ -33,19 +41,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/groups")
 public class GroupController {
 
+    public static final String COMPONENT_ID = "group";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -85,6 +91,22 @@ public class GroupController {
     public ResponseEntity<SimpleRestResponse<GroupDto>> getGroup(@PathVariable String groupCode) {
         GroupDto group = this.getGroupService().getGroup(groupCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(group), HttpStatus.OK);
+    }
+
+    @ApiOperation("Retrieve pageModel usage count")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK")
+    })
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String code) {
+        logger.trace("get {} usage by code {}", COMPONENT_ID, code);
+        ComponentUsage usage = ComponentUsage.builder()
+                .type(COMPONENT_ID)
+                .code(code)
+                .usage(groupService.getComponentUsage(code))
+                .build();
+        return new ResponseEntity<>(new SimpleRestResponse<>(usage), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
