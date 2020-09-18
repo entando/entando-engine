@@ -1,7 +1,6 @@
 package org.entando.entando.web.swagger;
 
-import static java.util.Optional.ofNullable;
-
+import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.classmate.TypeResolver;
 import java.lang.reflect.WildcardType;
 import java.util.Collections;
@@ -11,8 +10,8 @@ import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -29,8 +28,6 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
-import springfox.documentation.swagger.web.UiConfiguration;
-import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @ComponentScan
@@ -42,22 +39,19 @@ public class SwaggerConfig {
     @Autowired
     private TypeResolver typeResolver;
 
-    private final String clientId;
-    private final String clientSecret;
-    private final String authServer;
+    private String kcClientId;
+    private String kcClientSecret;
+    private String authServer;
 
-    public SwaggerConfig() {
+    public SwaggerConfig(Environment environment) {
 
-        boolean kcEnabled = Boolean.getBoolean("keycloak.enabled");
+        this.authServer = environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_AUTH_URL);
+
+        boolean kcEnabled = Boolean.parseBoolean(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_ENABLED));
         if (kcEnabled) {
-            String kcRealm = System.getProperty("keycloak.realm");
-            String kcUrl = System.getProperty("keycloak.auth.url");
-            this.authServer = String.format("%s/realms/%s/protocol/openid-connect", kcUrl, kcRealm);
-        } else {
-            this.authServer = "http://localhost:8081";
+            String kcRealm = environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_REALM);
+            this.authServer = String.format("%s/realms/%s/protocol/openid-connect", this.authServer, kcRealm);
         }
-        this.clientId = System.getProperty("keycloak.client.id");
-        this.clientSecret = System.getProperty("keycloak.client.secret");
     }
 
     @Bean
@@ -95,7 +89,7 @@ public class SwaggerConfig {
         GrantType grantType = new AuthorizationCodeGrantBuilder()
                 .tokenEndpoint(new TokenEndpoint(this.authServer + "/token", "oauthtoken"))
                 .tokenRequestEndpoint(
-                        new TokenRequestEndpoint(this.authServer + "/auth", this.clientId, this.clientSecret))
+                        new TokenRequestEndpoint(this.authServer + "/auth", this.kcClientId, this.kcClientSecret))
                 .build();
 
         return Collections.singletonList(grantType);
@@ -126,17 +120,7 @@ public class SwaggerConfig {
     public SecurityConfiguration security() {
 
         return SecurityConfigurationBuilder.builder()
-                .clientId(this.clientId)
-                .clientSecret(this.clientSecret)
                 .useBasicAuthenticationWithAccessCodeGrant(true)
                 .build();
     }
-
-//    @Bean
-//    public UiConfiguration uiConfig() {
-//        return UiConfigurationBuilder.builder()
-//                .displayRequestDuration(true)
-//                .validatorUrl("")
-//                .build();
-//    }
 }

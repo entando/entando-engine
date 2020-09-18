@@ -55,10 +55,11 @@
 
     <beans profile="swagger">
         <bean id="swagger" class="org.entando.entando.web.swagger.SwaggerConfig">
-<!--            <constructor-arg ref="BaseConfigManager"/>-->
+            <constructor-arg ref="Environment"/>
         </bean>
 
         <bean id="swaggerMvc" class="org.entando.entando.web.swagger.SwaggerMvcAdapter" />
+        <bean id="Environment" class="org.springframework.core.env.StandardEnvironment"/>
     </beans>
 
 </beans>
