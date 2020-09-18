@@ -36,15 +36,15 @@ public class SwaggerConfig {
 
     private static final String REFERENCE_NAME = "entando";
 
-    @Autowired
     private TypeResolver typeResolver;
 
     private String kcClientId;
     private String kcClientSecret;
     private String authServer;
 
-    public SwaggerConfig(Environment environment) {
+    public SwaggerConfig(Environment environment, TypeResolver typeResolver) {
 
+        this.typeResolver = typeResolver;
         this.authServer = environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_AUTH_URL);
 
         boolean kcEnabled = Boolean.parseBoolean(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_ENABLED));

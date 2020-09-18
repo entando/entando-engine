@@ -55,11 +55,13 @@
 
     <beans profile="swagger">
         <bean id="swagger" class="org.entando.entando.web.swagger.SwaggerConfig">
-            <constructor-arg ref="Environment"/>
+            <constructor-arg ref="environment"/>
+            <constructor-arg ref="typeResolver"/>
         </bean>
 
         <bean id="swaggerMvc" class="org.entando.entando.web.swagger.SwaggerMvcAdapter" />
-        <bean id="Environment" class="org.springframework.core.env.StandardEnvironment"/>
+        <bean id="environment" class="org.springframework.core.env.StandardEnvironment"/>
+        <bean id="typeResolver" class="com.fasterxml.classmate.TypeResolver"/>
     </beans>
 
 </beans>
