@@ -24,15 +24,15 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.io.IOUtils;
 import org.entando.entando.aps.system.services.storage.BasicFileAttributeView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 
 @XmlRootElement(name = "basicFileAttributeView")
 @XmlType(propOrder = {"name", "lastModifiedTime", "directory", "base64"})
 public class JAXBBasicFileAttributeView implements Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(JAXBBasicFileAttributeView.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(JAXBBasicFileAttributeView.class);
 
 	public JAXBBasicFileAttributeView() {}
 

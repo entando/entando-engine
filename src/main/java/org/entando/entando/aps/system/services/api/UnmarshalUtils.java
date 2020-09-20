@@ -28,8 +28,8 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.IOUtils;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -37,7 +37,7 @@ import org.springframework.context.ApplicationContext;
  */
 public class UnmarshalUtils {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(UnmarshalUtils.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(UnmarshalUtils.class);
 
 	private UnmarshalUtils() {
 		//

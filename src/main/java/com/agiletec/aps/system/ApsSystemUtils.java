@@ -32,8 +32,8 @@ import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Utility class for system logger
@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ApsSystemUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApsSystemUtils.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsSystemUtils.class);
 
     public static final String INIT_PROP_LOG_ACTIVE_FILE_OUTPUT = "logActiveFileOutput";
 
@@ -125,7 +125,7 @@ public class ApsSystemUtils {
         loggerContext.updateLoggers();
     }
 
-    public static Logger getLogger() {
+    public static EntLogger getLogger() {
         return logger;
     }
 

@@ -23,8 +23,8 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Data Access Object per gli oggetti Group. 
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupDAO extends AbstractSearcherDAO implements IGroupDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(GroupDAO.class);
 	
     @Override
     public int countGroups(FieldSearchFilter[] filters) {

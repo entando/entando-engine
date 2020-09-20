@@ -23,15 +23,15 @@ import java.util.List;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(GuiFragmentDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(GuiFragmentDAO.class);
 
     private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (code, widgettypecode, plugincode, gui, locked ) VALUES (? , ? , ? , ? , ?)";
 

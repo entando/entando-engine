@@ -29,8 +29,8 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ import java.util.*;
  */
 public class SearcherDAO implements ISearcherDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(SearcherDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(SearcherDAO.class);
 
     private ICategoryManager categoryManager;
 

@@ -19,8 +19,8 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -40,7 +40,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
  */
 public class FilterUtils extends BaseFilterUtils {
 
-	private static final Logger _logger = LoggerFactory.getLogger(FilterUtils.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(FilterUtils.class);
 
 	/**
 	 * Return the showlet parameters in the form of property list

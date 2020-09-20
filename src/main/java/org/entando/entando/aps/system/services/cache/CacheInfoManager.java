@@ -36,8 +36,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
@@ -52,7 +52,7 @@ import org.springframework.expression.EvaluationContext;
 @Aspect
 public class CacheInfoManager extends AbstractService implements ICacheInfoManager, PageChangedObserver {
 
-    private static final Logger logger = LoggerFactory.getLogger(CacheInfoManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(CacheInfoManager.class);
 
     private CacheManager springCacheManager;
 

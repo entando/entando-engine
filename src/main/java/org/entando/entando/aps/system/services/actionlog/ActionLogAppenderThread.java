@@ -14,17 +14,15 @@
 package org.entando.entando.aps.system.services.actionlog;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ActionLogAppenderThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ActionLogAppenderThread.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ActionLogAppenderThread.class);
 	
 	public ActionLogAppenderThread(ActionLogRecord actionRecordToAdd, 
 			ActionLogManager actionLogManager) {

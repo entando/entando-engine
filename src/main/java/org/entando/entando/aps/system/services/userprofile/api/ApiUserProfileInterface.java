@@ -27,8 +27,8 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
@@ -44,7 +44,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  */
 public class ApiUserProfileInterface {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ApiUserProfileInterface.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiUserProfileInterface.class);
 
     public List<String> getUserProfiles(Properties properties) throws Throwable {
         List<String> usernames = null;

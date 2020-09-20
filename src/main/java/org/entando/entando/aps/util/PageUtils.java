@@ -19,15 +19,15 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.List;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class PageUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(PageUtils.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageUtils.class);
 
     /**
      * Check whether the page can publish free content, related to the draft

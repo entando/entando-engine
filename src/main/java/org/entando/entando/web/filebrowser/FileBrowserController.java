@@ -25,8 +25,8 @@ import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
 import org.entando.entando.web.filebrowser.validator.FileBrowserValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,7 +46,7 @@ import java.util.Map;
 @RequestMapping(value = "/fileBrowser")
 public class FileBrowserController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     public static final String PROTECTED_FOLDER = "protectedFolder";
     public static final String PREV_PATH = "prevPath";

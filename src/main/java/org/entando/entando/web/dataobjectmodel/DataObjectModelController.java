@@ -34,8 +34,8 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 import org.entando.entando.web.dataobjectmodel.validator.DataObjectModelValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.json.patch.JsonPatchPatchConverter;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/dataModels")
 public class DataObjectModelController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     JsonPatchPatchConverter jsonPatchPatchConverter;

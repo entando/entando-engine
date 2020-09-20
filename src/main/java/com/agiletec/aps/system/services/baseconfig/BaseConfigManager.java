@@ -27,8 +27,8 @@ import com.agiletec.aps.system.services.baseconfig.cache.IConfigManagerCacheWrap
 import de.mkammerer.argon2.Argon2Factory;
 import java.util.HashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.web.context.ServletContextAware;
 
 /**
@@ -45,7 +45,7 @@ import org.springframework.web.context.ServletContextAware;
  */
 public class BaseConfigManager extends AbstractService implements ConfigInterface, ServletContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseConfigManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(BaseConfigManager.class);
 
     private Map<String, String> systemParams;
 

@@ -33,8 +33,8 @@ import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.dataobject.model.DataTypeDtoRequest;
 import org.entando.entando.web.dataobject.model.DataTypeRefreshRequest;
 import org.entando.entando.web.dataobject.validator.DataTypeValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +54,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RestController
 public class DataTypeController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private IDataObjectService dataObjectService;

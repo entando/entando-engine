@@ -21,8 +21,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class ActivityStreamInfoDOM {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamInfoDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ActivityStreamInfoDOM.class);
 	
 	public static String marshalInfo(ActivityStreamInfo activityStreamInfo) throws EntException {
 		StringWriter writer = new StringWriter();

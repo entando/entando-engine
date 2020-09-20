@@ -18,8 +18,8 @@ import java.io.Serializable;
 
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.common.IManager;
@@ -31,7 +31,7 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public abstract class AbstractExtraAttributeSupportObject implements ServletContextAware, Serializable {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(AbstractExtraAttributeSupportObject.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(AbstractExtraAttributeSupportObject.class);
 	
 	/**
 	 * Extract the xml with the definition of Attribute support object.

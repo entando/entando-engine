@@ -52,8 +52,8 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
 import org.apache.commons.beanutils.BeanComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -74,7 +74,7 @@ public abstract class ApsEntityManager extends AbstractService
      */
     public static final String RELOAD_REFERENCES_THREAD_NAME_PREFIX = "RELOAD_REFERENCES_INDEX_";
 
-    private static final Logger logger = LoggerFactory.getLogger(ApsEntityManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsEntityManager.class);
 
     private IEntityTypeFactory entityTypeFactory;
 

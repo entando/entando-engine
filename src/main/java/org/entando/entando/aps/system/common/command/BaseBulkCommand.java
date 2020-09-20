@@ -22,8 +22,8 @@ import org.entando.entando.aps.system.common.command.context.BulkCommandContext;
 import org.entando.entando.aps.system.common.command.report.BulkCommandReport;
 import org.entando.entando.aps.system.common.command.report.DefaultBulkCommandReport;
 import org.entando.entando.aps.system.common.command.tracer.BulkCommandTracer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -37,7 +37,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public abstract class BaseBulkCommand<I, A, C extends BulkCommandContext<I>> implements ApsCommand<C> {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BaseBulkCommand.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(BaseBulkCommand.class);
 
 	@Override
 	public void init(C context) {

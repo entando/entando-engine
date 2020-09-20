@@ -27,8 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.cache.Cache;
  */
 public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements ICategoryManagerCacheWrapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryManagerCacheWrapper.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(CategoryManagerCacheWrapper.class);
 
     @Override
     public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws EntException {

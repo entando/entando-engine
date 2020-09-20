@@ -20,8 +20,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import org.entando.entando.ent.exception.EntException;
@@ -34,7 +34,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(CategoryDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(CategoryDAO.class);
 	
 	/**
 	 * Carica la lista delle categorie inserite nel sistema.

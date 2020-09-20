@@ -21,7 +21,6 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
-import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -29,8 +28,8 @@ import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
 import org.entando.entando.web.entity.validator.EntityValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 
@@ -41,7 +40,7 @@ import org.springframework.validation.BindingResult;
  */
 public abstract class AbstractEntityService<I extends IApsEntity, T extends EntityDto> {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private List<IEntityManager> entityManagers;

@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ComponentUninstallerInfo extends AbstractComponentModule implements Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ComponentUninstallerInfo.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ComponentUninstallerInfo.class);
 	
 	public ComponentUninstallerInfo(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {

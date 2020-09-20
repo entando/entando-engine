@@ -33,8 +33,8 @@ import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserver;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
-    private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
 
     private IPageManagerCacheWrapper _cacheWrapper;
     private IPageDAO _pageDao;

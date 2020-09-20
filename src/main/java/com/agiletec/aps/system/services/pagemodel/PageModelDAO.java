@@ -26,8 +26,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Data Access Object for page template objects
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 	
-    private static final Logger logger = LoggerFactory.getLogger(PageModelDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageModelDAO.class);
 	
     @Override
     public int count(FieldSearchFilter[] filters) {

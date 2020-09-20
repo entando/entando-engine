@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class Component {
 
-    private static final Logger logger = LoggerFactory.getLogger(Component.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(Component.class);
 
     private String code;
     private String description;

@@ -15,8 +15,8 @@ package com.agiletec.aps.system.services.group.cache;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -29,7 +29,7 @@ import com.agiletec.aps.system.services.group.IGroupDAO;
  */
 public class GroupManagerCacheWrapper extends AbstractGenericCacheWrapper<Group> implements IGroupManagerCacheWrapper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(GroupManagerCacheWrapper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(GroupManagerCacheWrapper.class);
 
 	@Override
 	public void initCache(IGroupDAO groupDAO) throws EntException {

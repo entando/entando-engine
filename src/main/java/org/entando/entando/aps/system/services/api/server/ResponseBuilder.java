@@ -32,8 +32,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodResult;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -50,7 +50,7 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, ServletContextAware {
    
-	private static final Logger _logger = LoggerFactory.getLogger(ApiRestStatusServer.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiRestStatusServer.class);
 	
 	@Override
     @Deprecated
@@ -254,11 +254,14 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 				throw new ApiException(error);
             }
         } catch (ApiException ae) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), ae);
+        	_logger.error("Error extracting api method {}",
+                    this.buildApiSignature(httpMethod, namespace, resourceName), ae);
             throw ae;
         } catch (Throwable t) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), t);
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, signature + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
+            _logger.error("Error extracting api method {}",
+                    this.buildApiSignature(httpMethod, namespace, resourceName), t);
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, signature + " is not supported",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
         return api;
     }

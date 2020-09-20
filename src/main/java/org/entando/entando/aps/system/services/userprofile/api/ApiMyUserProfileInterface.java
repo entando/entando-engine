@@ -20,8 +20,8 @@ import javax.ws.rs.core.Response;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
  */
 public class ApiMyUserProfileInterface {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ApiMyUserProfileInterface.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ApiMyUserProfileInterface.class);
 	
     public JAXBUserDetails getMyUserProfile(Properties properties) throws ApiException, Throwable {
         try {

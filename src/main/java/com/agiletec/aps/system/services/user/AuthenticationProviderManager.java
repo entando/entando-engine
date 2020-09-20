@@ -16,8 +16,8 @@ package com.agiletec.aps.system.services.user;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -43,7 +43,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 public class AuthenticationProviderManager extends AbstractService
         implements IAuthenticationProviderManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationProviderManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AuthenticationProviderManager.class);
 
     private IUserManager userManager;
     private IAuthorizationManager authorizationManager;

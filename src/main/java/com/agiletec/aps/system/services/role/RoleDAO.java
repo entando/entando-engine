@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.common.AbstractDAO;
@@ -35,7 +35,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class RoleDAO extends AbstractDAO implements IRoleDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(RoleDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(RoleDAO.class);
 	
 	/**
 	 * Carica da db una mappa completa di tutti i ruoli. Nella mappa, 

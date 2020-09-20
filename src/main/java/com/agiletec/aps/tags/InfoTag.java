@@ -17,8 +17,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -42,7 +42,7 @@ import org.entando.entando.aps.tags.ExtendedTagSupport;
  */
 public class InfoTag extends ExtendedTagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(InfoTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(InfoTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {

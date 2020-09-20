@@ -38,14 +38,14 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 import org.entando.entando.web.dataobjectmodel.validator.DataObjectModelValidator;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class DataObjectModelService implements IDataObjectModelService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
 //    @Autowired
 //    JsonPatchPatchConverter jsonPatchPatchConverter;

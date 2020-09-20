@@ -21,13 +21,14 @@ import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.entity.model.*;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileTypeDto;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
 import org.entando.entando.web.userprofile.model.*;
 import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
@@ -42,7 +43,7 @@ import java.util.*;
 @RestController
 public class ProfileTypeController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private IUserProfileTypeService userProfileTypeService;

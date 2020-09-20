@@ -16,8 +16,8 @@ package org.entando.entando.aps.system.init;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -29,7 +29,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public abstract class AbstractInitializerManager implements BeanFactoryAware {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractInitializerManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractInitializerManager.class);
 	
 	protected SystemInstallationReport extractReport() throws EntException {
 		SystemInstallationReport report = null;

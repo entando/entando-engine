@@ -15,8 +15,8 @@ package com.agiletec.aps.system.services.i18n.cache;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -26,7 +26,7 @@ import com.agiletec.aps.util.ApsProperties;
 
 public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProperties> implements II18nManagerCacheWrapper {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Override
     protected String getCacheName() {

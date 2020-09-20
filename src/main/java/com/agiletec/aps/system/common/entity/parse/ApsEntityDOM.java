@@ -21,8 +21,8 @@ import org.jdom.output.XMLOutputter;
 
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This class generates the XML of the single entity, and it is used by all those managers that manages
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ApsEntityDOM implements IApsEntityDOM, Serializable {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(ApsEntityDOM.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ApsEntityDOM.class);
 	
 	@Override
 	public ApsEntityDOM clone() {

@@ -41,8 +41,8 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
@@ -53,7 +53,7 @@ import org.springframework.web.context.ServletContextAware;
 public class DatabaseManager extends AbstractInitializerManager
         implements IDatabaseManager, IDatabaseInstallerManager, ServletContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DatabaseManager.class);
 
     private static final String LOG_PREFIX = "|   ";
 
@@ -180,7 +180,7 @@ public class DatabaseManager extends AbstractInitializerManager
             }
             List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
             if (null == tableClassNames || tableClassNames.isEmpty()) {
-                logger.debug("No Master Tables defined for db - " + databaseName);
+                logger.debug("No Master Tables defined for db {}", databaseName);
                 schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.NOT_AVAILABLE);
             } else {
                 this.createTables(databaseName, tableClassNames, dataSource, schemaReport);
@@ -222,7 +222,7 @@ public class DatabaseManager extends AbstractInitializerManager
                             ? report.getStatus()
                             : SystemInstallationReport.Status.SKIPPED;
                     dataSourceReport.getDatabaseStatus().put(dataSourceName, status);
-                    logger.debug(LOG_PREFIX + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
+                    logger.debug(LOG_PREFIX + "( ok )  {} already installed {}", dataSourceName, SystemInstallationReport.Status.PORTING);
                     System.out.println(LOG_PREFIX + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
                     continue;
                 }

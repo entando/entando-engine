@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -33,7 +33,7 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
 public class OAuthConsumerManager extends AbstractOAuthManager implements IOAuthConsumerManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(OAuthConsumerManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(OAuthConsumerManager.class);
 
     private IOAuthConsumerDAO consumerDAO;
 

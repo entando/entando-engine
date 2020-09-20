@@ -19,8 +19,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.aps.tags.util.PagerTagHelper;
@@ -35,7 +35,7 @@ import freemarker.template.SimpleSequence;
  */
 public class PagerTag extends TagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PagerTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PagerTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {

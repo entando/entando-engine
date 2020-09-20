@@ -24,8 +24,8 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.model.StringListApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
@@ -39,7 +39,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public abstract class ApiEntityTypeInterface {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApiEntityTypeInterface.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiEntityTypeInterface.class);
 	
 	public StringListApiResponse getEntityTypes(Properties properties) throws Throwable {
 		StringListApiResponse response = new StringListApiResponse();

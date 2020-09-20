@@ -25,8 +25,8 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.Category;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This class represents an entity suitable for the rendering process. This class extends
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EntityWrapper implements Map {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(EntityWrapper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EntityWrapper.class);
 	
 	/**
 	 * Wrapper initialization.

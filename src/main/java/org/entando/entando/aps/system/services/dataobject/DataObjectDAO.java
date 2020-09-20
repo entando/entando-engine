@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
@@ -48,7 +48,7 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecord
  */
 public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataObjectDAO.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectDAO.class);
     
     private ICategoryManager categoryManager;
 

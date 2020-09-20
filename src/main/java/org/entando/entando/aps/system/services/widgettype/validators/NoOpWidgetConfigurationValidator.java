@@ -2,13 +2,13 @@ package org.entando.entando.aps.system.services.widgettype.validators;
 
 import com.agiletec.aps.system.services.page.IPage;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class NoOpWidgetConfigurationValidator implements WidgetConfigurationValidator {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Override
     public boolean supports(String widgetCode) {

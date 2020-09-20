@@ -23,12 +23,13 @@ import org.entando.entando.aps.system.exception.*;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.pagemodel.model.*;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.*;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 @Service
 public class PageModelService implements IPageModelService, ApplicationContextAware {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private final IPageModelManager pageModelManager;
 

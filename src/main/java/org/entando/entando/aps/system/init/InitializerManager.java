@@ -26,8 +26,8 @@ import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 
@@ -36,7 +36,7 @@ import org.springframework.beans.FatalBeanException;
  */
 public class InitializerManager extends AbstractInitializerManager implements IInitializerManager {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     public static final String REPORT_CONFIG_ITEM = "entandoComponentsReport";
 

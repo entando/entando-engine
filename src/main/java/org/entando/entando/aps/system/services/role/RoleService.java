@@ -41,8 +41,8 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.role.model.RoleRequest;
 import org.entando.entando.web.role.validator.RoleValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class RoleService implements IRoleService {
@@ -53,7 +53,7 @@ public class RoleService implements IRoleService {
     private static final String KEY_FILTER_PERMISSION_CODE = "code";
     private static final String KEY_FILTER_PERMISSION_DESCR = "descr";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private IRoleManager roleManager;
     private RoleDtoBuilder dtoBuilder;

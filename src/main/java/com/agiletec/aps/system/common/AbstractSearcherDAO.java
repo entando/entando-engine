@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Utility Class for searching operation on db. This class presents utility
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings(value = {"serial", "rawtypes"})
 public abstract class AbstractSearcherDAO extends AbstractDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractSearcherDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AbstractSearcherDAO.class);
     private static final String DEFAULT_LIKE_CLAUSE = "LIKE ? ";
 
     private String likeClause;

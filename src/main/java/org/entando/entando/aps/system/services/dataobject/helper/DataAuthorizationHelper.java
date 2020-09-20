@@ -17,8 +17,8 @@ import com.agiletec.aps.system.SystemConstants;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -35,7 +35,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
  */
 public class DataAuthorizationHelper implements IDataAuthorizationHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataAuthorizationHelper.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataAuthorizationHelper.class);
 
     @Override
     public boolean isAuth(UserDetails user, DataObject dataObject) throws EntException {

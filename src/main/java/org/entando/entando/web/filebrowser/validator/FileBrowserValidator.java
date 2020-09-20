@@ -21,8 +21,8 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import org.springframework.validation.Validator;
 @Component
 public class FileBrowserValidator extends AbstractPaginationValidator implements Validator {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     public static final String ERRCODE_RESOURCE_DOES_NOT_EXIST = "1";
     public static final String ERRCODE_RESOURCE_ALREADY_EXIST = "2";

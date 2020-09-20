@@ -28,8 +28,8 @@ import static org.entando.entando.aps.system.services.storage.StorageManagerUtil
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.database.validator.DatabaseValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class DatabaseService implements IDatabaseService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private IDatabaseManager databaseManager;
     private IComponentManager componentManager;
@@ -151,7 +151,8 @@ public class DatabaseService implements IDatabaseService {
             String safeReportCode = mustBeValidFilename(reportCode);
 
             if (null == stream) {
-                logger.warn("no dump found with code {}, dataSource {}, table {}", reportCode, dataSource, tableName);
+                logger.warn("no dump found with code {}, dataSource {}, table {}",
+                        reportCode, dataSource, tableName);
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableName, "tableName");
                 bindingResult.reject(DatabaseValidator.ERRCODE_NO_TABLE_DUMP_FOUND, new Object[]{reportCode, dataSource, tableName}, "database.dump.table.notFound");
                 throw new ResourceNotFoundException("code - dataSource - table",

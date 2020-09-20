@@ -17,8 +17,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.tags.util.IParameterParentTag;
 
@@ -32,7 +32,7 @@ import com.agiletec.aps.tags.util.IParameterParentTag;
 @SuppressWarnings("serial")
 public class ParameterTag extends BodyTagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ParameterTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ParameterTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {

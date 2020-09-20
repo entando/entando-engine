@@ -35,8 +35,8 @@ import org.entando.entando.aps.system.services.api.IApiExportable;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.LinkedListItem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -48,7 +48,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
  */
 public class ApiPageModelInterface implements BeanFactoryAware, IApiExportable {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ApiPageModelInterface.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiPageModelInterface.class);
 	
 	public List<LinkedListItem> getPageModels(Properties properties) throws Throwable {
 		List<LinkedListItem> list = new ArrayList<LinkedListItem>();

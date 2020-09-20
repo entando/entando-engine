@@ -33,8 +33,8 @@ import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
@@ -46,7 +46,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
  */
 public class ApiWidgetTypeInterface implements IApiExportable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApiWidgetTypeInterface.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiWidgetTypeInterface.class);
 
 	public List<LinkedListItem> getWidgetTypes(Properties properties) throws Throwable {
 		List<LinkedListItem> list = new ArrayList<LinkedListItem>();

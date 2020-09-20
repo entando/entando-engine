@@ -25,8 +25,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.commons.lang.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -36,7 +36,7 @@ import java.util.Base64;
 
 public class PageTokenManager extends AbstractService implements IPageTokenManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(PageTokenManager.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageTokenManager.class);
 
 	private static final int SALT_LENGTH = 8;
 	private static final int HASH_LENGTH = 20;

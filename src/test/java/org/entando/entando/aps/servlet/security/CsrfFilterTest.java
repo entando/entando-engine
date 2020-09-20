@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockFilterChain;
@@ -24,7 +24,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 public class CsrfFilterTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsrfFilterTest.class);
+    private static final EntLogger LOGGER = EntLogFactory.getSanitizedLogger(CsrfFilterTest.class);
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;

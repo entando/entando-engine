@@ -23,8 +23,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.util.DateConverter;
 import java.io.Serializable;
@@ -34,7 +34,7 @@ import java.io.Serializable;
  */
 public class SystemInstallationReport implements Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(SystemInstallationReport.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(SystemInstallationReport.class);
 
     public enum Status {
         OK, PORTING, SKIPPED, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT, UNINSTALLED

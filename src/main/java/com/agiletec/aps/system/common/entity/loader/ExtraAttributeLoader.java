@@ -16,8 +16,8 @@ package com.agiletec.aps.system.common.entity.loader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -29,7 +29,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
  */
 public class ExtraAttributeLoader {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeLoader.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ExtraAttributeLoader.class);
 	
 	public Map<String, AttributeInterface> extractAttributes(BeanFactory beanFactory, String entityManagerName) {
 		Map<String, AttributeInterface> attributes = null;

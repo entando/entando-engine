@@ -31,8 +31,8 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
 import org.entando.entando.aps.system.services.dataobjectmodel.cache.IDataObjectModelCacheWrapper;
 import org.entando.entando.aps.system.services.dataobjectmodel.event.DataObjectModelChangedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Manager dei modelli di datatype.
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DataObjectModelManager extends AbstractService implements IDataObjectModelManager {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private IDataObjectModelDAO dataModelDAO;
     private IPageManager pageManager;

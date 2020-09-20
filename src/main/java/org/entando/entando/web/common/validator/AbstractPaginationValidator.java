@@ -20,8 +20,8 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Validator;
 
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractPaginationValidator implements Validator {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
     public static final String ERRCODE_PAGE_INVALID = "110";
     public static final String ERRCODE_NO_ITEM_ON_PAGE = "111";
     public static final String ERRCODE_PAGE_SIZE_INVALID = "112";

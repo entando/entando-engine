@@ -17,8 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import org.entando.entando.ent.exception.EntException;
@@ -28,7 +28,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class MockUniqueKeysDAO extends AbstractDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(MockUniqueKeysDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockUniqueKeysDAO.class);
 	
     /**
      * @param id L'id del contatore.

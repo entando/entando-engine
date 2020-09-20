@@ -32,8 +32,8 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Helper class for xml descriptor of page template.
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PageModelDOM {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(PageModelDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageModelDOM.class);
 	
 	/**
 	 * Constructor of the dom. This constructor has to be used 

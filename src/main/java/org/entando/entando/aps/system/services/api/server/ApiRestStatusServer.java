@@ -26,8 +26,8 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -37,7 +37,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 public class ApiRestStatusServer {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApiRestStatusServer.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiRestStatusServer.class);
 	
     @GET
     @Produces({"application/json", "application/xml", "application/javascript"})

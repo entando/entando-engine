@@ -31,8 +31,8 @@ import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.cache.IWidgetTypeManagerCacheWrapper;
 import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio di gestione dei tipi di widget (WidgetType) definiti nel sistema.
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class WidgetTypeManager extends AbstractService
         implements IWidgetTypeManager, LangsChangedObserver, GroupUtilizer<WidgetType>, GuiFragmentUtilizer {
 
-    private static final Logger logger = LoggerFactory.getLogger(WidgetTypeManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetTypeManager.class);
 
     private IWidgetTypeDAO _widgetTypeDAO;
     private IGuiFragmentManager _guiFragmentManager;

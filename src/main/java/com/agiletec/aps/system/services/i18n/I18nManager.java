@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
@@ -37,7 +37,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class I18nManager extends AbstractService implements II18nManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(I18nManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(I18nManager.class);
 
     private II18nManagerCacheWrapper cacheWrapper;
 

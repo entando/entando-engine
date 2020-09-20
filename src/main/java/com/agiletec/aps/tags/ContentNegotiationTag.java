@@ -25,7 +25,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class ContentNegotiationTag extends TagSupport {
 	/*
-	private static final Logger _logger = LoggerFactory.getLogger(ContentNegotiationTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSantiziedLogger(ContentNegotiationTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {

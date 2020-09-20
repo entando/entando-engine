@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import org.entando.entando.ent.exception.EntException;
@@ -36,7 +36,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class I18nDAO extends AbstractDAO implements II18nDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(I18nDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(I18nDAO.class);
 	
 	/**
 	 * Carica la mappa che contiene tutte le label in tutte le lingue.

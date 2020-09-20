@@ -27,8 +27,8 @@ import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImp
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.EntandoAuthorizationException;
 import org.entando.entando.web.common.exceptions.EntandoTokenException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -41,7 +41,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  */
 public class EntandoOauth2Interceptor extends HandlerInterceptorAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IApiOAuth2TokenManager oAuth2TokenManager;

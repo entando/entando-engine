@@ -23,8 +23,8 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.annotation.CacheEvict;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -43,7 +43,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class UserProfileManager extends ApsEntityManager implements IUserProfileManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserProfileManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserProfileManager.class);
 
     @Override
     public IApsEntity getEntity(String entityId) throws EntException {

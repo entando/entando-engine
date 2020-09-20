@@ -16,8 +16,8 @@ package org.entando.entando.aps.system.services.api;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.services.user.MockUserDAO;
@@ -27,7 +27,7 @@ import com.agiletec.aps.system.services.user.MockUserDAO;
  */
 public class ApiTestHelperDAO extends AbstractDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(MockUserDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockUserDAO.class);
 	
 	public void cleanApiStatus() {
 		String sql = "DELETE FROM apicatalog_methods";

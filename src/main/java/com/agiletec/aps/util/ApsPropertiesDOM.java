@@ -23,8 +23,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Classe per la lettura e scrittura delle Properties da xml.
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ApsPropertiesDOM {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApsPropertiesDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApsPropertiesDOM.class);
 	
 	/**
 	 * Costruisce il Jdom Document in base alle properties inserite.

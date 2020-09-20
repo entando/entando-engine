@@ -16,8 +16,8 @@ package org.entando.entando.aps.system.services.dataobject.parse;
 import com.agiletec.aps.system.SystemConstants;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -33,7 +33,7 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
  */
 public class DataObjectHandler extends EntityHandler {
 
-	private static final Logger _logger = LoggerFactory.getLogger(DataObjectHandler.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectHandler.class);
 
 	@Override
 	protected void startEntityElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

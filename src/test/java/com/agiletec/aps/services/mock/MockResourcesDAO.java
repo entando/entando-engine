@@ -16,8 +16,8 @@ package com.agiletec.aps.services.mock;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import org.entando.entando.ent.exception.EntException;
@@ -27,7 +27,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class MockResourcesDAO extends AbstractDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(MockResourcesDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockResourcesDAO.class);
 	
     /**
      * 

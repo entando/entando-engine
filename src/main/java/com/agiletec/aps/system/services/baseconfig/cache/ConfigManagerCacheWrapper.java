@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.cache.Cache;
  */
 public class ConfigManagerCacheWrapper extends AbstractCacheWrapper implements IConfigManagerCacheWrapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConfigManagerCacheWrapper.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ConfigManagerCacheWrapper.class);
 
     @Override
     public void initCache(IConfigItemDAO configItemDAO, String version) throws EntException {
