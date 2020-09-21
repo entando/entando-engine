@@ -18,6 +18,8 @@ import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.*;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
@@ -26,7 +28,6 @@ import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
@@ -42,7 +43,7 @@ public class PageModelController {
     
     public static final String COMPONENT_ID = "pageTemplate";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private final IPageModelService pageModelService;
     private final PageModelValidator pageModelValidator;

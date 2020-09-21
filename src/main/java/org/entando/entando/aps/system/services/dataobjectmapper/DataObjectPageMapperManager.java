@@ -13,8 +13,8 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
@@ -33,7 +33,7 @@ import org.entando.entando.aps.system.services.dataobjectmapper.cache.IDataObjec
  */
 public class DataObjectPageMapperManager extends AbstractService implements IDataObjectPageMapperManager, PageChangedObserver {
 
-	private static final Logger logger = LoggerFactory.getLogger(DataObjectPageMapperManager.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DataObjectPageMapperManager.class);
 	
 	private IPageManager pageManager;
 	private IDataObjectMapperCacheWrapper cacheWrapper;

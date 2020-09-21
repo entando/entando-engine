@@ -20,8 +20,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
@@ -39,7 +39,7 @@ import java.sql.SQLException;
  */
 public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(AbstractEntityDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(AbstractEntityDAO.class);
 	
 	@Override
 	public void addEntity(IApsEntity entity) {
@@ -229,7 +229,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		stat.executeBatch();
 	}
 	
-	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) throws EntException {
+	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(this.getAddingAttributeRoleRecordQuery());

@@ -24,15 +24,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Tag for the declaration of the informations to insert in the header of the HTML page
  */
 public class HeadInfoTag extends TagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(HeadInfoTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(HeadInfoTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {

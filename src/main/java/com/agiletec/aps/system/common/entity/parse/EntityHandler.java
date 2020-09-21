@@ -13,8 +13,8 @@
  */
 package com.agiletec.aps.system.common.entity.parse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -37,7 +37,7 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
  */
 public class EntityHandler extends DefaultHandler {
 
-	private static final Logger _logger = LoggerFactory.getLogger(EntityHandler.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EntityHandler.class);
 	
     /**
      * Handler initialization.

@@ -22,8 +22,8 @@ import javax.servlet.jsp.PageContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.RefreshableBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -34,7 +34,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class ApsWebApplicationUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApsWebApplicationUtils.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsWebApplicationUtils.class);
 	
 	/**
 	 * Resolve the given location pattern into Resource objects. 

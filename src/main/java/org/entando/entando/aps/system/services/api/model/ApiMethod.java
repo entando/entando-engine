@@ -21,8 +21,8 @@ import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 
 import org.jdom.Element;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -31,7 +31,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class ApiMethod implements Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApiMethod.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiMethod.class);
 	
     protected ApiMethod() {}
     

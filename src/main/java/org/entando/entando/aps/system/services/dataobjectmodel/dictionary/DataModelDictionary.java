@@ -16,12 +16,12 @@ import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.IEntityModelDictionary;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class DataModelDictionary implements IEntityModelDictionary {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private static final String KEY_ROOT = "$data";
 

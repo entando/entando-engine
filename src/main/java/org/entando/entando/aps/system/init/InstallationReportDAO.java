@@ -19,8 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
@@ -29,7 +29,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class InstallationReportDAO extends AbstractDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(InstallationReportDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(InstallationReportDAO.class);
 	
 	public SystemInstallationReport loadReport(String version) {
 		Connection conn = null;

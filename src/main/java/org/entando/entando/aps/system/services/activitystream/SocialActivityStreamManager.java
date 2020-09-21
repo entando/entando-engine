@@ -30,8 +30,8 @@ import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedObserver;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -40,7 +40,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class SocialActivityStreamManager extends AbstractService implements ISocialActivityStreamManager, ProfileChangedObserver {
 
-    private static final Logger _logger = LoggerFactory.getLogger(SocialActivityStreamManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(SocialActivityStreamManager.class);
 
     @Override
     public void init() throws Exception {

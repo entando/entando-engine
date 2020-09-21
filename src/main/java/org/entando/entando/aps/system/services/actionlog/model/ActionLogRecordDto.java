@@ -16,13 +16,13 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeanUtils;
 
 public class ActionLogRecordDto {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private int id;
 

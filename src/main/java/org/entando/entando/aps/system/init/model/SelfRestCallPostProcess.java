@@ -20,15 +20,15 @@ import javax.ws.rs.core.MediaType;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class SelfRestCallPostProcess implements IPostProcess {
 
-	private static final Logger _logger = LoggerFactory.getLogger(SelfRestCallPostProcess.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(SelfRestCallPostProcess.class);
 	
 	/*
 	<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 

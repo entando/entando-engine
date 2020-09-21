@@ -24,15 +24,15 @@ import java.util.Set;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class DataObjectSearcherDAO extends AbstractDataObjectSearcherDAO implements IDataObjectSearcherDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataObjectSearcherDAO.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectSearcherDAO.class);
 
     @Override
     public List<String> loadDataObjectsId(String contentType, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {

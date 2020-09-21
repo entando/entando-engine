@@ -17,8 +17,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.AbstractService;
@@ -35,7 +35,7 @@ import com.agiletec.aps.system.common.AbstractService;
  */
 public abstract class AbstractURLManager extends AbstractService implements IURLManager {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractURLManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractURLManager.class);
 	
 	/**
 	 * Crea e restituisce un oggetto PageURL.<br>

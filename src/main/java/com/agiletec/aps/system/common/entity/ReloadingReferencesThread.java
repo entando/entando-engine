@@ -16,8 +16,8 @@ package com.agiletec.aps.system.common.entity;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Thread Class used to reload all entity references. 
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReloadingReferencesThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ReloadingReferencesThread.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ReloadingReferencesThread.class);
 	
 	/**
 	 * Setup the thread for the references reloading

@@ -21,8 +21,8 @@ import java.sql.Statement;
 import java.sql.Types;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(WidgetTypeDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetTypeDAO.class);
 
     private ILangManager langManager;
 

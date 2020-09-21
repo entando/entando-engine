@@ -23,8 +23,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -34,7 +34,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class PageExtraConfigDOM {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PageExtraConfigDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageExtraConfigDOM.class);
 	
 	public void addExtraConfig(PageMetadata page, String xml) throws EntException {
 		Document doc = this.decodeDOM(xml);

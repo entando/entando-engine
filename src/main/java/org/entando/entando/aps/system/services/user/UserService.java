@@ -38,8 +38,8 @@ import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.web.user.validator.UserValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -50,7 +50,7 @@ import org.springframework.validation.BindingResult;
  */
 public class UserService implements IUserService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private static final String ERRCODE_USER_NOT_FOUND = "1";
 

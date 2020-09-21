@@ -5,7 +5,6 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogger.SanitizationLevel;
 import org.entando.entando.ent.util.EntLogging.SanitizedLogger;
-import java.util.Arrays;
 import junit.framework.TestCase;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -17,43 +16,23 @@ public class EntLoggingTest extends TestCase {
     public static final String HEY_EXP = "Hey\nThere\rHow\tAre\nYou\rDoing?\t.";
     public static final String HEY_EXP_ESC = "Hey_There_How_Are_You_Doing?_.";
 
-    public void testSanitizerUtilities() {
-        runBaseUtilitiesExpectations(SanitizationLevel.BASIC_SANITIZATION);
-        runBaseUtilitiesExpectations(SanitizationLevel.FULL_SANITIZATION);
-    }
-
-    public void runBaseUtilitiesExpectations(SanitizationLevel sanitizationLevel) {
-        assertEquals(
-                HEY_EXP_ESC,
-                EntLogger.maySanitize(sanitizationLevel, HEY));
-        assertEquals(
-                HEY_EXP_ESC,
-                EntLogger.maySanitize(sanitizationLevel, HEY));
-        assertEquals(
-                String.join("", new String[]{"A.", HEY_EXP_ESC, "B."}),
-                joinArr(EntLogger.maySanitize(sanitizationLevel, "A.", HEY, "B.")));
-    }
-
     public void testNonSanitizedLog() {
         LoggerMock mock = new LoggerMock();
-        runBaseSanitizationExpectations(EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock), mock, HEY_EXP,
-                false);
+        runBaseChecks(EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock), mock, HEY_EXP, false);
     }
 
     public void testSanitizedLog() {
         LoggerMock mock = new LoggerMock();
-        runBaseSanitizationExpectations(EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock), mock,
-                HEY_EXP_ESC, false);
-        runBaseSanitizationExpectations(SanitizedLogger.from(mock), mock, HEY_EXP_ESC, false);
+        runBaseChecks(EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock), mock, HEY_EXP_ESC, false);
+        runBaseChecks(SanitizedLogger.from(mock), mock, HEY_EXP_ESC, false);
     }
 
     public void testFullySanitizedLog() {
         LoggerMock mock = new LoggerMock();
-        runBaseSanitizationExpectations(EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock), mock,
-                HEY_EXP_ESC, true);
+        runBaseChecks(EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock), mock, HEY_EXP_ESC, true);
     }
 
-    public void runBaseSanitizationExpectations(EntLogger sl, LoggerMock mock,
+    public void runBaseChecks(EntLogger sl, LoggerMock mock,
             String expectedHey, boolean affectsSpecials) {
 
         mock.rst();
@@ -78,27 +57,32 @@ public class EntLoggingTest extends TestCase {
         mock.rst();
         sl.error("SOME_HEADER:\n{}{}{}", "A.", HEY, "B.", new Exception(HEY));
         assertEquals((affectsSpecials)
-                        ? "|SOME_HEADER:_{}{}{}|A." + "|" + expectedHey + "|B." + "|java.lang.Exception: " + expectedHey
+                        ? "|SOME_HEADER:_{}{}{}|A." + "|" + expectedHey + "|B." + "|java.lang.Exception: " + HEY
                         : "|SOME_HEADER:\n{}{}{}|A." + "|" + expectedHey + "|B." + "|java.lang.Exception: " + HEY
                 , mock.logged);
     }
 
     public void testModifiers() {
         LoggerMock mock = new LoggerMock();
-        EntLogger rl = EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock);
-        assertSame(rl.withNoSan(), rl);
-        runBaseSanitizationExpectations(rl, mock, HEY_EXP, false);
-        runBaseSanitizationExpectations(rl.withBasicSan(), mock, HEY_EXP_ESC, false);
-        runBaseSanitizationExpectations(rl.withFullSan(), mock, HEY_EXP_ESC, true);
-        EntLogger rlb = EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock);
-        assertSame(rlb.withBasicSan(), rlb);
-        runBaseSanitizationExpectations(rlb, mock, HEY_EXP_ESC, false);
-        runBaseSanitizationExpectations(rlb.withNoSan(), mock, HEY_EXP, false);
-        EntLogger rlf = EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock);
-        assertSame(rlf.withFullSan(), rlf);
-        runBaseSanitizationExpectations(rlf, mock, HEY_EXP_ESC, true);
-        runBaseSanitizationExpectations(rlb.withNoSan(), mock, HEY_EXP, false);
-        runBaseSanitizationExpectations(rlf.withBasicSan(), mock, HEY_EXP_ESC, false);
+        EntLogger rln, rlb, rlf;
+
+        rln = EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock);
+        assertSame(rln, rln.withNoSan());
+        rlb = rln.withFullSan();
+        assertNotSame(rlb, rln.withBasicSan());
+        assertSame(rlb, rln.withFullSan());
+
+        rlb = EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock);
+        assertSame(rlb, rlb.withBasicSan());
+        rlf = rlb.withFullSan();
+        assertNotSame(rlf, rlb.withBasicSan());
+        assertSame(rlf, rlb.withFullSan());
+
+        rlf = EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock);
+        assertSame(rlf, rlf.withFullSan());
+        rlb = rlf.withBasicSan();
+        assertNotSame(rlb, rlf.withFullSan());
+        assertSame(rlb, rlf.withBasicSan());
     }
 
     public void testBase() {
@@ -339,7 +323,7 @@ public class EntLoggingTest extends TestCase {
         logger = EntLogFactory.getLogger(SanitizationLevel.NO_SANITIZATION, this.getClass());
         assertEquals(SanitizationLevel.NO_SANITIZATION, logger.getSanitizationLevel());
 
-        logger = EntLogFactory.getSantiziedLogger(this.getClass());
+        logger = EntLogFactory.getSanitizedLogger(this.getClass());
         assertEquals(SanitizationLevel.BASIC_SANITIZATION, logger.getSanitizationLevel());
 
         logger = EntLogFactory.getLogger(SanitizationLevel.BASIC_SANITIZATION, this.getClass());
@@ -353,13 +337,6 @@ public class EntLoggingTest extends TestCase {
         LoggerMock mock = new LoggerMock();
         SanitizedLogger.from(mock).error("A{}", HEY);
         assertEquals("|A{}" + "|" + HEY_EXP_ESC, mock.logged);
-    }
-
-    private String joinArr(Object[] arr) {
-        return Arrays.stream(arr)
-                .reduce((a, e) -> a + (String) e)
-                .map(Object::toString)
-                .orElse(null);
     }
 
     static class LoggerMock extends SubstituteLogger {

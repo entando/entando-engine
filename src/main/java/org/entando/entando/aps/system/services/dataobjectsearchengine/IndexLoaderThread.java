@@ -18,8 +18,8 @@ import java.util.List;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Thread Class delegate to load dataobject index, in use on SearchEngine.
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IndexLoaderThread extends Thread {
 
-	private static final Logger _logger = LoggerFactory.getLogger(IndexLoaderThread.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(IndexLoaderThread.class);
 
 	public IndexLoaderThread(SearchEngineManager searchEngineManager,
 			IDataObjectManager dataObjectManager, IIndexerDAO indexerDao) {

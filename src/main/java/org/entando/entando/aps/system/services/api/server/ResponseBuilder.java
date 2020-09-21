@@ -32,8 +32,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodResult;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -50,7 +50,7 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, ServletContextAware {
    
-	private static final Logger _logger = LoggerFactory.getLogger(ApiRestStatusServer.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiRestStatusServer.class);
 	
 	@Override
     @Deprecated
@@ -212,8 +212,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     private AbstractApiResponse buildApiResponseObject(ApiMethod apiMethod) throws ApiException {
         AbstractApiResponse apiResponse = null;
         try {
-            Class responseClass = Class.forName(apiMethod.getResponseClassName());
-            apiResponse = (AbstractApiResponse) responseClass.newInstance();
+            Class<?> responseClass = Class.forName(apiMethod.getResponseClassName());
+            apiResponse = (AbstractApiResponse) responseClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
         	_logger.error("Error creating instance of response '{}'", apiMethod.getResponseClassName(), e);
         }
@@ -254,11 +254,14 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 				throw new ApiException(error);
             }
         } catch (ApiException ae) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), ae);
+        	_logger.error("Error extracting api method {}",
+                    this.buildApiSignature(httpMethod, namespace, resourceName), ae);
             throw ae;
         } catch (Throwable t) {
-        	_logger.error("Error extracting api method {}", this.buildApiSignature(httpMethod, namespace, resourceName), t);
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, signature + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
+            _logger.error("Error extracting api method {}",
+                    this.buildApiSignature(httpMethod, namespace, resourceName), t);
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, signature + " is not supported",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
         return api;
     }
@@ -275,12 +278,13 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 		}
         return buffer.toString();
     }
-    
-    protected Object extractBean(ApiMethod api) throws EntException, ApiException {
+
+    protected Object extractBean(ApiMethod api) throws ApiException {
         Object bean = this.getBeanFactory().getBean(api.getSpringBean());
         if (null == bean) {
             _logger.error("Null bean '{}' for api {}", api.getSpringBean(), this.buildApiSignature(api));
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
         return bean;
     }

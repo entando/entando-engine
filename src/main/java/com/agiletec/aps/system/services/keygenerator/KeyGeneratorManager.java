@@ -16,8 +16,8 @@ package com.agiletec.aps.system.services.keygenerator;
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.keygenerator.cache.IKeyGeneratorManagerCacheWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio gestore di sequenze univoche.
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class KeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
 	private IKeyGeneratorDAO keyGeneratorDao;
 

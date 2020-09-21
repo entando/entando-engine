@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
@@ -47,7 +47,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
     NumberAttributeValidationRules.class, TextAttributeValidationRules.class, OgnlValidationRule.class})
 public class DefaultJAXBAttributeType {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(DefaultJAXBAttributeType.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(DefaultJAXBAttributeType.class);
 	
 	@XmlElement(name = "name", required = true)
     public String getName() {

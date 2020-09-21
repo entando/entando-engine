@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.ListUtils;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -49,7 +49,7 @@ import org.entando.entando.aps.system.services.dataobject.helper.IDataTypeListFi
  */
 public class DataObjectListHelper extends BaseDataListHelper implements IDataObjectListWidgetHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataObjectListHelper.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectListHelper.class);
 
     @Override
     public EntitySearchFilter[] getFilters(String dataObjectType, String filtersShowletParam, RequestContext reqCtx) {

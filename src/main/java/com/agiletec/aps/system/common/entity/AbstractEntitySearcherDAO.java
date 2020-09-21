@@ -23,11 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Abstract class extended by those DAO that perform searches on entities.
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings(value = {"serial", "rawtypes"})
 public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO implements IEntitySearcherDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(AbstractEntitySearcherDAO.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractEntitySearcherDAO.class);
 
     @Override
     public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) {

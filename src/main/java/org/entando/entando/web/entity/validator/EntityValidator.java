@@ -20,8 +20,8 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -31,7 +31,7 @@ import org.springframework.validation.Validator;
  */
 public abstract class EntityValidator extends AbstractPaginationValidator implements Validator {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     public static final String ERRCODE_ENTITY_DOES_NOT_EXIST = "1";
 

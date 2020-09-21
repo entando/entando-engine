@@ -22,8 +22,8 @@ import org.entando.entando.aps.system.init.model.TableDumpReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 
 import javax.sql.DataSource;
@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class DatabaseDumper extends AbstractDatabaseUtils {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumper.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DatabaseDumper.class);
 
     protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport) throws EntException {
         try {

@@ -18,8 +18,8 @@ import java.lang.reflect.Method;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class QueryLimitResolver {
 
@@ -29,7 +29,7 @@ public class QueryLimitResolver {
     private static final String JDBC_DRIVER_MYSQL = "com.mysql.jdbc.Driver";
     private static final String JDBC_DRIVER_ORACLE = "oracle.jdbc.driver.OracleDriver";
 
-    private static final Logger logger = LoggerFactory.getLogger(QueryLimitResolver.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(QueryLimitResolver.class);
 
     @SuppressWarnings("rawtypes")
     public static String createLimitBlock(FieldSearchFilter filter, DataSource dataSource, String dataSourceClass) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {

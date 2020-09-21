@@ -29,12 +29,12 @@ import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private IPageManager pageManager;
 

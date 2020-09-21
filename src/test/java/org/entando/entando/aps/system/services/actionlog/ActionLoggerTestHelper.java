@@ -21,8 +21,8 @@ import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.common.AbstractDAO;
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class ActionLoggerTestHelper extends AbstractDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(ActionLoggerTestHelper.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ActionLoggerTestHelper.class);
 	
 	public ActionLoggerTestHelper(ApplicationContext applicationContext) {
 		DataSource dataSource = (DataSource) applicationContext.getBean("servDataSource");

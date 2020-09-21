@@ -21,8 +21,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(PermissionDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(PermissionDAO.class);
 	
 	/**
 	 * Carica la mappa (indicizzata in base al nome) dei permessi di autorizzazione presenti nel db.

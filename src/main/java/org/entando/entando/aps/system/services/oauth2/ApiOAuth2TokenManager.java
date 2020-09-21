@@ -15,8 +15,8 @@ package org.entando.entando.aps.system.services.oauth2;
 
 import java.util.Calendar;
 import java.util.Collection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +30,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 public class ApiOAuth2TokenManager extends AbstractOAuthManager implements IApiOAuth2TokenManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiOAuth2TokenManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApiOAuth2TokenManager.class);
     private transient ScheduledExecutorService scheduler = null;
 
     private IOAuth2TokenDAO oAuth2TokenDAO;

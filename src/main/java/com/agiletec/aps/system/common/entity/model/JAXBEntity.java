@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
@@ -52,7 +52,7 @@ import org.entando.entando.aps.system.common.entity.model.attribute.JAXBEnumerat
 @XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class, JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
 public class JAXBEntity implements Serializable {
 
-    private static final Logger _logger = LoggerFactory.getLogger(JAXBEntity.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(JAXBEntity.class);
 
     public JAXBEntity() {
     }

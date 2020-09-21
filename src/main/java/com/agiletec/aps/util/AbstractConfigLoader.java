@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -34,7 +34,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public abstract class AbstractConfigLoader {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractConfigLoader.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractConfigLoader.class);
 	
 	protected List<String> loadDefinitionPaths() throws Throwable {
 		List<String> filenames = new ArrayList<String>();

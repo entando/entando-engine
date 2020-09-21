@@ -17,8 +17,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -35,7 +35,7 @@ import org.springframework.beans.BeansException;
  */
 public class AttributeRolesLoader {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(AttributeRolesLoader.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(AttributeRolesLoader.class);
 	
 	public Map<String, AttributeRole> extractAttributeRoles(String attributeRolesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, AttributeRole> attributeRoles = new HashMap<>();

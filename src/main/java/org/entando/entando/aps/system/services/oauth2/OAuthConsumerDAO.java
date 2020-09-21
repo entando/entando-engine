@@ -29,8 +29,8 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsumerDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(OAuthConsumerDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(OAuthConsumerDAO.class);
 
     private static final String SELECT_CONSUMER
             = "SELECT consumerkey, consumersecret, name, description, callbackurl,scope, authorizedgranttypes, expirationdate, issueddate "

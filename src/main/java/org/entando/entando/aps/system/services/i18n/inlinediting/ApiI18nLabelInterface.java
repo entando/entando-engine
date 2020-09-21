@@ -18,8 +18,8 @@ import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.i18n.inlinediting.model.JAXBI18nLabel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import javax.ws.rs.core.Response;
 import java.util.Iterator;
@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 public class ApiI18nLabelInterface extends org.entando.entando.aps.system.services.i18n.ApiI18nLabelInterface {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ApiI18nLabelInterface.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiI18nLabelInterface.class);
 
     public void updateInlineLabel(JAXBI18nLabel jaxbI18nLabel) throws ApiException {
         try {

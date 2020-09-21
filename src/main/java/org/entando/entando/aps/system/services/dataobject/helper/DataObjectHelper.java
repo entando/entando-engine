@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -31,7 +31,7 @@ import org.entando.entando.aps.system.services.dataobject.DataTypeUtilizer;
 
 public class DataObjectHelper implements IDataTypeHelper, ApplicationContextAware {
 
-	private static final Logger _logger = LoggerFactory.getLogger(DataObjectHelper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectHelper.class);
 
 	@Override
 	public Map<String, List<?>> getReferencingObjects(DataObject content) throws EntException {

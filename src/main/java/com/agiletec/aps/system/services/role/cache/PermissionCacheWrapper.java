@@ -22,8 +22,8 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IPermissionDAO;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.cache.Cache;
  */
 public class PermissionCacheWrapper extends AbstractGenericCacheWrapper<Permission> implements IPermissionCacheWrapper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PermissionCacheWrapper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PermissionCacheWrapper.class);
 
 	@Override
 	public void initCache(IPermissionDAO permissionDAO) throws EntException {

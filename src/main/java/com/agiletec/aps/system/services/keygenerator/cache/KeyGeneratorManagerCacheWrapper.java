@@ -15,13 +15,13 @@ package com.agiletec.aps.system.services.keygenerator.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 public class KeyGeneratorManagerCacheWrapper extends AbstractCacheWrapper implements IKeyGeneratorManagerCacheWrapper {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
 	@Override
 	protected String getCacheName() {

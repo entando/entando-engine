@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.common.AbstractDAO;
@@ -35,7 +35,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class RoleDAO extends AbstractDAO implements IRoleDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(RoleDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(RoleDAO.class);
 	
 	/**
 	 * Carica da db una mappa completa di tutti i ruoli. Nella mappa, 
@@ -95,42 +95,43 @@ public class RoleDAO extends AbstractDAO implements IRoleDAO {
 
 
 	/**
-	 * Cancella da db tutti i permessi assegnati ad un ruolo.
-	 * @param role L'oggetto che rappresenta il ruolo
-	 * @param conn La connessione al db
-	 * @throws EntException In caso di eccezione nell'accesso al db.
-	 */
-	private void deleteRolePermission(Role role, Connection conn) throws EntException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(DELETE_ROLE_PERMISSIONS);
-			stat.setString(1, role.getName());
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			_logger.error("Error while deleting permissions",  t);
-			throw new RuntimeException("Error while deleting permissions", t);
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
+     * Cancella da db tutti i permessi assegnati ad un ruolo.
+     *
+     * @param role L'oggetto che rappresenta il ruolo
+     * @param conn La connessione al db
+     * @throws EntException In caso di eccezione nell'accesso al db.
+     */
+    private void deleteRolePermission(Role role, Connection conn) {
+        PreparedStatement stat = null;
+        try {
+            stat = conn.prepareStatement(DELETE_ROLE_PERMISSIONS);
+            stat.setString(1, role.getName());
+            stat.executeUpdate();
+        } catch (Throwable t) {
+            _logger.error("Error while deleting permissions", t);
+            throw new RuntimeException("Error while deleting permissions", t);
+        } finally {
+            closeDaoResources(null, stat);
+        }
+    }
 
-	/**
-	 * Salva su db i permessi di un ruolo.
-	 * @param role Il ruolo 
-	 * @param conn La connessione al db
-	 * @throws EntException In caso di eccezione nell'accesso al db.
-	 */
-	private void addRolePermissions(Role role, Connection conn) throws EntException {
-		Set<String> permissions = role.getPermissions();
-		if (permissions != null && permissions.size()>0) {
-			PreparedStatement stat = null;
-			try {
-				String roleName = role.getName();
-				Iterator<String> permissionIter = role.getPermissions().iterator();
-				stat = conn.prepareStatement(ADD_ROLE_PERMISSION);
-				while (permissionIter.hasNext()) {
-					stat.setString(1, roleName);
-					stat.setString(2, (String) permissionIter.next());
+    /**
+     * Salva su db i permessi di un ruolo.
+     *
+     * @param role Il ruolo
+     * @param conn La connessione al db
+     */
+    private void addRolePermissions(Role role, Connection conn) {
+        Set<String> permissions = role.getPermissions();
+        if (permissions != null && permissions.size() > 0) {
+            PreparedStatement stat = null;
+            try {
+                String roleName = role.getName();
+                Iterator<String> permissionIter = role.getPermissions().iterator();
+                stat = conn.prepareStatement(ADD_ROLE_PERMISSION);
+                while (permissionIter.hasNext()) {
+                    stat.setString(1, roleName);
+                    stat.setString(2, (String) permissionIter.next());
 					stat.addBatch();
 					stat.clearParameters();
 				}

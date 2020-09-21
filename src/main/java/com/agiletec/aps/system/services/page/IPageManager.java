@@ -94,8 +94,9 @@ public interface IPageManager extends ITreeNodeManager {
     public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException;
 
     /**
-     * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
+     * @deprecated Use {@link #joinWidget(String, Widget, int)} instead
      */
+    @Deprecated
     public void joinShowlet(String pageCode, Widget widget, int pos) throws EntException;
 
     /**
@@ -111,8 +112,9 @@ public interface IPageManager extends ITreeNodeManager {
     public void joinWidget(String pageCode, Widget widget, int pos) throws EntException;
 
     /**
-     * @deprecated Use {@link #removeWidget(String,int)} instead
+     * @deprecated Use {@link #removeWidget(String, int)} instead
      */
+    @Deprecated
     public void removeShowlet(String pageCode, int pos) throws EntException;
 
     /**

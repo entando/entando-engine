@@ -18,7 +18,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,8 +32,8 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.role.model.RoleRequest;
 import org.entando.entando.web.role.validator.RoleValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/roles")
 public class RoleController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IRoleService roleService;
@@ -138,7 +137,9 @@ public class RoleController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(@Valid @RequestBody RoleRequest roleRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<RoleDto>> addRole(
+            @Valid @RequestBody RoleRequest roleRequest,
+            BindingResult bindingResult) {
         logger.debug("adding role");
         //field validations
         if (bindingResult.hasErrors()) {
@@ -150,7 +151,7 @@ public class RoleController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{roleCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteRole(@PathVariable String roleCode) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteRole(@PathVariable String roleCode) {
         logger.info("deleting {}", roleCode);
         this.getRoleService().removeRole(roleCode);
         Map<String, String> result = new HashMap<>();

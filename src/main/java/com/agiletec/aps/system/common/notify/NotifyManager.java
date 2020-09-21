@@ -16,8 +16,8 @@ package com.agiletec.aps.system.common.notify;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -37,7 +37,7 @@ import com.agiletec.aps.util.DateConverter;
 public class NotifyManager implements INotifyManager, ApplicationListener, 
 BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(NotifyManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(NotifyManager.class);
 	
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {

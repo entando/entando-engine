@@ -30,14 +30,14 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class GuiFragmentService implements IGuiFragmentService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private IGuiFragmentManager guiFragmentManager;
@@ -172,14 +172,16 @@ public class GuiFragmentService implements IGuiFragmentService {
         return fragment;
     }
 
-    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) throws EntException {
+    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(fragment, "fragment");
         if (null == fragment) {
             return bindingResult;
         }
         if (!dto.getFragments().isEmpty() || !dto.getPageModels().isEmpty()) {
-            List<String> fragments = dto.getFragments().stream().map(GuiFragmentDto.FragmentRef::getCode).collect(Collectors.toList());
-            List<String> pagemodels = dto.getPageModels().stream().map(GuiFragmentDto.PageModelRef::getCode).collect(Collectors.toList());
+            List<String> fragments = dto.getFragments().stream().map(GuiFragmentDto.FragmentRef::getCode)
+                    .collect(Collectors.toList());
+            List<String> pagemodels = dto.getPageModels().stream().map(GuiFragmentDto.PageModelRef::getCode)
+                    .collect(Collectors.toList());
             bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES,
                     new Object[]{fragment.getCode(), fragments, pagemodels}, "guifragment.cannot.delete.references");
         }

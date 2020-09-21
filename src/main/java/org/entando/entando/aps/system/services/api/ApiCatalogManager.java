@@ -23,8 +23,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedWidget;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
@@ -36,7 +36,7 @@ import org.entando.entando.aps.system.services.api.cache.IApiServiceCacheWrapper
  */
 public class ApiCatalogManager extends AbstractService implements IApiCatalogManager {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
 	public static final String DEFAULT_LOCATION_PATTERN = "classpath*:/api/**/aps/apiMethods.xml";
 

@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -27,7 +27,7 @@ import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 
 public class ApiResourceCacheWrapper extends AbstractGenericCacheWrapper<ApiResource> implements IApiResourceCacheWrapper {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
 	@Override
 	protected String getCacheName() {

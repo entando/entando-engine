@@ -16,8 +16,8 @@ package com.agiletec.aps.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This tag must be used in conjunction with "HeadInfoOutputterTag"; it
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HeadInfoPrinterTag extends TagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(HeadInfoPrinterTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(HeadInfoPrinterTag.class);
 	
 	public int doEndTag() throws JspException {
 		HeadInfoOutputterTag parent = 

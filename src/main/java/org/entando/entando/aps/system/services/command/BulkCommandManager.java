@@ -21,8 +21,8 @@ import org.entando.entando.aps.system.common.command.BaseBulkCommand;
 import org.entando.entando.aps.system.common.command.report.BulkCommandReport;
 import org.entando.entando.aps.system.common.command.thread.ApsCommandThread;
 import org.entando.entando.aps.system.services.command.util.BulkCommandContainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.util.DateConverter;
@@ -35,7 +35,7 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class BulkCommandManager extends AbstractService implements IBulkCommandManager {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BulkCommandManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(BulkCommandManager.class);
 
 	@Override
 	public void init() throws Exception {

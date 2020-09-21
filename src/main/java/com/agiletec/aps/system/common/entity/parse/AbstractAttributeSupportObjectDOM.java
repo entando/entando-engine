@@ -31,8 +31,8 @@ import javax.xml.validation.Validator;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractAttributeSupportObjectDOM {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractAttributeSupportObjectDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractAttributeSupportObjectDOM.class);
 	
 	protected void validate(String xmlText, String definitionPath) throws EntException {
 		SchemaFactory factory = 

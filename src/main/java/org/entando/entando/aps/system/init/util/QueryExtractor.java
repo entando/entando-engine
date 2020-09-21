@@ -18,8 +18,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class QueryExtractor {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(QueryExtractor.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(QueryExtractor.class);
 	
 	@Deprecated
 	public static String[] extractQueries(String script) throws Throwable {

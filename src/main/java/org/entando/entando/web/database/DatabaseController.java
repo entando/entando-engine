@@ -24,8 +24,8 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.database.validator.DatabaseValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,7 +49,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RequestMapping(value = "/database")
 public class DatabaseController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private DatabaseValidator databaseValidator;
@@ -99,6 +99,7 @@ public class DatabaseController {
     @RequestMapping(value = "/restoreBackup/{reportCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> restoreBackup(
             @PathVariable String reportCode) {
+        //-
         String safeReportCode = StorageManagerUtil.mustBeValidFilename(reportCode);
         logger.debug("Starting database restore -> code {}", safeReportCode);
         this.getDatabaseService().startDatabaseRestore(safeReportCode);

@@ -16,8 +16,8 @@ package com.agiletec.aps.system.services.lang.cache;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class LangManagerCacheWrapper extends AbstractGenericCacheWrapper<Lang> implements ILangManagerCacheWrapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(LangManagerCacheWrapper.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LangManagerCacheWrapper.class);
 
     @Override
     public void initCache(String xmlConfig) throws EntException {

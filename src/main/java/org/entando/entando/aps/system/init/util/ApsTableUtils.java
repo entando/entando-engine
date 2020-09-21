@@ -25,8 +25,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.db.DatabaseType;
 import com.j256.ormlite.field.FieldType;
-import com.j256.ormlite.logger.Logger;
-import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.misc.SqlExceptionUtil;
 import com.j256.ormlite.stmt.StatementBuilder;
 import com.j256.ormlite.support.CompiledStatement;
@@ -34,6 +32,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.support.DatabaseResults;
 import com.j256.ormlite.table.TableInfo;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * Couple utility methods for the creating tables.
@@ -59,7 +59,7 @@ import com.j256.ormlite.table.TableInfo;
  */
 public class ApsTableUtils {
 	
-	private static Logger logger = LoggerFactory.getLogger(ApsTableUtils.class);
+	private static EntLogger logger = EntLogFactory.getSanitizedLogger(ApsTableUtils.class);
 	private static final FieldType[] noFieldTypes = new FieldType[0];
 
 	/**

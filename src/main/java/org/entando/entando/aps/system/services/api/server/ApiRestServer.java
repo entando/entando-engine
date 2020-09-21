@@ -29,8 +29,8 @@ import org.entando.entando.aps.system.services.api.model.*;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
 import org.entando.entando.web.common.interceptor.EntandoBearerTokenExtractor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -43,7 +43,7 @@ import java.util.Map.Entry;
  */
 public class ApiRestServer {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ApiRestServer.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiRestServer.class);
 
     @GET
     @Produces({"application/xml", "text/plain", "application/json", "application/javascript"})

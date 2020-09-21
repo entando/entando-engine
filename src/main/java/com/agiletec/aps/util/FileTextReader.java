@@ -26,8 +26,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Utility class for reading the contents of files.
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileTextReader {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileTextReader.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(FileTextReader.class);
 
     public static String getText(InputStream is) throws EntException, IOException {
         return getText(is, null);

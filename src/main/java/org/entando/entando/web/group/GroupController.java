@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
-import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -34,8 +33,8 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,7 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupController {
 
     public static final String COMPONENT_ID = "group";
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IGroupService groupService;
@@ -137,8 +136,9 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(@Valid @RequestBody GroupRequest groupRequest,
-            BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(
+            @Valid @RequestBody GroupRequest groupRequest,
+            BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -154,7 +154,7 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) {
         logger.info("deleting {}", groupName);
         this.getGroupService().removeGroup(groupName);
         Map<String, String> result = new HashMap<>();

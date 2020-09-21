@@ -33,8 +33,8 @@ import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This abstract class must be used when implementing Entity Attributes.
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractAttribute implements AttributeInterface, Serializable {
 
-    private static final Logger _logger = LoggerFactory.getLogger(AbstractAttribute.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractAttribute.class);
 
     private String _name;
     private ApsProperties _names;

@@ -28,8 +28,8 @@ import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.web.common.annotation.ActivityStreamAuditable;
 import org.entando.entando.web.common.exceptions.EntandoTokenException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
@@ -38,7 +38,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class ActivityStreamInterceptor extends HandlerInterceptorAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IActionLogManager actionLogManager;

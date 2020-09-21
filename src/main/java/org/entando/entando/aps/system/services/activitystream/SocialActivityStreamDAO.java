@@ -25,15 +25,15 @@ import com.agiletec.aps.system.common.AbstractDAO;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfos;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class SocialActivityStreamDAO extends AbstractDAO implements ISocialActivityStreamDAO {
 
-	private static final Logger logger =  LoggerFactory.getLogger(SocialActivityStreamDAO.class);
+	private static final EntLogger logger =  EntLogFactory.getSanitizedLogger(SocialActivityStreamDAO.class);
 	
 	private static final String ADD_ACTION_LIKE_RECORD
 			= "INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";

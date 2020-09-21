@@ -24,8 +24,8 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
 import org.entando.entando.web.filebrowser.validator.FileBrowserValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BindingResult;
 
 import java.io.ByteArrayInputStream;
@@ -42,7 +42,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
  */
 public class FileBrowserService implements IFileBrowserService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private IStorageManager storageManager;
 

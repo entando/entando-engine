@@ -20,8 +20,8 @@ import java.util.Map;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.ComponentLoader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -30,7 +30,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class ComponentManager implements IComponentManager {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ComponentManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ComponentManager.class);
 
     public void init() throws Exception {
         this.loadComponents();

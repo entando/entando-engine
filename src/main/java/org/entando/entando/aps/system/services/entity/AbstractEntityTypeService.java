@@ -28,11 +28,12 @@ import org.entando.entando.aps.system.common.entity.model.attribute.util.Enumera
 import org.entando.entando.aps.system.exception.*;
 import org.entando.entando.aps.system.services.*;
 import org.entando.entando.aps.system.services.entity.model.*;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.entity.model.EntityTypeDtoRequest;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
-import org.slf4j.*;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -52,7 +53,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     private static final String ERROR_UPDATING_ENTITY_TYPE = "Error updating entity type";
     private static final String TYPE_CODE = "Type Code";
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private BeanFactory beanFactory;
 
@@ -240,14 +241,16 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     }
 
     protected I createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult) throws Throwable {
-        Class entityClass = entityManager.getEntityClass();
-        ApsEntity entityType = (ApsEntity) entityClass.newInstance();
+        Class<?> entityClass = entityManager.getEntityClass();
+        ApsEntity entityType = (ApsEntity) entityClass.getDeclaredConstructor().newInstance();
         if (StringUtils.isEmpty(dto.getCode()) || dto.getCode().length() != 3) {
-            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_CODE, bindingResult, new String[]{dto.getCode()}, "entityType.typeCode.invalid");
+            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_CODE, bindingResult,
+                    new String[]{dto.getCode()}, "entityType.typeCode.invalid");
         }
         entityType.setTypeCode(dto.getCode());
         if (StringUtils.isEmpty(dto.getName())) {
-            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_DESCR, bindingResult, new String[]{}, "entityType.typeDescription.invalid");
+            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_DESCR, bindingResult, new String[]{},
+                    "entityType.typeDescription.invalid");
         }
         entityType.setTypeDescription(dto.getName());
         if (bindingResult.hasErrors()) {
@@ -261,7 +264,9 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
                 if (null != attribute) {
                     entityType.addAttribute(attribute);
                 } else {
-                    logger.warn("Create Entity Type - Attribute type {} undefined in manager {}", attributeDto.getType(), entityManager.getName());
+                    logger.warn("Create Entity Type - Attribute type {} undefined in manager {}",
+                            attributeDto.getType(),
+                            entityManager.getName());
                 }
             }
         }
@@ -274,7 +279,8 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         AttributeInterface prototype = attributeMap.get(type);
         if (null == prototype) {
             logger.warn("Undefined attribute of type {}", type);
-            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_ATTRIBUTE_TYPE, bindingResult, new String[]{typeCode, type}, "entityType.attribute.type.invalid");
+            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_ATTRIBUTE_TYPE, bindingResult,
+                    new String[]{typeCode, type}, "entityType.attribute.type.invalid");
             return null;
         }
         AttributeInterface attribute = (AttributeInterface) prototype.getAttributePrototype();

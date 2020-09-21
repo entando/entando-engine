@@ -19,8 +19,8 @@ import org.entando.entando.web.common.RestErrorCodes;
 import org.entando.entando.web.common.exceptions.*;
 import org.entando.entando.web.common.model.ErrorRestResponse;
 import org.entando.entando.web.common.model.RestError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -42,7 +42,7 @@ import java.util.Locale;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(RestExceptionHandler.class);
 
     @Autowired
     private MessageSource messageSource;

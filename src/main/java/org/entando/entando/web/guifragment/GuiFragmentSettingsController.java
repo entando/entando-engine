@@ -24,8 +24,8 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.guifragment.model.GuiFragmentSettingsBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/fragmentsSettings")
 public class GuiFragmentSettingsController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     public static final String RESULT_PARAM_NAME = "enableEditingWhenEmptyDefaultGui";
 
@@ -73,13 +73,16 @@ public class GuiFragmentSettingsController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map<String, Boolean>>> updateSettings(
+            @Valid @RequestBody GuiFragmentSettingsBody bodyRequest,
+            BindingResult bindingResult) throws EntException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
         Boolean value = bodyRequest.getEnableEditingWhenEmptyDefaultGui();
-        this.getConfigManager().updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
+        this.getConfigManager()
+                .updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
         Map<String, Boolean> result = new HashMap<>();
         result.put(RESULT_PARAM_NAME, value);
         logger.debug("Updated fragment setting -> {}", result);

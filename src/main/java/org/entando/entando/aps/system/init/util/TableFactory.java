@@ -24,8 +24,8 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
 import com.j256.ormlite.dao.Dao;
@@ -43,7 +43,7 @@ import com.j256.ormlite.table.TableUtils;
  */
 public class TableFactory {
 
-	private static final Logger _logger = LoggerFactory.getLogger(TableFactory.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(TableFactory.class);
 	
 	public TableFactory(String databaseName, DataSource dataSource, IDatabaseManager.DatabaseType type) {
 		this.setDataSource(dataSource);

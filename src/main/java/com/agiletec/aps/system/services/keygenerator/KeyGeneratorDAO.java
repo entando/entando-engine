@@ -18,8 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
@@ -29,7 +29,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class KeyGeneratorDAO extends AbstractDAO implements IKeyGeneratorDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(KeyGeneratorDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(KeyGeneratorDAO.class);
 	
 	/**
 	 * Estrae la chiave presente nel db.

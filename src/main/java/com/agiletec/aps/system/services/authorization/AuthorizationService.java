@@ -28,12 +28,12 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.user.model.UserDtoBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class AuthorizationService implements IAuthorizationService, GroupServiceUtilizer<UserDto> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
     private IAuthorizationManager authorizationManager;
     private IUserManager userManager;
     private IDtoBuilder<UserDetails, UserDto> dtoBuilder;

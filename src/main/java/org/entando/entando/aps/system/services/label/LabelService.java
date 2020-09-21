@@ -30,13 +30,13 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.label.LabelValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class LabelService implements ILabelService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private II18nManager i18nManager;
     private ILangManager langManager;
@@ -80,7 +80,7 @@ public class LabelService implements ILabelService {
             ApsProperties labelGroup = this.getI18nManager().getLabelGroup(code);
             if (null == labelGroup) {
                 logger.warn("no label found with key {}", code);
-                throw new ResourceNotFoundException(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND, "label", code);
+                throw mkLabelNotFoundException(code);
             }
             return this.getDtoBuilder().convert(code, labelGroup);
         } catch (EntException t) {
@@ -96,7 +96,7 @@ public class LabelService implements ILabelService {
             ApsProperties labelGroup = this.getI18nManager().getLabelGroup(code);
             if (null == labelGroup) {
                 logger.warn("no label found with key {}", code);
-                throw new ResourceNotFoundException(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND, "label", code);
+                throw mkLabelNotFoundException(code);
             }
             BeanPropertyBindingResult validationResult = this.validateUpdateLabelGroup(labelRequest);
             if (validationResult.hasErrors()) {
@@ -136,7 +136,7 @@ public class LabelService implements ILabelService {
             ApsProperties labelGroup = this.getI18nManager().getLabelGroup(code);
             if (null == labelGroup) {
                 logger.warn("no label found with key {}", code);
-                return;
+                throw mkLabelNotFoundException(code);
             }
             this.getI18nManager().deleteLabelGroup(code);
         } catch (EntException t) {
@@ -206,11 +206,16 @@ public class LabelService implements ILabelService {
             return;
         }
         if (!configuredLangs.contains(currentLangCode)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_NOT_ACTIVE_LANG, new String[]{currentLangCode}, "labelGroup.langs.lang.notActive");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_NOT_ACTIVE_LANG, new String[]{currentLangCode},
+                    "labelGroup.langs.lang.notActive");
         }
         if (currentLangCode.equals(defaultLangCode) && StringUtils.isBlank(entry.getValue())) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_TEXT_REQUIRED, new String[]{currentLangCode}, "labelGroup.langs.defaultLang.textRequired");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_TEXT_REQUIRED, new String[]{currentLangCode},
+                    "labelGroup.langs.defaultLang.textRequired");
         }
     }
 
+    private ResourceNotFoundException mkLabelNotFoundException(String code) {
+        return new ResourceNotFoundException(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND, "label", code);
+    }
 }

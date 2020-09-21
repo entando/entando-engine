@@ -16,8 +16,8 @@ package com.agiletec.aps.system.common.tree;
 import java.io.Serializable;
 
 import com.agiletec.aps.util.ApsProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * A node of a tree. The node is the basic information a tree and contains all the minimum information necessary for its
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TreeNode implements ITreeNode, Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(TreeNode.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(TreeNode.class);
 
     private String _code;
 

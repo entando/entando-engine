@@ -34,7 +34,7 @@ import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +46,7 @@ import org.springframework.validation.MapBindingResult;
 @Component
 public class UserValidator extends AbstractPaginationValidator {
 
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
+    private final org.slf4j.Logger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private Pattern pattern = Pattern.compile("([a-zA-Z0-9_\\.])+");
 

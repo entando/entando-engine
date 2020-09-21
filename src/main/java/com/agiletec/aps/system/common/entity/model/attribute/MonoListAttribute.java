@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -31,7 +31,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
  */
 public class MonoListAttribute extends AbstractListAttribute {
 
-    private static final Logger _logger = LoggerFactory.getLogger(MonoListAttribute.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(MonoListAttribute.class);
 
     /**
      * Initialize the list of attributes.

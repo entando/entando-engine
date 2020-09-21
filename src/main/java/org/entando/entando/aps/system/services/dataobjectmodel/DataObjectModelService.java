@@ -38,14 +38,14 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 import org.entando.entando.web.dataobjectmodel.validator.DataObjectModelValidator;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 public class DataObjectModelService implements IDataObjectModelService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
 //    @Autowired
 //    JsonPatchPatchConverter jsonPatchPatchConverter;
@@ -202,14 +202,15 @@ public class DataObjectModelService implements IDataObjectModelService {
         return model;
     }
 
-    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) throws EntException {
+    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(model, "dataObjectModel");
         if (null == model) {
             return bindingResult;
         }
         Map<String, List<IPage>> pages = this.getDataObjectModelManager().getReferencingPages(model.getId());
         if (!bindingResult.hasErrors() && !pages.isEmpty()) {
-            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES, new Object[]{String.valueOf(model.getId())}, "guifragment.cannot.delete.references");
+            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES,
+                    new Object[]{String.valueOf(model.getId())}, "guifragment.cannot.delete.references");
         }
         return bindingResult;
     }

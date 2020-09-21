@@ -36,8 +36,8 @@ import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -49,7 +49,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
  */
 public class ApiGuiFragmentInterface implements BeanFactoryAware, IApiExportable {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ApiGuiFragmentInterface.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiGuiFragmentInterface.class);
 	
 	public List<LinkedListItem> getGuiFragments(Properties properties) throws Throwable {
 		List<LinkedListItem> list = new ArrayList<LinkedListItem>();

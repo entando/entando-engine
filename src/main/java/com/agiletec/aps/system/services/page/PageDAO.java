@@ -33,11 +33,10 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
@@ -49,7 +48,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class PageDAO extends AbstractDAO implements IPageDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(PageDAO.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageDAO.class);
 
     protected enum WidgetConfigDest {
         ON_LINE, DRAFT;
@@ -226,7 +225,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void addPageRecord(IPage page, Connection conn) throws EntException {
+    protected void addPageRecord(IPage page, Connection conn) {
         String parentCode = page.getParentCode();
         // a new page is always inserted in the last position,
         // to avoid changes of the position of the "sister" pages.
@@ -277,7 +276,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void deletePageRecord(String pageCode, Connection conn) throws EntException {
+    protected void deletePageRecord(String pageCode, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE_PAGE);
@@ -467,7 +466,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void updatePageRecord(IPage page, Connection conn) throws EntException {
+    protected void updatePageRecord(IPage page, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE_PAGE);
@@ -524,24 +523,24 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         }
     }
 
-    protected void addOnlinePageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws EntException {
+    protected void addOnlinePageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) {
         this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataOnline.TABLE_NAME, conn);
     }
 
-    protected void addDraftPageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) throws EntException {
+    protected void addDraftPageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) {
         this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataDraft.TABLE_NAME, conn);
     }
 
-    protected void deleteOnlinePageMetadata(String pageCode, Connection conn) throws EntException {
+    protected void deleteOnlinePageMetadata(String pageCode, Connection conn) {
         this.executeQueryWithoutResultset(conn, DELETE_ONLINE_PAGE_METADATA, pageCode);
     }
 
-    protected void deleteDraftPageMetadata(String pageCode, Connection conn) throws EntException {
+    protected void deleteDraftPageMetadata(String pageCode, Connection conn) {
         this.executeQueryWithoutResultset(conn, DELETE_DRAFT_PAGE_METADATA, pageCode);
     }
 
-    protected void savePageMetadata(String pageCode, PageMetadata pageMetadata, boolean isAdd, String tableName, Connection conn)
-            throws EntException {
+    protected void savePageMetadata(String pageCode, PageMetadata pageMetadata,
+            boolean isAdd, String tableName, Connection conn) {
         if (pageMetadata != null) {
             PreparedStatement stat = null;
             try {
@@ -619,7 +618,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         return new PageExtraConfigDOM();
     }
 
-    protected void addWidgetForPage(IPage page, WidgetConfigDest dest, Connection conn) throws EntException {
+    protected void addWidgetForPage(IPage page, WidgetConfigDest dest, Connection conn) {
         PreparedStatement stat = null;
         try {
             Widget[] widgets = null;

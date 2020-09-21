@@ -16,15 +16,15 @@ package org.entando.entando.aps.system.services.actionlog;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ActivityStreamCleanerThread extends Thread {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamCleanerThread.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ActivityStreamCleanerThread.class);
 	
 	public ActivityStreamCleanerThread(Integer maxActivitySizeByGroup, IActionLogManager actionLogManager) {
 		this._maxActivitySizeByGroup = maxActivitySizeByGroup;

@@ -16,8 +16,8 @@ package com.agiletec.aps.services.mock;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
@@ -26,7 +26,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class MockWidgetTypeDAO extends AbstractDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(MockWidgetTypeDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockWidgetTypeDAO.class);
 	
 	public void deleteWidgetType(String widgetTypeCode) {
 		Connection conn = null;

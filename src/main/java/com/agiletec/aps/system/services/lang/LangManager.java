@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio di gestione delle lingue.
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LangManager extends AbstractService implements ILangManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(LangManager.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LangManager.class);
 
 	private Map<String, Lang> assignableLangs;
 

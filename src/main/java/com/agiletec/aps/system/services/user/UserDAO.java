@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class UserDAO extends AbstractDAO implements IUserDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserDAO.class);
 
     private PasswordEncoder passwordEncoder;
 
