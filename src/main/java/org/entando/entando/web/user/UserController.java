@@ -18,7 +18,6 @@ import static org.entando.entando.web.user.validator.UserValidator.createSelfDel
 import static org.entando.entando.web.user.validator.UserValidator.isAdminUser;
 import static org.entando.entando.web.user.validator.UserValidator.isUserDeletingHimself;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
@@ -117,7 +116,9 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> addUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<UserDto>> addUser(
+            @Valid @RequestBody UserRequest userRequest,
+            BindingResult bindingResult) {
         logger.debug("adding user with request {}", userRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -166,7 +167,11 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteUser(@ModelAttribute("user") UserDetails user, @PathVariable String target, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteUser(
+            //-
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String target,
+            BindingResult bindingResult) {
         logger.debug("deleting {}", target);
         if (isAdminUser(target)) {
             throw new ValidationGenericException(createDeleteAdminError());
@@ -211,8 +216,13 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> addUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) throws EntException {
-        logger.debug("user {} requesting add authorities for username {} with req {}", user.getUsername(), target, authRequest);
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> addUserAuthorities(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String target,
+            @Valid @RequestBody UserAuthoritiesRequest authRequest,
+            BindingResult bindingResult) {
+        logger.debug("user {} requesting add authorities for username {} with req {}",
+                user.getUsername(), target, authRequest);
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -232,7 +242,10 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse> deleteUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target) throws EntException {
+    public ResponseEntity<SimpleRestResponse<ArrayList<Object>>> deleteUserAuthorities(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String target) {
+        //-
         logger.debug("user {} requesting delete authorities for username {}", user.getUsername(), target);
         DataBinder binder = new DataBinder(target);
         BindingResult bindingResult = binder.getBindingResult();

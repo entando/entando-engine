@@ -33,7 +33,7 @@ public class ServiceExtraConfigDOM {
 
 	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ServiceExtraConfigDOM.class);
 	
-    protected ServiceExtraConfigDOM() throws EntException {
+    protected ServiceExtraConfigDOM() {
         this._doc = new Document();
         Element elementRoot = new Element("config");
         this._doc.setRootElement(elementRoot);

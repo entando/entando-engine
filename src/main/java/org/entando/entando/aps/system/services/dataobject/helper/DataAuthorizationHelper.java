@@ -64,7 +64,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
         return this.isAuth(user, content);
     }
 
-    protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws EntException {
+    protected boolean isAuth(UserDetails user, Set<String> groupCodes) {
         if (null == user) {
             _logger.error("Null user");
             return false;
@@ -90,7 +90,7 @@ public class DataAuthorizationHelper implements IDataAuthorizationHelper {
         return this.isAuthToEdit(user, mainGroupName);
     }
 
-    private boolean isAuthToEdit(UserDetails user, String mainGroupName) throws EntException {
+    private boolean isAuthToEdit(UserDetails user, String mainGroupName) {
         if (null == user) {
             _logger.error("Null user");
             return false;

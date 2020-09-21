@@ -97,7 +97,7 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 		}
 	}
 
-	private void addLabelGroup(String key, ApsProperties labels, Connection conn) throws EntException {
+	private void addLabelGroup(String key, ApsProperties labels, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(ADD_LABEL);
@@ -142,7 +142,7 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 		}
 	}
 
-	private void deleteLabelGroup(String key, Connection conn) throws EntException {
+	private void deleteLabelGroup(String key, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(DELETE_LABEL);
@@ -158,13 +158,12 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 	}
 
 	/**
-	 * Metodo di servizio: legge tutte le label. 
+	 * Metodo di servizio: legge tutte le label.
 	 * @param res Il resultset ottenuto dall'estrazione delle labels.
 	 * @throws SQLException
 	 * @throws EntException
 	 */
-	private Map<String, ApsProperties> createLabels(ResultSet res) 
-	throws SQLException, EntException {
+	private Map<String, ApsProperties> createLabels(ResultSet res) throws SQLException {
 		//1  l.key,  2 l.langcode, 3  l.value"
 		Map<String, ApsProperties> labels = new HashMap<String, ApsProperties>();
 		while (res.next()) {

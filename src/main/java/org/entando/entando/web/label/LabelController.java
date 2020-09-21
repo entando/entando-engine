@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.label;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class LabelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<LabelDto>> addLabelGroup(@Valid @RequestBody LabelRequest labelRequest) throws EntException {
+    public ResponseEntity<SimpleRestResponse<LabelDto>> addLabelGroup(@Valid @RequestBody LabelRequest labelRequest) {
         logger.debug("adding label {}", labelRequest.getKey());
         LabelDto group = this.getLabelService().addLabelGroup(labelRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(group), HttpStatus.OK);
@@ -107,7 +106,7 @@ public class LabelController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{labelCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteLabelGroup(@PathVariable String labelCode) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteLabelGroup(@PathVariable String labelCode) {
         logger.debug("deleting label {}", labelCode);
         this.getLabelService().removeLabelGroup(labelCode);
         Map<String, String> result = new HashMap<>();

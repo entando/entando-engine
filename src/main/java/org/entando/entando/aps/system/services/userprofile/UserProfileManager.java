@@ -129,7 +129,7 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
         }
     }
 
-    private void notifyProfileChanging(IUserProfile profile, int operationCode) throws EntException {
+    private void notifyProfileChanging(IUserProfile profile, int operationCode) {
         ProfileChangedEvent event = new ProfileChangedEvent();
         event.setProfile(profile);
         event.setOperationCode(operationCode);

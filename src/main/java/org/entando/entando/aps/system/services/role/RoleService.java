@@ -350,7 +350,7 @@ public class RoleService implements IRoleService {
         return permissions;
     }
 
-    protected List<UserDto> userReferences(String code) throws EntException {
+    protected List<UserDto> userReferences(String code) {
         return this.getAuthorizationService().getRoleUtilizer(code);
 
     }

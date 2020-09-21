@@ -34,7 +34,7 @@ public class AbstractComponentModule implements ComponentModule {
 
     private List<IPostProcess> postProcesses;
 
-    protected void extractSqlResources(Element sqlResourcesElement) throws EntException {
+    protected void extractSqlResources(Element sqlResourcesElement) {
         if (null != sqlResourcesElement) {
             List<Element> datasourceElements = sqlResourcesElement.getChildren("datasource");
             for (int j = 0; j < datasourceElements.size(); j++) {

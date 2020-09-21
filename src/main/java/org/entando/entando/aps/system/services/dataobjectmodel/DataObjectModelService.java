@@ -202,14 +202,15 @@ public class DataObjectModelService implements IDataObjectModelService {
         return model;
     }
 
-    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) throws EntException {
+    protected BeanPropertyBindingResult checkDataObjectModelForDelete(DataObjectModel model, DataModelDto dto) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(model, "dataObjectModel");
         if (null == model) {
             return bindingResult;
         }
         Map<String, List<IPage>> pages = this.getDataObjectModelManager().getReferencingPages(model.getId());
         if (!bindingResult.hasErrors() && !pages.isEmpty()) {
-            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES, new Object[]{String.valueOf(model.getId())}, "guifragment.cannot.delete.references");
+            bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES,
+                    new Object[]{String.valueOf(model.getId())}, "guifragment.cannot.delete.references");
         }
         return bindingResult;
     }

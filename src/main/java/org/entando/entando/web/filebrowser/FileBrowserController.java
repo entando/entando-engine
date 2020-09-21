@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.filebrowser;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.storage.IFileBrowserService;
@@ -113,7 +112,9 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<RestResponse<Map, Map>> addFile(
+            @Valid @RequestBody FileBrowserFileRequest request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -166,7 +167,10 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/directory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> addDirectory(@Valid @RequestBody FileBrowserRequest request, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> addDirectory(
+            @Valid @RequestBody FileBrowserRequest request,
+            BindingResult bindingResult) {
+        //-
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -180,13 +184,18 @@ public class FileBrowserController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/directory", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> deleteDirectory(@RequestParam String currentPath, @RequestParam Boolean protectedFolder) {
+    public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> deleteDirectory(
+            @RequestParam String currentPath,
+            @RequestParam Boolean protectedFolder) {
+        //-
         logger.debug("delete directory {} - protected {}", currentPath, protectedFolder);
         this.getFileBrowserService().deleteDirectory(currentPath, protectedFolder);
         return this.executeDirectoryRespose(currentPath, protectedFolder);
     }
 
-    public ResponseEntity<RestResponse<Map, Map>> executeDirectoryRespose(String path, Boolean protectedFolder) {
+    public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> executeDirectoryRespose(
+            String path, Boolean protectedFolder) {
+        //-
         Map<String, Object> result = new HashMap<>();
         if (path.endsWith("/")) {
             path = path.substring(0, path.length() - 1);

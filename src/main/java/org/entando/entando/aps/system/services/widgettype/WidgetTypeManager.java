@@ -221,7 +221,7 @@ public class WidgetTypeManager extends AbstractService
         return utilizers;
     }
 
-    private void notifyWidgetTypeChanging(String widgetTypeCode, int operationCode) throws EntException {
+    private void notifyWidgetTypeChanging(String widgetTypeCode, int operationCode) {
         WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
         event.setWidgetTypeCode(widgetTypeCode);
         event.setOperationCode(operationCode);

@@ -208,14 +208,15 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         return group;
     }
 
-    protected BeanPropertyBindingResult checkGroupForDelete(Group group) throws EntException {
+    protected BeanPropertyBindingResult checkGroupForDelete(Group group) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(group, "group");
 
         if (null == group) {
             return bindingResult;
         }
         if (Group.FREE_GROUP_NAME.equals(group.getName()) || Group.ADMINS_GROUP_NAME.equals(group.getName())) {
-            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()}, "group.cannot.delete.reserved");
+            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()},
+                    "group.cannot.delete.reserved");
         }
         if (!bindingResult.hasErrors()) {
 

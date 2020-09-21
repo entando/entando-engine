@@ -345,7 +345,7 @@ public abstract class ApsEntityManager extends AbstractService
         }
     }
 
-    private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) throws EntException {
+    private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) {
         EntityTypesChangingEvent event = new EntityTypesChangingEvent();
         event.setOperationCode(operationCode);
         event.setNewEntityType(newEntityType);

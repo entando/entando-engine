@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
-import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
@@ -137,8 +136,9 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(@Valid @RequestBody GroupRequest groupRequest,
-            BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(
+            @Valid @RequestBody GroupRequest groupRequest,
+            BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -154,7 +154,7 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) {
         logger.info("deleting {}", groupName);
         this.getGroupService().removeGroup(groupName);
         Map<String, String> result = new HashMap<>();

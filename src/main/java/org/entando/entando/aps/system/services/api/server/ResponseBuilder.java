@@ -212,8 +212,8 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     private AbstractApiResponse buildApiResponseObject(ApiMethod apiMethod) throws ApiException {
         AbstractApiResponse apiResponse = null;
         try {
-            Class responseClass = Class.forName(apiMethod.getResponseClassName());
-            apiResponse = (AbstractApiResponse) responseClass.newInstance();
+            Class<?> responseClass = Class.forName(apiMethod.getResponseClassName());
+            apiResponse = (AbstractApiResponse) responseClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
         	_logger.error("Error creating instance of response '{}'", apiMethod.getResponseClassName(), e);
         }
@@ -278,12 +278,13 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 		}
         return buffer.toString();
     }
-    
-    protected Object extractBean(ApiMethod api) throws EntException, ApiException {
+
+    protected Object extractBean(ApiMethod api) throws ApiException {
         Object bean = this.getBeanFactory().getBean(api.getSpringBean());
         if (null == bean) {
             _logger.error("Null bean '{}' for api {}", api.getSpringBean(), this.buildApiSignature(api));
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
         return bean;
     }

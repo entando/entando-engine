@@ -103,12 +103,13 @@ public class EntandoOauth2Interceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    protected void checkAuthorization(UserDetails user, String[] permissions, HttpServletRequest request) throws EntException {
+    protected void checkAuthorization(UserDetails user, String[] permissions, HttpServletRequest request) {
         if (null == user) {
             throw new EntandoTokenException("no access token found", request, null);
         }
 
-        logger.debug("User {} requesting resource that requires at least one of the permissions {}", user.getUsername(), permissions);
+        logger.debug("User {} requesting resource that requires at least one of the permissions {}", user.getUsername(),
+                permissions);
         if (permissions != null) {
             boolean hasPermission = false;
             for (String permission : permissions) {

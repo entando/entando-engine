@@ -151,8 +151,7 @@ public class IndexerDAO implements IIndexerDAO {
         this.indexCategory(document, parentCategory);
     }
 
-    private void indexAttribute(Document document,
-            AttributeInterface attribute, Lang lang) throws EntException {
+    private void indexAttribute(Document document, AttributeInterface attribute, Lang lang) {
         attribute.setRenderingLang(lang.getCode());
         if (attribute instanceof IndexableAttributeInterface) {
             String valueToIndex = ((IndexableAttributeInterface) attribute).getIndexeableFieldValue();

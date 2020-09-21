@@ -165,7 +165,7 @@ public class URLManager extends AbstractURLManager {
         return baseUrl.toString();
     }
 
-    protected void addBaseURL(StringBuilder link, HttpServletRequest request) throws EntException {
+    protected void addBaseURL(StringBuilder link, HttpServletRequest request) {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;

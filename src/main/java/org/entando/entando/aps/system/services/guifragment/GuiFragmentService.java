@@ -172,14 +172,16 @@ public class GuiFragmentService implements IGuiFragmentService {
         return fragment;
     }
 
-    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) throws EntException {
+    protected BeanPropertyBindingResult checkFragmentForDelete(GuiFragment fragment, GuiFragmentDto dto) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(fragment, "fragment");
         if (null == fragment) {
             return bindingResult;
         }
         if (!dto.getFragments().isEmpty() || !dto.getPageModels().isEmpty()) {
-            List<String> fragments = dto.getFragments().stream().map(GuiFragmentDto.FragmentRef::getCode).collect(Collectors.toList());
-            List<String> pagemodels = dto.getPageModels().stream().map(GuiFragmentDto.PageModelRef::getCode).collect(Collectors.toList());
+            List<String> fragments = dto.getFragments().stream().map(GuiFragmentDto.FragmentRef::getCode)
+                    .collect(Collectors.toList());
+            List<String> pagemodels = dto.getPageModels().stream().map(GuiFragmentDto.PageModelRef::getCode)
+                    .collect(Collectors.toList());
             bindingResult.reject(GuiFragmentValidator.ERRCODE_FRAGMENT_REFERENCES,
                     new Object[]{fragment.getCode(), fragments, pagemodels}, "guifragment.cannot.delete.references");
         }

@@ -241,14 +241,16 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     }
 
     protected I createEntityType(IEntityManager entityManager, EntityTypeDtoRequest dto, BindingResult bindingResult) throws Throwable {
-        Class entityClass = entityManager.getEntityClass();
-        ApsEntity entityType = (ApsEntity) entityClass.newInstance();
+        Class<?> entityClass = entityManager.getEntityClass();
+        ApsEntity entityType = (ApsEntity) entityClass.getDeclaredConstructor().newInstance();
         if (StringUtils.isEmpty(dto.getCode()) || dto.getCode().length() != 3) {
-            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_CODE, bindingResult, new String[]{dto.getCode()}, "entityType.typeCode.invalid");
+            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_CODE, bindingResult,
+                    new String[]{dto.getCode()}, "entityType.typeCode.invalid");
         }
         entityType.setTypeCode(dto.getCode());
         if (StringUtils.isEmpty(dto.getName())) {
-            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_DESCR, bindingResult, new String[]{}, "entityType.typeDescription.invalid");
+            this.addError(AbstractEntityTypeValidator.ERRCODE_INVALID_TYPE_DESCR, bindingResult, new String[]{},
+                    "entityType.typeDescription.invalid");
         }
         entityType.setTypeDescription(dto.getName());
         if (bindingResult.hasErrors()) {

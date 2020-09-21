@@ -123,7 +123,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
         }
     }
 
-    private void notifyDataModelChanging(DataObjectModel dataObjectModel, int operationCode) throws EntException {
+    private void notifyDataModelChanging(DataObjectModel dataObjectModel, int operationCode) {
         DataObjectModelChangedEvent event = new DataObjectModelChangedEvent();
         event.setDataObjectModel(dataObjectModel);
         event.setOperationCode(operationCode);

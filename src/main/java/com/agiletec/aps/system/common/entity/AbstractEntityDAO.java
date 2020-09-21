@@ -229,7 +229,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		stat.executeBatch();
 	}
 	
-	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) throws EntException {
+	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(this.getAddingAttributeRoleRecordQuery());

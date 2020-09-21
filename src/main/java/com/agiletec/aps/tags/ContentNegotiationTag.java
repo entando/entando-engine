@@ -21,11 +21,12 @@ import javax.servlet.jsp.tagext.TagSupport;
  * If the Mime-Type is not accepted by the User Agent then the default text/html is declared.
  * The given charset is appended to the declaration
  * @deprecated from Entando 4.1.0, moved function into executor service
- * @author William Ghelfi
  */
+
+// TODO: $$$ check
 public class ContentNegotiationTag extends TagSupport {
 	/*
-	private static final EntLogger _logger = EntLogFactory.getSantiziedLogger(ContentNegotiationTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ContentNegotiationTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {

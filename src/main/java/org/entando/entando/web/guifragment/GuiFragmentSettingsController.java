@@ -73,13 +73,16 @@ public class GuiFragmentSettingsController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> updateSettings(@Valid @RequestBody GuiFragmentSettingsBody bodyRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map<String, Boolean>>> updateSettings(
+            @Valid @RequestBody GuiFragmentSettingsBody bodyRequest,
+            BindingResult bindingResult) throws EntException {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
         Boolean value = bodyRequest.getEnableEditingWhenEmptyDefaultGui();
-        this.getConfigManager().updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
+        this.getConfigManager()
+                .updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
         Map<String, Boolean> result = new HashMap<>();
         result.put(RESULT_PARAM_NAME, value);
         logger.debug("Updated fragment setting -> {}", result);

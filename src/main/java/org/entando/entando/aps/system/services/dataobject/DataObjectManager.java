@@ -371,11 +371,11 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     /**
      * Notify the modification of a published dataobject.
      *
-     * @param dataobject The modified dataobject.
+     * @param dataobject    The modified dataobject.
      * @param operationCode the operation code to notify.
-     * @exception EntException in caso of error.
+     * @throws EntException in caso of error.
      */
-    private void notifyPublicDataObjectChanging(DataObject dataobject, int operationCode) throws EntException {
+    private void notifyPublicDataObjectChanging(DataObject dataobject, int operationCode) {
         PublicDataChangedEvent event = new PublicDataChangedEvent();
         event.setDataObject(dataobject);
         event.setOperationCode(operationCode);
