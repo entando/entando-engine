@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.Ordered;
@@ -35,6 +34,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     private static final String REFERENCE_NAME = "entando";
+    private static final String GROUP_NAME = "entando";
 
     private TypeResolver typeResolver;
 
@@ -58,7 +58,7 @@ public class SwaggerConfig {
     public Docket api() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("entando")
+                .groupName(GROUP_NAME)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
