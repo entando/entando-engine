@@ -125,7 +125,7 @@ public class ApsSystemUtils {
         loggerContext.updateLoggers();
     }
 
-    public static EntLogger getLogger() {
+    public static org.slf4j.Logger getLogger() {
         return logger;
     }
 
