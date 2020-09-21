@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -34,7 +34,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
  */
 public final class AttributeDisablingCodesLoader {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(AttributeDisablingCodesLoader.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(AttributeDisablingCodesLoader.class);
 	
 	public Map<String, String> extractDisablingCodes(String attributeDisablingCodesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, String> disablingCodes = new HashMap<>();

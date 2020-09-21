@@ -26,8 +26,8 @@ import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -44,7 +44,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttributeTy
 @XmlSeeAlso({JAXBListAttributeType.class, JAXBCompositeAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBEntityType {
 
-	private static final Logger _logger = LoggerFactory.getLogger(JAXBEntityType.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(JAXBEntityType.class);
 	
     public JAXBEntityType() {}
     

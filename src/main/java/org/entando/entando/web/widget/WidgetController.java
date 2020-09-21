@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.widget;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.services.widgettype.IWidgetService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
@@ -26,8 +25,8 @@ import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,7 +42,7 @@ import java.util.Map;
 public class WidgetController {
     public static final String COMPONENT_ID = "widget";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     IWidgetService widgetService;
@@ -90,7 +89,7 @@ public class WidgetController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/widgets/{widgetCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteWidget(@PathVariable String widgetCode) throws EntException {
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteWidget(@PathVariable String widgetCode) {
         logger.info("deleting widget {}", widgetCode);
         this.widgetService.removeWidget(widgetCode);
         Map<String, String> result = new HashMap<>();
@@ -116,7 +115,9 @@ public class WidgetController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/widgets", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
-    public ResponseEntity<SimpleRestResponse<WidgetDto>> addWidget(@Valid @RequestBody WidgetRequest widgetRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<WidgetDto>> addWidget(
+            @Valid @RequestBody WidgetRequest widgetRequest,
+            BindingResult bindingResult) {
         logger.trace("add widget. body {}: ", widgetRequest);
         //field validations
         if (bindingResult.hasErrors()) {

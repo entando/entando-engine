@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Utility class for date handling. 
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DateConverter {
 
-	private static final Logger _logger = LoggerFactory.getLogger(DateConverter.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DateConverter.class);
 	/**
 	 * Utility method. Return a formatted string representing the given date
 	 * @param date the date object to convert into a string

@@ -13,18 +13,13 @@
  */
 package org.entando.entando.web.guifragment.validator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
-import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -32,7 +27,7 @@ import org.springframework.validation.Errors;
 @Component
 public class GuiFragmentValidator extends AbstractPaginationValidator {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     //GET //PUT
     public static final String ERRCODE_FRAGMENT_DOES_NOT_EXISTS = "1";

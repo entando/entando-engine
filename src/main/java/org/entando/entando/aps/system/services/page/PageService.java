@@ -76,8 +76,8 @@ import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.page.validator.PageValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ import org.springframework.validation.DataBinder;
  */
 public class PageService implements IPageService, GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>, ApplicationContextAware {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     public static final String ERRCODE_PAGE_NOT_FOUND = "1";
     public static final String ERRCODE_PAGEMODEL_NOT_FOUND = "1";
@@ -492,7 +492,9 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
                 return;
             }
             if (frameId >= page.getWidgets().length) {
-                logger.info("the frame to delete with index {} in page {} with model {} does not exists", frameId, pageCode, page.getModel().getCode());
+                logger.info("the frame to delete with index {} in page {} with model {} does not exists",
+                        frameId, pageCode,
+                        page.getModel().getCode());
                 return;
             }
             this.pageManager.removeWidget(pageCode, frameId);

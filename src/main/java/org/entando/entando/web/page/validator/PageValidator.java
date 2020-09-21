@@ -23,7 +23,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.json.patch.PatchException;
 import org.springframework.stereotype.Component;
@@ -52,7 +52,7 @@ public class PageValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_PAGE_WITH_NO_PUBLIC_PARENT = "9";
     private static final String ERRCODE_FRAMEID_INVALID = null;
 
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
+    private final org.slf4j.Logger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IPageManager pageManager;

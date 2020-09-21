@@ -19,8 +19,8 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This class is used to change some date fields in the 'authuser' table, in order to test the behaviour of the privacy module
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MockUserDAO extends UserDAO {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(MockUserDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockUserDAO.class);
 	
 	public MockUserDAO(DataSource datasource) {
 		this.setDataSource(datasource);

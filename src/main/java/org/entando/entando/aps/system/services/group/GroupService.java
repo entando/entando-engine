@@ -26,10 +26,11 @@ import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -40,7 +41,7 @@ import java.util.*;
 
 public class GroupService implements IGroupService, ApplicationContextAware {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IGroupManager groupManager;
@@ -179,6 +180,27 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         }
     }
 
+    @Override
+    public Integer getComponentUsage(String groupName) {
+        Map<String, Boolean> gri = getReferencesInfo(groupName);
+        int totalUsageCount = 0;
+        for (String holder: gri.keySet()) {
+            try {
+                RestListRequest request = new RestListRequest(1, 1);
+                totalUsageCount += this.getGroupReferences(groupName, holder, request ).getTotalItems();
+            } catch (ResourceNotFoundException e) {
+                totalUsageCount = 0;
+            }
+        }
+        return totalUsageCount;
+    }
+
+    @Override
+    public PagedMetadata<ComponentUsageEntity> getComponentUsageDetails(String componentCode,
+            RestListRequest restListRequest) {
+        return null;
+    }
+
     protected Group createGroup(GroupRequest groupRequest) {
         Group group = new Group();
         group.setName(groupRequest.getCode());
@@ -186,14 +208,15 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         return group;
     }
 
-    protected BeanPropertyBindingResult checkGroupForDelete(Group group) throws EntException {
+    protected BeanPropertyBindingResult checkGroupForDelete(Group group) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(group, "group");
 
         if (null == group) {
             return bindingResult;
         }
         if (Group.FREE_GROUP_NAME.equals(group.getName()) || Group.ADMINS_GROUP_NAME.equals(group.getName())) {
-            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()}, "group.cannot.delete.reserved");
+            bindingResult.reject(GroupValidator.ERRCODE_CANNOT_DELETE_RESERVED_GROUP, new String[]{group.getName()},
+                    "group.cannot.delete.reserved");
         }
         if (!bindingResult.hasErrors()) {
 
@@ -212,11 +235,15 @@ public class GroupService implements IGroupService, ApplicationContextAware {
     }
 
     public Map<String, Boolean> getReferencesInfo(Group group) {
-        Map<String, Boolean> references = new HashMap<String, Boolean>();
+        return this.getReferencesInfo(group.getName());
+    }
+
+    public Map<String, Boolean> getReferencesInfo(String groupName) {
+        Map<String, Boolean> references = new HashMap<>();
         try {
             String[] defNames = applicationContext.getBeanNamesForType(GroupUtilizer.class);
             for (int i = 0; i < defNames.length; i++) {
-                Object service = null;
+                Object service;
                 try {
                     service = applicationContext.getBean(defNames[i]);
                 } catch (Throwable t) {
@@ -225,7 +252,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                 }
                 if (service != null) {
                     GroupUtilizer<?> groupUtilizer = (GroupUtilizer<?>) service;
-                    List<?> utilizers = groupUtilizer.getGroupUtilizers(group.getName());
+                    List<?> utilizers = groupUtilizer.getGroupUtilizers(groupName);
                     if (utilizers != null && !utilizers.isEmpty()) {
                         references.put(groupUtilizer.getName(), true);
                     } else {
@@ -234,7 +261,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                 }
             }
         } catch (EntException ex) {
-            logger.error("error loading references for group {}", group.getName(), ex);
+            logger.error("error loading references for group {}", groupName, ex);
             throw new RestServerError("error in getReferencingObjects ", ex);
         }
         return references;

@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
@@ -42,7 +42,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  */
 public class ApsEntity implements IApsEntity {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApsEntity.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsEntity.class);
 
     /**
      * Initialization of the entity with its related elements.

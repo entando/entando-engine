@@ -27,8 +27,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethod.HttpMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.util.ApsProperties;
@@ -38,7 +38,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(ApiCatalogDAO.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ApiCatalogDAO.class);
 	
 	@Override
     public void loadApiStatus(Map<String, ApiResource> resources) {

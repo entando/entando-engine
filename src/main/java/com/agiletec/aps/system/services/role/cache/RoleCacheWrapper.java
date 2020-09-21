@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.role.Role;
  */
 public class RoleCacheWrapper extends AbstractGenericCacheWrapper<Role> implements IRoleCacheWrapper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(RoleCacheWrapper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(RoleCacheWrapper.class);
 
 	@Override
 	public void initCache(IRoleDAO roleDAO) throws EntException {

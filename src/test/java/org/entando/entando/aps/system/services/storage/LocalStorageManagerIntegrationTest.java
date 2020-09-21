@@ -23,15 +23,15 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author S.Loru - E.Santoboni
  */
 public class LocalStorageManagerIntegrationTest extends BaseTestCase {
 
-    private static final Logger _logger = LoggerFactory.getLogger(LocalStorageManagerIntegrationTest.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(LocalStorageManagerIntegrationTest.class);
 
     @Override
     protected void setUp() throws Exception {

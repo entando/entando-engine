@@ -32,14 +32,14 @@ import org.entando.entando.aps.system.services.api.model.LinkedListItem;
 import org.entando.entando.aps.system.services.storage.BasicFileAttributeView;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 
 public class LocalStorageManagerInterface implements IApiExportable {
 
-	private static final Logger logger = LoggerFactory.getLogger(LocalStorageManagerInterface.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManagerInterface.class);
 
 	private IStorageManager storageManager;
 	private static final String PARAM_PATH = "path";

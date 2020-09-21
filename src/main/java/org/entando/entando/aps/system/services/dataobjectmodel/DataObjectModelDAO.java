@@ -21,8 +21,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class DataObjectModelDAO extends AbstractSearcherDAO implements IDataObjectModelDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataObjectModelDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DataObjectModelDAO.class);
 
     private final String ALL_DATA_UX
             = "SELECT modelid, datatype, descr, model, stylesheet FROM dataobjectmodels";

@@ -10,13 +10,13 @@ import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDtoBuilder;
 import org.entando.entando.web.usersettings.model.UserSettingsRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserSettingsService implements IUserSettingsService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private ConfigInterface configManager;

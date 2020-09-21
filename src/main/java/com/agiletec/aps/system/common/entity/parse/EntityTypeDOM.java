@@ -25,8 +25,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -62,7 +62,7 @@ import org.jdom.JDOMException;
  */
 public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 
-	private static final Logger _logger = LoggerFactory.getLogger(EntityTypeDOM.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EntityTypeDOM.class);
 
 	private Map<String, AttributeInterface> _attributeTypes;
 

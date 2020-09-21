@@ -22,13 +22,13 @@ import com.agiletec.aps.system.common.AbstractGenericCacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 public class DataObjectModelCacheWrapper extends AbstractGenericCacheWrapper<DataObjectModel> implements IDataObjectModelCacheWrapper {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
 	@Override
 	public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws EntException {

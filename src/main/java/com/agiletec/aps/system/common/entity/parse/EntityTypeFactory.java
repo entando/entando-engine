@@ -15,8 +15,8 @@ package com.agiletec.aps.system.common.entity.parse;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class EntityTypeFactory implements IEntityTypeFactory {
 
-	private static final Logger logger = LoggerFactory.getLogger(EntityTypeFactory.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(EntityTypeFactory.class);
 	
 	private ConfigInterface configManager;
 	

@@ -13,12 +13,12 @@
  */
 package org.entando.entando.aps.system.services.oauth2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class ScheduledDeleteExpiredTokenThread implements Runnable {
 
-    private final static Logger logger = LoggerFactory.getLogger(ScheduledDeleteExpiredTokenThread.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ScheduledDeleteExpiredTokenThread.class);
     
     private IOAuth2TokenDAO tokenDAO;
     private int expirationTime;

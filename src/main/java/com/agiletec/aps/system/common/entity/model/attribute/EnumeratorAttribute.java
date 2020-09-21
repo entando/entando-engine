@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.jdom.CDATA;
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
 import org.entando.entando.ent.exception.EntException;
@@ -35,7 +35,7 @@ import org.springframework.web.context.ContextLoader;
  */
 public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactoryAware {
 
-    private static final Logger _logger = LoggerFactory.getLogger(EnumeratorAttribute.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EnumeratorAttribute.class);
 
     @Override
     public Object getAttributePrototype() {

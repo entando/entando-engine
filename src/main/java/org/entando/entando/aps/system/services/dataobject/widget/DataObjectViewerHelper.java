@@ -13,8 +13,8 @@
  */
 package org.entando.entando.aps.system.services.dataobject.widget;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -39,7 +39,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
  */
 public class DataObjectViewerHelper implements IDataObjectViewerHelper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataObjectViewerHelper.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectViewerHelper.class);
 
     @Override
     public String getRenderedDataObject(String dataobjectId, String modelId, RequestContext reqCtx) throws EntException {
@@ -112,7 +112,7 @@ public class DataObjectViewerHelper implements IDataObjectViewerHelper {
             }
             authInfo = this.getDataAuthorizationHelper().getAuthorizationInfo(dataobjectId, true);
             if (null == authInfo) {
-                _logger.info("Null authorization info by dataobject '" + dataobjectId + "'");
+                _logger.info("Null authorization info by dataobject {}", dataobjectId);
             }
         } catch (Throwable t) {
             _logger.error("Error extracting dataobject authorization info by dataobject {}", dataobjectId, t);

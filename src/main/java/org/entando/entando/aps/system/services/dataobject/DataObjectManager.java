@@ -38,8 +38,8 @@ import org.entando.entando.aps.system.services.dataobject.event.PublicDataChange
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * DataObjects manager. This implements all the methods needed to create and
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DataObjectManager extends ApsEntityManager implements IDataObjectManager, GroupUtilizer<String>, CategoryUtilizer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataObjectManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DataObjectManager.class);
 
     private IDataObjectDAO dataObjectDao;
 
@@ -371,11 +371,11 @@ public class DataObjectManager extends ApsEntityManager implements IDataObjectMa
     /**
      * Notify the modification of a published dataobject.
      *
-     * @param dataobject The modified dataobject.
+     * @param dataobject    The modified dataobject.
      * @param operationCode the operation code to notify.
-     * @exception EntException in caso of error.
+     * @throws EntException in caso of error.
      */
-    private void notifyPublicDataObjectChanging(DataObject dataobject, int operationCode) throws EntException {
+    private void notifyPublicDataObjectChanging(DataObject dataobject, int operationCode) {
         PublicDataChangedEvent event = new PublicDataChangedEvent();
         event.setDataObject(dataobject);
         event.setOperationCode(operationCode);

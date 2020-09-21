@@ -25,8 +25,8 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -55,7 +55,7 @@ import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDi
  */
 public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ApiDataObjectInterface.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ApiDataObjectInterface.class);
 
     public List<String> getDataObjects(Properties properties) throws Throwable {
         return this.extractDataObjects(properties);

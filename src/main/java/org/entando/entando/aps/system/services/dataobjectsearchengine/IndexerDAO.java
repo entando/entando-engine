@@ -33,8 +33,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SimpleFSLockFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class IndexerDAO implements IIndexerDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndexerDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(IndexerDAO.class);
 
     private Directory dir;
 
@@ -151,8 +151,7 @@ public class IndexerDAO implements IIndexerDAO {
         this.indexCategory(document, parentCategory);
     }
 
-    private void indexAttribute(Document document,
-            AttributeInterface attribute, Lang lang) throws EntException {
+    private void indexAttribute(Document document, AttributeInterface attribute, Lang lang) {
         attribute.setRenderingLang(lang.getCode());
         if (attribute instanceof IndexableAttributeInterface) {
             String valueToIndex = ((IndexableAttributeInterface) attribute).getIndexeableFieldValue();

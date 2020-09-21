@@ -22,8 +22,8 @@ import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 public class GuiFragmentDtoBuilder extends DtoBuilder<GuiFragment, GuiFragmentDto> implements BeanFactoryAware {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
 	private BeanFactory beanFactory;
 	private IWidgetTypeManager widgetTypeManager;

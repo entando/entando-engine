@@ -35,8 +35,8 @@ import org.entando.entando.web.common.model.DateRange;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +50,7 @@ public class ActivityStreamService implements IActivityStreamService {
     private static final String KEY_FILTER_ACTIONNAME = "actionName";
     private static final String KEY_FILTER_PARAMS = "params";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private ActionLogRecordDtoBuilder dtoBuilder = new ActionLogRecordDtoBuilder();
 

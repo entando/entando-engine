@@ -24,8 +24,8 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.cache.IGroupManagerCacheWrapper;
 import java.util.Collections;
 import org.apache.commons.beanutils.BeanComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio gestore dei gruppi.
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupManager extends AbstractService implements IGroupManager {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private IGroupDAO groupDao;
     private IGroupManagerCacheWrapper cacheWrapper;

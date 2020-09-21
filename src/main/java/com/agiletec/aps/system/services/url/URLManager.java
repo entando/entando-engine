@@ -22,8 +22,8 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.PageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class URLManager extends AbstractURLManager {
 
-    private static final Logger _logger = LoggerFactory.getLogger(URLManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(URLManager.class);
 
     @Override
     public void init() throws Exception {
@@ -165,7 +165,7 @@ public class URLManager extends AbstractURLManager {
         return baseUrl.toString();
     }
 
-    protected void addBaseURL(StringBuilder link, HttpServletRequest request) throws EntException {
+    protected void addBaseURL(StringBuilder link, HttpServletRequest request) {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;

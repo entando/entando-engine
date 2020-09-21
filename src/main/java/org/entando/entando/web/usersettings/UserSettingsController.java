@@ -14,15 +14,13 @@
 package org.entando.entando.web.usersettings;
 
 import com.agiletec.aps.system.services.role.Permission;
-import java.util.Map;
 import org.entando.entando.aps.system.services.usersettings.IUserSettingsService;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.usersettings.model.UserSettingsRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +38,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RequestMapping(value = "/userSettings")
 public class UserSettingsController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IUserSettingsService userSettingsService;

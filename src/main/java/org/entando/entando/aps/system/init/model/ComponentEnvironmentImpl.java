@@ -17,12 +17,12 @@ import org.entando.entando.ent.exception.EntException;
 import java.io.Serializable;
 import java.util.Map;
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 public class ComponentEnvironmentImpl extends AbstractComponentModule implements ComponentEnvironment, Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(ComponentEnvironment.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ComponentEnvironment.class);
 
     private String code;
 

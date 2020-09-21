@@ -16,8 +16,8 @@ package org.entando.entando.aps.system.services.dataobjectdispenser;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -43,7 +43,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
  */
 public class BaseDataObjectDispenser extends AbstractService implements IDataObjectDispenser {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BaseDataObjectDispenser.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(BaseDataObjectDispenser.class);
 
 	@Override
 	public void init() throws Exception {

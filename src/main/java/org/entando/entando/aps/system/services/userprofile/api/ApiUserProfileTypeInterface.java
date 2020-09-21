@@ -23,8 +23,8 @@ import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfileType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
@@ -38,7 +38,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class ApiUserProfileTypeInterface {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(ApiUserProfileTypeInterface.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ApiUserProfileTypeInterface.class);
     
     public JAXBUserProfileType getUserProfileType(Properties properties) throws ApiException, Throwable {
         JAXBUserProfileType jaxbProfileType = null;

@@ -20,7 +20,8 @@ import com.agiletec.aps.system.services.pagemodel.cache.IPageModelManagerCacheWr
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
-import org.slf4j.*;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 import java.util.*;
 import java.util.regex.*;
@@ -30,7 +31,7 @@ import java.util.regex.*;
  */
 public class PageModelManager extends AbstractService implements IPageModelManager, GuiFragmentUtilizer {
 
-    private static final Logger logger = LoggerFactory.getLogger(PageModelManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageModelManager.class);
     private IPageModelDAO pageModelDao;
     private IPageModelManagerCacheWrapper cacheWrapper;
 

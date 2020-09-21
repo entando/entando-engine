@@ -1,8 +1,8 @@
 package com.agiletec.aps.system.services.health;
 
 import org.entando.entando.ent.exception.EntException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @Repository
 public class HealthDAO implements IHealthDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(HealthDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(HealthDAO.class);
 
     private DataSource portDataSource;
     private DataSource servDataSource;

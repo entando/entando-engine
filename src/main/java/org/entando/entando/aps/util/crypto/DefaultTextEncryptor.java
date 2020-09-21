@@ -18,8 +18,8 @@ import java.lang.reflect.Modifier;
 import java.util.Base64;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -32,7 +32,7 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
  */
 public class DefaultTextEncryptor implements TextEncryptor {
     
-    private static final Logger logger = LoggerFactory.getLogger(DefaultTextEncryptor.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DefaultTextEncryptor.class);
 
     private final String key;
 

@@ -17,8 +17,8 @@ import java.util.Collection;
 
 import javax.servlet.ServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -32,7 +32,7 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class PagerTagHelper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PagerTagHelper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PagerTagHelper.class);
 	
 	/**
 	 * Restituisce l'oggetto necessario per fornire gli elementi necessari 

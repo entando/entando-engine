@@ -21,8 +21,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -40,7 +40,7 @@ import com.agiletec.aps.system.services.lang.Lang;
  */
 public abstract class BaseEntityRenderer extends DefaultVelocityRenderer implements IEntityRenderer {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BaseEntityRenderer.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(BaseEntityRenderer.class);
 	
 	@Override
 	public String render(IApsEntity entity, String velocityTemplate, String langCode, boolean convertSpecialCharacters) {

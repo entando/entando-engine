@@ -33,8 +33,8 @@ import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserver;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -46,7 +46,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
-    private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
+    public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
 
     private IPageManagerCacheWrapper _cacheWrapper;
     private IPageDAO _pageDao;
@@ -211,7 +212,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         try {
             IPage currentPage = this.getDraftPage(pageCode);
             if (null == currentPage) {
-                throw new EntException("The page '" + pageCode + "' does not exist!");
+                throw mkException(pageCode);
             }
             IPage parent = this.getDraftPage(currentPage.getParentCode());
             String[] sisterPageCodes = parent.getChildrenCodes();
@@ -230,10 +231,14 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 }
             }
         } catch (Throwable t) {
-            _logger.error("Error while moving  page {}", pageCode, t);
-            throw new EntException("Error while moving a page", t);
+            _logger.error(ERRMSG_ERROR_WHILE_MOVING_A_PAGE + " {}", pageCode, t);
+            throw new EntException(ERRMSG_ERROR_WHILE_MOVING_A_PAGE, t);
         }
         return resultOperation;
+    }
+
+    private EntException mkException(String pageCode) {
+        return new EntException("The page '" + pageCode + "' does not exist!");
     }
 
     /**
@@ -256,8 +261,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 _logger.error("Movement impossible - page to move up {} - page to move down {}", pageUp, pageDown);
             }
         } catch (Throwable t) {
-            _logger.error("Error while moving a page", t);
-            throw new EntException("Error while moving a page", t);
+            _logger.error(ERRMSG_ERROR_WHILE_MOVING_A_PAGE, t);
+            throw new EntException(ERRMSG_ERROR_WHILE_MOVING_A_PAGE, t);
         }
     }
 
@@ -345,6 +350,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @deprecated Use {@link #removeWidget(String,int)} instead
      */
     @Override
+    @Deprecated
     public void removeShowlet(String pageCode, int pos) throws EntException {
         this.removeWidget(pageCode, pos);
     }
@@ -384,6 +390,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
      */
     @Override
+    @Deprecated
     public void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
         this.joinWidget(pageCode, widget, pos);
     }
@@ -666,7 +673,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Page to move '{}' is parent of the new parent '{}'", pageCode, newParentCode);
             return resultOperation;
         }
-        _logger.debug("start move page '" + pageToMove + "' under '" + newParent + "'");
+        _logger.debug("start move page '{}' under '{}'", pageToMove, newParent);
         try {
             this.getPageDAO().movePage(pageToMove, newParent);
             this.getCacheWrapper().movePage(pageCode, newParentCode);

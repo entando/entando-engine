@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -31,7 +31,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class ProtectedResourceWardenServlet extends HttpServlet {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ProtectedResourceWardenServlet.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ProtectedResourceWardenServlet.class);
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {

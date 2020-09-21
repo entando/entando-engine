@@ -21,8 +21,8 @@ import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.common.entity.model.attribute.util.EnumeratorMapAttributeItemsExtractor;
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute;
@@ -35,7 +35,7 @@ import com.agiletec.aps.util.SelectItem;
  */
 public class EnumeratorMapAttribute extends EnumeratorAttribute {
 
-    private static final Logger _logger = LoggerFactory.getLogger(EnumeratorMapAttribute.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EnumeratorMapAttribute.class);
 
     @Override
     public Object getAttributePrototype() {

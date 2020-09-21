@@ -15,11 +15,13 @@ package org.entando.entando.aps.system.services.storage;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.*;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 import java.io.File;
 import java.util.regex.*;
 import org.entando.entando.ent.exception.EntRuntimeException;
+import org.entando.entando.ent.util.EntSanitization;
 
 public final class StorageManagerUtil {
 
@@ -27,7 +29,7 @@ public final class StorageManagerUtil {
         // Utility class, not to be instantiated
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(StorageManagerUtil.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(StorageManagerUtil.class);
 
     private static final String REGEXP_FILE_EXTENSION = "([\\w|\\-]+?$)";
     private static final String REGEXP_FILE_BASENAME = "\\A(?!(?:COM[0-9]|CON|LPT[0-9]|NUL|PRN|AUX|com[0-9]|con|lpt[0-9]|nul|prn|aux)|[\\s\\.])[^\\\\/:*\"?<>|]{1,254}\\z";
@@ -37,8 +39,8 @@ public final class StorageManagerUtil {
         if (isValidFilename(fullname)) {
             return fullname;
         } else {
-            // TODO: $$$ SANITIZE  "fullname" after merge with logging sanitization PR
-            throw new EntRuntimeException("Invalid filename detected: \"" + fullname + "\"");
+            throw new EntRuntimeException("Invalid filename detected: \"" +
+                    EntSanitization.fixJavaSecS5145(fullname) + "\"");
         }
     }
 
@@ -46,8 +48,8 @@ public final class StorageManagerUtil {
         if (isValidDirName(fullname)) {
             return fullname;
         } else {
-            // TODO: $$$ SANITIZE  "fullname" after merge with logging sanitization PR
-            throw new EntRuntimeException("Invalid directory name detected: \"" + fullname + "\"");
+            throw new EntRuntimeException("Invalid directory name detected: \"" +
+                    EntSanitization.fixJavaSecS5145(fullname) + "\"");
         }
     }
 

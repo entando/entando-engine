@@ -27,12 +27,14 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.category.validator.CategoryValidator;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
@@ -41,7 +43,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
  */
 public class CategoryService implements ICategoryService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private ICategoryManager categoryManager;
     @Autowired
@@ -54,7 +56,26 @@ public class CategoryService implements ICategoryService {
         builder.setCategoryManager(this.categoryManager);
         return builder;
     }
-    
+
+    @Override
+    public Integer getComponentUsage(String componentCode) {
+        int totalCount = 0;
+        try {
+            for (CategoryUtilizer categoryUtilizer : this.getCategoryUtilizers()) {
+                totalCount += categoryUtilizer.getCategoryUtilizers(componentCode).size();
+            }
+        } catch (EntException e) {
+            totalCount = 0;
+        }
+        return totalCount;
+    }
+
+    @Override
+    public PagedMetadata<ComponentUsageEntity> getComponentUsageDetails(String componentCode,
+            RestListRequest restListRequest) {
+        return null;
+    }
+
     public class CategoryDtoBuilder extends DtoBuilder<Category, CategoryDto> {
         private ICategoryManager categoryManager;
         @Override

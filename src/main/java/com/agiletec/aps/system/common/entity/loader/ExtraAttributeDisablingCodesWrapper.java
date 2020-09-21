@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -31,7 +31,7 @@ import org.entando.entando.ent.exception.EntException;
  */
 public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeSupportObject {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeDisablingCodesWrapper.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ExtraAttributeDisablingCodesWrapper.class);
 	
 	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws EntException {
 		String managerName = ((IManager) entityManager).getName();

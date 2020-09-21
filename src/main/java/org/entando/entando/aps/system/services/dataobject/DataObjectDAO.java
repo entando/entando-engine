@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
@@ -48,7 +48,7 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecord
  */
 public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
 
-    private static final Logger _logger = LoggerFactory.getLogger(DataObjectDAO.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DataObjectDAO.class);
     
     private ICategoryManager categoryManager;
 
@@ -224,7 +224,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         this.addDataObjectRelationsRecord(dataobject, conn);
     }
 
-    protected void addDataObjectSearchRecord(String id, IApsEntity entity, Connection conn) throws EntException {
+    protected void addDataObjectSearchRecord(String id, IApsEntity entity, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(ADD_DATAOBJECT_SEARCH_RECORD);
@@ -237,11 +237,11 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    protected void updateDataObjectRecordForInsert(DataObject dataobject, Connection conn) throws EntException {
+    protected void updateDataObjectRecordForInsert(DataObject dataobject, Connection conn) {
         this.updateDataObjectRecordForInsert(dataobject, true, conn);
     }
 
-    protected void updateDataObjectRecordForInsert(DataObject dataobject, boolean updateDate, Connection conn) throws EntException {
+    protected void updateDataObjectRecordForInsert(DataObject dataobject, boolean updateDate, Connection conn) {
         PreparedStatement stat = null;
         try {
             int index = 1;
@@ -383,7 +383,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         super.executeDeleteEntity(entityId, conn);
     }
 
-    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat) throws EntException {
+    private void addCategoryRelationsRecord(DataObject dataobject, boolean isPublicRelations, PreparedStatement stat) {
         if (dataobject.getCategories().size() > 0) {
             try {
                 Set<String> codes = new HashSet<String>();
@@ -426,7 +426,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    private void addGroupRelationsRecord(DataObject dataobject, PreparedStatement stat) throws EntException {
+    private void addGroupRelationsRecord(DataObject dataobject, PreparedStatement stat) {
         try {
             dataobject.addGroup(dataobject.getMainGroup());
             Iterator<String> groupIter = dataobject.getGroups().iterator();
@@ -450,14 +450,14 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
     }
 
     /**
-     * Add a record in the table 'dataobjectrelations' for every resource, page,
-     * other dataobject, role and category associated to the given dataobject).
+     * Add a record in the table 'dataobjectrelations' for every resource, page, other dataobject, role and category
+     * associated to the given dataobject).
      *
      * @param dataobject The current dataobject.
-     * @param conn The connection to the database.
+     * @param conn       The connection to the database.
      * @throws EntException when connection error are detected.
      */
-    protected void addDataObjectRelationsRecord(DataObject dataobject, Connection conn) throws EntException {
+    protected void addDataObjectRelationsRecord(DataObject dataobject, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(ADD_DATAOBJECT_REL_RECORD);
@@ -479,7 +479,7 @@ public class DataObjectDAO extends AbstractEntityDAO implements IDataObjectDAO {
         }
     }
 
-    protected void addDataObjectAttributeRoleRecord(String id, IApsEntity entity, String query, Connection conn) throws EntException {
+    protected void addDataObjectAttributeRoleRecord(String id, IApsEntity entity, String query, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(query);

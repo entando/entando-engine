@@ -5,15 +5,15 @@ import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.activitystream.ISocialActivityStreamManager;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.activitystream.model.ActivityStreamLikeInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ActionLogRecordDtoBuilder extends DtoBuilder<ActionLogRecord, ActionLogRecordDto> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Deprecated
     @Override

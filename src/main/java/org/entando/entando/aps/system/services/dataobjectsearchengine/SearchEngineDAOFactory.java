@@ -18,8 +18,8 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ import java.io.File;
  */
 public class SearchEngineDAOFactory implements ISearchEngineDAOFactory {
 
-    private static final Logger _logger = LoggerFactory.getLogger(SearchEngineDAOFactory.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(SearchEngineDAOFactory.class);
 
     @Override
     public void init() throws Exception {

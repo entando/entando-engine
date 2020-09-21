@@ -15,8 +15,8 @@ package org.entando.entando.aps.system.services.oauth2;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 
 public class OAuth2TokenDAO extends AbstractSearcherDAO implements IOAuth2TokenDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(OAuth2TokenDAO.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(OAuth2TokenDAO.class);
 
     private static final String ERROR_REMOVE_ACCESS_TOKEN = "Error while remove access token";
 

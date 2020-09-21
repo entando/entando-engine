@@ -19,8 +19,8 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelDAO;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.Collection;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.cache.Cache;
  */
 public class PageModelManagerCacheWrapper extends AbstractGenericCacheWrapper<PageModel> implements IPageModelManagerCacheWrapper {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PageModelManagerCacheWrapper.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageModelManagerCacheWrapper.class);
 
 	@Override
 	public void initCache(IPageModelDAO pageModelDAO) throws EntException {

@@ -76,8 +76,8 @@ public class StorageManagerUtilTest {
 
     @Test
     public void isValidDirName() {
-        Assert.assertTrue(StorageManagerUtil.isValidDirName(null));         // TODO: $$$ THIS IS QUESTIONABLE
-        Assert.assertTrue(StorageManagerUtil.isValidDirName(""));           // TODO: $$$ THIS IS QUESTIONABLE
+        Assert.assertTrue(StorageManagerUtil.isValidDirName(null));         // TODO: THIS IS QUESTIONABLE
+        Assert.assertTrue(StorageManagerUtil.isValidDirName(""));           // TODO: THIS IS QUESTIONABLE
         Assert.assertTrue(StorageManagerUtil.isValidDirName("dirname"));
         Assert.assertTrue(StorageManagerUtil.isValidDirName("dirname.txt"));
         Assert.assertTrue(StorageManagerUtil.isValidDirName("dirn ame.xht"));

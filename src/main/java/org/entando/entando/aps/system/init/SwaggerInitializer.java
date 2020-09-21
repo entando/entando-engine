@@ -5,7 +5,8 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.BaseConfigManager;
 import org.entando.entando.aps.system.services.oauth2.OAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.slf4j.*;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -13,7 +14,7 @@ import java.sql.Date;
 import java.time.*;
 
 public class SwaggerInitializer  implements ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger logger = LoggerFactory.getLogger(SwaggerInitializer.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(SwaggerInitializer.class);
 
 
     private BaseConfigManager baseConfigManager;

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -39,7 +39,7 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class CategoryManager extends AbstractService implements ICategoryManager {
 
-	private static final Logger _logger = LoggerFactory.getLogger(CategoryManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(CategoryManager.class);
 
 	private ILangManager _langManager;
 

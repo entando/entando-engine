@@ -31,8 +31,8 @@ import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -41,7 +41,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class GuiFragmentManager extends AbstractService implements IGuiFragmentManager, GuiFragmentUtilizer {
 
-    private static final Logger logger = LoggerFactory.getLogger(GuiFragmentManager.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(GuiFragmentManager.class);
 
     private IGuiFragmentDAO guiFragmentDAO;
 

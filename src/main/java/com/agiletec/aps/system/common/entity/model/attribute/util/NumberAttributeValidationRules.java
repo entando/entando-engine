@@ -16,8 +16,8 @@ package com.agiletec.aps.system.common.entity.model.attribute.util;
 import java.util.List;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 public class NumberAttributeValidationRules extends AbstractAttributeValidationRules {
 
 	private static final long serialVersionUID = 3174872953012814318L;
-	private static final Logger _logger =  LoggerFactory.getLogger(NumberAttributeValidationRules.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(NumberAttributeValidationRules.class);
 	
 	@Override
     protected void fillJDOMConfigElement(Element configElement) {

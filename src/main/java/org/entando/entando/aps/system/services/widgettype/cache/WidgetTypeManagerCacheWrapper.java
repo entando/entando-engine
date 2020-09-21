@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.Map;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeDAO;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.Cache;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.cache.Cache;
  */
 public class WidgetTypeManagerCacheWrapper extends AbstractGenericCacheWrapper<WidgetType> implements IWidgetTypeManagerCacheWrapper {
 
-    private static final Logger _logger = LoggerFactory.getLogger(WidgetTypeManagerCacheWrapper.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(WidgetTypeManagerCacheWrapper.class);
 
     @Override
     public void initCache(IWidgetTypeDAO widgetTypeDAO) throws EntException {

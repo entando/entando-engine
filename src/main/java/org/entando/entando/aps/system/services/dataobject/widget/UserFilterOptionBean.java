@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.dataobjectsearchengine.IIndexerDAO;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * A user filter option of the list viewer widget
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UserFilterOptionBean implements Serializable {
 
-    private static final Logger _logger = LoggerFactory.getLogger(UserFilterOptionBean.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(UserFilterOptionBean.class);
 
     public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
         this.setKey(properties.getProperty(PARAM_KEY));

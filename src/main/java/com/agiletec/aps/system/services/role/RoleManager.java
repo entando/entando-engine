@@ -22,8 +22,8 @@ import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.cache.IPermissionCacheWrapper;
 import com.agiletec.aps.system.services.role.cache.IRoleCacheWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio di gestione dei ruoli.
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RoleManager extends AbstractService implements IRoleManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(RoleManager.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(RoleManager.class);
 
 	private IRoleDAO roleDao;
 	private IPermissionDAO permissionDao;

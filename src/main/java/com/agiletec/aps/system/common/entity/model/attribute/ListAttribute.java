@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -37,7 +37,7 @@ import com.agiletec.aps.system.services.lang.Lang;
  */
 public class ListAttribute extends AbstractListAttribute {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ListAttribute.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ListAttribute.class);
 
     /**
      * Initialize the data structure.

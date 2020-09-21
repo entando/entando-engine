@@ -20,8 +20,8 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.model.PagesStatusDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RequestMapping(value = "/dashboard")
 public class DashboardController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IComponentManager componentManager;

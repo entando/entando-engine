@@ -37,8 +37,8 @@ import org.entando.entando.aps.system.services.dataobject.event.PublicDataChange
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio detentore delle operazioni di indicizzazione di oggetti ricercabili
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 public class SearchEngineManager extends AbstractService
 		implements IDataObjectSearchEngineManager, PublicDataChangedObserver, EntityTypesChangingObserver {
 
-	private static final Logger _logger = LoggerFactory.getLogger(SearchEngineManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(SearchEngineManager.class);
 
 	@Override
 	public void init() throws Exception {

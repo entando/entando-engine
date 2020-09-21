@@ -27,8 +27,8 @@ import freemarker.template.TemplateModel;
 
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Add a parameter into the Freemarker's TemplateModel Map
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FreemarkerTemplateParameterTag extends TagSupport {
 	
-	private static final Logger _logger =  LoggerFactory.getLogger(FreemarkerTemplateParameterTag.class);
+	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(FreemarkerTemplateParameterTag.class);
 	
 	@Override
     public int doStartTag() throws JspException {

@@ -35,8 +35,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * Servizio di autorizzazione. Il servizio espone tutti i metodi necessari per
@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 @Aspect
 public class AuthorizationManager extends AbstractService implements IAuthorizationManager, GroupUtilizer {
 
-    private static final Logger _logger = LoggerFactory.getLogger(AuthorizationManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AuthorizationManager.class);
 
     @Override
     public void init() throws Exception {

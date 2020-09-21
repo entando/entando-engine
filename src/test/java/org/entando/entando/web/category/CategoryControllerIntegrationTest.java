@@ -28,6 +28,7 @@ import org.entando.entando.aps.system.services.category.ICategoryService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.category.validator.CategoryValidator;
+import org.entando.entando.web.pagemodel.PageModelController;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -263,6 +264,24 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_NO_REFERENCES)));
     }
+
+    @Test
+    public void shouldReturnCategoryUsageCount() throws Exception {
+        Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
+        Assert.assertNull(this.categoryManager.getCategory("test_test"));
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = this.mockOAuthInterceptor(user);
+        String code = "cat1";
+
+        mockMvc.perform(get("/categories/{categoryCode}/usage", new Object[]{code})
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.payload.type", is(CategoryController.COMPONENT_ID)))
+                        .andExpect(jsonPath("$.payload.code", is(code)))
+                        .andExpect(jsonPath("$.payload.usage", is(1)));
+    }
+
 
     @Test
     public void testGetCategoryWithAdminPermission() throws Exception {

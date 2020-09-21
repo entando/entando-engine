@@ -13,15 +13,21 @@
  */
 package org.entando.entando.web.group;
 
-import com.agiletec.aps.system.services.role.Permission;
-import java.util.ArrayList;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.group.IGroupService;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
@@ -33,13 +39,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GroupControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -273,6 +272,24 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
+
+    @Test
+    public void shouldTestGetGroupUsage() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.ADMINS_GROUP_NAME, Permission.SUPERUSER, Permission.SUPERUSER)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        String code = "coach";
+        mockMvc.perform(get("/groups/{code}/usage", code)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.type", is(GroupController.COMPONENT_ID)))
+                .andExpect(jsonPath("$.payload.code", is(code)))
+                .andExpect(jsonPath("$.payload.usage", is(12)))
+                .andReturn();;
+    }
+
 
     @Test
     public void testParamSize() throws EntException, Exception {

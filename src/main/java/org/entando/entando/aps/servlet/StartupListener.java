@@ -15,8 +15,8 @@ package org.entando.entando.aps.servlet;
 
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -29,7 +29,7 @@ import java.util.Objects;
  */
 public class StartupListener extends org.springframework.web.context.ContextLoaderListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StartupListener.class);
+    private static final EntLogger LOGGER = EntLogFactory.getSanitizedLogger(StartupListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent event) {

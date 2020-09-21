@@ -21,15 +21,15 @@ import java.util.Map;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.TableFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ComponentDto {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private String code;
     private String description;

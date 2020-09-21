@@ -30,8 +30,8 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -50,7 +50,7 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 
-	private static final Logger _logger = LoggerFactory.getLogger(SelfRestCaller.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(SelfRestCaller.class);
 	
 	@Override
 	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, EntException {

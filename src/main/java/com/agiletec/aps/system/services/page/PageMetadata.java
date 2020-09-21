@@ -18,8 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
@@ -32,7 +32,7 @@ import java.io.Serializable;
  */
 public class PageMetadata implements Cloneable, Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(PageMetadata.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageMetadata.class);
 
     private String group;
 

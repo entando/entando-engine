@@ -34,8 +34,8 @@ import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordS
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.ManagerConfiguration;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -44,7 +44,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class ActionLogManager extends AbstractService implements IActionLogManager {
 
-    private static final Logger _logger = LoggerFactory.getLogger(ActionLogManager.class);
+    private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ActionLogManager.class);
 
     private ManagerConfiguration _managerConfiguration;
 

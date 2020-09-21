@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -41,7 +41,7 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializable {
 
-	private static final Logger _logger = LoggerFactory.getLogger(EntitySearchFilter.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(EntitySearchFilter.class);
 	
 	protected EntitySearchFilter() {}
     

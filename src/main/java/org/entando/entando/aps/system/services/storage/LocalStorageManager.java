@@ -16,15 +16,15 @@ package org.entando.entando.aps.system.services.storage;
 import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import java.io.*;
 import java.util.*;
 
 public class LocalStorageManager implements IStorageManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(LocalStorageManager.class);
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManager.class);
 
 	private String baseURL;
 	private String baseDiskRoot;

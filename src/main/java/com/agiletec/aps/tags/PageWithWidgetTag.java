@@ -21,8 +21,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -36,7 +36,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 public class PageWithWidgetTag extends TagSupport {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PageWithWidgetTag.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageWithWidgetTag.class);
 
 	@Override
 	public int doStartTag() throws JspException {

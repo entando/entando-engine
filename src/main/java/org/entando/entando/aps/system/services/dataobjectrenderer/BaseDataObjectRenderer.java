@@ -19,8 +19,8 @@ import java.util.List;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -40,7 +40,7 @@ import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelM
  */
 public class BaseDataObjectRenderer extends BaseEntityRenderer implements IDataObjectRenderer {
 
-	private static final Logger _logger = LoggerFactory.getLogger(BaseDataObjectRenderer.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(BaseDataObjectRenderer.class);
 
 	@Override
 	public String render(DataObject dataobject, long modelId, String langCode, RequestContext reqCtx) {

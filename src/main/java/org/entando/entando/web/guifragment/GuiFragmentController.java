@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.guifragment;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.HashMap;
@@ -32,8 +31,8 @@ import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
 import org.entando.entando.web.page.model.PageSearchRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GuiFragmentController {
     public static final String COMPONENT_ID = "fragment";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     @Autowired
     private IGuiFragmentService guiFragmentService;
@@ -122,7 +121,9 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> addGuiFragment(@Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest, BindingResult bindingResult) throws EntException {
+    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> addGuiFragment(
+            @Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest,
+            BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -157,8 +158,10 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteGuiFragment(@PathVariable String fragmentCode) throws EntException {
-        logger.info("deleting {}", fragmentCode);
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteGuiFragment(
+            @PathVariable String fragmentCode) {
+        //-
+        logger.info("deleting {}", fragmentCode.replace("\n", "_").replace("\r", "_").replace("\t", "_"));
         this.getGuiFragmentService().removeGuiFragment(fragmentCode);
         Map<String, String> result = new HashMap<>();
         result.put("code", fragmentCode);
@@ -167,7 +170,7 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/info/plugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<String>>> getPluginCodes() throws EntException {
+    public ResponseEntity<SimpleRestResponse<List<String>>> getPluginCodes() {
         logger.info("loading plugin list");
         List<String> plugins = this.getGuiFragmentService().getPluginCodes();
 

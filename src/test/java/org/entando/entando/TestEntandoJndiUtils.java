@@ -14,8 +14,8 @@
 package org.entando.entando;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 import java.io.FileInputStream;
@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 
 public class TestEntandoJndiUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestEntandoJndiUtils.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(TestEntandoJndiUtils.class);
 
     public static void setupJndi() {
         SimpleNamingContextBuilder builder = null;

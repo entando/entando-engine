@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -28,13 +28,13 @@ import org.entando.entando.ent.exception.EntException;
 
 public class AbstractComponentModule implements ComponentModule {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractComponentModule.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AbstractComponentModule.class);
 
     private Map<String, String> sqlResourcesPaths = new HashMap<>();
 
     private List<IPostProcess> postProcesses;
 
-    protected void extractSqlResources(Element sqlResourcesElement) throws EntException {
+    protected void extractSqlResources(Element sqlResourcesElement) {
         if (null != sqlResourcesElement) {
             List<Element> datasourceElements = sqlResourcesElement.getChildren("datasource");
             for (int j = 0; j < datasourceElements.size(); j++) {

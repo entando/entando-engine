@@ -16,14 +16,13 @@ package org.entando.entando.aps.system.services.pagesettings;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
-import java.util.HashMap;
 import java.util.Map;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.pagesettings.model.PageSettingsDto;
 import org.entando.entando.web.pagesettings.model.PageSettingsRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -32,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class PageSettingsService implements IPageSettingsService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private ConfigInterface configManager;

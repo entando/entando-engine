@@ -20,10 +20,9 @@ import org.entando.entando.aps.system.services.entity.model.EntityManagerDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.entity.validator.EntityManagerValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 
@@ -44,7 +42,7 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 @RequestMapping(value = "/entityManagers")
 public class EntityManagerController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private IEntityManagerService entityManagerService;
