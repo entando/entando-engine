@@ -144,10 +144,10 @@ public class GroupController {
             throw new ValidationGenericException(bindingResult);
         }
         //business validations
-        getGroupValidator().validate(groupRequest, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationConflictException(bindingResult);
-        }
+//        getGroupValidator().validate(groupRequest, bindingResult);
+//        if (bindingResult.hasErrors()) {
+//            throw new ValidationConflictException(bindingResult);
+//        }
         GroupDto dto = this.getGroupService().addGroup(groupRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }

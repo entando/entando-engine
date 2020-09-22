@@ -18,6 +18,7 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.group.Group;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,14 +28,17 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
+import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.category.validator.CategoryValidator;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.web.group.validator.GroupValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 
@@ -50,6 +54,8 @@ public class CategoryService implements ICategoryService {
     private List<CategoryUtilizer> categoryUtilizers;
     @Autowired
     private List<CategoryServiceUtilizer> categoryServiceUtilizers;
+    @Autowired
+    private CategoryValidator categoryValidator;
 
     protected IDtoBuilder<Category, CategoryDto> getDtoBuilder() {
         CategoryDtoBuilder builder = new CategoryDtoBuilder();
@@ -159,25 +165,30 @@ public class CategoryService implements ICategoryService {
         if (null == parentCategory) {
             throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category", categoryDto.getParentCode());
         }
-        Category category = this.getCategoryManager().getCategory(categoryDto.getCode());
-        if (null != category) {
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
-            bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_ALREADY_EXISTS, new String[]{category.getCode()}, "category.exists");
-            throw new ValidationGenericException(bindingResult);
-        }
-        CategoryDto dto = null;
+
+        return this.checkForExistenceOrThrowValidationConflictException(categoryDto)
+                .map(this::saveNewCategory)
+                .orElse(categoryDto);
+    }
+
+    /**
+     *
+     * @param categoryDto
+     * @return
+     */
+    private CategoryDto saveNewCategory(CategoryDto categoryDto) {
+
         try {
             Category categoryToAdd = new Category();
             categoryToAdd.setCode(categoryDto.getCode());
             categoryToAdd.setParentCode(categoryDto.getParentCode());
             categoryToAdd.getTitles().putAll(categoryDto.getTitles());
             this.getCategoryManager().addCategory(categoryToAdd);
-            dto = this.getDtoBuilder().convert(this.getCategoryManager().getCategory(categoryDto.getCode()));
+            return this.getDtoBuilder().convert(this.getCategoryManager().getCategory(categoryDto.getCode()));
         } catch (Exception e) {
             logger.error("error adding category " + categoryDto.getCode(), e);
             throw new RestServerError("error adding category " + categoryDto.getCode(), e);
         }
-        return dto;
     }
 
     @Override
@@ -265,4 +276,45 @@ public class CategoryService implements ICategoryService {
         this.categoryServiceUtilizers = categoryServiceUtilizers;
     }
 
+    public CategoryValidator getCategoryValidator() {
+        return categoryValidator;
+    }
+
+    public CategoryService setCategoryValidator(
+            CategoryValidator categoryValidator) {
+        this.categoryValidator = categoryValidator;
+        return this;
+    }
+
+    /**
+     * check if the received Category already exists
+     * if it exists with equal name but different description, it throws ValidationConflictException
+     * if it exists completely equal, it will return an empty optional that means that the group has NOT to be saved
+     *
+     * @param categoryDto the category to validate
+     * @return the optional of the dto resulting from the validation, if empty the group has NOT to be saved
+     */
+    protected Optional<CategoryDto> checkForExistenceOrThrowValidationConflictException(CategoryDto categoryDto) {
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(categoryDto, "category");
+        Category savedCategory = this.getCategoryManager().getCategory(categoryDto.getCode());
+
+        // check for idempotemcy
+        if (null != savedCategory && savedCategory.getCode().equals(categoryDto.getCode())) {
+
+            CategoryDto savedCategoryDto = getDtoBuilder().convert(savedCategory);
+
+            if (categoryValidator.areEquals(categoryDto, savedCategoryDto)) {
+                return Optional.empty();
+            } else {
+                bindingResult
+                        .reject(CategoryValidator.ERRCODE_CATEGORY_ALREADY_EXISTS_WITH_CONFLICTS, new String[]{categoryDto.getCode()},
+                                "labelGroup.exists.conflict");
+
+                throw new ValidationConflictException(bindingResult);
+            }
+        }
+
+        return Optional.of(categoryDto);
+    }
 }
