@@ -15,6 +15,7 @@ package org.entando.entando.web.widget.validator;
 
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
@@ -64,7 +65,13 @@ public class WidgetValidator extends AbstractPaginationValidator {
         }
 
         WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
-        if ((!type.getConfig().equals(widgetRequest.getConfig()))&& type.isLocked()) {
+
+        if (type == null) {
+            throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);
+        }
+
+        if (null != type.getConfig() &&  null!=widgetRequest.getConfig() &&
+                (!type.getConfig().equals(widgetRequest.getConfig()) && type.isLocked())) {
             errors.rejectValue("code", ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.edit.locked");
         }
 
