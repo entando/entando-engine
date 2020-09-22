@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.label;
 
+import com.agiletec.aps.system.services.i18n.II18nManager;
 import java.util.HashMap;
 
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -36,7 +37,8 @@ public class LabelControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private LabelService labelService;
-
+    @Mock
+    private II18nManager i18nManager;
     @Mock
     private LabelValidator labelValidator = new LabelValidator();
 

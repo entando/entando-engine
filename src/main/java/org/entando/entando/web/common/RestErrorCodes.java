@@ -25,4 +25,6 @@ public interface RestErrorCodes {
 
     public static final String UNAUTHORIZED = "120";
 
+    public static final String CONFLICTING_ENTITIES = "130";
+
 }

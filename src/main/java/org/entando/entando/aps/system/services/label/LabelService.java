@@ -14,6 +14,8 @@
 package org.entando.entando.aps.system.services.label;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import java.util.Map;
+import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -114,21 +116,32 @@ public class LabelService implements ILabelService {
 
     @Override
     public LabelDto addLabelGroup(LabelDto labelRequest) {
+
+        this.validateAddLabelGroupOrThrow(labelRequest);
+
+        return this.checkForExistenceOrThrowValidationConflictException(labelRequest)
+                .map(this::saveLabelGroup)
+                .orElse(labelRequest);
+    }
+
+    /**
+     *
+     * @param labelDto
+     * @return
+     */
+    private LabelDto saveLabelGroup(LabelDto labelDto) {
+
         try {
-            BeanPropertyBindingResult validationResult = this.validateAddLabelGroup(labelRequest);
-            if (validationResult.hasErrors()) {
-                throw new ValidationConflictException(validationResult);
-            }
-            String code = labelRequest.getKey();
             ApsProperties languages = new ApsProperties();
-            languages.putAll(labelRequest.getTitles());
-            this.getI18nManager().addLabelGroup(code, languages);
-            return labelRequest;
-        } catch (EntException t) {
-            logger.error("error in add label group with code {}", labelRequest.getKey(), t);
-            throw new RestServerError("error in add label group", t);
+            languages.putAll(labelDto.getTitles());
+            this.getI18nManager().addLabelGroup(labelDto.getKey(), languages);
+            return labelDto;
+        } catch (EntException e) {
+            logger.error("error in add label group with code {}", labelDto.getKey(), e);
+            throw new RestServerError("error in add label group", e);
         }
     }
+
 
     @Override
     public void removeLabelGroup(String code) {
@@ -161,48 +174,106 @@ public class LabelService implements ILabelService {
         }
     }
 
-    protected BeanPropertyBindingResult validateAddLabelGroup(LabelDto labelDto) {
+    /**
+     * check if the received label already exists
+     * if it exists with equal key but different values, it throws ValidationConflictException
+     * if it exists completely equal, it will return an empty optional that means that the label has NOT to be saved
+     *
+     * @param labelDto
+     * @return the optional of the dto resulting from the validation, if empty the label has NOT to be saved
+     */
+    protected Optional<LabelDto> checkForExistenceOrThrowValidationConflictException(LabelDto labelDto) {
+
         try {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
-            String code = labelDto.getKey();
-            ApsProperties labelGroup = this.getI18nManager().getLabelGroup(code);
+            ApsProperties labelGroup = this.getI18nManager().getLabelGroup(labelDto.getKey());
+
+            // check for idempotemcy
             if (null != labelGroup) {
-                bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_EXISTS, new String[]{code}, "labelGroup.code.already.present");
-                return bindingResult;
+
+                Map<String, String> titles = labelDto.getTitles();
+                Map<String, String> savedTitles = (Map<String, String>) labelGroup.get(labelDto.getKey());
+
+                if (null != savedTitles && ! savedTitles.values().isEmpty()) {
+                    // collect eventual different labels with same key
+                    List<String> conflictingLabels = savedTitles.keySet().stream()
+                            .filter(lang -> !titles.get(lang).equals(savedTitles.get(lang)))
+                            .collect(Collectors.toList());
+
+                    // if all values are equals => returns empty optional => the labels has NOT to be saved
+                    if (conflictingLabels.isEmpty()) {
+                        return Optional.empty();
+                    } else {
+                        bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_EXISTS, new String[]{labelDto.getKey()},
+                                "labelGroup.code.already.present");
+                        throw new ValidationConflictException(bindingResult);
+                    }
+                }
             }
-            String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
-            boolean isDefaultLangValid = this.validateDefaultLang(labelDto, bindingResult, defaultLangCode);
-            if (!isDefaultLangValid) {
-                return bindingResult;
-            }
-            this.validateLabelEntry(labelDto, defaultLangCode, bindingResult);
-            return bindingResult;
+
+            return Optional.of(labelDto);
+
         } catch (EntException t) {
             logger.error("error in validate add label group with code {}", labelDto.getKey(), t);
             throw new RestServerError("error in validate add label group", t);
         }
     }
 
-    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult) throws EntException {
-        List<String> configuredLangs = this.getLangManager().getLangs().stream().map(i -> i.getCode()).collect(Collectors.toList());
-        List<String> systemLangs = this.getLangManager().getAssignableLangs().stream()
-                                       .map(i -> i.getCode()).collect(Collectors.toList());
-        labelDto.getTitles().entrySet().forEach(i -> validateLangEntry(i, systemLangs, configuredLangs, defaultLang, bindingResult));
+    /**
+     * apply validation to the received label, if it fails it throws runtimeexception
+     *
+     * @param labelDto
+     */
+    private void validateAddLabelGroupOrThrow(LabelDto labelDto) {
+
+        try {
+
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
+            // proceed with standard validation
+            String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
+            this.validateDefaultLang(labelDto, bindingResult, defaultLangCode);
+            this.validateLabelEntry(labelDto, defaultLangCode, bindingResult);
+
+            if (bindingResult.hasErrors()) {
+                throw new ValidationConflictException(bindingResult);
+            }
+
+        } catch (EntException t) {
+            logger.error("error in validate add label group with code {}", labelDto.getKey(), t);
+            throw new RestServerError("error in validate add label group", t);
+        }
     }
 
-    protected boolean validateDefaultLang(LabelDto labelDto, BeanPropertyBindingResult bindingResult, String defaultLang) {
-        String label = (null != labelDto && null != labelDto.getTitles()) ? labelDto.getTitles().get(defaultLang) : null;
+
+    protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult)
+            throws EntException {
+        List<String> configuredLangs = this.getLangManager().getLangs().stream().map(i -> i.getCode())
+                .collect(Collectors.toList());
+        List<String> systemLangs = this.getLangManager().getAssignableLangs().stream()
+                .map(i -> i.getCode()).collect(Collectors.toList());
+        labelDto.getTitles().entrySet()
+                .forEach(i -> validateLangEntry(i, systemLangs, configuredLangs, defaultLang, bindingResult));
+    }
+
+    protected boolean validateDefaultLang(LabelDto labelDto, BeanPropertyBindingResult bindingResult,
+            String defaultLang) {
+        String label =
+                (null != labelDto && null != labelDto.getTitles()) ? labelDto.getTitles().get(defaultLang) : null;
         if (StringUtils.isEmpty(label)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_DEFAULT_LANG_REQUIRED, new String[]{defaultLang}, "labelGroup.langs.defaultLang.required");
+            bindingResult
+                    .reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_DEFAULT_LANG_REQUIRED, new String[]{defaultLang},
+                            "labelGroup.langs.defaultLang.required");
             return false;
         }
         return true;
     }
 
-    private void validateLangEntry(Entry<String, String> entry, List<String> systemLangs, List<String> configuredLangs, String defaultLangCode, BeanPropertyBindingResult bindingResult) {
+    private void validateLangEntry(Entry<String, String> entry, List<String> systemLangs, List<String> configuredLangs,
+            String defaultLangCode, BeanPropertyBindingResult bindingResult) {
         String currentLangCode = entry.getKey();
         if (!systemLangs.contains(currentLangCode)) {
-            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_INVALID_LANG, new String[]{currentLangCode}, "labelGroup.langs.lang.invalid");
+            bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_LANGS_INVALID_LANG, new String[]{currentLangCode},
+                    "labelGroup.langs.lang.invalid");
             return;
         }
         if (!configuredLangs.contains(currentLangCode)) {
