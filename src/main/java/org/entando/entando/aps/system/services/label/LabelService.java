@@ -200,7 +200,7 @@ public class LabelService implements ILabelService {
                 if (! labelGroup.values().isEmpty()) {
                     // collect eventual different labels with same key
                     List<String> conflictingLabels = labelGroup.keySet().stream()
-                            .filter(lang -> !titles.get(lang).equals(labelGroup.get(lang)))
+                            .filter(lang -> null != titles.get(lang) && !titles.get(lang).equals(labelGroup.get(lang)))
                             .map(o -> (String)o)
                             .collect(Collectors.toList());
 
