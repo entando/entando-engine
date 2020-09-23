@@ -309,7 +309,7 @@ public class CategoryService implements ICategoryService {
             } else {
                 bindingResult
                         .reject(CategoryValidator.ERRCODE_CATEGORY_ALREADY_EXISTS_WITH_CONFLICTS, new String[]{categoryDto.getCode()},
-                                "labelGroup.exists.conflict");
+                                "category.exists.conflict");
 
                 throw new ValidationConflictException(bindingResult);
             }

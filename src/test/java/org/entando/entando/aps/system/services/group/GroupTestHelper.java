@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 public class GroupTestHelper {
 
-    public static final String GROUP_NAME = "Group1";
+    public static final String GROUP_NAME = "group1";
     public static final String GROUP_DESCRIPTION = "Funny group";
 
     public static GroupDto stubGroupDto() {
