@@ -22,11 +22,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.util.crypto.LegacyPasswordEncryptor;
 
 /**
  * Servizio di gestione degli utenti.
@@ -42,22 +38,6 @@ public class UserManager extends AbstractService implements IUserManager {
     
     @Override
     public void init() throws Exception {
-        if (!this.getConfigManager().areLegacyPasswordsUpdated()) {
-            List<UserDetails> users = this.getUserDAO().loadUsers();
-            for (UserDetails user : users) {
-                updateLegacyPassword(user);
-            }
-            Map<String, String> newParam = new HashMap<>();
-            newParam.put(ConfigInterface.LEGACY_PASSWORDS_UPDATED, "true");
-            String oldParam = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-            String newXmlParams = null;
-            try {
-                newXmlParams = SystemParamsUtils.getNewXmlParams(oldParam, newParam);
-            } catch (Throwable ex) {
-                logger.error("Error updating XML param", ex);
-            }
-            this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
-        }
         logger.debug("{} ready", this.getClass().getName());
     }
 
@@ -265,19 +245,6 @@ public class UserManager extends AbstractService implements IUserManager {
             value = defaultValue;
         }
         return value;
-    }
-
-    private void updateLegacyPassword(UserDetails user) throws EntException {
-        String pwd = user.getPassword();
-        if (!isBCryptEncoded(pwd) && !isArgon2Encoded(pwd)) {
-            try {
-                pwd = new LegacyPasswordEncryptor().decrypt(pwd);
-            } catch (Exception e) {
-                logger.warn("Plain text password for user {}", user.getUsername());
-                pwd = user.getPassword();
-            }
-            this.changePassword(user.getUsername(), pwd);
-        }
     }
 
     private boolean isArgon2Encoded(String encoded) {

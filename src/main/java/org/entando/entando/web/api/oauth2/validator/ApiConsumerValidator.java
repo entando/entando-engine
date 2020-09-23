@@ -53,7 +53,7 @@ public class ApiConsumerValidator extends AbstractPaginationValidator {
 
     private void validateGrantTypes(List<String> grantTypes, Errors errors) {
 
-        List<String> validGrantTypes = Arrays.asList(IOAuthConsumerManager.GRANT_TYPES);
+        List<String> validGrantTypes = IOAuthConsumerManager.GRANT_TYPES;
 
         for (String grantType : grantTypes) {
             if (!validGrantTypes.contains(grantType)) {

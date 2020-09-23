@@ -53,8 +53,6 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 
     private IConfigManagerCacheWrapper cacheWrapper;
 
-    private boolean legacyPasswordsUpdated = false;
-
     private IConfigItemDAO configDao;
 
     private ServletContext servletContext;
@@ -63,8 +61,12 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
     public void init() throws Exception {
         String version = this.getSystemParams().get(SystemConstants.INIT_PROP_CONFIG_VERSION);
         this.getCacheWrapper().initCache(this.getConfigDAO(), version);
-        legacyPasswordsUpdated = (this.getParam(LEGACY_PASSWORDS_UPDATED) != null
+        boolean legacyPasswordsUpdated = (this.getParam(LEGACY_PASSWORDS_UPDATED) != null
                 && this.getParam(LEGACY_PASSWORDS_UPDATED).equalsIgnoreCase("true"));
+
+        if (legacyPasswordsUpdated) {
+            logger.warn("legacyPasswordsUpdated system parameter ignored as legacy password update is no more supported");
+        }
         Properties props = this.extractSecurityConfiguration();
         this.checkSecurityConfiguration(props);
         logger.debug("{} ready. Initialized", this.getClass().getName());
@@ -242,15 +244,6 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 
     public void setCacheWrapper(IConfigManagerCacheWrapper cacheWrapper) {
         this.cacheWrapper = cacheWrapper;
-    }
-
-    @Override
-    public boolean areLegacyPasswordsUpdated() {
-        return legacyPasswordsUpdated;
-    }
-
-    public void setLegacyPasswordsUpdated(boolean updated) {
-        this.legacyPasswordsUpdated = updated;
     }
 
     protected ServletContext getServletContext() {

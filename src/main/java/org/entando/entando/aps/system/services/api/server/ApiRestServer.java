@@ -203,7 +203,7 @@ public class ApiRestServer {
         MultivaluedMap<String, String> queryParams = ui.getQueryParameters(false);
         Properties properties = new Properties();
         if (null != queryParams) {
-            List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
+            List<String> reservedParameters = SystemConstants.API_RESERVED_PARAMETERS;
             Set<Entry<String, List<String>>> entries = queryParams.entrySet();
             Iterator<Entry<String, List<String>>> iter = entries.iterator();
             while (iter.hasNext()) {

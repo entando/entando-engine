@@ -50,28 +50,39 @@ public class CompatiblePasswordEncoderTest {
     private Argon2PasswordEncoder argon2Encoder;
 
     @Autowired
-    private LegacyPasswordEncryptor legacyEncryptor;
-
-    @Autowired
     private CompatiblePasswordEncoder passwordEncoder;
 
     @Test
-    public void testLegacy() {
-        testMatches(legacyEncryptor.encrypt(SECRET));
+    public void testBCrypt() {
+        testMatches("{bcrypt}" + bcryptEncoder.encode(SECRET), SECRET);
     }
 
     @Test
-    public void testBCrypt() {
-        testMatches("{bcrypt}" + bcryptEncoder.encode(SECRET));
+    public void testBCryptBuildInProdPwd() {
+        // Test the passwords inserted via SQL (look for "{DIRECT USERS INSERT SQL}" in code)
+        testMatches("{bcrypt}$2a$10$TMRaAmZE4w5LEeELdmpJguuSuJc2D9hUelMGmsJyK35K3PBiePqXu", "adminadmin");
+        testMatches("{bcrypt}$2a$10$CkUsRinB3JkFlRE4M.FOg.XrUpYX5HySBxpEasdex7L5bh05RnX.G", "editoreditor");
+        testMatches("{bcrypt}$2a$10$0Idom7PIOI4YuKzyhqDJpe3Z/0N0M0FQEvKtrSOjgF71Hkx5mKhlq", "approverapprover");
+    }
+    
+    public void testBCryptBuildInTestPwd() {
+        testMatches("{bcrypt}$2a$10$zy1zkH5mP09rGv.iSYQiPunsc7F9Rd/TpZXm03YtSfZVeHK9Nddw2", "supervisorCoach");
+        testMatches("{bcrypt}$2a$10$WUtgtTwdhJdD0hTBu0aIlOgjdgv5wZ7W1BD9Nh.woEzmEfq3m1CT.", "mainEditor");
+        testMatches("{bcrypt}$2a$10$NIhSwtsre0H9tVDVpcs86eN/vR816tJxEPJwbtU4XeJOoFfvOYX6m", "pageManagerCoach");
+        testMatches("{bcrypt}$2a$10$pAmySl8JN1jYKRO9A88sEeesmrWiTOPndbgvifWjKW0BMD7zFk0JK", "supervisorCustomers");
+        testMatches("{bcrypt}$2a$10$eAFQsWoQG9k9.D6mo0aQJu/aAXGJE/dwuOBj8sbXPL7CH3YiWRVyG", "pageManagerCustomers");
+        testMatches("{bcrypt}$2a$10$6mbu1yVQ/jdgPnuqFMvbYOQklHY6VmIBUZTeYaY3OhxiGx0Yjbx3K", "editorCustomers");
+        testMatches("{bcrypt}$2a$10$8KYc6sUA7fiC2Pia20J4ouMk3Meb.zW3qk0QBD8EZ0vQiI0jqysMa", "editorCoach");
+        testMatches("{bcrypt}$2a$10$E9R2sHNZ/YXlDn188lpdyeoBl2iSF4E5LE8FNvxbdZbqnqlNP2mL2", "admin");
     }
 
     @Test
     public void testArgon2() throws Exception {
-        testMatches(argon2Encoder.encode(SECRET));
+        testMatches(argon2Encoder.encode(SECRET), SECRET);
     }
 
-    private void testMatches(String encodedPwd) {
-        assertThat(encodedPwd).isNotEqualTo(SECRET);
-        assertTrue(passwordEncoder.matches(SECRET, encodedPwd));
+    private void testMatches(String encodedPwd, String plainPwd) {
+        assertThat(encodedPwd).isNotEqualTo(plainPwd);
+        assertTrue(passwordEncoder.matches(plainPwd, encodedPwd));
     }
 }

@@ -13,9 +13,11 @@
  */
 package org.entando.entando.aps.system.services.storage;
 
+import org.apache.commons.io.FilenameUtils;
 import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharEncoding;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -255,7 +257,18 @@ public class LocalStorageManager implements IStorageManager {
 	private String createFullPath(String subPath, boolean isProtectedResource) {
 		subPath = (null == subPath) ? "" : subPath;
 		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
-		return this.createPath(diskRoot, subPath, false);
+		String resPath = this.createPath(diskRoot, subPath, false);
+		// PATH-TRAVERSAL-CHECK
+		try {
+			if (!diskRoot.endsWith(resPath) && !FilenameUtils.directoryContains(diskRoot, resPath)) {
+				throw new EntRuntimeException(
+						String.format("Path validation failed: \"%s\" not in \"%s\"", resPath, diskRoot)
+				);
+			}
+        } catch (IOException e) {
+            throw new EntRuntimeException("Error validating the path", e);
+        }
+		return resPath;
 	}
 
 	private String createPath(String basePath, String subPath, boolean isUrlPath) {

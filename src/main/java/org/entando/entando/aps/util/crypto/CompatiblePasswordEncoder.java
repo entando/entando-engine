@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.util.crypto;
 
+import com.agiletec.aps.system.exception.EntRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,14 +27,12 @@ public class CompatiblePasswordEncoder implements PasswordEncoder {
 
     private final BCryptPasswordEncoder bcryptEncoder;
     private final Argon2PasswordEncoder argon2Encoder;
-    private final LegacyPasswordEncryptor legacyEncryptor;
 
     @Autowired
     public CompatiblePasswordEncoder(BCryptPasswordEncoder bcryptEncoder,
-            Argon2PasswordEncoder argon2Encoder, LegacyPasswordEncryptor legacyEncryptor) {
+            Argon2PasswordEncoder argon2Encoder) {
         this.bcryptEncoder = bcryptEncoder;
         this.argon2Encoder = argon2Encoder;
-        this.legacyEncryptor = legacyEncryptor;
     }
 
     @Override
@@ -49,7 +48,7 @@ public class CompatiblePasswordEncoder implements PasswordEncoder {
         } else if (isArgon2(encodedPassword)) {
             return argon2Encoder.matches(password, encodedPassword);
         } else {
-            return encodedPassword.equals(legacyEncryptor.encrypt(password.toString()));
+            throw new EntRuntimeException("Legacy password encryption is no more supported");
         }
     }
 

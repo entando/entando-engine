@@ -64,7 +64,4 @@ public interface ConfigInterface {
     public void updateParam(String name, String value) throws EntException;
 
     public void updateParams(Map<String, String> params) throws EntException;
-
-    public boolean areLegacyPasswordsUpdated();
-
 }
