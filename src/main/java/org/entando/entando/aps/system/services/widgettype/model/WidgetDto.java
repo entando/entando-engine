@@ -42,6 +42,8 @@ public class WidgetDto {
     private String parentType;
     private String action;
 
+    private boolean locked;
+
     protected class GuiFragmentRef {
 
         private String code;
@@ -237,5 +239,13 @@ public class WidgetDto {
 
     public void setConfig(ApsProperties config) {
         this.config = config;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

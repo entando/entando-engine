@@ -29,8 +29,8 @@ import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
 
@@ -63,6 +63,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         String pluginCode = src.getPluginCode();
         Component plugin = this.getComponentManager().getInstalledComponent(pluginCode);
         dest.setPluginCode(pluginCode);
+        dest.setLocked(src.isLocked());
         dest.setPluginDesc(plugin != null ? plugin.getDescription() : null);
         List<WidgetTypeParameter> params = src.getTypeParameters();
         Map<String, Object> configUi = parseConfigUi(src);
