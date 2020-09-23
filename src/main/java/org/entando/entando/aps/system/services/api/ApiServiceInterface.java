@@ -114,7 +114,7 @@ public class ApiServiceInterface {
             Properties serviceParameters = new Properties();
             serviceParameters.putAll(service.getParameters());
             Iterator<Object> paramIter = properties.keySet().iterator();
-            List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
+            List<String> reservedParameters = SystemConstants.API_RESERVED_PARAMETERS;
             while (paramIter.hasNext()) {
                 Object paramName = paramIter.next();
 				String paramNameString = paramName.toString();
