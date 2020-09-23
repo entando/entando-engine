@@ -117,7 +117,10 @@ public class LabelService implements ILabelService {
     @Override
     public LabelDto addLabelGroup(LabelDto labelRequest) {
 
-        this.validateAddLabelGroupOrThrow(labelRequest);
+        BeanPropertyBindingResult bindingResult = this.validateAddLabelGroupOrThrow(labelRequest);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationConflictException(bindingResult);
+        }
 
         return this.checkForExistenceOrThrowValidationConflictException(labelRequest)
                 .map(this::saveLabelGroup)
@@ -192,20 +195,21 @@ public class LabelService implements ILabelService {
             if (null != labelGroup) {
 
                 Map<String, String> titles = labelDto.getTitles();
-                Map<String, String> savedTitles = (Map<String, String>) labelGroup.get(labelDto.getKey());
+//                Map<String, String> savedTitles = (Map<String, String>) labelGroup.get(labelDto.getKey());
 
-                if (null != savedTitles && ! savedTitles.values().isEmpty()) {
+                if (! labelGroup.values().isEmpty()) {
                     // collect eventual different labels with same key
-                    List<String> conflictingLabels = savedTitles.keySet().stream()
-                            .filter(lang -> !titles.get(lang).equals(savedTitles.get(lang)))
+                    List<String> conflictingLabels = labelGroup.keySet().stream()
+                            .filter(lang -> !titles.get(lang).equals(labelGroup.get(lang)))
+                            .map(o -> (String)o)
                             .collect(Collectors.toList());
 
                     // if all values are equals => returns empty optional => the labels has NOT to be saved
-                    if (conflictingLabels.isEmpty()) {
+                    if (conflictingLabels.isEmpty() && labelGroup.keySet().size() == labelDto.getTitles().size()) {
                         return Optional.empty();
                     } else {
                         bindingResult.reject(LabelValidator.ERRCODE_LABELGROUP_EXISTS, new String[]{labelDto.getKey()},
-                                "labelGroup.code.already.present");
+                                "labelGroup.exists.conflict");
                         throw new ValidationConflictException(bindingResult);
                     }
                 }
@@ -224,19 +228,19 @@ public class LabelService implements ILabelService {
      *
      * @param labelDto
      */
-    private void validateAddLabelGroupOrThrow(LabelDto labelDto) {
+    private BeanPropertyBindingResult validateAddLabelGroupOrThrow(LabelDto labelDto) {
 
         try {
 
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
             // proceed with standard validation
             String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
-            this.validateDefaultLang(labelDto, bindingResult, defaultLangCode);
-            this.validateLabelEntry(labelDto, defaultLangCode, bindingResult);
-
-            if (bindingResult.hasErrors()) {
-                throw new ValidationConflictException(bindingResult);
+            boolean isDefaultLangValid = this.validateDefaultLang(labelDto, bindingResult, defaultLangCode);
+            if (isDefaultLangValid) {
+                this.validateLabelEntry(labelDto, defaultLangCode, bindingResult);
             }
+
+            return bindingResult;
 
         } catch (EntException t) {
             logger.error("error in validate add label group with code {}", labelDto.getKey(), t);

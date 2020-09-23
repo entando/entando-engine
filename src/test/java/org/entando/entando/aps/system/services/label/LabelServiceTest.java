@@ -169,7 +169,7 @@ public class LabelServiceTest {
 
 
     @Test
-    public void addExistingGroupShouldReturnTheReceivedLabel() throws EntException {
+    public void addExistingLabelShouldReturnTheReceivedLabel() throws EntException {
 
         String value = "some_value";
         String key = "lab";
@@ -199,10 +199,27 @@ public class LabelServiceTest {
         when(langManager.getLangs()).thenReturn(singletonList(lang));
 
         ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
-        existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.EN_KEY, "some_old_value"));
+        existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
         when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
 
         final LabelDto label = LabelTestHelper.stubTestLabelDto();
+
+        labelService.addLabelGroup(label);
+    }
+
+    @Test(expected = ValidationConflictException.class)
+    public void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
+
+        when(langManager.getDefaultLang()).thenReturn(lang);
+        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        when(langManager.getLangs()).thenReturn(singletonList(lang));
+
+        ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
+        existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
+        when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
+
+        final LabelDto label = LabelTestHelper.stubTestLabelDto();
+        label.getTitles().put("en", "test");
 
         labelService.addLabelGroup(label);
     }
