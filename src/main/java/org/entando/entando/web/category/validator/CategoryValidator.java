@@ -106,12 +106,6 @@ public class CategoryValidator implements Validator {
 
         return null != cat1.getCode() && cat1.getCode().equals(cat2.getCode()) &&
                 null != cat1.getParentCode() && cat1.getParentCode().equals(cat2.getParentCode()) &&
-                null != cat1.getTitles() && cat1.getTitles().equals(cat2.getTitles()); // &&
-//                null != cat1.getFullTitles() && cat1.getFullTitles().equals(cat2.getFullTitles()) &&
-//                null != cat1.getReferences() && cat1.getReferences().equals(cat2.getReferences()) &&
-//                null != cat1.getChildren() &&
-//                cat1.getChildren().stream().sorted().collect(Collectors.toList()).equals(
-//                        cat2.getChildren().stream().sorted().collect(Collectors.toList())
-//                );
+                null != cat1.getTitles() && cat1.getTitles().equals(cat2.getTitles());
     }
 }
