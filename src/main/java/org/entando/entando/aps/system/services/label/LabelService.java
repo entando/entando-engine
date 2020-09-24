@@ -41,6 +41,8 @@ public class LabelService implements ILabelService {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
+    private static final String BINDING_RESULT_LABEL_NAME = "labelGroup";
+
     private II18nManager i18nManager;
     private ILangManager langManager;
     private LabelDtoBuilder dtoBuilder = new LabelDtoBuilder();
@@ -164,7 +166,7 @@ public class LabelService implements ILabelService {
 
     protected BeanPropertyBindingResult validateUpdateLabelGroup(LabelDto labelDto) {
         try {
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, BINDING_RESULT_LABEL_NAME);
             String defaultLang = this.getLangManager().getDefaultLang().getCode();
             boolean isDefaultLangValid = validateDefaultLang(labelDto, bindingResult, defaultLang);
             if (!isDefaultLangValid) {
@@ -189,7 +191,7 @@ public class LabelService implements ILabelService {
     protected Optional<LabelDto> checkForExistenceOrThrowValidationConflictException(LabelDto labelDto) {
 
         try {
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, BINDING_RESULT_LABEL_NAME);
             ApsProperties labelGroup = this.getI18nManager().getLabelGroup(labelDto.getKey());
 
             // check for idempotemcy
@@ -232,7 +234,7 @@ public class LabelService implements ILabelService {
 
         try {
 
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, "labelGroup");
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(labelDto, BINDING_RESULT_LABEL_NAME);
             // proceed with standard validation
             String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
             boolean isDefaultLangValid = this.validateDefaultLang(labelDto, bindingResult, defaultLangCode);
