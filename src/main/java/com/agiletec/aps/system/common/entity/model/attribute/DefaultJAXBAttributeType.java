@@ -42,7 +42,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "attributeType")
-@XmlType(propOrder = {"name", "description", "type", "roles", "searchable", "indexable", "validationRules"})
+@XmlType(propOrder = {"name", "description", "type", "roles", "searchable", "indexable", "validationRules", "names"})
 @XmlSeeAlso({ArrayList.class, BaseAttributeValidationRules.class, DateAttributeValidationRules.class, 
     NumberAttributeValidationRules.class, TextAttributeValidationRules.class, OgnlValidationRule.class})
 public class DefaultJAXBAttributeType {
