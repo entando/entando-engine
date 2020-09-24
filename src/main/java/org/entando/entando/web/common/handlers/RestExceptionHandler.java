@@ -146,6 +146,16 @@ public class RestExceptionHandler {
         return processAllErrors(result);
     }
 
+    @ExceptionHandler(value = FileMaxSizeException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    @ResponseBody
+    public ErrorRestResponse processTooLargePayload(FileMaxSizeException ex) {
+        logger.debug("Handling {} error", ex.getClass().getSimpleName());
+        ErrorRestResponse dto = new ErrorRestResponse();
+        dto.addError(new RestError("1", "File is too large"));
+        return dto;
+    }
+
     private ErrorRestResponse processAllErrors(BindingResult result) {
         return processAllErrors(result.getFieldErrors(), result.getGlobalErrors());
     }
