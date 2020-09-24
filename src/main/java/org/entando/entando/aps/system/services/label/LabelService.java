@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.label;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.services.lang.Lang;
 import java.util.Map;
 import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
@@ -195,7 +196,6 @@ public class LabelService implements ILabelService {
             if (null != labelGroup) {
 
                 Map<String, String> titles = labelDto.getTitles();
-//                Map<String, String> savedTitles = (Map<String, String>) labelGroup.get(labelDto.getKey());
 
                 if (! labelGroup.values().isEmpty()) {
                     // collect eventual different labels with same key
@@ -251,10 +251,10 @@ public class LabelService implements ILabelService {
 
     protected void validateLabelEntry(LabelDto labelDto, String defaultLang, BeanPropertyBindingResult bindingResult)
             throws EntException {
-        List<String> configuredLangs = this.getLangManager().getLangs().stream().map(i -> i.getCode())
+        List<String> configuredLangs = this.getLangManager().getLangs().stream().map(Lang::getCode)
                 .collect(Collectors.toList());
         List<String> systemLangs = this.getLangManager().getAssignableLangs().stream()
-                .map(i -> i.getCode()).collect(Collectors.toList());
+                .map(Lang::getCode).collect(Collectors.toList());
         labelDto.getTitles().entrySet()
                 .forEach(i -> validateLangEntry(i, systemLangs, configuredLangs, defaultLang, bindingResult));
     }
