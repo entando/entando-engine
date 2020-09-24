@@ -34,6 +34,8 @@ public class UserRequest {
 
     private boolean reset;
 
+    private String profileType;
+
     public String getUsername() {
         return username;
     }
@@ -66,9 +68,17 @@ public class UserRequest {
         this.reset = reset;
     }
 
+    public String getProfileType() {
+        return profileType;
+    }
+
+    public void setProfileType(String profileType) {
+        this.profileType = profileType;
+    }
+
     @Override
     public String toString() {
-        return "UserRequest{" + "username=" + username + ", status=" + status + ", password=....}";
+        return "UserRequest{" + "username=" + username + ", status=" + status + ", password=...., profileType=\" + profileType + \"}";
     }
 
 }
