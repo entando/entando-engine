@@ -1,6 +1,5 @@
 package org.entando.entando.ent.util;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.parse.EntityHandler;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +10,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
-import junit.framework.TestCase;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import org.junit.Assert;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.xml.sax.SAXException;

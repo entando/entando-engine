@@ -151,10 +151,20 @@ public class GroupService implements IGroupService, ApplicationContextAware {
 
     @Override
     public GroupDto addGroup(GroupRequest groupRequest) {
+
+        Group group = this.createGroup(groupRequest);
+        return this.checkForExistenceOrThrowValidationConflictException(group)
+                .map(groupDto -> this.saveGroup(group, groupDto))
+                .orElseGet(() -> dtoBuilder.convert(group));
+    }
+
+    /**
+     *
+     */
+    private GroupDto saveGroup(Group group, GroupDto groupDto) {
         try {
-            Group group = this.createGroup(groupRequest);
-            this.getGroupManager().addGroup(group);
-            return this.getDtoBuilder().convert(group);
+            getGroupManager().addGroup(group);
+            return groupDto;
         } catch (EntException e) {
             logger.error("Error adding group", e);
             throw new RestServerError("error add group", e);
@@ -184,10 +194,10 @@ public class GroupService implements IGroupService, ApplicationContextAware {
     public Integer getComponentUsage(String groupName) {
         Map<String, Boolean> gri = getReferencesInfo(groupName);
         int totalUsageCount = 0;
-        for (String holder: gri.keySet()) {
+        for (String holder : gri.keySet()) {
             try {
                 RestListRequest request = new RestListRequest(1, 1);
-                totalUsageCount += this.getGroupReferences(groupName, holder, request ).getTotalItems();
+                totalUsageCount += this.getGroupReferences(groupName, holder, request).getTotalItems();
             } catch (ResourceNotFoundException e) {
                 totalUsageCount = 0;
             }
@@ -225,7 +235,8 @@ public class GroupService implements IGroupService, ApplicationContextAware {
                 for (Map.Entry<String, Boolean> entry : references.entrySet()) {
                     if (true == entry.getValue().booleanValue()) {
 
-                        bindingResult.reject(GroupValidator.ERRCODE_GROUP_REFERENCES, new Object[]{group.getName(), entry.getKey()}, "group.cannot.delete.references");
+                        bindingResult.reject(GroupValidator.ERRCODE_GROUP_REFERENCES,
+                                new Object[]{group.getName(), entry.getKey()}, "group.cannot.delete.references");
                     }
                 }
             }
@@ -276,6 +287,37 @@ public class GroupService implements IGroupService, ApplicationContextAware {
             return defName.get();
         }
         return null;
+    }
+
+
+    /**
+     * check if the received Group already exists
+     * if it exists with equal name but different description, it throws ValidationConflictException
+     * if it exists completely equal, it will return an empty optional that means that the group has NOT to be saved
+     *
+     * @param group the group to validate
+     * @return the optional of the dto resulting from the validation, if empty the group has NOT to be saved
+     */
+    protected Optional<GroupDto> checkForExistenceOrThrowValidationConflictException(Group group) {
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(group, "group");
+        Group savedGroup = this.getGroupManager().getGroup(group.getName());
+
+        // check for idempotemcy
+        if (null != savedGroup && savedGroup.getName().equals(group.getName())) {
+
+            if (savedGroup.getDescription().equals(group.getDescription())) {
+                return Optional.empty();
+            } else {
+                bindingResult
+                        .reject(GroupValidator.ERRCODE_ADDING_GROUP_WITH_CONFLICTS, new String[]{group.getName()},
+                                "group.exists.conflict");
+
+                throw new ValidationConflictException(bindingResult);
+            }
+        }
+
+        return Optional.of(dtoBuilder.convert(group));
     }
 
 }

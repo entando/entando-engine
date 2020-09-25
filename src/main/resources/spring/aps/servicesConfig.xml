@@ -150,6 +150,7 @@
 
     <bean id="CategoryService" class="org.entando.entando.aps.system.services.category.CategoryService" >
         <property name="categoryManager" ref="CategoryManager" />
+        <property name="categoryValidator" ref="CategoryValidator" />
     </bean>
 
     <bean id="UserService" class="org.entando.entando.aps.system.services.user.UserService" >

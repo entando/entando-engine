@@ -119,6 +119,7 @@ public class RestExceptionHandler {
         return processAllErrors(result);
     }
 
+
     @ExceptionHandler(value = ValidationGenericException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

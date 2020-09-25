@@ -11,20 +11,18 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.web.common;
+package com.agiletec.aps.system.exception;
 
-public interface RestErrorCodes {
+/**
+ * Generic Entando Runtime Exception
+ */
+public class EntRuntimeException extends RuntimeException {
 
-    public static final String NOT_NULL = "51";
+	public EntRuntimeException(String message) {
+		super(message);
+	}
 
-    public static final String NOT_BLANK = "52";
-
-    public static final String NOT_EMPTY = "53";
-
-    public static final String INTERNAL_ERROR = "101";
-
-    public static final String UNAUTHORIZED = "120";
-
-    public static final String CONFLICTING_ENTITIES = "130";
-
+	public EntRuntimeException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

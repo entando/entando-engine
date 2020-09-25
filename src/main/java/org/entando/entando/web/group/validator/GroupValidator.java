@@ -29,6 +29,7 @@ public class GroupValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_URINAME_MISMATCH = "3";
     public static final String ERRCODE_CANNOT_DELETE_RESERVED_GROUP = "4";
     public static final String ERRCODE_GROUP_REFERENCES = "5";
+    public static final String ERRCODE_ADDING_GROUP_WITH_CONFLICTS = "6";
 
     @Autowired
     private IGroupManager groupManager;

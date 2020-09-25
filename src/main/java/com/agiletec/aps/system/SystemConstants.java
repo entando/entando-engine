@@ -13,6 +13,10 @@
  */
 package com.agiletec.aps.system;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Interfaccia con le principali costanti di sistema.
  *
@@ -231,8 +235,9 @@ public interface SystemConstants {
 
     public static final String API_PRODUCES_MEDIA_TYPE_PARAMETER = "apiMethod:producesMediaType";
 
-    public static final String[] API_RESERVED_PARAMETERS = {API_LANG_CODE_PARAMETER, API_USER_PARAMETER,
-        API_OAUTH_CONSUMER_PARAMETER, API_APPLICATION_BASE_URL_PARAMETER, API_PRODUCES_MEDIA_TYPE_PARAMETER};
+    public static final List<String> API_RESERVED_PARAMETERS = Collections.unmodifiableList(Arrays.asList(
+            API_LANG_CODE_PARAMETER, API_USER_PARAMETER, API_OAUTH_CONSUMER_PARAMETER,
+            API_APPLICATION_BASE_URL_PARAMETER, API_PRODUCES_MEDIA_TYPE_PARAMETER));
 
     public static final String OAUTH_TOKEN_MANAGER = "OAuth2TokenManager";
 
@@ -423,5 +428,10 @@ public interface SystemConstants {
     public static final String REFERER = "Referer";
     public static final String CSRF_BASIC_PROTECTION = "basic";
 
+
+    // keycloak
+    public static final String SYSTEM_PROP_KEYCLOAK_AUTH_URL = "keycloak.auth.url";
+    public static final String SYSTEM_PROP_KEYCLOAK_ENABLED = "keycloak.enabled";
+    public static final String SYSTEM_PROP_KEYCLOAK_REALM = "keycloak.realm";
 
 }

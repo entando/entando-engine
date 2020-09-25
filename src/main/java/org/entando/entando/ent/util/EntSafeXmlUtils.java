@@ -14,7 +14,11 @@
 
 package org.entando.entando.ent.util;
 
-import java.io.InputStream;
+import org.entando.entando.ent.exception.EntRuntimeException;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -22,10 +26,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.entando.entando.ent.exception.EntRuntimeException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
+import java.io.InputStream;
 
 /**
  * Helpers to centralize creation of safe factories and parsers
@@ -39,6 +40,7 @@ public class EntSafeXmlUtils {
     private static final String HTTP_XML_ORG_SAX_FEATURES_EXTERNAL_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
     private static final String HTTP_XML_ORG_SAX_FEATURES_EXTERNAL_PARAMETER_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
     private static final String HTTP_APACHE_ORG_XML_FEATURES_NONVALIDATING_LOAD_EXTERNAL_DTD = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+    public static final String XMLSCHEMA_FACTORY_CLASS = "com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory";
 
     private static SAXParserFactory newSaxParserFactory() {
         SAXParserFactory parseFactory = SAXParserFactory.newInstance();
@@ -58,7 +60,7 @@ public class EntSafeXmlUtils {
     }
 
     public static SchemaFactory newSafeSchemaFactory(String schemaLanguage) {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage, XMLSCHEMA_FACTORY_CLASS, null);
         try {
             schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");

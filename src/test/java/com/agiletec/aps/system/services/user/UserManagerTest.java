@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.util.crypto.Argon2PasswordEncoder;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
-import org.entando.entando.aps.util.crypto.LegacyPasswordEncryptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -95,7 +94,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
-        when(configManager.areLegacyPasswordsUpdated()).thenReturn(true);
         this.emptyUsers();
         this.mockAdminPlainText();
         this.prepareInit();
@@ -108,7 +106,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
-        when(configManager.areLegacyPasswordsUpdated()).thenReturn(true);
         this.emptyUsers();
         this.prepareInit();
         userManager.init();
@@ -119,7 +116,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
-        when(configManager.areLegacyPasswordsUpdated()).thenReturn(false);
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersPlainText();
@@ -137,27 +133,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitPortingToBCryptOldEncryptionPasswords() throws Exception {
-        when(configManager.areLegacyPasswordsUpdated()).thenReturn(false);
-        this.emptyUsers();
-        this.mockAdminOldEncryption();
-        this.mockUsersOldEncryption();
-        this.prepareInit();
-        Mockito.when(userDao.loadUser(Mockito.anyString())).thenReturn(this.getMockUser("admin"));
-        Mockito.when(userDao.searchUsers(null)).thenReturn(users);
-        Mockito.when(userDao.searchUsers(Mockito.anyString())).thenReturn(users);
-        userManager.init();
-        List<UserDetails> usersList = this.userManager.getUsers();
-        assertNotNull(usersList);
-        assertEquals(6, usersList.size());
-        for (UserDetails user : usersList) {
-            assertBCrypt(user.getPassword());
-        }
-    }
-
-    @Test
     public void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
-        when(configManager.areLegacyPasswordsUpdated()).thenReturn(false);
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersMixed();
@@ -181,13 +157,6 @@ public class UserManagerTest {
         users.add(user);
     }
 
-    private void mockAdminOldEncryption() throws Exception {
-        User user = new User();
-        user.setUsername("admin");
-        user.setPassword(new LegacyPasswordEncryptor().encrypt("adminadmin"));
-        users.add(user);
-    }
-
     private void mockUsersPlainText() {
         for (int i = 1; i <= 5; i++) {
             UserDetails user = this.mockUserPlainText("user_" + i, "password_" + i);
@@ -202,26 +171,8 @@ public class UserManagerTest {
         return user;
     }
 
-    private void mockUsersOldEncryption() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            UserDetails user = this.mockUserOldEncryption("user_" + i, "password_" + i);
-            users.add(user);
-        }
-    }
-
-    private UserDetails mockUserOldEncryption(String username, String password) throws Exception {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(new LegacyPasswordEncryptor().encrypt(password));
-        return user;
-    }
-
     private void mockUsersMixed() throws Exception {
-        for (int i = 1; i <= 3; i++) {
-            UserDetails user = this.mockUserOldEncryption("user_" + i, "password_" + i);
-            users.add(user);
-        }
-        for (int i = 4; i <= 5; i++) {
+        for (int i = 1; i <= 5; i++) {
             UserDetails user = this.mockUserPlainText("user_" + i, "password_" + i);
             users.add(user);
         }
@@ -275,7 +226,6 @@ public class UserManagerTest {
     }
 
     private CompatiblePasswordEncoder getCompatiblePasswordEncoder() {
-        return new CompatiblePasswordEncoder(new BCryptPasswordEncoder(),
-                new Argon2PasswordEncoder(), new LegacyPasswordEncryptor());
+        return new CompatiblePasswordEncoder(new BCryptPasswordEncoder(), new Argon2PasswordEncoder());
     }
 }

@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.init.util;
 
+import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,11 +51,10 @@ public class ComponentDefDOM {
     }
     
     private void validate(String xmlText, String configPath) throws EntException {
-        SchemaFactory factory =
-                SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream schemaIs = null;
         InputStream xmlIs = null;
         try {
+            SchemaFactory factory = EntSafeXmlUtils.newSafeSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schemaIs = this.getClass().getResourceAsStream("componentDef-4.2.xsd");
             Source schemaSource = new StreamSource(schemaIs);
             Schema schema = factory.newSchema(schemaSource);

@@ -91,6 +91,8 @@ import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
 import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.ent.util.EntSafeXmlUtilsTest;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccessTest;
+import org.entando.entando.web.swagger.SwaggerConfigTest;
+import org.entando.entando.web.swagger.SwaggerMvcAdapterTest;
 
 /**
  * @author W.Ambu
@@ -228,6 +230,9 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(IgnoreJacksonWriteOnlyAccessTest.class));
 
         suite.addTest(new JUnit4TestAdapter(CsrfFilterTest.class));
+
+        suite.addTest(new JUnit4TestAdapter(SwaggerConfigTest.class));
+        suite.addTest(new JUnit4TestAdapter(SwaggerMvcAdapterTest.class));
 
         return suite;
     }

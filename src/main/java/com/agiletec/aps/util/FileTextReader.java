@@ -19,13 +19,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.apache.commons.io.FilenameUtils;
 import org.entando.entando.ent.exception.EntException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -98,6 +102,13 @@ public class FileTextReader {
         try {
             byte[] buffer = new byte[1024];
             int length = -1;
+            // PATH-TRAVERSAL-CHECK
+            if (!FilenameUtils.directoryContains(tempDir, filePath)) {
+                throw new EntRuntimeException(
+                        String.format("Path validation failed: \"%s\" not in \"%s\"", filePath, tempDir)
+                );
+            }
+            //-
             outStream = new FileOutputStream(filePath);
             while ((length = is.read(buffer)) != -1) {
                 outStream.write(buffer, 0, length);

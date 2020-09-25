@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -34,10 +35,13 @@ import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.FileTextReader;
 import com.jayway.jsonpath.JsonPath;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -68,6 +72,9 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
 
     @Autowired
     private IAuthenticationProviderManager authenticationProviderManager;
+
+    @Autowired
+    private IUserProfileManager userProfileManager;
 
     private MockMvcHelper mockMvcHelper;
 
@@ -752,6 +759,79 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .perform(get("/users/admin")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAddUserWithDefaultProfile() throws Exception {
+        String username = "user_with_default_profile";
+        try {
+            InputStream file = this.getClass().getResourceAsStream("1_POST_user_with_default_profile.json");
+            String request = FileTextReader.getText(file);
+            request = request.replace("**NAME**", username);
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            mockMvc
+                    .perform(post("/users")
+                            .content(request)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_default_profile")))
+                    .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+
+        } finally {
+            this.userManager.removeUser(username);
+            UserDetails user = this.userManager.getUser(username);
+            assertNull(user);
+        }
+    }
+
+    @Test
+    public void testAddUserWithProfile() throws Exception {
+        String username = "user_with_profile";
+        try {
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            InputStream file = this.getClass().getResourceAsStream("1_POST_profile_type.json");
+            String profileRequest = FileTextReader.getText(file);
+            mockMvc
+                    .perform(post("/profileTypes")
+                            .content(profileRequest)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+
+            file = this.getClass().getResourceAsStream("1_POST_user_with_profile.json");
+            String userRequest = FileTextReader.getText(file);
+            userRequest = userRequest.replace("**NAME**", username);
+
+            mockMvc
+                    .perform(post("/users")
+                            .content(userRequest)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
+                    .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("AAA")))
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Profile Type AAA")));
+
+        } finally {
+            this.userManager.removeUser(username);
+            UserDetails user = this.userManager.getUser(username);
+            assertNull(user);
+
+            if (null != this.userProfileManager.getEntityPrototype("AAA")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("AAA");
+            }
+        }
     }
 
     private ResultActions executeUserPost(String body, String accessToken, ResultMatcher expected) throws Exception {

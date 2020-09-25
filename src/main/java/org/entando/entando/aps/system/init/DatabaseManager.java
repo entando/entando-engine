@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
@@ -41,6 +42,7 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -519,8 +521,17 @@ public class DatabaseManager extends AbstractInitializerManager
     @Override
     public void deleteBackup(String subFolderName) throws EntException {
         try {
-            String directoryName = this.getLocalBackupsFolder() + subFolderName;
+            String baseDir = this.getLocalBackupsFolder();
+            String directoryName = baseDir + subFolderName;
+            // PATH-TRAVERSAL-CHECK
+            if (!FilenameUtils.directoryContains(baseDir, directoryName)) {
+                throw new EntRuntimeException(
+                        String.format("Path validation failed: \"%s\" not in \"%s\"", directoryName, baseDir)
+                );
+            }
+            //-
             this.getStorageManager().deleteDirectory(directoryName, true);
+
         } catch (Throwable t) {
             logger.error("Error while deleting backup", t);
             throw new EntException("Error while deleting backup", t);
@@ -539,7 +550,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public DataSourceDumpReport getBackupReport(String subFolderName) throws EntException {
+    public DataSourceDumpReport getBackupReport(String subFolderName) {
         try {
             if (this.checkBackupFolder(subFolderName)) {
                 return this.getDumpReport(subFolderName);
@@ -552,7 +563,7 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public List<DataSourceDumpReport> getBackupReports() throws EntException {
+    public List<DataSourceDumpReport> getBackupReports() {
         List<DataSourceDumpReport> reports = new ArrayList<DataSourceDumpReport>();
         try {
             String[] children = this.getStorageManager().listDirectory(this.getLocalBackupsFolder(), true); //backupsFolder.list();
@@ -573,19 +584,16 @@ public class DatabaseManager extends AbstractInitializerManager
         return reports;
     }
 
-    private boolean checkBackupFolder(String subFolderName) throws EntException {
+    private boolean checkBackupFolder(String subFolderName) throws EntException, IOException {
         String dirName = this.getLocalBackupsFolder();
-        /* shouldn't be no need to check if there is a folder for each Data Source defined
-		String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-		for (int i = 0; i < dataSourceNames.length; i++) {
-			String folderName = dirName + subFolderName + File.separator + dataSourceNames[i] + File.separator;
-			String[] directoryContent = this.getStorageManager().listFile(folderName, true);
-			if (null == directoryContent || directoryContent.length == 0) {
-				return false;
-			}
-		}
-         */
         String reportFileName = dirName + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
+        // PATH-TRAVERSAL-CHECK
+        if (!FilenameUtils.directoryContains(dirName, reportFileName)) {
+            throw new EntRuntimeException(
+                    String.format("Path validation failed: \"%s\" not in \"%s\"", reportFileName, dirName)
+            );
+        }
+        //-
         if (!this.getStorageManager().exists(reportFileName, true)) {
             logger.warn("dump report file name not found in path {}", reportFileName);
             return false;

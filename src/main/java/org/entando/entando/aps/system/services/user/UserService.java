@@ -351,6 +351,7 @@ public class UserService implements IUserService {
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setPassword(userRequest.getPassword());
+        user.setProfile(userProfileManager.getProfileType(userRequest.getProfileType()));
         user.setDisabled(userRequest.getStatus() != null && !userRequest.getStatus().equals(IUserService.STATUS_ACTIVE));
         return user;
     }
