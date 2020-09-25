@@ -13,7 +13,7 @@
     </role>
     <role>
         <name>userprofile:surname</name>
-        <description>The Attriuserprofile:surnamebute that contains the surname</description>
+        <description>The Attribute that contains the surname</description>
         <allowedTypes>Monotext</allowedTypes>
         <formFieldType>TEXT</formFieldType>
     </role>
