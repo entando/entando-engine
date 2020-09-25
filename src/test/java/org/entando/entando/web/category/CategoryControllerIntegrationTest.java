@@ -13,31 +13,6 @@
  */
 package org.entando.entando.web.category;
 
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.role.Permission;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.InputStream;
-
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.FileTextReader;
-import java.util.Collections;
-import org.entando.entando.aps.system.services.category.ICategoryService;
-import org.entando.entando.aps.system.services.category.model.CategoryDto;
-import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.category.validator.CategoryValidator;
-import org.entando.entando.web.pagemodel.PageModelController;
-import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +21,32 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.FileTextReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import org.entando.entando.aps.system.services.category.CategoryTestHelper;
+import org.entando.entando.aps.system.services.category.ICategoryService;
+import org.entando.entando.aps.system.services.category.model.CategoryDto;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.category.validator.CategoryValidator;
+import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 public class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -110,13 +111,14 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
             Assert.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
-            this.executePost("1_POST_invalid_1.json", accessToken, status().isBadRequest());
-            this.executePost("1_POST_invalid_2.json", accessToken, status().isBadRequest());
-            this.executePost("1_POST_invalid_3.json", accessToken, status().isNotFound());
-            this.executePost("1_POST_valid.json", accessToken, status().isOk());
+            this.executePostByFile("1_POST_invalid_2.json", accessToken, status().isBadRequest());
+            this.executePostByFile("1_POST_invalid_3.json", accessToken, status().isNotFound());
+            this.executePostByFile("1_POST_valid.json", accessToken, status().isOk());
             Assert.assertNotNull(this.categoryManager.getCategory(categoryCode));
             this.executeDelete(categoryCode, accessToken, status().isOk());
             Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (categoryManager.getCategory(categoryCode) != null) {
                 this.categoryManager.deleteCategory(categoryCode);
@@ -132,13 +134,14 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
             Assert.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
-            ResultActions result = this.executePost("2_POST_valid.json", accessToken, status().isOk());
+            ResultActions result = this.executePostByFile("2_POST_valid.json", accessToken, status().isOk());
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
 
             result = this.executePut("2_PUT_invalid_1.json", categoryCode, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
-            result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_PARENT_CATEGORY_CANNOT_BE_CHANGED)));
+            result.andExpect(
+                    jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_PARENT_CATEGORY_CANNOT_BE_CHANGED)));
 
             result = this.executePut("2_PUT_invalid_2.json", categoryCode, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -174,7 +177,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
             Assert.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
-            ResultActions result = this.executePost("1_POST_valid.json", accessToken, status().isOk());
+            ResultActions result = this.executePostByFile("1_POST_valid.json", accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
             Assert.assertNotNull(this.categoryManager.getCategory(categoryCode));
             result = this.executeDelete(categoryCode, accessToken, status().isOk());
@@ -255,9 +258,11 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         Assert.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = this.mockOAuthInterceptor(user);
-        ResultActions result = this.executeReference("cat1", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isOk());
+        ResultActions result = this
+                .executeReference("cat1", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isOk());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(1)));
-        result = this.executeReference("test_test", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isNotFound());
+        result = this
+                .executeReference("test_test", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isNotFound());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_NOT_FOUND)));
         result = this.executeReference("cat1", accessToken, SystemConstants.GROUP_MANAGER, status().isNotFound());
@@ -274,12 +279,12 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         String code = "cat1";
 
         mockMvc.perform(get("/categories/{categoryCode}/usage", new Object[]{code})
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.payload.type", is(CategoryController.COMPONENT_ID)))
-                        .andExpect(jsonPath("$.payload.code", is(code)))
-                        .andExpect(jsonPath("$.payload.usage", is(1)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.type", is(CategoryController.COMPONENT_ID)))
+                .andExpect(jsonPath("$.payload.code", is(code)))
+                .andExpect(jsonPath("$.payload.usage", is(1)));
     }
 
 
@@ -319,7 +324,8 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
                 .andDo(print())
                 .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED)))
-                .andExpect(jsonPath("$.errors[0].message", is("The Category 'home' cannot be deleted because it is the root")));
+                .andExpect(jsonPath("$.errors[0].message",
+                        is("The Category 'home' cannot be deleted because it is the root")));
     }
 
     private ResultActions executeGet(String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
@@ -330,20 +336,28 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         return result;
     }
 
-    private ResultActions executePost(String filename, String accessToken, ResultMatcher rm) throws Exception {
+    private ResultActions executePostByFile(String filename, String accessToken, ResultMatcher rm) throws Exception {
+        return executePost(readJsonFile(filename), accessToken, rm);
+    }
+
+    private String readJsonFile(String filename) throws EntException, IOException {
         InputStream isJsonPost = this.getClass().getResourceAsStream(filename);
-        String jsonPost = FileTextReader.getText(isJsonPost);
+        return FileTextReader.getText(isJsonPost);
+    }
+
+
+    private ResultActions executePost(String jsonPost, String accessToken, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/categories").content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(rm);
-        return result;
+                        .header("Authorization", "Bearer " + accessToken))
+                        .andDo(print());
+        return result.andExpect(rm);
     }
 
-    private ResultActions executePut(String filename, String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
-        InputStream isJsonPut = this.getClass().getResourceAsStream(filename);
-        String jsonPut = FileTextReader.getText(isJsonPut);
+    private ResultActions executePut(String filename, String categoryCode, String accessToken, ResultMatcher rm)
+            throws Exception {
+        String jsonPut = readJsonFile(filename);
         ResultActions result = mockMvc
                 .perform(put("/categories/{categoryCode}", new Object[]{categoryCode})
                         .content(jsonPut)
@@ -362,7 +376,8 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         return result;
     }
 
-    private ResultActions executeReference(String categoryCode, String accessToken, String managerName, ResultMatcher rm) throws Exception {
+    private ResultActions executeReference(String categoryCode, String accessToken, String managerName,
+            ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/categories/{categoryCode}/references/{holder}", new Object[]{categoryCode, managerName})
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -371,4 +386,49 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
         return result;
     }
 
+    @Test
+    public void addExistingCategoryShouldReturnTheReceivedCategory() throws Exception {
+
+        CategoryDto expected = null;
+
+        try {
+            String jsonPost = readJsonFile("1_POST_valid.json");
+            expected = MAPPER.readValue(jsonPost, CategoryDto.class);
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+            this.executePostByFile("1_POST_valid.json", accessToken, status().is2xxSuccessful());
+            ResultActions resultActions = this
+                    .executePostByFile("1_POST_valid.json", accessToken, status().is2xxSuccessful());
+
+            CategoryTestHelper.assertCategories(expected, resultActions);
+        } finally {
+            if (categoryManager.getCategory(expected.getCode()) != null) {
+                this.categoryManager.deleteCategory(expected.getCode());
+            }
+        }
+    }
+
+    @Test
+    public void addExistingGroupWithDifferentParentCodeOrTitlesShouldReturn409() throws Exception {
+
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            this.executePostByFile("1_POST_valid.json", accessToken, status().is2xxSuccessful());
+
+            // change parent code
+            String cat1Json = readJsonFile("1_POST_valid.json").replace("cat1", "home");
+            this.executePost(cat1Json, accessToken, status().isConflict());
+
+            // change titles
+            String cat2Json = readJsonFile("1_POST_valid.json").replace("en_title", "new_title");
+            this.executePost(cat2Json, accessToken, status().isConflict());
+        } finally {
+            if (categoryManager.getCategory("test_cat") != null) {
+                this.categoryManager.deleteCategory("test_cat");
+            }
+        }
+    }
 }

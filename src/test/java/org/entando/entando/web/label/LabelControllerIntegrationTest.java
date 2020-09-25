@@ -22,9 +22,12 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.label.LabelTestHelper;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,6 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +54,14 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
 
     @Autowired
     private ILangManager langManager;
+
+    private MockMvcHelper mockMvcHelper;
+
+    @Before
+    public void init() {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        this.mockMvcHelper = new MockMvcHelper(mockMvc, mockOAuthInterceptor(user));
+    }
 
     @Test
     public void testGetLabels_1() throws Exception {
@@ -281,7 +293,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
             languages.put(langManager.getDefaultLang().getCode(), "");
             request.setTitles(languages);
             
-            ResultActions result = this.executePost(request, accessToken, status().isConflict());
+            ResultActions result = this.executePost(request, accessToken, status().isConflict()).andDo(print());
             result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
@@ -477,9 +489,87 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
         ResultActions result = mockMvc.perform(post("/labels")
                             .content(payLoad)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .header("Authorization", "Bearer " + accessToken));
+                            .header("Authorization", "Bearer " + accessToken))
+                .andDo(print());
         result.andExpect(expected);
         return result;
     }
 
+
+    @Test
+    public void addExistingLabelShouldReturnTheReceivedLabel() throws Exception {
+
+        LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
+
+        try {
+            // add label
+            mockMvcHelper.postMockMvc("/labels", labelRequest)
+                    .andExpect(status().is2xxSuccessful());
+
+            // add changed label should fail with conflict
+            labelRequest.getTitles().put("en", "new");
+            ResultActions resultActions = mockMvcHelper.postMockMvc("/labels", labelRequest)
+                    .andExpect(status().isConflict());
+
+        } finally {
+            mockMvcHelper.deleteMockMvc("/labels/" + labelRequest.getKey());
+        }
+    }
+
+
+    @Test
+    public void addExistingLabelShouldReturnTheSameLabel() throws Exception {
+
+        LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
+
+        try {
+            // add label
+            mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().is2xxSuccessful());
+
+            // add changed label should fail with conflict
+            ResultActions resultActions = mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().is2xxSuccessful());
+
+            LabelTestHelper.assertLabels(LabelTestHelper.stubTestLabelDto(), resultActions);
+
+        } finally {
+            mockMvcHelper.deleteMockMvc("/labels/" + labelRequest.getKey());
+        }
+    }
+
+
+    @Test
+    public void addExistingLabelWithDifferentValuesShouldReturnReturn40() throws Exception {
+
+        LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
+
+        try {
+            // add label
+            mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().is2xxSuccessful());
+
+            // add changed label should fail with conflict
+            labelRequest.getTitles().put(LabelTestHelper.KEY, "new");
+            mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().isConflict());
+
+        } finally {
+            mockMvcHelper.deleteMockMvc("/labels/" + labelRequest.getKey());
+        }
+    }
+
+    @Test
+    public void addExistingLabelWithMoreValuesShouldReturn409() throws Exception {
+
+        LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
+
+        try {
+            // add label
+            mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().is2xxSuccessful());
+
+            // add changed label should fail with conflict
+            labelRequest.getTitles().put("en", "new");
+            mockMvcHelper.postMockMvc("/labels", labelRequest).andExpect(status().isConflict());
+
+        } finally {
+            mockMvcHelper.deleteMockMvc("/labels/" + labelRequest.getKey());
+        }
+    }
 }

@@ -167,6 +167,63 @@ public class LabelServiceTest {
         assertThat(labelResult.getTitles()).containsOnly(entry("EN", "some_value"));
     }
 
+
+    @Test
+    public void addExistingLabelShouldReturnTheReceivedLabel() throws EntException {
+
+        String value = "some_value";
+        String key = "lab";
+
+        when(langManager.getDefaultLang()).thenReturn(lang);
+        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        when(langManager.getLangs()).thenReturn(singletonList(lang));
+
+        ApsProperties existinglabels = new ApsProperties();
+        existinglabels.put(key, singletonMap("EN", value));
+        when(i18nManager.getLabelGroup(key)).thenReturn(existinglabels);
+
+        final LabelDto label = new LabelDto(key, singletonMap("EN", value));
+
+        LabelDto actualLabelDto = labelService.addLabelGroup(label);
+
+        verify(i18nManager, times(0)).addLabelGroup(anyString(), any());
+        LabelTestHelper.assertLabelsDtoEquals(label, actualLabelDto);
+    }
+
+
+    @Test(expected = ValidationConflictException.class)
+    public void addExistingLabelGroupWithDifferentValuesShouldThrowValidationConflictException() throws EntException {
+
+        when(langManager.getDefaultLang()).thenReturn(lang);
+        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        when(langManager.getLangs()).thenReturn(singletonList(lang));
+
+        ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
+        existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
+        when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
+
+        final LabelDto label = LabelTestHelper.stubTestLabelDto();
+
+        labelService.addLabelGroup(label);
+    }
+
+    @Test(expected = ValidationConflictException.class)
+    public void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
+
+        when(langManager.getDefaultLang()).thenReturn(lang);
+        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        when(langManager.getLangs()).thenReturn(singletonList(lang));
+
+        ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
+        existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
+        when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
+
+        final LabelDto label = LabelTestHelper.stubTestLabelDto();
+        label.getTitles().put("en", "test");
+
+        labelService.addLabelGroup(label);
+    }
+
     @Test
     public void testGetLabelsPagination() {
         RestListRequest request = new RestListRequest();

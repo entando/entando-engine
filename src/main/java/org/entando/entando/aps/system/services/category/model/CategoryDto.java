@@ -47,17 +47,17 @@ public class CategoryDto {
     public CategoryDto() {
     }
 
-    public CategoryDto(Category page, ICategoryManager categoryManager) {
-        this.setCode(page.getCode());
-        this.setParentCode(page.getParentCode());
-        Optional<ApsProperties> apsTitles = Optional.ofNullable(page.getTitles());
+    public CategoryDto(Category category, ICategoryManager categoryManager) {
+        this.setCode(category.getCode());
+        this.setParentCode(category.getParentCode());
+        Optional<ApsProperties> apsTitles = Optional.ofNullable(category.getTitles());
         apsTitles.ifPresent(values -> values.keySet().forEach((lang)
                 -> {
             this.getTitles().put((String) lang, (String) values.get(lang));
-            this.getFullTitles().put((String) lang, (String) page.getFullTitle((String) lang, categoryManager));
+            this.getFullTitles().put((String) lang, (String) category.getFullTitle((String) lang, categoryManager));
         }
         ));
-        Optional.ofNullable(page.getChildrenCodes()).
+        Optional.ofNullable(category.getChildrenCodes()).
                 ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
     }
 

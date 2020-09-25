@@ -42,6 +42,7 @@ public class CategoryValidator implements Validator {
     public static final String ERRCODE_CATEGORY_HAS_CHILDREN = "7";
     public static final String ERRCODE_CATEGORY_NO_REFERENCES = "8";
     public static final String ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED = "9";
+    public static final String ERRCODE_CATEGORY_ALREADY_EXISTS_WITH_CONFLICTS = "10";
 
     @Autowired
     private ICategoryManager categoryManager;
@@ -57,7 +58,8 @@ public class CategoryValidator implements Validator {
 
     public void validatePutReferences(String categoryCode, CategoryDto request, BindingResult bindingResult) {
         if (!StringUtils.equals(categoryCode, request.getCode())) {
-            bindingResult.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{categoryCode, request.getCode()}, "category.code.mismatch");
+            bindingResult.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{categoryCode, request.getCode()},
+                    "category.code.mismatch");
             throw new ValidationGenericException(bindingResult);
         }
         Category category = this.getCategoryManager().getCategory(request.getCode());
@@ -67,20 +69,19 @@ public class CategoryValidator implements Validator {
         }
         Category parent = this.getCategoryManager().getCategory(request.getParentCode());
         if (null == parent) {
-            bindingResult.reject(ERRCODE_PARENT_CATEGORY_NOT_FOUND, new String[]{request.getCode()}, "category.parent.notexists");
+            bindingResult.reject(ERRCODE_PARENT_CATEGORY_NOT_FOUND, new String[]{request.getCode()},
+                    "category.parent.notexists");
             throw new ResourceNotFoundException(bindingResult);
         } else if (!parent.getCode().equals(category.getParentCode())) {
-            bindingResult.reject(ERRCODE_PARENT_CATEGORY_CANNOT_BE_CHANGED, new String[]{}, "category.parent.cannotBeChanged");
+            bindingResult.reject(ERRCODE_PARENT_CATEGORY_CANNOT_BE_CHANGED, new String[]{},
+                    "category.parent.cannotBeChanged");
         }
     }
 
     public void validatePostReferences(CategoryDto request, BindingResult bindingResult) {
-        if (null != this.getCategoryManager().getCategory(request.getCode())) {
-            bindingResult.reject(ERRCODE_CATEGORY_ALREADY_EXISTS, new String[]{request.getCode()}, "category.exists");
-            throw new ValidationGenericException(bindingResult);
-        }
         if (null == this.getCategoryManager().getCategory(request.getParentCode())) {
-            bindingResult.reject(ERRCODE_PARENT_CATEGORY_NOT_FOUND, new String[]{request.getCode()}, "category.parent.notexists");
+            bindingResult.reject(ERRCODE_PARENT_CATEGORY_NOT_FOUND, new String[]{request.getCode()},
+                    "category.parent.notexists");
             throw new ResourceNotFoundException(bindingResult);
         }
     }
@@ -93,4 +94,17 @@ public class CategoryValidator implements Validator {
         this.categoryManager = categoryManager;
     }
 
+
+    /**
+     * does a deep check to ensure equality
+     * @param cat1
+     * @param cat2
+     * @return
+     */
+    public boolean areEquals(CategoryDto cat1, CategoryDto cat2) {
+
+        return null != cat1.getCode() && cat1.getCode().equals(cat2.getCode()) &&
+                null != cat1.getParentCode() && cat1.getParentCode().equals(cat2.getParentCode()) &&
+                null != cat1.getTitles() && cat1.getTitles().equals(cat2.getTitles());
+    }
 }
