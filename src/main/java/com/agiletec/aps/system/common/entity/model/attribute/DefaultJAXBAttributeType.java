@@ -42,7 +42,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "attributeType")
-@XmlType(propOrder = {"name", "description", "type", "roles", "searchable", "indexable", "validationRules"})
+@XmlType(propOrder = {"name", "names", "description", "type", "roles", "searchable", "indexable", "validationRules"})
 @XmlSeeAlso({ArrayList.class, BaseAttributeValidationRules.class, DateAttributeValidationRules.class, 
     NumberAttributeValidationRules.class, TextAttributeValidationRules.class, OgnlValidationRule.class})
 public class DefaultJAXBAttributeType {
@@ -56,7 +56,7 @@ public class DefaultJAXBAttributeType {
     public void setName(String name) {
         this._name = name;
     }
-
+    
     @XmlElement(name = "names", required = false)
     public Map<String, String> getNames() {
         return _names;
