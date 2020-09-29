@@ -1,0 +1,18 @@
+{
+    "username":"**NAME**",
+    "registration":"2008-10-10 00:00:00",
+    "lastLogin":"2020-09-29 00:00:00",
+    "lastPasswordChange":null,
+    "status":"active",
+    "accountNotExpired":true,
+    "credentialsNotExpired":true,
+    "profileType": "PFL",
+    "profileAttributes":{
+        "fullname":"",
+        "email":""
+    },
+    "maxMonthsSinceLastAccess":-1,
+    "maxMonthsSinceLastPasswordChange":-1,
+    "password":"adminadmin2",
+    "passwordConfirm":"adminadmin2"
+}

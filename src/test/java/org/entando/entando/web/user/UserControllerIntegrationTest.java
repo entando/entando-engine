@@ -624,6 +624,31 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
+    public void testUpdatePasswordInactiveUser() throws Exception {
+        String validUsername = "user1";
+        String validPassword = "password1";
+        String newValidPassword = "password2";
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"inactive\",\"password\": \"" + validPassword + "\"}";
+            this.executeUserPost(mockJson, accessToken, status().isOk());
+
+            String body = "{\"username\": \"" + validUsername + "\",\"oldPassword\": \"" + validPassword + "\",\"newPassword\": \"" + newValidPassword + "\"}";
+            ResultActions resultValid = this.executeUpdatePassword(body, validUsername, accessToken, status().isOk());
+            resultValid.andExpect(jsonPath("$.payload.username", is(validUsername)));
+            resultValid.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            resultValid.andExpect(jsonPath("$.metaData.size()", is(0)));
+
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            this.userManager.removeUser(validUsername);
+        }
+    }
+
+    @Test
     public void testUserPagination() throws Exception {
         String userPrefix = "test_pager_";
         for (int i = 0; i < 20; i++) {
@@ -831,6 +856,48 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             if (null != this.userProfileManager.getEntityPrototype("AAA")) {
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("AAA");
             }
+        }
+    }
+
+    @Test
+    public void testUpdateUserWithProfile() throws Exception {
+        String username = "user_with_profile";
+        try {
+            InputStream file = this.getClass().getResourceAsStream("1_POST_user_with_default_profile.json");
+            String request = FileTextReader.getText(file).replace("**NAME**", username);
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            mockMvc
+                    .perform(post("/users")
+                            .content(request)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
+                    .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+
+            file = this.getClass().getResourceAsStream("1_PUT_user_with_profile.json");
+            request = FileTextReader.getText(file).replace("**NAME**", username);
+
+            mockMvc
+                    .perform(put("/users/{username}", new Object[]{username})
+                            .content(request)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
+                    .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+
+        } finally {
+            this.userManager.removeUser(username);
+            UserDetails user = this.userManager.getUser(username);
+            assertNull(user);
         }
     }
 
