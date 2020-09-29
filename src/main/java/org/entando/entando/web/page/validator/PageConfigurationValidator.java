@@ -17,7 +17,6 @@ import java.util.Map;
 import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +27,6 @@ import org.springframework.validation.Errors;
 public class PageConfigurationValidator extends AbstractPaginationValidator {
 
     private static final String ERRCODE_OPERATION_WIDEGT_CONF_NOT_OVERRIDABLE = "10";
-
-    private final org.slf4j.Logger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
     private JsonPatchValidator jsonPatchValidator;
@@ -56,6 +53,6 @@ public class PageConfigurationValidator extends AbstractPaginationValidator {
 
     @Override
     public void validate(Object o, Errors errors) {
-
+        //nothing to do
     }
 }

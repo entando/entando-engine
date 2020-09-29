@@ -216,7 +216,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(4, configUi);
             stat.setString(5, bundleId);
 
-            if (overridable) {
+            if (Boolean.TRUE.equals(overridable)) {
                 stat.setInt(6, 1);
             } else {
                 stat.setInt(6, 0);
