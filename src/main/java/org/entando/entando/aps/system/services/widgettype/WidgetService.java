@@ -249,7 +249,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
             widgetDto = dtoBuilder.convert(type);
             this.getWidgetManager().updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId());
+                    type.getConfigUi(), type.getBundleId(), type.isOverridable());
             if (!StringUtils.isEmpty(widgetCode)) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetCode);
                 if (null == guiFragment) {
@@ -365,7 +365,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
-
+        type.setOverridable(widgetRequest.isOverridable());
         if (widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
         }

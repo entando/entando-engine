@@ -13,13 +13,12 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.util.ApsProperties;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -70,6 +69,8 @@ public class WidgetType implements Serializable {
     private String configUi;
 
     private String bundleId;
+
+    private boolean overridable;
 
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
@@ -267,6 +268,14 @@ public class WidgetType implements Serializable {
 
     public void setLocked(boolean locked) {
         this._locked = locked;
+    }
+
+    public boolean isOverridable() {
+        return overridable;
+    }
+
+    public void setOverridable(boolean overridable) {
+        this.overridable = overridable;
     }
 
     public String getMainGroup() {

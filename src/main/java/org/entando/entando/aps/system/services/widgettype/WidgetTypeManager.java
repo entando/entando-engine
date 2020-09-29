@@ -13,26 +13,25 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.cache.IWidgetTypeManagerCacheWrapper;
 import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * Servizio di gestione dei tipi di widget (WidgetType) definiti nel sistema.
@@ -149,7 +148,7 @@ public class WidgetTypeManager extends AbstractService
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws EntException {
+                                 String configUi, String bundleId, Boolean overridable) throws EntException {
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
@@ -159,7 +158,7 @@ public class WidgetTypeManager extends AbstractService
             if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
                 defaultConfig = type.getConfig();
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId);
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, overridable);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);

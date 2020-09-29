@@ -309,17 +309,17 @@ INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu
 <property key="it">Home</property>
 </properties>', 'home', 1, NULL, '2017-02-18 00:12:24');
 
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, overridable) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">System Messages</property>
 <property key="it">Messaggi di Sistema</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, overridable) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Login Form</property>
 <property key="it">Form di Login</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, overridable) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Internal Servlet</property>
 <property key="it">Invocazione di una Servlet Interna</property>
@@ -328,8 +328,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 		Path to an action or to a JSP. You must prepend ''/ExtStr2'' to any Struts2 action path
 	</parameter>
 	<action name="configSimpleParameter"/>
-</config>', NULL, NULL, NULL, 1, NULL);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
+</config>', NULL, NULL, NULL, 1, NULL, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, overridable) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">APIs</property>
 <property key="it">APIs</property>
@@ -338,31 +338,31 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free');
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
+', 1, 'free', 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, overridable) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Current User</property>
 <property key="it">Edita Utente Corrente</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/edit.action</property>
-</properties>', 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', 1, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, overridable) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Current User Password</property>
 <property key="it">Edita Password Utente Corrente</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/editPassword.action</property>
-</properties>', 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', 1, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, overridable) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Current User Profile</property>
 <property key="it">Edita Profilo Utente Corrente</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/Profile/edit.action</property>
-</properties>', 1);
+</properties>', 1, 0);
 
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('userprofile_editCurrentUser_profile', 'userprofile_editCurrentUser_profile', NULL, NULL, '<#assign s=JspTaglibs["/struts-tags"]>
 <#assign wp=JspTaglibs["/aps-core"]>
