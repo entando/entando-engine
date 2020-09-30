@@ -264,7 +264,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.metaData.pageSize", is(5)));
-        result.andExpect(jsonPath("$.metaData.lastPage", is(3)));
+        result.andExpect(jsonPath("$.metaData.lastPage", is(4)));
         result.andExpect(jsonPath("$.metaData.totalItems", is(15)));
         result.andExpect(jsonPath("$.payload[0]", is("Timestamp")));
     }

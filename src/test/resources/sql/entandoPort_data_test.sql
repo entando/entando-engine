@@ -641,7 +641,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 			<attribute name="boolean2" attributetype="Boolean" searchable="true"/>
 		</attributes>
 	</profiletype>
-	<profiletype typecode="TST" typedescr="Other user profile" >
+	<profiletype typecode="OTH" typedescr="Other user profile" >
 		<attributes>
 			<attribute name="firstname" attributetype="Monotext" searchable="true" >
 				<validations>

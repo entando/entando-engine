@@ -104,7 +104,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(1))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
                 .andExpect(jsonPath("$.payload[1].profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload[1].profileType.typeDescription", is("Default user profile")));
+                .andExpect(jsonPath("$.payload[1].profileType.typeDescription", is("Default user profile type")));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
                 .andExpect(jsonPath("$.payload[0].profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload[0].profileType.typeDescription", is("Default user profile")))
+                .andExpect(jsonPath("$.payload[0].profileType.typeDescription", is("Default user profile type")))
                 .andExpect(jsonPath("$.payload[0].profileAttributes.fullname", Matchers.containsString("s")));
 
         String username = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].username");
@@ -153,7 +153,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.username", is(username)))
                 .andExpect(jsonPath("$.payload.profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload.profileType.typeDescription", is("Default user profile")));
+                .andExpect(jsonPath("$.payload.profileType.typeDescription", is("Default user profile type")));
     }
 
     @Test
@@ -806,7 +806,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_default_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")));
 
         } finally {
             this.userManager.removeUser(username);
@@ -878,7 +878,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")));
 
             file = this.getClass().getResourceAsStream("1_PUT_user_with_profile.json");
             request = FileTextReader.getText(file).replace("**NAME**", username);
@@ -892,7 +892,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")));
 
         } finally {
             this.userManager.removeUser(username);

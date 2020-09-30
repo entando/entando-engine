@@ -67,7 +67,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 
 	public void testValidate_2() throws Throwable {
 		try {
-			IUserProfile profile = this.userProfileManager.getProfileType("TST");
+			IUserProfile profile = this.userProfileManager.getProfileType("OTH");
 			List<FieldError> errors = profile.validate(this._groupManager);
 			assertNotNull(errors);
             String[] requiredFields = {"firstname", "surname", "email"};

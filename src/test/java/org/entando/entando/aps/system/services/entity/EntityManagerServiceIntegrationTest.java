@@ -23,9 +23,6 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 public class EntityManagerServiceIntegrationTest extends BaseTestCase {
 
     private IEntityManagerService entityManagerService;
@@ -63,7 +60,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
         EntityManagerDto dto = this.entityManagerService.getEntityManager(SystemConstants.USER_PROFILE_MANAGER);
         assertNotNull(dto);
         assertEquals(SystemConstants.USER_PROFILE_MANAGER, dto.getCode());
-        assertEquals(1, dto.getEntityTypes().size());
+        assertEquals(2, dto.getEntityTypes().size());
         assertEquals("PFL", dto.getEntityTypes().get(0).getCode());
     }
 
@@ -82,7 +79,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
         RestListRequest restListRequest = new RestListRequest();
         PagedMetadata<EntityTypeShortDto> dtos = this.entityManagerService.getShortEntityTypes(SystemConstants.USER_PROFILE_MANAGER, restListRequest);
         assertNotNull(dtos);
-        assertEquals(1, dtos.getBody().size());
+        assertEquals(2, dtos.getBody().size());
     }
 
 }
