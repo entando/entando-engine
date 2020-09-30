@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -660,6 +661,75 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                 .perform(get("/profileTypes")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAddUpdateDeleteUserProfileAttributeWithRegex() throws Exception {
+        String typeCode = "REX";
+        try {
+            Assert.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            InputStream isJsonPostValid = this.getClass().getResourceAsStream("8_POST_regex.json");
+            String jsonPostValid = FileTextReader.getText(isJsonPostValid);
+            ResultActions result = mockMvc
+                    .perform(post("/profileTypes")
+                            .content(jsonPostValid)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.attributes.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.attributes[0].code", Matchers.is("text")))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.minLength", Matchers.is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.maxLength", Matchers.is(20)))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.regex", Matchers.is("text regex")))
+                    .andExpect(jsonPath("$.payload.attributes[1].code", Matchers.is("longtext")))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.minLength", Matchers.is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.maxLength", Matchers.is(20)))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.regex", Matchers.is("longtext regex")))
+                    .andExpect(jsonPath("$.payload.attributes[2].code", Matchers.is("monotext")))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.minLength", Matchers.is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.maxLength", Matchers.is(20)))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.regex", Matchers.is("monotext regex")))
+                    .andExpect(jsonPath("$.payload.attributes[3].code", Matchers.is("hypertext")))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.minLength", Matchers.is(10)))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.maxLength", Matchers.is(20)))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.regex", Matchers.is("hypertext regex")));
+
+            isJsonPostValid = this.getClass().getResourceAsStream("8_PUT_regex.json");
+            jsonPostValid = FileTextReader.getText(isJsonPostValid);
+            result = mockMvc
+                    .perform(put("/profileTypes/{profileTypeCode}", new Object[]{typeCode})
+                            .content(jsonPostValid)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk())
+                    .andDo(print())
+                    .andExpect(jsonPath("$.payload.attributes.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.attributes[0].code", Matchers.is("text")))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.minLength", Matchers.is(11)))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.maxLength", Matchers.is(21)))
+                    .andExpect(jsonPath("$.payload.attributes[0].validationRules.regex", Matchers.is("text regex 2")))
+                    .andExpect(jsonPath("$.payload.attributes[1].code", Matchers.is("longtext")))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.minLength", Matchers.is(11)))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.maxLength", Matchers.is(21)))
+                    .andExpect(jsonPath("$.payload.attributes[1].validationRules.regex", Matchers.is("longtext regex 2")))
+                    .andExpect(jsonPath("$.payload.attributes[2].code", Matchers.is("monotext")))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.minLength", Matchers.is(11)))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.maxLength", Matchers.is(21)))
+                    .andExpect(jsonPath("$.payload.attributes[2].validationRules.regex", Matchers.is("monotext regex 2")))
+                    .andExpect(jsonPath("$.payload.attributes[3].code", Matchers.is("hypertext")))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.minLength", Matchers.is(11)))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.maxLength", Matchers.is(21)))
+                    .andExpect(jsonPath("$.payload.attributes[3].validationRules.regex", Matchers.is("hypertext regex 2")));
+
+        } finally {
+            if (null != this.userProfileManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype(typeCode);
+            }
+        }
     }
 
 }

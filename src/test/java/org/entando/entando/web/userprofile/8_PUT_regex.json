@@ -1,0 +1,47 @@
+{
+    "code": "REX",
+    "name": "Profile Type REX 2",
+    "attributes": [
+        {
+            "code": "text",
+            "type": "Text",
+            "name": "Description of text attribute",
+            "mandatory": false,
+            "validationRules": {
+                "minLength":"11",
+                "maxLength":"21",
+                "regex":"text regex 2"
+            }
+        },{
+            "code": "longtext",
+            "type": "Longtext",
+            "name": "Link Description",
+            "mandatory": false,
+            "validationRules": {
+                "minLength":"11",
+                "maxLength":"21",
+                "regex":"longtext regex 2"
+            }
+        },{
+            "code": "monotext",
+            "type": "Monotext",
+            "name": "Description of monotext attribute",
+            "mandatory": false,
+            "validationRules": {
+                "minLength":"11",
+                "maxLength":"21",
+                "regex":"monotext regex 2"
+            }
+        },{
+            "code": "hypertext",
+            "type": "Hypertext",
+            "name": "Description of hypertext attribute",
+            "mandatory": false,
+            "validationRules": {
+                "minLength":"11",
+                "maxLength":"21",
+                "regex":"hypertext regex 2"
+            }
+        }
+    ]
+}
