@@ -129,7 +129,7 @@ public class EntityTypeAttributeValidationDto {
         IAttributeValidationRules validationRules = attribute.getValidationRules();
         if (attribute.isTextAttribute()) {
             TextAttributeValidationRules textValRule = (TextAttributeValidationRules) validationRules;
-            if (StringUtils.isEmpty(this.getRegex())) {
+            if (!StringUtils.isEmpty(this.getRegex())) {
                 textValRule.setRegexp(this.getRegex());
             }
             if (null != this.getMinLength() && null != this.getMaxLength() && (this.getMinLength() > this.getMaxLength())) {
