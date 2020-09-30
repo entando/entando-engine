@@ -265,7 +265,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.metaData.pageSize", is(5)));
         result.andExpect(jsonPath("$.metaData.lastPage", is(4)));
-        result.andExpect(jsonPath("$.metaData.totalItems", is(15)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(16)));
         result.andExpect(jsonPath("$.payload[0]", is("Timestamp")));
     }
 
@@ -538,7 +538,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.size()", is(3)));
-        result.andExpect(jsonPath("$.payload.ready", Matchers.hasSize(1)));
+        result.andExpect(jsonPath("$.payload.ready", Matchers.hasSize(2)));
         result.andExpect(jsonPath("$.payload.toRefresh", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.payload.refreshing", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));

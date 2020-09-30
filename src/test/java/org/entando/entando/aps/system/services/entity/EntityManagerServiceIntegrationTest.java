@@ -61,7 +61,8 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
         assertNotNull(dto);
         assertEquals(SystemConstants.USER_PROFILE_MANAGER, dto.getCode());
         assertEquals(2, dto.getEntityTypes().size());
-        assertEquals("PFL", dto.getEntityTypes().get(0).getCode());
+        assertEquals("OTH", dto.getEntityTypes().get(0).getCode());
+        assertEquals("PFL", dto.getEntityTypes().get(1).getCode());
     }
 
     @Test
