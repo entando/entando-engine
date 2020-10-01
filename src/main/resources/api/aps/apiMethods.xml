@@ -34,18 +34,6 @@
 		</method>
 	</resource>
     
-	<resource name="myOAuthAccessToken">
-		<description>My OAuth Access Token</description>
-		<source>core</source>
-		<method httpMethod="DELETE" active="true" requiredAuth="true" hidden="true">
-			<description>Delete his Access Token</description>
-			<springBean name="OAuthConsumerManager" method="deleteMyAccessToken" />
-			<parameters>
-				<parameter key="accessToken" required="true" />
-			</parameters>
-		</method>
-	</resource>
-    
 	<!--
 	<resource name="entandoEntity">
 		<source>core</source>
