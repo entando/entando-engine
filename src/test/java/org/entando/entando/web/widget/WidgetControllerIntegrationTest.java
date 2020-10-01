@@ -28,6 +28,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,7 +36,6 @@ import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.model.WidgetDto.WidgetParameter;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
@@ -202,7 +202,10 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
-    
+
+
+
+
     @Test
     public void testAddUpdateWidget_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -629,6 +632,72 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
+
+
+    @Test
+    public void testEditLockedConfigWidget() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        try {
+            //Try to update the config of locked widget with a null config as previous value
+
+            String widgetTypeCode = "login_form";
+            
+            WidgetRequest request = new WidgetRequest();
+            request.setCode(widgetTypeCode);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            Map<String, String> titles = new HashMap<>();
+            titles.put("it", "Titolo ITA");
+            titles.put("en", "Title EN");
+            request.setTitles(titles);
+            request.setCustomUi("<h1>Custom UI</h1>");
+            request.setGroup(Group.FREE_GROUP_NAME);
+
+            request.setConfig(Collections.singletonMap("k","v"));
+            ResultActions result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+
+            //Try to update the config of locked widget with a not null config as previous value
+
+            widgetTypeCode = "formAction";
+            request.setCode(widgetTypeCode);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andDo(print());
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+            //Try to update the config of locked widget with a not null config as previous value using a null config
+
+            widgetTypeCode = "entando_apis";
+            request.setCode(widgetTypeCode);
+            request.setConfig(null);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andDo(print());
+
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+            //Try to update the config of locked widget with the same config
+
+            widgetTypeCode = "entando_apis";
+            final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
+
+            request.setCode(widgetTypeCode);
+            Map<String, String> configMap = (Map) config;
+
+            request.setConfig(configMap);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result.andDo(print());
+
+            result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
+            result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
+            result.andExpect(jsonPath("$.payload.group", is("free")));
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc

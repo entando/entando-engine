@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.widget.validator;
 
+import com.agiletec.aps.util.ApsProperties;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -70,14 +71,24 @@ public class WidgetValidator extends AbstractPaginationValidator {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);
         }
 
-        if (null != type.getConfig() &&  null!=widgetRequest.getConfig() &&
-                (!type.getConfig().equals(widgetRequest.getConfig()) && type.isLocked())) {
+        ApsProperties newWidgetConfig = ApsProperties.fromMap(widgetRequest.getConfig());
+        ApsProperties widgetTypeConfig = type.getConfig();
+
+        if (newWidgetConfig.size( ) == 0) {
+            newWidgetConfig = null;
+        }
+
+        if ((widgetTypeConfig==null && newWidgetConfig!=null && type.isLocked()) ||
+           (widgetTypeConfig!=null && newWidgetConfig==null && type.isLocked()) ||
+           (widgetTypeConfig!=null && newWidgetConfig!=null  && !widgetTypeConfig.equals(newWidgetConfig) && type.isLocked()))
+        {
             errors.rejectValue("code", ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.edit.locked");
         }
 
         this.validateTitles(widgetRequest, errors);
+
     }
-    
+
     protected void validateTitles(WidgetRequest widgetRequest, Errors errors) {
         Map<String, String> titles = widgetRequest.getTitles();
         if (null == titles) {
