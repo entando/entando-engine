@@ -180,7 +180,7 @@
 	<resource name="userProfiles" namespace="core">
 		<description>The list of usernames, composed using the specified filters to user profiles</description>
 		<source>core</source>
-		<method httpMethod="GET" active="true">
+		<method httpMethod="GET" active="true" requiredAuth="true" requiredPermission="viewUsers">
 			<description>Returns a list of usernames, composed using the specified filters to user profiles</description>
 			<springBean name="ApiUserProfileInterface" method="getUserProfiles" />
 			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
@@ -198,7 +198,7 @@
 	<resource name="userProfile" namespace="core">
 		<description>The representation of the user profile</description>
 		<source>core</source>
-		<method httpMethod="GET" active="true">
+		<method httpMethod="GET" active="true" requiredAuth="true" requiredPermission="viewUsers">
 			<description>Return a public user profile</description>
 			<springBean name="ApiUserProfileInterface" method="getUserProfile" />
 			<responseClass>org.entando.entando.aps.system.services.userprofile.api.response.UserProfileResponse</responseClass>
