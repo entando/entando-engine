@@ -26,44 +26,49 @@ import org.springframework.cache.Cache;
  */
 public class EntityManagerCacheWrapper extends AbstractCacheWrapper implements IEntityManagerCacheWrapper {
 
-	private String entityManagerName;
+    private String entityManagerName;
 
-	@Override
-	public void initCache(String managerName) throws EntException {
-		this.setEntityManagerName(managerName);
-	}
+    @Override
+    public void release() {
+        // nothing to do
+    }
 
-	@Override
-	public Integer getEntityTypeStatus(String typeCode) {
-		Map<String, Integer> status = this.get(IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, Map.class);
-		if (null == status || null == status.get(typeCode)) {
-			return IEntityManager.STATUS_READY;
-		}
-		return status.get(typeCode);
-	}
+    @Override
+    public void initCache(String managerName) throws EntException {
+        this.setEntityManagerName(managerName);
+    }
 
-	@Override
-	public void updateEntityTypeStatus(String typeCode, Integer state) {
-		Cache cache = this.getCache();
-		Map<String, Integer> status = this.get(cache, IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, Map.class);
-		if (null == status) {
-			status = new HashMap<>();
-		}
-		status.put(typeCode, state);
-		cache.put(IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, status);
-	}
+    @Override
+    public Integer getEntityTypeStatus(String typeCode) {
+        Map<String, Integer> status = this.get(IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, Map.class);
+        if (null == status || null == status.get(typeCode)) {
+            return IEntityManager.STATUS_READY;
+        }
+        return status.get(typeCode);
+    }
 
-	@Override
-	protected String getCacheName() {
-		return ENTITY_MANAGER_CACHE_NAME_PREFIX + this.getEntityManagerName();
-	}
+    @Override
+    public void updateEntityTypeStatus(String typeCode, Integer state) {
+        Cache cache = this.getCache();
+        Map<String, Integer> status = this.get(cache, IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, Map.class);
+        if (null == status) {
+            status = new HashMap<>();
+        }
+        status.put(typeCode, state);
+        cache.put(IEntityManagerCacheWrapper.ENTITY_STATUS_CACHE_NAME, status);
+    }
 
-	protected String getEntityManagerName() {
-		return entityManagerName;
-	}
+    @Override
+    protected String getCacheName() {
+        return ENTITY_MANAGER_CACHE_NAME_PREFIX + this.getEntityManagerName();
+    }
 
-	protected void setEntityManagerName(String entityManagerName) {
-		this.entityManagerName = entityManagerName;
-	}
+    protected String getEntityManagerName() {
+        return entityManagerName;
+    }
+
+    protected void setEntityManagerName(String entityManagerName) {
+        this.entityManagerName = entityManagerName;
+    }
 
 }

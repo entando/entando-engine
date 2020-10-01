@@ -30,6 +30,11 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 public class DataObjectMapperCacheWrapper extends AbstractCacheWrapper implements IDataObjectMapperCacheWrapper {
 
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DataObjectMapperCacheWrapper.class);
+    
+    @Override
+    public void release() {
+        this.getCache().evict(OBJECT_MAPPER_CACHE_KEY);
+    }
 
 	@Override
 	public void initCache(IPageManager pageManager) throws EntException {

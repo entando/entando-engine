@@ -37,9 +37,8 @@ public class I18nManagerCacheWrapper extends AbstractGenericCacheWrapper<ApsProp
     public void initCache(II18nDAO i18nDAO) throws EntException {
         try {
             Cache cache = this.getCache();
-            this.releaseCachedObjects(cache);
             Map<String, ApsProperties> labels = i18nDAO.loadLabelGroups();
-            this.insertObjectsOnCache(cache, labels);
+            this.insertAndCleanCache(cache, labels);
         } catch (Throwable t) {
             logger.error("Error loading labels", t);
             throw new EntException("Error loading labels", t);

@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
+import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -43,6 +44,12 @@ public class DataObjectPageMapperManager extends AbstractService implements IDat
 		this.getCacheWrapper().initCache(this.getPageManager());
 		logger.debug("{} ready.", this.getClass().getName());
 	}
+    
+    @Override
+    protected void release() {
+        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        super.release();
+    }
 
 	/**
 	 * Effettua il caricamento della mappa contenuti pubblicati / pagine

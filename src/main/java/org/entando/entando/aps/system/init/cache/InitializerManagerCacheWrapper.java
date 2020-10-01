@@ -23,43 +23,44 @@ import org.entando.entando.ent.exception.EntException;
 
 public class InitializerManagerCacheWrapper extends AbstractCacheWrapper implements IInitializerManagerCacheWrapper {
 
-	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
-	@Override
-	protected String getCacheName() {
-		return INITIALIZER_MANAGER_CACHE_NAME;
-	}
+    @Override
+    protected String getCacheName() {
+        return INITIALIZER_MANAGER_CACHE_NAME;
+    }
 
-	@Override
-	public void initCache(SystemInstallationReport report) throws EntException {
-		try {
-			Cache cache = this.getCache();
-			this.releaseCachedObjects(cache);
-			this.insertObjectsOnCache(cache, report);
-		} catch (Throwable t) {
-			logger.error("Error bootstrapping InitializerManager cache", t);
-			throw new EntException("Error bootstrapping InitializerManager cache", t);
-		}
-	}
+    @Override
+    public void initCache(SystemInstallationReport report) throws EntException {
+        try {
+            Cache cache = this.getCache();
+            this.insertObjectsOnCache(cache, report);
+        } catch (Throwable t) {
+            logger.error("Error bootstrapping InitializerManager cache", t);
+            throw new EntException("Error bootstrapping InitializerManager cache", t);
+        }
+    }
 
-	private void insertObjectsOnCache(Cache cache, SystemInstallationReport report) {
-		cache.put(INITIALIZER_REPORT_CACHE_NAME, report);
-	}
+    private void insertObjectsOnCache(Cache cache, SystemInstallationReport report) {
+        cache.put(INITIALIZER_REPORT_CACHE_NAME, report);
+    }
 
-	protected void releaseCachedObjects(Cache cache) {
-		cache.evict(INITIALIZER_REPORT_CACHE_NAME);
-		logger.trace("report entry evicted");
-	}
+    @Override
+    public void release() {
+        Cache cache = this.getCache();
+        cache.evict(INITIALIZER_REPORT_CACHE_NAME);
+        logger.trace("report entry evicted");
+    }
 
-	@Override
-	public SystemInstallationReport getReport() {
-		return this.get(this.getCache(), INITIALIZER_REPORT_CACHE_NAME, SystemInstallationReport.class);
-	}
+    @Override
+    public SystemInstallationReport getReport() {
+        return this.get(this.getCache(), INITIALIZER_REPORT_CACHE_NAME, SystemInstallationReport.class);
+    }
 
-	@Override
-	public void setCurrentReport(SystemInstallationReport report) {
-		this.getCache().put(INITIALIZER_REPORT_CACHE_NAME, report);
-		logger.trace("report entry updated");
-	}
+    @Override
+    public void setCurrentReport(SystemInstallationReport report) {
+        this.getCache().put(INITIALIZER_REPORT_CACHE_NAME, report);
+        logger.trace("report entry updated");
+    }
 
 }
