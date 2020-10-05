@@ -365,7 +365,9 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
-        type.setReadonlyDefaultConfig(widgetRequest.isReadonlyDefaultConfig());
+        if (widgetRequest.isReadonlyDefaultConfig() != null) {
+            type.setReadonlyDefaultConfig(widgetRequest.isReadonlyDefaultConfig());
+        }
         if (widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
         }
