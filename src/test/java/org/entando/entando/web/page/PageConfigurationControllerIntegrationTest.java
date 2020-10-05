@@ -63,10 +63,10 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         Assert.assertNull(this.pageManager.getDraftPage(pageCode));
         try {
 
-            WidgetRequest widgetRequestOverridable = getWidgetRequest(newWidgetCode, false);
+            WidgetRequest widgetRequestNotOverridable = getWidgetRequest(newWidgetCode, true);
 
             //Create the widget
-            ResultActions result = this.executeWidgetPost(widgetRequestOverridable, accessToken, status().isOk());
+            ResultActions result = this.executeWidgetPost(widgetRequestNotOverridable, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
@@ -133,7 +133,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         Assert.assertNull(this.pageManager.getDraftPage(pageCode));
         try {
 
-            WidgetRequest widgetRequestOverridable = getWidgetRequest(newWidgetCode, true);
+            WidgetRequest widgetRequestOverridable = getWidgetRequest(newWidgetCode, false);
 
             //Create the widget
             ResultActions result = this.executeWidgetPost(widgetRequestOverridable, accessToken, status().isOk());
@@ -195,7 +195,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         return pageRequest;
     }
 
-    private WidgetRequest getWidgetRequest(String newWidgetCode, boolean overridable) {
+    private WidgetRequest getWidgetRequest(String newWidgetCode, boolean readonlyDefaultConfig) {
         WidgetRequest request = new WidgetRequest();
         request.setCode(newWidgetCode);
         request.setParentType("parent_widget");
@@ -207,7 +207,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         request.setConfig(Collections.singletonMap("key", "value"));
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
-        request.setOverridable(overridable);
+        request.setReadonlyDefaultConfig(readonlyDefaultConfig);
         return request;
     }
 

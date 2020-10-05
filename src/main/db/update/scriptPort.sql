@@ -7,4 +7,4 @@ ALTER TABLE resources ADD COLUMN owner character varying(128);
 ALTER TABLE contents ADD COLUMN restriction character varying(40);
 ALTER TABLE widgetcatalog ADD COLUMN bundleid character varying(150);
 ALTER TABLE widgetcatalog ADD COLUMN configui character varying;
-ALTER TABLE widgetcatalog ADD COLUMN overridable smallint NOT NULL SET DEFAULT 1;
+ALTER TABLE widgetcatalog ADD COLUMN readonlydefaultconfig smallint NOT NULL SET DEFAULT 0;

@@ -40,6 +40,6 @@ public interface IWidgetTypeDAO {
     public void deleteWidgetType(String widgetTypeCode);
 
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean overridable);
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig);
 
 }

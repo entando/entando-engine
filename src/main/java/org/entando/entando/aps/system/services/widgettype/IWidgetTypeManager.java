@@ -70,6 +70,6 @@ public interface IWidgetTypeManager {
      * @throws EntException in case of error
      */
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean overridable) throws EntException;
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) throws EntException;
 
 }

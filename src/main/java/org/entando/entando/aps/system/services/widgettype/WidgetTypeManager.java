@@ -148,7 +148,7 @@ public class WidgetTypeManager extends AbstractService
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean overridable) throws EntException {
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) throws EntException {
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
@@ -158,7 +158,7 @@ public class WidgetTypeManager extends AbstractService
             if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
                 defaultConfig = type.getConfig();
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, overridable);
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyDefaultConfig);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);

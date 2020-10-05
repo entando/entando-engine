@@ -40,17 +40,17 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     private ILangManager langManager;
 
     private final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, overridable FROM widgetcatalog";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig FROM widgetcatalog";
 
     private final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, overridable) "
+            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig) "
             + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?)";
 
     private final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
     private final String UPDATE_WIDGET_TYPE
-            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, overridable = ? WHERE code = ? ";
+            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlydefaultconfig = ? WHERE code = ? ";
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -118,8 +118,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             if (StringUtils.isNotEmpty(bundleId)) {
                 widgetType.setBundleId(bundleId);
             }
-            int isOverridable = res.getInt(11);
-            widgetType.setOverridable(isOverridable == 1);
+            int isReadonlyDefaultConfig = res.getInt(11);
+            widgetType.setReadonlyDefaultConfig(isReadonlyDefaultConfig == 1);
 
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
@@ -136,7 +136,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(ADD_WIDGET_TYPE);
-            //(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, overridable)
+            //(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaulconfig)
             stat.setString(1, widgetType.getCode());
             stat.setString(2, widgetType.getTitles().toXml());
             if (null != widgetType.getTypeParameters()) {
@@ -160,7 +160,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(8, widgetType.getMainGroup());
             stat.setString(9, widgetType.getConfigUi());
             stat.setString(10, widgetType.getBundleId());
-            if (widgetType.isOverridable()) {
+            if (widgetType.isReadonlyDefaultConfig()) {
                 stat.setInt(11, 1);
             } else {
                 stat.setInt(11, 0);
@@ -199,7 +199,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean overridable) {
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {
@@ -216,7 +216,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(4, configUi);
             stat.setString(5, bundleId);
 
-            if (Boolean.TRUE.equals(overridable)) {
+            if (Boolean.TRUE.equals(readonlyDefaultConfig)) {
                 stat.setInt(6, 1);
             } else {
                 stat.setInt(6, 0);

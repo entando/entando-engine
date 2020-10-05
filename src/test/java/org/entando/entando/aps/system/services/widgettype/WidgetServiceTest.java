@@ -280,7 +280,7 @@ public class WidgetServiceTest {
         widgetType.setMainGroup("group1");
         widgetType.setLocked(true);
         widgetType.setBundleId(BUNDLE_1);
-        widgetType.setOverridable(true);
+        widgetType.setReadonlyDefaultConfig(true);
         widgetType.setConfigUi(objectMapper.writeValueAsString(
                 ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1)));
         return widgetType;
@@ -292,7 +292,7 @@ public class WidgetServiceTest {
         widgetType.setMainGroup("group2");
         widgetType.setParentType(getWidget1());
         widgetType.setBundleId(BUNDLE_2);
-        widgetType.setOverridable(true);
+        widgetType.setReadonlyDefaultConfig(true);
         widgetType.setConfigUi(objectMapper.writeValueAsString(
                 ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_2, RESOURCES_KEY, RESOURCES_2)));
         return widgetType;
@@ -304,7 +304,7 @@ public class WidgetServiceTest {
         widgetRequest.setTitles(ImmutableMap.of("it", "Mio Titolo", "en", "My Title"));
         widgetRequest.setCustomUi("<div></div>");
         widgetRequest.setGroup("group");
-        widgetRequest.setOverridable(true);
+        widgetRequest.setReadonlyDefaultConfig(true);
         widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));
         widgetRequest.setBundleId(BUNDLE_1);
         return widgetRequest;

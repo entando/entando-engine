@@ -70,7 +70,12 @@ public class WidgetType implements Serializable {
 
     private String bundleId;
 
-    private boolean overridable;
+
+    /**
+     * The readonlyDefaultConfig boolean field is read during the widget configuration, if It's false the user
+     * can override the widget type default configuration in the instance of the widget
+     */
+    private boolean readonlyDefaultConfig;
 
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
@@ -270,12 +275,12 @@ public class WidgetType implements Serializable {
         this._locked = locked;
     }
 
-    public boolean isOverridable() {
-        return overridable;
+    public boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
     }
 
-    public void setOverridable(boolean overridable) {
-        this.overridable = overridable;
+    public void setReadonlyDefaultConfig(boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 
     public String getMainGroup() {

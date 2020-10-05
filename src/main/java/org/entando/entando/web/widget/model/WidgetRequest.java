@@ -39,7 +39,7 @@ public class WidgetRequest {
 
     private Map<String, String> config;
 
-    private Boolean overridable;
+    private Boolean readonlyDefaultConfig;
 
     public String getCode() {
         return code;
@@ -105,11 +105,11 @@ public class WidgetRequest {
         this.config = config;
     }
 
-    public Boolean isOverridable() {
-        return overridable;
+    public Boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
     }
 
-    public void setOverridable(Boolean overridable) {
-        this.overridable = overridable;
+    public void setReadonlyDefaultConfig(Boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 }

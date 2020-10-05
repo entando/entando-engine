@@ -164,7 +164,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
             newTitles.put("it", "Titolo modificato");
             newTitles.put("en", "Modified title");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, newTitles, type.getConfig(), type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isOverridable());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("Titolo modificato", extracted.getTitles().get("it"));
@@ -192,7 +192,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
 
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isOverridable());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
@@ -200,7 +200,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
 
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isOverridable());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));

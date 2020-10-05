@@ -218,7 +218,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("<h1>Custom UI</h1>");
             request.setGroup(Group.FREE_GROUP_NAME);
-            request.setOverridable(true);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newCode)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -271,7 +271,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("");
             request.setGroup(Group.FREE_GROUP_NAME);
-            request.setOverridable(true);
+            request.setReadonlyDefaultConfig(true);
 
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
@@ -311,7 +311,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         try {
             WidgetRequest request = getWidgetRequest(newWidgetCode);
-            request.setOverridable(true);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result0 = this.executeWidgetPost(request, accessToken, status().isOk());
             result0.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
@@ -369,7 +369,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("it", "Titolo ITA");
             titles.put("en", "Title EN");
             request.setTitles(titles);
-            request.setOverridable(true);
+            request.setReadonlyDefaultConfig(true);
 
             request.setCustomUi(parentCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
@@ -400,7 +400,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
             request.setConfig(Collections.singletonMap("parentCode", "configValue"));
-            request.setOverridable(true);
+            request.setReadonlyDefaultConfig(true);
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
@@ -570,7 +570,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setTitles(titles);
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
-        request.setOverridable(true);
+        request.setReadonlyDefaultConfig(true);
         return request;
     }
 
@@ -593,7 +593,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setCode(code);
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
-        request.setOverridable(true);
+        request.setReadonlyDefaultConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
     }

@@ -73,10 +73,10 @@ public class WidgetCatalog {
 			width = 150)
 	private String bundleId;
 
-	@DatabaseField(columnName = "overridable",
+	@DatabaseField(columnName = "readonlydefaultconfig",
 			dataType = DataType.SHORT,
 			canBeNull = false)
-	private short overridable;
+	private short readonlyDefaultConfig;
 
 	public static final String TABLE_NAME = "widgetcatalog";
 	
@@ -94,7 +94,7 @@ CREATE TABLE widgetcatalog
   maingroup character varying(20),
   configui character varying,
   bundleid character varying(150),
-  overridable smallint NOT NULL,
+  readonlydefaultconfig smallint NOT NULL,
   CONSTRAINT showletcatalog_pkey PRIMARY KEY (code )
 )
  */

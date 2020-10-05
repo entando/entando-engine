@@ -34,7 +34,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "widgetType")
-@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments", "overridable"})
+@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments", "readonlyDefaultConfig"})
 public class JAXBWidgetType implements Serializable {
 	
 	public JAXBWidgetType() {}
@@ -67,7 +67,7 @@ public class JAXBWidgetType implements Serializable {
 				}
 			}
 			this.setFragments(jaxbFragments);
-			this.setOverridable(widgetType.isOverridable());
+			this.setReadonlyDefaultConfig(widgetType.isReadonlyDefaultConfig());
 		}
 	}
 	
@@ -208,12 +208,12 @@ public class JAXBWidgetType implements Serializable {
 		this._fragments = fragments;
 	}
 
-	@XmlElement(name = "overridable", required = false)
-	public boolean isOverridable() {
-		return overridable;
+	@XmlElement(name = "readonlydefaultconfig", required = false)
+	public boolean isReadonlyDefaultConfig() {
+		return readonlyDefaultConfig;
 	}
-	public void setOverridable(boolean overridable) {
-		this.overridable = overridable;
+	public void setReadonlyDefaultConfig(boolean readonlyDefaultConfig) {
+		this.readonlyDefaultConfig = readonlyDefaultConfig;
 	}
 
 	private String _code;
@@ -227,6 +227,6 @@ public class JAXBWidgetType implements Serializable {
 	private String _mainGroup;
 	private String _gui;
 	private List<JAXBGuiFragment> _fragments;
-	private boolean overridable;
+	private boolean readonlyDefaultConfig;
 
 }

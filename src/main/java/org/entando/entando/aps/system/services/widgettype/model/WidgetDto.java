@@ -41,7 +41,7 @@ public class WidgetDto {
     private ApsProperties config;
     private String parentType;
     private String action;
-    private Boolean isOverridable;
+    private Boolean readonlyDefaultConfig;
     private boolean locked;
 
     protected class GuiFragmentRef {
@@ -249,11 +249,11 @@ public class WidgetDto {
         this.locked = locked;
     }
 
-   public Boolean getOverridable() {
-        return isOverridable;
+   public Boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
     }
 
-    public void setOverridable(Boolean overridable) {
-        isOverridable = overridable;
+    public void setReadonlyDefaultConfig(Boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 }
