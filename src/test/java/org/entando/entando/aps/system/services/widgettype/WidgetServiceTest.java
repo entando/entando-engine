@@ -13,6 +13,18 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
@@ -22,6 +34,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.entando.entando.aps.system.init.IComponentManager;
 import org.entando.entando.aps.system.services.assertionhelper.WidgetAssertionHelper;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
@@ -46,17 +65,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WidgetServiceTest {
@@ -259,7 +267,7 @@ public class WidgetServiceTest {
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> bundleIdCaptor = ArgumentCaptor.forClass(String.class);
         verify(widgetManager).updateWidgetType(anyString(), any(), any(), anyString(), configUiCaptor.capture(),
-                bundleIdCaptor.capture());
+                bundleIdCaptor.capture(), anyBoolean());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
         assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
@@ -272,6 +280,7 @@ public class WidgetServiceTest {
         widgetType.setMainGroup("group1");
         widgetType.setLocked(true);
         widgetType.setBundleId(BUNDLE_1);
+        widgetType.setReadonlyDefaultConfig(true);
         widgetType.setConfigUi(objectMapper.writeValueAsString(
                 ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1)));
         return widgetType;
@@ -283,6 +292,7 @@ public class WidgetServiceTest {
         widgetType.setMainGroup("group2");
         widgetType.setParentType(getWidget1());
         widgetType.setBundleId(BUNDLE_2);
+        widgetType.setReadonlyDefaultConfig(true);
         widgetType.setConfigUi(objectMapper.writeValueAsString(
                 ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_2, RESOURCES_KEY, RESOURCES_2)));
         return widgetType;
@@ -294,6 +304,7 @@ public class WidgetServiceTest {
         widgetRequest.setTitles(ImmutableMap.of("it", "Mio Titolo", "en", "My Title"));
         widgetRequest.setCustomUi("<div></div>");
         widgetRequest.setGroup("group");
+        widgetRequest.setReadonlyDefaultConfig(true);
         widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));
         widgetRequest.setBundleId(BUNDLE_1);
         return widgetRequest;

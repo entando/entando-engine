@@ -222,6 +222,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("<h1>Custom UI</h1>");
             request.setGroup(Group.FREE_GROUP_NAME);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newCode)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -274,6 +275,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("");
             request.setGroup(Group.FREE_GROUP_NAME);
+            request.setReadonlyDefaultConfig(true);
+
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
             
@@ -285,7 +288,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("en", "Title EN 2 bis");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_WIDGET_NOT_FOUND)));
-            
+
             result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.group", is(Group.FREE_GROUP_NAME)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -312,6 +315,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         try {
             WidgetRequest request = getWidgetRequest(newWidgetCode);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result0 = this.executeWidgetPost(request, accessToken, status().isOk());
             result0.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
@@ -319,6 +323,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             PageRequest pageRequest = new PageRequest();
             pageRequest.setCode(pageCode);
             pageRequest.setPageModel("home");
+
             pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
             Map<String, String> pageTitles = new HashMap<>();
             pageTitles.put("it", pageCode);
@@ -368,6 +373,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("it", "Titolo ITA");
             titles.put("en", "Title EN");
             request.setTitles(titles);
+            request.setReadonlyDefaultConfig(true);
+
             request.setCustomUi(parentCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
 
@@ -397,7 +404,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
             request.setConfig(Collections.singletonMap("parentCode", "configValue"));
-
+            request.setReadonlyDefaultConfig(true);
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
@@ -567,6 +574,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setTitles(titles);
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
+        request.setReadonlyDefaultConfig(true);
         return request;
     }
 
@@ -589,6 +597,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setCode(code);
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
+        request.setReadonlyDefaultConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
     }

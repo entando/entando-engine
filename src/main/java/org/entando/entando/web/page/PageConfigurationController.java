@@ -24,6 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.model.PageConfigurationDto;
 import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.EntandoMessageCodesResolver;
 import org.entando.entando.web.common.annotation.ActivityStreamAuditable;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -31,8 +33,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.web.page.validator.PageConfigurationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,6 +51,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PageConfigurationController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
+
+    @Autowired
+    private PageConfigurationValidator validator;
 
     @Autowired
     private IPageService pageService;
@@ -120,6 +124,9 @@ public class PageConfigurationController {
         logger.debug("updating widget configuration in page {} and frame {}", pageCode, frameId);
 
         this.validateFrameId(frameId, bindingResult);
+
+        validator.validateWidgetConfigOverridable(widget.getCode(), widget.getConfig() , bindingResult);
+
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

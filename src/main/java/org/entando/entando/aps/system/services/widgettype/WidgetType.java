@@ -13,13 +13,12 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.util.ApsProperties;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -70,6 +69,13 @@ public class WidgetType implements Serializable {
     private String configUi;
 
     private String bundleId;
+
+
+    /**
+     * The readonlyDefaultConfig boolean field is read during the widget configuration, if It's false the user
+     * can override the widget type default configuration in the instance of the widget
+     */
+    private boolean readonlyDefaultConfig;
 
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
@@ -267,6 +273,14 @@ public class WidgetType implements Serializable {
 
     public void setLocked(boolean locked) {
         this._locked = locked;
+    }
+
+    public boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
+    }
+
+    public void setReadonlyDefaultConfig(boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 
     public String getMainGroup() {
