@@ -46,6 +46,7 @@ public class UserDto {
     private String status;
     private boolean accountNotExpired;
     private boolean credentialsNotExpired;
+    private boolean wizardEnabled;
     private ProfileTypeDto profileType;
     private Map<String, Object> profileAttributes = new HashMap<>();
     private int maxMonthsSinceLastAccess;
@@ -58,6 +59,7 @@ public class UserDto {
         this.credentialsNotExpired = user.isCredentialsNotExpired();
         if (user instanceof User) {
             User entandoUser = (User) user;
+            this.wizardEnabled = entandoUser.isWizardEnabled();
             if (null != entandoUser.getCreationDate()) {
                 this.registration = DateConverter.getFormattedDate(entandoUser.getCreationDate(), SystemConstants.API_DATE_FORMAT);
             }
@@ -131,6 +133,14 @@ public class UserDto {
 
     public void setCredentialsNotExpired(boolean credentialsNotExpired) {
         this.credentialsNotExpired = credentialsNotExpired;
+    }
+
+    public boolean isWizardEnabled() {
+        return wizardEnabled;
+    }
+
+    public void setWizardEnabled(boolean wizardEnabled) {
+        this.wizardEnabled = wizardEnabled;
     }
 
     public Map<String, Object> getProfileAttributes() {

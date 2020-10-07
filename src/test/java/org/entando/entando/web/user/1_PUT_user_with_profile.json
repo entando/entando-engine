@@ -14,5 +14,6 @@
     "maxMonthsSinceLastAccess":-1,
     "maxMonthsSinceLastPasswordChange":-1,
     "password":"adminadmin2",
-    "passwordConfirm":"adminadmin2"
+    "passwordConfirm":"adminadmin2",
+    "wizardEnabled": true
 }
