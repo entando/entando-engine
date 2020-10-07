@@ -41,7 +41,7 @@ public class WidgetDto {
     private ApsProperties config;
     private String parentType;
     private String action;
-
+    private Boolean readonlyDefaultConfig;
     private boolean locked;
 
     protected class GuiFragmentRef {
@@ -247,5 +247,13 @@ public class WidgetDto {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+   public Boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
+    }
+
+    public void setReadonlyDefaultConfig(Boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 }

@@ -19,7 +19,6 @@ import com.agiletec.aps.system.exception.EntRuntimeException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
@@ -27,6 +26,7 @@ import java.util.Map;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import org.apache.commons.lang.RandomStringUtils;
@@ -38,6 +38,10 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 public class PageTokenManager extends AbstractService implements IPageTokenManager {
 
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(PageTokenManager.class);
+
+	private static final byte[] IV = new byte[] {
+			0x61, 0x64 , 0x30, 0x32 , 0x36, 0x66 , 0x63, 0x31
+			, 0x2d, 0x37 , 0x38, 0x37 , 0x65, 0x2d , 0x34, 0x36};
 
 	private static final int SALT_LENGTH = 8;
 	private static final int HASH_LENGTH = 20;
@@ -83,7 +87,7 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(this.getPasswordCharArray()));
 			// Good enough for the page token although the salt generation can be better
 			Cipher pbeCipher = Cipher.getInstance(ENCRYPTION_CIPHER);	//NOSONAR
-			pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20));
+			pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20, new IvParameterSpec(IV)));
 			return base64Encode(pbeCipher.doFinal(pageCode.getBytes(StandardCharsets.UTF_8)));
 		} catch (GeneralSecurityException e) {
 			logger.error("Error during token generation for page code: {}", pageCode, e);
@@ -101,7 +105,7 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 			SecretKey key = keyFactory.generateSecret(new PBEKeySpec(this.getPasswordCharArray()));
 			// Good enough for the page token although the salt generation can be better
 			Cipher pbeCipher = Cipher.getInstance(ENCRYPTION_CIPHER);	//NOSONAR
-			pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20));
+			pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(this.getSalt().getBytes(), 20, new IvParameterSpec(IV)));
 			return new String(pbeCipher.doFinal(base64Decode(property)), StandardCharsets.UTF_8);
 		} catch (GeneralSecurityException | IOException e) {
 			logger.error("Error in decrypt", e);

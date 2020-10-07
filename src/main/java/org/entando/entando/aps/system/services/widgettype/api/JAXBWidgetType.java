@@ -14,18 +14,14 @@
 package org.entando.entando.aps.system.services.widgettype.api;
 
 import com.agiletec.aps.util.ApsProperties;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.core.Response;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -38,7 +34,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "widgetType")
-@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments"})
+@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments", "readonlyDefaultConfig"})
 public class JAXBWidgetType implements Serializable {
 	
 	public JAXBWidgetType() {}
@@ -71,6 +67,7 @@ public class JAXBWidgetType implements Serializable {
 				}
 			}
 			this.setFragments(jaxbFragments);
+			this.setReadonlyDefaultConfig(widgetType.isReadonlyDefaultConfig());
 		}
 	}
 	
@@ -93,6 +90,7 @@ public class JAXBWidgetType implements Serializable {
 		}
 		type.setMainGroup(this.getMainGroup());
 		//type.setLocked(this.isLocked());
+
 		type.setPluginCode(this.getPluginCode());
 		return type;
 	}
@@ -209,7 +207,15 @@ public class JAXBWidgetType implements Serializable {
 	protected void setFragments(List<JAXBGuiFragment> fragments) {
 		this._fragments = fragments;
 	}
-	
+
+	@XmlElement(name = "readonlydefaultconfig", required = false)
+	public boolean isReadonlyDefaultConfig() {
+		return readonlyDefaultConfig;
+	}
+	public void setReadonlyDefaultConfig(boolean readonlyDefaultConfig) {
+		this.readonlyDefaultConfig = readonlyDefaultConfig;
+	}
+
 	private String _code;
 	private ApsProperties _titles;
 	private List<WidgetTypeParameter> _parameters;
@@ -221,5 +227,6 @@ public class JAXBWidgetType implements Serializable {
 	private String _mainGroup;
 	private String _gui;
 	private List<JAXBGuiFragment> _fragments;
-	
+	private boolean readonlyDefaultConfig;
+
 }

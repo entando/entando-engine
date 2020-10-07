@@ -77,6 +77,7 @@ import org.entando.entando.aps.system.services.entity.AbstractEntityTypeServiceT
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentManagerIntegrationTest;
 import org.entando.entando.aps.system.services.i18n.TestApiI18nLabelInterface;
 import org.entando.entando.aps.system.services.oauth2.*;
+import org.entando.entando.aps.system.services.page.PageTokenManagerTest;
 import org.entando.entando.aps.system.services.storage.LocalStorageManagerIntegrationTest;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtilTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerAspectTest;
@@ -102,6 +103,8 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
 
+        //
+        suite.addTest(new JUnit4TestAdapter(PageTokenManagerTest.class));
         //
         suite.addTestSuite(EntLoggingTest.class);
         //

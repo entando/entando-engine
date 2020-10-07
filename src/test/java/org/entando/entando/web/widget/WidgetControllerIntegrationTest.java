@@ -28,6 +28,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,7 +36,6 @@ import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.model.WidgetDto.WidgetParameter;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
@@ -202,7 +202,10 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
-    
+
+
+
+
     @Test
     public void testAddUpdateWidget_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -219,6 +222,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("<h1>Custom UI</h1>");
             request.setGroup(Group.FREE_GROUP_NAME);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newCode)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -271,6 +275,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("");
             request.setGroup(Group.FREE_GROUP_NAME);
+            request.setReadonlyDefaultConfig(true);
+
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
             
@@ -282,7 +288,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("en", "Title EN 2 bis");
             result = this.executeWidgetPut(request, newCode, accessToken, status().isNotFound());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_WIDGET_NOT_FOUND)));
-            
+
             result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.group", is(Group.FREE_GROUP_NAME)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -309,6 +315,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         try {
             WidgetRequest request = getWidgetRequest(newWidgetCode);
+            request.setReadonlyDefaultConfig(true);
             ResultActions result0 = this.executeWidgetPost(request, accessToken, status().isOk());
             result0.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
@@ -316,6 +323,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             PageRequest pageRequest = new PageRequest();
             pageRequest.setCode(pageCode);
             pageRequest.setPageModel("home");
+
             pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
             Map<String, String> pageTitles = new HashMap<>();
             pageTitles.put("it", pageCode);
@@ -365,6 +373,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("it", "Titolo ITA");
             titles.put("en", "Title EN");
             request.setTitles(titles);
+            request.setReadonlyDefaultConfig(true);
+
             request.setCustomUi(parentCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
 
@@ -394,7 +404,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
             request.setConfig(Collections.singletonMap("parentCode", "configValue"));
-
+            request.setReadonlyDefaultConfig(true);
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
@@ -564,6 +574,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setTitles(titles);
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
+        request.setReadonlyDefaultConfig(true);
         return request;
     }
 
@@ -586,6 +597,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setCode(code);
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
+        request.setReadonlyDefaultConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
     }
@@ -629,6 +641,72 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
+
+
+    @Test
+    public void testEditLockedConfigWidget() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        try {
+            //Try to update the config of locked widget with a null config as previous value
+
+            String widgetTypeCode = "login_form";
+            
+            WidgetRequest request = new WidgetRequest();
+            request.setCode(widgetTypeCode);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            Map<String, String> titles = new HashMap<>();
+            titles.put("it", "Titolo ITA");
+            titles.put("en", "Title EN");
+            request.setTitles(titles);
+            request.setCustomUi("<h1>Custom UI</h1>");
+            request.setGroup(Group.FREE_GROUP_NAME);
+
+            request.setConfig(Collections.singletonMap("k","v"));
+            ResultActions result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+
+            //Try to update the config of locked widget with a not null config as previous value
+
+            widgetTypeCode = "formAction";
+            request.setCode(widgetTypeCode);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andDo(print());
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+            //Try to update the config of locked widget with a not null config as previous value using a null config
+
+            widgetTypeCode = "entando_apis";
+            request.setCode(widgetTypeCode);
+            request.setConfig(null);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
+            result.andDo(print());
+
+            result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
+
+            //Try to update the config of locked widget with the same config
+
+            widgetTypeCode = "entando_apis";
+            final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
+
+            request.setCode(widgetTypeCode);
+            Map<String, String> configMap = (Map) config;
+
+            request.setConfig(configMap);
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result.andDo(print());
+
+            result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
+            result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
+            result.andExpect(jsonPath("$.payload.group", is("free")));
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
