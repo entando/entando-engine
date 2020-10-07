@@ -84,6 +84,7 @@ import org.entando.entando.aps.system.services.userprofile.UserProfileManagerAsp
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerIntegrationTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
+import org.entando.entando.aps.system.services.userprofile.ValidateUserProfileIntegrationTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
 import org.entando.entando.ent.util.EntLoggingTest;
 import org.entando.entando.aps.util.FilterUtilsTest;
@@ -182,6 +183,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(UserProfileManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(UserProfileManagerAspectTest.class));
         suite.addTest(new JUnit4TestAdapter(UserProfileTypeServiceTest.class));
+        suite.addTest(new JUnit4TestAdapter(ValidateUserProfileIntegrationTest.class));
         //
         suite.addTestSuite(GuiFragmentManagerIntegrationTest.class);
         //
