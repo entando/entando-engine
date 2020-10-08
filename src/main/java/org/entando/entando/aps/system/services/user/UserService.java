@@ -37,6 +37,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
+import org.entando.entando.web.user.model.UserWizardRequest;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -305,6 +306,18 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public UserDto updateUserWizard(String username, UserWizardRequest wizardRequest) {
+        try {
+            this.getUserManager().changeWizard(username, wizardRequest.getWizardEnabled());
+            UserDetails user = this.getUserManager().getUser(username);
+            return dtoBuilder.convert(user);
+        } catch (EntException e) {
+            logger.error("Error in updating wizard enabled for user {}", username, e);
+            throw new RestServerError("Error in updating wizard enabled", e);
+        }
+    }
+
 
     @Override
     public List<UserGroupPermissions> getMyGroupPermissions(UserDetails user) {
@@ -339,6 +352,7 @@ public class UserService implements IUserService {
         user.setUsername(userRequest.getUsername());
         user.setPassword(userRequest.getPassword());
         user.setDisabled(userRequest.getStatus() != null && !userRequest.getStatus().equals(IUserService.STATUS_ACTIVE));
+        user.setWizardEnabled(userRequest.getWizardEnabled() != null  && userRequest.getWizardEnabled());
         if (oldUser instanceof User) {
             User userToClone = (User) oldUser;
             user.setLastAccess(userToClone.getLastAccess());
@@ -353,6 +367,7 @@ public class UserService implements IUserService {
         user.setPassword(userRequest.getPassword());
         user.setProfile(userProfileManager.getProfileType(userRequest.getProfileType()));
         user.setDisabled(userRequest.getStatus() != null && !userRequest.getStatus().equals(IUserService.STATUS_ACTIVE));
+        user.setWizardEnabled(userRequest.getWizardEnabled() == null  || userRequest.getWizardEnabled());
         return user;
     }
 }
