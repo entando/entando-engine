@@ -20,9 +20,6 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
@@ -32,6 +29,10 @@ import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChang
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Servizio di gestione dei tipi di widget (WidgetType) definiti nel sistema.
@@ -164,6 +165,7 @@ public class WidgetTypeManager extends AbstractService
             type.setMainGroup(mainGroup);
             type.setConfigUi(configUi);
             type.setBundleId(bundleId);
+            type.setReadonlyDefaultConfig(readonlyDefaultConfig);
             this.getCacheWrapper().updateWidgetType(type);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {

@@ -18,15 +18,16 @@ import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.util.ApsProperties;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.entando.entando.ent.exception.EntException;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author M.Diana - E.Santoboni
@@ -189,15 +190,15 @@ public class TestWidgetTypeManager extends BaseTestCase {
             assertNotNull(extracted);
             assertEquals("formAction", extracted.getParentType().getCode());
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
-
+            Boolean readonlyDefaultConfig = true;
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
+                    type.getConfigUi(), type.getBundleId(), readonlyDefaultConfig);
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals(0, extracted.getConfig().size());
-
+            assertTrue(extracted.isReadonlyDefaultConfig());
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
@@ -228,6 +229,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
         ApsProperties config = new ApsProperties();
         config.put("actionPath", "/myNewJsp.jsp");
         type.setConfig(config);
+        type.setReadonlyDefaultConfig(false);
         return type;
     }
 
