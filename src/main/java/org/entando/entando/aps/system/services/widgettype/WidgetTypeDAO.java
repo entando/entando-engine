@@ -14,21 +14,19 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.util.ApsProperties;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-
-import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.util.ApsProperties;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * Data Access Object per i tipi di widget (WidgetType).
@@ -42,17 +40,17 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     private ILangManager langManager;
 
     private final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid FROM widgetcatalog";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig FROM widgetcatalog";
 
     private final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid) "
-            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)";
+            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig) "
+            + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?)";
 
     private final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
     private final String UPDATE_WIDGET_TYPE
-            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ? WHERE code = ? ";
+            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlydefaultconfig = ? WHERE code = ? ";
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -101,6 +99,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 defaultConfig.loadFromXml(config);
                 widgetType.setConfig(defaultConfig);
             }
+
             if ((null != widgetType.getConfig() && null == widgetType.getParentTypeCode())) {
                 throw new EntException("Default configuration found in the type '"
                         + code + "' with no parent type assigned");
@@ -119,6 +118,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             if (StringUtils.isNotEmpty(bundleId)) {
                 widgetType.setBundleId(bundleId);
             }
+            int isReadonlyDefaultConfig = res.getInt(11);
+            widgetType.setReadonlyDefaultConfig(isReadonlyDefaultConfig == 1);
+
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
             throw new EntException("Error in the parsing in the Widget Type '" + code + "'", t);
@@ -134,7 +136,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(ADD_WIDGET_TYPE);
-            //(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked)
+            //(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaulconfig)
             stat.setString(1, widgetType.getCode());
             stat.setString(2, widgetType.getTitles().toXml());
             if (null != widgetType.getTypeParameters()) {
@@ -158,6 +160,11 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(8, widgetType.getMainGroup());
             stat.setString(9, widgetType.getConfigUi());
             stat.setString(10, widgetType.getBundleId());
+            if (widgetType.isReadonlyDefaultConfig()) {
+                stat.setInt(11, 1);
+            } else {
+                stat.setInt(11, 0);
+            }
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -192,7 +199,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) {
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {
@@ -208,7 +215,15 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(3, mainGroup);
             stat.setString(4, configUi);
             stat.setString(5, bundleId);
-            stat.setString(6, widgetTypeCode);
+
+            if (Boolean.TRUE.equals(readonlyDefaultConfig)) {
+                stat.setInt(6, 1);
+            } else {
+                stat.setInt(6, 0);
+            }
+
+            stat.setString(7, widgetTypeCode);
+
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {

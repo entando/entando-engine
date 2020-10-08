@@ -13,10 +13,9 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.List;
-
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.List;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * Interfaccia base per i Servizi gestori dei tipi di widget (WidgetType)
@@ -71,6 +70,6 @@ public interface IWidgetTypeManager {
      * @throws EntException in case of error
      */
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId) throws EntException;
+                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) throws EntException;
 
 }

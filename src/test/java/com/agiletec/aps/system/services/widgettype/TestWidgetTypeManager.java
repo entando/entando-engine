@@ -13,23 +13,20 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+import org.entando.entando.ent.exception.EntException;
 
 /**
  * @author M.Diana - E.Santoboni
@@ -167,7 +164,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
             newTitles.put("it", "Titolo modificato");
             newTitles.put("en", "Modified title");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, newTitles, type.getConfig(), type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("Titolo modificato", extracted.getTitles().get("it"));
@@ -195,7 +192,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
 
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
@@ -203,7 +200,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
 
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));

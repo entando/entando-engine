@@ -115,6 +115,14 @@ public interface IUserDAO {
      */
     public void changePassword(String username, String password);
 
+    /**
+     * Effettua l'aggiornamento della wizard stato di un'utente.
+     *
+     * @param username La username dell'utente a cui aggiornare la wizard stato.
+     * @param wizardEnabled La nuova wizard stato.
+     */
+    public void changeWizard(String username, Boolean wizardEnabled);
+
     public void updateLastAccess(String username);
 
     public PasswordEncoder getPasswordEncoder();

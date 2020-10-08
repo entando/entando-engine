@@ -104,7 +104,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(1))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
                 .andExpect(jsonPath("$.payload[1].profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload[1].profileType.typeDescription", is("Default user profile")));
+                .andExpect(jsonPath("$.payload[1].profileType.typeDescription", is("Default user profile type")));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
                 .andExpect(jsonPath("$.payload[0].profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload[0].profileType.typeDescription", is("Default user profile")))
+                .andExpect(jsonPath("$.payload[0].profileType.typeDescription", is("Default user profile type")))
                 .andExpect(jsonPath("$.payload[0].profileAttributes.fullname", Matchers.containsString("s")));
 
         String username = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload[0].username");
@@ -153,7 +153,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.username", is(username)))
                 .andExpect(jsonPath("$.payload.profileType.typeCode", is("PFL")))
-                .andExpect(jsonPath("$.payload.profileType.typeDescription", is("Default user profile")));
+                .andExpect(jsonPath("$.payload.profileType.typeDescription", is("Default user profile type")));
     }
 
     @Test
@@ -806,7 +806,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_default_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")));
 
         } finally {
             this.userManager.removeUser(username);
@@ -846,7 +846,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("AAA")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Profile Type AAA")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Profile Type AAA")))
+                    .andExpect(jsonPath("$.payload.wizardEnabled", Matchers.is(true)));
 
         } finally {
             this.userManager.removeUser(username);
@@ -878,7 +879,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")))
+                    .andExpect(jsonPath("$.payload.wizardEnabled", Matchers.is(false)));
 
             file = this.getClass().getResourceAsStream("1_PUT_user_with_profile.json");
             request = FileTextReader.getText(file).replace("**NAME**", username);
@@ -892,7 +894,50 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
-                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile")));
+                    .andExpect(jsonPath("$.payload.profileType.typeDescription", Matchers.is("Default user profile type")))
+                    .andExpect(jsonPath("$.payload.wizardEnabled", Matchers.is(true)));
+
+        } finally {
+            this.userManager.removeUser(username);
+            UserDetails user = this.userManager.getUser(username);
+            assertNull(user);
+        }
+    }
+
+    @Test
+    public void testUpdateUserWizard() throws Exception {
+        String username = "user_wizard_enabled";
+        UserDetails mockUser = this.createUser(username);
+        try {
+            this.userManager.addUser(mockUser);
+            InputStream file = this.getClass().getResourceAsStream("1_POST_user_wizard_enabled.json");
+            String request = FileTextReader.getText(file);
+
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            mockMvc
+                    .perform(post("/users/{username}/wizard", new Object[]{username})
+                            .content(request)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", is("user_wizard_enabled")))
+                    .andExpect(jsonPath("$.payload.wizardEnabled", is(true)));
+
+            file = this.getClass().getResourceAsStream("1_POST_user_wizard_disabled.json");
+            request = FileTextReader.getText(file);
+
+            mockMvc
+                    .perform(post("/users/{username}/wizard", new Object[]{username})
+                            .content(request)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.username", is("user_wizard_enabled")))
+                    .andExpect(jsonPath("$.payload.wizardEnabled", is(false)));
 
         } finally {
             this.userManager.removeUser(username);
@@ -953,6 +998,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
         user.setMaxMonthsSinceLastAccess(2);
         user.setMaxMonthsSinceLastPasswordChange(1);
         user.setPassword("password");
+        user.setWizardEnabled(true);
         return user;
     }
 

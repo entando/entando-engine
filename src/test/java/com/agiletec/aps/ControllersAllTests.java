@@ -44,6 +44,7 @@ import org.entando.entando.web.label.LabelControllerIntegrationTest;
 import org.entando.entando.web.label.LabelControllerUnitTest;
 import org.entando.entando.web.language.LanguageControllerIntegrationTest;
 import org.entando.entando.web.language.LanguageControllerUnitTest;
+import org.entando.entando.web.page.PageConfigurationControllerIntegrationTest;
 import org.entando.entando.web.page.PageControllerIntegrationTest;
 import org.entando.entando.web.page.PageControllerTest;
 import org.entando.entando.web.pagemodel.PageModelControllerIntegrationTest;
@@ -137,7 +138,9 @@ public class ControllersAllTests extends TestCase {
 
         suite.addTest(new JUnit4TestAdapter(ApiConsumerControllerIntegrationTest.class));
         suite.addTest(new JUnit4TestAdapter(ApiConsumerControllerTest.class));
-        
+
+        suite.addTest(new JUnit4TestAdapter(PageConfigurationControllerIntegrationTest.class));
+
         return suite;
     }
 

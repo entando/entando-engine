@@ -91,6 +91,13 @@ public interface UserDetails {
     public boolean isDisabled();
 
     /**
+     * Return if the wizard tutorial will be shown to the user
+     *
+     * @return 'true' if the current user has wizard enabled
+     */
+    public boolean isWizardEnabled();
+
+    /**
      * Return the profile associated to the current user, if any
      *
      * @return The profile

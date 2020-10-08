@@ -77,12 +77,14 @@ import org.entando.entando.aps.system.services.entity.AbstractEntityTypeServiceT
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentManagerIntegrationTest;
 import org.entando.entando.aps.system.services.i18n.TestApiI18nLabelInterface;
 import org.entando.entando.aps.system.services.oauth2.*;
+import org.entando.entando.aps.system.services.page.PageTokenManagerTest;
 import org.entando.entando.aps.system.services.storage.LocalStorageManagerIntegrationTest;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtilTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerAspectTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerIntegrationTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
+import org.entando.entando.aps.system.services.userprofile.ValidateUserProfileIntegrationTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
 import org.entando.entando.ent.util.EntLoggingTest;
 import org.entando.entando.aps.util.FilterUtilsTest;
@@ -101,6 +103,8 @@ public class AllTests {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
 
+        //
+        suite.addTest(new JUnit4TestAdapter(PageTokenManagerTest.class));
         //
         suite.addTestSuite(EntLoggingTest.class);
         //
@@ -179,6 +183,7 @@ public class AllTests {
         suite.addTest(new JUnit4TestAdapter(UserProfileManagerTest.class));
         suite.addTest(new JUnit4TestAdapter(UserProfileManagerAspectTest.class));
         suite.addTest(new JUnit4TestAdapter(UserProfileTypeServiceTest.class));
+        suite.addTest(new JUnit4TestAdapter(ValidateUserProfileIntegrationTest.class));
         //
         suite.addTestSuite(GuiFragmentManagerIntegrationTest.class);
         //

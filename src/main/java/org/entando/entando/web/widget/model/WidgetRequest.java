@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.widget.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -39,6 +38,8 @@ public class WidgetRequest {
     private String parentType;
 
     private Map<String, String> config;
+
+    private Boolean readonlyDefaultConfig;
 
     public String getCode() {
         return code;
@@ -102,5 +103,13 @@ public class WidgetRequest {
 
     public void setConfig(Map<String, String> config) {
         this.config = config;
+    }
+
+    public Boolean isReadonlyDefaultConfig() {
+        return readonlyDefaultConfig;
+    }
+
+    public void setReadonlyDefaultConfig(Boolean readonlyDefaultConfig) {
+        this.readonlyDefaultConfig = readonlyDefaultConfig;
     }
 }
