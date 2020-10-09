@@ -316,8 +316,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Login Form</property>
-<property key="it">Form di Login</property>
+<property key="en">Legacy Login Form</property>
+<property key="it">Form di Login Legacy</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
@@ -341,24 +341,24 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 ', 1, 'free', 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Edit Current User</property>
-<property key="it">Edita Utente Corrente</property>
+<property key="en">Edit Profile and Password</property>
+<property key="it">Edita Profilo e Password</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/edit.action</property>
 </properties>', 1, 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Edit Current User Password</property>
-<property key="it">Edita Password Utente Corrente</property>
+<property key="en">Edit User Password</property>
+<property key="it">Edita Password Utente</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/editPassword.action</property>
 </properties>', 1, 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Edit Current User Profile</property>
-<property key="it">Edita Profilo Utente Corrente</property>
+<property key="en">Edit User Profile</property>
+<property key="it">Edita Profilo Utente</property>
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/Profile/edit.action</property>
