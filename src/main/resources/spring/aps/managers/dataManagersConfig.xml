@@ -16,14 +16,14 @@
         <property name="dataModelDAO" >
             <bean class="org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModelDAO">
                 <property name="dataSource" ref="servDataSource" />
-                <property name="dataSourceClassName"><value>${servDataSourceClassName}</value></property>
+                <property name="dataSourceClassName">
+                    <value>${servDataSourceClassName}</value>
+                </property>
             </bean>
         </property>
-		<property name="cacheWrapper">
-			<bean class="org.entando.entando.aps.system.services.dataobjectmodel.cache.DataObjectModelCacheWrapper">
-				<property name="springCacheManager" ref="springCacheManager" />
-			</bean>
-		</property>
+        <property name="cacheWrapper">
+            <bean class="org.entando.entando.aps.system.services.dataobjectmodel.cache.DataObjectModelCacheWrapper" />
+        </property>
         <property name="pageManager" ref="PageManager" />
         <property name="dataObjectManager" ref="DataObjectManager" />
     </bean>
@@ -49,7 +49,7 @@
     </bean>
 
     <bean id="DataTypeDOM" class="org.entando.entando.aps.system.services.dataobject.parse.DataTypeDOM"
-              parent="baseEntityTypeDom" scope="prototype">
+          parent="baseEntityTypeDom" scope="prototype">
     </bean>
 
     <bean id="DataObjectSearcherDAO" class="org.entando.entando.aps.system.services.dataobject.DataObjectSearcherDAO">
@@ -73,11 +73,9 @@
     <bean id="DataObjectPageMapperManager" class="org.entando.entando.aps.system.services.dataobjectmapper.DataObjectPageMapperManager"
           parent="abstractService" >
         <property name="pageManager" ref="PageManager" />
-		<property name="cacheWrapper">
-			<bean class="org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper">
-				<property name="springCacheManager" ref="springCacheManager" />
-			</bean>
-		</property>
+        <property name="cacheWrapper">
+            <bean class="org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper" />
+        </property>
     </bean>
 
     <bean id="DataObjectDispenserManager" class="org.entando.entando.aps.system.services.dataobjectdispenser.BaseDataObjectDispenser"
@@ -130,13 +128,7 @@
         <property name="dataObjectModelManager" ref="DataObjectModelManager" />
         <property name="dataAuthorizationHelper" ref="DataObjectAuthorizationHelper" />
     </bean>
-    <!--
-    <bean id="jacmsCacheWrapperManager" class="com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager"
-          parent="abstractService" >
-        <property name="cacheInfoManager" ref="CacheInfoManager" />
-        <property name="contentManager" ref="jacmsContentManager" />
-    </bean>
-    -->
+    
     <!-- APIs -->
     <bean id="ApiDataObjectInterface" class="org.entando.entando.aps.system.services.dataobject.api.ApiDataObjectInterface" >
         <property name="dataObjectManager" ref="DataObjectManager" />

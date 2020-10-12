@@ -30,14 +30,10 @@
             </bean>
         </property>
         <property name="resourceCacheWrapper">
-            <bean class="org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper" />
         </property>
         <property name="serviceCacheWrapper">
-            <bean class="org.entando.entando.aps.system.services.api.cache.ApiServiceCacheWrapper">
-                <property name="springCacheManager" ref="springCacheManager" />
-            </bean>
+            <bean class="org.entando.entando.aps.system.services.api.cache.ApiServiceCacheWrapper" />
         </property>
     </bean>
 
@@ -53,11 +49,17 @@
         <property name="consumerDAO">
             <bean class="org.entando.entando.aps.system.services.oauth2.OAuthConsumerDAO">
                 <property name="dataSource" ref="servDataSource"/>
-                <property name="dataSourceClassName"><value>${servDataSourceClassName}</value></property>
+                <property name="dataSourceClassName">
+                    <value>${servDataSourceClassName}</value>
+                </property>
             </bean>
         </property>
-        <property name="accessTokenValiditySeconds"><value>${oauth2.accessToken.validitySeconds}</value></property>
-        <property name="refreshTokenValiditySeconds"><value>${oauth2.refreshToken.validitySeconds}</value></property>
+        <property name="accessTokenValiditySeconds">
+            <value>${oauth2.accessToken.validitySeconds}</value>
+        </property>
+        <property name="refreshTokenValiditySeconds">
+            <value>${oauth2.refreshToken.validitySeconds}</value>
+        </property>
     </bean>
 
     <bean id="OAuth2TokenManager"
@@ -68,8 +70,12 @@
                 <property name="dataSource" ref="servDataSource"/>
             </bean>
         </property>
-        <property name="accessTokenValiditySeconds"><value>${oauth2.accessToken.validitySeconds}</value></property>
-        <property name="refreshTokenValiditySeconds"><value>${oauth2.refreshToken.validitySeconds}</value></property>
+        <property name="accessTokenValiditySeconds">
+            <value>${oauth2.accessToken.validitySeconds}</value>
+        </property>
+        <property name="refreshTokenValiditySeconds">
+            <value>${oauth2.refreshToken.validitySeconds}</value>
+        </property>
     </bean>
 
     <beans profile="swagger">
