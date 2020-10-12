@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.role.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import java.util.List;
 
 import org.entando.entando.ent.exception.EntException;
@@ -22,7 +23,7 @@ import com.agiletec.aps.system.services.role.Permission;
 /**
  * @author E.Santoboni
  */
-public interface IPermissionCacheWrapper {
+public interface IPermissionCacheWrapper extends ICacheWrapper {
 
 	public static final String PERMISSION_CACHE_NAME_PREFIX = "RoleManager_permission_";
 	public static final String PERMISSION_CODES_CACHE_NAME = "RoleManager_permissions";

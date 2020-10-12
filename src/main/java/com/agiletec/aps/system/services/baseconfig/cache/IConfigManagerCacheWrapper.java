@@ -13,13 +13,14 @@
  */
 package com.agiletec.aps.system.services.baseconfig.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.IConfigItemDAO;
 
 /**
  * @author E.Santoboni
  */
-public interface IConfigManagerCacheWrapper {
+public interface IConfigManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String CONFIG_MANAGER_CACHE_NAME = "Entando_ConfigManager";
 	public static final String CONFIG_ITEM_CACHE_NAME_PREFIX = "ConfigManager_item_";

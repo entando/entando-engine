@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.category.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryDAO;
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * @author E.Santoboni
  */
-public interface ICategoryManagerCacheWrapper {
+public interface ICategoryManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String CATEGORY_MANAGER_CACHE_NAME = "Entando_CategoryManager";
 	public static final String CATEGORY_CACHE_NAME_PREFIX = "CategoryManager_node_";

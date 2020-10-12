@@ -13,7 +13,6 @@
  */
 package com.agiletec.aps.system.services.group;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class GroupManager extends AbstractService implements IGroupManager {
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

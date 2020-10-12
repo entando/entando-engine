@@ -13,7 +13,6 @@
  */
 package com.agiletec.aps.system.services.role;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,8 +48,8 @@ public class RoleManager extends AbstractService implements IRoleManager {
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getRoleCacheWrapper()).release();
-        ((AbstractCacheWrapper) this.getPermissionCacheWrapper()).release();
+        this.getRoleCacheWrapper().release();
+        this.getPermissionCacheWrapper().release();
         super.release();
     }
 

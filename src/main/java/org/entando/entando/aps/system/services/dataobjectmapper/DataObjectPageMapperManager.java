@@ -13,7 +13,6 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -47,7 +46,7 @@ public class DataObjectPageMapperManager extends AbstractService implements IDat
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

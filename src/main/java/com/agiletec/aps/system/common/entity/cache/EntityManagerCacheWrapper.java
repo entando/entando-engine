@@ -27,12 +27,7 @@ import org.springframework.cache.Cache;
 public class EntityManagerCacheWrapper extends AbstractCacheWrapper implements IEntityManagerCacheWrapper {
 
     private String entityManagerName;
-
-    @Override
-    public void release() {
-        // nothing to do
-    }
-
+    
     @Override
     public void initCache(String managerName) throws EntException {
         this.setEntityManagerName(managerName);

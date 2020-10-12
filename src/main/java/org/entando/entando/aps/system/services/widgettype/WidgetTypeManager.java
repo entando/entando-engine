@@ -13,11 +13,6 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
@@ -62,7 +57,7 @@ public class WidgetTypeManager extends AbstractService
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

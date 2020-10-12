@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.role.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.role.IRoleDAO;
 import com.agiletec.aps.system.services.role.Role;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * @author E.Santoboni
  */
-public interface IRoleCacheWrapper {
+public interface IRoleCacheWrapper extends ICacheWrapper {
 
 	public static final String ROLE_CACHE_NAME_PREFIX = "RoleManager_role_";
 	public static final String ROLE_CODES_CACHE_NAME = "RoleManager_roles";

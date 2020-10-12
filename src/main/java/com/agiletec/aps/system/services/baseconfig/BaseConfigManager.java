@@ -21,7 +21,6 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.cache.IConfigManagerCacheWrapper;
@@ -75,7 +74,7 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

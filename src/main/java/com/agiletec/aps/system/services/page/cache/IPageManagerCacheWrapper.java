@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.page.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageDAO;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * @author E.Santoboni
  */
-public interface IPageManagerCacheWrapper {
+public interface IPageManagerCacheWrapper extends ICacheWrapper {
 
     public static final String PAGE_MANAGER_CACHE_NAME = "Entando_PageManager";
     public static final String ONLINE_PAGE_CACHE_NAME_PREFIX = "PageManager_onLine_";

@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import org.entando.entando.ent.exception.EntException;
@@ -65,7 +64,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

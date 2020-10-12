@@ -13,13 +13,14 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPageManager;
 
 /**
  * @author E.Santoboni
  */
-public interface IDataObjectMapperCacheWrapper {
+public interface IDataObjectMapperCacheWrapper extends ICacheWrapper {
 
 	public static final String OBJECT_MAPPER_CACHE_NAME = "Entando_DataObjectPageMapperManager";
 	public static final String OBJECT_MAPPER_CACHE_KEY = "DataObjectMapper_mapper";

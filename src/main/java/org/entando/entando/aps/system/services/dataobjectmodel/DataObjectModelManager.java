@@ -13,7 +13,6 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,7 +88,7 @@ public class DataObjectModelManager extends AbstractService implements IDataObje
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

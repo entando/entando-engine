@@ -13,7 +13,6 @@
  */
 package com.agiletec.aps.system.services.keygenerator;
 
-import com.agiletec.aps.system.common.AbstractCacheWrapper;
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.keygenerator.cache.IKeyGeneratorManagerCacheWrapper;
@@ -41,7 +40,7 @@ public class KeyGeneratorManager extends AbstractService implements IKeyGenerato
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 

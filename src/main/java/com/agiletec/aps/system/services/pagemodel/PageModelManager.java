@@ -43,7 +43,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
     
     @Override
     protected void release() {
-        ((AbstractCacheWrapper) this.getCacheWrapper()).release();
+        this.getCacheWrapper().release();
         super.release();
     }
 
