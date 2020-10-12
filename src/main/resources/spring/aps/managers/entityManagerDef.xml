@@ -14,51 +14,22 @@
     <bean id="baseEntityTypeDom" class="com.agiletec.aps.system.common.entity.parse.EntityTypeDOM" scope="prototype">
         <property name="attributeTypes">
             <map>
-                <entry key="Date">
-                    <ref bean="DateAttribute" />
-                </entry>
-                <entry key="Timestamp">
-                    <ref bean="TimestampAttribute" />
-                </entry>
-                <entry key="Number">
-                    <ref bean="NumberAttribute" />
-                </entry>
-                <entry key="Monotext">
-                    <ref bean="MonoTextAttribute" />
-                </entry>
-                <entry key="Enumerator">
-                    <ref bean="EnumeratorAttribute" />
-                </entry>
-                <entry key="EnumeratorMap">
-                    <ref bean="EnumeratorMapAttribute" />
-                </entry>
-                <entry key="Text">
-                    <ref bean="TextAttribute" />
-                </entry>
-                <entry key="Longtext">
-                    <ref bean="LongtextAttribute" />
-                </entry>
-                <entry key="Hypertext">
-                    <ref bean="HypertextAttribute" />
-                </entry>
-                <entry key="Boolean">
-                    <ref bean="BooleanAttribute" />
-                </entry>
-                <entry key="CheckBox">
-                    <ref bean="CheckBoxAttribute"/>
-                </entry>
-                <entry key="ThreeState">
-                    <ref bean="ThreeStateBooleanAttribute" />
-                </entry>
-                <entry key="Composite">
-                    <ref bean="CompositeAttribute" />
-                </entry>
-                <entry key="Monolist">
-                    <ref bean="MonoListAttribute" />
-                </entry>
-                <entry key="List">
-                    <ref bean="ListAttribute" />
-                </entry>
+                <entry key="Date"><ref bean="DateAttribute" /></entry>
+                <entry key="Timestamp"><ref bean="TimestampAttribute" /></entry>
+                <entry key="Number"><ref bean="NumberAttribute" /></entry>
+                <entry key="Monotext"><ref bean="MonoTextAttribute" /></entry>
+                <entry key="Email"><ref bean="EmailAttribute" /></entry>
+                <entry key="Enumerator"><ref bean="EnumeratorAttribute" /></entry>
+                <entry key="EnumeratorMap"><ref bean="EnumeratorMapAttribute" /></entry>
+                <entry key="Text"><ref bean="TextAttribute" /></entry>
+                <entry key="Longtext"><ref bean="LongtextAttribute" /></entry>
+                <entry key="Hypertext"><ref bean="HypertextAttribute" /></entry>
+                <entry key="Boolean"><ref bean="BooleanAttribute" /></entry>
+                <entry key="CheckBox"><ref bean="CheckBoxAttribute"/></entry>
+                <entry key="ThreeState"><ref bean="ThreeStateBooleanAttribute" /></entry>
+                <entry key="Composite"><ref bean="CompositeAttribute" /></entry>
+                <entry key="Monolist"><ref bean="MonoListAttribute" /></entry>
+                <entry key="List"><ref bean="ListAttribute" /></entry>
             </map>
         </property>
     </bean>

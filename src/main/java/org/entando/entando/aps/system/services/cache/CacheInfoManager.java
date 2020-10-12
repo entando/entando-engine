@@ -38,6 +38,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
@@ -347,7 +348,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
     protected CacheManager getSpringCacheManager() {
         return springCacheManager;
     }
-
+    @Autowired
     public void setSpringCacheManager(CacheManager springCacheManager) {
         this.springCacheManager = springCacheManager;
     }
