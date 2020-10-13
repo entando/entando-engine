@@ -71,6 +71,12 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
         this.checkSecurityConfiguration(props);
         logger.debug("{} ready. Initialized", this.getClass().getName());
     }
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
     /**
      * Restituisce il valore di una voce della tabella di sistema. Il valore può

@@ -37,6 +37,12 @@ public class KeyGeneratorManager extends AbstractService implements IKeyGenerato
 		this.getCacheWrapper().initCache(this.getKeyGeneratorDAO());
 		logger.debug("{} ready. : last loaded key {}", this.getClass().getName(), this.getCacheWrapper().getUniqueKeyCurrentValue());
 	}
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
 	/**
 	 * Restituisce la chiave univoca corrente.

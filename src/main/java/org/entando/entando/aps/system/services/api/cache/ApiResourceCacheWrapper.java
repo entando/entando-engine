@@ -38,9 +38,8 @@ public class ApiResourceCacheWrapper extends AbstractGenericCacheWrapper<ApiReso
 	public void initCache(Map<String, ApiResource> resources, IApiCatalogDAO apiCatalogDAO) throws EntException {
 		try {
 			Cache cache = this.getCache();
-			this.releaseCachedObjects(cache);
 			apiCatalogDAO.loadApiStatus(resources);
-			this.insertObjectsOnCache(cache, resources);
+			this.insertAndCleanCache(cache, resources);
 		} catch (Throwable t) {
 			logger.error("Error bootstrapping ApiCatalog cache", t);
 			throw new EntException("Error bootstrapping ApiCatalog cache", t);

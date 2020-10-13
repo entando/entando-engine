@@ -13,11 +13,12 @@
  */
 package org.entando.entando.aps.system.init.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 
 import org.entando.entando.ent.exception.EntException;
 
-public interface IInitializerManagerCacheWrapper {
+public interface IInitializerManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String INITIALIZER_MANAGER_CACHE_NAME = "Entando_InitializerManager";
 

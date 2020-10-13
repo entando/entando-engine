@@ -13,13 +13,14 @@
  */
 package com.agiletec.aps.system.services.i18n.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import java.util.Map;
 
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
 
-public interface II18nManagerCacheWrapper {
+public interface II18nManagerCacheWrapper extends ICacheWrapper {
 
     public static final String I18N_MANAGER_CACHE_NAME = "Entando_I18nManager";
 

@@ -60,6 +60,12 @@ public class GroupManager extends AbstractService implements IGroupManager {
         this.getCacheWrapper().initCache(this.getGroupDAO());
         logger.debug("{} ready. Initialized", this.getClass().getName());
     }
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
     /**
      * Aggiunge un gruppo nel sistema.

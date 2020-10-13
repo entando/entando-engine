@@ -78,6 +78,12 @@ public class I18nManager extends AbstractService implements II18nManager {
         this.getCacheWrapper().initCache(this.getI18nDAO());
         logger.debug("{} : initialized {} labels", this.getClass().getName(), this.getLabelGroups().size());
     }
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
     /**
      * Return the group of labels.

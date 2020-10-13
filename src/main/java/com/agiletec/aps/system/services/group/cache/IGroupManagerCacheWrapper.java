@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.group.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupDAO;
@@ -21,7 +22,7 @@ import java.util.Map;
 /**
  * @author E.Santoboni
  */
-public interface IGroupManagerCacheWrapper {
+public interface IGroupManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String GROUP_MANAGER_CACHE_NAME = "Entando_GroupManager";
 	public static final String GROUP_CACHE_NAME_PREFIX = "GroupManager_group_";

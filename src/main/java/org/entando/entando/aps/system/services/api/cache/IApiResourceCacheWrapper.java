@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.api.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiResource;
@@ -20,7 +21,7 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.IApiCatalogDAO;
 
-public interface IApiResourceCacheWrapper {
+public interface IApiResourceCacheWrapper extends ICacheWrapper {
 
 	public static final String APICATALOG_RESOURCES_CACHE_NAME = "ApiResourceManager_resources";
 

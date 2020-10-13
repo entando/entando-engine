@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.widgettype.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import org.entando.entando.ent.exception.EntException;
 import java.util.Collection;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeDAO;
@@ -21,7 +22,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 /**
  * @author E.Santoboni
  */
-public interface IWidgetTypeManagerCacheWrapper {
+public interface IWidgetTypeManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String WIDGET_TYPE_MANAGER_CACHE_NAME = "Entando_WidgetTypeManager";
 	public static final String WIDGET_TYPE_CACHE_NAME_PREFIX = "WidgetTypeManager_type_";

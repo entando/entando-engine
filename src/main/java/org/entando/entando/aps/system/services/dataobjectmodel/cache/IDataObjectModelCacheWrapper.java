@@ -13,13 +13,14 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmodel.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import java.util.List;
 
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
 import org.entando.entando.aps.system.services.dataobjectmodel.IDataObjectModelDAO;
 
-public interface IDataObjectModelCacheWrapper {
+public interface IDataObjectModelCacheWrapper extends ICacheWrapper {
 
     public static final String CACHE_NAME = "Entando_DataObjectModelManager";
 
@@ -29,7 +30,7 @@ public interface IDataObjectModelCacheWrapper {
 
     public void initCache(IDataObjectModelDAO dataObjectModelDAO) throws EntException;
 
-    public DataObjectModel getModel(String code);
+	public DataObjectModel getModel(String code);
 
     public void addModel(DataObjectModel model);
 

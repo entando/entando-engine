@@ -14,7 +14,6 @@
 package com.agiletec.aps.system.services.category.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryDAO;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -27,8 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.cache.Cache;
 
 /**
@@ -37,6 +37,20 @@ import org.springframework.cache.Cache;
 public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements ICategoryManagerCacheWrapper {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(CategoryManagerCacheWrapper.class);
+
+    @Override
+    public void release() {
+        Cache cache = this.getCache();
+        List<String> codes = (List<String>) this.get(cache, CATEGORY_CODES_CACHE_NAME, List.class);
+        if (null != codes) {
+            for (String code : codes) {
+                cache.evict(CATEGORY_CACHE_NAME_PREFIX + code);
+            }
+            cache.evict(CATEGORY_CODES_CACHE_NAME);
+        }
+        cache.evict(CATEGORY_STATUS_CACHE_NAME);
+        cache.evict(CATEGORY_ROOT_CACHE_NAME);
+    }
 
     @Override
     public void initCache(ICategoryDAO categoryDAO, ILangManager langManager) throws EntException {
@@ -89,17 +103,6 @@ public class CategoryManagerCacheWrapper extends AbstractCacheWrapper implements
             throw new EntException("Error found in the category tree: undefined root");
         }
         this.insertObjectsOnCache(cache, root, categoryMap);
-    }
-
-    protected void releaseCachedObjects(Cache cache) {
-        List<String> codes = (List<String>) this.get(cache, CATEGORY_CODES_CACHE_NAME, List.class);
-        if (null != codes) {
-            for (String code : codes) {
-                cache.evict(CATEGORY_CACHE_NAME_PREFIX + code);
-            }
-            cache.evict(CATEGORY_CODES_CACHE_NAME);
-        }
-        cache.evict(CATEGORY_STATUS_CACHE_NAME);
     }
 
     protected void insertObjectsOnCache(Cache cache, Category root, Map<String, Category> categoryMap) {

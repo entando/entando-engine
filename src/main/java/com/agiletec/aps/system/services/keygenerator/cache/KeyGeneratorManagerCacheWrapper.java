@@ -21,48 +21,49 @@ import org.springframework.cache.Cache;
 
 public class KeyGeneratorManagerCacheWrapper extends AbstractCacheWrapper implements IKeyGeneratorManagerCacheWrapper {
 
-	private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
-	@Override
-	protected String getCacheName() {
-		return CACHE_NAME;
-	}
-
-	@Override
-	public void initCache(IKeyGeneratorDAO keyGeneratorDAO) {
-		Integer value = keyGeneratorDAO.getUniqueKey();
-		Cache cache = this.getCache();
-		this.releaseCachedObjects(cache);
-		this.insertObjectsOnCache(cache, value);
-	}
-    
     @Override
-	public synchronized int getAndIncrementUniqueKeyCurrentValue(IKeyGeneratorDAO keyGeneratorDAO) {
+    public void release() {
+        Cache cache = this.getCache();
+        cache.evict(IKeyGeneratorManagerCacheWrapper.CURRENT_KEY);
+    }
+
+    @Override
+    protected String getCacheName() {
+        return CACHE_NAME;
+    }
+
+    @Override
+    public void initCache(IKeyGeneratorDAO keyGeneratorDAO) {
+        Integer value = keyGeneratorDAO.getUniqueKey();
+        Cache cache = this.getCache();
+        this.insertObjectsOnCache(cache, value);
+    }
+
+    @Override
+    public synchronized int getAndIncrementUniqueKeyCurrentValue(IKeyGeneratorDAO keyGeneratorDAO) {
         Cache cache = this.getCache();
         Integer currentValue = this.get(cache, CURRENT_KEY, Integer.class);
         Integer nextValue = currentValue + 1;
         this.insertObjectsOnCache(cache, nextValue);
         keyGeneratorDAO.updateKey(nextValue);
-		return nextValue;
+        return nextValue;
     }
 
-	@Override
-	public int getUniqueKeyCurrentValue() {
-		return this.get(this.getCache(), CURRENT_KEY, Integer.class);
-	}
+    @Override
+    public int getUniqueKeyCurrentValue() {
+        return this.get(this.getCache(), CURRENT_KEY, Integer.class);
+    }
 
-	@Override
-	public void updateCurrentKey(int value) {
-		this.insertObjectsOnCache(this.getCache(), value);
-	}
+    @Override
+    public void updateCurrentKey(int value) {
+        this.insertObjectsOnCache(this.getCache(), value);
+    }
 
-	private void insertObjectsOnCache(Cache cache, Integer value) {
-		cache.put(IKeyGeneratorManagerCacheWrapper.CURRENT_KEY, value);
-		logger.trace("current key is now {}", value);
-	}
-
-	private void releaseCachedObjects(Cache cache) {
-		cache.evict(IKeyGeneratorManagerCacheWrapper.CURRENT_KEY);
-	}
+    private void insertObjectsOnCache(Cache cache, Integer value) {
+        cache.put(IKeyGeneratorManagerCacheWrapper.CURRENT_KEY, value);
+        logger.trace("current key is now {}", value);
+    }
 
 }

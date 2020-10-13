@@ -46,6 +46,23 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     private List<String> localObject = new CopyOnWriteArrayList<>();
 
     @Override
+    public void release() {
+        Cache cache = this.getCache();
+        List<String> codes = (List<String>) this.get(cache, DRAFT_PAGE_CODES_CACHE_NAME, List.class);
+        if (null != codes) {
+            for (int i = 0; i < codes.size(); i++) {
+                String code = codes.get(i);
+                cache.evict(DRAFT_PAGE_CACHE_NAME_PREFIX + code);
+                cache.evict(ONLINE_PAGE_CACHE_NAME_PREFIX + code);
+            }
+            cache.evict(DRAFT_PAGE_CODES_CACHE_NAME);
+            cache.evict(ONLINE_PAGE_CODES_CACHE_NAME);
+        }
+        cache.evict(DRAFT_ROOT_CACHE_NAME);
+        cache.evict(ONLINE_ROOT_CACHE_NAME);
+    }
+    
+    @Override
     public void initCache(IPageDAO pageDao) throws EntException {
         PagesStatus status = new PagesStatus();
         IPage newDraftRoot = null;
@@ -82,7 +99,6 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
                 throw new EntException("Error in the page tree: root page undefined");
             }
             Cache cache = this.getCache();
-            //this.releaseCachedObjects(cache);
             this.cleanLocalCache(cache);
             List<String> draftPageCodes = pageListD.stream().map(p -> p.getCode()).collect(Collectors.toList());
             cache.put(DRAFT_PAGE_CODES_CACHE_NAME, draftPageCodes);
@@ -105,20 +121,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         }
         this.localObject.clear();
     }
-
-    protected void releaseCachedObjects(Cache cache) {
-        List<String> codes = (List<String>) this.get(cache, DRAFT_PAGE_CODES_CACHE_NAME, List.class);
-        if (null != codes) {
-            for (int i = 0; i < codes.size(); i++) {
-                String code = codes.get(i);
-                cache.evict(DRAFT_PAGE_CACHE_NAME_PREFIX + code);
-                cache.evict(ONLINE_PAGE_CACHE_NAME_PREFIX + code);
-            }
-            cache.evict(DRAFT_PAGE_CODES_CACHE_NAME);
-            cache.evict(ONLINE_PAGE_CODES_CACHE_NAME);
-        }
-    }
-
+    
     protected void insertObjectsOnCache(Cache cache, PagesStatus status,
             IPage newDraftRoot, IPage newOnLineRoot, List<IPage> pageListD, List<IPage> pageListO) {
         cache.put(DRAFT_ROOT_CACHE_NAME, newDraftRoot);
@@ -226,7 +229,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         status.setUnpublished(status.getUnpublished()+1);
         cache.put(PAGE_STATUS_CACHE_NAME, status);
     }
-
+    
     @Override
     public void updateDraftPage(IPage page) {
         IPage cachedPage = this.getDraftPage(page.getCode());
@@ -580,8 +583,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
 
     private void getWidgetUtilizers(IPage page, Map<String, List> utilizersMap, boolean draft) {
         Widget[] widgets = page.getWidgets();
-
-        if(widgets!=null) {
+        if (widgets != null) {
             for (Widget widget : widgets) {
                 if (null != widget && null != widget.getType()) {
                     String cacheCode = this.getWidgetUtilizerCacheName(widget.getType().getCode(), draft);
@@ -595,8 +597,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             }
         }
         String[] childrenCodes = page.getChildrenCodes();
-
-        if(childrenCodes !=null) {
+        if (childrenCodes != null) {
             for (String childrenCode : childrenCodes) {
                 IPage child = (draft) ? this.getDraftPage(childrenCode) : this.getOnlinePage(childrenCode);
                 if (null != child) {

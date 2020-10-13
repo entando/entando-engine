@@ -20,7 +20,7 @@ import org.springframework.cache.CacheManager;
 /**
  * @author E.Santoboni
  */
-public abstract class AbstractCacheWrapper {
+public abstract class AbstractCacheWrapper implements ICacheWrapper {
 
     protected static enum Action {
         ADD,
@@ -36,6 +36,11 @@ public abstract class AbstractCacheWrapper {
     @Autowired
     public void setSpringCacheManager(CacheManager springCacheManager) {
         this.springCacheManager = springCacheManager;
+    }
+    
+    @Override
+    public void release() {
+        // nothing to do
     }
 
     protected abstract String getCacheName();

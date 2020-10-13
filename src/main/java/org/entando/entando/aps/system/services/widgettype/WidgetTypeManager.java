@@ -55,6 +55,12 @@ public class WidgetTypeManager extends AbstractService
         this.getCacheWrapper().initCache(this.getWidgetTypeDAO());
         logger.debug("{} ready. Initialized", this.getClass().getName());
     }
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
     @Override
     public void updateFromLangsChanged(LangsChangedEvent event) {

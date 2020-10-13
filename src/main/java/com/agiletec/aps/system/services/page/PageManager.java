@@ -61,6 +61,12 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     private void initCache() throws EntException {
         this.getCacheWrapper().initCache(this.getPageDAO());
     }
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
     @Override
     public void updateFromLangsChanged(LangsChangedEvent event) {

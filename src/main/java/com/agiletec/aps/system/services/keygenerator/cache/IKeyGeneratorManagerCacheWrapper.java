@@ -13,9 +13,10 @@
  */
 package com.agiletec.aps.system.services.keygenerator.cache;
 
+import com.agiletec.aps.system.common.ICacheWrapper;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorDAO;
 
-public interface IKeyGeneratorManagerCacheWrapper {
+public interface IKeyGeneratorManagerCacheWrapper extends ICacheWrapper {
 
 	public static final String CACHE_NAME = "Entando_KeyGeneratorManager";
 

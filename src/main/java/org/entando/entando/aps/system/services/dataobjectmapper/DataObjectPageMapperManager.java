@@ -43,6 +43,12 @@ public class DataObjectPageMapperManager extends AbstractService implements IDat
 		this.getCacheWrapper().initCache(this.getPageManager());
 		logger.debug("{} ready.", this.getClass().getName());
 	}
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
 	/**
 	 * Effettua il caricamento della mappa contenuti pubblicati / pagine

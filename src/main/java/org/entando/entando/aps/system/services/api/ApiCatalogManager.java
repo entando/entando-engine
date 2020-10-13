@@ -84,6 +84,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
 		this.getServiceCacheWrapper().initCache(resources, this.getApiCatalogDAO());
 		logger.debug("{} ready.", this.getClass().getName());
 	}
+    
+    @Override
+    protected void release() {
+        this.getServiceCacheWrapper().release();
+        this.getResourceCacheWrapper().release();
+        super.release();
+    }
 
 	@Override
 	public ApiMethod getRelatedMethod(String showletCode) throws EntException {

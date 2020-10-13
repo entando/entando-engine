@@ -52,6 +52,12 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		this.initCache();
 		_logger.debug("{} initialized", this.getClass().getName());
 	}
+    
+    @Override
+    protected void release() {
+        this.getCacheWrapper().release();
+        super.release();
+    }
 
 	private void initCache() throws EntException {
 		this.getCacheWrapper().initCache(this.getCategoryDAO(), this.getLangManager());

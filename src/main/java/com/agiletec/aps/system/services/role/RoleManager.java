@@ -45,6 +45,13 @@ public class RoleManager extends AbstractService implements IRoleManager {
 		this.getRoleCacheWrapper().initCache(this.getRoleDAO());
 		logger.debug("{} : initialized", this.getClass().getName());
 	}
+    
+    @Override
+    protected void release() {
+        this.getRoleCacheWrapper().release();
+        this.getPermissionCacheWrapper().release();
+        super.release();
+    }
 
 	/**
 	 * Restituisce la lista dei ruoli esistenti.
