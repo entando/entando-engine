@@ -38,6 +38,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
  * @author E.Santoboni
@@ -155,9 +156,9 @@ public class ApiUserProfileInterface {
     }
 
     private List<ApiError> validate(IUserProfile userProfile) throws EntException {
-        List<ApiError> errors = new ArrayList<ApiError>();
+        List<ApiError> errors = new ArrayList<>();
         try {
-            List<FieldError> fieldErrors = userProfile.validate(this.getGroupManager());
+            List<FieldError> fieldErrors = userProfile.validate(this.getGroupManager(), this.getLangManager());
             if (null != fieldErrors) {
                 for (int i = 0; i < fieldErrors.size(); i++) {
                     FieldError fieldError = fieldErrors.get(i);
@@ -201,22 +202,31 @@ public class ApiUserProfileInterface {
     }
 
     protected IUserProfileManager getUserProfileManager() {
-        return _userProfileManager;
+        return userProfileManager;
     }
 
     public void setUserProfileManager(IUserProfileManager userProfileManager) {
-        this._userProfileManager = userProfileManager;
+        this.userProfileManager = userProfileManager;
+    }
+
+    public ILangManager getLangManager() {
+        return langManager;
+    }
+
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
     }
 
     protected IGroupManager getGroupManager() {
-        return _groupManager;
+        return groupManager;
     }
 
     public void setGroupManager(IGroupManager groupManager) {
-        this._groupManager = groupManager;
+        this.groupManager = groupManager;
     }
 
-    private IUserProfileManager _userProfileManager;
-    private IGroupManager _groupManager;
+    private IUserProfileManager userProfileManager;
+    private ILangManager langManager;
+    private IGroupManager groupManager;
 
 }

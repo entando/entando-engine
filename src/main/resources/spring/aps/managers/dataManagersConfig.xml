@@ -135,6 +135,7 @@
         <property name="dataObjectAuthorizationHelper" ref="DataObjectAuthorizationHelper" />
         <property name="userManager" ref="UserManager" />
         <property name="pageManager" ref="PageManager" />
+        <property name="langManager" ref="LangManager" />
         <property name="groupManager" ref="GroupManager" />
         <property name="categoryManager" ref="CategoryManager" />
         <property name="dataObjectListHelper" ref="BaseDataObjectListHelper" />

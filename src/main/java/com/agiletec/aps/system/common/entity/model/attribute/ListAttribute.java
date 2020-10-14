@@ -26,12 +26,13 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import org.entando.entando.ent.exception.EntRuntimeException;
 
 /**
- * This class represents the Attribute of type "Multi-language List", composed
- * by several homogeneous attributes; there is a list for every language in the
- * system.
+ * This class represents the Attribute of type "Multi-language List", composed by several homogeneous attributes; there
+ * is a list for every language in the system.
  *
  * @author M.Diana
  */
@@ -50,8 +51,7 @@ public class ListAttribute extends AbstractListAttribute {
      * Add a new empty attribute to the list in the specified language.
      *
      * @param langCode The code of the language.
-     * @return The attribute added to the list, ready to be populated with the
-     * data.
+     * @return The attribute added to the list, ready to be populated with the data.
      */
     public AttributeInterface addAttribute(String langCode) {
         AttributeInterface newAttr = (AttributeInterface) this.getNestedAttributeType().getAttributePrototype();
@@ -91,8 +91,7 @@ public class ListAttribute extends AbstractListAttribute {
     /**
      * Remove from the list one of the attributes of the given language.
      *
-     * @param langCode The code of the language of the list where to delete the
-     * attribute from.
+     * @param langCode The code of the language of the list where to delete the attribute from.
      * @param index The index of the attribute in the list.
      */
     public void removeAttribute(String langCode, int index) {
@@ -141,8 +140,7 @@ public class ListAttribute extends AbstractListAttribute {
     }
 
     /**
-     * Return a Map containing all the localized versions of the associated
-     * list.
+     * Return a Map containing all the localized versions of the associated list.
      *
      * @return A map indexed by the language code.
      */
@@ -211,10 +209,10 @@ public class ListAttribute extends AbstractListAttribute {
     }
 
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
-        List<AttributeFieldError> errors = super.validate(tracer);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager);
         try {
-            List<Lang> langs = super.getLangManager().getLangs();
+            List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);
                 List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
@@ -228,17 +226,16 @@ public class ListAttribute extends AbstractListAttribute {
                     if (elementStatus.equals(Status.EMPTY)) {
                         errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                     } else {
-                        List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);
+                        List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager);
                         if (null != elementErrors) {
                             errors.addAll(elementErrors);
                         }
                     }
                 }
             }
-        } catch (Throwable t) {
-            //ApsSystemUtils.logThrowable(t, this, "validate");
+        } catch (Exception t) {
             _logger.error("Error validating list attribute", t);
-            throw new RuntimeException("Error validating list attribute", t);
+            throw new EntRuntimeException("Error validating list attribute", t);
         }
         return errors;
     }

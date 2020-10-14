@@ -25,14 +25,14 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
- * Interface for Entity Attributes. The attributes contain the informations
- * constituting the Entity. Is it very important to implement the clone() method
- * correctly since it is used when cloning Entity Attributes and when populating
- * list of attributes.
+ * Interface for Entity Attributes. The attributes contain the informations constituting the Entity. Is it very
+ * important to implement the clone() method correctly since it is used when cloning Entity Attributes and when
+ * populating list of attributes.
  *
  * @author W.Ambu
  */
@@ -88,8 +88,7 @@ public interface AttributeInterface extends Serializable {
     public String getType();
 
     /**
-     * Set up the type of the attribute. The name is the ID of the attribute,
-     * picked from the attribute configuration-
+     * Set up the type of the attribute. The name is the ID of the attribute, picked from the attribute configuration-
      *
      * @param typeName The type of the attribute.
      */
@@ -98,8 +97,7 @@ public interface AttributeInterface extends Serializable {
     /**
      * Test whether the attribute supports multiple languages or not.
      *
-     * @return True if the attribute supports multiple languages, false
-     * otherwise.
+     * @return True if the attribute supports multiple languages, false otherwise.
      */
     public boolean isMultilingual();
 
@@ -111,12 +109,10 @@ public interface AttributeInterface extends Serializable {
     public boolean isTextAttribute();
 
     /**
-     * Test if the current attribute is a "simple" one. Simple attributes are
-     * those composed by only one attribute; "Composed" one are built
-     * aggregating, in various manner, simple attributes.
+     * Test if the current attribute is a "simple" one. Simple attributes are those composed by only one attribute;
+     * "Composed" one are built aggregating, in various manner, simple attributes.
      *
-     * @return True if the current attribute is a simple on, false if the
-     * attribute is a composed.
+     * @return True if the current attribute is a simple on, false if the attribute is a composed.
      */
     public boolean isSimple();
 
@@ -128,9 +124,8 @@ public interface AttributeInterface extends Serializable {
     public Object getAttributePrototype();
 
     /**
-     * Set up the default language to utilize when, during the rendering of the
-     * attribute, the informations requested are not available in the desired
-     * language.
+     * Set up the default language to utilize when, during the rendering of the attribute, the informations requested
+     * are not available in the desired language.
      *
      * @param langCode The code of the default language
      */
@@ -144,9 +139,8 @@ public interface AttributeInterface extends Serializable {
     public void setRenderingLang(String langCode);
 
     /**
-     * Test whether the attribute is searchable (using a query on the DB) or
-     * not. The information held by a searchable attribute is replicated in an
-     * appropriate table used for SQL queries.
+     * Test whether the attribute is searchable (using a query on the DB) or not. The information held by a searchable
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
      * @return True if the attribute is a searchable one.
      * @deprecated Since Entando 4.0.1, use isSearchable()
@@ -154,32 +148,27 @@ public interface AttributeInterface extends Serializable {
     public boolean isSearcheable();
 
     /**
-     * Test whether the attribute is searchable (using a query on the DB) or
-     * not. The information held by a searchable attribute is replicated in an
-     * appropriate table used for SQL queries.
+     * Test whether the attribute is searchable (using a query on the DB) or not. The information held by a searchable
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
      * @return True if the attribute is a searchable one.
      */
     public boolean isSearchable();
 
     /**
-     * Set up the searchable status of an attribute. When set to 'true' then the
-     * information held by the current attribute is replicated in an appropriate
-     * table used for SQL queries.
+     * Set up the searchable status of an attribute. When set to 'true' then the information held by the current
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
-     * @param searchable True if the attribute is of searchable type, false
-     * otherwise.
+     * @param searchable True if the attribute is of searchable type, false otherwise.
      * @deprecated Since Entando 4.0.1, use setSearchable(boolean serchable)
      */
     public void setSearcheable(boolean searchable);
 
     /**
-     * Set up the searchable status of an attribute. When set to 'true' then the
-     * information held by the current attribute is replicated in an appropriate
-     * table used for SQL queries.
+     * Set up the searchable status of an attribute. When set to 'true' then the information held by the current
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
-     * @param searchable True if the attribute is of searchable type, false
-     * otherwise.
+     * @param searchable True if the attribute is of searchable type, false otherwise.
      */
     public void setSearchable(boolean searchable);
 
@@ -191,8 +180,7 @@ public interface AttributeInterface extends Serializable {
     public boolean isSearchableOptionSupported();
 
     /**
-     * Return the list of the informations characterizing the attribute in order
-     * to perform database queries.
+     * Return the list of the informations characterizing the attribute in order to perform database queries.
      *
      * @param systemLangs The list of the system languages.
      * @return The list of the characterizing informations.
@@ -214,11 +202,10 @@ public interface AttributeInterface extends Serializable {
     public void setRequired(boolean required);
 
     /**
-     * Return the JDOM portion representing the attribute to further include in
-     * a document which will result in a complete entity.
+     * Return the JDOM portion representing the attribute to further include in a document which will result in a
+     * complete entity.
      *
-     * @return The JDOM element and eventually its children, representing the
-     * attribute.
+     * @return The JDOM element and eventually its children, representing the attribute.
      */
     public Element getJDOMElement();
 
@@ -232,8 +219,7 @@ public interface AttributeInterface extends Serializable {
     /**
      * Return the indexing type of the attribute in the search engine.
      *
-     * @return The indexing type, chosen among the constants defined in this
-     * interface
+     * @return The indexing type, chosen among the constants defined in this interface
      */
     public String getIndexingType();
 
@@ -245,11 +231,9 @@ public interface AttributeInterface extends Serializable {
     public void setIndexingType(String indexingType);
 
     /**
-     * Build the configuration of the attribute using the JDOM description for
-     * the attribute.
+     * Build the configuration of the attribute using the JDOM description for the attribute.
      *
-     * @param attributeElement The JDOM element as extracted from the XML which
-     * configures the Entity Type.
+     * @param attributeElement The JDOM element as extracted from the XML which configures the Entity Type.
      * @throws EntException in case of error
      */
     public void setAttributeConfig(Element attributeElement) throws EntException;
@@ -269,16 +253,16 @@ public interface AttributeInterface extends Serializable {
     public IApsEntity getParentEntity();
 
     /**
-     * Return the handler class which parses the XML element related to the
-     * attribute, as obtained from the XML describing the entity.
+     * Return the handler class which parses the XML element related to the attribute, as obtained from the XML
+     * describing the entity.
      *
      * @return The handler class which parses the attribute.
      */
     public AttributeHandlerInterface getHandler();
 
     /**
-     * Set up the handler class which parses the XML element related to the
-     * attribute, as obtained from the XML describing the entity
+     * Set up the handler class which parses the XML element related to the attribute, as obtained from the XML
+     * describing the entity
      *
      * @param handler The handler class which parses the attribute.
      */
@@ -335,14 +319,13 @@ public interface AttributeInterface extends Serializable {
 
     public DefaultJAXBAttributeType getJAXBAttributeType();
 
-    public List<AttributeFieldError> validate(AttributeTracer tracer);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager);
 
     public Status getStatus();
 
     /**
-     * Return the class name of the manager of the attribute. The Attribute
-     * Manager magage (the updating process) the attribute inside custom GUI
-     * interface (like http form).
+     * Return the class name of the manager of the attribute. The Attribute Manager magage (the updating process) the
+     * attribute inside custom GUI interface (like http form).
      *
      * @return The Manager Class name
      */

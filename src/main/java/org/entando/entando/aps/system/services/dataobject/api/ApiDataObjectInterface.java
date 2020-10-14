@@ -37,6 +37,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -346,12 +347,12 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
     }
 
     private List<ApiError> validate(DataObject dataObject) throws EntException {
-        List<ApiError> errors = new ArrayList<ApiError>();
+        List<ApiError> errors = new ArrayList<>();
         try {
             if (null == dataObject.getMainGroup()) {
                 errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Main group null", Response.Status.CONFLICT));
             }
-            List<FieldError> fieldErrors = dataObject.validate(this.getGroupManager());
+            List<FieldError> fieldErrors = dataObject.validate(this.getGroupManager(), this.getLangManager());
             if (null != fieldErrors) {
                 for (int i = 0; i < fieldErrors.size(); i++) {
                     FieldError fieldError = fieldErrors.get(i);
@@ -363,7 +364,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
                     }
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             _logger.error("Error validating DataObject", t);
             throw new EntException("Error validating DataObject", t);
         }
@@ -440,6 +441,14 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
 
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
+    }
+
+    public ILangManager getLangManager() {
+        return langManager;
+    }
+
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
     }
 
     protected ICategoryManager getCategoryManager() {
@@ -524,6 +533,7 @@ public class ApiDataObjectInterface extends AbstractApiDataObjectInterface {
 
     private IDataTypeListHelper _dataObjectListHelper;
     private IUserManager _userManager;
+    private ILangManager langManager;
     private ICategoryManager _categoryManager;
     private IGroupManager _groupManager;
     private IPageManager _pageManager;

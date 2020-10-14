@@ -21,6 +21,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.List;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -47,6 +48,9 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
 
     @Autowired
     private ICategoryManager categoryManager;
+
+    @Autowired
+    private ILangManager langManager;
 
     protected abstract T buildEntityDto(I entity);
 
@@ -136,7 +140,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
         List<AttributeInterface> attributes = currentEntity.getAttributeList();
         for (AttributeInterface entityAttribute : attributes) {
             if (entityAttribute.isActive()) {
-                List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer());
+                List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer(), this.getLangManager());
                 if (null != errors && errors.size() > 0) {
                     for (AttributeFieldError attributeFieldError : errors) {
                         AttributeTracer tracer = attributeFieldError.getTracer();
@@ -233,6 +237,14 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
 
     public void setCategoryManager(ICategoryManager categoryManager) {
         this.categoryManager = categoryManager;
+    }
+
+    public ILangManager getLangManager() {
+        return langManager;
+    }
+
+    public void setLangManager(ILangManager langManager) {
+        this.langManager = langManager;
     }
 
 }

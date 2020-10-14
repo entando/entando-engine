@@ -30,14 +30,13 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
- * This class represents an entity. The structure of the entity, defined during
- * the configuration process, is built invoking the method 'addAttribute', but
- * this procedure is reserved for the Entity Service which invokes this method
- * only during the system initialization. The standard procedure to instantiate
- * an entity, used during the normal execution of the system, is to make a
- * request to the service: it will clone the prototype of the entity previously
+ * This class represents an entity. The structure of the entity, defined during the configuration process, is built
+ * invoking the method 'addAttribute', but this procedure is reserved for the Entity Service which invokes this method
+ * only during the system initialization. The standard procedure to instantiate an entity, used during the normal
+ * execution of the system, is to make a request to the service: it will clone the prototype of the entity previously
  * defined in the configuration.
  */
 public class ApsEntity implements IApsEntity {
@@ -147,11 +146,9 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Return the set of codes of the additional groups authorized to view the
-     * entity in the front-end.
+     * Return the set of codes of the additional groups authorized to view the entity in the front-end.
      *
-     * @return The set of codes belonging to the additional group authorized to
-     * access the entity,
+     * @return The set of codes belonging to the additional group authorized to access the entity,
      */
     @Override
     public Set<String> getGroups() {
@@ -291,8 +288,7 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Set up the language to use in the rendering process of the entity and its
-     * attributes.
+     * Set up the language to use in the rendering process of the entity and its attributes.
      *
      * @param langCode The code of the language to use in the rendering process.
      */
@@ -358,9 +354,8 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Return the DOM class that generates the XML corresponding to the entity
-     * with its data. This method must be extended to support customized XML
-     * structures; this happen when, for example, a custom entity is based on an
+     * Return the DOM class that generates the XML corresponding to the entity with its data. This method must be
+     * extended to support customized XML structures; this happen when, for example, a custom entity is based on an
      * object class which, in turn, extends ApsEntity.
      *
      * @return The DOM class that generates the XML
@@ -432,7 +427,7 @@ public class ApsEntity implements IApsEntity {
     }
 
     @Override
-    public List<FieldError> validate(IGroupManager groupManager) {
+    public List<FieldError> validate(IGroupManager groupManager, ILangManager langManager) {
         List<FieldError> errors = new ArrayList<>();
         if (null != this.getMainGroup() && null == groupManager.getGroup(this.getMainGroup())) {
             FieldError error = new FieldError("mainGroup", FieldError.INVALID);
@@ -455,7 +450,7 @@ public class ApsEntity implements IApsEntity {
             for (int i = 0; i < attributes.size(); i++) {
                 AttributeInterface attribute = attributes.get(i);
                 AttributeTracer tracer = new AttributeTracer();
-                List<AttributeFieldError> attributeErrors = attribute.validate(tracer);
+                List<AttributeFieldError> attributeErrors = attribute.validate(tracer, langManager);
                 if (null != attributeErrors) {
                     errors.addAll(attributeErrors);
                 }
