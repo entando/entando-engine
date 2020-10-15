@@ -18,6 +18,7 @@ import java.util.List;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -100,6 +101,27 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
                     }
                 }
             });
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
+    
+	public void testValidate_3() throws Throwable {
+		try {
+			IUserProfile profile = this.userProfileManager.getProfileType("ALL");
+			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
+			assertNotNull(errors);
+            for (int i = 0; i < errors.size(); i++) {
+                FieldError fieldError = errors.get(i);
+                String fieldCode = fieldError.getFieldCode();
+                String[] fieldNameSections = fieldCode.split(":");
+                String[] parts = fieldNameSections[1].split("_");
+                String attributeName = (parts.length == 1) ?  parts[0] : parts[1];
+                AttributeInterface attribute = profile.getAttribute(attributeName);
+                assertEquals(attribute.isMultilingual(), parts.length == 2);
+                assertEquals(attribute.getType() + ":" + (attribute.isMultilingual() ? "it_":"") + attributeName, fieldError.getFieldCode());
+                assertEquals(FieldError.MANDATORY, fieldError.getErrorCode());
+            }
 		} catch (Throwable t) {
 			throw t;
 		}
