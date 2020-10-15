@@ -539,7 +539,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.size()", is(3)));
-        result.andExpect(jsonPath("$.payload.ready", Matchers.hasSize(2)));
+        result.andExpect(jsonPath("$.payload.ready", Matchers.hasSize(3)));
         result.andExpect(jsonPath("$.payload.toRefresh", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.payload.refreshing", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
