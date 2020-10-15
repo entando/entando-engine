@@ -1832,10 +1832,9 @@ INSERT INTO sysconfig (version, item, descr, config) values ('production', 'user
 					<role>userprofile:fullname</role>
 				</roles>
 			</attribute>
-			<attribute name="email" attributetype="Monotext" description="Email" searchable="true">
+			<attribute name="email" attributetype="Email" description="Email" searchable="true">
 				<validations>
 					<required>true</required>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
 				</validations>
 				<roles>
 					<role>userprofile:email</role>
