@@ -80,6 +80,7 @@ import org.entando.entando.aps.system.services.oauth2.*;
 import org.entando.entando.aps.system.services.page.PageTokenManagerTest;
 import org.entando.entando.aps.system.services.storage.LocalStorageManagerIntegrationTest;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtilTest;
+import org.entando.entando.aps.system.services.userprofile.TestApiUserProfileInterface;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerAspectTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerIntegrationTest;
 import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTest;
@@ -102,7 +103,7 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
-
+        
         //
         suite.addTest(new JUnit4TestAdapter(PageTokenManagerTest.class));
         //
@@ -178,6 +179,7 @@ public class AllTests {
         suite.addTestSuite(LocalStorageManagerIntegrationTest.class);
         suite.addTest(new JUnit4TestAdapter(StorageManagerUtilTest.class));
         //
+        suite.addTestSuite(TestApiUserProfileInterface.class);
         suite.addTestSuite(UserProfileManagerIntegrationTest.class);
         suite.addTestSuite(org.entando.entando.aps.system.services.userprofile.TestUserManager.class);
         suite.addTest(new JUnit4TestAdapter(UserProfileManagerTest.class));
@@ -236,7 +238,7 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(SwaggerConfigTest.class));
         suite.addTest(new JUnit4TestAdapter(SwaggerMvcAdapterTest.class));
-
+        
         return suite;
     }
 

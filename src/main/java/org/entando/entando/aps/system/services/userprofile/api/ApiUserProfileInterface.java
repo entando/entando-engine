@@ -80,7 +80,8 @@ public class ApiUserProfileInterface {
                 throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
                         "Profile of user '" + username + "' does not exist", Response.Status.CONFLICT);
             }
-            jaxbUserProfile = new JAXBUserProfile(userProfile, null);
+            String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
+            jaxbUserProfile = new JAXBUserProfile(userProfile, langCode);
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
