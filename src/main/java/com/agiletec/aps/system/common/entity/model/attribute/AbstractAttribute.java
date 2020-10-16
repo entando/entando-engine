@@ -202,18 +202,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
             AttributeHandlerInterface handler = (AttributeHandlerInterface) this.getHandler().getAttributeHandlerPrototype();
             clone.setHandler(handler);
             if (this.getDisablingCodes() != null) {
-                String[] disablingCodes = new String[this.getDisablingCodes().length];
-                for (int i = 0; i < this.getDisablingCodes().length; i++) {
-                    disablingCodes[i] = this.getDisablingCodes()[i];
-                }
-                clone.setDisablingCodes(disablingCodes);
+                clone.setDisablingCodes(Arrays.copyOf(this.getDisablingCodes(), this.getDisablingCodes().length));
             }
             if (this.getRoles() != null) {
-                String[] roles = new String[this.getRoles().length];
-                for (int i = 0; i < this.getRoles().length; i++) {
-                    roles[i] = this.getRoles()[i];
-                }
-                clone.setRoles(roles);
+                clone.setRoles(Arrays.copyOf(this.getRoles(), this.getRoles().length));
             }
             clone.setValidationRules(this.getValidationRules().clone());
             clone.setLangManager(this.getLangManager());
