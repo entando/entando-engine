@@ -422,7 +422,6 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
         user.setMaxMonthsSinceLastAccess(2);
         user.setMaxMonthsSinceLastPasswordChange(1);
         user.setPassword("password");
-        user.setWizardEnabled(true);
         return user;
     }
 
