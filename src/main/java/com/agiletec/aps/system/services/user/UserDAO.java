@@ -235,11 +235,6 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
             } else {
                 stat.setInt(4, 0);
             }
-            if (user.isWizardEnabled()) {
-                stat.setInt(5, 1);
-            } else {
-                stat.setInt(5, 0);
-            }
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -285,12 +280,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
             } else {
                 stat.setNull(3, Types.NUMERIC);
             }
-            if (null != entandoUser && entandoUser.isWizardEnabled()) {
-                stat.setInt(4, 1);
-            } else {
-                stat.setInt(4, 0);
-            }
-            stat.setString(5, user.getUsername());
+            stat.setString(4, user.getUsername());
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -320,27 +310,6 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
             this.executeRollback(conn);
             logger.error("Error updating the password for the user {}", username, t);
             throw new RuntimeException("Error updating the password for the user " + username, t);
-        } finally {
-            closeDaoResources(null, stat, conn);
-        }
-    }
-
-    @Override
-    public void changeWizard(String username, Boolean wizardEnabled) {
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            conn = this.getConnection();
-            conn.setAutoCommit(false);
-            stat = conn.prepareStatement(CHANGE_WIZARD);
-            stat.setBoolean(1, wizardEnabled);
-            stat.setString(2, username);
-            stat.executeUpdate();
-            conn.commit();
-        } catch (Throwable t) {
-            this.executeRollback(conn);
-            logger.error("Error updating wizardEnabled for the user {}", username, t);
-            throw new RuntimeException("Error updating wizardEnabled for the user " + username, t);
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -386,8 +355,8 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
             user.setCreationDate(res.getDate(3));
             user.setLastAccess(res.getDate(4));
             user.setLastPasswordChange(res.getDate(5));
-            user.setDisabled(res.getInt(6) != 1);
-            user.setWizardEnabled(res.getInt(7) == 1);
+            int activeId = res.getInt(6);
+            user.setDisabled(activeId != 1);
         }
         return user;
     }
@@ -406,8 +375,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 
     private final String PREFIX_LOAD_USERS
             = "SELECT authusers.username, authusers.passwd, authusers.registrationdate, "
-            + "authusers.lastaccess, authusers.lastpasswordchange, authusers.active, authusers.wizardenabled FROM "
-            + "authusers ";
+            + "authusers.lastaccess, authusers.lastpasswordchange, authusers.active FROM authusers ";
 
     private final String LOAD_USERNAMES
             = PREFIX_LOAD_USERNAMES + "ORDER BY authusers.username";
@@ -428,18 +396,13 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
             = "DELETE FROM authusers WHERE username = ? ";
 
     private final String ADD_USER
-            = "INSERT INTO authusers (username, passwd, registrationdate, active, wizardenabled) VALUES ( ? , ? , ? ,"
-            + " ? , ?)";
+            = "INSERT INTO authusers (username, passwd, registrationdate, active) VALUES ( ? , ? , ? , ? )";
 
     private final String CHANGE_PASSWORD
             = "UPDATE authusers SET passwd = ? , lastpasswordchange = ? WHERE username = ? ";
 
-    private final String CHANGE_WIZARD
-            = "UPDATE authusers SET wizardenabled = ? WHERE username = ? ";
-
     private final String UPDATE_USER
-            = "UPDATE authusers SET lastaccess = ? , lastpasswordchange = ? , active = ? , wizardenabled = ? WHERE "
-            + "username = ? ";
+            = "UPDATE authusers SET lastaccess = ? , lastpasswordchange = ? , active = ? WHERE username = ? ";
 
     private final String UPDATE_LAST_ACCESS
             = "UPDATE authusers SET lastaccess = ? WHERE username = ? ";

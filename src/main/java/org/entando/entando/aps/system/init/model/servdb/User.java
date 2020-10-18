@@ -56,10 +56,6 @@ public class User {
             dataType = DataType.SHORT)
     private short _active;
 
-    @DatabaseField(columnName = "wizardenabled",
-            dataType = DataType.SHORT)
-    private short _wizardenabled;
-
     public static final String TABLE_NAME = "authusers";
 
 }
@@ -72,7 +68,6 @@ CREATE TABLE authusers
   lastaccess date,
   lastpasswordchange date,
   active smallint,
-  wizardenabled smallint,
   CONSTRAINT authusers_pkey PRIMARY KEY (username )
 )
  */

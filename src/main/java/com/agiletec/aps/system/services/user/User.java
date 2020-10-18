@@ -75,15 +75,6 @@ public class User extends AbstractUser {
 		this._disabled = disabled;
 	}
 
-	@Override
-	public boolean isWizardEnabled() {
-		return _wizardEnabled;
-	}
-
-	public void setWizardEnabled(boolean wizardEnabled) {
-		this._wizardEnabled = wizardEnabled;
-	}
-
 	protected boolean isCheckCredentials() {
 		return _checkCredentials;
 	}
@@ -144,11 +135,10 @@ public class User extends AbstractUser {
 	private Date _lastPasswordChange;
 
 	private boolean _disabled;
+
 	private boolean _checkCredentials;
-	private boolean _wizardEnabled;
 
 	private int _maxMonthsSinceLastAccess = -1;
 	private int _maxMonthsSinceLastPasswordChange = -1;
-
 
 }

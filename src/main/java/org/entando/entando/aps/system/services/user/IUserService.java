@@ -24,7 +24,6 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
-import org.entando.entando.web.user.model.UserWizardRequest;
 
 /**
  * @author paddeo
@@ -56,8 +55,6 @@ public interface IUserService {
     public void removeUser(String username);
 
     public UserDto updateUserPassword(UserPasswordRequest passwordRequest);
-
-    public UserDto updateUserWizard(String username, UserWizardRequest passwordRequest);
 
     /**
      * gets and returns informations about received user group and received user permissions
