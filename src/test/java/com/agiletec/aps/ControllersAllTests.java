@@ -57,6 +57,7 @@ import org.entando.entando.web.system.ReloadConfigurationControllerTest;
 import org.entando.entando.web.user.UserControllerDeleteAuthoritiesIntegrationTest;
 import org.entando.entando.web.user.UserControllerIntegrationTest;
 import org.entando.entando.web.user.UserControllerUnitTest;
+import org.entando.entando.web.userpreferences.UserPreferencesControllerIntegrationTest;
 import org.entando.entando.web.userprofile.ProfileTypeControllerIntegrationTest;
 import org.entando.entando.web.userprofile.ProfileTypeControllerTest;
 import org.entando.entando.web.userprofile.UserProfileControllerIntegrationTest;
@@ -140,6 +141,8 @@ public class ControllersAllTests extends TestCase {
         suite.addTest(new JUnit4TestAdapter(ApiConsumerControllerTest.class));
 
         suite.addTest(new JUnit4TestAdapter(PageConfigurationControllerIntegrationTest.class));
+
+        suite.addTest(new JUnit4TestAdapter(UserPreferencesControllerIntegrationTest.class));
 
         return suite;
     }

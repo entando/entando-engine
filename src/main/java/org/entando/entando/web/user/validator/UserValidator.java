@@ -200,7 +200,7 @@ public class UserValidator extends AbstractPaginationValidator {
         }
     }
 
-    public void validateUpdateOther(String username, String currentUser, BindingResult bindingResult) {
+    public void validateSameUser(String username, String currentUser, BindingResult bindingResult) {
         if (!username.equals(currentUser)) {
             bindingResult.reject(ERRCODE_WIZARD_OTHER_UPDATE, new String[]{username}, "user.wizard.other.user.update");
             throw new ResourcePermissionsException(bindingResult);
