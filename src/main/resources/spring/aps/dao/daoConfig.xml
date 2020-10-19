@@ -8,4 +8,8 @@
         <property name="servDataSource" ref="servDataSource" />
     </bean>
 
+    <bean id="UserPreferencesDAO" class="org.entando.entando.aps.system.services.userpreferences.UserPreferencesDAO">
+        <property name="dataSource" ref="portDataSource" />
+    </bean>
+
 </beans>

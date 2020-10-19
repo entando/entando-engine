@@ -194,4 +194,10 @@
     <bean id="JsonPatchValidator"
           class="org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator">
     </bean>
+
+    <bean id="UserPreferencesService"
+            class="org.entando.entando.aps.system.services.userpreferences.UserPreferencesService" >
+        <property name="userPreferencesManager" ref="UserPreferencesManager" />
+    </bean>
+
 </beans>

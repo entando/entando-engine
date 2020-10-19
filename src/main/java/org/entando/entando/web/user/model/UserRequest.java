@@ -36,8 +36,6 @@ public class UserRequest {
 
     private String profileType;
 
-    private Boolean wizardEnabled;
-
     public String getUsername() {
         return username;
     }
@@ -78,23 +76,13 @@ public class UserRequest {
         this.profileType = profileType;
     }
 
-    public Boolean getWizardEnabled() {
-        return wizardEnabled;
-    }
-
-    public void setWizardEnabled(Boolean wizardEnabled) {
-        this.wizardEnabled = wizardEnabled;
-    }
-
     @Override
     public String toString() {
         return "UserRequest{" +
                 "username='" + username + '\'' +
                 ", status='" + status + '\'' +
-                ", password='" + password + '\'' +
                 ", reset=" + reset +
                 ", profileType='" + profileType + '\'' +
-                ", wizardEnabled=" + wizardEnabled +
                 '}';
     }
 }

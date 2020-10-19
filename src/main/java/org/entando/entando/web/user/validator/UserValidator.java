@@ -73,7 +73,7 @@ public class UserValidator extends AbstractPaginationValidator {
 
     public static final String ERRCODE_SELF_DELETE = "8";
 
-    public static final String ERRCODE_WIZARD_OTHER_UPDATE = "9";
+    public static final String ERRCODE_UPDATE_OTHER = "9";
 
     @Autowired
     @Qualifier("compatiblePasswordEncoder")
@@ -200,9 +200,9 @@ public class UserValidator extends AbstractPaginationValidator {
         }
     }
 
-    public void validateUpdateOther(String username, String currentUser, BindingResult bindingResult) {
+    public void validateSameUser(String username, String currentUser, BindingResult bindingResult) {
         if (!username.equals(currentUser)) {
-            bindingResult.reject(ERRCODE_WIZARD_OTHER_UPDATE, new String[]{username}, "user.wizard.other.user.update");
+            bindingResult.reject(ERRCODE_UPDATE_OTHER, new String[]{username}, "user.preferences.update.other");
             throw new ResourcePermissionsException(bindingResult);
         }
     }

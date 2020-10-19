@@ -90,15 +90,6 @@ public interface IUserManager {
     public void changePassword(String username, String password) throws EntException;
 
     /**
-     * Effettua l'operazione di cambio wizard stato.
-     *
-     * @param username Lo username al quale cambiare la wizard stato.
-     * @param wizardEnabled Wizard stato.
-     * @throws EntException In caso di errore.
-     */
-    public void changeWizard(String username, Boolean wizardEnabled) throws EntException;
-
-    /**
      * Aggiunge un utente.
      *
      * @param user L'utente da aggiungere.

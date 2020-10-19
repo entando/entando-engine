@@ -3,6 +3,5 @@
     "password":"11111111",
     "passwordConfirm":"11111111",
     "profileType":"PFL",
-    "status":"active",
-    "wizardEnabled": false
+    "status":"active"
 }

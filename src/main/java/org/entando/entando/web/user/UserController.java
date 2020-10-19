@@ -40,7 +40,6 @@ import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
-import org.entando.entando.web.user.model.UserWizardRequest;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -163,23 +162,6 @@ public class UserController {
             throw new ValidationGenericException(bindingResult);
         }
         UserDto userDto = this.getUserService().updateUserPassword(passwordRequest);
-        return new ResponseEntity<>(new SimpleRestResponse<>(userDto), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{username:.+}/wizard", method = RequestMethod.POST, produces =
-            MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateUserWizard(@ModelAttribute("user") UserDetails user,
-            @PathVariable String username, @Valid @RequestBody UserWizardRequest wizardRequest,
-            BindingResult bindingResult) {
-        logger.debug("changing wizard enabled for user {} with request {}", username, wizardRequest);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
-        this.getUserValidator().validateUpdateOther(username, user.getUsername(), bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
-        UserDto userDto = this.getUserService().updateUserWizard(username, wizardRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(userDto), HttpStatus.OK);
     }
 
