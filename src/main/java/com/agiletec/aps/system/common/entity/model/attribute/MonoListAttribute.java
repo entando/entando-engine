@@ -23,6 +23,8 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import org.entando.entando.ent.exception.EntRuntimeException;
 
 /**
  * This class implements a list of homogeneous attributes.
@@ -181,8 +183,8 @@ public class MonoListAttribute extends AbstractListAttribute {
     }
 
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
-        List<AttributeFieldError> errors = super.validate(tracer);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager);
         try {
             List<AttributeInterface> attributes = this.getAttributes();
             for (int i = 0; i < attributes.size(); i++) {
@@ -194,15 +196,15 @@ public class MonoListAttribute extends AbstractListAttribute {
                 if (elementStatus.equals(Status.EMPTY)) {
                     errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                 } else {
-                    List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);
+                    List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager);
                     if (null != elementErrors) {
                         errors.addAll(elementErrors);
                     }
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             _logger.error("Error validating monolist attribute", t);
-            throw new RuntimeException("Error validating monolist attribute", t);
+            throw new EntRuntimeException("Error validating monolist attribute", t);
         }
         return errors;
     }

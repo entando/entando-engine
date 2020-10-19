@@ -16,9 +16,12 @@ package org.entando.entando.aps.system.services.userprofile;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.Arrays;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
@@ -36,7 +39,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 	public void testValidate_1() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getDefaultProfileType();
-			List<FieldError> errors = profile.validate(this._groupManager);
+			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
 			assertNotNull(errors);
             String[] requiredFields = {"fullname", "email", "birthdate", "language"};
 			assertEquals(requiredFields.length, errors.size());
@@ -52,7 +55,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
             }
             ITextAttribute textAttribute = (ITextAttribute) profile.getAttribute("email");
 			textAttribute.setText("invalid address", "it");
-            errors = profile.validate(this._groupManager);
+            errors = profile.validate(this._groupManager, this._langManager);
             assertNotNull(errors);
             assertEquals(requiredFields.length, errors.size());
             errors.stream().forEach(error -> {
@@ -68,7 +71,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 	public void testValidate_2() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getProfileType("OTH");
-			List<FieldError> errors = profile.validate(this._groupManager);
+			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
 			assertNotNull(errors);
             String[] requiredFields = {"firstname", "surname", "email"};
 			assertEquals(requiredFields.length, errors.size());
@@ -87,7 +90,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
                 "@j.brownentando.com", "j.brown@ent ando.com", "j.brown@ent$ando.com", "j.brown@@entando.com", "j.brown.entando.com"};
             Arrays.stream(invalidEmails).forEach(email -> {
                 textAttribute.setText(email, "it");
-                List<FieldError> errors_adv = profile.validate(this._groupManager);
+                List<FieldError> errors_adv = profile.validate(this._groupManager, this._langManager);
                 assertEquals(requiredFields.length, errors_adv.size());
                 for (int i = 0; i < errors_adv.size(); i++) {
                     FieldError error_adv = errors_adv.get(i);
@@ -102,10 +105,33 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 			throw t;
 		}
 	}
+    
+	public void testValidate_3() throws Throwable {
+		try {
+			IUserProfile profile = this.userProfileManager.getProfileType("ALL");
+			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
+			assertNotNull(errors);
+            for (int i = 0; i < errors.size(); i++) {
+                FieldError fieldError = errors.get(i);
+                String fieldCode = fieldError.getFieldCode();
+                String[] fieldNameSections = fieldCode.split(":");
+                String[] parts = fieldNameSections[1].split("_");
+                String attributeName = (parts.length == 1) ?  parts[0] : parts[1];
+                AttributeInterface attribute = profile.getAttribute(attributeName);
+                assertEquals(attribute.isMultilingual(), parts.length == 2);
+                assertEquals(attribute.getType() + ":" + (attribute.isMultilingual() ? "it_":"") + attributeName, fieldError.getFieldCode());
+                assertEquals(FieldError.MANDATORY, fieldError.getErrorCode());
+            }
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
 
 	private void init() throws Exception {
 		try {
 			this.userProfileManager = this.getApplicationContext().getBean(IUserProfileManager.class);
+			this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+			this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
 		} catch (Throwable t) {
 			throw new Exception(t);
 		}
@@ -113,5 +139,6 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 
 	private IUserProfileManager userProfileManager = null;
 	private IGroupManager _groupManager = null;
+	private ILangManager _langManager = null;
 
 }

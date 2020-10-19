@@ -27,16 +27,16 @@ import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 
 /**
- * This class describes the Entity of a Composed Attribute. This attribute is
- * build by one or more elementary attributes of different types. These
- * elementary attributes can support multiple languages or not (and are defined
- * multi or mono-language). The Composite Attribute is only utilized in
- * conjunction with the 'Monolist' attribute. Please note that the composite
- * attribute cannot be used as an element of the "List" attribute since the
- * items in the List can support multiple languages.
+ * This class describes the Entity of a Composed Attribute. This attribute is build by one or more elementary attributes
+ * of different types. These elementary attributes can support multiple languages or not (and are defined multi or
+ * mono-language). The Composite Attribute is only utilized in conjunction with the 'Monolist' attribute. Please note
+ * that the composite attribute cannot be used as an element of the "List" attribute since the items in the List can
+ * support multiple languages.
  *
  * @author E.Santoboni
  */
@@ -164,8 +164,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     @Deprecated(/**
-             * INSERTED to guaranted compatibility with previsous version of
-             * jAPS 2.0.12
+             * INSERTED to guaranted compatibility with previsous version of jAPS 2.0.12
              */
             )
     private void setOldComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws EntException {
@@ -191,15 +190,12 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     /**
-     * Since this kind of attribute can never be indexable this method, which
-     * overrides the one of the abstract class, always returns the constant
-     * "INDEXING_TYPE_NONE" (defined in AttributeInterface) which explicitly
-     * declares it not indexable. Declaring indexable a complex attribute will
-     * make the contained element indexable.
+     * Since this kind of attribute can never be indexable this method, which overrides the one of the abstract class,
+     * always returns the constant "INDEXING_TYPE_NONE" (defined in AttributeInterface) which explicitly declares it not
+     * indexable. Declaring indexable a complex attribute will make the contained element indexable.
      *
      * @return the indexing type
-     * @see
-     * com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getIndexingType()
+     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getIndexingType()
      */
     @Override
     public String getIndexingType() {
@@ -301,8 +297,8 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     }
 
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
-        List<AttributeFieldError> errors = super.validate(tracer);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager);
         try {
             List<AttributeInterface> attributes = this.getAttributes();
             for (int i = 0; i < attributes.size(); i++) {
@@ -310,14 +306,14 @@ public class CompositeAttribute extends AbstractComplexAttribute {
                 AttributeTracer elementTracer = tracer.clone();
                 elementTracer.setCompositeElement(true);
                 elementTracer.setParentAttribute(this);
-                List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);
+                List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager);
                 if (null != elementErrors) {
                     errors.addAll(elementErrors);
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             _logger.error("Error validating composite attribute", t);
-            throw new RuntimeException("Error validating composite attribute", t);
+            throw new EntRuntimeException("Error validating composite attribute", t);
         }
         return errors;
     }

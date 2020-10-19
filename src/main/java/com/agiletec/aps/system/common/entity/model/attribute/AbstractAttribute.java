@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -105,8 +106,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * The returned type corresponds to the attribute code as found in the
-     * declaration of the attribute type.
+     * The returned type corresponds to the attribute code as found in the declaration of the attribute type.
      */
     @Override
     public String getType() {
@@ -164,9 +164,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Test whether the attribute is searchable (using a query on the DB) or
-     * not. The information held by a searchable attribute is replicated in an
-     * appropriate table used for SQL queries.
+     * Test whether the attribute is searchable (using a query on the DB) or not. The information held by a searchable
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
      * @return True if the attribute is a searchable one.
      */
@@ -176,12 +175,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Set up the searchable status of an attribute. When set to 'true' then the
-     * information held by the current attribute is replicated in an appropriate
-     * table used for SQL queries.
+     * Set up the searchable status of an attribute. When set to 'true' then the information held by the current
+     * attribute is replicated in an appropriate table used for SQL queries.
      *
-     * @param searchable True if the attribute is of searchable type, false
-     * otherwise.
+     * @param searchable True if the attribute is of searchable type, false otherwise.
      */
     @Override
     public void setSearchable(boolean searchable) {
@@ -205,18 +202,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
             AttributeHandlerInterface handler = (AttributeHandlerInterface) this.getHandler().getAttributeHandlerPrototype();
             clone.setHandler(handler);
             if (this.getDisablingCodes() != null) {
-                String[] disablingCodes = new String[this.getDisablingCodes().length];
-                for (int i = 0; i < this.getDisablingCodes().length; i++) {
-                    disablingCodes[i] = this.getDisablingCodes()[i];
-                }
-                clone.setDisablingCodes(disablingCodes);
+                clone.setDisablingCodes(Arrays.copyOf(this.getDisablingCodes(), this.getDisablingCodes().length));
             }
             if (this.getRoles() != null) {
-                String[] roles = new String[this.getRoles().length];
-                for (int i = 0; i < this.getRoles().length; i++) {
-                    roles[i] = this.getRoles()[i];
-                }
-                clone.setRoles(roles);
+                clone.setRoles(Arrays.copyOf(this.getRoles(), this.getRoles().length));
             }
             clone.setValidationRules(this.getValidationRules().clone());
             clone.setLangManager(this.getLangManager());
@@ -224,7 +213,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException t) {
             String message = "Error detected while creating the attribute prototype '" + this.getName() + "' type '" + this.getType() + "'";
             _logger.error("Error detected while creating the attribute prototype '{}' type '{}'", this.getName(), this.getType(), t);
-            throw new RuntimeException(message, t);
+            throw new EntRuntimeException(message, t);
         }
         return clone;
     }
@@ -286,11 +275,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
                 String[] roles = this.extractValues(rolesElements, "role");
                 this.setRoles(roles);
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             String message = "Error detected while creating the attribute config '"
                     + this.getName() + "' type '" + this.getType() + "'";
             _logger.error("Error detected while creating the attribute config '{}' type '{}'", this.getName(), this.getType(), t);
-            throw new RuntimeException(message, t);
+            throw new EntRuntimeException(message, t);
         }
     }
 
@@ -304,11 +293,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
 
     private void fallbackFromNamesToName() {
         if (null == this.getName() && null != this.getNames() && this.getNames().size() > 0) {
-            String defaultName = (String)this.getNames().get(_langManager.getDefaultLang().getCode());
+            String defaultName = (String) this.getNames().get(_langManager.getDefaultLang().getCode());
             if (null == defaultName) {
                 for (String lang : getNames().stringPropertyNames()) {
                     if (null != getNames().get(lang)) {
-                        defaultName = (String)getNames().get(lang);
+                        defaultName = (String) getNames().get(lang);
                         break;
                     }
                 }
@@ -393,14 +382,11 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     /**
      * Get the attribute matching the given criteria from a XML string.
      *
-     * @param currElement The element where to extract the value of the
-     * attribute from
+     * @param currElement The element where to extract the value of the attribute from
      * @param attributeName Name of the requested attribute.
-     * @param required Select a mandatory condition of the attribute to search
-     * for.
+     * @param required Select a mandatory condition of the attribute to search for.
      * @return The value of the requested attribute.
-     * @throws EntException when a attribute declared mandatory is not
-     * present in the given XML element.
+     * @throws EntException when a attribute declared mandatory is not present in the given XML element.
      */
     protected String extractXmlAttribute(Element currElement, String attributeName,
             boolean required) throws EntException {
@@ -516,9 +502,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Create and return the Jaxb structure of the attribute. This method return
-     * the object only if the value of the attribute is not null, and it can be
-     * overriten by custom attributes class.
+     * Create and return the Jaxb structure of the attribute. This method return the object only if the value of the
+     * attribute is not null, and it can be overriten by custom attributes class.
      *
      * @param langCode The lang code
      * @return The jaxb structure of the atttribute
@@ -531,8 +516,8 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     /**
-     * Create and return the base Jaxb structure of the attribute. This method
-     * can't be overriten by other attributes class.
+     * Create and return the base Jaxb structure of the attribute. This method can't be overriten by other attributes
+     * class.
      *
      * @return The base jaxb structure of the attribute.
      */
@@ -541,9 +526,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         jaxbAttribute.setDescription(this.getDescription());
         jaxbAttribute.setNames(new HashMap<>());
         Optional<ApsProperties> apsNames = Optional.ofNullable(this.getNames());
-        apsNames.ifPresent(values -> values.keySet().forEach((lang) -> {
-            jaxbAttribute.getNames().put((String) lang, (String) values.get(lang));
-        }));
+        apsNames.ifPresent(values -> values.keySet().forEach(lang -> jaxbAttribute.getNames().put((String) lang, (String) values.get(lang))));
         jaxbAttribute.setName(this.getName());
         jaxbAttribute.setType(this.getType());
         if (null != this.getRoles() && this.getRoles().length > 0) {
@@ -592,7 +575,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = new ArrayList<>();
         try {
             if (this.getStatus().equals(Status.INCOMPLETE)) {
@@ -602,14 +585,14 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
                 if (null == validationRules) {
                     return errors;
                 }
-                List<AttributeFieldError> validationRulesErrors = validationRules.validate(this, tracer, this.getLangManager());
+                List<AttributeFieldError> validationRulesErrors = validationRules.validate(this, tracer, langManager);
                 if (null != validationRulesErrors) {
                     errors.addAll(validationRulesErrors);
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             _logger.error("Error validating Attribute '{}'", this.getName(), t);
-            throw new RuntimeException("Error validating Attribute '" + this.getName() + "'", t);
+            throw new EntRuntimeException("Error validating Attribute '" + this.getName() + "'", t);
         }
         return errors;
     }
