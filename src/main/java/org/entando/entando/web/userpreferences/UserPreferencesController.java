@@ -56,7 +56,7 @@ public class UserPreferencesController {
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/userPreferences/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/userPreferences/{username:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> updateUserPreferences(
             @ModelAttribute("user") UserDetails user, @PathVariable String username,
             @Valid @RequestBody UserPreferencesRequest bodyRequest, BindingResult bindingResult) {

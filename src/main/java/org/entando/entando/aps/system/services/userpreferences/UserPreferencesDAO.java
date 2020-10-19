@@ -17,6 +17,8 @@ import com.agiletec.aps.system.common.AbstractDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
@@ -37,7 +39,7 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			"DELETE FROM userpreferences WHERE username = ? ";
 
 	@Override
-	public UserPreferences loadUserPreferences(String username) {
+	public UserPreferences loadUserPreferences(String username) throws EntException {
 		Connection conn = null;
 		UserPreferences response = null;
 		PreparedStatement stat = null;
@@ -54,9 +56,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 				response.setLoadOnPageSelect(res.getBoolean(2));
 				response.setTranslationWarning(res.getBoolean(3));
 			}
-		} catch (Throwable t) {
-			_logger.error("Error loading user preferences for user {}", username,  t);
-			throw new RuntimeException("Error loading user preferences for user " + username, t);
+		} catch (SQLException e) {
+			_logger.error("Error loading user preferences for user {}", username,  e);
+			throw new EntException("Error loading user preferences for user " + username, e);
 		} finally {
 			this.closeDaoResources(res, stat, conn);
 		}
@@ -64,7 +66,7 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 	}
 
 	@Override
-	public void addUserPreferences(UserPreferences userPreferences) {
+	public void addUserPreferences(UserPreferences userPreferences) throws EntException {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -77,17 +79,17 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			stat.setBoolean(4, userPreferences.isTranslationWarning());
 			stat.executeUpdate();
 			conn.commit();
-		} catch (Throwable t) {
+		} catch (SQLException e) {
 			this.executeRollback(conn);
-			_logger.error("Error while inserting user preferences {}", userPreferences,  t);
-			throw new RuntimeException("Error while inserting user preferences", t);
+			_logger.error("Error while inserting user preferences {}", userPreferences,  e);
+			throw new EntException("Error while inserting user preferences", e);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
 	}
 
 	@Override
-	public void updateUserPreferences(UserPreferences userPreferences) {
+	public void updateUserPreferences(UserPreferences userPreferences) throws EntException {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -100,17 +102,17 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			stat.setString(4, userPreferences.getUsername());
 			stat.executeUpdate();
 			conn.commit();
-		} catch (Throwable t) {
+		} catch (SQLException e) {
 			this.executeRollback(conn);
-			_logger.error("Error detected while updating user preferences",  userPreferences, t);
-			throw new RuntimeException("Error detected while updating user preferences", t);
+			_logger.error("Error detected while updating user preferences",  userPreferences, e);
+			throw new EntException("Error detected while updating user preferences", e);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
 	}
 
 	@Override
-	public void deleteUserPreferences(String username) {
+	public void deleteUserPreferences(String username) throws EntException {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -120,10 +122,10 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			stat.setString(1, username);
 			stat.executeUpdate();
 			conn.commit();
-		} catch (Throwable t) {
+		} catch (SQLException e) {
 			this.executeRollback(conn);
-			_logger.error("Error detected while deleting user preferences for user '{}'", username,  t);
-			throw new RuntimeException("Error detected while deleting user preferences", t);
+			_logger.error("Error detected while deleting user preferences for user '{}'", username,  e);
+			throw new EntException("Error detected while deleting user preferences", e);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

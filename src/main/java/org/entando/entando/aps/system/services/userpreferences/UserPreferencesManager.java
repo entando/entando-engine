@@ -14,57 +14,32 @@
 package org.entando.entando.aps.system.services.userpreferences;
 
 import org.entando.entando.ent.exception.EntException;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 public class UserPreferencesManager implements IUserPreferencesManager {
-
-    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserPreferencesManager.class);
 
     private UserPreferencesDAO userPreferencesDAO;
 
     @Override
     public void addUserPreferences(UserPreferences userPreferences) throws EntException {
-        try {
-            userPreferencesDAO.addUserPreferences(userPreferences);
-        } catch (Throwable t) {
-            logger.error("Error saving user preferences: {}", userPreferences, t);
-            throw new EntException("Error saving user preferences", t);
-        }
+        userPreferencesDAO.addUserPreferences(userPreferences);
     }
 
     @Override
     public UserPreferences getUserPreferences(String username) throws EntException {
-        try {
-            return userPreferencesDAO.loadUserPreferences(username);
-        } catch (Throwable t) {
-            logger.error("Error loading user preferences for user: {}", username, t);
-            throw new EntException("Error loading user preferences", t);
-        }
+        return userPreferencesDAO.loadUserPreferences(username);
     }
 
     @Override
     public void updateUserPreferences(UserPreferences userPreferences) throws EntException {
-        try {
-            userPreferencesDAO.updateUserPreferences(userPreferences);
-        } catch (Throwable t) {
-            logger.error("Error updating user preferences: {}", userPreferences, t);
-            throw new EntException("Error updating user preferences", t);
-        }
+        userPreferencesDAO.updateUserPreferences(userPreferences);
     }
 
     @Override
     public void deleteUserPreferences(String username) throws EntException {
-        try {
-            userPreferencesDAO.deleteUserPreferences(username);
-        } catch (Throwable t) {
-            logger.error("Error deleting user preferences for user: {}", username, t);
-            throw new EntException("Error updating user preferences", t);
-        }
+        userPreferencesDAO.deleteUserPreferences(username);
     }
 
-    public void setUserPreferencesDAO(
-            UserPreferencesDAO userPreferencesDAO) {
+    public void setUserPreferencesDAO(UserPreferencesDAO userPreferencesDAO) {
         this.userPreferencesDAO = userPreferencesDAO;
     }
 }

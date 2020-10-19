@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.services.userpreferences;
 
+import org.entando.entando.ent.exception.EntException;
+
 /**
  * The interface for user preferences DAO.
  *
@@ -25,27 +27,31 @@ public interface IUserPreferencesDAO {
      *
      * @param username the username
      * @return the user preferences
+     * @throws EntException the ent exception
      */
-    UserPreferences loadUserPreferences(String username);
+    UserPreferences loadUserPreferences(String username) throws EntException;
 
     /**
      * Add user preferences.
      *
      * @param userPreferences the user preferences to be added
+     * @throws EntException the ent exception
      */
-    void addUserPreferences(UserPreferences userPreferences);
+    void addUserPreferences(UserPreferences userPreferences) throws EntException;
 
     /**
      * Update user preferences.
      *
      * @param userPreferences the user preferences to be updated
+     * @throws EntException the ent exception
      */
-    void updateUserPreferences(UserPreferences userPreferences);
+    void updateUserPreferences(UserPreferences userPreferences) throws EntException;
 
     /**
      * Delete user preferences.
      *
      * @param username the username which will have its user preferences deleted
+     * @throws EntException the ent exception
      */
-    void deleteUserPreferences(String username);
+    void deleteUserPreferences(String username) throws EntException;
 }
