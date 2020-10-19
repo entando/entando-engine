@@ -132,17 +132,7 @@ public class UserManager extends AbstractService implements IUserManager {
             this.getUserDAO().changePassword(username, password);
         } catch (Throwable t) {
             logger.error("Error on change password for user '{}'", username, t);
-            throw new EntException("Error updating the password of the User " + username, t);
-        }
-    }
-
-    @Override
-    public void changeWizard(String username, Boolean wizardEnabled) throws EntException {
-        try {
-            this.getUserDAO().changeWizard(username, wizardEnabled);
-        } catch (Throwable t) {
-            logger.error("Error on change wizard enabled for user '{}'", username, t);
-            throw new EntException("Error changing wizard enabled of the User " + username, t);
+            throw new EntException("Error updating the password of the User" + username, t);
         }
     }
 
