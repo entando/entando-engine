@@ -16,45 +16,31 @@ package org.entando.entando.aps.system.init.model.portdb;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import org.entando.entando.aps.system.init.model.servdb.UserProfile;
 
 @DatabaseTable(tableName = UserPreferences.TABLE_NAME)
 public class UserPreferences {
 
     public static final String TABLE_NAME = "userpreferences";
 
-    public UserPreferences() {
-    }
-
     @DatabaseField(columnName = "username",
             dataType = DataType.STRING,
             width = 80,
             canBeNull = false, id = true)
-    private String _username;
+    private String username;
 
     @DatabaseField(columnName = "wizard",
             dataType = DataType.SHORT,
             canBeNull = false)
-    private short _wizard;
+    private short wizard;
 
     @DatabaseField(columnName = "loadonpageselect",
             dataType = DataType.SHORT,
             canBeNull = false)
-    private short _loadonpageselect;
+    private short loadonpageselect;
 
     @DatabaseField(columnName = "translationwarning",
             dataType = DataType.SHORT,
             canBeNull = false)
-    private short _translationwarning;
+    private short translationwarning;
 
 }
-/*
-CREATE TABLE userpreferences
-(
-  username character varying(80) NOT NULL,
-  wizard smallint NOT NULL,
-  loadonpageselect smallint NOT NULL,
-  translationwarning smallint NOT NULL,
-  CONSTRAINT userpreferences_pkey PRIMARY KEY (username)
-);
- */

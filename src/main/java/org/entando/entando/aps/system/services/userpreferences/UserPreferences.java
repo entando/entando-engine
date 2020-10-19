@@ -24,52 +24,52 @@ public class UserPreferences implements Serializable {
 
 	@XmlElement(name = "username", required = true)
 	public String getUsername() {
-		return _username;
+		return username;
 	}
 
 	public void setUsername(String username) {
-		this._username = username;
+		this.username = username;
 	}
 
 	@XmlElement(name = "wizard", required = true)
 	public boolean isWizard() {
-		return _wizard;
+		return wizard;
 	}
 
 	public void setWizard(boolean wizard) {
-		this._wizard = wizard;
+		this.wizard = wizard;
 	}
 
 	@XmlElement(name = "loadOnPageSelect", required = true)
 	public boolean isLoadOnPageSelect() {
-		return _loadOnPageSelect;
+		return loadOnPageSelect;
 	}
 
 	public void setLoadOnPageSelect(boolean loadOnPageSelect) {
-		this._loadOnPageSelect = loadOnPageSelect;
+		this.loadOnPageSelect = loadOnPageSelect;
 	}
 
 	@XmlElement(name = "translationWarning", required = true)
 	public boolean isTranslationWarning() {
-		return _translationWarning;
+		return translationWarning;
 	}
 
 	public void setTranslationWarning(boolean translationWarning) {
-		this._translationWarning = translationWarning;
+		this.translationWarning = translationWarning;
 	}
 
-	private String _username;
-	private boolean _wizard;
-	private boolean _loadOnPageSelect;
-	private boolean _translationWarning;
+	private String username;
+	private boolean wizard;
+	private boolean loadOnPageSelect;
+	private boolean translationWarning;
 
 	@Override
 	public String toString() {
 		return "UserPreferences{" +
-				"username='" + _username + '\'' +
-				", wizard=" + _wizard +
-				", loadOnPageSelect=" + _loadOnPageSelect +
-				", translationWarning=" + _translationWarning +
+				"username='" + username + '\'' +
+				", wizard=" + wizard +
+				", loadOnPageSelect=" + loadOnPageSelect +
+				", translationWarning=" + translationWarning +
 				'}';
 	}
 }

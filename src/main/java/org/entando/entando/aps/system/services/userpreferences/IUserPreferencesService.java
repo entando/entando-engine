@@ -15,9 +15,28 @@ package org.entando.entando.aps.system.services.userpreferences;
 
 import org.entando.entando.web.userpreferences.model.UserPreferencesDto;
 import org.entando.entando.web.userpreferences.model.UserPreferencesRequest;
-import org.springframework.validation.BindingResult;
 
+/**
+ * The interface for user preferences service.
+ *
+ * @author b.queiroz
+ */
 public interface IUserPreferencesService {
+
+    /**
+     * Gets user preferences for a given user.
+     *
+     * @param username the username
+     * @return the current user preferences
+     */
     UserPreferencesDto getUserPreferences(String username);
+
+    /**
+     * Update user preferences for a given user.
+     *
+     * @param username the username
+     * @param request  the request
+     * @return the updated user preferences
+     */
     UserPreferencesDto updateUserPreferences(String username, UserPreferencesRequest request);
 }

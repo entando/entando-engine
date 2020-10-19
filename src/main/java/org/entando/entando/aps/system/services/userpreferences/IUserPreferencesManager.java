@@ -15,10 +15,43 @@ package org.entando.entando.aps.system.services.userpreferences;
 
 import org.entando.entando.ent.exception.EntException;
 
+/**
+ * The interface for user preferences manager.
+ *
+ * @author b.queiroz
+ */
 public interface IUserPreferencesManager {
-	
-	UserPreferences getUserPreferences(String username)	throws EntException;
-	void addUserPreferences(UserPreferences userPreferences) throws EntException;
-	void updateUserPreferences(UserPreferences userPreferences) throws EntException;
-	void deleteUserPreferences(String username) throws EntException;
+
+    /**
+     * Gets user preferences for a given user.
+     *
+     * @param username the username
+     * @return the user preferences
+     * @throws EntException the ent exception
+     */
+    UserPreferences getUserPreferences(String username) throws EntException;
+
+    /**
+     * Add user preferences.
+     *
+     * @param userPreferences the user preferences to be added
+     * @throws EntException the ent exception
+     */
+    void addUserPreferences(UserPreferences userPreferences) throws EntException;
+
+    /**
+     * Update user preferences.
+     *
+     * @param userPreferences the user preferences to be updated
+     * @throws EntException the ent exception
+     */
+    void updateUserPreferences(UserPreferences userPreferences) throws EntException;
+
+    /**
+     * Delete user preferences.
+     *
+     * @param username the username that will have its user preferences deleted
+     * @throws EntException the ent exception
+     */
+    void deleteUserPreferences(String username) throws EntException;
 }

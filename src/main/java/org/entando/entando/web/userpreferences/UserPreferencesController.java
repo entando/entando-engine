@@ -13,13 +13,11 @@
  */
 package org.entando.entando.web.userpreferences;
 
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.userpreferences.IUserPreferencesService;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.userpreferences.model.UserPreferencesDto;
 import org.entando.entando.web.userpreferences.model.UserPreferencesRequest;
@@ -29,11 +27,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -49,8 +47,7 @@ public class UserPreferencesController {
     @Autowired
     private UserPreferencesValidator userPreferencesValidator;
 
-    @RequestMapping(value = "/userPreferences/{username:.+}", method = RequestMethod.GET, produces =
-            MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/userPreferences/{username:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> getUserPreferences(
             @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult) {
         logger.debug("Getting user '{}' preferences ", username);
@@ -59,8 +56,7 @@ public class UserPreferencesController {
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/userPreferences/{username}", method = RequestMethod.PUT, produces =
-            MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/userPreferences/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> updateUserPreferences(
             @ModelAttribute("user") UserDetails user, @PathVariable String username,
             @Valid @RequestBody UserPreferencesRequest bodyRequest, BindingResult bindingResult) {

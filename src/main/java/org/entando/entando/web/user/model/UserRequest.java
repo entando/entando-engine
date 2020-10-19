@@ -78,7 +78,11 @@ public class UserRequest {
 
     @Override
     public String toString() {
-        return "UserRequest{" + "username=" + username + ", status=" + status + ", password=...., profileType=\" + profileType + \"}";
+        return "UserRequest{" +
+                "username='" + username + '\'' +
+                ", status='" + status + '\'' +
+                ", reset=" + reset +
+                ", profileType='" + profileType + '\'' +
+                '}';
     }
-
 }

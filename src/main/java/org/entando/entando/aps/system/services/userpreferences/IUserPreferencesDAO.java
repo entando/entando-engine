@@ -13,10 +13,39 @@
  */
 package org.entando.entando.aps.system.services.userpreferences;
 
+/**
+ * The interface for user preferences DAO.
+ *
+ * @author b.queiroz
+ */
 public interface IUserPreferencesDAO {
-	
-	UserPreferences loadUserPreferences(String username);
+
+    /**
+     * Load user preferences user preferences for a given user.
+     *
+     * @param username the username
+     * @return the user preferences
+     */
+    UserPreferences loadUserPreferences(String username);
+
+    /**
+     * Add user preferences.
+     *
+     * @param userPreferences the user preferences to be added
+     */
     void addUserPreferences(UserPreferences userPreferences);
+
+    /**
+     * Update user preferences.
+     *
+     * @param userPreferences the user preferences to be updated
+     */
     void updateUserPreferences(UserPreferences userPreferences);
+
+    /**
+     * Delete user preferences.
+     *
+     * @param username the username which will have its user preferences deleted
+     */
     void deleteUserPreferences(String username);
 }
