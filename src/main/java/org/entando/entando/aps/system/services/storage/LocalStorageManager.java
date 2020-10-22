@@ -254,7 +254,8 @@ public class LocalStorageManager implements IStorageManager {
 		return newArray;
 	}
 
-	private String createFullPath(String subPath, boolean isProtectedResource) {
+	@Override
+	public String createFullPath(String subPath, boolean isProtectedResource) {
 		subPath = (null == subPath) ? "" : subPath;
 		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
 		String resPath = this.createPath(diskRoot, subPath, false);
