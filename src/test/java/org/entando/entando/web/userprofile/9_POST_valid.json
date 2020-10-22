@@ -1,0 +1,20 @@
+{
+    "id": "new_user_2",
+    "typeCode":"OTH",
+    "typeDescription":"Other user profile",
+    "description":"Profile of user with email",
+    "mainGroup":"free",
+    "groups":[],
+    "attributes": [
+        {
+            "code": "firstname",
+            "value": "Eric"
+        },{
+            "code": "surname",
+            "value": "Brown"
+        },{
+            "code": "email",
+            "value": "eric.brown@entando.com"
+        }
+    ]
+}
