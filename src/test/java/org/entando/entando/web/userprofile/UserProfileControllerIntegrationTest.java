@@ -46,9 +46,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
 
 public class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -63,7 +64,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
 
     @Autowired
     private ProfileController controller;
-
+    
     @Test
     public void testGetUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
@@ -164,6 +165,32 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
             if (null != this.userProfileManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
             }
+        }
+    }
+    
+    @Test
+    public void testAddUserProfileWithEmail() throws Exception {
+        try {
+            String accessToken = this.createAccessToken();
+
+            ResultActions result1 = this.executeProfilePost("9_POST_valid.json", accessToken, status().isOk());
+            result1.andExpect(jsonPath("$.payload.id", is("new_user_2")));
+            result1.andExpect(jsonPath("$.errors.size()", is(0)));
+            result1.andExpect(jsonPath("$.metaData.size()", is(0)));
+            IUserProfile profile = this.userProfileManager.getProfile("new_user_2");
+            Assert.assertNotNull(profile);
+            EmailAttribute emailAttribute = (EmailAttribute) profile.getAttribute("email");
+            Assert.assertEquals("eric.brown@entando.com", emailAttribute.getText());
+            
+            ResultActions result2 = executeProfileGet("new_user_2", accessToken, status().isOk());
+            result2.andExpect(jsonPath("$.payload.id", is("new_user_2")));
+            result2.andExpect(jsonPath("$.payload.typeCode", is("OTH")));
+            result2.andExpect(jsonPath("$.payload.attributes[0].value", is("Eric")));
+            result2.andExpect(jsonPath("$.payload.attributes[1].value", is("Brown")));
+            result2.andExpect(jsonPath("$.payload.attributes[2].value", is("eric.brown@entando.com")));
+        } finally {
+            this.userProfileManager.deleteProfile("new_user_2");
+            Assert.assertNull(this.userProfileManager.getProfile("new_user_2"));
         }
     }
 
@@ -346,7 +373,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
             }
         }
     }
-
+    
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageUserProfile", Permission.MANAGE_USER_PROFILES)
