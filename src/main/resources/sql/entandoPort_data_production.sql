@@ -313,12 +313,12 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="en">System Messages</property>
 <property key="it">Messaggi di Sistema</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 0);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Legacy Login Form</property>
 <property key="it">Form di Login Legacy</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 0);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Internal Servlet</property>
@@ -338,7 +338,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free', 0);
+', 1, 'free', 1);
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Profile and Password</property>
