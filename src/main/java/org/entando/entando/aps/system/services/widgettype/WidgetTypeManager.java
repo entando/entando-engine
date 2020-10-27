@@ -157,6 +157,7 @@ public class WidgetTypeManager extends AbstractService
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException {
         try {
+            boolean readonlyPageWidgetConfigLocalVar;
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
                 logger.error("Type not exists : type code {}", widgetTypeCode);
@@ -165,13 +166,19 @@ public class WidgetTypeManager extends AbstractService
             if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
                 defaultConfig = type.getConfig();
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfig);
+            if (type.isLocked()) {
+                readonlyPageWidgetConfigLocalVar = type.isReadonlyPageWidgetConfig();
+            } else {
+                readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
+            }
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);
             type.setConfigUi(configUi);
             type.setBundleId(bundleId);
             type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
+            type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfigLocalVar);
             this.getCacheWrapper().updateWidgetType(type);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {

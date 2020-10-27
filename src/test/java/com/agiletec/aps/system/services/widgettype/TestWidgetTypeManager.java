@@ -190,10 +190,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
             assertNotNull(extracted);
             assertEquals("formAction", extracted.getParentType().getCode());
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
-            Boolean readonlyPageWidgetConfig = true;
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), readonlyPageWidgetConfig);
+                    type.getConfigUi(), type.getBundleId(), true);
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
@@ -212,6 +211,23 @@ public class TestWidgetTypeManager extends BaseTestCase {
                 this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
             assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        }
+    }
+
+    public void testUpdateReadOnlyPageConfigLockedWidget() throws Throwable {
+        String widgetTypeCode = "entando_apis";
+        WidgetType widgetType = _widgetTypeManager.getWidgetType(widgetTypeCode);
+
+        try {
+            assertNotNull(widgetType);
+            this._widgetTypeManager.updateWidgetType(widgetTypeCode, widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup(),
+                    widgetType.getConfigUi(), widgetType.getBundleId(), false);
+            WidgetType updated = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(updated);
+            assertNotNull(updated.getConfig());
+            assertTrue(updated.isReadonlyPageWidgetConfig());
+        } catch (Throwable t) {
+            throw t;
         }
     }
 
