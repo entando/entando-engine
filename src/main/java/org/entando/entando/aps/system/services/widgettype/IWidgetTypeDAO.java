@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.util.ApsProperties;
+
 import java.util.Map;
 
 /**
@@ -40,6 +41,6 @@ public interface IWidgetTypeDAO {
     public void deleteWidgetType(String widgetTypeCode);
 
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean readonlyDefaultConfig);
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig);
 
 }

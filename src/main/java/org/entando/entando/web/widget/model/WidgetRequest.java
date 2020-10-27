@@ -13,9 +13,10 @@
  */
 package org.entando.entando.web.widget.model;
 
-import java.util.Map;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.Map;
 
 public class WidgetRequest {
 
@@ -39,7 +40,7 @@ public class WidgetRequest {
 
     private Map<String, String> config;
 
-    private Boolean readonlyDefaultConfig;
+    private Boolean readonlyPageWidgetConfig;
 
     public String getCode() {
         return code;
@@ -105,11 +106,11 @@ public class WidgetRequest {
         this.config = config;
     }
 
-    public Boolean isReadonlyDefaultConfig() {
-        return readonlyDefaultConfig;
+    public Boolean isReadonlyPageWidgetConfig() {
+        return readonlyPageWidgetConfig;
     }
 
-    public void setReadonlyDefaultConfig(Boolean readonlyDefaultConfig) {
-        this.readonlyDefaultConfig = readonlyDefaultConfig;
+    public void setReadonlyPageWidgetConfig(Boolean readonlyPageWidgetConfig) {
+        this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
     }
 }

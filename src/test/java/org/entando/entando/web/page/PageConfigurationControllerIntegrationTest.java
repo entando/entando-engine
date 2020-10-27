@@ -13,21 +13,10 @@
  */
 package org.entando.entando.web.page;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageRequest;
@@ -41,6 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+
+import javax.ws.rs.core.HttpHeaders;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -195,7 +194,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         return pageRequest;
     }
 
-    private WidgetRequest getWidgetRequest(String newWidgetCode, boolean readonlyDefaultConfig) {
+    private WidgetRequest getWidgetRequest(String newWidgetCode, boolean readonlyPageWidgetConfig) {
         WidgetRequest request = new WidgetRequest();
         request.setCode(newWidgetCode);
         request.setParentType("parent_widget");
@@ -207,7 +206,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         request.setConfig(Collections.singletonMap("key", "value"));
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
-        request.setReadonlyDefaultConfig(readonlyDefaultConfig);
+        request.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
         return request;
     }
 

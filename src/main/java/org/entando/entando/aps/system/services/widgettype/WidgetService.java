@@ -23,10 +23,6 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -51,6 +47,11 @@ import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.context.ServletContextAware;
+
+import javax.servlet.ServletContext;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WidgetService implements IWidgetService, GroupServiceUtilizer<WidgetDto>, ServletContextAware {
@@ -249,7 +250,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
             widgetDto = dtoBuilder.convert(type);
             this.getWidgetManager().updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyDefaultConfig());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig());
             if (!StringUtils.isEmpty(widgetCode)) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetCode);
                 if (null == guiFragment) {
@@ -365,8 +366,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         type.setTitles(titles);
         type.setMainGroup(widgetRequest.getGroup());
         type.setBundleId(widgetRequest.getBundleId());
-        if (widgetRequest.isReadonlyDefaultConfig() != null) {
-            type.setReadonlyDefaultConfig(widgetRequest.isReadonlyDefaultConfig());
+        if (widgetRequest.isReadonlyPageWidgetConfig() != null) {
+            type.setReadonlyPageWidgetConfig(widgetRequest.isReadonlyPageWidgetConfig());
         }
         if (widgetRequest.getParentType() != null) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));

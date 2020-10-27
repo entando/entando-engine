@@ -13,27 +13,12 @@
  */
 package org.entando.entando.web.widget;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
@@ -49,6 +34,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+
+import javax.ws.rs.core.HttpHeaders;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
@@ -222,7 +220,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("<h1>Custom UI</h1>");
             request.setGroup(Group.FREE_GROUP_NAME);
-            request.setReadonlyDefaultConfig(true);
+            request.setReadonlyPageWidgetConfig(true);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newCode)));
             WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
@@ -275,7 +273,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setTitles(titles);
             request.setCustomUi("");
             request.setGroup(Group.FREE_GROUP_NAME);
-            request.setReadonlyDefaultConfig(true);
+            request.setReadonlyPageWidgetConfig(true);
 
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_NOT_BLANK)));
@@ -315,7 +313,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         try {
             WidgetRequest request = getWidgetRequest(newWidgetCode);
-            request.setReadonlyDefaultConfig(true);
+            request.setReadonlyPageWidgetConfig(true);
             ResultActions result0 = this.executeWidgetPost(request, accessToken, status().isOk());
             result0.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
@@ -373,7 +371,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             titles.put("it", "Titolo ITA");
             titles.put("en", "Title EN");
             request.setTitles(titles);
-            request.setReadonlyDefaultConfig(true);
+            request.setReadonlyPageWidgetConfig(true);
 
             request.setCustomUi(parentCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
@@ -404,7 +402,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setGroup(Group.FREE_GROUP_NAME);
             request.setParentType(parentCode);
             request.setConfig(Collections.singletonMap("parentCode", "configValue"));
-            request.setReadonlyDefaultConfig(true);
+            request.setReadonlyPageWidgetConfig(true);
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
                     .andDo(print())
@@ -574,7 +572,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setTitles(titles);
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
-        request.setReadonlyDefaultConfig(true);
+        request.setReadonlyPageWidgetConfig(true);
         return request;
     }
 
@@ -597,7 +595,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setCode(code);
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
-        request.setReadonlyDefaultConfig(true);
+        request.setReadonlyPageWidgetConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
     }

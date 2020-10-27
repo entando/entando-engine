@@ -16,17 +16,14 @@ package org.entando.entando.aps.system.services.widgettype;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Data Access Object per i tipi di widget (WidgetType).
@@ -40,17 +37,17 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     private ILangManager langManager;
 
     private final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig FROM widgetcatalog";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig FROM widgetcatalog";
 
     private final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlydefaultconfig) "
+            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig) "
             + "VALUES ( ? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?)";
 
     private final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
     private final String UPDATE_WIDGET_TYPE
-            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlydefaultconfig = ? WHERE code = ? ";
+            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ? WHERE code = ? ";
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -118,8 +115,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             if (StringUtils.isNotEmpty(bundleId)) {
                 widgetType.setBundleId(bundleId);
             }
-            int isReadonlyDefaultConfig = res.getInt(11);
-            widgetType.setReadonlyDefaultConfig(isReadonlyDefaultConfig == 1);
+            int isReadonlyPageWidgetConfig = res.getInt(11);
+            widgetType.setReadonlyPageWidgetConfig(isReadonlyPageWidgetConfig == 1);
 
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
@@ -160,7 +157,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(8, widgetType.getMainGroup());
             stat.setString(9, widgetType.getConfigUi());
             stat.setString(10, widgetType.getBundleId());
-            if (widgetType.isReadonlyDefaultConfig()) {
+            if (widgetType.isReadonlyPageWidgetConfig()) {
                 stat.setInt(11, 1);
             } else {
                 stat.setInt(11, 0);
@@ -199,7 +196,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean readonlyDefaultConfig) {
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {
@@ -216,7 +213,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             stat.setString(4, configUi);
             stat.setString(5, bundleId);
 
-            if (Boolean.TRUE.equals(readonlyDefaultConfig)) {
+            if (Boolean.TRUE.equals(readonlyPageWidgetConfig)) {
                 stat.setInt(6, 1);
             } else {
                 stat.setInt(6, 0);

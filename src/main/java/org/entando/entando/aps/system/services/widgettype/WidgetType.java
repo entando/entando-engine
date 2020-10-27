@@ -14,14 +14,15 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.util.ApsProperties;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Rappresenta un tipo di oggetto visuale che può essere inserito in una pagina,
@@ -72,10 +73,10 @@ public class WidgetType implements Serializable {
 
 
     /**
-     * The readonlyDefaultConfig boolean field is read during the widget configuration, if It's false the user
+     * The readonlyPageWidgetConfig boolean field is read during the widget configuration, if It's false the user
      * can override the widget type default configuration in the instance of the widget
      */
-    private boolean readonlyDefaultConfig;
+    private boolean readonlyPageWidgetConfig;
 
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
@@ -275,12 +276,12 @@ public class WidgetType implements Serializable {
         this._locked = locked;
     }
 
-    public boolean isReadonlyDefaultConfig() {
-        return readonlyDefaultConfig;
+    public boolean isReadonlyPageWidgetConfig() {
+        return readonlyPageWidgetConfig;
     }
 
-    public void setReadonlyDefaultConfig(boolean readonlyDefaultConfig) {
-        this.readonlyDefaultConfig = readonlyDefaultConfig;
+    public void setReadonlyPageWidgetConfig(boolean readonlyPageWidgetConfig) {
+        this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
     }
 
     public String getMainGroup() {

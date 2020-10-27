@@ -309,17 +309,17 @@ INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu
 <property key="it">Home</property>
 </properties>', 'home', 1, NULL, '2017-02-18 00:12:24');
 
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">System Messages</property>
 <property key="it">Messaggi di Sistema</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Legacy Login Form</property>
 <property key="it">Form di Login Legacy</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Internal Servlet</property>
 <property key="it">Invocazione di una Servlet Interna</property>
@@ -328,8 +328,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 		Path to an action or to a JSP. You must prepend ''/ExtStr2'' to any Struts2 action path
 	</parameter>
 	<action name="configSimpleParameter"/>
-</config>', NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlydefaultconfig) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
+</config>', NULL, NULL, NULL, 1, NULL, 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">APIs</property>
 <property key="it">APIs</property>
@@ -338,8 +338,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free', 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
+', 1, 'free', 0);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Profile and Password</property>
 <property key="it">Edita Profilo e Password</property>
@@ -347,7 +347,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/edit.action</property>
 </properties>', 1, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit User Password</property>
 <property key="it">Edita Password Utente</property>
@@ -355,7 +355,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/editPassword.action</property>
 </properties>', 1, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlydefaultconfig) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit User Profile</property>
 <property key="it">Edita Profilo Utente</property>
@@ -1655,7 +1655,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 			<input type="submit" value="<@wp.i18n key="SIGNIN" />" class="btn btn-primary" />
 		</div>
 	</form>
-</#if>', 1);
+</#if>', 0);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('internal_servlet_generic_error', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <@wp.i18n key="GENERIC_ERROR" />', 1);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('internal_servlet_user_not_allowed', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
@@ -1673,7 +1673,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <div class="alert alert-error alert-block">
 	<h1 class="alert-heading"><@wp.i18n key="GENERIC_ERROR" escapeXml=false /></h1>
 </div>
-</#if>', 1);
+</#if>', 0);
 INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('default_pagerBlock', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 
 <#if (group.size > group.max)>

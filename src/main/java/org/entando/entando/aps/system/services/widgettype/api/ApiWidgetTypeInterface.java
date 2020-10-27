@@ -16,11 +16,6 @@ package org.entando.entando.aps.system.services.widgettype.api;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.IApiExportable;
@@ -37,6 +32,12 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author E.Santoboni
@@ -152,7 +153,7 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			WidgetType widgetType = jaxbWidgetType.getModifiedWidgetType(this.getWidgetTypeManager());
 			this.checkAndSaveFragment(widgetType, jaxbWidgetType, false, response, addedFragments, updatedFragments);
 			this.getWidgetTypeManager().updateWidgetType(widgetType.getCode(), widgetType.getTitles(), widgetType.getConfig(), widgetType
-					.getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyDefaultConfig());
+					.getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyPageWidgetConfig());
 			response.setResult(IResponseBuilder.SUCCESS, null);
 		} catch (ApiException ae) {
 			this.revertPreviousObject(widgetTypeToUpdate, addedFragments, updatedFragments);
@@ -169,7 +170,7 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			throws Throwable {
 		if (null != widgetTypeToUpdate) {
 			this.getWidgetTypeManager().updateWidgetType(widgetTypeToUpdate.getCode(), widgetTypeToUpdate.getTitles(), widgetTypeToUpdate
-					.getConfig(), widgetTypeToUpdate.getMainGroup(), widgetTypeToUpdate.getConfigUi(), widgetTypeToUpdate.getBundleId(),widgetTypeToUpdate.isReadonlyDefaultConfig());
+					.getConfig(), widgetTypeToUpdate.getMainGroup(), widgetTypeToUpdate.getConfigUi(), widgetTypeToUpdate.getBundleId(),widgetTypeToUpdate.isReadonlyPageWidgetConfig());
 		}
 		for (int i = 0; i < addedFragments.size(); i++) {
 			GuiFragment guiFragment = addedFragments.get(i);
