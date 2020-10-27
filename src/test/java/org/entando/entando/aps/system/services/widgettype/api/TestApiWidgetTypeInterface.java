@@ -19,12 +19,6 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -32,6 +26,13 @@ import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author E.Santoboni
@@ -204,7 +205,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
                 this._guiFragmentManager.updateGuiFragment(previousFragment);
             }
             this._widgetTypeManager.updateWidgetType(widgetType.getCode(), originalTitles, widgetType.getConfig(), widgetType
-                    .getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyDefaultConfig());
+                    .getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyPageWidgetConfig());
         }
     }
 

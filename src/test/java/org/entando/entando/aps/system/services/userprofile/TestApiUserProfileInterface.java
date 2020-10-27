@@ -18,13 +18,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttr
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import javax.ws.rs.core.MediaType;
 import org.entando.entando.aps.system.services.api.ApiBaseTestCase;
 import org.entando.entando.aps.system.services.api.UnmarshalUtils;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
@@ -34,6 +27,14 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.userprofile.api.ApiUserProfileInterface;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
+import javax.ws.rs.core.MediaType;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author E.Santoboni
@@ -137,7 +138,6 @@ public class TestApiUserProfileInterface extends ApiBaseTestCase {
         Object result = this.getResponseBuilder().createResponse(getMethod, properties);
         assertNotNull(result);
         ApiUserProfileInterface apiUserProfileInterface = (ApiUserProfileInterface) this.getApplicationContext().getBean("ApiUserProfileInterface");
-        System.out.println("aaaaaaaaaaaaa --->>> " + apiUserProfileInterface);
         Object singleResult = apiUserProfileInterface.getUserProfile(properties);
         assertNotNull(singleResult);
         String toString = this.marshall(singleResult, mediaType);

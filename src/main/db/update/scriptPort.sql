@@ -16,3 +16,5 @@ CREATE TABLE userpreferences
   translationwarning smallint NOT NULL,
   CONSTRAINT userpreferences_pkey PRIMARY KEY (username)
 );
+ALTER TABLE widgetcatalog DROP COLUMN readonlydefaultconfig;
+ALTER TABLE widgetcatalog ADD COLUMN readonlypagewidgetconfig smallint SET DEFAULT 0;

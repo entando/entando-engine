@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.page.validator;
 
-import java.util.Map;
 import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
@@ -21,6 +20,8 @@ import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+
+import java.util.Map;
 
 
 @Component
@@ -39,7 +40,7 @@ public class PageConfigurationValidator extends AbstractPaginationValidator {
         final WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
 
         if (null != type.getConfig() &&
-                (!type.getConfig().equals(widgetConfig) && type.isReadonlyDefaultConfig())) {
+                (!type.getConfig().equals(widgetConfig) && type.isReadonlyPageWidgetConfig())) {
             errors.rejectValue("code", ERRCODE_OPERATION_WIDEGT_CONF_NOT_OVERRIDABLE,
                     new String[]{widgetCode}, "page.widgetconfig.notoverridable");
         }
