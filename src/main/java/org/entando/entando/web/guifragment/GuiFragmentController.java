@@ -27,6 +27,7 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
@@ -38,6 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +47,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/fragments")
 public class GuiFragmentController {
     public static final String COMPONENT_ID = "fragment";
 
@@ -75,7 +76,7 @@ public class GuiFragmentController {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<GuiFragmentDtoSmall>> getGuiFragments(RestListRequest requestList) throws JsonProcessingException {
         this.getGuiFragmentValidator().validateRestListRequest(requestList, GuiFragmentDto.class);
         PagedMetadata<GuiFragmentDtoSmall> result = this.getGuiFragmentService().getGuiFragments(requestList);
@@ -85,14 +86,21 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments/{fragmentCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> getGuiFragment(@PathVariable String fragmentCode) {
         GuiFragmentDto fragment = this.getGuiFragmentService().getGuiFragment(fragmentCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(fragment), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{fragmentCode}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/analysis/fragments")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get fragment analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.guiFragmentService.getComponentAnalysis(codes)));
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @RequestMapping(value = "/fragments/{fragmentCode}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String fragmentCode) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, fragmentCode);
 
@@ -106,7 +114,7 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{fragmentCode}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments/{fragmentCode}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable String fragmentCode, PageSearchRequest searchRequest) {
 
         logger.trace("get {} usage details by code {}", COMPONENT_ID, fragmentCode);
@@ -120,7 +128,7 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> addGuiFragment(
             @Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest,
             BindingResult bindingResult) {
@@ -138,7 +146,7 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments/{fragmentCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> updateGuiFragment(@PathVariable String fragmentCode, @Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest, BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
@@ -157,7 +165,7 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments/{fragmentCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteGuiFragment(
             @PathVariable String fragmentCode) {
         //-
@@ -169,7 +177,7 @@ public class GuiFragmentController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/info/plugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fragments/info/plugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<List<String>>> getPluginCodes() {
         logger.info("loading plugin list");
         List<String> plugins = this.getGuiFragmentService().getPluginCodes();

@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.IGroupService;
@@ -32,6 +33,7 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/groups")
 public class GroupController {
 
     public static final String COMPONENT_ID = "group";
@@ -75,7 +77,7 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<GroupDto>> getGroups(RestListRequest requestList)
             throws JsonProcessingException {
         this.getGroupValidator().validateRestListRequest(requestList, GroupDto.class);
@@ -86,10 +88,17 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    @RequestMapping(value = "/{groupCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/{groupCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GroupDto>> getGroup(@PathVariable String groupCode) {
         GroupDto group = this.getGroupService().getGroup(groupCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(group), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/groups")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get group analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.groupService.getComponentAnalysis(codes)));
     }
 
     @ApiOperation("Retrieve pageModel usage count")
@@ -97,7 +106,7 @@ public class GroupController {
             @ApiResponse(code = 200, message = "OK")
     })
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String code) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, code);
         ComponentUsage usage = ComponentUsage.builder()
@@ -109,7 +118,7 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{groupCode}/references/{holder}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/{groupCode}/references/{holder}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<?>> getGroupReferences(@PathVariable String groupCode,
             @PathVariable String holder, RestListRequest requestList) {
         PagedMetadata<?> result = this.getGroupService().getGroupReferences(groupCode, holder, requestList);
@@ -117,7 +126,7 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{groupCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/{groupCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GroupDto>> updateGroup(@PathVariable String groupCode,
             @Valid @RequestBody GroupRequest groupRequest, BindingResult bindingResult) {
         //field validations
@@ -134,7 +143,7 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<GroupDto>> addGroup(
             @Valid @RequestBody GroupRequest groupRequest,
             BindingResult bindingResult) {
@@ -148,7 +157,7 @@ public class GroupController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{groupName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/{groupName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map>> deleteGroup(@PathVariable String groupName) {
         logger.info("deleting {}", groupName);
         this.getGroupService().removeGroup(groupName);

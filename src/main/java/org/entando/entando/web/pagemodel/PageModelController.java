@@ -16,6 +16,7 @@ package org.entando.entando.web.pagemodel;
 import com.agiletec.aps.system.services.role.Permission;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.*;
+import java.util.List;
 import org.entando.entando.aps.system.services.pagemodel.IPageModelService;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -24,6 +25,7 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
@@ -38,7 +40,7 @@ import java.util.Map;
 
 @Api(tags = {"page-models"})
 @RestController
-@RequestMapping(value = "/pageModels", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class PageModelController {
     
     public static final String COMPONENT_ID = "pageTemplate";
@@ -60,7 +62,7 @@ public class PageModelController {
             @ApiResponse(code = 400, message = "Bad Request")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @GetMapping
+    @GetMapping(value = "/pageModels")
     public ResponseEntity<PagedRestResponse<PageModelDto>> getPageModels(
             RestListRequest requestList, @RequestParam Map<String, String> requestParams) {
         logger.trace("loading page templates");
@@ -76,7 +78,7 @@ public class PageModelController {
             @ApiResponse(code = 404, message = "NotFound")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @GetMapping(value = "/{code:.+}")
+    @GetMapping(value = "/pageModels/{code:.+}")
     public ResponseEntity<SimpleRestResponse<PageModelDto>> getPageModel(@PathVariable String code) {
         PageModelDto pageModelDto = this.pageModelService.getPageModel(code);
         return ResponseEntity.ok(new SimpleRestResponse<>(pageModelDto));
@@ -87,11 +89,26 @@ public class PageModelController {
             @ApiResponse(code = 200, message = "OK")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @GetMapping(value = "/{code:.+}/references/{manager}")
+    @GetMapping(value = "/pageModels/{code:.+}/references/{manager}")
     public ResponseEntity<PagedRestResponse<?>> getPageModelReferences(
             @PathVariable String code, @PathVariable String manager, RestListRequest requestList) {
         PagedMetadata<?> result = this.pageModelService.getPageModelReferences(code, manager, requestList);
         return ResponseEntity.ok(new PagedRestResponse<>(result));
+    }
+
+    @ApiOperation(
+            value = "componentAnalysis",
+            nickname = "getComponentAnalysis",
+            response = ComponentAnalysis.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = ComponentAnalysis.class),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden")})
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/pageModels")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get pageTemplate analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.pageModelService.getComponentAnalysis(codes)));
     }
 
     @ApiOperation("Retrieve pageModel usage count")
@@ -99,7 +116,7 @@ public class PageModelController {
             @ApiResponse(code = 200, message = "OK")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pageModels/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String code) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, code);
         ComponentUsage usage = ComponentUsage.builder()
@@ -116,7 +133,7 @@ public class PageModelController {
             @ApiResponse(code = 400, message = "Bad Request")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/{code}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/pageModels/{code}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable String code, PageSearchRequest searchRequest) {
         logger.trace("get {} usage details by code {}", COMPONENT_ID, code);
         // clear filters
@@ -131,7 +148,7 @@ public class PageModelController {
             @ApiResponse(code = 400, message = "Bad Request")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @PutMapping(value = "/{code:.+}", name = "roleGroup")
+    @PutMapping(value = "/pageModels/{code:.+}", name = "roleGroup")
     public ResponseEntity<SimpleRestResponse<PageModelDto>> updatePageModel(@PathVariable String code,
             @Valid @RequestBody PageModelRequest pageModelRequest, BindingResult bindingResult) {
         this.validateWithBodyName(code, pageModelRequest, bindingResult);
@@ -156,7 +173,7 @@ public class PageModelController {
             @ApiResponse(code = 409, message = "Conflict")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @PostMapping
+    @PostMapping(value = "/pageModels")
     public ResponseEntity<SimpleRestResponse<PageModelDto>> addPageModel(
             @Valid @RequestBody PageModelRequest pagemodelRequest, BindingResult bindingResult) {
         this.validatePageModelRequest(pagemodelRequest, bindingResult);
@@ -179,7 +196,7 @@ public class PageModelController {
             @ApiResponse(code = 200, message = "OK")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @DeleteMapping(value = "/{code:.+}")
+    @DeleteMapping(value = "/pageModels/{code:.+}")
     public ResponseEntity<SimpleRestResponse<Map>> deletePageModel(@PathVariable String code) {
         logger.debug("deleting {}", code);
         this.pageModelService.removePageModel(code);

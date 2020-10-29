@@ -14,12 +14,14 @@
 package org.entando.entando.web.language;
 
 import com.agiletec.aps.system.services.role.Permission;
+import java.util.List;
 import org.entando.entando.aps.system.services.language.ILanguageService;
 import org.entando.entando.aps.system.services.language.LanguageDto;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.language.model.LanguageRequest;
 import org.entando.entando.web.language.validator.LanguageValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -36,7 +38,6 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 
 @RestController
-@RequestMapping(value = "/languages")
 public class LanguageController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
@@ -64,7 +65,7 @@ public class LanguageController {
     }
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/languages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<LanguageDto>> getLanguages(RestListRequest requestList) {
         logger.trace("loading languages list");
         this.getLanguageValidator().validateRestListRequest(requestList, LanguageDto.class);
@@ -74,7 +75,7 @@ public class LanguageController {
     }
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    @RequestMapping(value = "/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/languages/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<LanguageDto>> getLanguage(@PathVariable String code) {
         logger.trace("loading language {}", code);
         LanguageDto result = this.getLanguageService().getLanguage(code);
@@ -82,7 +83,7 @@ public class LanguageController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/languages/{code}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<LanguageDto>> updateLanguage(@PathVariable String code,
             @Valid @RequestBody LanguageRequest languageRequest, BindingResult bindingResult) {
         logger.trace("loading language {}", code);
@@ -91,6 +92,13 @@ public class LanguageController {
         }
         LanguageDto result = this.getLanguageService().updateLanguage(code, languageRequest.getStatus());
         return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/languages")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get language analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.languageService.getComponentAnalysis(codes)));
     }
 
 }

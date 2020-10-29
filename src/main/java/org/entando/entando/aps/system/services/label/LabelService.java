@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.label;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
@@ -32,6 +33,8 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentAnalysisState;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.label.LabelValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -294,5 +297,15 @@ public class LabelService implements ILabelService {
 
     private ResourceNotFoundException mkLabelNotFoundException(String code) {
         return new ResourceNotFoundException(LabelValidator.ERRCODE_LABELGROUP_NOT_FOUND, "label", code);
+    }
+
+    @Override
+    public ComponentAnalysis getComponentAnalysis(List<String> codeList) {
+        // FIXME stub data
+        Map<String, ComponentAnalysisState> components = new HashMap<>();
+        components.put("code1", ComponentAnalysisState.CONFLICT);
+        components.put("code2", ComponentAnalysisState.NO_CONFLICT);
+        components.put("STUB_DATA", ComponentAnalysisState.NO_CONFLICT);
+        return new ComponentAnalysis(components);
     }
 }

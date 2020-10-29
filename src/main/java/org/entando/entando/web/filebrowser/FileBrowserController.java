@@ -21,6 +21,8 @@ import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeV
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
 import org.entando.entando.web.filebrowser.validator.FileBrowserValidator;
@@ -42,7 +44,6 @@ import java.util.Map;
  * @author E.Santoboni
  */
 @RestController
-@RequestMapping(value = "/fileBrowser")
 public class FileBrowserController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
@@ -58,7 +59,7 @@ public class FileBrowserController {
     private FileBrowserValidator validator;
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<List<BasicFileAttributeViewDto>, Map<String, Object>>> browseFolder(
             @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
             @RequestParam(value = PROTECTED_FOLDER, required = false) Boolean protectedFolder) {
@@ -94,7 +95,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/file", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/file", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> getFile(
             @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
             @RequestParam(value = PROTECTED_FOLDER, required = false, defaultValue = "false") Boolean protectedFolder) {
@@ -111,7 +112,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> addFile(
             @Valid @RequestBody FileBrowserFileRequest request,
             BindingResult bindingResult) {
@@ -127,7 +128,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/file", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/file", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> updateFile(@Valid @RequestBody FileBrowserFileRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -151,7 +152,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/file", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/file", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> deleteFile(@RequestParam String currentPath, @RequestParam Boolean protectedFolder) {
         logger.debug("delete file {} - protected {}", currentPath, protectedFolder);
         String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
@@ -166,7 +167,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/directory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/directory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> addDirectory(
             @Valid @RequestBody FileBrowserRequest request,
             BindingResult bindingResult) {
@@ -183,7 +184,7 @@ public class FileBrowserController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/directory", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fileBrowser/directory", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> deleteDirectory(
             @RequestParam String currentPath,
             @RequestParam Boolean protectedFolder) {
@@ -192,6 +193,22 @@ public class FileBrowserController {
         this.getFileBrowserService().deleteDirectory(currentPath, protectedFolder);
         return this.executeDirectoryRespose(currentPath, protectedFolder);
     }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/fileBrowser/file")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> fileComponentAnalysis(List<String> codes) {
+        logger.debug("REST request - get file analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.fileBrowserService.getFileComponentAnalysis(codes)));
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/fileBrowser/directory")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> directoryComponentAnalysis(List<String> codes) {
+        logger.debug("REST request - get directory analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.fileBrowserService.getDirectoryComponentAnalysis(codes)));
+    }
+
+
 
     public ResponseEntity<RestResponse<Map<String, Object>, Map<String, Object>>> executeDirectoryRespose(
             String path, Boolean protectedFolder) {

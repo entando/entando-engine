@@ -35,11 +35,13 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +53,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author E.Santoboni
  */
 @RestController
-@RequestMapping(value = "/categories")
 public class CategoryController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
@@ -79,7 +80,7 @@ public class CategoryController {
         this.categoryValidator = categoryValidator;
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<List<CategoryDto>, Map<String, String>>> getCategories(@RequestParam(value = "parentCode", required = false, defaultValue = "home") String parentCode) {
         logger.debug("getting category tree for parent {}", parentCode);
         List<CategoryDto> result = this.getCategoryService().getTree(parentCode);
@@ -89,7 +90,7 @@ public class CategoryController {
     }
 
     @RestAccessControl(permission = { Permission.ENTER_BACKEND })
-    @RequestMapping(value = "/{categoryCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories/{categoryCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<CategoryDto>> getCategory(@PathVariable String categoryCode) {
         logger.debug("getting category {}", categoryCode);
         CategoryDto category = this.getCategoryService().getCategory(categoryCode);
@@ -97,11 +98,26 @@ public class CategoryController {
     }
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    @RequestMapping(value = "/{categoryCode}/references/{holder}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories/{categoryCode}/references/{holder}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<?>> getCategoryReferences(@PathVariable String categoryCode, @PathVariable String holder, RestListRequest requestList) {
         logger.debug("getting category references - {}", categoryCode);
         PagedMetadata<?> result = this.getCategoryService().getCategoryReferences(categoryCode, holder, requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
+    }
+
+    @ApiOperation(
+            value = "componentAnalysis",
+            nickname = "getComponentAnalysis",
+            response = ComponentAnalysis.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = ComponentAnalysis.class),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden")})
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/categories/")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get category analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.categoryService.getComponentAnalysis(codes)));
     }
 
     @ApiOperation("Retrieve categories usage count")
@@ -110,7 +126,7 @@ public class CategoryController {
             @ApiResponse(code = 400, message = "Bad Request")
     })
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories/{code}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String code) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, code);
         ComponentUsage usage = ComponentUsage.builder()
@@ -123,7 +139,7 @@ public class CategoryController {
 
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<CategoryDto>> addCategory(@Valid @RequestBody CategoryDto categoryRequest, BindingResult bindingResult) throws EntException {
         //field validations
         this.getCategoryValidator().validate(categoryRequest, bindingResult);
@@ -137,7 +153,7 @@ public class CategoryController {
     }
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
-    @RequestMapping(value = "/{categoryCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories/{categoryCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<CategoryDto, Map<String, String>>> updateCategory(@PathVariable String categoryCode, @Valid @RequestBody CategoryDto categoryRequest, BindingResult bindingResult) {
         logger.debug("updating category {} with request {}", categoryCode, categoryRequest);
         //field validations
@@ -154,7 +170,7 @@ public class CategoryController {
     }
 
     @RestAccessControl(permission = Permission.MANAGE_CATEGORIES)
-    @RequestMapping(value = "/{categoryCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories/{categoryCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteCategory(@PathVariable String categoryCode) {
         logger.debug("Deleting category -> {}", categoryCode);
         this.getCategoryService().deleteCategory(categoryCode);

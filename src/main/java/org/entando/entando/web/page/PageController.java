@@ -36,6 +36,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
@@ -50,6 +51,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -168,6 +170,13 @@ public class PageController {
         PageDto page = this.getPageService().getPage(pageCode, status);
         metadata.put("status", status);
         return new ResponseEntity<>(new RestResponse<>(page, metadata), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/pages")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get page analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.pageService.getComponentAnalysis(codes)));
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)

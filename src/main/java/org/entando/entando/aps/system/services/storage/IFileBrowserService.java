@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.storage;
 
 import java.util.List;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
 import org.springframework.validation.BindingResult;
@@ -37,5 +38,21 @@ public interface IFileBrowserService {
     public void addDirectory(FileBrowserRequest request, BindingResult bindingResult);
 
     public void deleteDirectory(String currentPath, Boolean protectedFolder);
+
+    /**
+     * for each code, checks if the relative file does exists or not
+     *
+     * @param codeList the list of the component codes to check
+     * @return a ComponentAnalysis containing the requested conflict/no conflict info
+     */
+    ComponentAnalysis getFileComponentAnalysis(List<String> codeList);
+
+    /**
+     * for each code, checks if the relative file does exists or not
+     *
+     * @param codeList the list of the component codes to check
+     * @return a ComponentAnalysis containing the requested conflict/no conflict info
+     */
+    ComponentAnalysis getDirectoryComponentAnalysis(List<String> codeList);
 
 }

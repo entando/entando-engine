@@ -15,12 +15,16 @@ package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.util.FileTextReader;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.component.ComponentAnalysisState;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
 import org.entando.entando.web.filebrowser.validator.FileBrowserValidator;
@@ -189,6 +193,26 @@ public class FileBrowserService implements IFileBrowserService {
             logger.error("error deleting directory path {} - type {}", currentPath, protectedFolder);
             throw new RestServerError("error deleting directory", t);
         }
+    }
+
+    @Override
+    public ComponentAnalysis getFileComponentAnalysis(List<String> codeList) {
+        // FIXME stub data
+        Map<String, ComponentAnalysisState> components = new HashMap<>();
+        components.put("code1", ComponentAnalysisState.CONFLICT);
+        components.put("code2", ComponentAnalysisState.NO_CONFLICT);
+        components.put("STUB_DATA", ComponentAnalysisState.NO_CONFLICT);
+        return new ComponentAnalysis(components);
+    }
+
+    @Override
+    public ComponentAnalysis getDirectoryComponentAnalysis(List<String> codeList) {
+        // FIXME stub data
+        Map<String, ComponentAnalysisState> components = new HashMap<>();
+        components.put("code1", ComponentAnalysisState.CONFLICT);
+        components.put("code2", ComponentAnalysisState.NO_CONFLICT);
+        components.put("STUB_DATA", ComponentAnalysisState.NO_CONFLICT);
+        return new ComponentAnalysis(components);
     }
 
     protected void checkResource(String currentPath, String objectName, Boolean protectedFolder) {

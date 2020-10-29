@@ -15,6 +15,7 @@ package org.entando.entando.web.label;
 
 import com.agiletec.aps.system.services.role.Permission;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.label.ILabelService;
@@ -27,11 +28,13 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/labels")
 public class LabelController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
@@ -67,7 +69,7 @@ public class LabelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/labels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<LabelDto>> getLabels(RestListRequest requestList) {
         logger.debug("loading labels");
         this.getLabelValidator().validateRestListRequest(requestList, LabelDto.class);
@@ -77,7 +79,7 @@ public class LabelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{labelCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/labels/{labelCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<LabelDto>> geLabelGroup(@PathVariable String labelCode) {
         logger.debug("loading label {}", labelCode);
         LabelDto label = this.getLabelService().getLabelGroup(labelCode);
@@ -85,7 +87,7 @@ public class LabelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{labelCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/labels/{labelCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<LabelDto>> updateLabelGroup(@PathVariable String labelCode, @Valid @RequestBody LabelRequest labelRequest, BindingResult bindingResult) {
         logger.debug("updating label {}", labelRequest.getKey());
         this.getLabelValidator().validateBodyName(labelCode, labelRequest, bindingResult);
@@ -97,7 +99,7 @@ public class LabelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/labels", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<LabelDto>> addLabelGroup(@Valid @RequestBody LabelRequest labelRequest) {
         logger.debug("adding label {}", labelRequest.getKey());
         LabelDto group = this.getLabelService().addLabelGroup(labelRequest);
@@ -105,7 +107,7 @@ public class LabelController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/{labelCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/labels/{labelCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map>> deleteLabelGroup(@PathVariable String labelCode) {
         logger.debug("deleting label {}", labelCode);
         this.getLabelService().removeLabelGroup(labelCode);
@@ -114,4 +116,10 @@ public class LabelController {
         return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
 
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/labels")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get labels analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.labelService.getComponentAnalysis(codes)));
+    }
 }

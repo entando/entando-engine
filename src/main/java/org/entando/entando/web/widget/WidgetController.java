@@ -15,6 +15,7 @@ package org.entando.entando.web.widget;
 
 import com.agiletec.aps.system.services.role.Permission;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.widgettype.IWidgetService;
@@ -30,6 +31,7 @@ import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
@@ -39,6 +41,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +66,13 @@ public class WidgetController {
         logger.trace("getWidget by code {}", widgetCode);
         WidgetDto widgetDto = this.widgetService.getWidget(widgetCode);
         return new ResponseEntity<>(new SimpleRestResponse<>(widgetDto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping("/analysis/widgets")
+    public ResponseEntity<SimpleRestResponse<ComponentAnalysis>> componentAnalysis(List<String> codes) {
+        logger.debug("REST request - get widgets analysis for codes {}", codes);
+        return ResponseEntity.ok(new SimpleRestResponse<>(this.widgetService.getComponentAnalysis(codes)));
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)

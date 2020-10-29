@@ -1,7 +1,9 @@
 package org.entando.entando.aps.system.services.language;
 
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -15,6 +17,8 @@ import org.entando.entando.aps.system.services.language.utils.LanguageRequestLis
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.component.ComponentAnalysisState;
+import org.entando.entando.web.component.ComponentAnalysis;
 import org.entando.entando.web.language.validator.LanguageValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -140,6 +144,16 @@ public class LanguageService implements ILanguageService {
         }
         return bindingResult;
 
+    }
+
+    @Override
+    public ComponentAnalysis getComponentAnalysis(List<String> codeList) {
+        // FIXME stub data
+        Map<String, ComponentAnalysisState> components = new HashMap<>();
+        components.put("code1", ComponentAnalysisState.CONFLICT);
+        components.put("code2", ComponentAnalysisState.NO_CONFLICT);
+        components.put("STUB_DATA", ComponentAnalysisState.NO_CONFLICT);
+        return new ComponentAnalysis(components);
     }
 
 }
