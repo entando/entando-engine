@@ -77,7 +77,12 @@ public class WidgetCatalog {
 			dataType = DataType.SHORT)
 	private short readonlyPageWidgetConfig;
 
-	public static final String TABLE_NAME = "widgetcatalog";
+    @DatabaseField(columnName = "widgetcategory",
+            dataType = DataType.STRING,
+            width = 80)
+    private String widgetCategory;
+
+    public static final String TABLE_NAME = "widgetcatalog";
 	
 }
 /*
@@ -94,6 +99,7 @@ CREATE TABLE widgetcatalog
   configui character varying,
   bundleid character varying(150),
   readonlypagewidgetconfig smallint,
+  widgetcategory character varying(80),
   CONSTRAINT showletcatalog_pkey PRIMARY KEY (code )
 )
  */

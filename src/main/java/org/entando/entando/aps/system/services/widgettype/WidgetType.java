@@ -78,6 +78,11 @@ public class WidgetType implements Serializable {
      */
     private boolean readonlyPageWidgetConfig;
 
+    /**
+     * The widgetCategory string field is used to group widget types
+     */
+    private String widgetCategory;
+
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
     @Override
@@ -103,6 +108,13 @@ public class WidgetType implements Serializable {
             clone.setTypeParameters(params);
         }
         clone.setMainGroup(this.getMainGroup());
+        if (this.isReadonlyPageWidgetConfig()){
+            clone.setReadonlyPageWidgetConfig(this.readonlyPageWidgetConfig);
+        }
+        else {
+            clone.setReadonlyPageWidgetConfig(false);
+        }
+        clone.setWidgetCategory(this.widgetCategory);
         return clone;
     }
 
@@ -284,6 +296,14 @@ public class WidgetType implements Serializable {
         this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
     }
 
+    public String getWidgetCategory() {
+        return widgetCategory;
+    }
+
+    public void setWidgetCategory(String widgetCategory) {
+        this.widgetCategory = widgetCategory;
+    }
+
     public String getMainGroup() {
         return _mainGroup;
     }
@@ -355,6 +375,8 @@ public class WidgetType implements Serializable {
         result = prime * result + ((_parentTypeCode == null) ? 0 : _parentTypeCode.hashCode());
         result = prime * result + ((_pluginCode == null) ? 0 : _pluginCode.hashCode());
         result = prime * result + ((_titles == null) ? 0 : _titles.hashCode());
+        result = prime * result + (readonlyPageWidgetConfig ? 1231 : 1237);
+        result = prime * result + ((widgetCategory == null) ? 0 : widgetCategory.hashCode());
         return result;
     }
 
@@ -436,6 +458,17 @@ public class WidgetType implements Serializable {
         } else if (!_titles.equals(other._titles)) {
             return false;
         }
+        if (readonlyPageWidgetConfig != other.readonlyPageWidgetConfig) {
+            return false;
+        }
+        if (widgetCategory == null) {
+            if (other.widgetCategory != null) {
+                return false;
+            }
+        } else if (!widgetCategory.equals(other.widgetCategory)) {
+            return false;
+        }
         return true;
     }
+
 }

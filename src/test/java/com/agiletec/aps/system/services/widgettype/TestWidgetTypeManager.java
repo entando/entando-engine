@@ -192,7 +192,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), true);
+                    type.getConfigUi(), type.getBundleId(), true, type.getWidgetCategory());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
@@ -200,7 +200,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory());
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));

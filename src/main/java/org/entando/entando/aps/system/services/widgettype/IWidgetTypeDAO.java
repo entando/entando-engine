@@ -40,7 +40,13 @@ public interface IWidgetTypeDAO {
      */
     public void deleteWidgetType(String widgetTypeCode);
 
+    @Deprecated
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig);
+
+    WidgetType getWidgetType(String widgetTypeCode);
+
+     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory);
 
 }

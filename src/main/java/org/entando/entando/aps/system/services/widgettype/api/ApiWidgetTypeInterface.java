@@ -153,7 +153,7 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			WidgetType widgetType = jaxbWidgetType.getModifiedWidgetType(this.getWidgetTypeManager());
 			this.checkAndSaveFragment(widgetType, jaxbWidgetType, false, response, addedFragments, updatedFragments);
 			this.getWidgetTypeManager().updateWidgetType(widgetType.getCode(), widgetType.getTitles(), widgetType.getConfig(), widgetType
-					.getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyPageWidgetConfig());
+					.getMainGroup(), widgetType.getConfigUi(), widgetType.getBundleId(), widgetType.isReadonlyPageWidgetConfig(), widgetType.getWidgetCategory());
 			response.setResult(IResponseBuilder.SUCCESS, null);
 		} catch (ApiException ae) {
 			this.revertPreviousObject(widgetTypeToUpdate, addedFragments, updatedFragments);
@@ -170,7 +170,8 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			throws Throwable {
 		if (null != widgetTypeToUpdate) {
 			this.getWidgetTypeManager().updateWidgetType(widgetTypeToUpdate.getCode(), widgetTypeToUpdate.getTitles(), widgetTypeToUpdate
-					.getConfig(), widgetTypeToUpdate.getMainGroup(), widgetTypeToUpdate.getConfigUi(), widgetTypeToUpdate.getBundleId(),widgetTypeToUpdate.isReadonlyPageWidgetConfig());
+					.getConfig(), widgetTypeToUpdate.getMainGroup(), widgetTypeToUpdate.getConfigUi(), widgetTypeToUpdate.getBundleId(),
+                    widgetTypeToUpdate.isReadonlyPageWidgetConfig(), widgetTypeToUpdate.getWidgetCategory());
 		}
 		for (int i = 0; i < addedFragments.size(); i++) {
 			GuiFragment guiFragment = addedFragments.get(i);

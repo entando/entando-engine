@@ -42,8 +42,9 @@ public class WidgetDto {
     private ApsProperties config;
     private String parentType;
     private String action;
-    private Boolean readonlyPageWidgetConfig;
+    private boolean readonlyPageWidgetConfig;
     private boolean locked;
+    private String widgetCategory;
 
     protected class GuiFragmentRef {
 
@@ -256,5 +257,17 @@ public class WidgetDto {
 
     public void setReadonlyPageWidgetConfig(Boolean readonlyPageWidgetConfig) {
         this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
+    }
+
+    public Boolean getReadonlyPageWidgetConfig() {
+        return readonlyPageWidgetConfig;
+    }
+
+    public String getWidgetCategory() {
+        return widgetCategory;
+    }
+
+    public void setWidgetCategory(String widgetCategory) {
+        this.widgetCategory = widgetCategory;
     }
 }

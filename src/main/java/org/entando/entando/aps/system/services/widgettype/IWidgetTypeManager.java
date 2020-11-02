@@ -70,7 +70,11 @@ public interface IWidgetTypeManager {
      * @param bundleId The bundle id of the widget type to update.
      * @throws EntException in case of error
      */
+    @Deprecated
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException;
+
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException;
 
 }

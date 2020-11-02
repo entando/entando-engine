@@ -153,10 +153,23 @@ public class WidgetTypeManager extends AbstractService
         }
     }
 
+    @Deprecated
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException {
+        WidgetType type = this.getWidgetType(widgetTypeCode);
+        if (null == type) {
+            logger.error("Type not exists : type code {}", widgetTypeCode);
+            return;
+        }
+        updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig, type.getWidgetCategory());
+    }
+
+    @Override
+    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException {
         try {
+
             boolean readonlyPageWidgetConfigLocalVar;
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
@@ -171,14 +184,14 @@ public class WidgetTypeManager extends AbstractService
             } else {
                 readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar);
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);
             type.setConfigUi(configUi);
             type.setBundleId(bundleId);
-            type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
             type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfigLocalVar);
+            type.setWidgetCategory(widgetCategory);
             this.getCacheWrapper().updateWidgetType(type);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
