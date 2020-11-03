@@ -28,7 +28,7 @@ public interface IWidgetTypeDAO {
     /**
      * Return the map of the widget types
      *
-     * @return The map of the widget types
+      @return The map of the widget types
      */
     public Map<String, WidgetType> loadWidgetTypes();
 
@@ -42,8 +42,9 @@ public interface IWidgetTypeDAO {
     public void deleteWidgetType(String widgetTypeCode);
 
     /**
-        @deprecated
-    */
+     * @deprecated
+     */
+    @Deprecated
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                           String configUi, String bundleId, Boolean readonlyPageWidgetConfig);
 

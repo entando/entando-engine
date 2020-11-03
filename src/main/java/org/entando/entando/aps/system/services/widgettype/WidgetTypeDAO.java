@@ -225,6 +225,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
         }
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
