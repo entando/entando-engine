@@ -1,14 +1,10 @@
 package com.agiletec.aps.system.services.widgettype;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsProperties;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.Test;
-
-import javax.sql.DataSource;
 
 public class TestWidgetType extends BaseTestCase {
 
@@ -25,7 +21,6 @@ public class TestWidgetType extends BaseTestCase {
         assertEquals(widgetType1, widgetType2);
         assertEquals(widgetType1.hashCode(),widgetType2.hashCode());
     }
-
 
     private WidgetType createWidgetType(String code) {
         WidgetType type = new WidgetType();
