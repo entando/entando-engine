@@ -49,7 +49,7 @@ public class WidgetTypeManager extends AbstractService
     private IWidgetTypeDAO _widgetTypeDAO;
     private IGuiFragmentManager _guiFragmentManager;
     private IWidgetTypeManagerCacheWrapper _cacheWrapper;
-    private static String WIDGET_TYPE_NOT_EXIST = "Widget Type not exists {}";
+    private static final String WIDGET_TYPE_NOT_EXIST = "Widget Type not exists {}";
 
     @Override
     public void init() throws Exception {
