@@ -18,6 +18,7 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
@@ -36,20 +37,20 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     private ILangManager langManager;
 
-    private final String ALL_WIDGET_TYPES
+    private static final String ALL_WIDGET_TYPES
             = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog";
 
-    private final String ADD_WIDGET_TYPE
+    private static final String ADD_WIDGET_TYPE
             = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory) "
             + "VALUES (? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?)";
 
-    private final String DELETE_WIDGET_TYPE
+    private static final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
-    private final String UPDATE_WIDGET_TYPE
+    private static final String UPDATE_WIDGET_TYPE
             = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ?, widgetcategory = ? WHERE code = ? ";
 
-    private final String GET_WIDGET_TYPE
+    private static final String GET_WIDGET_TYPE
             = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog WHERE code = ?";
 
     @Override
@@ -76,7 +77,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     }
 
     @Override
-    public WidgetType getWidgetType(String widgetTypeCode) {
+    public WidgetType getWidgetType(String widgetTypeCode) throws EntException{
         Connection conn = null;
         PreparedStatement stat = null;
         ResultSet res = null;
@@ -90,9 +91,10 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             while (res.next()) {
                 widgetType = this.createWidgetTypeFromResultSet(res);
             }
-        } catch (Throwable t) {
-            logger.error("Error loading widgets", t);
-            throw new RuntimeException("Error loading widgets", t);
+        } catch (EntException | SQLException e) {
+            String msg ="Error loading the widget type";
+            logger.error(msg, e);
+            throw new EntException(String.format("%s %s", msg, e));
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -227,7 +229,14 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) {
-        String widgetCategory=getWidgetType(widgetTypeCode).getWidgetCategory();
+        String widgetCategory;
+
+        try {
+            widgetCategory = getWidgetType(widgetTypeCode).getWidgetCategory();
+        } catch (EntException | RuntimeException e) {
+            throw new EntRuntimeException("Error updating widget type", e);
+        }
+
         updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
                 configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory);
     }

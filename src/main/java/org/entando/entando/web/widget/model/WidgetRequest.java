@@ -116,10 +116,6 @@ public class WidgetRequest {
         this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
     }
 
-    public Boolean getReadonlyPageWidgetConfig() {
-        return readonlyPageWidgetConfig;
-    }
-
     public String getWidgetCategory() {
         return widgetCategory;
     }

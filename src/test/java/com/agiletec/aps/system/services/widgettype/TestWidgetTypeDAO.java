@@ -13,16 +13,15 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
+import org.entando.entando.ent.exception.EntException;
+
+import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * @author M.Diana
@@ -49,4 +48,26 @@ public class TestWidgetTypeDAO extends BaseTestCase {
         assertNull(widgetType);
     }
 
+    public void testGetWidgetType()  {
+        String code="login_form";
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+        WidgetTypeDAO widgetTypeDao = new WidgetTypeDAO();
+        widgetTypeDao.setDataSource(dataSource);
+        ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+        widgetTypeDao.setLangManager(langManager);
+        WidgetType widgetType = null;
+        try {
+            widgetType = widgetTypeDao.getWidgetType(code);
+        } catch (EntException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(widgetType);
+        System.out.println(widgetType.getCode());
+        System.out.println(widgetType.getTitles());
+        System.out.println(widgetType.isReadonlyPageWidgetConfig());
+        System.out.println(widgetType.getWidgetCategory());
+        assertEquals("login_form",widgetType.getCode());
+        assertTrue(widgetType.isReadonlyPageWidgetConfig());
+        assertEquals("system",widgetType.getWidgetCategory());
+    }
 }

@@ -42,7 +42,7 @@ public class WidgetDto {
     private ApsProperties config;
     private String parentType;
     private String action;
-    private boolean readonlyPageWidgetConfig;
+    private Boolean readonlyPageWidgetConfig;
     private boolean locked;
     private String widgetCategory;
 
@@ -257,10 +257,6 @@ public class WidgetDto {
 
     public void setReadonlyPageWidgetConfig(Boolean readonlyPageWidgetConfig) {
         this.readonlyPageWidgetConfig = readonlyPageWidgetConfig;
-    }
-
-    public Boolean getReadonlyPageWidgetConfig() {
-        return readonlyPageWidgetConfig;
     }
 
     public String getWidgetCategory() {
