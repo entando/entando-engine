@@ -321,6 +321,15 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
+                .perform(get("/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", new Object[]{"XXX", "Monotext"})
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
+        result.andExpect(jsonPath("$.errors[0].code", is("1")));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
+
+        result = mockMvc
                 .perform(get("/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", new Object[]{"PFL", "Monotext"})
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
