@@ -1,0 +1,12 @@
+{
+    "code": "DataAttribute",
+    "type": "Date",
+    "name": "Description of date attribute",
+    "roles": [],
+    "mandatory": false,
+    "listFilter": true,
+    "validationRules": {
+        "rangeStartDate": "2000-03-24 00:00:00",
+        "rangeEndDate": "2020-12-24 00:00:00"
+    }
+}
