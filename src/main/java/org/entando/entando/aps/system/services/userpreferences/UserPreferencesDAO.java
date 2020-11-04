@@ -52,9 +52,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			if (res.next()) {
 				response = new UserPreferences();
 				response.setUsername(username);
-				response.setWizard(res.getBoolean(1));
-				response.setLoadOnPageSelect(res.getBoolean(2));
-				response.setTranslationWarning(res.getBoolean(3));
+				response.setWizard((1 == res.getInt(1)) ? true : false);
+				response.setLoadOnPageSelect((1 == res.getInt(2)) ? true : false);
+				response.setTranslationWarning((1 == res.getInt(3)) ? true : false);
 			}
 		} catch (SQLException e) {
 			_logger.error("Error loading user preferences for user {}", username,  e);
@@ -74,9 +74,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(ADD_USER_PREFERENCES);
 			stat.setString(1, userPreferences.getUsername());
-			stat.setBoolean(2, userPreferences.isWizard());
-			stat.setBoolean(3, userPreferences.isLoadOnPageSelect());
-			stat.setBoolean(4, userPreferences.isTranslationWarning());
+			stat.setInt(2, (userPreferences.isWizard()) ? 1 : 0);
+			stat.setInt(3, (userPreferences.isLoadOnPageSelect()) ? 1 : 0);
+			stat.setInt(4, (userPreferences.isTranslationWarning()) ? 1 : 0);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
