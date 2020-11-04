@@ -41,6 +41,7 @@ import com.agiletec.aps.system.services.role.TestRoleDAO;
 import com.agiletec.aps.system.services.role.TestRoleManager;
 import com.agiletec.aps.system.services.url.TestURLManager;
 import com.agiletec.aps.system.services.user.*;
+import com.agiletec.aps.system.services.widgettype.TestWidgetType;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
@@ -163,6 +164,8 @@ public class AllTests {
         suite.addTestSuite(TestWidgetTypeDAO.class);
         suite.addTestSuite(TestWidgetTypeDOM.class);
         suite.addTestSuite(TestWidgetTypeManager.class);
+        suite.addTestSuite(TestWidgetType.class);
+
         //
         suite.addTestSuite(TestURLManager.class);
         //

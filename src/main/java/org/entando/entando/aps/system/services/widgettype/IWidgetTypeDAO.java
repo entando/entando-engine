@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import com.agiletec.aps.util.ApsProperties;
+import org.entando.entando.ent.exception.EntException;
 
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public interface IWidgetTypeDAO {
     /**
      * Return the map of the widget types
      *
-     * @return The map of the widget types
+      @return The map of the widget types
      */
     public Map<String, WidgetType> loadWidgetTypes();
 
@@ -40,7 +41,15 @@ public interface IWidgetTypeDAO {
      */
     public void deleteWidgetType(String widgetTypeCode);
 
-    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig);
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                          String configUi, String bundleId, Boolean readonlyPageWidgetConfig);
 
+    WidgetType getWidgetType(String widgetTypeCode) throws EntException;
+
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                          String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory);
 }

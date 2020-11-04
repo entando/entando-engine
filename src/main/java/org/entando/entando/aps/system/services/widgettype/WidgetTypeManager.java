@@ -49,6 +49,7 @@ public class WidgetTypeManager extends AbstractService
     private IWidgetTypeDAO _widgetTypeDAO;
     private IGuiFragmentManager _guiFragmentManager;
     private IWidgetTypeManagerCacheWrapper _cacheWrapper;
+    private static final String WIDGET_TYPE_NOT_EXIST = "Widget Type not exists {}";
 
     @Override
     public void init() throws Exception {
@@ -122,7 +123,7 @@ public class WidgetTypeManager extends AbstractService
         try {
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
-                logger.error("Type not exists : type code {}", widgetTypeCode);
+                logger.error(WIDGET_TYPE_NOT_EXIST , widgetTypeCode);
                 return;
             }
             if (type.isLocked()) {
@@ -153,14 +154,30 @@ public class WidgetTypeManager extends AbstractService
         }
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException {
+        WidgetType type = this.getWidgetType(widgetTypeCode);
+        if (null == type) {
+            logger.error(WIDGET_TYPE_NOT_EXIST, widgetTypeCode);
+            return;
+        }
+        updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig, type.getWidgetCategory());
+    }
+
+    @Override
+    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException {
         try {
+
             boolean readonlyPageWidgetConfigLocalVar;
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
-                logger.error("Type not exists : type code {}", widgetTypeCode);
+                logger.error(WIDGET_TYPE_NOT_EXIST, widgetTypeCode);
                 return;
             }
             if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
@@ -171,14 +188,14 @@ public class WidgetTypeManager extends AbstractService
             } else {
                 readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar);
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);
             type.setConfigUi(configUi);
             type.setBundleId(bundleId);
-            type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
             type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfigLocalVar);
+            type.setWidgetCategory(widgetCategory);
             this.getCacheWrapper().updateWidgetType(type);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {

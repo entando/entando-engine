@@ -259,11 +259,12 @@ public class WidgetServiceTest {
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> bundleIdCaptor = ArgumentCaptor.forClass(String.class);
         verify(widgetManager).updateWidgetType(anyString(), any(), any(), anyString(), configUiCaptor.capture(),
-                bundleIdCaptor.capture(), anyBoolean());
+                bundleIdCaptor.capture(), anyBoolean(), anyString());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
         assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
         assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
+        assertThat(widgetDto.getWidgetCategory()).isEqualTo(widgetRequest.getWidgetCategory());
     }
 
     private WidgetType getWidget1() throws JsonProcessingException {
@@ -299,6 +300,7 @@ public class WidgetServiceTest {
         widgetRequest.setReadonlyPageWidgetConfig(true);
         widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));
         widgetRequest.setBundleId(BUNDLE_1);
+        widgetRequest.setWidgetCategory("test");
         return widgetRequest;
     }
 

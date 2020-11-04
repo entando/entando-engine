@@ -389,17 +389,17 @@ INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu
 </config>', '2017-02-17 13:06:24');
 
 
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Login Widget</property>
 <property key="it">Widget di Login</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1, 'system');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">System Messages</property>
 <property key="it">Messaggi di Sistema</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1, 'system');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Internal Servlet</property>
 <property key="it">Invocazione di una Servlet Interna</property>
@@ -408,16 +408,16 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 		Path relativo di una action o una Jsp
 	</parameter>
 	<action name="configSimpleParameter"/>
-</config>', NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('leftmenu', '<?xml version="1.0" encoding="UTF-8"?>
+</config>', NULL, NULL, NULL, 1, NULL, 1, 'system');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('leftmenu', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Vertical Navigation Menu</property>
 <property key="it">Menu di navigazione verticale</property>
 </properties>', '<config>
 	<parameter name="navSpec">Rules for the Page List auto-generation</parameter>
 	<action name="navigatorConfig" />
-</config>', NULL, NULL, NULL, 1, NULL, 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
+</config>', NULL, NULL, NULL, 1, NULL, 1, 'navigation');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">APIs</property>
 <property key="it">APIs</property>
@@ -426,16 +426,16 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free', 1);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('logic_type', '<?xml version="1.0" encoding="UTF-8"?>
+', 1, 'free', 1, 'system');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('logic_type', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Logic type for test</property>
 <property key="it">Tipo logico per test</property>
 </properties>', NULL, NULL, 'leftmenu', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="navSpec">code(homepage)</property>
-</properties>', 0, NULL, 0);
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig) VALUES ('parent_widget', '<?xml version="1.0" encoding="UTF-8"?>
+</properties>', 0, NULL, 0, 'logic');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('parent_widget', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Parent Widget</property>
 <property key="it">Parent Widget em Italiano</property>
@@ -444,7 +444,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 		Description of the Widget Parameter
 	</parameter>
 	<action name="configSimpleParameter"/>
-</config>', NULL, NULL, NULL, 1, NULL, 1);
+</config>', NULL, NULL, NULL, 1, NULL, 1, 'parentWidgetType');
 
 
 

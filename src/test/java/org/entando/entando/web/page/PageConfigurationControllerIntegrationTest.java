@@ -63,10 +63,10 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         try {
 
             WidgetRequest widgetRequestNotOverridable = getWidgetRequest(newWidgetCode, true);
-
             //Create the widget
             ResultActions result = this.executeWidgetPost(widgetRequestNotOverridable, accessToken, status().isOk());
-            result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
+            result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)))
+                  .andExpect(jsonPath("$.payload.widgetCategory", Matchers.is("test")));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
             //Create the page
@@ -75,7 +75,8 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
 
             //Get the widget type
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
-            result.andExpect(jsonPath("$.payload.used", is(0)));
+            result.andExpect(jsonPath("$.payload.used", is(0)))
+                    .andExpect(jsonPath("$.payload.widgetCategory", Matchers.is("test")));
 
             // Update the Widget at frame 0 with a new configuration
 
@@ -207,6 +208,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         request.setCustomUi("<h1>Test</h1>");
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
+        request.setWidgetCategory("test");
         return request;
     }
 
