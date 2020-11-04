@@ -82,7 +82,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     }
 
     protected PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode,
-                                                                    RestListRequest requestList) {
+            RestListRequest requestList) {
 
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
 
@@ -137,6 +137,10 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     }
 
     protected AttributeTypeDto getAttributeType(String entityManagerCode, String attributeCode) {
+        return this.getAttributeType(entityManagerCode, null, attributeCode);
+    }
+
+    protected AttributeTypeDto getAttributeType(String entityManagerCode, String entityTypeCode, String attributeCode) {
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
         AttributeInterface attribute = entityManager.getEntityAttributePrototypes().get(attributeCode);
         if (null == attribute) {
@@ -148,6 +152,13 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             dto.setEnumeratorMapExtractorBeans(this.getEnumeratorMapExtractorBeans());
         } else if (dto.isEnumeratorOptionsSupported()) {
             dto.setEnumeratorExtractorBeans(this.getEnumeratorExtractorBeans());
+        }
+        if (null != entityTypeCode) {
+            dto.setAssignedRoles(new HashMap<>());
+            I entityType = (I) entityManager.getEntityPrototype(entityTypeCode);
+            entityType.getAttributeList().stream().filter(a -> (null != a.getRoles())).forEach(a -> {
+                Arrays.asList(a.getRoles()).stream().forEach(r -> dto.getAssignedRoles().put(r, a.getName()));
+            });
         }
         return dto;
     }
@@ -183,10 +194,8 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             IDtoBuilder<I, O> builder = this.getEntityTypeFullDtoBuilder(entityManager);
             I existing = (I) entityManager.getEntityPrototype(bodyRequest.getCode());
             I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
-
             boolean isConflict = existing != null && (!idempotent || !builder.convert(entityPrototype)
                     .equals(builder.convert(existing)));
-
             if (isConflict) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS,
                         bindingResult, new String[]{bodyRequest.getCode()}, "entityType.exists");
@@ -346,14 +355,13 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
 
     private void setDescriptionWithFallbackFromNames(AttributeInterface attribute, EntityTypeAttributeFullDto attributeDto, ApsProperties names) {
         String description = attributeDto.getName();
-
         if (null == description && names.size() > 0) {
             String defaultLangCode = languageManager.getDefaultLang().getCode();
-            description = (String)names.get(defaultLangCode);
+            description = (String) names.get(defaultLangCode);
             if (null == description) {
                 for (String lang : names.stringPropertyNames()) {
                     if (null != names.get(lang)) {
-                        description = (String)names.get(lang);
+                        description = (String) names.get(lang);
                         break;
                     }
                 }
@@ -441,7 +449,6 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             logger.warn(NO_TYPE_FOUND_WITH_CODE, entityTypeCode);
             throw new ResourceNotFoundException(ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, TYPE_CODE, entityTypeCode);
         }
-
         return entityType.getAttributeList().stream()
                 .map(a -> new EntityTypeAttributeFullDto(a, entityManager.getAttributeRoles()))
                 .collect(Collectors.toList());
@@ -466,7 +473,6 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         if (bindingResult.hasErrors()) {
             return null;
         }
-
         try {
             entityType.addAttribute(attribute);
             ((IEntityTypesConfigurer) entityManager).updateEntityPrototype(entityType);

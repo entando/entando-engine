@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.entando.entando.aps.system.common.entity.model.attribute.EnumeratorMapAttribute;
 
 /**
@@ -48,6 +50,8 @@ public class AttributeTypeDto implements Serializable {
     private List<String> enumeratorExtractorBeans = new ArrayList<>();
     private List<String> enumeratorMapExtractorBeans = new ArrayList<>();
     private List<AttributePropertyDto> allowedRoles = new ArrayList<>();
+    @JsonInclude(Include.NON_NULL)
+    private Map<String, String> assignedRoles = null;
     private List<AttributePropertyDto> allowedDisablingCodes = new ArrayList<>();
 
     public AttributeTypeDto() {
@@ -193,6 +197,14 @@ public class AttributeTypeDto implements Serializable {
         this.allowedRoles = allowedRoles;
     }
 
+    public Map<String, String> getAssignedRoles() {
+        return assignedRoles;
+    }
+
+    public void setAssignedRoles(Map<String, String> assignedRoles) {
+        this.assignedRoles = assignedRoles;
+    }
+    
     public List<AttributePropertyDto> getAllowedDisablingCodes() {
         return allowedDisablingCodes;
     }
