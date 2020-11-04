@@ -52,9 +52,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			if (res.next()) {
 				response = new UserPreferences();
 				response.setUsername(username);
-				response.setWizard((1 == res.getInt(1)) ? true : false);
-				response.setLoadOnPageSelect((1 == res.getInt(2)) ? true : false);
-				response.setTranslationWarning((1 == res.getInt(3)) ? true : false);
+				response.setWizard(1 == res.getInt(1));
+				response.setLoadOnPageSelect(1 == res.getInt(2));
+				response.setTranslationWarning(1 == res.getInt(3));
 			}
 		} catch (SQLException e) {
 			_logger.error("Error loading user preferences for user {}", username,  e);
