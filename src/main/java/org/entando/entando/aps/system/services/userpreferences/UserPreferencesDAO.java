@@ -96,9 +96,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(UPDATE_USER_PREFERENCES);
-			stat.setBoolean(1, userPreferences.isWizard());
-			stat.setBoolean(2, userPreferences.isLoadOnPageSelect());
-			stat.setBoolean(3, userPreferences.isTranslationWarning());
+			stat.setInt(1, userPreferences.isWizard() ? 1 : 0);
+			stat.setInt(2, userPreferences.isLoadOnPageSelect() ? 1 : 0);
+			stat.setInt(3, userPreferences.isTranslationWarning() ? 1 : 0);
 			stat.setString(4, userPreferences.getUsername());
 			stat.executeUpdate();
 			conn.commit();
