@@ -288,7 +288,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(jsonPath("$.metaData.totalItems", is(4)));
         result.andExpect(jsonPath("$.payload[0]", is("Hypertext")));
     }
-
+    
     @Test
     public void testGetUserProfileAttributeType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -298,6 +298,9 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("Monotext")));
+        result.andExpect(jsonPath("$.payload.multilingual", is(false)));
+        result.andExpect(jsonPath("$.payload.dateFilterSupported", is(false)));
+        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(4)));
         result.andExpect(jsonPath("$.payload.simple", is(true)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
@@ -316,6 +319,35 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
     }
 
+    @Test
+    public void testGetUserProfileAttributeType_3() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", new Object[]{"XXX", "Monotext"})
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
+        result.andExpect(jsonPath("$.errors[0].code", is("1")));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
+
+        result = mockMvc
+                .perform(get("/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", new Object[]{"PFL", "Monotext"})
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload.multilingual", is(false)));
+        result.andExpect(jsonPath("$.payload.dateFilterSupported", is(false)));
+        result.andExpect(jsonPath("$.payload.assignedRoles.size()", is(2)));
+        result.andExpect(jsonPath("$.payload.assignedRoles.userprofile:fullname", is("fullname")));
+        result.andExpect(jsonPath("$.payload.assignedRoles.userprofile:email", is("email")));
+        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(4)));
+        result.andExpect(jsonPath("$.payload.dateFilterSupported", is(false)));
+        result.andExpect(jsonPath("$.payload.simple", is(true)));
+        result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
+    }
+    
     // ------------------------------------
     @Test
     public void testGetUserProfileAttribute() throws Exception {
@@ -497,7 +529,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             }
         }
     }
-
+    
     private ResultActions executeProfileAttributePost(String fileName, String typeCode, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
@@ -530,7 +562,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(expected);
         return result;
     }
-
+    
     @Test
     public void testGetUserProfileTypesStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -639,7 +671,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .content(new ObjectMapper().writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
+            resultRefresh.andExpect(status().isOk());
             synchronized (this) {
                 this.wait(1000);
             }
@@ -653,7 +685,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .content(new ObjectMapper().writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
+            resultRefresh.andExpect(status().isOk());
             synchronized (this) {
                 this.wait(1000);
             }

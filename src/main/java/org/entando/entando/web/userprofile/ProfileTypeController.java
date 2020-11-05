@@ -163,6 +163,15 @@ public class ProfileTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
+    @GetMapping(value = "/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String profileTypeCode, @PathVariable String attributeTypeCode) {
+        logger.debug("Profile type {}, Extracting attribute type -> {}", profileTypeCode, attributeTypeCode);
+        AttributeTypeDto attribute = this.getUserProfileTypeService().getAttributeType(profileTypeCode, attributeTypeCode);
+        logger.debug("Main Response -> {}", attribute);
+        return new ResponseEntity<>(new SimpleRestResponse<>(attribute), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws JsonProcessingException {
         logger.debug("Requested profile type {} - attribute {}", profileTypeCode, attributeCode);

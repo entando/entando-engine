@@ -45,6 +45,8 @@ public interface IUserProfileTypeService {
 
     public AttributeTypeDto getAttributeType(String attributeCode);
 
+    public AttributeTypeDto getAttributeType(String profileTypeCode, String attributeCode);
+
     // ----------------------------------
     public EntityTypeAttributeFullDto getUserProfileAttribute(String profileTypeCode, String attributeCode);
 
