@@ -81,19 +81,25 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         };
     }
 
-    protected PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode, RestListRequest requestList) {
+    protected PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode,
+                                                                    RestListRequest requestList) {
+
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
+
         Map<String, String> fieldMapping = this.getEntityTypeFieldNameMapping();
+
         Comparator caseInsensitiveComparator = createCaseInsensitiveComparator();
         if (!RestListRequest.DIRECTION_VALUE_DEFAULT.equals(requestList.getDirection())) {
             caseInsensitiveComparator = caseInsensitiveComparator.reversed();
         }
+
         List<IApsEntity> entityTypes = entityManager.getEntityPrototypes()
                 .values()
                 .stream()
                 .filter(i -> this.filterObjects(i, requestList.getFilters(), fieldMapping))
                 .sorted(new BeanComparator<>(getFieldName(requestList.getSort(), fieldMapping), caseInsensitiveComparator))
                 .collect(Collectors.toList());
+
         List<IApsEntity> sublist = requestList.getSublist(entityTypes);
         PagedMetadata<EntityTypeShortDto> pagedMetadata = new PagedMetadata<>(requestList, entityTypes.size());
         List<EntityTypeShortDto> body = this.getEntityTypeShortDtoBuilder().convert(sublist);
@@ -192,8 +198,10 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             IDtoBuilder<I, O> builder = this.getEntityTypeFullDtoBuilder(entityManager);
             I existing = (I) entityManager.getEntityPrototype(bodyRequest.getCode());
             I entityPrototype = this.createEntityType(entityManager, bodyRequest, bindingResult);
+
             boolean isConflict = existing != null && (!idempotent || !builder.convert(entityPrototype)
                     .equals(builder.convert(existing)));
+
             if (isConflict) {
                 this.addError(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_ALREADY_EXISTS,
                         bindingResult, new String[]{bodyRequest.getCode()}, "entityType.exists");
@@ -353,13 +361,14 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
 
     private void setDescriptionWithFallbackFromNames(AttributeInterface attribute, EntityTypeAttributeFullDto attributeDto, ApsProperties names) {
         String description = attributeDto.getName();
+
         if (null == description && names.size() > 0) {
             String defaultLangCode = languageManager.getDefaultLang().getCode();
-            description = (String) names.get(defaultLangCode);
+            description = (String)names.get(defaultLangCode);
             if (null == description) {
                 for (String lang : names.stringPropertyNames()) {
                     if (null != names.get(lang)) {
-                        description = (String) names.get(lang);
+                        description = (String)names.get(lang);
                         break;
                     }
                 }
@@ -447,6 +456,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
             logger.warn(NO_TYPE_FOUND_WITH_CODE, entityTypeCode);
             throw new ResourceNotFoundException(ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, TYPE_CODE, entityTypeCode);
         }
+
         return entityType.getAttributeList().stream()
                 .map(a -> new EntityTypeAttributeFullDto(a, entityManager.getAttributeRoles()))
                 .collect(Collectors.toList());
@@ -471,6 +481,7 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         if (bindingResult.hasErrors()) {
             return null;
         }
+
         try {
             entityType.addAttribute(attribute);
             ((IEntityTypesConfigurer) entityManager).updateEntityPrototype(entityType);
