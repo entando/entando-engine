@@ -145,7 +145,7 @@ public class ProfileTypeController {
     // ********************* ATTRIBUTE TYPES *********************
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypeAttributes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<String>> getUserProfileAttributeTypes(RestListRequest requestList) throws JsonProcessingException {
+    public ResponseEntity<PagedRestResponse<String>> getUserProfileAttributeTypes(RestListRequest requestList) {
         this.getProfileTypeValidator().validateRestListRequest(requestList, AttributeTypeDto.class);
         PagedMetadata<String> result = this.getUserProfileTypeService().getAttributeTypes(requestList);
         logger.debug("Main Response -> {}", result);
@@ -155,7 +155,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypeAttributes/{attributeTypeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String attributeTypeCode) throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String attributeTypeCode) {
         logger.debug("Extracting attribute type -> {}", attributeTypeCode);
         AttributeTypeDto attribute = this.getUserProfileTypeService().getAttributeType(attributeTypeCode);
         logger.debug("Main Response -> {}", attribute);
@@ -164,7 +164,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String profileTypeCode, @PathVariable String attributeTypeCode) throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String profileTypeCode, @PathVariable String attributeTypeCode) {
         logger.debug("Profile type {}, Extracting attribute type -> {}", profileTypeCode, attributeTypeCode);
         AttributeTypeDto attribute = this.getUserProfileTypeService().getAttributeType(profileTypeCode, attributeTypeCode);
         logger.debug("Main Response -> {}", attribute);
@@ -173,7 +173,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) throws JsonProcessingException {
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> getUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) {
         logger.debug("Requested profile type {} - attribute {}", profileTypeCode, attributeCode);
         EntityTypeAttributeFullDto dto = this.getUserProfileTypeService().getUserProfileAttribute(profileTypeCode, attributeCode);
         logger.debug("Main Response -> {}", dto);
@@ -184,8 +184,8 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addUserProfileAttribute(@PathVariable String profileTypeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest,
-            BindingResult bindingResult) throws JsonProcessingException {
+    public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> addUserProfileAttribute(@PathVariable String profileTypeCode,
+            @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Profile type {} - Adding attribute {}", profileTypeCode, bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -203,7 +203,7 @@ public class ProfileTypeController {
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<EntityTypeAttributeFullDto, Map>> updateUserProfileAttribute(@PathVariable String profileTypeCode,
-            @PathVariable String attributeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) throws JsonProcessingException {
+            @PathVariable String attributeCode, @Valid @RequestBody EntityTypeAttributeFullDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Profile type {} - Updating attribute {}", profileTypeCode, bodyRequest);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -223,9 +223,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileAttribute(
-            @PathVariable String profileTypeCode,
-            @PathVariable String attributeCode) {
+    public ResponseEntity<SimpleRestResponse<Map>> deleteUserProfileAttribute(@PathVariable String profileTypeCode, @PathVariable String attributeCode) {
         logger.debug("Deleting attribute {} from profile type {}", attributeCode, profileTypeCode);
         this.getUserProfileTypeService().deleteUserProfileAttribute(profileTypeCode, attributeCode);
         Map<String, String> result = new HashMap<>();
@@ -236,7 +234,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/refresh/{profileTypeCode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@PathVariable String profileTypeCode) throws Throwable {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@PathVariable String profileTypeCode) {
         logger.debug("reload references of profile type {}", profileTypeCode);
         this.getUserProfileTypeService().reloadProfileTypeReferences(profileTypeCode);
         Map<String, String> result = new HashMap<>();
@@ -248,8 +246,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypesStatus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@Valid @RequestBody ProfileTypeRefreshRequest bodyRequest,
-            BindingResult bindingResult) throws Throwable {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadReferences(@Valid @RequestBody ProfileTypeRefreshRequest bodyRequest, BindingResult bindingResult) {
         logger.debug("reload references of profile types {}", bodyRequest.getProfileTypeCodes());
         Map<String, Integer> status = this.getUserProfileTypeService().reloadProfileTypesReferences(bodyRequest.getProfileTypeCodes());
         Map<String, Object> result = new HashMap<>();
@@ -261,7 +258,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypesStatus", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus() throws Throwable {
+    public ResponseEntity<SimpleRestResponse<EntityTypesStatusDto>> extractStatus() {
         logger.debug("Extract profile types status");
         EntityTypesStatusDto status = this.getUserProfileTypeService().getProfileTypesRefreshStatus();
         logger.debug("Extracted profile types status {}", status);
@@ -280,19 +277,12 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/profileTypes/{profileTypeCode}/attribute/{attributeCode}/moveDown", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveUserProfileAttributeDown(
-            @PathVariable String profileTypeCode,
-            @PathVariable String attributeCode) {
-        //-
+    public ResponseEntity<SimpleRestResponse<Map<String, String>>> moveUserProfileAttributeDown(@PathVariable String profileTypeCode, @PathVariable String attributeCode) {
         logger.debug("Move DOWN attribute {} from profile type {}", attributeCode, profileTypeCode);
         return this.moveUserProfileAttribute(profileTypeCode, attributeCode, false);
     }
 
-    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveUserProfileAttribute(
-            String profileTypeCode,
-            String attributeCode,
-            boolean moveUp) {
-        //-
+    private ResponseEntity<SimpleRestResponse<Map<String, String>>> moveUserProfileAttribute(String profileTypeCode, String attributeCode, boolean moveUp) {
         this.getUserProfileTypeService().moveUserProfileAttribute(profileTypeCode, attributeCode, moveUp);
         Map<String, String> result = new HashMap<>();
         result.put("profileTypeCode", profileTypeCode);
@@ -301,4 +291,5 @@ public class ProfileTypeController {
         result.put("movement", movement);
         return new ResponseEntity<>(new SimpleRestResponse<>(result), HttpStatus.OK);
     }
+
 }

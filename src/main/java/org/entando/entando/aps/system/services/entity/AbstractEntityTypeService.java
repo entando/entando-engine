@@ -81,25 +81,19 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
         };
     }
 
-    protected PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode,
-            RestListRequest requestList) {
-
+    protected PagedMetadata<EntityTypeShortDto> getShortEntityTypes(String entityManagerCode, RestListRequest requestList) {
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
-
         Map<String, String> fieldMapping = this.getEntityTypeFieldNameMapping();
-
         Comparator caseInsensitiveComparator = createCaseInsensitiveComparator();
         if (!RestListRequest.DIRECTION_VALUE_DEFAULT.equals(requestList.getDirection())) {
             caseInsensitiveComparator = caseInsensitiveComparator.reversed();
         }
-
         List<IApsEntity> entityTypes = entityManager.getEntityPrototypes()
                 .values()
                 .stream()
                 .filter(i -> this.filterObjects(i, requestList.getFilters(), fieldMapping))
                 .sorted(new BeanComparator<>(getFieldName(requestList.getSort(), fieldMapping), caseInsensitiveComparator))
                 .collect(Collectors.toList());
-
         List<IApsEntity> sublist = requestList.getSublist(entityTypes);
         PagedMetadata<EntityTypeShortDto> pagedMetadata = new PagedMetadata<>(requestList, entityTypes.size());
         List<EntityTypeShortDto> body = this.getEntityTypeShortDtoBuilder().convert(sublist);
@@ -160,9 +154,9 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
                 throw new ResourceNotFoundException(ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, TYPE_CODE, entityTypeCode);
             }
             dto.setAssignedRoles(new HashMap<>());
-            entityType.getAttributeList().stream().filter(a -> (null != a.getRoles())).forEach(a -> {
-                Arrays.asList(a.getRoles()).stream().forEach(r -> dto.getAssignedRoles().put(r, a.getName()));
-            });
+            entityType.getAttributeList().stream().filter(a -> (null != a.getRoles())).forEach(a -> 
+                Arrays.asList(a.getRoles()).stream().forEach(r -> dto.getAssignedRoles().put(r, a.getName()))
+            );
         }
         return dto;
     }
