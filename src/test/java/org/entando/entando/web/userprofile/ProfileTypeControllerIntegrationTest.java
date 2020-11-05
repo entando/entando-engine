@@ -529,7 +529,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
             }
         }
     }
-
+    
     private ResultActions executeProfileAttributePost(String fileName, String typeCode, String accessToken, ResultMatcher expected) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
@@ -562,7 +562,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
         result.andExpect(expected);
         return result;
     }
-
+    
     @Test
     public void testGetUserProfileTypesStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -671,7 +671,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .content(new ObjectMapper().writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
+            resultRefresh.andExpect(status().isOk());
             synchronized (this) {
                 this.wait(1000);
             }
@@ -685,7 +685,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                         .content(new ObjectMapper().writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
+            resultRefresh.andExpect(status().isOk());
             synchronized (this) {
                 this.wait(1000);
             }
