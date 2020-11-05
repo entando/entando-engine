@@ -163,7 +163,7 @@ public class ProfileTypeController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/profileTypeAttributes/{profileTypeCode}/attribute/{attributeTypeCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<AttributeTypeDto>> getUserProfileAttributeType(@PathVariable String profileTypeCode, @PathVariable String attributeTypeCode) {
         logger.debug("Profile type {}, Extracting attribute type -> {}", profileTypeCode, attributeTypeCode);
         AttributeTypeDto attribute = this.getUserProfileTypeService().getAttributeType(profileTypeCode, attributeTypeCode);
