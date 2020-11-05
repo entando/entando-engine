@@ -44,6 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
+
 public class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
@@ -578,7 +581,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testRefreshUserProfileTypes() throws Exception {
+    public void testRefreshUserProfileType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -603,7 +606,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testRefreshUserProfileType() throws Exception {
+    public void testRefreshUserProfileType_2() throws Exception {
         String typeCode = "TST";
         try {
             Assert.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
@@ -639,6 +642,73 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype(typeCode);
             }
         }
+    }
+    
+    @Test
+    public void testRefreshUserProfileType_3() throws Exception {
+        String typeCode = "TST";
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+            
+            this.checkStatus(3, 0, accessToken);
+            Assert.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
+            
+            this.executeProfileTypePost("2_POST_valid.json", accessToken, status().isOk());
+            Assert.assertNotNull(this.userProfileManager.getEntityPrototype(typeCode));
+            this.checkStatus(4, 0, accessToken);
+            
+            ResultActions result = this.executeProfileAttributePut("10_PUT_attribute_valid_1.json", typeCode, "DataAttribute", accessToken, status().isOk());
+            this.checkStatus(4, 0, accessToken);
+            
+            result = this.executeProfileAttributePut("10_PUT_attribute_valid_2.json", typeCode, "DataAttribute", accessToken, status().isOk());
+            this.checkStatus(3, 1, accessToken);
+            
+            ProfileTypeRefreshRequest request = new ProfileTypeRefreshRequest();
+            request.getProfileTypeCodes().add(typeCode);
+            ResultActions resultRefresh = mockMvc
+                .perform(post("/profileTypesStatus")
+                        .content(new ObjectMapper().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            synchronized (this) {
+                this.wait(1000);
+            }
+            this.checkStatus(4, 0, accessToken);
+            
+            result = this.executeProfileAttributePut("10_PUT_attribute_valid_1.json", typeCode, "DataAttribute", accessToken, status().isOk());
+            this.checkStatus(3, 1, accessToken);
+            
+            resultRefresh = mockMvc
+                .perform(post("/profileTypes/refresh/{profileTypeCode}", new Object[]{typeCode})
+                        .content(new ObjectMapper().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            synchronized (this) {
+                this.wait(1000);
+            }
+            this.checkStatus(4, 0, accessToken);
+        } finally {
+            if (null != this.userProfileManager.getEntityPrototype(typeCode)) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype(typeCode);
+            }
+        }
+    }
+    
+    private void checkStatus(int expectedReady, int expectedToRefresh, String accessToken) throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/profileTypesStatus")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload.size()", is(3)));
+        result.andExpect(jsonPath("$.payload.ready", Matchers.hasSize(expectedReady)));
+        result.andExpect(jsonPath("$.payload.toRefresh", Matchers.hasSize(expectedToRefresh)));
+        result.andExpect(jsonPath("$.payload.refreshing", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.metaData.size()", is(0)));
     }
     
     @Test
