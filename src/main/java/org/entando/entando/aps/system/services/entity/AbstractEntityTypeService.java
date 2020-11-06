@@ -398,6 +398,15 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
     }
 
     protected IEntityManager extractEntityManager(String entityManagerCode) {
+        IEntityManager entityManager = loadEntityManager(entityManagerCode);
+        if (null == entityManager) {
+            logger.warn("no entity manager found with code {}", entityManagerCode);
+            throw new ResourceNotFoundException("entityManagerCode", entityManagerCode);
+        }
+        return entityManager;
+    }
+
+    protected IEntityManager loadEntityManager(String entityManagerCode) {
         IEntityManager entityManager = null;
         List<IEntityManager> managers = this.getEntityManagers();
         for (IEntityManager manager : managers) {
@@ -405,10 +414,6 @@ public abstract class AbstractEntityTypeService<I extends IApsEntity, O extends 
                 entityManager = manager;
                 break;
             }
-        }
-        if (null == entityManager) {
-            logger.warn("no entity manager found with code {}", entityManagerCode);
-            throw new ResourceNotFoundException("entityManagerCode", entityManagerCode);
         }
         return entityManager;
     }

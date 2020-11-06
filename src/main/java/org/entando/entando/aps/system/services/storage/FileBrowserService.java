@@ -20,6 +20,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
@@ -189,6 +190,15 @@ public class FileBrowserService implements IFileBrowserService {
             logger.error("error deleting directory path {} - type {}", currentPath, protectedFolder);
             throw new RestServerError("error deleting directory", t);
         }
+    }
+
+    public boolean exists(String currentPath, Boolean protectedFolder) throws EntException {
+        return this.getStorageManager().exists(currentPath, protectedFolder);
+    }
+
+    @Override
+    public boolean exists(String code) throws EntException {
+        return this.getStorageManager().exists(code, false);
     }
 
     protected void checkResource(String currentPath, String objectName, Boolean protectedFolder) {

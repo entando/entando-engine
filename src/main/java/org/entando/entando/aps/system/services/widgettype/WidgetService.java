@@ -156,6 +156,11 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
     @Override
+    public boolean exists(String code) {
+        return this.getWidgetManager().getWidgetType(code) != null;
+    }
+
+    @Override
     public WidgetInfoDto getWidgetInfo(String widgetCode) {
         try {
             List<IPage> publishedUtilizer = this.getPageManager().getOnlineWidgetUtilizers(widgetCode);

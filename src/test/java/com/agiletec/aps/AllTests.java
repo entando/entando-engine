@@ -93,6 +93,7 @@ import org.entando.entando.aps.util.FilterUtilsTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
 import org.entando.entando.aps.util.crypto.DefaultTextEncryptorTest;
 import org.entando.entando.ent.util.EntSafeXmlUtilsTest;
+import org.entando.entando.web.analysis.AnalysisControllerTest;
 import org.entando.entando.web.common.IgnoreJacksonWriteOnlyAccessTest;
 import org.entando.entando.web.common.model.RestNamedIdTest;
 import org.entando.entando.web.swagger.SwaggerConfigTest;

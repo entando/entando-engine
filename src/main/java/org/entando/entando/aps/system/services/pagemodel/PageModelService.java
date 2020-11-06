@@ -107,6 +107,11 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     }
 
     @Override
+    public boolean exists(String code) {
+        return this.pageModelManager.getPageModel(code) != null;
+    }
+
+    @Override
     public PageModelDto addPageModel(PageModelRequest pageModelRequest) {
         try {
             BeanPropertyBindingResult validationResult = this.validateAdd(pageModelRequest);

@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.guifragment;
 
 import java.util.List;
 
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDtoSmall;
@@ -22,7 +23,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 
-public interface IGuiFragmentService extends IComponentUsageService {
+public interface IGuiFragmentService extends IComponentExistsService, IComponentUsageService {
 
     public PagedMetadata<GuiFragmentDtoSmall> getGuiFragments(RestListRequest restListReq);
 
