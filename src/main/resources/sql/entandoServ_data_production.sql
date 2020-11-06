@@ -38,12 +38,8 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', '
 
 
 INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('admin', 'administrators', 'admin');
---INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('editor', 'free', 'editor');
---INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('approver', 'free', 'approver');
 
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', '{bcrypt}$2a$10$TMRaAmZE4w5LEeELdmpJguuSuJc2D9hUelMGmsJyK35K3PBiePqXu', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
---INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editor', '{bcrypt}$2a$10$CkUsRinB3JkFlRE4M.FOg.XrUpYX5HySBxpEasdex7L5bh05RnX.G', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
---INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('approver', '{bcrypt}$2a$10$0Idom7PIOI4YuKzyhqDJpe3Z/0N0M0FQEvKtrSOjgF71Hkx5mKhlq', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
 
 
 
