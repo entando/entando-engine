@@ -35,6 +35,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisTestsStubs;
 import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -66,6 +67,18 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         super.setUp();
         this.setupAuthenticationDetails();
         this.deletePageModelsFromPreviousTests();
+    }
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+        AnalysisControllerDiffAnalysisTestsStubs.testDiffResult(
+                "home",
+                new ContextOfControllerTests(mockMvc, jsonMapper)
+        );
+        AnalysisControllerDiffAnalysisTestsStubs.testNotFoundResult(
+                "AN_NONEXISTENT_CODE",
+                new ContextOfControllerTests(mockMvc, jsonMapper)
+        );
     }
 
     private void setupAuthenticationDetails() {
