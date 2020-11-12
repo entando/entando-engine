@@ -480,6 +480,26 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
+    public void testAddUserUppercase() throws Exception {
+        String invalidUsername = "Username";
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String mockJson = "{\"username\": \"" + invalidUsername + "\",\"status\": \"active\",\"password\": \"password\"}";
+            this.executeUserPost(mockJson, accessToken, status().isBadRequest());
+
+        } catch (Throwable e) {
+            this.userManager.removeUser(invalidUsername);
+            throw e;
+        } finally {
+            UserDetails user = this.userManager.getUser(invalidUsername);
+            assertNull(user);
+        }
+    }
+
+
+    @Test
     public void testUpdateUser() throws Exception {
         String validUsername = "test_test";
         String validPassword = "password";
