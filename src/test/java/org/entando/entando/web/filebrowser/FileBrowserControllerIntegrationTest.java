@@ -203,7 +203,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             result1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
 
             String body2 = this.createBody("test.txt", folderName + "/subfolder/test.txt", protectedFolder, "test test");
-            ResultActions result2 = this.executeFilePost(body2, accessToken, status().isNotFound());
+            ResultActions result2 = this.executeFilePost(body2, accessToken, status().isOk()); //subfolder is created automatically
             result2.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
 
             String body3 = this.createBody("", folderName + "/test.txt", protectedFolder, "test test");
@@ -215,6 +215,32 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             ResultActions result4 = this.executeFilePost(body4, accessToken, status().isBadRequest());
             result4.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result4.andExpect(jsonPath("$.errors[0].code", is("51")));
+
+            String body = this.createBody("test.txt", folderName + "/test.txt", protectedFolder, "test test");
+            ResultActions result = this.executeFilePost(body, accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(3)));
+            result.andExpect(jsonPath("$.payload.protectedFolder", is(protectedFolder)));
+            result.andExpect(jsonPath("$.payload.path", is(folderName + "/test.txt")));
+            result.andExpect(jsonPath("$.payload.filename", is("test.txt")));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(1)));
+            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.storageManager.deleteDirectory(folderName, protectedFolder);
+        }
+    }
+
+    @Test
+    public void testAddFileAndCreateParentFolderIfNotExists() throws Exception {
+        String folderName = "test_folder_3";
+        boolean protectedFolder = false;
+        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
 
             String body = this.createBody("test.txt", folderName + "/test.txt", protectedFolder, "test test");
             ResultActions result = this.executeFilePost(body, accessToken, status().isOk());
