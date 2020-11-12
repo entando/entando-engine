@@ -51,7 +51,8 @@ public class UserValidator extends AbstractPaginationValidator {
 
     private final org.slf4j.Logger logger = EntLogFactory.getSanitizedLogger(getClass());
 
-    private Pattern pattern = Pattern.compile("([a-zA-Z0-9_\\.])+");
+    private Pattern patternUsername = Pattern.compile("([a-z0-9_\\.])+");
+    private Pattern patternPassword = Pattern.compile("([a-zA-Z0-9_\\.])+");
 
     public static final String ERRCODE_USER_ALREADY_EXISTS = "1";
 
@@ -143,7 +144,7 @@ public class UserValidator extends AbstractPaginationValidator {
             bindingResult.reject(UserValidator.ERRCODE_USER_ALREADY_EXISTS, new String[]{username}, "user.exists");
             throw new ValidationConflictException(bindingResult);
         }
-        Matcher matcherUsername = pattern.matcher(username);
+        Matcher matcherUsername = patternUsername.matcher(username);
         int usLength = username.length();
         if (usLength < 4 || usLength > 80 || !matcherUsername.matches()) {
             bindingResult.reject(UserValidator.ERRCODE_USERNAME_FORMAT_INVALID, new String[]{username}, "user.username.format.invalid");
@@ -244,7 +245,7 @@ public class UserValidator extends AbstractPaginationValidator {
             return;
         }
         int pwLength = password.length();
-        Matcher matcherPassword = pattern.matcher(password);
+        Matcher matcherPassword = patternPassword.matcher(password);
         if (pwLength < 8 || pwLength > 20 || !matcherPassword.matches()) {
             bindingResult.reject(UserValidator.ERRCODE_PASSWORD_FORMAT_INVALID, new String[]{username}, "user.password.format.invalid");
         }
