@@ -31,7 +31,7 @@ public class AnalysisResponse {
     }
 
     public enum ObjectType {
-        widgets, fragments, pages, pageTemplates, //NOSONAR
-        categories, groups, labels, languages, resources,   //NOSONAR
+        widgets, fragments, pages, pageTemplates, categories, //NOSONAR
+        groups, labels, languages, directories, resources,   //NOSONAR
     }
 }

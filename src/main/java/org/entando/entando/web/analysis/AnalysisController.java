@@ -85,6 +85,7 @@ public class AnalysisController implements IAnalysisController {
                     return labelService;
                 case languages:
                     return languageService;
+                case directories:
                 case resources:
                     return fileBrowserService;
                 default:
