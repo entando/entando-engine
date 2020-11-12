@@ -204,7 +204,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
 
             String body2 = this.createBody("test.txt", folderName + "/subfolder/test.txt", protectedFolder, "test test");
             ResultActions result2 = this.executeFilePost(body2, accessToken, status().isOk()); //subfolder is created automatically
-            result2.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
+            result2.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
 
             String body3 = this.createBody("", folderName + "/test.txt", protectedFolder, "test test");
             ResultActions result3 = this.executeFilePost(body3, accessToken, status().isBadRequest());
