@@ -81,7 +81,7 @@ public class ComponentExistenceAnalysis {
             }
             return service.exists(idCode);
         } catch (Exception ex) {
-            throw new EntRuntimeException("Error detected checking component existence" + idCode, ex);
+            throw new EntRuntimeException("Error detected checking component existence " + idCode, ex);
         }
     }
 }

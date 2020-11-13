@@ -38,6 +38,7 @@ import org.entando.entando.aps.system.services.category.ICategoryService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.category.validator.CategoryValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
@@ -327,6 +328,27 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
                 .andExpect(jsonPath("$.errors[0].message",
                         is("The Category 'home' cannot be deleted because it is the root")));
     }
+
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_CATEGORIES,
+                "cat1",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, MAPPER)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_CATEGORIES,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, MAPPER)
+        );
+    }
+
 
     private ResultActions executeGet(String categoryCode, String accessToken, ResultMatcher rm) throws Exception {
         ResultActions result = mockMvc

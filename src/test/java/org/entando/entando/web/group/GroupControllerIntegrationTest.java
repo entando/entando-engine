@@ -36,6 +36,7 @@ import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -54,6 +55,8 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     private IGroupManager groupManager;
 
     private MockMvcHelper mockMvcHelper;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void init() {
@@ -353,6 +356,25 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
             mockMvcHelper.deleteMockMvc("/groups/" + groupRequest.getCode(), groupRequest).andExpect(status().is2xxSuccessful());
         }
 
+    }
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_GROUPS,
+                "free",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_GROUPS,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
     }
 
 }

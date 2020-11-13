@@ -13,10 +13,12 @@
  */
 package org.entando.entando.web.filebrowser;
 
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.CoreMatchers;
@@ -40,6 +42,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
 
     @Autowired
     private IStorageManager storageManager;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testCheckRequest() throws Exception {
@@ -475,7 +479,28 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
         }
     }
 
-    private ResultActions executeDirectoryPost(String body, String accessToken, ResultMatcher expected) throws Exception {
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_RESOURCES,
+                "conf",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_RESOURCES,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+    }
+
+
+    private ResultActions executeDirectoryPost(String body, String accessToken, ResultMatcher expected)
+            throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/fileBrowser/directory")
                         .content(body).contentType(MediaType.APPLICATION_JSON_VALUE)
