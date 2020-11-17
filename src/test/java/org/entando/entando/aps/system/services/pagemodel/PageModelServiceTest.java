@@ -125,6 +125,24 @@ public class PageModelServiceTest {
         PageModelAssertionHelper.assertUsageDetails(usageDetails);
     }
 
+
+    @Test
+    public void shouldCreateTheRightPageModel() {
+
+        PageModelRequest pageModelRequest = validPageModelRequest();
+        pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
+        PageModel pageModel = pageModelService.createPageModel(pageModelRequest);
+
+        assertThat(pageModel).isNotNull();
+        assertThat(pageModel.getCode()).isEqualTo(pageModelRequest.getCode());
+        assertThat(pageModel.getDescription()).isEqualTo(pageModelRequest.getDescr());
+        assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
+        assertThat(pageModel.getMainFrame()).isZero();
+        assertThat(pageModel.getTemplate()).isEqualTo(pageModelRequest.getTemplate());
+        assertThat(pageModel.getConfiguration()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
+    }
+
+
     private PagedMetadata<PageModelDto> resultPagedMetadata() {
         RestListRequest request = new RestListRequest();
         return new PagedMetadata<>(request, asList(dtoBuilder.convert(pageModel())), 1);
