@@ -94,6 +94,8 @@ public interface SystemConstants {
 
     public static final String EXTRAPAR_EXECUTOR_BEAN_CONTAINER = "reqCtx_param_ExecutorBeanContainer";
 
+    public static final String EXTRAPAR_CSP_NONCE_TOKEN = "reqCtx_param_nonce_token";
+
     /**
      * Nome parametro di sessione: utente corrente
      */
