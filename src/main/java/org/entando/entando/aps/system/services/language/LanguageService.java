@@ -85,6 +85,15 @@ public class LanguageService implements ILanguageService {
     }
 
     @Override
+    public boolean exists(String code) throws EntException {
+        return this.getLangManager().getAssignableLangs().stream()
+                .filter(lang -> lang.getCode().equals(code))
+                .map(lang -> getLanguageDtoBuilder().convert(lang))
+                .filter(LanguageDto::isActive)
+                .findFirst().orElse(null) != null;
+    }
+
+    @Override
     public LanguageDto updateLanguage(String code, boolean status) {
         if (status) {
             return this.enableLang(code);

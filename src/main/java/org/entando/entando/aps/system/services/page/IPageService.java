@@ -16,6 +16,8 @@ package org.entando.entando.aps.system.services.page;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collection;
 import java.util.List;
+
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.page.model.PageConfigurationDto;
 import org.entando.entando.aps.system.services.page.model.PageDto;
@@ -33,7 +35,7 @@ import org.springframework.lang.Nullable;
  *
  * @author paddeo
  */
-public interface IPageService extends IComponentUsageService {
+public interface IPageService extends IComponentExistsService, IComponentUsageService {
 
     String BEAN_NAME = "PageService";
 

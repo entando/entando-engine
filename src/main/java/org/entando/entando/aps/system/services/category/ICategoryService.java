@@ -14,6 +14,8 @@
 package org.entando.entando.aps.system.services.category;
 
 import java.util.List;
+
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -22,7 +24,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 /**
  * @author E.Santoboni
  */
-public interface ICategoryService extends IComponentUsageService {
+public interface ICategoryService extends IComponentExistsService, IComponentUsageService {
 
     public List<CategoryDto> getTree(String parentCode);
 

@@ -55,6 +55,7 @@ import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.JsonPatchBuilder;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.assertionhelper.PageAssertionHelper;
 import org.entando.entando.web.assertionhelper.PageRestResponseAssertionHelper;
 import org.entando.entando.web.component.ComponentUsageEntity;
@@ -1268,6 +1269,34 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
         List<ComponentUsageEntity> expectedResult = Arrays.asList(new ComponentUsageEntity(ComponentUsageEntity.TYPE_PAGE, PageRequestMockHelper.ADD_FIRST_CHILD_PAGE_CODE, IPageService.STATUS_UNPUBLISHED));
 
         this.execPageUsageDetailsTest(false, expectedResult);
+    }
+
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        String pageCode = "funny_page";
+
+        try {
+            // should return DIFF for existing component
+            pageManager.addPage(createPage(pageCode, null, null, Group.FREE_GROUP_NAME));
+            AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                    AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_PAGES,
+                    pageCode,
+                    AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                    new ContextOfControllerTests(mockMvc, mapper)
+            );
+
+            // should return NEW for NON existing component
+            AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                    AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_PAGES,
+                    "AN_NONEXISTENT_CODE",
+                    AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                    new ContextOfControllerTests(mockMvc, mapper)
+            );
+        } finally {
+            pageManager.deletePage(pageCode);
+        }
     }
 
 

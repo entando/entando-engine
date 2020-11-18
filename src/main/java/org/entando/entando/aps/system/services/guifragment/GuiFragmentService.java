@@ -13,16 +13,15 @@
  */
 package org.entando.entando.aps.system.services.guifragment;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDtoSmall;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -30,10 +29,12 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuiFragmentService implements IGuiFragmentService {
 
@@ -103,6 +104,10 @@ public class GuiFragmentService implements IGuiFragmentService {
             throw new ResourceNotFoundException(GuiFragmentValidator.ERRCODE_FRAGMENT_DOES_NOT_EXISTS, "fragment", code);
         }
         return this.getDtoBuilder().convert(fragment);
+    }
+
+    public boolean exists(String code) throws EntException {
+        return this.getGuiFragmentManager().getGuiFragment(code) != null;
     }
 
     @Override

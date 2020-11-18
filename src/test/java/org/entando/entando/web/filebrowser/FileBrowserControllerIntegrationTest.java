@@ -13,10 +13,12 @@
  */
 package org.entando.entando.web.filebrowser;
 
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.CoreMatchers;
@@ -40,6 +42,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
 
     @Autowired
     private IStorageManager storageManager;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testCheckRequest() throws Exception {
@@ -203,8 +207,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             result1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
 
             String body2 = this.createBody("test.txt", folderName + "/subfolder/test.txt", protectedFolder, "test test");
-            ResultActions result2 = this.executeFilePost(body2, accessToken, status().isNotFound());
-            result2.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
+            ResultActions result2 = this.executeFilePost(body2, accessToken, status().isOk()); //subfolder is created automatically
+            result2.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
 
             String body3 = this.createBody("", folderName + "/test.txt", protectedFolder, "test test");
             ResultActions result3 = this.executeFilePost(body3, accessToken, status().isBadRequest());
@@ -215,6 +219,32 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             ResultActions result4 = this.executeFilePost(body4, accessToken, status().isBadRequest());
             result4.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result4.andExpect(jsonPath("$.errors[0].code", is("51")));
+
+            String body = this.createBody("test.txt", folderName + "/test.txt", protectedFolder, "test test");
+            ResultActions result = this.executeFilePost(body, accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.size()", is(3)));
+            result.andExpect(jsonPath("$.payload.protectedFolder", is(protectedFolder)));
+            result.andExpect(jsonPath("$.payload.path", is(folderName + "/test.txt")));
+            result.andExpect(jsonPath("$.payload.filename", is("test.txt")));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(1)));
+            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.storageManager.deleteDirectory(folderName, protectedFolder);
+        }
+    }
+
+    @Test
+    public void testAddFileAndCreateParentFolderIfNotExists() throws Exception {
+        String folderName = "test_folder_3";
+        boolean protectedFolder = false;
+        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
 
             String body = this.createBody("test.txt", folderName + "/test.txt", protectedFolder, "test test");
             ResultActions result = this.executeFilePost(body, accessToken, status().isOk());
@@ -449,7 +479,28 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
         }
     }
 
-    private ResultActions executeDirectoryPost(String body, String accessToken, ResultMatcher expected) throws Exception {
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_RESOURCES,
+                "conf",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_RESOURCES,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+    }
+
+
+    private ResultActions executeDirectoryPost(String body, String accessToken, ResultMatcher expected)
+            throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/fileBrowser/directory")
                         .content(body).contentType(MediaType.APPLICATION_JSON_VALUE)

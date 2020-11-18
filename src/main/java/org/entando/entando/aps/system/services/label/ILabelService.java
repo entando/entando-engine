@@ -13,11 +13,12 @@
  */
 package org.entando.entando.aps.system.services.label;
 
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.label.model.LabelDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
-public interface ILabelService {
+public interface ILabelService extends IComponentExistsService {
 
     String BEAN_NAME = "LabelService";
 

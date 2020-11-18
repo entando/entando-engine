@@ -2,12 +2,13 @@ package org.entando.entando.aps.system.services.pagemodel;
 
 import java.util.Map;
 
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 
-public interface IPageModelService extends IComponentUsageService {
+public interface IPageModelService extends IComponentExistsService, IComponentUsageService {
 
     String BEAN_NAME = "PageModelService";
 

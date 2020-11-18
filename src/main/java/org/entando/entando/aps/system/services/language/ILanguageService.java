@@ -1,9 +1,10 @@
 package org.entando.entando.aps.system.services.language;
 
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 
-public interface ILanguageService {
+public interface ILanguageService extends IComponentExistsService {
 
     String BEAN_NAME = "LanguageService";
 

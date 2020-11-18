@@ -16,6 +16,7 @@ package org.entando.entando.web;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.TestEntandoJndiUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
@@ -151,5 +152,19 @@ public class AbstractControllerIntegrationTest {
         result.andExpect(header().doesNotExist("Access-Control-Allow-Credentials"));
         result.andExpect(header().string("Access-Control-Max-Age", "3600"));
 
+    }
+
+    public class ContextOfControllerTests {
+        public final MockMvc mockMvc;
+        public final ObjectMapper jsonMapper;
+        public final IApiOAuth2TokenManager apiOAuth2TokenManager = AbstractControllerIntegrationTest.this.apiOAuth2TokenManager;
+        public final IAuthenticationProviderManager authenticationProviderManager = AbstractControllerIntegrationTest.this.authenticationProviderManager;
+        public final IAuthorizationManager authorizationManager = AbstractControllerIntegrationTest.this.authorizationManager;
+
+        public ContextOfControllerTests(
+                MockMvc mockMvc, ObjectMapper jsonMapper) {
+            this.mockMvc = mockMvc;
+            this.jsonMapper = jsonMapper;
+        }
     }
 }

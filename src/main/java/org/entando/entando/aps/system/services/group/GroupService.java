@@ -108,6 +108,11 @@ public class GroupService implements IGroupService, ApplicationContextAware {
         return dto;
     }
 
+    public boolean exists(String groupCode) {
+        return this.getGroupManager().getGroup(groupCode) != null;
+    }
+
+
     @Override
     public PagedMetadata<?> getGroupReferences(String groupCode, String managerName, RestListRequest restRequest) {
         Group group = this.getGroupManager().getGroup(groupCode);

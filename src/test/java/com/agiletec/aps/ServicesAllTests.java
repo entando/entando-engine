@@ -17,6 +17,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.entando.entando.aps.system.services.analysis.component_existence.ComponentExistenceAnalysisTest;
 import org.entando.entando.aps.system.services.database.DatabaseServiceTest;
 import org.entando.entando.aps.system.services.category.CategoryServiceTest;
 import org.entando.entando.aps.system.services.dataobject.DataObjectServiceTest;
@@ -46,6 +47,7 @@ public class ServicesAllTests extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite(ServicesAllTests.class.getName());
 
+        suite.addTest(new JUnit4TestAdapter(ComponentExistenceAnalysisTest.class));
         suite.addTestSuite(GroupServiceIntegrationTest.class);
         suite.addTestSuite(PageSettingsServiceIntegrationTest.class);
         suite.addTestSuite(PageServiceIntegrationTest.class);
