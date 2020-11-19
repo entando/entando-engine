@@ -19,15 +19,11 @@ import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class CspNonceTag extends ExtendedTagSupport {
-
-    private static final Logger logger = LoggerFactory.getLogger(CspNonceTag.class);
 
     private String var;
 
@@ -49,9 +45,7 @@ public class CspNonceTag extends ExtendedTagSupport {
                 }
             }
         } catch (IOException t) {
-            String msg = "Error detected during tag preprocessing";
-            logger.error(msg, t);
-            throw new JspException(msg, t);
+            throw new JspException("Error detected during tag preprocessing", t);
         }
         return EVAL_BODY_INCLUDE;
     }

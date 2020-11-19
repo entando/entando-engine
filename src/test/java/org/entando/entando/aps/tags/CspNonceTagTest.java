@@ -70,7 +70,7 @@ public class CspNonceTagTest {
     public void getNotNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(result, EVAL_BODY_INCLUDE);
+        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -80,7 +80,7 @@ public class CspNonceTagTest {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         this.nonceTag.setVar("var");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(result, EVAL_BODY_INCLUDE);
+        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(1)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -91,7 +91,17 @@ public class CspNonceTagTest {
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
         this.nonceTag.setVar("var");
-        Assert.assertEquals(result, EVAL_BODY_INCLUDE);
+        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Mockito.verify(pageContext, Mockito.times(1)).getOut();
+        Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
+    }
+    
+    @Test
+    public void getNotNullTokenWithNoVarAndNoEscape() throws Throwable {
+        when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
+        int result = this.nonceTag.doStartTag();
+        this.nonceTag.setEscapeXml(false);
+        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
