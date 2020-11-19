@@ -61,7 +61,7 @@ public class CspNonceTagTest {
     public void getNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn(null);
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(result, EVAL_BODY_INCLUDE);
+        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
