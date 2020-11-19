@@ -16,54 +16,34 @@ package org.entando.entando.aps.system.services.page;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.group.IGroupManager;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Page;
-import com.agiletec.aps.system.services.page.PageMetadata;
-import com.agiletec.aps.system.services.page.PageUtilizer;
-import com.agiletec.aps.system.services.page.PagesStatus;
-import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.page.*;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.jsonpatch.JsonPatchService;
-import org.entando.entando.aps.system.services.page.model.PageConfigurationDto;
-import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.entando.entando.aps.system.services.page.model.PageDtoBuilder;
-import org.entando.entando.aps.system.services.page.model.PageSearchDto;
-import org.entando.entando.aps.system.services.page.model.PagesStatusDto;
-import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
+import org.entando.entando.aps.system.services.page.model.*;
 import org.entando.entando.aps.system.services.pagemodel.PageModelServiceUtilizer;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.validators.WidgetProcessorFactory;
 import org.entando.entando.aps.system.services.widgettype.validators.WidgetValidatorFactory;
-import org.entando.entando.aps.util.PageUtils;
 import org.entando.entando.aps.util.GenericResourceUtils;
+import org.entando.entando.aps.util.PageUtils;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.assembler.PageSearchMapper;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
@@ -76,8 +56,6 @@ import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.page.validator.PageValidator;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,10 +66,14 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * @author paddeo
  */
-public class PageService implements IPageService, GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>, ApplicationContextAware {
+public class PageService implements IComponentExistsService, IPageService,
+        GroupServiceUtilizer<PageDto>, PageModelServiceUtilizer<PageDto>, ApplicationContextAware {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
@@ -245,6 +227,15 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         return pageDto;
     }
 
+    public boolean exists(String pageCode, String status) {
+        return this.loadPage(pageCode, status) != null;
+    }
+
+    @Override
+    public boolean exists(String code) {
+        return this.exists(code, IPageService.STATUS_DRAFT) || this.exists(code, IPageService.STATUS_ONLINE);
+    }
+
     @Override
     public PageDto addPage(PageRequest pageRequest) {
         this.validateRequest(pageRequest);
@@ -388,7 +379,7 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
         boolean moveUp = page.getPosition() > pageRequest.getPosition();
         try {
             if (page.getParentCode().equals(parent.getCode())) {
-                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp));
+                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp)) ;
             } else {
                 this.getPageManager().movePage(page, parent);
             }

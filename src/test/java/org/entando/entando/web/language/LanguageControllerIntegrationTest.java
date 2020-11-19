@@ -17,9 +17,11 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.language.ILanguageService;
 import org.entando.entando.aps.system.services.language.LanguageDto;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -48,6 +50,8 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     @Autowired
     @InjectMocks
     private LanguageController controller;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testGetLangsWithBackendPermission() throws Exception {
@@ -217,6 +221,26 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
         result.andExpect(jsonPath("$.errors[0].code", is("2")));
 
     }
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LANGUAGES,
+                "en",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LANGUAGES,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+    }
+
 
     private UserDetails createUserWithPermission() {
         return new OAuth2TestUtils.UserBuilder("user", "0x01")

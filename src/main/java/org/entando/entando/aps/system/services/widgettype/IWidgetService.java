@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
+import org.entando.entando.aps.system.services.IComponentExistsService;
 import org.entando.entando.aps.system.services.IComponentUsageService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
@@ -24,7 +25,7 @@ import org.entando.entando.web.widget.model.WidgetRequest;
 
 import java.util.Map;
 
-public interface IWidgetService extends IComponentUsageService {
+public interface IWidgetService extends IComponentExistsService, IComponentUsageService {
 
     public String BEAN_NAME = "WidgetService";
 

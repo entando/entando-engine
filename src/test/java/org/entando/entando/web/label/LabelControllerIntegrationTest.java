@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.label.LabelTestHelper;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -56,6 +57,8 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     private ILangManager langManager;
 
     private MockMvcHelper mockMvcHelper;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void init() {
@@ -571,5 +574,24 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
         } finally {
             mockMvcHelper.deleteMockMvc("/labels/" + labelRequest.getKey());
         }
+    }
+
+    @Test
+    public void testComponentExistenceAnalysis() throws Exception {
+
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LABELS,
+                "PAGE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_DIFF,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
+
+        // should return NEW for NON existing component
+        AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
+                AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LABELS,
+                "AN_NONEXISTENT_CODE",
+                AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
+                new ContextOfControllerTests(mockMvc, mapper)
+        );
     }
 }

@@ -20,6 +20,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.filebrowser.model.FileBrowserRequest;
@@ -112,8 +113,10 @@ public class FileBrowserService implements IFileBrowserService {
     public void addFile(FileBrowserFileRequest request, BindingResult bindingResult) {
         String path = request.getPath();
         String parentFolder = path.substring(0, path.lastIndexOf("/"));
-        this.checkResource(parentFolder, "Parent Folder", request.isProtectedFolder());
+
         try {
+            this.createFolderIfNotExists(parentFolder, request.isProtectedFolder());
+            this.checkResource(parentFolder, "Parent Folder", request.isProtectedFolder());
             if (this.getStorageManager().exists(request.getPath(), request.isProtectedFolder())) {
                 bindingResult.reject(FileBrowserValidator.ERRCODE_RESOURCE_ALREADY_EXIST,
                         new String[]{request.getPath(), String.valueOf(request.isProtectedFolder())}, "fileBrowser.file.exists");
@@ -188,6 +191,22 @@ public class FileBrowserService implements IFileBrowserService {
         } catch (Throwable t) {
             logger.error("error deleting directory path {} - type {}", currentPath, protectedFolder);
             throw new RestServerError("error deleting directory", t);
+        }
+    }
+
+    public boolean exists(String currentPath, Boolean protectedFolder) throws EntException {
+        return this.getStorageManager().exists(currentPath, protectedFolder);
+    }
+
+    @Override
+    public boolean exists(String code) throws EntException {
+        return this.getStorageManager().exists(code, false);
+    }
+
+    protected void createFolderIfNotExists(String path, boolean protectedFolder) throws EntException {
+        boolean exists = this.getStorageManager().exists(path, protectedFolder);
+        if (!exists) {
+            this.getStorageManager().createDirectory(path, protectedFolder);
         }
     }
 

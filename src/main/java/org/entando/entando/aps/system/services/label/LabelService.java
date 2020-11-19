@@ -95,6 +95,11 @@ public class LabelService implements ILabelService {
     }
 
     @Override
+    public boolean exists(String code) throws EntException {
+        return this.getI18nManager().getLabelGroup(code) != null;
+    }
+
+    @Override
     public LabelDto updateLabelGroup(LabelDto labelRequest) {
         try {
             String code = labelRequest.getKey();

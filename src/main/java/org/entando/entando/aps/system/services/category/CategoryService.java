@@ -127,6 +127,11 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public boolean exists(String categoryCode) {
+        return this.getCategoryManager().getCategory(categoryCode) != null;
+    }
+
+    @Override
     public PagedMetadata<?> getCategoryReferences(String categoryCode, String managerName, RestListRequest restListRequest) {
         Category group = this.getCategoryManager().getCategory(categoryCode);
         if (null == group) {

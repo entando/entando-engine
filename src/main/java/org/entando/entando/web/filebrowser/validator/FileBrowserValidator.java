@@ -70,10 +70,6 @@ public class FileBrowserValidator extends AbstractPaginationValidator implements
             return;
         }
         try {
-            String directory = path.substring(0, path.lastIndexOf("/"));
-            if (!this.getStorageManager().exists(directory, request.isProtectedFolder())) {
-                throw new ResourceNotFoundException(FileBrowserValidator.ERRCODE_RESOURCE_DOES_NOT_EXIST, "parent folder", path);
-            }
             if (request instanceof FileBrowserFileRequest) {
                 FileBrowserFileRequest fileRequest = (FileBrowserFileRequest) target;
                 String extractedFileName = path.substring(path.lastIndexOf("/") + 1, path.length());
