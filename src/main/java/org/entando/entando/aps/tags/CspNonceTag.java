@@ -15,7 +15,7 @@ package org.entando.entando.aps.tags;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.tags.InfoTag;
+import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CspNonceTag extends ExtendedTagSupport {
 
-    private static final Logger logger = LoggerFactory.getLogger(InfoTag.class);
+    private static final Logger logger = LoggerFactory.getLogger(CspNonceTag.class);
 
     private String var;
 
@@ -36,7 +36,7 @@ public class CspNonceTag extends ExtendedTagSupport {
         ServletRequest request = this.pageContext.getRequest();
         try {
             RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
-            String currentToken = (null!= reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN) : null;
+            String currentToken = (null != reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN) : null;
             if (null != currentToken) {
                 if (StringUtils.isEmpty(this.getVar())) {
                     if (this.getEscapeXml()) {
@@ -48,7 +48,7 @@ public class CspNonceTag extends ExtendedTagSupport {
                     this.pageContext.setAttribute(this.getVar(), currentToken);
                 }
             }
-        } catch (Exception t) {
+        } catch (IOException t) {
             String msg = "Error detected during tag preprocessing";
             logger.error(msg, t);
             throw new JspException(msg, t);

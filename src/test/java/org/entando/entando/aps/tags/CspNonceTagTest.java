@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -97,8 +98,11 @@ public class CspNonceTagTest {
     
     @Test(expected = JspException.class)
     public void testJspException() throws Exception {
-        Mockito.doThrow(RuntimeException.class).when(this.reqCtx).getExtraParam(Mockito.anyString());
+            when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
+        Mockito.doThrow(IOException.class).when(this.writer).write(Mockito.anyString());
         this.nonceTag.doStartTag();
+
+        
     }
     
 }
