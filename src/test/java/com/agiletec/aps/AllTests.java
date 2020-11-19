@@ -88,6 +88,7 @@ import org.entando.entando.aps.system.services.userprofile.UserProfileManagerTes
 import org.entando.entando.aps.system.services.userprofile.UserProfileTypeServiceTest;
 import org.entando.entando.aps.system.services.userprofile.ValidateUserProfileIntegrationTest;
 import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
+import org.entando.entando.aps.tags.CspNonceTagTest;
 import org.entando.entando.ent.util.EntLoggingTest;
 import org.entando.entando.aps.util.FilterUtilsTest;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoderTest;
@@ -245,6 +246,8 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(SwaggerConfigTest.class));
         suite.addTest(new JUnit4TestAdapter(SwaggerMvcAdapterTest.class));
+        
+        suite.addTest(new JUnit4TestAdapter(CspNonceTagTest.class));
         
         return suite;
     }

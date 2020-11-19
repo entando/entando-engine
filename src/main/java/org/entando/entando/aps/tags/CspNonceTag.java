@@ -38,7 +38,7 @@ public class CspNonceTag extends ExtendedTagSupport {
             RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
             String currentToken = (null!= reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN) : null;
             if (null != currentToken) {
-                if (StringUtils.isBlank(this.getVar())) {
+                if (StringUtils.isEmpty(this.getVar())) {
                     if (this.getEscapeXml()) {
                         out(this.pageContext, this.getEscapeXml(), currentToken);
                     } else {
