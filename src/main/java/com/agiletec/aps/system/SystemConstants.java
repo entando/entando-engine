@@ -49,6 +49,8 @@ public interface SystemConstants {
     public static final String PAR_RESOURCES_DISK_ROOT = "resourceDiskRootFolder";
 
     public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
+    
+    public static final String PAR_CSP_HEADER_EXTRA_CONFIG = "cspHeaderExtraConfig";
 
     /**
      * Nome parametro extra per requestContext: lingua corrente
