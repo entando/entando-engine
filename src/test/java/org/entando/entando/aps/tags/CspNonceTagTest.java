@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.tags;
 
-import static javax.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE;
+import static javax.servlet.jsp.tagext.Tag.SKIP_BODY;
 import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.RequestContext;
@@ -61,7 +61,7 @@ public class CspNonceTagTest {
     public void getNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn(null);
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Assert.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -70,7 +70,7 @@ public class CspNonceTagTest {
     public void getNotNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Assert.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -80,7 +80,7 @@ public class CspNonceTagTest {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         this.nonceTag.setVar("var");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Assert.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(1)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -91,7 +91,7 @@ public class CspNonceTagTest {
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
         this.nonceTag.setVar("var");
-        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Assert.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -101,7 +101,7 @@ public class CspNonceTagTest {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
-        Assert.assertEquals(EVAL_BODY_INCLUDE, result);
+        Assert.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }

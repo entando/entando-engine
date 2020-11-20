@@ -35,11 +35,7 @@ public class CspNonceTag extends ExtendedTagSupport {
             String currentToken = (null != reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN) : null;
             if (null != currentToken) {
                 if (StringUtils.isEmpty(this.getVar())) {
-                    if (this.getEscapeXml()) {
-                        out(this.pageContext, this.getEscapeXml(), currentToken);
-                    } else {
-                        this.pageContext.getOut().print(currentToken);
-                    }
+                    out(this.pageContext, this.getEscapeXml(), currentToken);
                 } else {
                     this.pageContext.setAttribute(this.getVar(), currentToken);
                 }
@@ -47,7 +43,7 @@ public class CspNonceTag extends ExtendedTagSupport {
         } catch (IOException t) {
             throw new JspException("Error detected during tag preprocessing", t);
         }
-        return EVAL_BODY_INCLUDE;
+        return super.doStartTag();
     }
 
     @Override
