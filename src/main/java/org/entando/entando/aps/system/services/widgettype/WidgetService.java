@@ -31,6 +31,7 @@ import org.entando.entando.aps.system.services.group.GroupServiceUtilizer;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.page.IPageService;
+import org.entando.entando.aps.system.services.security.NonceInjector;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDetails;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
@@ -204,7 +205,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
         try {
             this.getWidgetManager().addWidgetType(widgetType);
-            String customUi = widgetRequest.getCustomUi();
+            String customUi = NonceInjector.process(widgetRequest.getCustomUi());
             if (StringUtils.isEmpty(customUi) && widgetType.getParentType() != null) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetType.getParentTypeCode());
                 if (guiFragment != null) {
@@ -237,7 +238,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
             this.processWidgetType(type, widgetRequest);
 
-            String customUi = widgetRequest.getCustomUi();
+            String customUi = NonceInjector.process(widgetRequest.getCustomUi());
             if (StringUtils.isEmpty(customUi) && type.getParentType() != null) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(type.getParentTypeCode());
                 if (guiFragment != null) {

@@ -19,6 +19,7 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDtoSmall;
+import org.entando.entando.aps.system.services.security.NonceInjector;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -130,7 +131,7 @@ public class GuiFragmentService implements IGuiFragmentService {
             if (null == fragment) {
                 throw new ResourceNotFoundException(GuiFragmentValidator.ERRCODE_FRAGMENT_DOES_NOT_EXISTS, "fragment", code);
             }
-            fragment.setGui(guiFragmentRequest.getGuiCode());
+            fragment.setGui(NonceInjector.process(guiFragmentRequest.getGuiCode()));
             this.getGuiFragmentManager().updateGuiFragment(fragment);
             return this.getDtoBuilder().convert(fragment);
         } catch (ResourceNotFoundException e) {
@@ -173,7 +174,7 @@ public class GuiFragmentService implements IGuiFragmentService {
     private GuiFragment createGuiFragment(GuiFragmentRequestBody guiFragmentRequest) {
         GuiFragment fragment = new GuiFragment();
         fragment.setCode(guiFragmentRequest.getCode());
-        fragment.setGui(guiFragmentRequest.getGuiCode());
+        fragment.setGui(NonceInjector.process(guiFragmentRequest.getGuiCode()));
         return fragment;
     }
 

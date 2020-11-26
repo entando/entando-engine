@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import org.entando.entando.aps.system.services.security.NonceInjector;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.*;
@@ -218,7 +219,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
     protected void copyProperties(PageModelRequest srcPpageModelRequest, PageModel descPageModel) {
         descPageModel.setCode(srcPpageModelRequest.getCode());
         descPageModel.setDescription(srcPpageModelRequest.getDescr());
-        descPageModel.setTemplate(srcPpageModelRequest.getTemplate());
+        descPageModel.setTemplate(NonceInjector.process(srcPpageModelRequest.getTemplate()));
         descPageModel.setPluginCode(srcPpageModelRequest.getPluginCode());
         descPageModel.setConfiguration(this.createPageModelConfiguration(srcPpageModelRequest));
 

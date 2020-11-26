@@ -227,6 +227,7 @@ public class WidgetServiceTest {
     @Test
     public void shouldAddNewWidget() throws Exception {
         // Given
+        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
 
@@ -243,11 +244,13 @@ public class WidgetServiceTest {
         assertThat(widgetDto.getCode()).isEqualTo(widgetRequest.getCode());
         assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
         assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
+        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
     }
 
     @Test
     public void shouldUpdateWidget() throws Exception {
         // Given
+        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
         when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
@@ -265,6 +268,32 @@ public class WidgetServiceTest {
         assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
         assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
         assertThat(widgetDto.getWidgetCategory()).isEqualTo(widgetRequest.getWidgetCategory());
+        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
+    }
+
+    @Test
+    public void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
+        // Given
+        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        WidgetRequest widgetRequest = getWidgetRequest1();
+        widgetRequest.setCustomUi(expectedCustomUi);
+        when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
+        when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+
+        // When
+        WidgetDto widgetDto = widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
+
+        // Then
+        ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> bundleIdCaptor = ArgumentCaptor.forClass(String.class);
+        verify(widgetManager).updateWidgetType(anyString(), any(), any(), anyString(), configUiCaptor.capture(),
+                bundleIdCaptor.capture(), anyBoolean(), anyString());
+        assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
+        assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
+        assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
+        assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
+        assertThat(widgetDto.getWidgetCategory()).isEqualTo(widgetRequest.getWidgetCategory());
+        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
     }
 
     private WidgetType getWidget1() throws JsonProcessingException {
@@ -295,7 +324,7 @@ public class WidgetServiceTest {
         WidgetRequest widgetRequest = new WidgetRequest();
         widgetRequest.setCode(WIDGET_1_CODE);
         widgetRequest.setTitles(ImmutableMap.of("it", "Mio Titolo", "en", "My Title"));
-        widgetRequest.setCustomUi("<div></div>");
+        widgetRequest.setCustomUi("<script>my_js_script</script>");
         widgetRequest.setGroup("group");
         widgetRequest.setReadonlyPageWidgetConfig(true);
         widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));

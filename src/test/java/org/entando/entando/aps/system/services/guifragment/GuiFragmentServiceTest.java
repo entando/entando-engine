@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.guifragment;
 
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
@@ -25,22 +26,32 @@ import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.page.model.PageSearchDto;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.page.model.PageSearchRequest;
+import org.entando.entando.web.widget.model.WidgetRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.aps.system.services.guifragment.FragmentTestUtil.validFragmentRequest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.AssertionErrors;
@@ -84,6 +95,85 @@ public class GuiFragmentServiceTest {
         fragment.setCode("test_code");
         when(guiFragmentManager.getGuiFragment("test_code")).thenReturn(fragment);
         this.guiFragmentService.removeGuiFragment(fragment.getCode());
+    }
+
+    @Test
+    public void shouldCreateFragment() throws Exception {
+        //GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
+        //GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
+
+        //when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        //when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
+
+        // Given
+        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        GuiFragmentRequestBody request = validFragmentRequest();
+
+        // When
+        GuiFragmentDto fragmentDto = guiFragmentService.addGuiFragment(request);
+
+        // Then
+        ArgumentCaptor<GuiFragment> argumentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).addGuiFragment(argumentCaptor.capture());
+        GuiFragment argument = argumentCaptor.getValue();
+        assertThat(argument.getCode()).isEqualTo(request.getCode());
+        assertThat(argument.getGui()).isEqualTo(expectedGui);
+
+        assertThat(fragmentDto.getCode()).isEqualTo(request.getCode());
+        assertThat(fragmentDto.getGuiCode()).isEqualTo(expectedGui);
+    }
+
+    @Test
+    public void shouldUpdateFragment() throws Exception {
+        GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
+        //GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
+
+        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        //when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
+
+        // Given
+        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        GuiFragmentRequestBody request = validFragmentRequest();
+
+        // When
+        GuiFragmentDto fragmentDto = guiFragmentService.addGuiFragment(request);
+
+        // Then
+        ArgumentCaptor<GuiFragment> argumentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).addGuiFragment(argumentCaptor.capture());
+        GuiFragment argument = argumentCaptor.getValue();
+        assertThat(argument.getCode()).isEqualTo(request.getCode());
+        assertThat(argument.getGui()).isEqualTo(expectedGui);
+
+        assertThat(fragmentDto.getCode()).isEqualTo(request.getCode());
+        assertThat(fragmentDto.getGuiCode()).isEqualTo(expectedGui);
+    }
+
+    @Test
+    public void shouldNotUpdateGuiNonce() throws Exception {
+        GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
+        //GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
+
+        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        //when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
+
+        // Given
+        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        GuiFragmentRequestBody request = validFragmentRequest();
+        request.setGuiCode(expectedGui);
+
+        // When
+        GuiFragmentDto fragmentDto = guiFragmentService.addGuiFragment(request);
+
+        // Then
+        ArgumentCaptor<GuiFragment> argumentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).addGuiFragment(argumentCaptor.capture());
+        GuiFragment argument = argumentCaptor.getValue();
+        assertThat(argument.getCode()).isEqualTo(request.getCode());
+        assertThat(argument.getGui()).isEqualTo(expectedGui);
+
+        assertThat(fragmentDto.getCode()).isEqualTo(request.getCode());
+        assertThat(fragmentDto.getGuiCode()).isEqualTo(expectedGui);
     }
 
 

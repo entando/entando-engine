@@ -25,9 +25,13 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.createDefaultWidgetType;
+import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModel;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -78,7 +82,7 @@ public class PageModelServiceTest {
         when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(mockType);
         PageModelRequest pageModelRequest = validPageModelRequest();
         PageModelDto result = pageModelService.addPageModel(pageModelRequest);
-        Mockito.verify(pageModelManager, Mockito.times(1)).addPageModel(Mockito.any(PageModel.class));
+        verify(pageModelManager, Mockito.times(1)).addPageModel(Mockito.any(PageModel.class));
         assertThat(result).isNotNull();
         assertThat(result.getCode()).isEqualTo(pageModelRequest.getCode());
         assertThat(result.getDescr()).isEqualTo(pageModelRequest.getDescr());
@@ -128,6 +132,7 @@ public class PageModelServiceTest {
 
     @Test
     public void shouldCreateTheRightPageModel() {
+        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
         PageModelRequest pageModelRequest = validPageModelRequest();
         pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
@@ -138,8 +143,51 @@ public class PageModelServiceTest {
         assertThat(pageModel.getDescription()).isEqualTo(pageModelRequest.getDescr());
         assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
         assertThat(pageModel.getMainFrame()).isZero();
-        assertThat(pageModel.getTemplate()).isEqualTo(pageModelRequest.getTemplate());
+        assertThat(pageModel.getTemplate()).isEqualTo(expectedTemplate);
         assertThat(pageModel.getConfiguration()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
+    }
+
+    @Test
+    public void shouldUpdatePageModel() throws Exception {
+        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+
+        when(widgetTypeManager.getWidgetType(any())).thenReturn(createDefaultWidgetType());
+        when(pageModelManager.getPageModel(any())).thenReturn(validPageModel());
+
+        PageModelRequest pageModelRequest = validPageModelRequest();
+        pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
+        PageModelDto pageModel = pageModelService.updatePageModel(pageModelRequest);
+
+        assertThat(pageModel).isNotNull();
+        assertThat(pageModel.getCode()).isEqualTo(pageModelRequest.getCode());
+        assertThat(pageModel.getDescr()).isEqualTo(pageModelRequest.getDescr());
+        assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
+        assertThat(pageModel.getMainFrame()).isZero();
+        assertThat(pageModel.getTemplate()).isEqualTo(expectedTemplate);
+        assertThat(pageModel.getConfiguration().getFrames()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
+    }
+
+    @Test
+    public void shouldNotChangeTemplateWithNonce() throws Exception {
+        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+
+        when(widgetTypeManager.getWidgetType(any())).thenReturn(createDefaultWidgetType());
+        when(pageModelManager.getPageModel(any())).thenReturn(validPageModel());
+
+        PageModelRequest pageModelRequest = validPageModelRequest();
+        pageModelRequest.setTemplate(expectedTemplate);
+        pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
+        PageModelDto pageModel = pageModelService.updatePageModel(pageModelRequest);
+
+        assertThat(pageModel).isNotNull();
+        assertThat(pageModel.getCode()).isEqualTo(pageModelRequest.getCode());
+        assertThat(pageModel.getDescr()).isEqualTo(pageModelRequest.getDescr());
+        assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
+        assertThat(pageModel.getMainFrame()).isZero();
+        assertThat(pageModel.getTemplate()).isEqualTo(expectedTemplate);
+        assertThat(pageModel.getConfiguration().getFrames()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
+
+        verify(pageModelManager, times(1)).updatePageModel(any());
     }
 
 
