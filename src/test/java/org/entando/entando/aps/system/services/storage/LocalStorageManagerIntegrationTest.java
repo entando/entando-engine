@@ -21,10 +21,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import com.agiletec.aps.system.exception.EntRuntimeException;
 import org.apache.commons.io.IOUtils;
 
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 
 /**
  * @author S.Loru - E.Santoboni
@@ -138,6 +142,24 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
             this._localStorageManager.deleteDirectory("testfolder/", false);
             InputStream streamBis = this._localStorageManager.getStream(testFilePath, false);
             assertNull(streamBis);
+        }
+    }
+
+    public void testCreateDirectoryShouldBlockPathTraversals() throws Throwable {
+        try {
+            this._localStorageManager.createDirectory("/../../../dev/mydir", false);
+            assert(false);
+        } catch (EntRuntimeException t) {
+            Assert.assertThat(t.getCause().getMessage(), CoreMatchers.startsWith("Path traversal detected"));
+        } catch (Throwable t) {
+            assert(false);
+        }
+
+        try {
+            this._localStorageManager.createDirectory("target/mydir", false);
+            assert(true);
+        } catch (Throwable t) {
+            assert(false);
         }
     }
 

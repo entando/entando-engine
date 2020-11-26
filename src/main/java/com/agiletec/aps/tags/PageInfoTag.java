@@ -122,7 +122,11 @@ public class PageInfoTag extends ExtendedTagSupport implements IParameterParentT
 				pageUrl.addParam(name, this.getParameters().get(name));
 			}
 		}
-		this.setValue(pageUrl.getURL());
+		this.setValue(
+				org.owasp.encoder.Encode.forHtml(	// $$$
+						pageUrl.getURL()
+				)
+		);
 	}
 
 	protected void extractPageOwner(IPage page, RequestContext reqCtx) {
@@ -135,7 +139,7 @@ public class PageInfoTag extends ExtendedTagSupport implements IParameterParentT
 			this.pageContext.setAttribute(this.getVar(), this.getValue());
 		} else {
 			try {
-				if (this.getEscapeXml()) {
+				if (this.getEscapeXml()) { // $$$
 					out(this.pageContext, this.getEscapeXml(), this.getValue());
 				} else {
 					this.pageContext.getOut().print(this.getValue());

@@ -18,22 +18,28 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.EntRuntimeException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Random;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.springframework.security.crypto.codec.Hex;
 
 public class PageTokenManager extends AbstractService implements IPageTokenManager {
 
@@ -124,7 +130,7 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 			String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
 			Map<String, String> params = SystemParamsUtils.getParams(xmlParams);
 			if (!params.containsKey(IPageTokenManager.PREVIEW_HASH)) {
-				param = RandomStringUtils.randomAlphanumeric(HASH_LENGTH);
+				param = mkRandomString(HASH_LENGTH);
 				params.put(PREVIEW_HASH, param);
 				String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, params);
 				this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
@@ -134,6 +140,19 @@ public class PageTokenManager extends AbstractService implements IPageTokenManag
 			throw new EntException("Error occurred generating a random page_preview_hash", t);
 		}
 		return param;
+	}
+
+	public static String mkRandomString(int length) {
+		return mkRandomString(new SecureRandom(), length);
+	}
+
+	public static String mkRandomString(Random rnd, int length) {
+		String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz0123456789";
+		int max = base.length() - 1;
+		StringBuilder sb = new StringBuilder(length);
+		for (int i = 0; i < length; i++)
+			sb.append(base.charAt(rnd.nextInt(max)));
+		return sb.toString();
 	}
 
 	protected char[] getPasswordCharArray() {

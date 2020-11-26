@@ -30,11 +30,17 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        /*
+         * About: .csrf().disable()
+         *
+         * The engine currently explicitly implements
+         * OWASP csrf mitigations by checking origin and host header
+         */
         http
             .headers().frameOptions().sameOrigin()
             .and()
                 .anonymous().disable()
-                .csrf().disable()
+                .csrf().disable()   //NOSONAR
                 .cors();
     }
 

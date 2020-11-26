@@ -181,7 +181,8 @@ public class URLManager extends AbstractURLManager {
             if (null != hostName && hostName.startsWith(serverName)) {
                 checkPort = true;
                 if (hostName.length() > serverName.length()) {
-                    link.append(hostName.substring(serverName.length()));
+                    String encodedHostName = org.owasp.encoder.Encode.forHtmlContent(hostName);
+                    link.append(encodedHostName.substring(serverName.length()));
                 }
             }
             if (!checkPort) {
