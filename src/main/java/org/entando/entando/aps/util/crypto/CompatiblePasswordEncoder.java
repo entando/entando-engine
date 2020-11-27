@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.util.crypto;
 
-import com.agiletec.aps.system.exception.EntRuntimeException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

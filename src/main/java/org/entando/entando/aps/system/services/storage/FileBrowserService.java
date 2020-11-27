@@ -185,7 +185,7 @@ public class FileBrowserService implements IFileBrowserService {
     @Override
     public void deleteDirectory(String currentPath, Boolean protectedFolder) {
         try {
-            this.getStorageManager().deleteDirectory(currentPath, protectedFolder);
+            this.getStorageManager().safeDeleteDirectory(null, currentPath, protectedFolder);
         } catch (ValidationConflictException vge) {
             throw vge;
         } catch (Throwable t) {

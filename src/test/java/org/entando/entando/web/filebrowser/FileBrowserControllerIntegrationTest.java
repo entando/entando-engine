@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.filebrowser;
 
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.storage.IStorageManager;

@@ -20,6 +20,7 @@ import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.springframework.lang.Nullable;
 
 import java.io.*;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class LocalStorageManager implements IStorageManager {
 		try {
 			File fileUnsafe = new File(fullPath);
 			File directory = new File(diskRoot);
-			if (FileUtils.directoryContains(directory, fileUnsafe)) {
+			if (isSamePath(diskRoot, fullPath) || FileUtils.directoryContains(directory, fileUnsafe)) {
 				if (fileUnsafe.exists()) {
 					return fileUnsafe.delete();
 				}
@@ -114,19 +115,25 @@ public class LocalStorageManager implements IStorageManager {
 		}
 	}
 
+	public void deleteDirectory(String subPath, boolean isProtectedResource) throws EntException {
+		safeDeleteDirectory(null, subPath, isProtectedResource);
+	}
+
 	@Override
-	public void deleteDirectory(String subPath, boolean isProtectedResource) {
+	public void safeDeleteDirectory(@Nullable String basePath, String subPath, boolean isProtectedResource) throws EntException {
+		if (basePath == null)
+			basePath = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
+
 		subPath = (null == subPath) ? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
 		try {
 			File targetDir = new File(fullPath);
-			File baseDir = new File(diskRoot);
-			if (FileUtils.directoryContains(baseDir, targetDir)) {
+			File baseDir = new File(basePath);
+			if (isSamePath(basePath, fullPath) || FileUtils.directoryContains(baseDir, targetDir)) {
 				this.delete(targetDir);
 			} else {
 				throw new IOException(
-						String.format("Path validation failed: \"%s\" not in \"%s\"", diskRoot, subPath)
+						String.format("Path validation failed: \"%s\" not in \"%s\"", subPath, basePath)
 				);
 			}
 		} catch (IOException e) {
@@ -163,7 +170,7 @@ public class LocalStorageManager implements IStorageManager {
 			String fullPath = this.createFullPath(subPath, isProtectedResource);
 			String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
 			File file = new File(fullPath);
-			if (FileUtils.directoryContains(new File(diskRoot), file)) {
+			if (isSamePath(diskRoot, fullPath) || FileUtils.directoryContains(new File(diskRoot), file)) {
 				if (file.exists() && !file.isDirectory()) {
 					return new FileInputStream(file);
 				}
@@ -347,7 +354,7 @@ public class LocalStorageManager implements IStorageManager {
 
 		try {
 			File directory = new File(fullPath);
-			if (FileUtils.directoryContains(new File(diskRoot), directory)) {
+			if (isSamePath(diskRoot, fullPath) || FileUtils.directoryContains(new File(diskRoot), directory)) {
 				if (directory.exists() && directory.isDirectory()) {
 					BasicFileAttributeView[] objects = new BasicFileAttributeView[]{};
 					String folder = fullPath;
@@ -447,5 +454,11 @@ public class LocalStorageManager implements IStorageManager {
 				return false;
 			}
 		}
+	}
+
+	public static boolean isSamePath(String path1, String path2) {
+		if (!path1.endsWith("/")) path1 = path1.concat("/");
+		if (!path2.endsWith("/")) path2 = path2.concat("/");
+		return path1.equals(path2);
 	}
 }
