@@ -56,9 +56,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
         try {
             conn = this.getConnection();
             if (text == null) {
-                stat = conn.prepareStatement(LOAD_USERNAMES);
+                stat = conn.prepareStatement(LOAD_USERNAMES);           //NOSONAR
             } else {
-                stat = conn.prepareStatement(SEARCH_USERNAMES_BY_TEXT);
+                stat = conn.prepareStatement(SEARCH_USERNAMES_BY_TEXT); //NOSONAR
                 stat.setString(1, "%" + text + "%");
             }
             res = stat.executeQuery();
@@ -91,9 +91,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
         try {
             conn = this.getConnection();
             if (text == null) {
-                stat = conn.prepareStatement(LOAD_USERS);
+                stat = conn.prepareStatement(LOAD_USERS);           //NOSONAR
             } else {
-                stat = conn.prepareStatement(SEARCH_USERS_BY_TEXT);
+                stat = conn.prepareStatement(SEARCH_USERS_BY_TEXT); //NOSONAR
                 stat.setString(1, "%" + text + "%");
             }
             res = stat.executeQuery();
@@ -163,7 +163,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
         ResultSet res = null;
         try {
             conn = this.getConnection();
-            stat = conn.prepareStatement(LOAD_USER_FROM_USERNAME);
+            stat = conn.prepareStatement(LOAD_USER_FROM_USERNAME);      //NOSONAR
             stat.setString(1, username);
             res = stat.executeQuery();
             user = this.createUserFromRecord(res);
