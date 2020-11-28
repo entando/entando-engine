@@ -13,7 +13,10 @@
         <Logger name="org.springframework" additivity="false" level="WARN">
             <AppenderRef ref="console"/>
         </Logger>
-        <Root level="debug" additivity="false">
+        <Logger name="org.entando.entando.aps.system.init" additivity="false" level="WARN">
+            <AppenderRef ref="console"/>
+        </Logger>
+        <Root level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Root>
     </Loggers>

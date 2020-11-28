@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.servlet;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -35,10 +36,10 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
     public void contextInitialized(ServletContextEvent event) {
         ServletContext svCtx = event.getServletContext();
         String msg = this.getClass().getName() + ": INIT " + svCtx.getServletContextName();
-        System.out.println(msg);
+        ApsSystemUtils.directStdoutTrace(msg, true);
         super.contextInitialized(event);
         msg = this.getClass().getName() + ": INIT DONE " + svCtx.getServletContextName();
-        System.out.println(msg);
+        ApsSystemUtils.directStdoutTrace(msg, true);
 
         boolean isActive = Objects.nonNull(System.getenv(SystemConstants.ENTANDO_CSRF_PROTECTION));
         String whiteList = System.getenv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS);

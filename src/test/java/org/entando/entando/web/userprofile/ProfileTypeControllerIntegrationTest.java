@@ -780,7 +780,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.attributes.size()", Matchers.is(4)))
                     .andExpect(jsonPath("$.payload.attributes[0].code", Matchers.is("text")))
                     .andExpect(jsonPath("$.payload.attributes[0].validationRules.minLength", Matchers.is(10)))
@@ -807,7 +807,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.attributes.size()", Matchers.is(4)))
                     .andExpect(jsonPath("$.payload.attributes[0].code", Matchers.is("text")))
                     .andExpect(jsonPath("$.payload.attributes[0].validationRules.minLength", Matchers.is(11)))

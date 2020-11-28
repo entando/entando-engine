@@ -24,36 +24,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
-import com.agiletec.aps.system.services.authorization.Authorization;
-import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.group.IGroupManager;
-import com.agiletec.aps.system.services.role.IRoleManager;
-import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.aps.system.services.role.Role;
-import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.FileTextReader;
-import com.jayway.jsonpath.JsonPath;
+
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
+
 import org.entando.entando.aps.system.services.userpreferences.IUserPreferencesManager;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 public class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -72,7 +57,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                 get("/userPreferences/{username}", username)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken))
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.size()", Matchers.is(1)))
                 .andExpect(jsonPath("$.errors[0].code", Matchers.is("1")))
@@ -93,7 +78,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -117,7 +102,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -141,7 +126,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                         .content(bodyRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken))
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.size()", Matchers.is(1)))
                 .andExpect(jsonPath("$.errors[0].code", Matchers.is("1")))
@@ -165,7 +150,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isNotFound());
         } finally {
             this.userManager.removeUser(username);
@@ -189,7 +174,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isNotFound());
         } finally {
             this.userManager.removeUser(username);
@@ -210,7 +195,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -224,7 +209,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -234,7 +219,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -258,7 +243,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -272,7 +257,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -282,7 +267,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -296,7 +281,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -306,7 +291,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -320,7 +305,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -330,7 +315,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -344,7 +329,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -354,7 +339,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
@@ -368,7 +353,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -378,7 +363,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -392,7 +377,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                             .content(bodyRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
@@ -402,7 +387,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
                     get("/userPreferences/{username}", username)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))

@@ -275,7 +275,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
                     .param("filters[0].operator", "eq")
                     .param("filters[0].value", "asdas")
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
         } finally {

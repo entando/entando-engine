@@ -58,6 +58,9 @@ public class ApsSystemUtils {
 
     private static final long KILOBYTE = 1024L;
 
+    private static final boolean ENABLE_DIRECT_STDOUT_TRACE =
+            ("" + System.getProperty("org.entando.enableDirectStdoutTrace")).equals("true");
+
     private Map<String, Object> systemParams;
 
     public void init() throws Exception {
@@ -159,6 +162,19 @@ public class ApsSystemUtils {
 
     public void setSystemParams(Map<String, Object> systemParams) {
         this.systemParams = systemParams;
+    }
+
+    public static boolean directStdoutTrace(String str) {
+        return directStdoutTrace(str, false);
+    }
+
+    public static boolean directStdoutTrace(String str, boolean force) {
+        if (ENABLE_DIRECT_STDOUT_TRACE || force) {
+            System.out.println(str);    //NOSONAR
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

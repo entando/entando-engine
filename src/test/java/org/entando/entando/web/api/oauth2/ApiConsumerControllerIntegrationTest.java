@@ -150,7 +150,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
                     .param("filters[0].attribute", "name")
                     .param("filters[0].value", "Consumer 1"));
 
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload", hasSize(1)))
                     .andExpect(jsonPath("$.payload[0].key", is(CONSUMER_KEY_1)))
@@ -159,7 +159,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
             // Sort by name
             result = authRequest(getSortRequest("name", "DESC"));
 
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload", hasSize(2)))
                     .andExpect(jsonPath("$.payload[0].key", is(CONSUMER_KEY_2)))
@@ -169,7 +169,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
             // Sort by issuedDate
             result = authRequest(getSortRequest("issuedDate", "ASC"));
 
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload", hasSize(2)))
                     .andExpect(jsonPath("$.payload[0].key", is(CONSUMER_KEY_2)))
@@ -179,7 +179,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
             // Sort by expirationDate
             result = authRequest(getSortRequest("expirationDate", "ASC"));
 
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload", hasSize(2)))
                     .andExpect(jsonPath("$.payload[0].key", is(CONSUMER_KEY_1)))

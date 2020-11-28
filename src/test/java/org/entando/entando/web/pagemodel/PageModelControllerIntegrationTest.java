@@ -233,7 +233,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(PAGE_MODEL_WITH_DOT_CODE)))
                     .andExpect(jsonPath("$.payload.descr", is("description")))
@@ -254,14 +254,14 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(PAGE_MODEL_WITH_DOT_CODE)))
                     .andExpect(jsonPath("$.payload.descr", is("description2")));
             result = mockMvc.perform(
                     get("/pageModels/{code}", PAGE_MODEL_WITH_DOT_CODE)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(PAGE_MODEL_WITH_DOT_CODE)))
                     .andExpect(jsonPath("$.payload.descr", is("description2")));
@@ -270,7 +270,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                     delete("/pageModels/{code}", PAGE_MODEL_WITH_DOT_CODE)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk());
         }
     }
@@ -350,7 +350,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk());
+            result.andDo(resultPrint()).andExpect(status().isOk());
             
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNotNull(pageModel);
