@@ -40,7 +40,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
         ResultActions result = mockMvc
                 .perform(get("/fragments")
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print());
+        result.andDo(resultPrint());
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(1)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
@@ -137,7 +137,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
 
         mockMvc.perform(get("/fragments/{code}/usage".replace("{code}", code))
                 .header("Authorization", "Bearer " + accessToken))
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors", Matchers.hasSize(0)))
                 .andExpect(jsonPath("$.payload.type", is(GuiFragmentController.COMPONENT_ID)))

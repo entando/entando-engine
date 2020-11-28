@@ -217,29 +217,29 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
                     .content(MAPPER.writeValueAsString(parentCategory))
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
             mockMvc.perform(post("/categories")
                     .content(MAPPER.writeValueAsString(childCategory))
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
             mockMvc.perform(delete("/categories/{code}", parentCategoryCode)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isBadRequest());
 
             mockMvc.perform(delete("/categories/{code}", childCategoryCode)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
             mockMvc.perform(delete("/categories/{code}", parentCategoryCode)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
         } finally {
@@ -317,12 +317,12 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
         String accessToken = mockOAuthInterceptor(user);
         mockMvc.perform(get("/categories"))
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(status().isOk());
 
         Assert.assertNotNull(this.categoryManager.getCategory("home"));
         this.executeDelete("home", accessToken, status().isBadRequest())
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED)))
                 .andExpect(jsonPath("$.errors[0].message",
@@ -373,7 +373,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
                 .perform(post("/categories").content(jsonPost)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken))
-                        .andDo(print());
+                        .andDo(resultPrint());
         return result.andExpect(rm);
     }
 

@@ -220,7 +220,10 @@ public class Filter {
 
     @Override
     public String toString() {
-        return "Filter{" + "attribute=" + attribute + ", operator=" + operator + ", value=" + value + ", allowedValues=[" + String.join(",", allowedValues) + "]}";
+        String allowedValuesDesc = (allowedValues != null) ? "[" + String.join(",", allowedValues) + "]" : "null";
+        return "Filter{" +
+                "attribute=" + attribute + ", operator=" + operator + ", value=" + value + ", " +
+                "allowedValues=" + allowedValuesDesc + "}";
     }
 
 }

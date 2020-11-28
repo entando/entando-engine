@@ -177,7 +177,6 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 			}
 		}
 		_logger.info(log.toString());
-		System.out.println(log.toString());
 		if (!validResponse && selfRestCall.isFailOnError()) {
 			throw new InvalidPostProcessResultException(responseStatus.getStatusCode(), 
 					selfRestCall.getExpectedResult(), path.toString(), method.getHttpMethod());

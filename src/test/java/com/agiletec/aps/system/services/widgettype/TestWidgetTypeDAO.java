@@ -62,10 +62,6 @@ public class TestWidgetTypeDAO extends BaseTestCase {
             e.printStackTrace();
         }
         assertNotNull(widgetType);
-        System.out.println(widgetType.getCode());
-        System.out.println(widgetType.getTitles());
-        System.out.println(widgetType.isReadonlyPageWidgetConfig());
-        System.out.println(widgetType.getWidgetCategory());
         assertEquals("login_form",widgetType.getCode());
         assertTrue(widgetType.isReadonlyPageWidgetConfig());
         assertEquals("system",widgetType.getWidgetCategory());

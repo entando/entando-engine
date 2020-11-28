@@ -267,7 +267,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
         mockMvc.perform(get("/pages/{code}/usage", code)
                 .header("Authorization", "Bearer " + accessToken))
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.type", is(PageController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
@@ -836,7 +836,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(getPageJson("1_POST_valid_page.json", pageCode))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.pageModel", is("service")));
 
@@ -848,7 +848,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(getPageJson("1_PUT_valid_page.json", pageCode))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.pageModel", is("home")));
 
@@ -880,14 +880,14 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(getPageJson("1_POST_valid_page.json", pageCode))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)));
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}", pageCode)
                             .header("Authorization", "Bearer " + accessToken));
 
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.status", is("unpublished")));
 
@@ -899,7 +899,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(mapper.writeValueAsString(pageStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.status", is("published")));
 
@@ -912,7 +912,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isBadRequest())
+            result.andDo(resultPrint()).andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].message", is("Online pages can not be deleted")));
 
@@ -929,7 +929,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(mapper.writeValueAsString(pageStatusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.status", is("unpublished")));
 
@@ -942,7 +942,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk());
+            result.andDo(resultPrint()).andExpect(status().isOk());
 
             page = this.pageManager.getDraftPage(pageCode);
             Assert.assertNull(page);
@@ -953,14 +953,14 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result = mockMvc
                     .perform(get("/pages/{pageCode}", pageCode)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isNotFound());
+            result.andDo(resultPrint()).andExpect(status().isNotFound());
 
             result = mockMvc
                     .perform(post("/pages")
                             .content(getPageJson("1_POST_valid_page.json", pageCode))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print()).andExpect(status().isOk())
+            result.andDo(resultPrint()).andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)));
 
         } finally {
@@ -1052,7 +1052,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk()).andDo(print());
+            result.andExpect(status().isOk()).andDo(resultPrint());
 
             page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
@@ -1093,7 +1093,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(pageRequest)))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.numWidget", is(0)));
@@ -1102,14 +1102,14 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(widgetRequest)))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
             mockMvc.perform(put("/pages/{code}", pageCode)
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(pageRequest)))
-                    .andDo(print()).andDo(print())
+                    .andDo(resultPrint()).andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is(pageCode)))
                     .andExpect(jsonPath("$.payload.numWidget", is(1)));
@@ -1318,7 +1318,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .params(getFilteredParams())
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + adminAccessToken))
-                    .andDo(print());
+                    .andDo(resultPrint());
 
             PageRestResponseAssertionHelper.assertNoFilters(resultActions);
             PageAssertionHelper.assertUsagePageDetails(resultActions, expectedResult);

@@ -84,6 +84,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
                 .perform(get("/fileBrowser").param("protectedFolder", "false")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+        result.andDo(resultPrint());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(2)));
         result.andExpect(jsonPath("$.payload[0].name", is("conf")));
         result.andExpect(jsonPath("$.payload[0].protectedFolder", is(false)));

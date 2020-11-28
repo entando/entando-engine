@@ -351,7 +351,9 @@ public class EntLoggingTest extends TestCase {
         private void delegate_print(Object... arguments) {
             String s = "";
             for (Object e : arguments) {
-                if (e instanceof Object[]) {
+                if (e instanceof Marker) {
+                    s = s.concat("|" + ((Marker) e).getName());
+                } else if (e instanceof Object[]) {
                     for (Object ee : (Object[]) e) {
                         s = s.concat("|" + ee.toString());
                     }

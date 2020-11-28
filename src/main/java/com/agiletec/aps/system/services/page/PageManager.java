@@ -263,7 +263,6 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 this.getCacheWrapper().moveUpDown(pageDown, pageUp);
                 this.getPageDAO().updatePosition(pageDown, pageUp);
             } else {
-                System.out.println("Movement impossible - page to move up {"+pageUp+"} - page to move down " + pageDown);
                 _logger.error("Movement impossible - page to move up {} - page to move down {}", pageUp, pageDown);
             }
         } catch (Throwable t) {

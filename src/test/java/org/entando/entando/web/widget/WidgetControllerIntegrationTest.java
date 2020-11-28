@@ -123,7 +123,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
 
         // @formatter:off
         executeWidgetUsage(code, accessToken, status().isOk())
-                .andDo(print())
+                .andDo(resultPrint())
                 .andExpect(jsonPath("$.payload.type", is(WidgetController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
                 .andExpect(jsonPath("$.payload.usage", is(2)))
@@ -379,7 +379,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
 
             //Update parent, with parameters
             executeWidgetPut(request, parentCode, accessToken, status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(parentCode)))
                     .andExpect(jsonPath("$.payload.parentType", nullValue()))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
@@ -406,7 +406,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setReadonlyPageWidgetConfig(true);
             //When creating and has parent, should also inherit parent paremeters
             executeWidgetPost(request, accessToken, status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
@@ -424,7 +424,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
 
             //When updating, request parameters override everything
             executeWidgetPut(request, childCode, accessToken, status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
                     .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
@@ -435,7 +435,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
 
             //Parent should remain unchanged
             executeWidgetGet(parentCode, accessToken, status().isOk())
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(parentCode)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
                     .andExpect(jsonPath("$.payload.parameters[0].code", is("parentCode")))
@@ -459,7 +459,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         try {
             WidgetRequest request = getWidgetRequest(newWidgetCode);
             ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(newWidgetCode)));
             Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
@@ -470,7 +470,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk());
 
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
@@ -483,7 +483,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                             .content(mapper.writeValueAsString(wcr))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk());
 
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
@@ -493,7 +493,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .perform(get("/pages/{pageCode}/widgets", pageCode)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload[0].code", is(newWidgetCode)))
                     .andExpect(jsonPath("$.payload[1]", Matchers.isEmptyOrNullString()))
@@ -504,14 +504,14 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .perform(delete("/pages/{pageCode}/widgets/{frameId}", new Object[]{pageCode, 0})
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk());
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}/widgets", pageCode)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload[0]", Matchers.isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload[1]", Matchers.isEmptyOrNullString()))
@@ -523,7 +523,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                             .content(mapper.writeValueAsString(wcr))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk());
 
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
@@ -533,7 +533,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
                     .perform(get("/pages/{pageCode}/widgets", pageCode)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andDo(print())
+            result.andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload[0]", Matchers.isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload[1]", Matchers.isEmptyOrNullString()))
@@ -672,7 +672,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             widgetTypeCode = "formAction";
             request.setCode(widgetTypeCode);
             result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
-            result.andDo(print());
+            result.andDo(resultPrint());
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
             //Try to update the config of locked widget with a not null config as previous value using a null config
@@ -681,7 +681,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             request.setCode(widgetTypeCode);
             request.setConfig(null);
             result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isBadRequest());
-            result.andDo(print());
+            result.andDo(resultPrint());
 
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
@@ -695,7 +695,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
 
             request.setConfig(configMap);
             result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
-            result.andDo(print());
+            result.andDo(resultPrint());
 
             result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));

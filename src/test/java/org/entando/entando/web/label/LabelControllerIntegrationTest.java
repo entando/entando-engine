@@ -296,7 +296,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
             languages.put(langManager.getDefaultLang().getCode(), "");
             request.setTitles(languages);
             
-            ResultActions result = this.executePost(request, accessToken, status().isConflict()).andDo(print());
+            ResultActions result = this.executePost(request, accessToken, status().isConflict()).andDo(resultPrint());
             result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
@@ -493,7 +493,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
                             .content(payLoad)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                .andDo(print());
+                .andDo(resultPrint());
         result.andExpect(expected);
         return result;
     }
