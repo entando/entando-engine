@@ -17,13 +17,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.pagemodel.model.FrameDto;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PageModelDtoTest {
 
     @Test
     public void test_json() throws JsonProcessingException {
-
         FrameDto frameDto = new FrameDto();
         frameDto.setPos(0);
         frameDto.setDescr("description");
@@ -35,9 +35,17 @@ public class PageModelDtoTest {
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writer().writeValueAsString(dto);
+        Assert.assertNotNull(json);
 
-        String actual = "{\"code\":\"code\",\"description\":\"description\",\"mainFrame\":-1,\"pluginCode\":null,\"template\":null,\"configuration\":{\"frames\":[{\"pos\":0,\"description\":\"description\",\"mainFrame\":false,\"defaultWidget\":{\"code\":null,\"properties\":{}},\"sketch\":{\"x1\":0,\"y1\":0,\"x2\":0,\"y2\":0}}]}}";
-        //assertThat(json, is(actual));
+/*
+        String actual = "{\"code\":\"code\",\"description\":\"description\"," +
+                "\"mainFrame\":-1,\"pluginCode\":null,\"template\":null," +
+                "\"configuration\":{\"frames\":[{\"pos\":0,\"description\":\"description\"," +
+                "\"mainFrame\":false,\"defaultWidget\":{\"code\":null,\"properties\":{}}," +
+                "\"sketch\":{\"x1\":0,\"y1\":0,\"x2\":0,\"y2\":0}}]}}";
+
+        assertThat(json, is(actual));
+*/
         //TODO replace a string compare with a json compare
     }
 }

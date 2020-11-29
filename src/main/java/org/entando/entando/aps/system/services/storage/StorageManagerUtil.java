@@ -19,6 +19,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.*;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntSanitization;
@@ -149,4 +150,56 @@ public final class StorageManagerUtil {
         return true;
     }
 
+    /**
+     * Tells if a actual path is contained in another actual path
+     * Note that for this function a path doesn't contain itself
+     *
+     * @see #doesPathContainsPath(String, String, boolean)
+     */
+    public static boolean doesPathContainsPath(String basePath, String pathToCheck) throws IOException {
+        return doesPathContainsPath(basePath, pathToCheck, false);
+    }
+
+    /**
+     * Tells if a actual path is contained in another actual path
+     *
+     * @param basePath         the path that should contain
+     * @param pathToCheck      the path that should be contained
+     * @param baseIncludesBase if the paths are the same path, function returns this result
+     * @throws IOException throw by the internal use of {@link FilenameUtils#directoryContains}
+     */
+    public static boolean doesPathContainsPath(String basePath, String pathToCheck, boolean baseIncludesBase) throws IOException {
+        basePath = FilenameUtils.normalize(basePath);
+        if (!basePath.endsWith("/")) basePath = basePath.concat("/");
+        pathToCheck = FilenameUtils.normalize(pathToCheck);
+        try {
+            if (FilenameUtils.directoryContains(basePath, pathToCheck)) {
+                return true;
+            } else {
+                return baseIncludesBase && isSamePathString(basePath, pathToCheck);
+            }
+        } catch (IllegalArgumentException ignore) {
+            return false;
+        }
+    }
+
+    /**
+     * Tells if two actual paths are equivalent
+     */
+    public static boolean isSamePath(String path1, String path2) {
+        path1 = FilenameUtils.normalize(path1);
+        path2 = FilenameUtils.normalize(path2);
+        if (!path1.endsWith("/")) path1 = path1.concat("/");
+        if (!path2.endsWith("/")) path2 = path2.concat("/");
+        return path1.equals(path2);
+    }
+
+    /**
+     * Tells if two path string expressions are equivalent, BUT doesn't compare the actual path
+     */
+    public static boolean isSamePathString(String path1, String path2) {
+        if (!path1.endsWith("/")) path1 = path1.concat("/");
+        if (!path2.endsWith("/")) path2 = path2.concat("/");
+        return path1.equals(path2);
+    }
 }

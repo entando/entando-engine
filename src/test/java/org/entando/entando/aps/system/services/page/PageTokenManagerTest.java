@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.security.SecureRandom;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PageTokenManagerTest {
 
@@ -29,5 +31,19 @@ public class PageTokenManagerTest {
         String code = pageTokenManager.decrypt(token);
         Assert.assertNotNull(code);
         Assert.assertEquals(TEST_PAGE_CODE, code);
+    }
+
+    @Mock
+    SecureRandom secureRandomMock1;
+    @Mock
+    SecureRandom secureRandomMock2;
+
+    @Test
+    public void testMkRandomString() {
+        Assert.assertEquals(33, PageTokenManager.mkRandomString(33).length());
+        Mockito.doReturn(0).when(secureRandomMock1).nextInt(Mockito.anyInt());
+        Assert.assertEquals("AAAAAAAAAAAAAAA", PageTokenManager.mkRandomString(secureRandomMock1, 15));
+        Mockito.doReturn(60).when(secureRandomMock2).nextInt(Mockito.anyInt());
+        Assert.assertEquals("999999999999999", PageTokenManager.mkRandomString(secureRandomMock2, 15));
     }
 }

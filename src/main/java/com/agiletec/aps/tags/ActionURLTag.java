@@ -72,7 +72,8 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 			if (null != this.getVar()) {
 				this.pageContext.setAttribute(this.getVar(), path);
 			} else {
-				this.pageContext.getOut().print(path);
+				String encodedPath = org.owasp.encoder.Encode.forHtmlContent(path);
+				this.pageContext.getOut().print(encodedPath);
 			}
 		} catch (IOException e) {
 			_logger.error("Error closing tag", e);

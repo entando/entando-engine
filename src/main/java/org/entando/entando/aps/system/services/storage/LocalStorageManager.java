@@ -13,20 +13,24 @@
  */
 package org.entando.entando.aps.system.services.storage;
 
-import org.apache.commons.io.FilenameUtils;
-import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharEncoding;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.BiFunction;
+
+import static org.entando.entando.aps.system.services.storage.StorageManagerUtil.isSamePath;
 
 public class LocalStorageManager implements IStorageManager {
 
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManager.class);
+	private static final String ERROR_EXTRACTING_STREAM_DESC = "Error extracting stream";
 
 	private String baseURL;
 	private String baseDiskRoot;
@@ -72,30 +76,55 @@ public class LocalStorageManager implements IStorageManager {
 	@Override
 	public boolean deleteFile(String subPath, boolean isProtectedResource) {
 		subPath = (null == subPath) ? "" : subPath;
-		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		File file = new File(fullPath);
-		if (file.exists()) {
-			return file.delete();
-		}
-		return false;
+		return withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> {
+			try {
+				File fileUnsafe = new File(fullPath);
+				File directory = new File(basePath);
+				if (fileUnsafe.exists()) {
+					if (isSamePath(basePath, fullPath) || FileUtils.directoryContains(directory, fileUnsafe)) {
+						return fileUnsafe.delete();
+					}
+				}
+				return false;
+			} catch (IOException | IllegalArgumentException e) {
+				handleStorageFunctionProblem(e, "Error while deleting file");
+			}
+			return false;
+		});
+	}
+
+	private EntRuntimeException mkPathValidationErr(String diskRoot, String fullPath) {
+		return new EntRuntimeException(
+				String.format("Path validation failed: \"%s\" not in \"%s\"", fullPath, diskRoot)
+		);
 	}
 
 	@Override
 	public void createDirectory(String subPath, boolean isProtectedResource) {
-		subPath = (null == subPath) ? "" : subPath;
-		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		File dir = new File(fullPath);
-		if (!dir.exists() || !dir.isDirectory()) {
-			dir.mkdirs();
-		}
+		withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> {
+			File dir = new File(fullPath);
+			if (!dir.exists() || !dir.isDirectory()) {
+				return dir.mkdirs();
+			}
+			return false;
+		});
 	}
 
 	@Override
-	public void deleteDirectory(String subPath, boolean isProtectedResource) {
+	public void deleteDirectory(String subPath, boolean isProtectedResource) throws EntException {
 		subPath = (null == subPath) ? "" : subPath;
-		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		File dir = new File(fullPath);
-		this.delete(dir);
+		withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> {
+			try {
+				File targetDir = new File(fullPath);
+				File baseDir = new File(basePath);
+				if (FileUtils.directoryContains(baseDir, targetDir)) {
+					return this.delete(targetDir);
+				}
+			} catch (IOException | IllegalArgumentException e) {
+				handleStorageFunctionProblem(e, "Error while deleting directory");
+			}
+			return false;
+		});
 	}
 
 	private boolean delete(File file) {
@@ -125,13 +154,17 @@ public class LocalStorageManager implements IStorageManager {
 		try {
 			subPath = (null == subPath) ? "" : subPath;
 			String fullPath = this.createFullPath(subPath, isProtectedResource);
+			String basePath = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
 			File file = new File(fullPath);
-			if (file.exists() && !file.isDirectory()) {
-				return new FileInputStream(file);
+			if (FileUtils.directoryContains(new File(basePath), file)) {
+				if (file.exists() && !file.isDirectory()) {
+					return new FileInputStream(file);
+				}
 			}
+		} catch (IOException | IllegalArgumentException | EntRuntimeException e) {
+			handleStorageFunctionProblem(e, ERROR_EXTRACTING_STREAM_DESC);
 		} catch (Throwable t) {
-			logger.error("Error extracting stream", t);
-			throw new EntException("Error extracting stream", t);
+			throw new EntException(ERROR_EXTRACTING_STREAM_DESC, t);
 		}
 		return null;
 	}
@@ -256,20 +289,25 @@ public class LocalStorageManager implements IStorageManager {
 
 	@Override
 	public String createFullPath(String subPath, boolean isProtectedResource) {
-		subPath = (null == subPath) ? "" : subPath;
-		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
-		String resPath = this.createPath(diskRoot, subPath, false);
-		// PATH-TRAVERSAL-CHECK
+		return withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> fullPath);
+	}
+
+	@Override
+	public <T> T withValidResourcePath(String resourceRelativePath, boolean isProtectedResource,
+									   BiFunction<String, String, T> bip) {
+		//-
+		resourceRelativePath = (resourceRelativePath == null) ? "" : resourceRelativePath;
+		String basePath = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
+		String fullPath = this.createPath(basePath, resourceRelativePath, false);
 		try {
-			if (!diskRoot.endsWith(resPath) && !FilenameUtils.directoryContains(diskRoot, resPath)) {
-				throw new EntRuntimeException(
-						String.format("Path validation failed: \"%s\" not in \"%s\"", resPath, diskRoot)
-				);
+			if (StorageManagerUtil.doesPathContainsPath(basePath, fullPath, true)) {
+				return bip.apply(basePath, fullPath);
+			} else {
+				throw mkPathValidationErr(basePath, fullPath);
 			}
-        } catch (IOException e) {
-            throw new EntRuntimeException("Error validating the path", e);
-        }
-		return resPath;
+		} catch (IOException ex) {
+			throw mkPathValidationErr(basePath, fullPath);
+		}
 	}
 
 	private String createPath(String basePath, String subPath, boolean isUrlPath) {
@@ -305,25 +343,34 @@ public class LocalStorageManager implements IStorageManager {
 	private BasicFileAttributeView[] listAttributes(String subPath, boolean isProtectedResource, Boolean searchDirectory) {
 		subPath = (null == subPath) ? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		File directory = new File(fullPath);
-		if (directory.exists() && directory.isDirectory()) {
-			BasicFileAttributeView[] objects = new BasicFileAttributeView[]{};
-			String folder = fullPath;
-			if (!folder.endsWith("/")) {
-				folder += "/";
-			}
-			String[] contents = directory.list();
-			for (String string : Objects.requireNonNull(contents)) {
-				File file = new File(folder + string);
-				if (null == searchDirectory || (file.isDirectory() && searchDirectory) || (!file.isDirectory() && !searchDirectory)) {
-					BasicFileAttributeView bfav = new BasicFileAttributeView(file);
-					objects = this.addChild(bfav, objects);
+		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
+
+		try {
+			File directory = new File(fullPath);
+			if (isSamePath(diskRoot, fullPath) || FileUtils.directoryContains(new File(diskRoot), directory)) {
+				if (directory.exists() && directory.isDirectory()) {
+					BasicFileAttributeView[] objects = new BasicFileAttributeView[]{};
+					String folder = fullPath;
+					if (!folder.endsWith("/")) {
+						folder += "/";
+					}
+					String[] contents = directory.list();
+					for (String string : Objects.requireNonNull(contents)) {
+						File file = new File(folder + string);
+						if (null == searchDirectory || (file.isDirectory() && searchDirectory) || (!file.isDirectory() && !searchDirectory)) {
+							BasicFileAttributeView bfav = new BasicFileAttributeView(file);
+							objects = this.addChild(bfav, objects);
+						}
+					}
+					Arrays.sort(objects);
+					return objects;
 				}
 			}
-			Arrays.sort(objects);
-			return objects;
+		} catch (IOException | IllegalArgumentException e) {
+			handleStorageFunctionProblem(e, "Error while listing attributes");
 		}
-		return null;
+
+		return new BasicFileAttributeView[]{};
 	}
 
 	protected BasicFileAttributeView[] addChild(BasicFileAttributeView elementToAdd, BasicFileAttributeView[] objects) {
@@ -382,5 +429,20 @@ public class LocalStorageManager implements IStorageManager {
 
 	public String getAllowedEditExtensions() {
 		return allowedEditExtensions;
+	}
+
+	@SuppressWarnings("java:S1871")
+	public void handleStorageFunctionProblem(Exception e, String msg) {
+		if (e instanceof IOException) {
+			// Invalid access cases, like non-existent paths
+			logger.warn(msg, e);
+		} else if (e instanceof IllegalArgumentException) {
+			// Invalid argument cases, like file instead of dir or null values
+			logger.warn(msg, e);
+		} else if (e instanceof EntRuntimeException) {
+			// Explicitly handled low-level cases like path validation errors
+			logger.debug(msg, e);
+			throw (EntRuntimeException) e;
+		}
 	}
 }

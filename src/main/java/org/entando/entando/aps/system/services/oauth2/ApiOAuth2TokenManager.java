@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.services.oauth2;
 
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -23,6 +25,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -31,6 +34,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 public class ApiOAuth2TokenManager extends AbstractOAuthManager implements IApiOAuth2TokenManager {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApiOAuth2TokenManager.class);
+    public static final int ACCESS_TOKEN_LEN = 32;
     private transient ScheduledExecutorService scheduler = null;
 
     private IOAuth2TokenDAO oAuth2TokenDAO;
@@ -122,9 +126,16 @@ public class ApiOAuth2TokenManager extends AbstractOAuthManager implements IApiO
     }
 
     protected OAuth2AccessToken getAccessToken(String principal, String clientId, String grantType) {
-        String tokenPrefix = principal + System.nanoTime();
-        final String accessToken = DigestUtils.md5Hex(tokenPrefix + "_accessToken");
-        final String refreshToken = DigestUtils.md5Hex(tokenPrefix + "_refreshToken");
+        byte[] array1 = new byte[8];
+        new SecureRandom().nextBytes(array1);
+        String tokenPrefix1 = principal + new String(Hex.encode(array1));
+        final String accessToken = DigestUtils.sha256Hex(tokenPrefix1 + "_accessToken").substring(0, ACCESS_TOKEN_LEN);
+
+        byte[] array2 = new byte[8];
+        new SecureRandom().nextBytes(array2);
+        String tokenPrefix2 = principal + Arrays.toString(Hex.encode(array2));
+        final String refreshToken = DigestUtils.sha256Hex(tokenPrefix2 + "_refreshToken").substring(0, ACCESS_TOKEN_LEN);
+
         final OAuth2AccessTokenImpl oAuth2Token = new OAuth2AccessTokenImpl(accessToken);
         oAuth2Token.setRefreshToken(new DefaultOAuth2RefreshToken(refreshToken));
         oAuth2Token.setClientId(clientId);
