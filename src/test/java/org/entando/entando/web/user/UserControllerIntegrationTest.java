@@ -99,7 +99,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .perform(get("/users")
                         .param("withProfile", "1")
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print())
+        result.andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(1))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
@@ -135,7 +135,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                         .param("filter[1].operator", "eq")
                         .param("filter[1].value", "All")
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print())
+        result.andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload", Matchers.hasSize(Matchers.greaterThan(0))))
                 .andExpect(jsonPath("$.metaData.additionalParams.withProfile", is("1")))
@@ -149,7 +149,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                 .perform(get("/users/" + username)
                 .header("Authorization", "Bearer " + accessToken));
 
-        result.andDo(print())
+        result.andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.username", is(username)))
                 .andExpect(jsonPath("$.payload.profileType.typeCode", is("PFL")))
@@ -822,7 +822,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                             .content(request)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_default_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
@@ -850,7 +850,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                             .content(profileRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk());
 
             file = this.getClass().getResourceAsStream("1_POST_user_with_profile.json");
@@ -862,7 +862,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                             .content(userRequest)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("AAA")))
@@ -894,7 +894,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                             .content(request)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))
@@ -908,7 +908,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
                             .content(request)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
+                    .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.username", Matchers.is("user_with_profile")))
                     .andExpect(jsonPath("$.payload.profileType.typeCode", Matchers.is("PFL")))

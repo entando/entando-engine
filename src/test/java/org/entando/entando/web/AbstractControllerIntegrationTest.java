@@ -23,10 +23,8 @@ import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +34,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CorsFilter;
@@ -167,4 +168,21 @@ public class AbstractControllerIntegrationTest {
             this.jsonMapper = jsonMapper;
         }
     }
+
+    private static class NopResultHandler implements ResultHandler {
+        private NopResultHandler() {
+        }
+
+        public void handle(MvcResult result) throws Exception {
+        }
+    }
+
+    boolean restResultPrintIsEnabled = ("" + System.getProperty("org.entando.test.enableResultPrint")).equals("true");
+
+    public ResultHandler resultPrint() {
+        return (restResultPrintIsEnabled)
+                ? MockMvcResultHandlers.print()
+                : new NopResultHandler();
+    }
+
 }

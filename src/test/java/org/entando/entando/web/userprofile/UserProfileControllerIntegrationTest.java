@@ -385,7 +385,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{username})
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print()).andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
 
@@ -397,7 +397,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print()).andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
 
@@ -409,7 +409,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print()).andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
 
@@ -421,7 +421,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
-        result.andDo(print()).andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
 

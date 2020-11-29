@@ -186,7 +186,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
                         .param("pageSize", "4")
                         .param("direction", "ASC")
                         .header("Authorization", "Bearer " + accessToken))
-                .andDo(print());
+                .andDo(resultPrint());
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload[0].code", is("administrators")));
 
