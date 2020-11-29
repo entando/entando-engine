@@ -825,5 +825,28 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<description>
+			<![CDATA[Check and print the value of token "nonce" created for implement XSS protection using content security policies (CSP)]]>
+		</description>
+		<name>cspNonce</name>
+		<tag-class>org.entando.entando.aps.tags.CspNonceTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				<![CDATA[Name used to reference the value pushed into the pageContext.]]>
+			</description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Decides whether to escape the special characters in the information retrieved or not.
+				Value admitted (true|false), the default is true.]]></description>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
 	
 </taglib>

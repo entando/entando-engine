@@ -936,7 +936,7 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 <@s.else>
 	<p><@wp.i18n key="ENTANDO_API_NO_RESOURCES" /></p>
 </@s.else>
-<script>
+<script nonce="<@wp.cspNonce />" >
   $(function () {
     $(''#api-togglers a:first'').tab(''show'');
   })
