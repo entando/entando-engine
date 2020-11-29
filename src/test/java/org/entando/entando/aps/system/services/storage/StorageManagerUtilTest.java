@@ -17,6 +17,8 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class StorageManagerUtilTest {
 
     @Test
@@ -149,7 +151,6 @@ public class StorageManagerUtilTest {
 
         // INVALID FILENAME
         try {
-
             StorageManagerUtil.mustBeValidDirName("../dir");
         } catch (EntRuntimeException e) {
             ex = e;
@@ -158,4 +159,48 @@ public class StorageManagerUtilTest {
         Assert.assertNotNull("no exception was throw for invalid dir names", ex);
         Assert.assertEquals("Invalid directory name detected: \"../dir\"", ex.getMessage());
     }
+
+
+    @Test
+    public void testDoesPathContainsPath() throws IOException {
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc/", "/etc/x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc//x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etcx/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etc /x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/./x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc//x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/zz/../x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/zz/./../x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../etc/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../etc /x"));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../etc/ x"));
+        // "..." is a proper file/dir name
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/..."));
+        // "..." is a proper fil/dir name
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/.../etc/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../../etc/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../../z/etc/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/../..//etc/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etx/x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/etc", "/etx/../x"));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/a/b/c", "/a/b/c", false));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("/a/b/c/", "/a/b/c", false));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/c", "/a/b/c", true));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/c/", "/a/b/c", true));
+        Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/../b/c/", "/a/b/c", true));
+    }
+
+    @Test
+    public void testIsSamePath() {
+        Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/c", "a/b/c/"));
+        Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/../b/c", "a/b/c/"));
+    }
+
+    @Test
+    public void testIsSamePathString() {
+        Assert.assertTrue(StorageManagerUtil.isSamePathString("a/b/c", "a/b/c/"));
+        Assert.assertFalse(StorageManagerUtil.isSamePathString("a/b/../b/c", "a/b/c/"));
+    }
+
 }

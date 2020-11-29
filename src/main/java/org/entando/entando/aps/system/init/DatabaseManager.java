@@ -25,8 +25,8 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
-import org.apache.commons.io.FilenameUtils;
 import com.agiletec.aps.system.ApsSystemUtils;
+import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
@@ -524,15 +524,7 @@ public class DatabaseManager extends AbstractInitializerManager
         try {
             String baseDir = this.getLocalBackupsFolder();
             String directoryName = baseDir + subFolderName;
-            // PATH-TRAVERSAL-CHECK
-            if (!FilenameUtils.directoryContains(baseDir, directoryName)) {
-                throw new EntRuntimeException(
-                        String.format("Path validation failed: \"%s\" not in \"%s\"", directoryName, baseDir)
-                );
-            }
-            //-
             this.getStorageManager().deleteDirectory(directoryName, true);
-
         } catch (Throwable t) {
             logger.error("Error while deleting backup", t);
             throw new EntException("Error while deleting backup", t);
@@ -586,19 +578,20 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     private boolean checkBackupFolder(String subFolderName) throws EntException, IOException {
-        String dirName = this.getLocalBackupsFolder();
-        String reportFileName = dirName + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
-        // PATH-TRAVERSAL-CHECK
-        if (!FilenameUtils.directoryContains(dirName, reportFileName)) {
+        String localBackupFolderRoot = this.getLocalBackupsFolder();
+        String reportFileName = localBackupFolderRoot + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
+
+        if (StorageManagerUtil.doesPathContainsPath(localBackupFolderRoot, reportFileName)) {
+            if (!this.getStorageManager().exists(reportFileName, true)) {
+                logger.warn("dump report file name not found in path {}", reportFileName);
+                return false;
+            }
+        } else {
             throw new EntRuntimeException(
-                    String.format("Path validation failed: \"%s\" not in \"%s\"", reportFileName, dirName)
+                    String.format("Path validation failed: \"%s\" not in \"%s\"", reportFileName, localBackupFolderRoot)
             );
         }
-        //-
-        if (!this.getStorageManager().exists(reportFileName, true)) {
-            logger.warn("dump report file name not found in path {}", reportFileName);
-            return false;
-        }
+
         return true;
     }
 
@@ -758,5 +751,4 @@ public class DatabaseManager extends AbstractInitializerManager
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
-
 }

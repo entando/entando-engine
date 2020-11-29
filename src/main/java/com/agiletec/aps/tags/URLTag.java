@@ -80,7 +80,8 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 			this.pageContext.setAttribute(this.getVar(), url);
 		} else {
 			try {
-				this.pageContext.getOut().print(url);
+				String encodedUrl = org.owasp.encoder.Encode.forHtmlContent(url);
+				this.pageContext.getOut().print(encodedUrl);
 			} catch (Throwable t) {
 				_logger.error("Error closing tag", t);
 				throw new JspException("Error closing tag", t);
