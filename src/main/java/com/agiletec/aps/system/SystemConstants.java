@@ -49,6 +49,8 @@ public interface SystemConstants {
     public static final String PAR_RESOURCES_DISK_ROOT = "resourceDiskRootFolder";
 
     public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
+    
+    public static final String PAR_CSP_HEADER_EXTRA_CONFIG = "cspHeaderExtraConfig";
 
     /**
      * Nome parametro extra per requestContext: lingua corrente
@@ -93,6 +95,8 @@ public interface SystemConstants {
     public static final String EXTRAPAR_HEAD_INFO_CONTAINER = "HeadInfoContainer";
 
     public static final String EXTRAPAR_EXECUTOR_BEAN_CONTAINER = "reqCtx_param_ExecutorBeanContainer";
+
+    public static final String EXTRAPAR_CSP_NONCE_TOKEN = "reqCtx_param_nonce_token";
 
     /**
      * Nome parametro di sessione: utente corrente

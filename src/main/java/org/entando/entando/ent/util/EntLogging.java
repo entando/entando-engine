@@ -570,7 +570,7 @@ public class EntLogging {
 
         public void info(String format, String arg) {
             if (delegate.isInfoEnabled()) {
-                delegate.info(fms.sanitize(format), svs.sanitize(arg));
+                delegate.info(fms.sanitize(format), svs.sanitize(arg)); //NOSONAR
             }
         }
 
@@ -754,7 +754,7 @@ public class EntLogging {
 
         public void warn(String format, String arg) {
             if (delegate.isWarnEnabled()) {
-                delegate.warn(fms.sanitize(format), svs.sanitize(arg));
+                delegate.warn(fms.sanitize(format), svs.sanitize(arg));     //NOSONAR
             }
         }
 
@@ -790,8 +790,7 @@ public class EntLogging {
         @Override
         public void warn(String format, Object arg1, Object arg2) {
             if (delegate.isWarnEnabled()) {
-                delegate.warn(fms.sanitize(format), ovs.sanitize(arg1),
-                        ovs.sanitize(arg2));
+                delegate.warn(fms.sanitize(format), ovs.sanitize(arg1), ovs.sanitize(arg2)); //NOSONAR
             }
         }
 
@@ -933,7 +932,7 @@ public class EntLogging {
 
         public void error(String format, String arg) {
             if (delegate.isErrorEnabled()) {
-                delegate.error(fms.sanitize(format), svs.sanitize(arg));
+                delegate.error(fms.sanitize(format), svs.sanitize(arg));    //NOSONAR
             }
         }
 
@@ -950,7 +949,7 @@ public class EntLogging {
         @Override
         public void error(String format, Object arg1, Object arg2) {
             if (delegate.isErrorEnabled()) {
-                delegate.error(fms.sanitize(format), ovs.sanitize(arg1), ovs.sanitize(arg2));
+                delegate.error(fms.sanitize(format), ovs.sanitize(arg1), ovs.sanitize(arg2));   //NOSONAR
             }
         }
 
@@ -969,7 +968,7 @@ public class EntLogging {
         @Override
         public void error(String format, Object... arguments) {
             if (delegate.isErrorEnabled()) {
-                delegate.error(fms.sanitize(format), sanitize(arguments));
+                delegate.error(fms.sanitize(format), sanitize(arguments));  //NOSONAR
             }
         }
 

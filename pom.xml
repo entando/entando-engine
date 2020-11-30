@@ -10,7 +10,7 @@
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine</artifactId>
     <packaging>jar</packaging>
-    <version>6.2.0-SNAPSHOT</version>
+    <version>6.3.0-SNAPSHOT</version>
     <name>Entando Core: Engine</name>
     <description>Entando Engine: an agile, modern and user-centric open source Portal platform.</description>
     <url>http://www.entando.com/</url>
@@ -273,6 +273,12 @@
         </pluginManagement>
     </build>
     <dependencies>
+        <!-- OWASP -->
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>1.2.2</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
@@ -280,6 +286,23 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j-core.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

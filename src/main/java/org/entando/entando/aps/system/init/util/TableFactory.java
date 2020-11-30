@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
@@ -138,7 +139,7 @@ public class TableFactory {
 					continue;
 				}
 				try {
-					System.out.println("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
+					ApsSystemUtils.directStdoutTrace("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
 					this.createTable(tableClass, connectionSource);
 					tables.add(tableName);
 				} catch (Throwable t) {

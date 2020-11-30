@@ -122,6 +122,9 @@
                 <entry key="appBuilderBaseURL">
                     <value>${appBuilderBaseURL}</value>
                 </entry>
+                <entry key="cspHeaderExtraConfig">
+                    <value>${csp.header.extraConfig}</value>
+                </entry>
             </map>
         </property>
         <property name="securityConfigPath">

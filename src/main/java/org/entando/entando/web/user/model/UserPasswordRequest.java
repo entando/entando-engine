@@ -54,7 +54,7 @@ public class UserPasswordRequest {
 
     @Override
     public String toString() {
-        return "UserPasswordRequest{" + "username=" + username + ", oldPassword=....., newPassword=.....}";
+        return "UserPasswordRequest{" + "username=" + username + "}";
     }
 
 }

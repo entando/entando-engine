@@ -775,7 +775,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
         PreparedStatement stat = null;
         try {
             String query = "UPDATE " + mustBeValidMetadataTableName(tablename) + " SET updatedat = ? WHERE code = ?";
-            stat = conn.prepareStatement(query);
+            stat = conn.prepareStatement(query);    //NOSONAR
             stat.setTimestamp(1, new Timestamp(date.getTime()));
             stat.setString(2, pageCode);
             stat.executeUpdate();

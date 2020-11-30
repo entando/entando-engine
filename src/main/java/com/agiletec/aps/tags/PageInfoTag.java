@@ -36,6 +36,7 @@ import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.aps.tags.util.IParameterParentTag;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.owasp.encoder.Encode;
 
 /**
  * Returns the information of the specified page. This tag can use the sub-tag
@@ -135,17 +136,17 @@ public class PageInfoTag extends ExtendedTagSupport implements IParameterParentT
 			this.pageContext.setAttribute(this.getVar(), this.getValue());
 		} else {
 			try {
-				if (this.getEscapeXml()) {
-					out(this.pageContext, this.getEscapeXml(), this.getValue());
-				} else {
-					this.pageContext.getOut().print(this.getValue());
-				}
+				this.pageContext.getOut().print(mkSafeForHtmlContent(this.getValue()));
 			} catch (IOException e) {
 				_logger.error("Error closing tag", e);
 				// ApsSystemUtils.logThrowable(e, this, "doEndTag");
 				throw new JspException("Error closing tag ", e);
 			}
 		}
+	}
+
+	public static String mkSafeForHtmlContent(String unsafeValue) {
+		return Encode.forHtmlContent(unsafeValue);
 	}
 
 	@Override

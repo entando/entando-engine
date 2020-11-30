@@ -13,7 +13,6 @@
  */
 package org.entando.entando.web.filebrowser;
 
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
@@ -84,6 +83,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
                 .perform(get("/fileBrowser").param("protectedFolder", "false")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+        result.andDo(resultPrint());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(2)));
         result.andExpect(jsonPath("$.payload[0].name", is("conf")));
         result.andExpect(jsonPath("$.payload[0].protectedFolder", is(false)));
