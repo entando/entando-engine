@@ -46,7 +46,7 @@ public class WidgetDto {
     private boolean locked;
     private String widgetCategory;
 
-    protected class GuiFragmentRef {
+    public class GuiFragmentRef {
 
         private String code;
         private String customUi;

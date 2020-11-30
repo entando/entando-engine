@@ -228,7 +228,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         if (type == null) {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);
         }
-        WidgetDto widgetDto = null;
+        WidgetDto widgetDto;
         try {
             if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");

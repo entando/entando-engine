@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.entando.entando.aps.system.init.IComponentManager;
 import org.entando.entando.aps.system.services.assertionhelper.WidgetAssertionHelper;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.mockhelper.WidgetMockHelper;
@@ -232,7 +233,7 @@ public class WidgetServiceTest {
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
 
         // When
-        WidgetDto widgetDto = widgetService.addWidget(widgetRequest);
+        widgetService.addWidget(widgetRequest);
 
         // Then
         ArgumentCaptor<WidgetType> argumentCaptor = ArgumentCaptor.forClass(WidgetType.class);
@@ -241,10 +242,11 @@ public class WidgetServiceTest {
         assertThat(argument.getCode()).isEqualTo(widgetRequest.getCode());
         assertThat(argument.getConfigUi()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(argument.getBundleId()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getCode()).isEqualTo(widgetRequest.getCode());
-        assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
-        assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
+
+        ArgumentCaptor<GuiFragment> fragmentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).addGuiFragment(fragmentCaptor.capture());
+
+        assertThat(fragmentCaptor.getValue().getGui()).isEqualTo(expectedCustomUi);
     }
 
     @Test
@@ -254,9 +256,12 @@ public class WidgetServiceTest {
         WidgetRequest widgetRequest = getWidgetRequest1();
         when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+        GuiFragment mockedFragment = mock(GuiFragment.class);
+        when(mockedFragment.getGui()).thenReturn(expectedCustomUi);
+        when(guiFragmentManager.getUniqueGuiFragmentByWidgetType(any())).thenReturn(mockedFragment);
 
         // When
-        WidgetDto widgetDto = widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
+        widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
 
         // Then
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
@@ -265,10 +270,11 @@ public class WidgetServiceTest {
                 bundleIdCaptor.capture(), anyBoolean(), anyString());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
-        assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getWidgetCategory()).isEqualTo(widgetRequest.getWidgetCategory());
-        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
+
+        ArgumentCaptor<GuiFragment> fragmentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).updateGuiFragment(fragmentCaptor.capture());
+
+        assertThat(fragmentCaptor.getValue().getGui()).isEqualTo(expectedCustomUi);
     }
 
     @Test
@@ -279,9 +285,12 @@ public class WidgetServiceTest {
         widgetRequest.setCustomUi(expectedCustomUi);
         when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+        GuiFragment mockedFragment = mock(GuiFragment.class);
+        when(mockedFragment.getGui()).thenReturn(expectedCustomUi);
+        when(guiFragmentManager.getUniqueGuiFragmentByWidgetType(any())).thenReturn(mockedFragment);
 
         // When
-        WidgetDto widgetDto = widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
+        widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
 
         // Then
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
@@ -290,10 +299,11 @@ public class WidgetServiceTest {
                 bundleIdCaptor.capture(), anyBoolean(), anyString());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getConfigUi()).isEqualTo(widgetRequest.getConfigUi());
-        assertThat(widgetDto.getBundleId()).isEqualTo(widgetRequest.getBundleId());
-        assertThat(widgetDto.getWidgetCategory()).isEqualTo(widgetRequest.getWidgetCategory());
-        assertThat(widgetDto.getGuiFragments().get(0).getCustomUi()).isEqualTo(expectedCustomUi);
+
+        ArgumentCaptor<GuiFragment> fragmentCaptor = ArgumentCaptor.forClass(GuiFragment.class);
+        verify(guiFragmentManager).updateGuiFragment(fragmentCaptor.capture());
+
+        assertThat(fragmentCaptor.getValue().getGui()).isEqualTo(expectedCustomUi);
     }
 
     private WidgetType getWidget1() throws JsonProcessingException {

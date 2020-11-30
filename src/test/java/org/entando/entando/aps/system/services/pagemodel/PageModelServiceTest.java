@@ -76,7 +76,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void add_page_model_calls_page_model_manager() throws Exception {
+    public void addPageModelCallsPageModelManager() throws Exception {
         WidgetType mockType = Mockito.mock(WidgetType.class);
         when(mockType.hasParameter(Mockito.anyString())).thenReturn(true);
         when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(mockType);
@@ -88,7 +88,6 @@ public class PageModelServiceTest {
         assertThat(result.getDescr()).isEqualTo(pageModelRequest.getDescr());
         assertThat(result.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
         assertThat(result.getMainFrame()).isEqualTo(DEFAULT_MAIN_FRAME);
-        assertThat(result.getTemplate()).isEqualTo(pageModelRequest.getTemplate());
     }
 
     @Test 
