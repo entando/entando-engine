@@ -5,12 +5,13 @@ import java.util.regex.Pattern;
 
 public class NonceInjector {
     private static final String NONCE_INJECTION = "nonce=\"<@wp.cspNonce />\"";
+    private static final Pattern SCRIPT_REGEX = Pattern.compile(
+            "(<script)(?:[\\t\\r\\n\\s]+([^\"=]*)=\"([^\"]*)\"[\\t\\r\\n\\s]*)*([^>]*>)");
 
     public static String process(String source) {
         if (source == null) return null;
 
-        Pattern pattern = Pattern.compile("(<script)(?:[\\t\\r\\n\\s]+([^\"=]*)=\"([^\"]*)\"[\\t\\r\\n\\s]*)*([^>]*>)");
-        Matcher matcher = pattern.matcher(source);
+        Matcher matcher = SCRIPT_REGEX.matcher(source);
 
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
