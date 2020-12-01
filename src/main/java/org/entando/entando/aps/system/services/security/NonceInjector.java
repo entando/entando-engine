@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class NonceInjector {
     private static final String NONCE_INJECTION = "nonce=\"<@wp.cspNonce />\"";
     private static final Pattern SCRIPT_REGEX = Pattern.compile(
-            "(<script)(?:[\\t\\r\\n\\s]+([^\"=]*)=\"([^\"]*)\"[\\t\\r\\n\\s]*)*([^>]*>)");
+            "(<script)(?:[\\t\\r\\n\\s]+([^\"=]*)=\"([^\"]*)\"[\\t\\r\\n\\s]*){0,8}([^>]*>)");
 
     private NonceInjector() {
         //Not used
