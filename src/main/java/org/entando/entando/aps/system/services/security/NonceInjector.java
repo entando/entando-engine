@@ -8,6 +8,10 @@ public class NonceInjector {
     private static final Pattern SCRIPT_REGEX = Pattern.compile(
             "(<script)(?:[\\t\\r\\n\\s]+([^\"=]*)=\"([^\"]*)\"[\\t\\r\\n\\s]*)*([^>]*>)");
 
+    private NonceInjector() {
+        //Not used
+    }
+
     public static String process(String source) {
         if (source == null) return null;
 
@@ -17,7 +21,6 @@ public class NonceInjector {
         while (matcher.find()) {
             String replacement;
             if (hasNonce(matcher)) {
-                //Already has nonce
                 replacement = "$0";
             } else {
                 replacement = "$1 " + NONCE_INJECTION;
@@ -34,18 +37,6 @@ public class NonceInjector {
 
     public static boolean hasNonce(Matcher matcher) {
         return matcher.groupCount() == 4 && matcher.group(2) != null && matcher.group(2).equals("nonce");
-    }
-
-    public static void main(String[] args) {
-        System.out.println(NonceInjector.process(
-                "<html><body>\n"
-                        + "<script nonce=\"what\" key=\"value\" another_key=\"value\">\n"
-                        + "<script   key=\"value\"  \t   another_key=\"value\">\n"
-                        + "<script nonce=\"what\">\n"
-                        + "<script key=\"value\" >\n"
-                        + "<script >\n"
-                        + "<script>\n"
-                        + "</body></html>"));
     }
 
 }
