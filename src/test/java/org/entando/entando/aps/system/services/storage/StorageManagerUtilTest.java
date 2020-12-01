@@ -193,8 +193,8 @@ public class StorageManagerUtilTest {
 
     @Test
     public void testIsSamePath() {
-        Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/c", "a/b/c/"));
-        Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/../b/c", "a/b/c/"));
+        Assert.assertTrue(StorageManagerUtil.isSamePathString("a/b/c", "a/b/c/"));
+        Assert.assertTrue(StorageManagerUtil.isSamePathString("a/b/../b/c", "a/b/c/"));
     }
 
     @Test

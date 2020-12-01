@@ -25,12 +25,15 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-import static org.entando.entando.aps.system.services.storage.StorageManagerUtil.isSamePath;
+import static org.entando.entando.aps.system.services.storage.StorageManagerUtil.isSamePathString;
 
 public class LocalStorageManager implements IStorageManager {
 
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManager.class);
 	private static final String ERROR_EXTRACTING_STREAM_DESC = "Error extracting stream";
+	private static final String UNIX_SEP = "/";
+	private static final String URL_SEP = "/";
+	private static final String WINDOWS_SEP = "\\";
 
 	private String baseURL;
 	private String baseDiskRoot;
@@ -81,7 +84,7 @@ public class LocalStorageManager implements IStorageManager {
 				File fileUnsafe = new File(fullPath);
 				File directory = new File(basePath);
 				if (fileUnsafe.exists()) {
-					if (isSamePath(basePath, fullPath) || FileUtils.directoryContains(directory, fileUnsafe)) {
+					if (isSamePathString(basePath, fullPath) || FileUtils.directoryContains(directory, fileUnsafe)) {
 						return fileUnsafe.delete();
 					}
 				}
@@ -312,8 +315,10 @@ public class LocalStorageManager implements IStorageManager {
 
 	private String createPath(String basePath, String subPath, boolean isUrlPath) {
 		subPath = (null == subPath) ? "" : subPath;
-		String separator = (isUrlPath) ? "/" : File.separator;
-		boolean baseEndWithSlash = basePath.endsWith(separator);
+		String separator = (isUrlPath) ? URL_SEP : File.separator;
+		boolean baseEndWithSlash = basePath.endsWith(separator) ||
+				basePath.endsWith(UNIX_SEP) ||
+				basePath.endsWith(WINDOWS_SEP);
 		boolean subPathStartWithSlash = subPath.startsWith(separator);
 		if ((baseEndWithSlash && !subPathStartWithSlash) || (!baseEndWithSlash && subPathStartWithSlash)) {
 			return basePath + subPath;
@@ -347,7 +352,7 @@ public class LocalStorageManager implements IStorageManager {
 
 		try {
 			File directory = new File(fullPath);
-			if (isSamePath(diskRoot, fullPath) || FileUtils.directoryContains(new File(diskRoot), directory)) {
+			if (isSamePathString(diskRoot, fullPath) || FileUtils.directoryContains(new File(diskRoot), directory)) {
 				if (directory.exists() && directory.isDirectory()) {
 					BasicFileAttributeView[] objects = new BasicFileAttributeView[]{};
 					String folder = fullPath;

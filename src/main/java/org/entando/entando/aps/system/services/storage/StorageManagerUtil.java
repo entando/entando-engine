@@ -23,8 +23,12 @@ import java.io.IOException;
 import java.util.regex.*;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntSanitization;
+import org.springframework.lang.Nullable;
 
 public final class StorageManagerUtil {
+
+    private static final String PATH_SEP_WINDOWS = "\\";
+    private static final String PATH_SEP_UNIX = "/";
 
     private StorageManagerUtil() {
         // Utility class, not to be instantiated
@@ -169,9 +173,9 @@ public final class StorageManagerUtil {
      * @throws IOException throw by the internal use of {@link FilenameUtils#directoryContains}
      */
     public static boolean doesPathContainsPath(String basePath, String pathToCheck, boolean baseIncludesBase) throws IOException {
-        basePath = FilenameUtils.normalize(basePath);
-        if (!basePath.endsWith("/")) basePath = basePath.concat("/");
-        pathToCheck = FilenameUtils.normalize(pathToCheck);
+        if (basePath == null || pathToCheck == null) return false;
+        basePath = normalizePathForComparison(basePath);
+        pathToCheck = normalizePathForComparison(pathToCheck);
         try {
             if (FilenameUtils.directoryContains(basePath, pathToCheck)) {
                 return true;
@@ -184,22 +188,17 @@ public final class StorageManagerUtil {
     }
 
     /**
-     * Tells if two actual paths are equivalent
-     */
-    public static boolean isSamePath(String path1, String path2) {
-        path1 = FilenameUtils.normalize(path1);
-        path2 = FilenameUtils.normalize(path2);
-        if (!path1.endsWith("/")) path1 = path1.concat("/");
-        if (!path2.endsWith("/")) path2 = path2.concat("/");
-        return path1.equals(path2);
-    }
-
-    /**
      * Tells if two path string expressions are equivalent, BUT doesn't compare the actual path
      */
     public static boolean isSamePathString(String path1, String path2) {
-        if (!path1.endsWith("/")) path1 = path1.concat("/");
-        if (!path2.endsWith("/")) path2 = path2.concat("/");
-        return path1.equals(path2);
+        if (path1 == null || path2 == null) return false;
+        return normalizePathForComparison(path1).equals(normalizePathForComparison(path2));
+    }
+
+    private static String normalizePathForComparison(@Nullable String path) {
+        if (path == null) return null;
+        path = FilenameUtils.normalize(path);
+        return (path.endsWith(PATH_SEP_WINDOWS) || path.endsWith(PATH_SEP_UNIX)) ?
+                path.substring(0, path.length() - 1) : path;
     }
 }
