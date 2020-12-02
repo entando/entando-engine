@@ -9,6 +9,7 @@ public class FragmentMockHelper {
     public static final String FRAGMENT_CODE = "fragment1";
     public static final String FRAGMENT_REF_1_CODE = "fragment_ref_1";
     public static final String FRAGMENT_REF_2_CODE = "fragment_ref_2";
+    public static final String GUI_CODE = "<script>my_js_script</script>";
 
     public static GuiFragment mockGuiFragment() {
         return mockGuiFragment(FRAGMENT_CODE);
@@ -18,6 +19,7 @@ public class FragmentMockHelper {
         GuiFragment fragment = new GuiFragment();
         fragment.setCode(fragmentCode);
         fragment.setWidgetTypeCode(WidgetMockHelper.WIDGET_1_CODE);
+        fragment.setGui(GUI_CODE);
         return fragment;
     }
 

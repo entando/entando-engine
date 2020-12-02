@@ -108,7 +108,7 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for APS");
-        
+
         //
         suite.addTest(new JUnit4TestAdapter(FileTextReaderTest.class));
         //
@@ -251,9 +251,9 @@ public class AllTests {
 
         suite.addTest(new JUnit4TestAdapter(SwaggerConfigTest.class));
         suite.addTest(new JUnit4TestAdapter(SwaggerMvcAdapterTest.class));
-        
+
         suite.addTest(new JUnit4TestAdapter(CspNonceTagTest.class));
-        
+
         return suite;
     }
 
