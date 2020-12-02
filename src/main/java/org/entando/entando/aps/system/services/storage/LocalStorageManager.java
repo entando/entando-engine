@@ -31,6 +31,9 @@ public class LocalStorageManager implements IStorageManager {
 
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManager.class);
 	private static final String ERROR_EXTRACTING_STREAM_DESC = "Error extracting stream";
+	private static final String UNIX_SEP = "/";
+	private static final String URL_SEP = "/";
+	private static final String WINDOWS_SEP = "\\";
 
 	private String baseURL;
 	private String baseDiskRoot;
@@ -312,8 +315,10 @@ public class LocalStorageManager implements IStorageManager {
 
 	private String createPath(String basePath, String subPath, boolean isUrlPath) {
 		subPath = (null == subPath) ? "" : subPath;
-		String separator = (isUrlPath) ? "/" : File.separator;
-		boolean baseEndWithSlash = basePath.endsWith(separator);
+		String separator = (isUrlPath) ? URL_SEP : File.separator;
+		boolean baseEndWithSlash = basePath.endsWith(separator) ||
+				basePath.endsWith(UNIX_SEP) ||
+				basePath.endsWith(WINDOWS_SEP);
 		boolean subPathStartWithSlash = subPath.startsWith(separator);
 		if ((baseEndWithSlash && !subPathStartWithSlash) || (!baseEndWithSlash && subPathStartWithSlash)) {
 			return basePath + subPath;

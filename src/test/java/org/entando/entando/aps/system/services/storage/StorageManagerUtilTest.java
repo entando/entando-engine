@@ -189,18 +189,20 @@ public class StorageManagerUtilTest {
         Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/c", "/a/b/c", true));
         Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/c/", "/a/b/c", true));
         Assert.assertTrue(StorageManagerUtil.doesPathContainsPath("/a/b/../b/c/", "/a/b/c", true));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath(null, null, true));
+        Assert.assertFalse(StorageManagerUtil.doesPathContainsPath("..", "..", true));
     }
 
     @Test
     public void testIsSamePath() {
         Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/c", "a/b/c/"));
         Assert.assertTrue(StorageManagerUtil.isSamePath("a/b/../b/c", "a/b/c/"));
+        Assert.assertFalse(StorageManagerUtil.isSamePath(null, "a/b/c/"));
+        Assert.assertFalse(StorageManagerUtil.isSamePath("..", "a/b/c/"));
+        Assert.assertFalse(StorageManagerUtil.isSamePath("a/b/c/", null));
+        Assert.assertFalse(StorageManagerUtil.isSamePath("a/b/c/", ".."));
+        Assert.assertFalse(StorageManagerUtil.isSamePath(null, null));
+        Assert.assertFalse(StorageManagerUtil.isSamePath("../etc", "../etc"));
+        Assert.assertFalse(StorageManagerUtil.isSamePath("a/b/../../../b/c", "a/b/../../../b/c"));
     }
-
-    @Test
-    public void testIsSamePathString() {
-        Assert.assertTrue(StorageManagerUtil.isSamePathString("a/b/c", "a/b/c/"));
-        Assert.assertFalse(StorageManagerUtil.isSamePathString("a/b/../b/c", "a/b/c/"));
-    }
-
 }
