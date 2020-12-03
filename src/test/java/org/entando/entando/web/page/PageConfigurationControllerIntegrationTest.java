@@ -89,14 +89,22 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.used", is(0)));
 
-            // Test passing the same config of the widget type
+            // Test passing widget with a config
 
             WidgetConfigurationRequest wcr1 = new WidgetConfigurationRequest();
             wcr1.setCode(newWidgetCode);
             wcr1.setConfig(Collections.singletonMap("key", "value"));
 
             // Update the Widget at frame 0
-            executePutPageFrameWidget(pageCode, wcr1, accessToken, status().isOk());
+            executePutPageFrameWidget(pageCode, wcr1, accessToken, status().isBadRequest());
+
+            // Test passing a widget without config
+
+            WidgetConfigurationRequest wcr2 = new WidgetConfigurationRequest();
+            wcr2.setCode(newWidgetCode);
+            wcr2.setConfig(null);
+            // Update the Widget at frame 0
+            executePutPageFrameWidget(pageCode, wcr2, accessToken, status().isOk());
 
             //Count widget usages
 
