@@ -38,9 +38,7 @@ public class PageConfigurationValidator extends AbstractPaginationValidator {
     public void validateWidgetConfigOverridable(String widgetCode, Map<String, Object> widgetConfig, Errors errors) {
 
         final WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
-
-        if (null != type.getConfig() &&
-                (!type.getConfig().equals(widgetConfig) && type.isReadonlyPageWidgetConfig())) {
+        if (null != widgetConfig && type.isReadonlyPageWidgetConfig()) {
             errors.rejectValue("code", ERRCODE_OPERATION_WIDEGT_CONF_NOT_OVERRIDABLE,
                     new String[]{widgetCode}, "page.widgetconfig.notoverridable");
         }
