@@ -96,7 +96,8 @@ public class GuiFragmentServiceTest {
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
-        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedGui = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         GuiFragmentRequestBody request = validFragmentRequest();
 
         // When
@@ -119,7 +120,8 @@ public class GuiFragmentServiceTest {
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
-        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedGui = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         GuiFragmentRequestBody request = validFragmentRequest();
 
         // When
@@ -142,7 +144,8 @@ public class GuiFragmentServiceTest {
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
-        String expectedGui = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedGui = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         GuiFragmentRequestBody request = validFragmentRequest();
         request.setGuiCode(expectedGui);
 

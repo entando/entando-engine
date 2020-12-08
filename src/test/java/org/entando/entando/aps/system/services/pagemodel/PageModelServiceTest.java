@@ -131,7 +131,8 @@ public class PageModelServiceTest {
 
     @Test
     public void shouldCreateTheRightPageModel() {
-        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
         PageModelRequest pageModelRequest = validPageModelRequest();
         pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
@@ -148,7 +149,8 @@ public class PageModelServiceTest {
 
     @Test
     public void shouldUpdatePageModel() throws Exception {
-        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
         when(widgetTypeManager.getWidgetType(any())).thenReturn(createDefaultWidgetType());
         when(pageModelManager.getPageModel(any())).thenReturn(validPageModel());
@@ -168,7 +170,8 @@ public class PageModelServiceTest {
 
     @Test
     public void shouldNotChangeTemplateWithNonce() throws Exception {
-        String expectedTemplate = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
         when(widgetTypeManager.getWidgetType(any())).thenReturn(createDefaultWidgetType());
         when(pageModelManager.getPageModel(any())).thenReturn(validPageModel());
