@@ -20,8 +20,10 @@ public class NonceInjector {
 
         Matcher scriptsMatcher = SCRIPT_REGEX.matcher(source);
         StringBuffer sb = new StringBuffer();
+        Boolean hasNonce = false;
 
         while (scriptsMatcher.find()) {
+            hasNonce = true;
             String replacement;
             if (hasNonce(scriptsMatcher)) {
                 replacement = "$0";
@@ -38,7 +40,7 @@ public class NonceInjector {
         String processed = scriptsMatcher.appendTail(sb).toString();
 
         Matcher libMatcher = LIB_REGEX.matcher(processed);
-        if (!libMatcher.find()) {
+        if (hasNonce && !libMatcher.find()) {
             processed = LIB_INJECTION + processed;
         }
 

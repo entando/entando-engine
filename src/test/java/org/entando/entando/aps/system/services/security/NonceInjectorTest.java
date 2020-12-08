@@ -22,6 +22,13 @@ public class NonceInjectorTest {
     }
 
     @Test
+    public void shouldNotInjectApsCoreLibIfDoesntHaveNonce() {
+        String source = "<h1>My Title<h1>";
+
+        assertThat(NonceInjector.process(source)).isEqualTo(source);
+    }
+
+    @Test
     public void shouldProcessComplexHtmlAndInsertNonceWhereAppropriate() {
         String source = "<html><body>\n"
                 + "<script nonce=\"what\" key=\"value\" another_key=\"value\">\n"
