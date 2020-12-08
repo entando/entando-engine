@@ -20,7 +20,7 @@ public class NonceInjector {
 
         Matcher scriptsMatcher = SCRIPT_REGEX.matcher(source);
         StringBuffer sb = new StringBuffer();
-        Boolean hasNonce = false;
+        boolean hasNonce = false;
 
         while (scriptsMatcher.find()) {
             hasNonce = true;
