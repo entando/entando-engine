@@ -228,7 +228,8 @@ public class WidgetServiceTest {
     @Test
     public void shouldAddNewWidget() throws Exception {
         // Given
-        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
 
@@ -252,7 +253,8 @@ public class WidgetServiceTest {
     @Test
     public void shouldUpdateWidget() throws Exception {
         // Given
-        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
         when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
@@ -280,7 +282,7 @@ public class WidgetServiceTest {
     @Test
     public void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
         // Given
-        String expectedCustomUi = "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+        String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
         widgetRequest.setCustomUi(expectedCustomUi);
         when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
