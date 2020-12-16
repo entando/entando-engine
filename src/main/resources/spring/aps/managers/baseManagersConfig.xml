@@ -126,7 +126,7 @@
                     <value>${csp.header.extraConfig}</value>
                 </entry>
                 <entry key="cspEnabled">
-                    <value>${csp.header.enabled}</value>
+                    <value>${csp.header.enabled:true}</value>
                 </entry>
             </map>
         </property>
