@@ -1793,7 +1793,6 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 	<Param name="treeStyle_category">classic</Param>
 	<Param name="startLangFromBrowser">false</Param>
 	<Param name="firstTimeMessages">false</Param>
-	<Param name="cspEnabled">true</Param>
 	<Param name="baseUrl">request</Param>
 	<Param name="baseUrlContext">true</Param>
   <Param name="useJsessionId">false</Param>

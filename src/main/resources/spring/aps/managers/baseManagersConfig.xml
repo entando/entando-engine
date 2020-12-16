@@ -125,6 +125,9 @@
                 <entry key="cspHeaderExtraConfig">
                     <value>${csp.header.extraConfig}</value>
                 </entry>
+                <entry key="cspEnabled">
+                    <value>${csp.header.enabled}</value>
+                </entry>
             </map>
         </property>
         <property name="securityConfigPath">

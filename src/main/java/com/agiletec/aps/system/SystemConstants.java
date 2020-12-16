@@ -50,6 +50,8 @@ public interface SystemConstants {
 
     public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
     
+    public static final String PAR_CSP_ENABLED = "cspEnabled";
+    
     public static final String PAR_CSP_HEADER_EXTRA_CONFIG = "cspHeaderExtraConfig";
 
     /**
@@ -345,8 +347,6 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
 
     public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
-    
-    public static final String CONFIG_PARAM_CSP_ENABLED = "cspEnabled";
 
     public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
 
