@@ -345,6 +345,8 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
 
     public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
+    
+    public static final String CONFIG_PARAM_CSP_ENABLED = "cspEnabled";
 
     public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
 
