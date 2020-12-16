@@ -74,7 +74,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test public void
-    get_all_page_models_return_ok() throws Exception {
+    getAllPageModelsReturnOk() throws Exception {
 
         when(pageModelService.getPageModels(any(RestListRequest.class), any())).thenReturn(pagedMetadata());
 
@@ -122,7 +122,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test public void
-    add_page_model_empty_return_bad_request() throws Exception {
+    addPageModelEmptyReturnBadRequest() throws Exception {
         PageModelRequest pageModel = new PageModelRequest();
 
         mockMvc.perform(
@@ -134,8 +134,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
                .andExpect(jsonPath("$.errors.length()", is(3)));
     }
 
-    @Test public void
-    add_page_model_with_invalid_first_frame_return_bad_request() throws Exception {
+    @Test public void addPageModelWithInvalidFirstFrameReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithInvalidFirstFrame();
 
@@ -166,7 +165,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
 
     @Test
     public void
-    add_page_model_with_invalid_last_frame_return_bad_request() throws Exception {
+    addPageModeWithInvalidLastFrameReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithInvalidLastFrame();
 
@@ -196,7 +195,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test public void
-    add_page_model_with_multiple_invalid_frames_return_bad_request() throws Exception {
+    addPageModelWithMultipleInvalidFramesReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithMultipleInvalidFrames();
 
@@ -225,7 +224,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test public void
-    add_page_model_with_frame_missing_description_return_bad_request() throws Exception {
+    addPageModelWithFrameMissingDescriptionReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithFrameMissingDescription();
 
@@ -252,9 +251,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
         return pageModel;
     }
 
-    @Test public void
-    add_simple_valid_page_model_return_OK() throws Exception {
-
+    @Test public void addSimpleValidPageModelReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 post("/pageModels")
                         .content(simplePageModelJson())
@@ -275,7 +272,12 @@ public class PageModelControllerTest extends AbstractControllerTest {
                     + "            \"descr\": \"test_frame\",\n"
                     + "            \"mainFrame\": false,\n"
                     + "            \"defaultWidget\": null,\n"
-                    + "            \"sketch\": null\n"
+                    + "            \"sketch\": {\n"
+                    + "                 \"x1\": 0,"
+                    + "                 \"y1\": 0,"
+                    + "                 \"x2\": 2,"
+                    + "                 \"y2\": 0"
+                    + "              }\n"
                     + "        }]\n"
                     + "    },\n"
                     + "    \"pluginCode\": null,\n"
@@ -284,7 +286,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test public void
-    add_complex_valid_page_model_return_ok() throws Exception {
+    addComplexValidPageModelReturnOk() throws Exception {
 
         mockMvc.perform(
                 post("/pageModels")
