@@ -13,11 +13,10 @@
  */
 package org.entando.entando.web.dataobject;
 
-import java.io.InputStream;
-import java.util.Date;
-
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
@@ -37,13 +36,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.io.InputStream;
+import java.util.Date;
+
 import static com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules.DATE_PATTERN;
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -169,6 +167,46 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             Assert.assertNull(dateAttributeValidationRules.getRangeStart());
             Assert.assertNull(dateAttributeValidationRules.getRangeEnd());
             Assert.assertEquals("10/03/2021",DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
+
+            ResultActions result4 = mockMvc
+                    .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"AAA"})
+                            .header("Authorization", "Bearer " + accessToken));
+            result4.andExpect(status().isOk());
+            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+        } finally {
+            if (null != this.dataObjectManager.getEntityPrototype("AAA")) {
+                ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("AAA");
+            }
+        }
+    }
+
+    @Test
+    public void testAddUpdateListWithNestedDateValidationRules() throws Exception {
+        try {
+            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            this.executeDataTypePost("1_POST_valid.json", accessToken, status().isOk());
+            DataObject addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
+            Assert.assertNotNull(addedType);
+            Assert.assertEquals("Type AAA", addedType.getTypeDescription());
+            Assert.assertEquals(1, addedType.getAttributeList().size());
+
+            this.executeDataTypePut("5_PUT_valid_list_date_nested_attribute.json", "AAA", accessToken, status().isOk());
+
+            addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
+            Assert.assertEquals("MyDataType", addedType.getTypeDescription());
+            ListAttribute listAttribute = (ListAttribute) addedType.getAttributeList().get(1);
+            final AttributeInterface nestedAttributeType = listAttribute.getNestedAttributeType();
+
+            final DateAttributeValidationRules dateAttributeValidationRules = (DateAttributeValidationRules) nestedAttributeType.getValidationRules();
+
+
+            Assert.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
+            Assert.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
+            Assert.assertEquals("10/03/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
+
 
             ResultActions result4 = mockMvc
                     .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"AAA"})
