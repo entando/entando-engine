@@ -65,7 +65,7 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
                 LOGGER.info("Content Security Policy (CSP) extra-config set to: " + cspExtraConfig);
             }
         } else {
-            LOGGER.warn("Content Security Policy (CSP) header is disabled");
+            LOGGER.warn("Content Security Policy (CSP) header is not enabled");
         }
     }
 
