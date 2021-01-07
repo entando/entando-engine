@@ -135,6 +135,7 @@ public class PageModelController {
     public ResponseEntity<SimpleRestResponse<PageModelDto>> updatePageModel(@PathVariable String code,
             @Valid @RequestBody PageModelRequest pageModelRequest, BindingResult bindingResult) {
         this.validateWithBodyName(code, pageModelRequest, bindingResult);
+        this.validatePageModelRequest(pageModelRequest, bindingResult);
         PageModelDto pageModel = this.pageModelService.updatePageModel(pageModelRequest);
         return ResponseEntity.ok(new SimpleRestResponse<>(pageModel));
     }
