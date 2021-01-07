@@ -50,6 +50,8 @@ public interface SystemConstants {
 
     public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
     
+    public static final String PAR_CSP_ENABLED = "cspEnabled";
+    
     public static final String PAR_CSP_HEADER_EXTRA_CONFIG = "cspHeaderExtraConfig";
 
     /**
@@ -421,8 +423,9 @@ public interface SystemConstants {
 
     public static final Integer OAUTH2_REFRESH_TOKEN_DEFAULT_VALIDITY_SECOND = 86400;
 
-
-
+    
+    public static final String ENTANDO_CSP_PROTECTION = "ENTANDO_CSP_ENABLED";
+    public static final String ENTANDO_CSP_EXTRACONFIG = "CSP_HEADER_EXTRACONFIG";
     public static final String ENTANDO_CSRF_PROTECTION = "ENTANDO_CSRF_PROTECTION";
     public static final String ENTANDO_CSRF_ALLOWED_DOMAINS = "ENTANDO_CSRF_ALLOWED_DOMAINS";
     public static final String SEPARATOR_DOMAINS = ",";

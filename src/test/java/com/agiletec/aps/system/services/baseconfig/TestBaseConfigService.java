@@ -35,6 +35,8 @@ public class TestBaseConfigService extends BaseTestCase {
     public void testGetParam() throws EntException {
         String param = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals(param, "notfound");
+        param = this.configInterface.getParam(SystemConstants.PAR_CSP_ENABLED);
+        assertEquals(param, "true");
     }
 
     public void testUpdateParam_1() throws EntException {
