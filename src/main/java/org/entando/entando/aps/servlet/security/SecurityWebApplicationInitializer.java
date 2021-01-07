@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.servlet.security;
 
+import org.entando.entando.web.health.HealthFilter;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 import javax.servlet.ServletContext;
@@ -26,6 +27,7 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
 
     @Override
     protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
+        super.insertFilters(servletContext,new HealthFilter());
         super.beforeSpringSecurityFilterChain(servletContext);
         super.insertFilters(servletContext, new CsrfFilter());
     }

@@ -97,10 +97,10 @@ public class EntityTypeAttributeValidationDto {
             if (null != dateValRule.getRangeEnd()) {
                 this.setRangeEndDate(DateConverter.getFormattedDate((Date) dateValRule.getRangeEnd(), SystemConstants.API_DATE_FORMAT));
             }
-            if (null != dateValRule.getRangeEnd()) {
+            if (null != dateValRule.getRangeStart()) {
                 this.setRangeStartDate(DateConverter.getFormattedDate((Date) dateValRule.getRangeStart(), SystemConstants.API_DATE_FORMAT));
             }
-            if (null != dateValRule.getRangeEnd()) {
+            if (null != dateValRule.getValue()) {
                 this.setEqualDate(DateConverter.getFormattedDate((Date) dateValRule.getValue(), SystemConstants.API_DATE_FORMAT));
             }
             this.setRangeEndDateAttribute(dateValRule.getRangeEndAttribute());

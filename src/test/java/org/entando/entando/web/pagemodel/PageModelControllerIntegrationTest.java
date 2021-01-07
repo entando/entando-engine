@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.services.pagemodel.FrameSketch;
+import com.agiletec.aps.util.FileTextReader;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
@@ -36,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
+import org.entando.entando.web.pagemodel.model.PageModelConfigurationRequest;
 import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -46,6 +49,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -98,17 +105,17 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     private void deletePageModelsFromPreviousTests() throws EntException {
         pageModelManager.deletePageModel(PAGE_MODEL_CODE);
     }
-    
-    @Test 
-    public void get_all_page_models_return_OK() throws Exception {
+
+    @Test
+    public void getAllPageModelsReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
 
-    @Test 
-    public void get_page_model_return_OK() throws Exception {
+    @Test
+    public void getPageModelReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", "home")
                         .header("Authorization", "Bearer " + accessToken));
@@ -116,8 +123,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(jsonPath("$.payload.references.length()", is(1)));
     }
 
-    @Test 
-    public void get_page_models_reference_1() throws Exception {
+    @Test
+    public void getPageModelsReference1() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "home", "PageManager")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,21 +133,21 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(jsonPath("$.metaData.totalItems", is(25)));
     }
 
-    @Test 
-    public void get_page_models_reference_2() throws Exception {
+    @Test
+    public void getPageModelsReference2() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "service", "PageManager")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.metaData.totalItems", is(10)));
-        
+
         result.andExpect(jsonPath("$.payload.size()", is(10)));
         result.andExpect(jsonPath("$.payload[0].code", is("service")));
         result.andExpect(jsonPath("$.payload[0].status", is("published")));
         result.andExpect(jsonPath("$.payload[0].onlineInstance", is(false)));
         result.andExpect(jsonPath("$.payload[0].titles.it", is("Nodo pagine di servizio")));
-        
+
         result.andExpect(jsonPath("$.payload[5].code", is("service")));
         result.andExpect(jsonPath("$.payload[5].status", is("published")));
         result.andExpect(jsonPath("$.payload[5].onlineInstance", is(true)));
@@ -157,11 +164,11 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                 .andExpect(jsonPath("$.payload.type", is(PageModelController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
                 .andExpect(jsonPath("$.payload.usage", is(25)))
-                .andReturn();;
+                .andReturn();
     }
 
-    @Test 
-    public void add_repeated_page_model_return_conflict() throws Exception {
+    @Test
+    public void addRepeatedPageModelReturnConflict() throws Exception {
         // pageModel home always exists because it's created with DB.
         String payload = createPageModelPayload("home");
         ResultActions result = mockMvc.perform(
@@ -171,8 +178,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isConflict());
     }
 
-    @Test 
-    public void add_page_model_return_OK() throws Exception {
+    @Test
+    public void addPageModelReturnOK() throws Exception {
         String payload = createPageModelPayload(PAGE_MODEL_CODE);
         ResultActions result = mockMvc.perform(
                 post("/pageModels")
@@ -181,19 +188,31 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
-    
+
     private String createPageModelPayload(String pageModelCode) throws JsonProcessingException {
         PageModelRequest pageModelRequest = validPageModelRequest();
         pageModelRequest.setCode(pageModelCode);
+
+        PageModelConfigurationRequest configuration = new PageModelConfigurationRequest();
+        List<PageModelFrameReq> frames = new ArrayList<>();
+
+        FrameSketch frameSkatch = new FrameSketch();
+        frameSkatch.setCoords(0, 1, 2, 1);
+
+        final PageModelFrameReq pageModelFrameReq = new PageModelFrameReq(0, "Position 0");
+        pageModelFrameReq.setSketch(frameSkatch);
+        frames.add(pageModelFrameReq);
+        configuration.setFrames(frames);
+        pageModelRequest.setConfiguration(configuration);
         return createJson(pageModelRequest);
     }
 
     private String createJson(PageModelRequest pageModelRequest) throws JsonProcessingException {
         return jsonMapper.writeValueAsString(pageModelRequest);
     }
-    
-    @Test 
-    public void get_nonexistent_page_model_return_not_found() throws Exception {
+
+    @Test
+    public void getNonexistentPageModelReturnNotFound() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -201,8 +220,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isNotFound());
     }
 
-    @Test 
-    public void delete_page_model_return_OK() throws Exception {
+    @Test
+    public void deletePageModelReturnOK() throws Exception {
         PageModel pageModel = new PageModel();
         pageModel.setCode(PAGE_MODEL_CODE);
         pageModel.setDescription(PAGE_MODEL_CODE);
@@ -214,17 +233,17 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         result.andExpect(status().isOk());
     }
 
-    @Test 
-    public void delete_page_model_nonexistent_code_return_OK() throws Exception {
+    @Test
+    public void deletePageModelNonexistentCodeReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 delete("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
-    
-    @Test 
-    public void add_page_model_with_dot_return_OK() throws Exception {
+
+    @Test
+    public void addPageModelWithDotReturnOK() throws Exception {
         try {
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
             pageModelRequest.setCode(PAGE_MODEL_WITH_DOT_CODE);
@@ -242,8 +261,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.configuration.frames[1].defaultWidget", CoreMatchers.nullValue()));
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_WITH_DOT_CODE);
             Assert.assertNotNull(pageModel);
-            Assert.assertEquals(2, pageModel.getFrames().length);
-            Assert.assertEquals(2, pageModel.getFramesConfig().length);
+            Assert.assertEquals(3, pageModel.getFrames().length);
+            Assert.assertEquals(3, pageModel.getFramesConfig().length);
             Assert.assertNotNull(pageModel.getFramesConfig()[0].getDefaultWidget());
             Assert.assertEquals("leftmenu", pageModel.getFramesConfig()[0].getDefaultWidget().getType().getCode());
             Assert.assertEquals(1, pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().size());
@@ -274,22 +293,28 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(status().isOk());
         }
     }
-    
-    @Test 
-    public void add_page_model_with_errors() throws Exception {
+
+    @Test
+    public void addPageModelWithErrors() throws Exception {
         try {
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
-            PageModelFrameReq newFrames = new PageModelFrameReq(2, "Position 1");
+
+            FrameSketch newSketch = new FrameSketch();
+            newSketch.setCoords(0,3,11,3);
+            final PageModelFrameReq newFrames = new PageModelFrameReq(3, "Position 3");
+            newFrames.setSketch(newSketch);
+
+
             newFrames.getDefaultWidget().setCode("invalid_widget");
             pageModelRequest.getConfiguration().getFrames().add(newFrames);
-            
+
             pageModelRequest.setCode(PAGE_MODEL_CODE);
             ResultActions result = mockMvc.perform(
                     post("/pageModels")
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            
+
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.payload.size()", is(0)));
             result.andExpect(jsonPath("$.errors.size()", is(1)));
@@ -297,16 +322,16 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNull(pageModel);
-            
+
             newFrames.getDefaultWidget().setCode("leftmenu");
             newFrames.getDefaultWidget().getProperties().put("wrongParam", "code(homepage).subtree(8)");
-            
+
             result = mockMvc.perform(
                     post("/pageModels")
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            
+
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.payload.size()", is(0)));
             result.andExpect(jsonPath("$.errors.size()", is(1)));
@@ -314,17 +339,17 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNull(pageModel);
-            
+
             newFrames.getDefaultWidget().getProperties().remove("wrongParam");
             PageModelFrameReq newWrongFrames = new PageModelFrameReq(7, "Position 7");
             pageModelRequest.getConfiguration().getFrames().add(newWrongFrames);
-            
+
             result = mockMvc.perform(
                     post("/pageModels")
                             .content(createJson(pageModelRequest))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
-            
+
             result.andExpect(status().isBadRequest());
             result.andExpect(jsonPath("$.payload.size()", is(0)));
             result.andExpect(jsonPath("$.errors.size()", is(1)));
@@ -332,17 +357,41 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNull(pageModel);
-            
+
         } catch (Exception e) {
             throw e;
         } finally {
             this.pageModelManager.deletePageModel(PAGE_MODEL_CODE);
         }
     }
-    
-    @Test 
-    public void update_page_model_with_errors() throws Exception {
+
+
+    @Test
+    public void addPageModelWithoutConfigurationReturnBadRequest() throws Exception {
         try {
+            PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
+            pageModelRequest.setConfiguration(null);
+
+            pageModelRequest.setCode(PAGE_MODEL_CODE);
+            ResultActions result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(createJson(pageModelRequest))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+            result.andExpect(jsonPath("$.payload.size()", is(0)));
+            result.andExpect(jsonPath("$.errors.size()", is(1)));
+            result.andExpect(jsonPath("$.errors[0].code", is("53")));
+            result.andExpect(jsonPath("$.metaData.size()", is(0)));
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    @Test
+    public void updatePageModelWithErrors() throws Exception {
+        try {
+
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
             pageModelRequest.setCode(PAGE_MODEL_CODE);
             ResultActions result = mockMvc.perform(
@@ -351,15 +400,24 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andDo(resultPrint()).andExpect(status().isOk());
-            
+
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNotNull(pageModel);
-            Assert.assertEquals(2, pageModel.getFrames().length);
-            
-            PageModelFrameReq newFrames = new PageModelFrameReq(2, "Position 1");
+            Assert.assertEquals(3, pageModel.getFrames().length);
+
+
+
+
+            PageModelFrameReq newFrames = new PageModelFrameReq(3, "Position 3");
             newFrames.getDefaultWidget().setCode("invalid_widget");
+
+            FrameSketch newSketch = new FrameSketch();
+            newSketch.setCoords(0,3,11,3);
+
+            newFrames.setSketch(newSketch);
+
             pageModelRequest.getConfiguration().getFrames().add(newFrames);
-            
+
             result = mockMvc.perform(
                     post("/pageModels")
                             .content(createJson(pageModelRequest))
@@ -372,8 +430,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNotNull(pageModel);
-            Assert.assertEquals(2, pageModel.getFrames().length);
-            
+            Assert.assertEquals(3, pageModel.getFrames().length);
+
             result = mockMvc.perform(
                     put("/pageModels/{code}", PAGE_MODEL_CODE)
                             .content(createJson(pageModelRequest))
@@ -386,8 +444,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNotNull(pageModel);
-            Assert.assertEquals(2, pageModel.getFrames().length);
-            
+            Assert.assertEquals(3, pageModel.getFrames().length);
+
             pageModelRequest.setCode(NONEXISTENT_PAGE_MODEL);
             result = mockMvc.perform(
                     put("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
@@ -401,14 +459,14 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
             Assert.assertNotNull(pageModel);
-            Assert.assertEquals(2, pageModel.getFrames().length);
+            Assert.assertEquals(3, pageModel.getFrames().length);
         } catch (Exception e) {
             throw e;
         } finally {
             this.pageModelManager.deletePageModel(PAGE_MODEL_CODE);
         }
     }
-    
+
     @Test
     public void testGetPageModelWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -436,5 +494,194 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                         .header("Authorization", "Bearer " + mockOAuthInterceptor(user)));
         result.andExpect(status().isOk());
     }
-    
+
+    @Test
+    public void testPostPageTemplateValidations() throws Exception {
+        try {
+            // x1 with negative value
+            ResultActions result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_1.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+            // y1 with negative value
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_2.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // x2 with negative value
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_3.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // y2 with negative value
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_4.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // x2 < x1
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_5.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // y2 < y1
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("invalid_Y1Y2_frames_6.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andDo(print()).andExpect(status().isBadRequest());
+
+
+            // overlapping frames  test 1
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("overlapping_frames_1.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // overlapping frames test 2
+
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("overlapping_frames_2.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // post a valid template
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(getJsonRequest("1_POST_valid_frames.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.pageModelManager.deletePageModel("valid_page_model_1-2x2-1-column");
+        }
+    }
+
+    @Test
+    public void testPutPageTemplateValidations() throws Exception {
+        try {
+            final String PUT_PAGE_TEMPLATE_CODE = "test-template";
+            ResultActions result = mockMvc.perform(
+                    post("/pageModels/")
+                            .content(getJsonRequest("2_POST_valid_frames.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+
+
+            // x1 with negative value
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_1.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+            // y1 with negative value
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_2.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // x2 with negative value
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_3.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // y2 with negative value
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_4.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // x2 < x1
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_5.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // y2 < y1
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("invalid_Y1Y2_frames_6.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // overlapping frames test 1
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("overlapping_frames_1.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // overlapping frames test 2
+
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", PUT_PAGE_TEMPLATE_CODE)
+                            .content(getJsonRequest("overlapping_frames_2.json"))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.pageModelManager.deletePageModel("test-template");
+        }
+
+    }
+
+    private String getJsonRequest(String filename) throws Exception {
+        InputStream isJsonPostValid = this.getClass().getResourceAsStream(filename);
+        String result = FileTextReader.getText(isJsonPostValid);
+        return result;
+    }
 }

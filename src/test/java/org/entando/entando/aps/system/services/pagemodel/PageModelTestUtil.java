@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.Frame;
+import com.agiletec.aps.system.services.pagemodel.FrameSketch;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,15 +64,30 @@ public final class PageModelTestUtil {
         PageModelConfigurationRequest configuration = new PageModelConfigurationRequest();
         List<PageModelFrameReq> frames = new ArrayList<>();
         frames.add(createValidFrameRequest());
-        frames.add(new PageModelFrameReq(1, "Position 1"));
+        FrameSketch frameSketch1 = new FrameSketch();
+        frameSketch1.setCoords(0,1,11,1);
+        final PageModelFrameReq pageModelFrameReq1 = new PageModelFrameReq(1, "Position 1");
+        pageModelFrameReq1.setSketch(frameSketch1);
+        frames.add(pageModelFrameReq1);
+
+        FrameSketch frameSketch2 = new FrameSketch();
+        frameSketch2.setCoords(0,2,11,2);
+        final PageModelFrameReq pageModelFrameReq2 = new PageModelFrameReq(2, "Position 2");
+        pageModelFrameReq2.setSketch(frameSketch2);
+        frames.add(pageModelFrameReq2);
+
         configuration.setFrames(frames);
         return configuration;
     }
 
     private static Frame[] createValidPageModelConfiguration() throws JsonProcessingException {
+        FrameSketch frameSkatch0 = new FrameSketch();
+        frameSkatch0.setCoords(0,0,2,0);
+        frameSkatch0.setCoords(3,0,5,0);
+        FrameSketch frameSkatch1 = new FrameSketch();
         return new Frame[] {
-            createValidFrame(0, FRAME_DESCRIPTION),
-            createValidFrame(1, "Position 1")
+            createValidFrame(0, FRAME_DESCRIPTION, frameSkatch0),
+            createValidFrame(1, "Position 1", frameSkatch1)
         };
     }
 
@@ -79,14 +95,18 @@ public final class PageModelTestUtil {
         PageModelFrameReq pageReq = new PageModelFrameReq(0, FRAME_DESCRIPTION);
         pageReq.getDefaultWidget().setCode("leftmenu");
         pageReq.getDefaultWidget().getProperties().put("navSpec", "code(homepage).subtree(5)");
+        FrameSketch sketch = new FrameSketch();
+        sketch.setCoords(0,0,11,0);
+        pageReq.setSketch(sketch);
         return pageReq;
     }
 
-    private static Frame createValidFrame(int pos, String description) throws JsonProcessingException{
+    private static Frame createValidFrame(int pos, String description, FrameSketch sketch) throws JsonProcessingException{
         Frame frame = new Frame();
         frame.setPos(pos);
         frame.setDescription(description);
         frame.setDefaultWidget(createDefaultWidget());
+        frame.setSketch(sketch);
         return frame;
     }
 
