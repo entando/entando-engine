@@ -22,6 +22,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Init the system when the web application is started
@@ -55,7 +56,17 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
                 throw new CSRFProtectionException("CSRF protection is enabled but the domains are not initialized. Please initialize the domains");
             }
         }
-
+        
+        String cspEnabled = System.getenv(SystemConstants.ENTANDO_CSP_PROTECTION);
+        if (StringUtils.isEmpty(cspEnabled) || Boolean.TRUE.toString().equalsIgnoreCase(cspEnabled)) {
+            LOGGER.info("Content Security Policy (CSP) header is enabled");
+            String cspExtraConfig = System.getenv(SystemConstants.ENTANDO_CSP_EXTRACONFIG);
+            if (!StringUtils.isEmpty(cspExtraConfig)) {
+                LOGGER.info("Content Security Policy (CSP) extra-config set to: " + cspExtraConfig);
+            }
+        } else {
+            LOGGER.warn("Content Security Policy (CSP) header is disabled");
+        }
     }
 
 }
