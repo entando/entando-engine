@@ -57,10 +57,10 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
             }
         }
         
-        String cspEnabled = System.getenv(SystemConstants.ENTANDO_CSP_PROTECTION);
+        String cspEnabled = System.getenv(SystemConstants.CSP_HEADER_ENABLED);
         if (StringUtils.isEmpty(cspEnabled) || Boolean.TRUE.toString().equalsIgnoreCase(cspEnabled)) {
             LOGGER.info("Content Security Policy (CSP) header is enabled");
-            String cspExtraConfig = System.getenv(SystemConstants.ENTANDO_CSP_EXTRACONFIG);
+            String cspExtraConfig = System.getenv(SystemConstants.CSP_HEADER_EXTRACONFIG);
             if (!StringUtils.isEmpty(cspExtraConfig)) {
                 LOGGER.info("Content Security Policy (CSP) extra-config set to: " + cspExtraConfig);
             }
