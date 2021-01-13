@@ -13,28 +13,30 @@
  */
 package com.agiletec.aps.system.services.authorization;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Role;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestAuthorityManager extends BaseTestCase {
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-	
-	public void testGetUsersByAuthority_1() throws Throwable {
+public class TestAuthorityManager extends BaseTestCaseJunit5 {
+    
+	@Test
+    public void testGetUsersByAuthority_1() throws Throwable {
+        this.init();
 		Role role = this.getRole("pageManager");
 		List<String> usersByRole = this._authorizationManager.getUsersByAuthority(role, false);
 		assertNotNull(usersByRole);
@@ -62,7 +64,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		assertNull(usersByInvaliGroup);
 	}
 	
-	public void testGetUsersByAuthority_2() throws Throwable {
+	@Test
+    public void testGetUsersByAuthority_2() throws Throwable {
+        this.init();
 		Group groupForTest = this.createGroupForTest("pageManager");//name equal to an existing role
 		try {
 			((IGroupManager) this._groupManager).addGroup(groupForTest);
@@ -87,7 +91,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		}
 	}
 	
-	public void testSetRemoveUserAuthorization_1() throws Throwable {
+	@Test
+    public void testSetRemoveUserAuthorization_1() throws Throwable {
+        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "coach";
 		String roleName = "pageManager";
@@ -112,7 +118,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		}
 	}
 	
-	public void testSetRemoveUserAuthorization_2() throws Throwable {
+	@Test
+    public void testSetRemoveUserAuthorization_2() throws Throwable {
+        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "testgroupname";
 		String roleName = "pageManager";
@@ -127,7 +135,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		}
 	}
 	
-	public void testSetRemoveUserAuthorizations_1() throws Throwable {
+	@Test
+    public void testSetRemoveUserAuthorizations_1() throws Throwable {
+        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "management";
 		String roleName = "pageManager";
@@ -153,7 +163,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		}
 	}
 	
-	public void testSetRemoveUserAuthorizations_2() throws Throwable {
+	@Test
+    public void testSetRemoveUserAuthorizations_2() throws Throwable {
+        this.init();
 		String username = "pageManagerCustomers";
 		String notExistentGroupName = "testgroupname";
 		String existentGroupName = "management";
@@ -193,7 +205,9 @@ public class TestAuthorityManager extends BaseTestCase {
 		}
 	}
 	
-	public void testGetAuthorizationsByUser() throws Throwable {
+	@Test
+    public void testGetAuthorizationsByUser() throws Throwable {
+        this.init();
 		String username = "pageManagerCoach";
 		List<Authorization> authorizations = this._authorizationManager.getUserAuthorizations(username);
 		assertNotNull(authorizations);

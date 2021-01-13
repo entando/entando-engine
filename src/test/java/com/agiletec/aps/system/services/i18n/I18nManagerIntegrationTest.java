@@ -13,28 +13,29 @@
  */
 package com.agiletec.aps.system.services.i18n;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.Test;
 
 /**
  * @version 1.0
  * @author W.Ambu
  */
-public class I18nManagerIntegrationTest extends BaseTestCase {
-
-    private II18nManager i18nManager = null;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+public class I18nManagerIntegrationTest extends BaseTestCaseJunit5 {
+    
+    @Test
     public void testRenderLabel() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         assertEquals("titolo pagina", i18nManager.renderLabel("PAGE_TITLE", "it", false));
         assertEquals("page title", i18nManager.renderLabel("PAGE_TITLE", "en", false));
 
@@ -44,7 +45,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertEquals("Welcome ${surname} ${name} (${username} - ${name}.${surname})", i18nManager.renderLabel("LABEL_WITH_PARAMS", "en", true));
     }
 
+    @Test
     public void testRenderLabelWithParams() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         assertEquals("titolo pagina", i18nManager.renderLabel("PAGE_TITLE", "it", false, null));
 
         Map<String, String> params = new HashMap<String, String>();
@@ -57,7 +60,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertEquals("not-exists", i18nManager.renderLabel("not-exists", "en", true, params));
     }
 
+    @Test
     public void testGetLabelGroup() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         ApsProperties labelsProp = i18nManager.getLabelGroup("PAGE_TITLE");
         assertNotNull(labelsProp);
         assertEquals(2, labelsProp.size());
@@ -74,7 +79,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertNull(labelsProp);
     }
 
+    @Test
     public void testGetLabels() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         String label = i18nManager.getLabel("PAGE_TITLE", "it");
         assertNotNull(label);
         assertEquals(label, "titolo pagina");
@@ -82,7 +89,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertNull(label);
     }
 
+    @Test
     public void testAddDeleteLabels() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         String key = "TEST_KEY";
         ApsProperties labels = new ApsProperties();
         labels.put("it", "Testo Italiano");
@@ -102,7 +111,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateLabels() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         String key = "TEST_KEY";
         ApsProperties labels = new ApsProperties();
         labels.put("it", "Testo Italiano");
@@ -127,7 +138,9 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetLabelsKey() throws Throwable {
+        II18nManager i18nManager = (II18nManager) getService(SystemConstants.I18N_MANAGER);
         assertEquals(10, i18nManager.getLabelGroups().size());
         assertEquals(0, i18nManager.searchLabelsKey("*", false, false, null).size());
         assertEquals(10, i18nManager.searchLabelsKey("", false, false, null).size());
@@ -135,13 +148,5 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
         assertEquals(4, i18nManager.searchLabelsKey("age", true, false, null).size());
         assertEquals(3, i18nManager.searchLabelsKey("pag", false, true, "it").size());
     }
-
-    private void init() throws Exception {
-        try {
-            i18nManager = (II18nManager) this.getService(SystemConstants.I18N_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
-    }
-
+    
 }
