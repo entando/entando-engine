@@ -43,7 +43,6 @@ import org.junit.jupiter.api.Disabled;
 /**
  * @author W.Ambu - E.Santoboni
  */
-@Disabled("Unabled base class!")
 public class BaseTestCase extends TestCase {
 
     @Override

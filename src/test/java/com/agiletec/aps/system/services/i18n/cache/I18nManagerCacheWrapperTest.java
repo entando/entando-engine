@@ -14,12 +14,10 @@
 package com.agiletec.aps.system.services.i18n.cache;
 
 import org.entando.entando.ent.exception.EntException;
-import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.exception.CacheItemNotFoundException;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,9 +32,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.Cache;
 
+@ExtendWith(MockitoExtension.class)
 public class I18nManagerCacheWrapperTest {
 
     private static final String CACHE_NAME = I18nManagerCacheWrapper.I18N_MANAGER_CACHE_NAME;
@@ -52,19 +56,14 @@ public class I18nManagerCacheWrapperTest {
     @InjectMocks
     private I18nManagerCacheWrapper cacheWrapper;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);
-        List<String> codes = new ArrayList<>();
-        codes.add(TEST_KEY);
-        fakeCache.put(I18nManagerCacheWrapper.I18N_CODES_CACHE_NAME, codes);
-        fakeCache.put(I18nManagerCacheWrapper.I18N_CACHE_NAME_PREFIX + TEST_KEY, I18nManagerTest.createLabel("ciao", "hello"));
-        when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
+    @BeforeAll
+    public static void setUp() {
+        MockitoAnnotations.initMocks(I18nManagerCacheWrapperTest.class);
     }
     
     @Test
     public void testInitCache() throws Exception {
+        this.init();
         Cache fakeCache = Mockito.mock(Cache.class);
         when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
         ApsProperties properties = I18nManagerTest.createLabel("It Label", "En Label");
@@ -75,23 +74,27 @@ public class I18nManagerCacheWrapperTest {
         Mockito.verify(fakeCache, Mockito.times(1)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
     }
     
-    @Test(expected = EntException.class)
-    public void testInitCacheWithErrors() throws Exception {
-        Cache fakeCache = Mockito.mock(Cache.class);
-        when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
-        Mockito.doThrow(RuntimeException.class).when(fakeCache).get(Mockito.anyString());
-        try {
-            this.cacheWrapper.initCache(this.i18nDAO);
-            Assert.fail();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            Mockito.verify(fakeCache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
-        }
+    @Test
+    public void testInitCacheWithErrors() {
+        this.init();
+        Assertions.assertThrows(EntException.class, () -> {
+            Cache fakeCache = Mockito.mock(Cache.class);
+            when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
+            Mockito.doThrow(RuntimeException.class).when(fakeCache).get(Mockito.anyString());
+            try {
+                this.cacheWrapper.initCache(this.i18nDAO);
+                Assert.fail();
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                Mockito.verify(fakeCache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(ApsProperties.class));
+            }
+        });
     }
     
     @Test
     public void getLabelsGroup() throws Exception {
+        this.init();
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNotNull(properties);
         Assert.assertEquals("ciao", properties.get("it"));
@@ -99,22 +102,37 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void update() {
+        this.init();
         cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNotNull(properties);
         Assert.assertEquals("yes", properties.get("en"));
     }
     
-    @Test(expected = CacheItemNotFoundException.class)
+    @Test
     public void updateInvalidEntry() {
-        cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"));
+        this.init();
+        Assertions.assertThrows(CacheItemNotFoundException.class, ()
+                -> cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"))
+        );
     }
     
     @Test
     public void delete() {
+        this.init();
         cacheWrapper.removeLabelGroup(TEST_KEY);
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNull(properties);
+    }
+    
+    private void init() {
+        MockitoAnnotations.initMocks(I18nManagerCacheWrapperTest.class);
+        ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);
+        List<String> codes = new ArrayList<>();
+        codes.add(TEST_KEY);
+        fakeCache.put(I18nManagerCacheWrapper.I18N_CODES_CACHE_NAME, codes);
+        fakeCache.put(I18nManagerCacheWrapper.I18N_CACHE_NAME_PREFIX + TEST_KEY, I18nManagerTest.createLabel("ciao", "hello"));
+        when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
     }
 
 }

@@ -80,7 +80,6 @@ public class BaseTestCaseJunit5 {
     
     @AfterAll
     protected static void tearDown() throws Exception {
-        System.out.println("ESEGUITO tearDown");
         waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
         getConfigUtils().destroyContext(getApplicationContext());
         Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();

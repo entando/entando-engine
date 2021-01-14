@@ -13,18 +13,22 @@
  */
 package com.agiletec.aps.system.services.baseconfig;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestConfigItemDAO extends BaseTestCase {
+public class TestConfigItemDAO extends BaseTestCaseJunit5 {
 	
+    @Test
     public void testLoadVersionItems() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 		ConfigItemDAO configItemDAO = new ConfigItemDAO();
@@ -41,7 +45,8 @@ public class TestConfigItemDAO extends BaseTestCase {
 		assertTrue(index != -1);
     }
 	
-	public void testLoadVersionItem() throws Throwable {
+	@Test
+    public void testLoadVersionItem() throws Throwable {
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 		ConfigItemDAO configItemDAO = new ConfigItemDAO();
 		configItemDAO.setDataSource(dataSource);

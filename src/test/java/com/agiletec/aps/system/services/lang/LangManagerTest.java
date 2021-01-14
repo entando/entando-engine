@@ -21,15 +21,18 @@ import java.util.List;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class LangManagerTest {
 
 	@Mock
@@ -45,8 +48,8 @@ public class LangManagerTest {
 	private LangManager langManager;
 
 	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
+	public static void setUp() throws Exception {
+		MockitoAnnotations.initMocks(LangManagerTest.class);
 	}
 
 	@Test

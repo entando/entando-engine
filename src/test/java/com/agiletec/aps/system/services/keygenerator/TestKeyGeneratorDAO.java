@@ -13,19 +13,17 @@
  */
 package com.agiletec.aps.system.services.keygenerator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.services.mock.MockUniqueKeysDAO;
 
-/**
- * @version 1.0
- * @author M.Diana
- */
-public class TestKeyGeneratorDAO extends BaseTestCase {
+public class TestKeyGeneratorDAO extends BaseTestCaseJunit5 {
 	
     public void testGetUniqueKey() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+    	DataSource dataSource = (DataSource) getApplicationContext().getBean("portDataSource");
 		KeyGeneratorDAO keyGeneratorDao = new KeyGeneratorDAO();
 		keyGeneratorDao.setDataSource(dataSource);
 		MockUniqueKeysDAO mockUniqueKeysDao = new MockUniqueKeysDAO();
