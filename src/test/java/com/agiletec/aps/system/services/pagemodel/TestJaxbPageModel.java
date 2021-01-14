@@ -13,7 +13,11 @@
  */
 package com.agiletec.aps.system.services.pagemodel;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
@@ -23,19 +27,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestJaxbPageModel extends BaseTestCase {
+public class TestJaxbPageModel extends BaseTestCaseJunit5 {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testLoadModel() throws Throwable {
+        this.init();
         String testPageModelCode = "test_jabx_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -99,12 +100,8 @@ public class TestJaxbPageModel extends BaseTestCase {
     }
 
     private void init() throws Exception {
-        try {
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
     }
 
     private IPageModelManager _pageModelManager = null;

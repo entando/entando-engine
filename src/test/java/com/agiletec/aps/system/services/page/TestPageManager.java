@@ -13,8 +13,12 @@
  */
 package com.agiletec.aps.system.services.page;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +30,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.services.mock.MockWidgetsDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
@@ -34,26 +38,23 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana, E.Mezzano
  */
-public class TestPageManager extends BaseTestCase {
+public class TestPageManager extends BaseTestCaseJunit5 {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetPage_1() throws Throwable {
+        this.init();
         IPage root = _pageManager.getDraftRoot();
         assertNotNull(root);
         assertEquals("homepage", root.getCode());
         assertTrue(root.isOnline());
         assertNotNull(root.getMetadata());
         assertNotNull(root.getMetadata());
-        assertEquals(7, root.getChildrenCodes().length);
+        assertEquals(root.getChildrenCodes().length, 7);
 
         assertEquals("service", root.getChildrenCodes()[0]);
         assertEquals("pagina_1", root.getChildrenCodes()[1]);
@@ -67,7 +68,9 @@ public class TestPageManager extends BaseTestCase {
         assertNotNull(_pageManager.getDraftPage("homepage"));
     }
 
+    @Test
     public void testGetPage_2() throws Throwable {
+        this.init();
         IPage page1 = _pageManager.getOnlinePage("pagina_1");
         assertNotNull(page1);
         assertTrue(page1.isOnline());
@@ -78,7 +81,9 @@ public class TestPageManager extends BaseTestCase {
         assertTrue(page1.getWidgets().length > 1);
     }
 
+    @Test
     public void testGetPage_3() throws Throwable {
+        this.init();
         assertNull(_pageManager.getOnlinePage("pagina_draft"));
         IPage draft = _pageManager.getDraftPage("pagina_draft");
         assertFalse(draft.isOnline());
@@ -87,7 +92,9 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(7, draft.getPosition());
     }
 
+    @Test
     public void testAddUpdateMoveDeletePage() throws Throwable {
+        this.init();
         try {
             assertNull(this._pageManager.getDraftPage("temp"));
             assertNull(this._pageManager.getDraftPage("temp1"));
@@ -248,7 +255,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testAddPublishPage() throws Throwable {
+        this.init();
         try {
             this.addPagesForTest("test_add_", "pagina_11", 4);
             this.checkOrderAndPos("pagina_11", Arrays.asList("test_add_1", "test_add_2", "test_add_3", "test_add_4"));
@@ -303,7 +312,9 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(0, extractedParent.getChildrenCodes().length);
     }
 
+    @Test
     public void testChangeParent() throws Throwable {
+        this.init();
         try {
             this.addPagesForTest("st_move_", "pagina_11", 4);
             this.addPagesForTest("dt_move_", "pagina_12", 4);
@@ -382,7 +393,9 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(0, extractedParent.getChildrenCodes().length);
     }
 
+    @Test
     public void testMoveUpDown() throws Throwable {
+        this.init();
         try {
             this.addPagesForTest("move_", "pagina_11", 6);
             for (int i = 0; i < 4; i++) {
@@ -483,7 +496,9 @@ public class TestPageManager extends BaseTestCase {
         return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
     }
 
+    @Test
     public void testFailureJoinWidget_1() throws Throwable {
+        this.init();
         String pageCode = "wrongPageCode";
         int frame = 2;
         try {
@@ -497,7 +512,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testFailureJoinWidget_2() throws Throwable {
+        this.init();
         String pageCode = "pagina_1";
         int frame = 6;
         IPage pagina_1 = this._pageManager.getDraftPage(pageCode);
@@ -515,7 +532,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testFailureRemoveWidget_1() throws Throwable {
+        this.init();
         String pageCode = "wrongPageCode";
         int frame = 2;
         try {
@@ -528,7 +547,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testFailureRemoveWidget_2() throws Throwable {
+        this.init();
         String pageCode = "pagina_1";
         int frame = 6;
         IPage pagina_1 = this._pageManager.getDraftPage(pageCode);
@@ -543,7 +564,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testJoinMoveRemoveWidget() throws Throwable {
+        this.init();
         String pageCode = "pagina_1";
         int frame = 1;
         IPage pagina_1 = this._pageManager.getDraftPage(pageCode);
@@ -621,7 +644,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testSearchPage() throws Throwable {
+        this.init();
         List<String> allowedGroupCodes = new ArrayList<>();
         allowedGroupCodes.add(Group.ADMINS_GROUP_NAME);
         try {
@@ -649,7 +674,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetWidgetUtilizers() throws Throwable {
+        this.init();
         List<IPage> pageUtilizers1 = this._pageManager.getDraftWidgetUtilizers(null);
         assertNotNull(pageUtilizers1);
         assertEquals(0, pageUtilizers1.size());
@@ -669,7 +696,9 @@ public class TestPageManager extends BaseTestCase {
         assertEquals("pagina_1", pageUtilizers3.get(0).getCode());
     }
 
+    @Test
     public void testPageStatus() throws EntException {
+        this.init();
         String testCode = "testcode";
         PagesStatus status = this._pageManager.getPagesStatus();
         try {
@@ -729,27 +758,35 @@ public class TestPageManager extends BaseTestCase {
         return widget;
     }
 
+    @Test
     public void testGetDraftPage_should_load_draftPages() {
+        this.init();
         String onlyDraftPageCode = "pagina_draft";
         IPage page = this._pageManager.getDraftPage(onlyDraftPageCode);
         assertNotNull(page);
         assertFalse(page.isOnline());
     }
 
+    @Test
     public void testGetDraftPage_should_load_onlinePages() {
+        this.init();
         String onlinePageCode = "pagina_1";
         IPage page = this._pageManager.getDraftPage(onlinePageCode);
         assertNotNull(page);
         assertTrue(page.isOnline());
     }
 
+    @Test
     public void testGetOnlinePage_should_ignore_draftPages() {
+        this.init();
         String onlyDraftPageCode = "pagina_draft";
         IPage page = this._pageManager.getOnlinePage(onlyDraftPageCode);
         assertNull(page);
     }
 
+    @Test
     public void testGetOnlinePage_should_load_onlinePages() {
+        this.init();
         String onlinePageCode = "pagina_1";
         IPage page = this._pageManager.getOnlinePage(onlinePageCode);
         assertNotNull(page);
@@ -758,7 +795,9 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(2, childs.size());
     }
 
+    @Test
     public void testGetOnlinePage_should_ignore_draftPageChildren() {
+        this.init();
         String onlyDraftPageCode = "pagina_draft";
         String onlinePageCode = "homepage";
         IPage page = this._pageManager.getOnlinePage(onlinePageCode);
@@ -773,7 +812,9 @@ public class TestPageManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetDraftPage_should_load_draftPageChildren() {
+        this.init();
         String onlyDraftPageCode = "pagina_draft";
         String onlinePageCode = "homepage";
         IPage page = this._pageManager.getDraftPage(onlinePageCode);
@@ -788,13 +829,9 @@ public class TestPageManager extends BaseTestCase {
         assertTrue(found);
     }
 
-    private void init() throws Exception {
-        try {
-            this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    private void init() {
+        this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     }
 
     private IPageManager _pageManager = null;

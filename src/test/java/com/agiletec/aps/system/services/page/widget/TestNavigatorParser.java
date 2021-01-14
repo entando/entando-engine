@@ -13,28 +13,25 @@
  */
 package com.agiletec.aps.system.services.page.widget;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.widget.INavigatorParser;
-import com.agiletec.aps.system.services.page.widget.NavigatorTarget;
+import org.junit.jupiter.api.Test;
 
 /**
- * @version 1.0
  * @author E.Santoboni
  */
-public class TestNavigatorParser extends BaseTestCase {
+public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
-	protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-	
+    @Test
 	public void testGetTargets_1() throws Throwable {
+        this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", "admin");
 		String spec = "current.path";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -47,7 +44,9 @@ public class TestNavigatorParser extends BaseTestCase {
 		assertEquals("pagina_11", target2.getPage().getCode());
 	}
 	
+	@Test
 	public void testGetTargets_2() throws Throwable {
+		this.init();
 		RequestContext reqCtx = this.valueRequestContext("contentview", "admin");
 		String spec = "current.path";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -58,7 +57,9 @@ public class TestNavigatorParser extends BaseTestCase {
 		assertEquals("contentview", target1.getPage().getCode());
 	}
 	
+	@Test
 	public void testGetTargets_3() throws Throwable {
+		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", SystemConstants.GUEST_USER_NAME);
 		String spec = "abs(0).subtree(2)";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -84,7 +85,9 @@ public class TestNavigatorParser extends BaseTestCase {
 		assertEquals(1, target4.getLevel());
 	}
 	
+	@Test
 	public void testGetTargets_4() throws Throwable {
+		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", "editorCustomers");
 		String spec = "code(homepage).children";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -103,7 +106,9 @@ public class TestNavigatorParser extends BaseTestCase {
 		assertEquals(0, target2.getLevel());
 	}
 	
+	@Test
 	public void testGetTargets_5() throws Throwable {
+		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_1", "editorCoach");
 		String spec = "current.subtree(1)+parent.children";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
