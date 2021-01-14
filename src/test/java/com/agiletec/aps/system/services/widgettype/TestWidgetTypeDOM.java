@@ -13,20 +13,25 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeDOM;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestWidgetTypeDOM extends BaseTestCase {
+public class TestWidgetTypeDOM extends BaseTestCaseJunit5 {
 	
+    @Test
     public void testParseConfig() throws EntException {
 		String framesXml = "<config>" +
 							"<parameter name=\"contentType\">" +
@@ -45,6 +50,7 @@ public class TestWidgetTypeDOM extends BaseTestCase {
         assertEquals(3, params.size());
 	}
     
+    @Test
     public void testCreateConfig() throws EntException {
     	WidgetTypeParameter params1 = new WidgetTypeParameter();
     	params1.setName("param1");

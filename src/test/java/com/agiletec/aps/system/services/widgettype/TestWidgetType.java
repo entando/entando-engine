@@ -1,21 +1,17 @@
 package com.agiletec.aps.system.services.widgettype;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-public class TestWidgetType extends BaseTestCase {
+import com.agiletec.aps.BaseTestCaseJunit5;
+import org.junit.jupiter.api.Test;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+public class TestWidgetType extends BaseTestCaseJunit5 {
 
     @Test
     public void testEqualsAndHashcode() throws EntException {

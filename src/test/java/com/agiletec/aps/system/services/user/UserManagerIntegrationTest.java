@@ -13,44 +13,39 @@
  */
 package com.agiletec.aps.system.services.user;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
+import org.junit.jupiter.api.Test;
 
-public class UserManagerIntegrationTest extends BaseTestCase {
+public class UserManagerIntegrationTest extends BaseTestCaseJunit5 {
 
-    private IUserManager userManager = null;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetUsers() throws Throwable {
-        List<UserDetails> users = this.userManager.getUsers();
+        IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
+        List<UserDetails> users = userManager.getUsers();
         assertTrue(users.size() >= 8);
     }
 
+    @Test
     public void testAdminUserPasswordIsBCrypt() throws Throwable {
+        IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         UserDetails admin = this.getUser("admin");
         assertNotNull(admin);
         assertTrue(CompatiblePasswordEncoder.isBCrypt(admin.getPassword()));
     }
 
+    @Test
     public void testAllUsersPasswordsIsArgon2() throws Throwable {
+        IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         for (UserDetails user : userManager.getUsers()) {
             assertTrue(CompatiblePasswordEncoder.isBCrypt(user.getPassword()));
         }
     }
-
-    private void init() throws Exception {
-        try {
-            this.userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
-        } catch (Throwable e) {
-            throw new Exception(e);
-        }
-    }
+    
 }

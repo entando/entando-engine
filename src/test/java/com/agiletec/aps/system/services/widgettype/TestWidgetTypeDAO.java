@@ -13,7 +13,12 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -22,12 +27,14 @@ import org.entando.entando.ent.exception.EntException;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestWidgetTypeDAO extends BaseTestCase {
+public class TestWidgetTypeDAO extends BaseTestCaseJunit5 {
 
+    @Test
     public void testLoadWidgetTypes() throws Throwable {
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
         WidgetTypeDAO widgetTypeDao = new WidgetTypeDAO();
@@ -48,6 +55,7 @@ public class TestWidgetTypeDAO extends BaseTestCase {
         assertNull(widgetType);
     }
 
+    @Test
     public void testGetWidgetType()  {
         String code="login_form";
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
@@ -66,4 +74,5 @@ public class TestWidgetTypeDAO extends BaseTestCase {
         assertTrue(widgetType.isReadonlyPageWidgetConfig());
         assertEquals("system",widgetType.getWidgetCategory());
     }
+    
 }

@@ -12,24 +12,18 @@
  * details.
  *
  */
-
 package com.agiletec.aps.tags;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-
-import javax.servlet.jsp.JspWriter;
 
 import static org.hamcrest.CoreMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class PageInfoTagTest {
 
     private static final String TEST_URL_1 = "http://www.example.com?param1=1&param2=xxx#a_fragment";

@@ -13,26 +13,25 @@
  */
 package com.agiletec.aps.system.services.url;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Map;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import org.junit.jupiter.api.Test;
 
-public class TestURLManager extends BaseTestCase {
+public class TestURLManager extends BaseTestCaseJunit5 {
 
     private ConfigInterface configManager = null;
     private IURLManager urlManager = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetURLString_1() throws Throwable {
+        this.init();
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("it");
@@ -50,7 +49,9 @@ public class TestURLManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetURLString_2() throws Throwable {
+        this.init();
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");
@@ -80,13 +81,9 @@ public class TestURLManager extends BaseTestCase {
         }
     }
 
-    private void init() throws Exception {
-        try {
-            this.urlManager = (IURLManager) this.getService(SystemConstants.URL_MANAGER);
-            this.configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
-        } catch (Exception e) {
-            throw e;
-        }
+    private void init() {
+        this.urlManager = (IURLManager) this.getService(SystemConstants.URL_MANAGER);
+        this.configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
     }
 
 }

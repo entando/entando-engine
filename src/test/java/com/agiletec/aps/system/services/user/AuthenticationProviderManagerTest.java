@@ -26,13 +26,18 @@ import java.util.List;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +49,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class AuthenticationProviderManagerTest {
 
     @Mock
@@ -58,9 +64,9 @@ public class AuthenticationProviderManagerTest {
     @InjectMocks
     private AuthenticationProviderManager authenticationProviderManager;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    @BeforeAll
+    public static void setUp() throws Exception {
+        MockitoAnnotations.initMocks(AuthenticationProviderManagerTest.class);
     }
 
     @Test
@@ -177,10 +183,12 @@ public class AuthenticationProviderManagerTest {
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
     }
 
-    @Test(expected = EntException.class)
+    @Test
     public void getUser_8() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
-        this.authenticationProviderManager.getUser("test_user", "password");
+        Assertions.assertThrows(EntException.class, () -> {
+            this.authenticationProviderManager.getUser("test_user", "password");
+        });
     }
 
     @Test
@@ -200,7 +208,7 @@ public class AuthenticationProviderManagerTest {
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
     }
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void authenticate_userNotFound_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "");
@@ -216,36 +224,40 @@ public class AuthenticationProviderManagerTest {
         }
     }
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void authenticate_userNotFound_2() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("username", "password");
-        try {
-            Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-            Assert.fail();
-        } catch (UsernameNotFoundException e) {
-            Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
-            Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
-            Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
-            Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
-            throw e;
-        }
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            try {
+                Authentication auth = this.authenticationProviderManager.authenticate(authTest);
+                Assert.fail();
+            } catch (UsernameNotFoundException e) {
+                Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
+                Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
+                Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
+                Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = AuthenticationServiceException.class)
+    @Test
     public void failAuthenticate_serviceError() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("username", "password");
-        try {
-            Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-            Assert.fail();
-        } catch (AuthenticationServiceException e) {
-            Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
-            Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
-            Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
-            Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
-            throw e;
-        }
+        Assertions.assertThrows(AuthenticationServiceException.class, () -> {
+            try {
+                Authentication auth = this.authenticationProviderManager.authenticate(authTest);
+                Assert.fail();
+            } catch (AuthenticationServiceException e) {
+                Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
+                Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
+                Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
+                Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
+                throw e;
+            }
+        });
     }
 
     @Test
@@ -265,35 +277,39 @@ public class AuthenticationProviderManagerTest {
         Mockito.verifyZeroInteractions(this.tokenManager);
     }
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void failLoadUserByUsername_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(null);
-        try {
-            org.springframework.security.core.userdetails.UserDetails userDetails
-                    = this.authenticationProviderManager.loadUserByUsername("username");
-            Assert.fail();
-        } catch (UsernameNotFoundException e) {
-            Mockito.verifyZeroInteractions(this.authorizationManager);
-            Mockito.verifyZeroInteractions(this.tokenManager);
-            throw e;
-        }
+        Assertions.assertThrows(AuthenticationServiceException.class, () -> {
+            try {
+                org.springframework.security.core.userdetails.UserDetails userDetails
+                        = this.authenticationProviderManager.loadUserByUsername("username");
+                Assert.fail();
+            } catch (UsernameNotFoundException e) {
+                Mockito.verifyZeroInteractions(this.authorizationManager);
+                Mockito.verifyZeroInteractions(this.tokenManager);
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void failLoadUserByUsername_2() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenThrow(new EntException("System error"));
-        try {
-            org.springframework.security.core.userdetails.UserDetails userDetails
-                    = this.authenticationProviderManager.loadUserByUsername("username");
-            Assert.fail();
-        } catch (UsernameNotFoundException e) {
-            Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
-            Mockito.verify(userManager, Mockito.times(0)).getUser(Mockito.anyString(), Mockito.anyString());
-            Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString());
-            Mockito.verifyZeroInteractions(this.authorizationManager);
-            Mockito.verifyZeroInteractions(this.tokenManager);
-            throw e;
-        }
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            try {
+                org.springframework.security.core.userdetails.UserDetails userDetails
+                        = this.authenticationProviderManager.loadUserByUsername("username");
+                Assert.fail();
+            } catch (UsernameNotFoundException e) {
+                Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
+                Mockito.verify(userManager, Mockito.times(0)).getUser(Mockito.anyString(), Mockito.anyString());
+                Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString());
+                Mockito.verifyZeroInteractions(this.authorizationManager);
+                Mockito.verifyZeroInteractions(this.tokenManager);
+                throw e;
+            }
+        });
     }
 
     private UserDetails createMockUser(String username, boolean enabled, boolean accoutExpired, boolean credentialExpired) {

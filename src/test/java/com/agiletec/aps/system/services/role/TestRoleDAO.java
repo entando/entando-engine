@@ -13,18 +13,23 @@
  */
 package com.agiletec.aps.system.services.role;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
+import org.junit.jupiter.api.Test;
 
 /**
- * @version 1.0
  * @author M.Diana
  */
-public class TestRoleDAO extends BaseTestCase {
+public class TestRoleDAO extends BaseTestCaseJunit5 {
 
+    @Test
     public void testAddUpdateDeleteRole() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		RoleDAO roleDAO = new RoleDAO();

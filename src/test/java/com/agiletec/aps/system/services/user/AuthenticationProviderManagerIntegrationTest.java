@@ -13,13 +13,19 @@
  */
 package com.agiletec.aps.system.services.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -29,6 +35,7 @@ import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +45,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * @author E.Santoboni
  */
-public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
+public class AuthenticationProviderManagerIntegrationTest extends BaseTestCaseJunit5 {
 
     private IAuthenticationProviderManager authenticationProvider = null;
     private IUserManager userManager = null;
@@ -50,13 +57,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
 
     private IAuthorizationManager authorizationManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetUser() throws Throwable {
+        this.init();
         UserDetails adminUser = this.authenticationProvider.getUser("admin", "admin");//nel database di test, username e password sono uguali
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
@@ -69,7 +72,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         assertNull(nullUser);
     }
 
+    @Test
     public void testUpdateUserAuthorities() throws Throwable {
+        this.init();
         String username = "UserForTest2";
         String password = "PasswordForTest2";
         this.addUserForTest(username, password);
@@ -94,7 +99,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetUserWithPrivacyModuleEnabled() throws Throwable {
+        this.init();
         String username = "MEMisUserExpired";
         String password = "123456";
 
@@ -137,7 +144,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testAuthWithPrivacyModuleEnabled() throws Throwable {
+        this.init();
         String username = "MEMhasAuthExpired";
         String password = "123456";
         String newPassword = "EequalsMsquareC";
@@ -183,7 +192,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateRoleWithPrivacyModuleEnabled() throws Throwable {
+        this.init();
         String username = "MEMisToUpdateRole";
         String password = "123456";
         this.addUserForTest(username, password);
@@ -214,7 +225,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testAuthentication() throws Exception {
+        this.init();
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "admin");
         try {
             Authentication auth = ((AuthenticationManager) this.authenticationProvider).authenticate(authTest);
@@ -227,7 +240,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testFailedAuthentication() throws Exception {
+        this.init();
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "wrong");
         this.testFailedAuthentication(authTest, UsernameNotFoundException.class);
         authTest = new TestingAuthenticationToken("admin", "");
@@ -236,7 +251,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         this.testFailedAuthentication(authTest, UsernameNotFoundException.class);
     }
 
-    private void testFailedAuthentication(Authentication auth, Class expectedException) throws Exception {
+    @Test
+    public void testFailedAuthentication(Authentication auth, Class expectedException) throws Exception {
+        this.init();
         try {
             ((AuthenticationManager) this.authenticationProvider).authenticate(auth);
             fail();
@@ -245,7 +262,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testLoadUserByUsername() throws Exception {
+        this.init();
         try {
             org.springframework.security.core.userdetails.UserDetails userDetails
                     = this.authenticationProvider.loadUserByUsername("admin");
@@ -257,7 +276,9 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testFailedLoadUserByUsername() throws Exception {
+        this.init();
         try {
             org.springframework.security.core.userdetails.UserDetails userDetails
                     = this.authenticationProvider.loadUserByUsername("wrong_username");
@@ -307,17 +328,13 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     private void init() throws Exception {
-        try {
-            this.dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
-            this.authenticationProvider = (IAuthenticationProviderManager) this.getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
-            this.userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
-            this.roleManager = (RoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-            this.groupManager = (GroupManager) this.getService(SystemConstants.GROUP_MANAGER);
-            this.configurationManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
-            this.authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
-        } catch (Exception e) {
-            throw e;
-        }
+        this.dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
+        this.authenticationProvider = (IAuthenticationProviderManager) this.getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
+        this.userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
+        this.roleManager = (RoleManager) this.getService(SystemConstants.ROLE_MANAGER);
+        this.groupManager = (GroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+        this.configurationManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
+        this.authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
     }
 
     private void addUserForTest(String username, String password) throws Throwable {

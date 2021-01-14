@@ -15,24 +15,29 @@
 
 package com.agiletec.aps.util;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.commons.io.input.NullInputStream;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 
 import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-public class FileTextReaderTest extends TestCase {
+public class FileTextReaderTest {
 
     private static final String A_TMP_FILE = "a-tmp-file";
 
+    @Test
     public void testShouldCreateAProperTempFile() throws IOException {
         assertNotNull(
                 FileTextReader.createTempFile(A_TMP_FILE, new NullInputStream(100))
         );
     }
 
+    @Test
     public void testCreateTempFileShouldBlockPathTraversal() {
         try {
             FileTextReader.createTempFile("../" + A_TMP_FILE, new NullInputStream(100));
@@ -43,4 +48,5 @@ public class FileTextReaderTest extends TestCase {
             fail("Shouldn't reach this point");
         }
     }
+    
 }

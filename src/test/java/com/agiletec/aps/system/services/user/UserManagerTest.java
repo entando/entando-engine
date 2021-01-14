@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.util.crypto.Argon2PasswordEncoder;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,9 +27,16 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@ExtendWith(MockitoExtension.class)
 public class UserManagerTest {
 
     @Mock
@@ -84,9 +89,13 @@ public class UserManagerTest {
 
     private final PasswordEncoder passwordEncoder = getCompatiblePasswordEncoder();
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    @BeforeAll
+    public static void setUp() throws Exception {
+        MockitoAnnotations.initMocks(UserManagerTest.class);
+    }
+
+    private void init() throws EntException {
+        MockitoAnnotations.initMocks(UserManagerTest.class);
         when(userDao.getPasswordEncoder()).thenReturn(passwordEncoder);
         doNothing().when(configManager).updateConfigItem(anyString(), anyString());
         when(configManager.getConfigItem(Mockito.anyString())).thenReturn(params);
@@ -94,6 +103,7 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
+        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.prepareInit();
@@ -106,6 +116,7 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
+        this.init();
         this.emptyUsers();
         this.prepareInit();
         userManager.init();
@@ -116,6 +127,7 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
+        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersPlainText();
@@ -134,6 +146,7 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
+        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersMixed();
@@ -228,4 +241,5 @@ public class UserManagerTest {
     private CompatiblePasswordEncoder getCompatiblePasswordEncoder() {
         return new CompatiblePasswordEncoder(new BCryptPasswordEncoder(), new Argon2PasswordEncoder());
     }
+    
 }

@@ -13,14 +13,16 @@
  */
 package com.agiletec.aps.util;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 /**
- * @version 1.0
  * @author W.Ambu
  */
-public class TestHtmlHandler extends BaseTestCase {
+public class TestHtmlHandler  {
 	
+    @Test
     public void testGetParsedText() {
         String textToParse = "<title> This is the<b>first</b></title><body><b>this is</b>the next</body>";
         HtmlHandler htmlHandler = new HtmlHandler();

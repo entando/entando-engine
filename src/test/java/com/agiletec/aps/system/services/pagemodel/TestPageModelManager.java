@@ -16,7 +16,6 @@ package com.agiletec.aps.system.services.pagemodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -30,18 +29,20 @@ import org.entando.entando.web.common.model.RestListRequest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.agiletec.aps.BaseTestCaseJunit5;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestPageModelManager extends BaseTestCase {
+public class TestPageModelManager extends BaseTestCaseJunit5 {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
@@ -54,6 +55,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(3));
     }
 
+    @Test
     public void testSearch_with_page_filter() throws EntException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
@@ -75,6 +77,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(2));
     }
 
+    @Test
     public void testGetPageModel() throws EntException {
         PageModel pageModel = this._pageModelManager.getPageModel("home");
         String code = pageModel.getCode();
@@ -92,6 +95,7 @@ public class TestPageModelManager extends BaseTestCase {
         assertEquals(mainFrame, 3);
     }
 
+    @Test
     public void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
         assertEquals(3, pageModels.size());
@@ -108,6 +112,7 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetModel() throws Throwable {
         PageModel model = this._pageModelManager.getPageModel("internal");
         assertNotNull(model);
@@ -131,6 +136,7 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testAddRemoveModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
@@ -162,6 +168,7 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
@@ -246,6 +253,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testGuiFragmentUtilizer() throws Throwable {
         String testPageModelACode = "test_pagemodelA";
         String testPageModelBCode = "test_pagemodelB";
@@ -306,12 +314,8 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     private void init() throws Exception {
-        try {
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
     }
 
     private IWidgetTypeManager _widgetTypeManager;

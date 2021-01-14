@@ -13,7 +13,14 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
@@ -28,19 +35,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestWidgetTypeManager extends BaseTestCase {
+public class TestWidgetTypeManager extends BaseTestCaseJunit5 {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetWidgetTypes() throws EntException {
+        this.init();
         List<WidgetType> list = _widgetTypeManager.getWidgetTypes();
         Iterator<WidgetType> iter = list.iterator();
         Map<String, String> widgetTypes = new HashMap<>();
@@ -58,7 +62,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertTrue(containsValue);
     }
 
+    @Test
     public void testGetWidgetType_1() throws EntException {
+        this.init();
         WidgetType widgetType = _widgetTypeManager.getWidgetType("leftmenu");
         assertEquals("leftmenu", widgetType.getCode());
         assertEquals("Menu di navigazione verticale", widgetType.getTitles().get("it"));
@@ -81,7 +87,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertTrue(parameters.containsValue("Rules for the Page List auto-generation"));
     }
 
+    @Test
     public void testGetWidgetType_2() throws EntException {
+        this.init();
         WidgetType widgetType = _widgetTypeManager.getWidgetType("entando_apis");
         assertEquals("entando_apis", widgetType.getCode());
         assertEquals("APIs", widgetType.getTitles().get("it"));
@@ -97,7 +105,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertEquals("/ExtStr2/do/Front/Api/Resource/list.action", contentTypeParam);
     }
 
+    @Test
     public void testFailureDeleteWidgetType_1() throws Throwable {
+        this.init();
         String widgetTypeCode = "formAction";
         assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -108,7 +118,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     }
 
+    @Test
     public void testFailureDeleteWidgetType_2() throws Throwable {
+        this.init();
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -133,7 +145,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testAddDeleteWidgetType() throws Throwable {
+        this.init();
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -151,7 +165,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateTitles() throws Throwable {
+        this.init();
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -180,7 +196,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdate() throws Throwable {
+        this.init();
         String widgetTypeCode = "test_showletType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -214,8 +232,9 @@ public class TestWidgetTypeManager extends BaseTestCase {
         }
     }
 
-
+    @Test
     public void testUpdateWithoutWidgetCategory() throws Throwable {
+        this.init();
         String widgetTypeCode = "test_showletType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -251,11 +270,11 @@ public class TestWidgetTypeManager extends BaseTestCase {
         }
     }
 
-
+    @Test
     public void testUpdateReadOnlyPageConfigLockedWidget() throws Throwable {
+        this.init();
         String widgetTypeCode = "entando_apis";
         WidgetType widgetType = _widgetTypeManager.getWidgetType(widgetTypeCode);
-
         try {
             assertNotNull(widgetType);
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup(),
@@ -288,15 +307,11 @@ public class TestWidgetTypeManager extends BaseTestCase {
         return type;
     }
 
-    private void init() throws Exception {
-        try {
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-            this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
-            this._mockWidgetTypeDAO.setDataSource(dataSource);
-        } catch (Throwable e) {
-            throw new Exception(e);
-        }
+    private void init() {
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+        this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
+        this._mockWidgetTypeDAO.setDataSource(dataSource);
     }
 
     private IWidgetTypeManager _widgetTypeManager = null;

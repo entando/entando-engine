@@ -13,10 +13,12 @@
  */
 package com.agiletec.aps.system;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.i18n.II18nManager;
@@ -27,12 +29,14 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author W.Ambu
  */
-public class TestApplicationContext extends BaseTestCase {
+public class TestApplicationContext extends BaseTestCaseJunit5 {
 	
+    @Test
     public void testGetServices() {
     	ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
         assertNotNull(configManager);
