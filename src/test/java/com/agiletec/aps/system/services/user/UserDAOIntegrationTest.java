@@ -22,12 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.agiletec.aps.BaseTestCaseJunit5;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class UserDAOIntegrationTest extends BaseTestCaseJunit5 {
 
     private IUserDAO userDao;
     
+    @BeforeEach
     private void init() throws Exception {
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
         PasswordEncoder passwordEncoder = (PasswordEncoder) this.getApplicationContext().getBean("compatiblePasswordEncoder");
@@ -39,7 +41,6 @@ public class UserDAOIntegrationTest extends BaseTestCaseJunit5 {
 
     @Test
     public void testAddDeleteUser() throws Throwable {
-        this.init();
         String username = "UserForTest1";
         User user = this.createUserForTest(username);
         try {
@@ -60,7 +61,6 @@ public class UserDAOIntegrationTest extends BaseTestCaseJunit5 {
 
     @Test
     public void testUpdateUser() throws Throwable {
-        this.init();
         String username = "UserForTest2";
         User user = this.createUserForTest(username);
         try {

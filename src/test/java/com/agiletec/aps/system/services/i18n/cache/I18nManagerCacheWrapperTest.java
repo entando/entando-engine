@@ -34,6 +34,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -63,7 +64,6 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void testInitCache() throws Exception {
-        this.init();
         Cache fakeCache = Mockito.mock(Cache.class);
         when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
         ApsProperties properties = I18nManagerTest.createLabel("It Label", "En Label");
@@ -76,7 +76,6 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void testInitCacheWithErrors() {
-        this.init();
         Assertions.assertThrows(EntException.class, () -> {
             Cache fakeCache = Mockito.mock(Cache.class);
             when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
@@ -94,7 +93,6 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void getLabelsGroup() throws Exception {
-        this.init();
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNotNull(properties);
         Assert.assertEquals("ciao", properties.get("it"));
@@ -102,7 +100,6 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void update() {
-        this.init();
         cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNotNull(properties);
@@ -111,7 +108,6 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void updateInvalidEntry() {
-        this.init();
         Assertions.assertThrows(CacheItemNotFoundException.class, ()
                 -> cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"))
         );
@@ -119,12 +115,12 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void delete() {
-        this.init();
         cacheWrapper.removeLabelGroup(TEST_KEY);
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         Assert.assertNull(properties);
     }
     
+    @BeforeEach
     private void init() {
         MockitoAnnotations.initMocks(I18nManagerCacheWrapperTest.class);
         ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);

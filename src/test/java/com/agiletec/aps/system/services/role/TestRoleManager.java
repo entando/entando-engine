@@ -21,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.i18n.II18nManager;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,26 +33,32 @@ import org.junit.jupiter.api.Test;
  */
 public class TestRoleManager extends BaseTestCaseJunit5 {
 	
+    private IRoleManager roleManager;
+    
+    @BeforeEach
+    private void init() {
+        this.roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
+    }
+    
     @Test
     public void testAddUpdateDeletePermission() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
 		Role role = new Role();
 		role.setName("temp");
 		try {
-			roleManager.removeRole(role);
-			roleManager.removePermission("temp");
+			this.roleManager.removeRole(role);
+			this.roleManager.removePermission("temp");
 		} catch (Throwable t) {
 			throw t;
 		}
 		Permission permission = new Permission();
 		permission.setName("temp");
 		permission.setDescription("Permesso temporaneo");
-		roleManager.addPermission(permission);		
+		this.roleManager.addPermission(permission);		
 		role = new Role();
 		role.setName("temp");
 		role.setDescription("Ruolo temporaneo");
 		role.addPermission("temp");
-		roleManager.addRole(role);
+		this.roleManager.addRole(role);
 		
 		this.getRolesAndPermissions();
 		this.updateRoleAndPermission();
@@ -60,12 +68,11 @@ public class TestRoleManager extends BaseTestCaseJunit5 {
 	}
 	
 	private void getRolesAndPermissions() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-		Role role = roleManager.getRole("temp");
+		Role role = this.roleManager.getRole("temp");
 		assertNotNull(role);
 		
 		assertEquals(role.getDescription(), "Ruolo temporaneo");
-		Iterator<Permission> iter = roleManager.getPermissions().iterator();
+		Iterator<Permission> iter = this.roleManager.getPermissions().iterator();
 		boolean contains = false;
 		while (iter.hasNext()) {
 			Permission permission = (Permission) iter.next();
@@ -80,23 +87,21 @@ public class TestRoleManager extends BaseTestCaseJunit5 {
 	}
 	
 	private void updateRoleAndPermission() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
 		Role role = new Role();
 		role.setName("temp");
 		role.setDescription("Ruolo temporaneo 1");
 		role.addPermission("temp");
-		roleManager.updateRole(role);
+		this.roleManager.updateRole(role);
 		Permission permission = new Permission();
 		permission.setName("temp");
 		permission.setDescription("Permesso temporaneo 1");
-		roleManager.updatePermission(permission);
+		this.roleManager.updatePermission(permission);
 	}
 	
 	private void getNewRolesAndPermissions() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-		Role role = roleManager.getRole("temp");
+		Role role = this.roleManager.getRole("temp");
 		assertEquals(role.getDescription(), "Ruolo temporaneo 1");
-		Iterator<Permission> iter = roleManager.getPermissions().iterator();
+		Iterator<Permission> iter = this.roleManager.getPermissions().iterator();
 		boolean contains = false;
 		while (iter.hasNext()) {
 			Permission permission = (Permission) iter.next();
@@ -108,20 +113,18 @@ public class TestRoleManager extends BaseTestCaseJunit5 {
 	}
 	
 	private void deleteRoleAndPermission() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
 		Role role = new Role();
 		role.setName("temp");
 		role.setDescription("temp description");
-		roleManager.updateRole(role);
-		roleManager.removeRole(role);
-		roleManager.removePermission("temp");
+		this.roleManager.updateRole(role);
+		this.roleManager.removeRole(role);
+		this.roleManager.removePermission("temp");
 	} 	
 	
 	private void deletedRoleAndPermission() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-		Role role = roleManager.getRole("temp");
+		Role role = this.roleManager.getRole("temp");
 		assertNull(role);
-		Iterator<Permission> iter = roleManager.getPermissions().iterator();
+		Iterator<Permission> iter = this.roleManager.getPermissions().iterator();
 		boolean contains = false;
 		while (iter.hasNext()) {
 			Permission permission = iter.next();
@@ -134,9 +137,8 @@ public class TestRoleManager extends BaseTestCaseJunit5 {
 	
     @Test
 	public void testGetRolesWithPemission() throws Throwable {
-        IRoleManager roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
     	String permission = Permission.SUPERVISOR;
-    	List<Role> roles = roleManager.getRolesWithPermission(permission);
+    	List<Role> roles = this.roleManager.getRolesWithPermission(permission);
     	assertEquals(1, roles.size());
     	for (int i=0; i<roles.size(); i++) {
     		Role role = roles.get(i);

@@ -23,14 +23,16 @@ import java.util.List;
 import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
 
+	private ILangManager langManager = null;
+
 	@Test
     public void testGetLang() throws EntException {
-        ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		Lang lang = langManager.getLang("en");
+		Lang lang = this.langManager.getLang("en");
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
 		assertEquals(langCode, "en");
@@ -39,8 +41,7 @@ public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
 
 	@Test
     public void testGetDefaultLang() throws EntException {
-		ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		Lang lang = langManager.getDefaultLang();
+		Lang lang = this.langManager.getDefaultLang();
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
 		assertEquals(langCode, "it");
@@ -49,8 +50,7 @@ public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
 
 	@Test
     public void testGetLangs() throws EntException {
-		ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		List<Lang> langs = langManager.getLangs();
+		List<Lang> langs = this.langManager.getLangs();
 		assertEquals(2, langs.size());
 		for (Lang lang : langs) {
 			String code = lang.getCode();
@@ -66,8 +66,7 @@ public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
 
 	@Test
     public void testGetAssignableLangs() throws Throwable {
-		ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		List<Lang> assignableLangs = langManager.getAssignableLangs();
+		List<Lang> assignableLangs = this.langManager.getAssignableLangs();
 		assertTrue(!assignableLangs.isEmpty());
 		Lang firstLang = (Lang) assignableLangs.get(0);
 		assertEquals("om", firstLang.getCode());
@@ -80,28 +79,32 @@ public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
 
 	@Test
     public void testAddUpdateRemoveLang() throws Throwable {
-		ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		int systemLangs = langManager.getLangs().size();
+		int systemLangs = this.langManager.getLangs().size();
 		try {
-			langManager.addLang("ro");
-			Lang addedLang = langManager.getLang("ro");
+			this.langManager.addLang("ro");
+			Lang addedLang = this.langManager.getLang("ro");
 			assertEquals("ro", addedLang.getCode());
 			assertEquals("Romanian", addedLang.getDescr());
-			assertEquals(systemLangs + 1, langManager.getLangs().size());
+			assertEquals(systemLangs + 1, this.langManager.getLangs().size());
 
-			langManager.updateLang("ro", "New Descr Romanian Lang");
-			addedLang = langManager.getLang("ro");
+			this.langManager.updateLang("ro", "New Descr Romanian Lang");
+			addedLang = this.langManager.getLang("ro");
 			assertEquals("ro", addedLang.getCode());
 			assertEquals("New Descr Romanian Lang", addedLang.getDescr());
-			assertEquals(systemLangs + 1, langManager.getLangs().size());
+			assertEquals(systemLangs + 1, this.langManager.getLangs().size());
 
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			langManager.removeLang("ro");
-			assertNull(langManager.getLang("ro"));
-			assertEquals(systemLangs, langManager.getLangs().size());
+			this.langManager.removeLang("ro");
+			assertNull(this.langManager.getLang("ro"));
+			assertEquals(systemLangs, this.langManager.getLangs().size());
 		}
 	}
+
+    @BeforeEach
+    private void init() throws Exception {
+        this.langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+    }
 
 }

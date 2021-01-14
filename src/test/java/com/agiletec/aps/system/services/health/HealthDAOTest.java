@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,6 +35,7 @@ public class HealthDAOTest {
         MockitoAnnotations.initMocks(HealthDAOTest.class);
     }
     
+    @BeforeEach
     private void init() {
         healthDAO = new HealthDAO()
                 .setPortDataSource(portDataSource)
@@ -42,7 +44,6 @@ public class HealthDAOTest {
     
     @Test
     public void isServDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
-        this.init();
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
 
@@ -51,7 +52,6 @@ public class HealthDAOTest {
 
     @Test
     public void isServDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
-        this.init();
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
         assertFalse(healthDAO.isServDBConnectionHealthy());
@@ -59,14 +59,12 @@ public class HealthDAOTest {
 
     @Test
     public void isServDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
-        this.init();
         when(servDataSource.getConnection()).thenThrow(new SQLException());
         assertFalse(healthDAO.isServDBConnectionHealthy());
     }
 
     @Test
     public void isPortDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
-        this.init();
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
         assertTrue(healthDAO.isPortDBConnectionHealthy());
@@ -74,14 +72,12 @@ public class HealthDAOTest {
 
     @Test
     public void isPortDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
-        this.init();
         when(portDataSource.getConnection()).thenThrow(new SQLException());
         assertFalse(healthDAO.isPortDBConnectionHealthy());
     }
 
     @Test
     public void isPortDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
-        this.init();
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
         assertFalse(healthDAO.isPortDBConnectionHealthy());

@@ -31,6 +31,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.agiletec.aps.BaseTestCaseJunit5;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,14 +41,12 @@ public class TestGroupManager extends BaseTestCaseJunit5 {
 
     @Test
     public void testGetGroups() {
-        IGroupManager groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         List<Group> groups = groupManager.getGroups();
         assertTrue(groups.size() >= 6);
     }
 
     @Test
     public void testAddDeleteGroup() throws Throwable {
-        IGroupManager groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         int initSize = groupManager.getGroups().size();
         String groupCode = "Gruppo_Prova";
         Group group = new Group();
@@ -72,7 +71,6 @@ public class TestGroupManager extends BaseTestCaseJunit5 {
 
     @Test
     public void testUpdateGroup() throws Throwable {
-        IGroupManager groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         int initSize = groupManager.getGroups().size();
         Group group = new Group();
         String groupCode = "Gruppo_Prova";
@@ -105,7 +103,6 @@ public class TestGroupManager extends BaseTestCaseJunit5 {
     @SuppressWarnings("rawtypes")
     @Test
     public void test_search_should_return_all_results() throws EntException {
-        IGroupManager groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         FieldSearchFilter[] fieldSearchFilters = null;
         SearcherDaoPaginatedResult<Group> result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(6));
@@ -120,7 +117,6 @@ public class TestGroupManager extends BaseTestCaseJunit5 {
     @SuppressWarnings("rawtypes")
     @Test
     public void test_search_by_filter() throws EntException {
-        IGroupManager groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
         FieldSearchFilter[] fieldSearchFilters = new FieldSearchFilter[0];
 
         FieldSearchFilter groupNameFilter = new FieldSearchFilter<>("groupname", "s", true, LikeOptionType.COMPLETE);
@@ -146,5 +142,12 @@ public class TestGroupManager extends BaseTestCaseJunit5 {
         assertThat(result.getCount(), is(3));
         assertThat(result.getList().size(), is(1));
     }
+
+    @BeforeEach
+    private void init() {
+        this.groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+    }
+
+    private IGroupManager groupManager = null;
 
 }

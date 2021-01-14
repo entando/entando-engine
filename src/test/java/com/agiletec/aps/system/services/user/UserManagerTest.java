@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -94,6 +95,7 @@ public class UserManagerTest {
         MockitoAnnotations.initMocks(UserManagerTest.class);
     }
 
+    @BeforeEach
     private void init() throws EntException {
         MockitoAnnotations.initMocks(UserManagerTest.class);
         when(userDao.getPasswordEncoder()).thenReturn(passwordEncoder);
@@ -103,7 +105,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
-        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.prepareInit();
@@ -116,7 +117,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
-        this.init();
         this.emptyUsers();
         this.prepareInit();
         userManager.init();
@@ -127,7 +127,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
-        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersPlainText();
@@ -146,7 +145,6 @@ public class UserManagerTest {
 
     @Test
     public void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
-        this.init();
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersMixed();

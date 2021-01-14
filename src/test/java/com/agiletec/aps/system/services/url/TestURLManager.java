@@ -22,6 +22,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestURLManager extends BaseTestCaseJunit5 {
@@ -31,7 +32,6 @@ public class TestURLManager extends BaseTestCaseJunit5 {
 
     @Test
     public void testGetURLString_1() throws Throwable {
-        this.init();
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("it");
@@ -51,7 +51,6 @@ public class TestURLManager extends BaseTestCaseJunit5 {
 
     @Test
     public void testGetURLString_2() throws Throwable {
-        this.init();
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");
@@ -81,6 +80,7 @@ public class TestURLManager extends BaseTestCaseJunit5 {
         }
     }
 
+    @BeforeEach
     private void init() {
         this.urlManager = (IURLManager) this.getService(SystemConstants.URL_MANAGER);
         this.configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);

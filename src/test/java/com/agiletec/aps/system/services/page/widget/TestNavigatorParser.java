@@ -22,6 +22,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,7 +32,6 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
     @Test
 	public void testGetTargets_1() throws Throwable {
-        this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", "admin");
 		String spec = "current.path";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -46,7 +46,6 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
 	@Test
 	public void testGetTargets_2() throws Throwable {
-		this.init();
 		RequestContext reqCtx = this.valueRequestContext("contentview", "admin");
 		String spec = "current.path";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -59,7 +58,6 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
 	@Test
 	public void testGetTargets_3() throws Throwable {
-		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", SystemConstants.GUEST_USER_NAME);
 		String spec = "abs(0).subtree(2)";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -87,7 +85,6 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
 	@Test
 	public void testGetTargets_4() throws Throwable {
-		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_11", "editorCustomers");
 		String spec = "code(homepage).children";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -108,7 +105,6 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 	
 	@Test
 	public void testGetTargets_5() throws Throwable {
-		this.init();
 		RequestContext reqCtx = this.valueRequestContext("pagina_1", "editorCoach");
 		String spec = "current.subtree(1)+parent.children";
 		List<NavigatorTarget> targets = this._navigatorParser.parseSpec(spec, reqCtx);
@@ -151,6 +147,7 @@ public class TestNavigatorParser extends BaseTestCaseJunit5 {
 		return reqCtx;
 	}
 	
+    @BeforeEach
 	private void init() throws Exception {
 		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
 		this._navigatorParser = (INavigatorParser) this.getApplicationContext().getBean(SystemConstants.NAVIGATOR_PARSER);

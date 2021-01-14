@@ -27,6 +27,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Role;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,9 +35,19 @@ import org.junit.jupiter.api.Test;
  */
 public class TestAuthorityManager extends BaseTestCaseJunit5 {
     
+	private IRoleManager _roleManager = null;
+	private IGroupManager _groupManager = null;
+	private IAuthorizationManager _authorizationManager;
+    
+    @BeforeEach
+    private void init() {
+        this._roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
+        this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+        this._authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
+    }
+    
 	@Test
     public void testGetUsersByAuthority_1() throws Throwable {
-        this.init();
 		Role role = this.getRole("pageManager");
 		List<String> usersByRole = this._authorizationManager.getUsersByAuthority(role, false);
 		assertNotNull(usersByRole);
@@ -66,7 +77,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testGetUsersByAuthority_2() throws Throwable {
-        this.init();
 		Group groupForTest = this.createGroupForTest("pageManager");//name equal to an existing role
 		try {
 			((IGroupManager) this._groupManager).addGroup(groupForTest);
@@ -93,7 +103,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testSetRemoveUserAuthorization_1() throws Throwable {
-        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "coach";
 		String roleName = "pageManager";
@@ -120,7 +129,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testSetRemoveUserAuthorization_2() throws Throwable {
-        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "testgroupname";
 		String roleName = "pageManager";
@@ -137,7 +145,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testSetRemoveUserAuthorizations_1() throws Throwable {
-        this.init();
 		String username = "pageManagerCustomers";
 		String groupName = "management";
 		String roleName = "pageManager";
@@ -165,7 +172,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testSetRemoveUserAuthorizations_2() throws Throwable {
-        this.init();
 		String username = "pageManagerCustomers";
 		String notExistentGroupName = "testgroupname";
 		String existentGroupName = "management";
@@ -207,7 +213,6 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testGetAuthorizationsByUser() throws Throwable {
-        this.init();
 		String username = "pageManagerCoach";
 		List<Authorization> authorizations = this._authorizationManager.getUserAuthorizations(username);
 		assertNotNull(authorizations);
@@ -228,19 +233,5 @@ public class TestAuthorityManager extends BaseTestCaseJunit5 {
 		groupForTest.setDescription("Description");
 		return groupForTest;
 	}
-    
-	private void init() throws Exception {
-    	try {
-    		this._roleManager = (IRoleManager) this.getService(SystemConstants.ROLE_MANAGER);
-    		this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
-			this._authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
-    	} catch (Throwable t) {
-            throw new Exception(t);
-        }
-    }
-    
-	private IRoleManager _roleManager = null;
-	private IGroupManager _groupManager = null;
-	private IAuthorizationManager _authorizationManager;
 	
 }

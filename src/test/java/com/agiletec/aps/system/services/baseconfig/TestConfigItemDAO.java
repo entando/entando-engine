@@ -21,21 +21,28 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
 public class TestConfigItemDAO extends BaseTestCaseJunit5 {
-	
+    
+    private ConfigItemDAO configItemDAO;
+    
+    @BeforeEach
+    private void init() {
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+		this.configItemDAO = new ConfigItemDAO();
+		this.configItemDAO.setDataSource(dataSource);
+    }
+    
     @Test
     public void testLoadVersionItems() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		ConfigItemDAO configItemDAO = new ConfigItemDAO();
-		configItemDAO.setDataSource(dataSource);
 		Map<String, String> items = null;
         try {
-            items = configItemDAO.loadVersionItems("test");
+            items = this.configItemDAO.loadVersionItems("test");
         } catch (Throwable e) {
         	throw e;
         }
@@ -47,12 +54,9 @@ public class TestConfigItemDAO extends BaseTestCaseJunit5 {
 	
 	@Test
     public void testLoadVersionItem() throws Throwable {
-		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		ConfigItemDAO configItemDAO = new ConfigItemDAO();
-		configItemDAO.setDataSource(dataSource);
 		String config = null;
         try {
-        	config = configItemDAO.loadVersionItem("test", SystemConstants.CONFIG_ITEM_LANGS);
+        	config = this.configItemDAO.loadVersionItem("test", SystemConstants.CONFIG_ITEM_LANGS);
         } catch (Throwable e) {
         	throw e;
         }

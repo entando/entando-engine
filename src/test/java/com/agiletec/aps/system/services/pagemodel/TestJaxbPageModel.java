@@ -27,6 +27,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,7 +37,6 @@ public class TestJaxbPageModel extends BaseTestCaseJunit5 {
 
     @Test
     public void testLoadModel() throws Throwable {
-        this.init();
         String testPageModelCode = "test_jabx_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -99,6 +99,7 @@ public class TestJaxbPageModel extends BaseTestCaseJunit5 {
         return model;
     }
 
+    @BeforeEach
     private void init() throws Exception {
         this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);

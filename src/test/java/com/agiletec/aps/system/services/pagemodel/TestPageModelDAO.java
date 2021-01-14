@@ -28,6 +28,7 @@ import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,7 +38,6 @@ public class TestPageModelDAO extends BaseTestCaseJunit5 {
 
     @Test
     public void testLoadModels() throws Throwable {
-        this.init();
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         assertTrue(models.containsKey("home"));
         assertTrue(models.containsKey("service"));
@@ -45,7 +45,6 @@ public class TestPageModelDAO extends BaseTestCaseJunit5 {
 
     @Test
     public void testAddRemoveModel() throws Throwable {
-        this.init();
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {
@@ -81,7 +80,6 @@ public class TestPageModelDAO extends BaseTestCaseJunit5 {
 
     @Test
     public void testUpdateModel() throws Throwable {
-        this.init();
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {
@@ -174,6 +172,7 @@ public class TestPageModelDAO extends BaseTestCaseJunit5 {
         return model;
     }
 
+    @BeforeEach
     private void init() {
         this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
