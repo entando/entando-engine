@@ -21,13 +21,16 @@ import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.init.cache.IInitializerManagerCacheWrapper;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.BeanFactory;
 
+@ExtendWith(MockitoExtension.class)
 public class InitializerManagerTest {
 
 	@Mock
@@ -39,7 +42,7 @@ public class InitializerManagerTest {
 	@InjectMocks
 	private InitializerManager initializerManager = null;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}

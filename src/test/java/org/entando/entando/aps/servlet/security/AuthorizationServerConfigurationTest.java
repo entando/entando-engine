@@ -19,15 +19,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.springframework.security.crypto.codec.Base64;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.is;
+
 import org.junit.Assert;
-import org.junit.Before;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.web.servlet.ResultActions;
@@ -39,8 +41,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     @Autowired
     private IApiOAuth2TokenManager apiOAuth2TokenManager;
 
-    @Before
-    @Override
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         this.removeTokens("admin", "mainEditor", "supervisorCustomers");

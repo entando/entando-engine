@@ -45,7 +45,7 @@ import org.junit.jupiter.api.BeforeAll;
 public class BaseTestCaseJunit5 {
     
     @BeforeAll
-    protected static void setUp() throws Exception {
+    public static void setUp() throws Exception {
         try {
             ServletContext srvCtx = new MockServletContext("", new FileSystemResourceLoader());
             ApplicationContext applicationContext = getConfigUtils().createApplicationContext(srvCtx);
@@ -79,7 +79,7 @@ public class BaseTestCaseJunit5 {
     }
     
     @AfterAll
-    protected static void tearDown() throws Exception {
+    public static void tearDown() throws Exception {
         waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
         getConfigUtils().destroyContext(getApplicationContext());
         Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
@@ -159,7 +159,7 @@ public class BaseTestCaseJunit5 {
         return (IManager) getApplicationContext().getBean(name);
     }
 
-    protected static ApplicationContext getApplicationContext() {
+    public static ApplicationContext getApplicationContext() {
         return _applicationContext;
     }
 

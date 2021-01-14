@@ -13,11 +13,16 @@
  */
 package org.entando.entando.aps.system.services.api;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiService;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,18 +30,21 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
  */
 public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
 	
+    @Test
     public void testGetMethod() throws Throwable {
     	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	assertNotNull(method);
     	assertTrue(method.isActive());
     }
     
+    @Test
     public void testGetMethods() throws Throwable {
     	List<ApiMethod> methods = this.getApiCatalogManager().getMethods(ApiMethod.HttpMethod.GET);
     	assertNotNull(methods);
     	assertTrue(methods.size() > 0);
     }
     
+    @Test
     public void testUpdateMethodStatus() throws Throwable {
     	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	method.setStatus(false);
@@ -45,6 +53,7 @@ public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
     	assertFalse(method.isActive());
     }
     
+    @Test
     public void testGetServices() throws Throwable {
     	Map<String, ApiService> services = this.getApiCatalogManager().getServices();
     	assertNotNull(services);

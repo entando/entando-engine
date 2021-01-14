@@ -15,15 +15,18 @@ import org.entando.entando.aps.system.services.api.cache.ApiServiceCacheWrapper;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class ApiCatalogManagerTest {
 
     @Mock
@@ -38,7 +41,7 @@ public class ApiCatalogManagerTest {
     @InjectMocks
     private ApiCatalogManager apiCatalogManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }

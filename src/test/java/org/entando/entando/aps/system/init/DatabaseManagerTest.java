@@ -9,21 +9,22 @@ import org.entando.entando.aps.system.init.cache.IInitializerManagerCacheWrapper
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.ComponentUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class DatabaseManagerTest {
 
     @Mock
@@ -35,7 +36,7 @@ public class DatabaseManagerTest {
     @InjectMocks
     private DatabaseManager databaseManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }

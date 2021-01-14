@@ -35,13 +35,13 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCaseJunit5 {
     private static int currentKey;
     
     @BeforeAll
-	protected static void setUp() throws Exception {
+	public static void setUp() throws Exception {
         BaseTestCaseJunit5.setUp();
         extractSequenceNumber();
     }
     
     @AfterAll
-    protected static void tearDown() throws Exception {
+    public static void tearDown() throws Exception {
     	updateSequenceNumber();
         BaseTestCaseJunit5.tearDown();
     }

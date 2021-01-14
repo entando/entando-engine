@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.io.ByteArrayOutputStream;
@@ -28,25 +29,18 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.entando.entando.aps.system.services.api.model.CDataCharacterEscapeHandler;
 import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author E.Santoboni
  */
-public class ApiBaseTestCase extends BaseTestCase {
+public class ApiBaseTestCase extends BaseTestCaseJunit5 {
 	
-	@Override
-    protected void setUp() throws Exception {
-    	super.setUp();
-    	this.init();
-    }
-	
-    private void init() throws Exception {
-    	try {
-    		this._responseBuilder = (IResponseBuilder) this.getApplicationContext().getBean(SystemConstants.API_RESPONSE_BUILDER);
-    		this._apiCatalogManager = (IApiCatalogManager) this.getService(SystemConstants.API_CATALOG_MANAGER);
-    	} catch (Throwable t) {
-    		throw new Exception(t);
-        }
+    @BeforeEach
+    protected void init() {
+        this._responseBuilder = (IResponseBuilder) this.getApplicationContext().getBean(SystemConstants.API_RESPONSE_BUILDER);
+        this._apiCatalogManager = (IApiCatalogManager) this.getService(SystemConstants.API_CATALOG_MANAGER);
     }
     
 	protected Properties createApiProperties(String username, String langCode, MediaType mediaType) throws Throwable {
@@ -78,8 +72,8 @@ public class ApiBaseTestCase extends BaseTestCase {
 		}
 	}
 	
-    @Override
-	protected void tearDown() throws Exception {
+    @AfterEach
+	protected void destroy() throws Exception {
     	try {
     		ApiTestHelperDAO helperDao = new ApiTestHelperDAO();
     		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");

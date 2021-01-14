@@ -11,10 +11,12 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
-import org.junit.Before;
-import org.junit.Test;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockFilterChain;
@@ -31,8 +33,7 @@ public class CsrfFilterTest {
     private MockFilterChain filterChain;
     private MockEnvironment mockEnvironment;
 
-
-    @Before
+    @BeforeEach
     public void initTest() {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -98,15 +99,19 @@ public class CsrfFilterTest {
     }
 
     // referer not valid
-    @Test(expected = CSRFProtectionException.class)
+    @Test
     public void refererNotValid() {
-        testFilter(null, "xxxxxx", HttpMethod.POST.name());
+        Assertions.assertThrows(CSRFProtectionException.class, () -> {
+            testFilter(null, "xxxxxx", HttpMethod.POST.name());
+        });
     }
 
     // origin not valid
-    @Test(expected = CSRFProtectionException.class)
+    @Test
     public void originNotValid() {
-        testFilter("xxxxx", null, HttpMethod.POST.name());
+        Assertions.assertThrows(CSRFProtectionException.class, () -> {
+            testFilter("xxxxx", null, HttpMethod.POST.name());
+        });
     }
 
 

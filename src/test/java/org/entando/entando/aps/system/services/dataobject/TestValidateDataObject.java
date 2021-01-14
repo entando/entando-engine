@@ -13,9 +13,12 @@
  */
 package org.entando.entando.aps.system.services.dataobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -24,18 +27,15 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestValidateDataObject extends BaseTestCase {
+public class TestValidateDataObject extends BaseTestCaseJunit5 {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
+    @Test
 	public void testValidate_1() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
@@ -66,6 +66,7 @@ public class TestValidateDataObject extends BaseTestCase {
 		}
 	}
 
+	@Test
 	public void testValidate_2() throws Throwable {
 		try {
 			DataObject content = this.createNewVoid("RAH", "descr", DataObject.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
@@ -82,6 +83,7 @@ public class TestValidateDataObject extends BaseTestCase {
 		}
 	}
 
+	@Test
 	public void testValidate_4() throws Throwable {
 		String shortTitle = "short";
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; "
@@ -129,6 +131,7 @@ public class TestValidateDataObject extends BaseTestCase {
 		return content;
 	}
 
+    @BeforeEach
 	private void init() throws Exception {
 		try {
 			this._contentManager = (IDataObjectManager) this.getService("DataObjectManager");

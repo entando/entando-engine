@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.dataobject.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
@@ -37,6 +42,8 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.entando.entando.aps.system.services.dataobject.api.model.JAXBDataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
@@ -45,27 +52,25 @@ public class TestApiDataObjectInterface extends ApiBaseTestCase {
 
     private IDataObjectManager dataObjectManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetXmlDataObject() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testGetDataObject(mediaType, "admin", "ALL4", "it");
     }
 
+    @Test
     public void testGetJsonDataObject() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testGetDataObject(mediaType, "admin", "ALL4", "en");
     }
 
+    @Test
     public void testCreateNewDataObjectFromXml() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testCreateNewDataObject(mediaType, "ALL4");
     }
 
+    @Test
     public void testCreateNewDataObjectFromJson() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testCreateNewDataObject(mediaType, "ALL4");
@@ -162,12 +167,10 @@ public class TestApiDataObjectInterface extends ApiBaseTestCase {
         return jaxbData;
     }
 
-    private void init() throws Exception {
-        try {
-            this.dataObjectManager = (IDataObjectManager) this.getApplicationContext().getBean(SystemConstants.DATA_OBJECT_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    @BeforeEach
+    protected void init() {
+        super.init();
+        this.dataObjectManager = (IDataObjectManager) this.getApplicationContext().getBean(SystemConstants.DATA_OBJECT_MANAGER);
     }
 
 }
