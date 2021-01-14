@@ -17,7 +17,6 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.*;
 import org.mockito.*;
 import org.springframework.cache.*;
 
@@ -26,9 +25,16 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class CacheInfoManagerTest {
 	
 	@Mock
@@ -49,7 +55,7 @@ public class CacheInfoManagerTest {
 	@InjectMocks
     private CacheInfoManager cacheInfoManager;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		Map<String, Date> map = new HashMap<>();
@@ -65,48 +71,52 @@ public class CacheInfoManagerTest {
 		Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
 	}
 	
-	@Test(expected = EntException.class)
+    @Test
     public void testAroundCacheableMethod() throws Throwable {
-		CacheableInfo cacheableInfo = new CacheableInfo() {
-			@Override
-			public int expiresInMinute() {
-				return 1;
-			}
-			@Override
-			public String groups() {
-				return "testGroup";
-			}
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return CacheableInfo.class;
-			}
-		};
-        cacheInfoManager.aroundCacheableMethod(proceedingJoinPoint, cacheableInfo);
-        Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
-        Mockito.verify(cacheInfoManager, Mockito.never())
-				.putInGroup(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String[].class));
-        Mockito.verify(cacheInfoManager, Mockito.never())
-				.setExpirationTime(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(Date.class));
+        CacheableInfo cacheableInfo = new CacheableInfo() {
+            @Override
+            public int expiresInMinute() {
+                return 1;
+            }
+            @Override
+            public String groups() {
+                return "testGroup";
+            }
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return CacheableInfo.class;
+            }
+        };
+        Assertions.assertThrows(EntException.class, () -> {
+            cacheInfoManager.aroundCacheableMethod(proceedingJoinPoint, cacheableInfo);
+            Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
+            Mockito.verify(cacheInfoManager, Mockito.never())
+                    .putInGroup(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String[].class));
+            Mockito.verify(cacheInfoManager, Mockito.never())
+                    .setExpirationTime(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(Date.class));
+        });
     }
 	
-    @Test(expected = EntException.class)
+    @Test
     public void testAroundCacheInfoEvictMethod() throws Throwable {
-		CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
-			@Override
-			public String[] value() {
-				return new String[]{ICacheInfoManager.DEFAULT_CACHE_NAME};
-			}
-			@Override
-			public String groups() {
-				return "testCacheGroup2,testCacheGroup2";
-			}
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return CacheInfoEvict.class;
-			}
-		};
-        cacheInfoManager.aroundCacheInfoEvictMethod(proceedingJoinPoint, cacheInfoEvict);
-        Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
+        CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
+            @Override
+            public String[] value() {
+                return new String[]{ICacheInfoManager.DEFAULT_CACHE_NAME};
+            }
+            @Override
+            public String groups() {
+                return "testCacheGroup2,testCacheGroup2";
+            }
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return CacheInfoEvict.class;
+            }
+        };
+        Assertions.assertThrows(EntException.class, () -> {
+            cacheInfoManager.aroundCacheInfoEvictMethod(proceedingJoinPoint, cacheInfoEvict);
+            Mockito.verify(proceedingJoinPoint, Mockito.times(1)).getTarget();
+        });
     }
 	
     @Test

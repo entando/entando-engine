@@ -13,24 +13,22 @@
  */
 package org.entando.entando.aps.system.services.command;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-import junit.framework.TestCase;
 
 import org.entando.entando.aps.system.common.command.context.BaseBulkCommandContext;
 import org.entando.entando.aps.system.common.command.tracer.DefaultBulkCommandTracer;
 import org.entando.entando.aps.system.services.command.util.BulkCommandContainer;
+import org.junit.jupiter.api.Test;
 
-public class TestBulkCommandManagerCache extends TestCase /* BaseTestCase*/ {
+public class TestBulkCommandManagerCache {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	public void testClean() {
+	@Test
+    public void testClean() {
 		for (int i = 0; i < 10; i++) {
 			String name = "test" + i;
 			FakeBulkCommand command = new FakeBulkCommand(new BaseBulkCommandContext<String>(new ArrayList<String>(), new DefaultBulkCommandTracer<String>()));

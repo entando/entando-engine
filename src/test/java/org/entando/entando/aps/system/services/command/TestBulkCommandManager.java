@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.command;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -23,17 +27,14 @@ import org.entando.entando.aps.system.common.command.context.BaseBulkCommandCont
 import org.entando.entando.aps.system.common.command.report.BulkCommandReport;
 import org.entando.entando.aps.system.common.command.tracer.DefaultBulkCommandTracer;
 
-import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TestBulkCommandManager extends BaseTestCase {
+public class TestBulkCommandManager extends BaseTestCaseJunit5 {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
+    @Test
 	public void testAddGetCommandWOThread() {
 		String owner = "test";
 		Collection<String> items = Arrays.asList(new String[] { "1_succ", "2_err", "3_warn", "4_err", "5_warn", 
@@ -56,6 +57,7 @@ public class TestBulkCommandManager extends BaseTestCase {
 		assertNotNull(this._bulkCommandManager.getCommand(owner, command.getId()));
 	}
 
+    @Test
 	public void testAddGetCommandByThread() throws InterruptedException {
 		String owner = "test";
 		Collection<String> items = Arrays.asList(new String[] { "1_succ", "2_err", "3_warn", "4_err", "5_warn", 
@@ -126,12 +128,9 @@ public class TestBulkCommandManager extends BaseTestCase {
 		return threadSet.size();
 	}
 
+    @BeforeEach
 	private void init() throws Exception {
-		try {
-			this._bulkCommandManager = (IBulkCommandManager) this.getApplicationContext().getBean(SystemConstants.BULK_COMMAND_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
+		this._bulkCommandManager = (IBulkCommandManager) this.getApplicationContext().getBean(SystemConstants.BULK_COMMAND_MANAGER);
 	}
 
 	private IBulkCommandManager _bulkCommandManager;
