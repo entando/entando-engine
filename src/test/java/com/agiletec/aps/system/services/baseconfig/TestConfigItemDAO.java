@@ -19,7 +19,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestConfigItemDAO extends BaseTestCaseJunit5 {
+public class TestConfigItemDAO extends BaseTestCase {
     
     private ConfigItemDAO configItemDAO;
     

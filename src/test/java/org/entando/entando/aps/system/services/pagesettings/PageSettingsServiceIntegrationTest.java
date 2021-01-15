@@ -13,10 +13,15 @@
  */
 package org.entando.entando.aps.system.services.pagesettings;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.BaseTestCase;
 import org.entando.entando.aps.system.services.pagesettings.model.PageSettingsDto;
 import org.entando.entando.web.pagesettings.model.PageSettingsRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author paddeo
@@ -25,12 +30,7 @@ public class PageSettingsServiceIntegrationTest extends BaseTestCase {
 
     private IPageSettingsService pageSettingsService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             pageSettingsService = (IPageSettingsService) this.getApplicationContext().getBean(IPageSettingsService.BEAN_NAME);

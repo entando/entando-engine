@@ -21,13 +21,13 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestPermissionDAO extends BaseTestCaseJunit5 {
+public class TestPermissionDAO extends BaseTestCase {
 	
     @Test
     public void testAddUpdateDeletePermission() throws Throwable {

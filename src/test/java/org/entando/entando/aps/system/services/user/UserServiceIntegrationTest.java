@@ -13,12 +13,16 @@
  */
 package org.entando.entando.aps.system.services.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.agiletec.aps.BaseTestCase;
 import java.util.List;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserAuthority;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  *
@@ -28,12 +32,7 @@ public class UserServiceIntegrationTest extends BaseTestCase {
 
     private IUserService userService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             userService = (IUserService) this.getApplicationContext().getBean(IUserService.BEAN_NAME);

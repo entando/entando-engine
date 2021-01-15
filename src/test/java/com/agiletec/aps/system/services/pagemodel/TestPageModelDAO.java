@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestPageModelDAO extends BaseTestCaseJunit5 {
+public class TestPageModelDAO extends BaseTestCase {
 
     @Test
     public void testLoadModels() throws Throwable {

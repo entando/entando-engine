@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestNavigatorParser extends BaseTestCaseJunit5 {
+public class TestNavigatorParser extends BaseTestCase {
 	
     @Test
 	public void testGetTargets_1() throws Throwable {

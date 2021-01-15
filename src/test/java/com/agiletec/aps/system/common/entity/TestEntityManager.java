@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestEntityManager extends BaseTestCaseJunit5 {
+public class TestEntityManager extends BaseTestCase {
 	
     @Test
 	public void testGetAttributeTypes() throws Throwable {

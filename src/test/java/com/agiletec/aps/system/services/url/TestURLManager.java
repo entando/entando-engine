@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -25,7 +25,7 @@ import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestURLManager extends BaseTestCaseJunit5 {
+public class TestURLManager extends BaseTestCase {
 
     private ConfigInterface configManager = null;
     private IURLManager urlManager = null;

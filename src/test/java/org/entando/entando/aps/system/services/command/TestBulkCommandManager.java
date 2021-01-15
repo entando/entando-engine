@@ -27,12 +27,12 @@ import org.entando.entando.aps.system.common.command.context.BaseBulkCommandCont
 import org.entando.entando.aps.system.common.command.report.BulkCommandReport;
 import org.entando.entando.aps.system.common.command.tracer.DefaultBulkCommandTracer;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestBulkCommandManager extends BaseTestCaseJunit5 {
+public class TestBulkCommandManager extends BaseTestCase {
 
     @Test
 	public void testAddGetCommandWOThread() {

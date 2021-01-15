@@ -19,18 +19,15 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 public class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;
-
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    
+    @BeforeEach
     private void init() throws Exception {
         try {
             pageService = (IPageService) this.getApplicationContext().getBean(IPageService.BEAN_NAME);
@@ -40,6 +37,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetPageConfiguration() throws JsonProcessingException {
         IPage draftRoot = this.pageManager.getDraftRoot();
         PageConfigurationDto pageConfigurationDto = (PageConfigurationDto) this.pageService.getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
@@ -47,6 +45,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pageConfigurationDto);
     }
 
+    @Test
     public void testUpdatePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
@@ -70,9 +69,9 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         } finally {
             pageManager.deletePage(pageCode);
         }
-
     }
 
+    @Test
     public void testRemovePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();

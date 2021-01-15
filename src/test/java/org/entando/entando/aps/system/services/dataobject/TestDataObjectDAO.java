@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class TestDataObjectDAO extends BaseTestCaseJunit5 {
+public class TestDataObjectDAO extends BaseTestCase {
 
     @Test
     void testDeleteAddDataObject() throws Throwable {

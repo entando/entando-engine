@@ -13,23 +13,23 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
 
     private IDataObjectModelDAO dataModelDAO;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testLoadContentModels() throws Throwable {
         Map<Long, DataObjectModel> models = null;
         try {
@@ -49,6 +49,7 @@ public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
         assertEquals(contains, true);
     }
 
+    @Test
     public void testAddUpdateContentModel() throws Throwable {
         DataObjectModel contentModel = new DataObjectModel();
         contentModel.setId(99);
@@ -93,6 +94,7 @@ public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
         }
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.util.ApsProperties;
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class TestCategoryManager extends BaseTestCaseJunit5 {
+public class TestCategoryManager extends BaseTestCase {
 
     @Test
     public void testGetCategory() {

@@ -22,14 +22,14 @@ import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TestActionLogManager extends BaseTestCaseJunit5 {
+public class TestActionLogManager extends BaseTestCase {
 	
     @Test
 	public void testGetActionRecords() throws Throwable {

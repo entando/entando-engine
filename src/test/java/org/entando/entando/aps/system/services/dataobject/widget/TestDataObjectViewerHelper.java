@@ -25,11 +25,11 @@ import com.agiletec.aps.util.ApsProperties;
 import static org.entando.entando.Jdk11CompatibleDateFormatter.formatMediumDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestDataObjectViewerHelper extends BaseTestCaseJunit5 {
+public class TestDataObjectViewerHelper extends BaseTestCase {
 
     @Test
     void testGetRenderedDataObject() throws Throwable {

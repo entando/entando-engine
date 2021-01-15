@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -56,7 +56,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M. Morini - E.Santoboni
  */
-public class TestDataObjectManager extends BaseTestCaseJunit5 {
+public class TestDataObjectManager extends BaseTestCase {
 
     @Test
     void testSearchDataObjects_1_1() throws Throwable {

@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.util.DateConverter;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TestActionLogDAO extends BaseTestCaseJunit5 {
+public class TestActionLogDAO extends BaseTestCase {
     
     @Test
 	public void testGetActionRecords() {

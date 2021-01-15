@@ -13,6 +13,12 @@
  */
 package org.entando.entando.aps.system.services.oauth2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
@@ -21,6 +27,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.util.DateConverter;
 import java.util.Date;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 
@@ -31,12 +39,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
 
     private IOAuthConsumerManager oauthConsumerManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetConsumer() throws Exception {
         ConsumerRecordVO consumer = oauthConsumerManager.getConsumerRecord("test1_consumer");
         assertNotNull(consumer);
@@ -49,6 +52,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         assertNull(consumer);
     }
 
+    @Test
     public void testAddConsumer() throws Exception {
         ConsumerRecordVO consumer = this.createConsumer("key", "secret", false);
         try {
@@ -74,6 +78,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateRemoveCategory() throws Throwable {
         ConsumerRecordVO consumer = this.createConsumer("key_2", "secret_2", false);
         try {
@@ -103,6 +108,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetConsumers() throws Exception {
         FieldSearchFilter filter = new FieldSearchFilter(IOAuthConsumerManager.CONSUMER_DESCRIPTION_FILTER_KEY, "1 Consumer", true);
         List<String> keys = this.oauthConsumerManager.getConsumerKeys(new FieldSearchFilter[]{filter});
@@ -111,6 +117,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         assertEquals("test1_consumer", keys.get(0));
     }
 
+    @Test
     public void testLoadClientByClientId() {
         ClientDetails client = this.oauthConsumerManager.loadClientByClientId("test1_consumer");
         assertNotNull(client);
@@ -118,6 +125,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         assertEquals(4, client.getAuthorizedGrantTypes().size());
     }
 
+    @Test
     public void testFailLoadClientByClientId() throws Throwable {
         ConsumerRecordVO consumer = this.createConsumer("key_3", "secret_3", true);
         try {
@@ -137,6 +145,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testLoadClientByInvalidClientId() {
         try {
             this.oauthConsumerManager.loadClientByClientId("invalid");
@@ -165,6 +174,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
         return consumer;
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this.oauthConsumerManager = (IOAuthConsumerManager) this.getService(SystemConstants.OAUTH_CONSUMER_MANAGER);

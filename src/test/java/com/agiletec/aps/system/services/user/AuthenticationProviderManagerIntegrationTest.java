@@ -25,7 +25,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -46,7 +46,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * @author E.Santoboni
  */
-public class AuthenticationProviderManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
 
     private IAuthenticationProviderManager authenticationProvider = null;
     private IUserManager userManager = null;

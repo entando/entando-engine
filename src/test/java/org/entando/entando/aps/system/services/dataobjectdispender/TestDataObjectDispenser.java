@@ -26,14 +26,14 @@ import static org.entando.entando.Jdk11CompatibleDateFormatter.formatMediumDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectDispenser extends BaseTestCaseJunit5 {
+public class TestDataObjectDispenser extends BaseTestCase {
 
     @Test
     void testGetRenderedContent_1() throws Throwable {

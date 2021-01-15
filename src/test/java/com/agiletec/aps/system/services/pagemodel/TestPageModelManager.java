@@ -34,14 +34,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestPageModelManager extends BaseTestCaseJunit5 {
+public class TestPageModelManager extends BaseTestCase {
 
     @Test
     public void testSearch_with_null_empty_filters() throws EntException {

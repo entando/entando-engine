@@ -20,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LangManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class LangManagerIntegrationTest extends BaseTestCase {
 
 	private ILangManager langManager = null;
 

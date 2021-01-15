@@ -8,10 +8,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
-public class TestWidgetType extends BaseTestCaseJunit5 {
+public class TestWidgetType extends BaseTestCase {
 
     @Test
     public void testEqualsAndHashcode() throws EntException {

@@ -24,7 +24,7 @@ import java.util.List;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectListHelper extends BaseTestCaseJunit5 {
+public class TestDataObjectListHelper extends BaseTestCase {
 
 	@Test
     void testGetFilters() throws Throwable {

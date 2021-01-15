@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
 import org.junit.jupiter.api.Test;
 
-public class UserManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class UserManagerIntegrationTest extends BaseTestCase {
 
     @Test
     public void testGetUsers() throws Throwable {

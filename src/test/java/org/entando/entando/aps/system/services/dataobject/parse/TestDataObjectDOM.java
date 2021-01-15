@@ -16,14 +16,14 @@ package org.entando.entando.aps.system.services.dataobject.parse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestDataObjectDOM extends BaseTestCaseJunit5 {
+public class TestDataObjectDOM extends BaseTestCase {
 
 	@Test
     void testGetXMLDocument() throws EntException {

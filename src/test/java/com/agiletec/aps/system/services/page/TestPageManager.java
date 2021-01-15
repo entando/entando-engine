@@ -30,7 +30,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetsDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana, E.Mezzano
  */
-public class TestPageManager extends BaseTestCaseJunit5 {
+public class TestPageManager extends BaseTestCase {
 
     @Test
     public void testGetPage_1() throws Throwable {

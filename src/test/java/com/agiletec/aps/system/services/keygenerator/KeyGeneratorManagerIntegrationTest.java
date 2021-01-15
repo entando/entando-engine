@@ -23,27 +23,27 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class KeyGeneratorManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
 
     private static int currentKey;
     
     @BeforeAll
 	public static void setUp() throws Exception {
-        BaseTestCaseJunit5.setUp();
+        BaseTestCase.setUp();
         extractSequenceNumber();
     }
     
     @AfterAll
     public static void tearDown() throws Exception {
     	updateSequenceNumber();
-        BaseTestCaseJunit5.tearDown();
+        BaseTestCase.tearDown();
     }
 
     /*

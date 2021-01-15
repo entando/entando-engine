@@ -13,40 +13,44 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.List;
 import java.util.Map;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
 
     private IDataObjectModelManager dataModelManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testGetContentModel() {
         DataObjectModel model = this.dataModelManager.getDataObjectModel(1);
         assertNotNull(model);
     }
 
+    @Test
     public void testGetContentModels() {
         List<DataObjectModel> models = this.dataModelManager.getDataObjectModels();
         assertNotNull(models);
         assertEquals(4, models.size());
     }
 
+    @Test
     public void testGetModelsForContentType() {
         List<DataObjectModel> models = this.dataModelManager.getModelsForDataObjectType("ART");
         assertNotNull(models);
         assertEquals(4, models.size());
     }
 
+    @Test
     public void testAddDeleteContentModel() throws Throwable {
         List<DataObjectModel> contentModels = this.dataModelManager.getDataObjectModels();
         int size = contentModels.size();
@@ -72,6 +76,7 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testUpdateContentModel() throws Throwable {
         List<DataObjectModel> contentModels = dataModelManager.getDataObjectModels();
         int size = contentModels.size();
@@ -106,12 +111,14 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testGetReferencingPages() {
         Map<String, List<IPage>> utilizers = this.dataModelManager.getReferencingPages(2);
         assertNotNull(utilizers);
         assertEquals(0, utilizers.size());
     }
 
+    @Test
     public void testGetTypeUtilizer() throws Throwable {
         SmallDataType utilizer = this.dataModelManager.getDefaultUtilizer(1);
         assertNotNull(utilizer);
@@ -126,12 +133,9 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
         assertEquals("RAH", utilizer.getCode());
     }
 
-    private void init() throws Exception {
-        try {
-            this.dataModelManager = (IDataObjectModelManager) this.getService("DataObjectModelManager");
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    @BeforeEach
+    private void init() {
+        this.dataModelManager = (IDataObjectModelManager) this.getService("DataObjectModelManager");
     }
 
 }

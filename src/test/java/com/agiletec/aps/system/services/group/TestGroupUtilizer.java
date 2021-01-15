@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestGroupUtilizer extends BaseTestCaseJunit5 {
+public class TestGroupUtilizer extends BaseTestCase {
 
     @Test
 	public void testGetGroupsUtilizers_1() throws Throwable {

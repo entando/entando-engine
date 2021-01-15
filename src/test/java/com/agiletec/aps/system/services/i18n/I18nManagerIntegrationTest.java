@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  * @author W.Ambu
  */
-public class I18nManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class I18nManagerIntegrationTest extends BaseTestCase {
     
     private II18nManager i18nManager;
     

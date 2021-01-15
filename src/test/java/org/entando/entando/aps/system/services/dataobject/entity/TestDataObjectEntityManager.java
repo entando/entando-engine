@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Date;
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import org.entando.entando.ent.exception.EntException;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectEntityManager extends BaseTestCaseJunit5 {
+public class TestDataObjectEntityManager extends BaseTestCase {
 
     @Test
     void testSearchRecords() throws Throwable {

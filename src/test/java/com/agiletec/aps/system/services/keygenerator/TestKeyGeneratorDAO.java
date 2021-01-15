@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockUniqueKeysDAO;
 import org.junit.jupiter.api.Test;
 
-public class TestKeyGeneratorDAO extends BaseTestCaseJunit5 {
+public class TestKeyGeneratorDAO extends BaseTestCase {
 	
     @Test
     public void testGetUniqueKey() throws Throwable {

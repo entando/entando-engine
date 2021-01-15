@@ -16,7 +16,7 @@ package com.agiletec.aps.system.services.baseconfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Casari
  */
-public class TestBaseConfigService extends BaseTestCaseJunit5 {
+public class TestBaseConfigService extends BaseTestCase {
     
     private ConfigInterface configInterface;
     

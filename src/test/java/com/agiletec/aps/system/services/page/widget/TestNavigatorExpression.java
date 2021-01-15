@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
 /**
  * @version 1.0
  * @author E.Santoboni
  */
-public class TestNavigatorExpression extends BaseTestCaseJunit5 {
+public class TestNavigatorExpression extends BaseTestCase {
 	
     @Test
 	public void testSetExpression_1() throws Throwable {

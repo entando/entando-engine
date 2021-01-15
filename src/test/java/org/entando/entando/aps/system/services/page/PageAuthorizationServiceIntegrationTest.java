@@ -13,13 +13,18 @@
  */
 package org.entando.entando.aps.system.services.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.util.List;
 import org.entando.entando.aps.system.services.auth.IAuthorizationService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -31,12 +36,7 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             authorizationService = (PageAuthorizationService) this.getApplicationContext().getBean(IAuthorizationService.BEAN_NAME_FOR_PAGE);

@@ -22,14 +22,14 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectSearcherDAO extends BaseTestCaseJunit5 {
+public class TestDataObjectSearcherDAO extends BaseTestCase {
 
     @Test
     void testLoadDataObjectsId_1() throws Throwable {

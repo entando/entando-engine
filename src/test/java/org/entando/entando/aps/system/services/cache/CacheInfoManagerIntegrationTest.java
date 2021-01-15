@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class CacheInfoManagerIntegrationTest extends BaseTestCaseJunit5 {
+public class CacheInfoManagerIntegrationTest extends BaseTestCase {
 
 	private static final String DEFAULT_CACHE = CacheInfoManager.DEFAULT_CACHE_NAME;
 

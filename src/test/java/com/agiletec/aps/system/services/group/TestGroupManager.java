@@ -30,14 +30,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestGroupManager extends BaseTestCaseJunit5 {
+public class TestGroupManager extends BaseTestCase {
 
     @Test
     public void testGetGroups() {

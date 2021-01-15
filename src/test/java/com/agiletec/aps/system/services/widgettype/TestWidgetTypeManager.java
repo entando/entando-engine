@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.agiletec.aps.BaseTestCaseJunit5;
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestWidgetTypeManager extends BaseTestCaseJunit5 {
+public class TestWidgetTypeManager extends BaseTestCase {
 
     @Test
     public void testGetWidgetTypes() throws EntException {

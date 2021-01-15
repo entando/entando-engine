@@ -13,22 +13,24 @@
  */
 package org.entando.entando.aps.system.services.guifragment;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author S.Puddu - E.Santoboni
  */
 public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @Test
     public void testCrud() throws Exception {
         String code = "mockCrud_1";
         try {
@@ -54,6 +56,7 @@ public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
     public void testReferences() throws Exception {
         List<String> codes = this._guiFragmentManager.searchGuiFragments(null);
         assertEquals(1, codes.size());
@@ -107,6 +110,7 @@ public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
         return fragment;
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);

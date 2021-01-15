@@ -6,21 +6,18 @@ import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroupServiceIntegrationTest extends BaseTestCase {
 
     private IGroupService groupService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             groupService = (IGroupService) this.getApplicationContext().getBean(IGroupService.BEAN_NAME);

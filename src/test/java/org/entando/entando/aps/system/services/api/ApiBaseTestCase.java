@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * @author E.Santoboni
  */
-public class ApiBaseTestCase extends BaseTestCaseJunit5 {
+public class ApiBaseTestCase extends BaseTestCase {
 	
     @BeforeEach
     protected void init() {
