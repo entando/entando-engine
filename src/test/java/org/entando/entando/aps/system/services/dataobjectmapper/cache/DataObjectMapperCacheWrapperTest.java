@@ -27,7 +27,6 @@ import java.util.List;
 import org.entando.entando.aps.system.services.dataobjectmapper.DataObjectPageMapper;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.junit.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,6 +37,13 @@ import org.springframework.cache.CacheManager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class DataObjectMapperCacheWrapperTest {
 	
 	@Mock
@@ -55,25 +61,27 @@ public class DataObjectMapperCacheWrapperTest {
 	@InjectMocks
     private DataObjectMapperCacheWrapper cacheWrapper;
 	
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
 	
-	@Test(expected = EntException.class)
-    public void testInitCacheWithError() throws Throwable {
-        cacheWrapper.initCache(this.pageManager);
+    @Test
+    void testInitCacheWithError() throws Throwable {
+        Assertions.assertThrows(EntException.class, () -> {
+            cacheWrapper.initCache(this.pageManager);
+        });
     }
 	
 	@Test
-	public void testInitCache() throws Throwable {
+	void testInitCache() throws Throwable {
 		Mockito.when(pageManager.getOnlineRoot()).thenReturn(this.createMockPage());
 		Mockito.when(cacheManager.getCache(IDataObjectMapperCacheWrapper.OBJECT_MAPPER_CACHE_NAME)).thenReturn(this.cache);
 		cacheWrapper.initCache(this.pageManager);
 	}
 	
 	@Test
-	public void testGetPageCode() {
+	void testGetPageCode() {
 		DataObjectPageMapper dataObjectPageMapper = new DataObjectPageMapper();
 		dataObjectPageMapper.add("dataId", "temp_model");
 		dataObjectPageMapper.add("dataId2", "wring_page");

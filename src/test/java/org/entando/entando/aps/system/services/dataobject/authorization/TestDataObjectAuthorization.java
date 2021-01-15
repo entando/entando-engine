@@ -13,7 +13,13 @@
  */
 package org.entando.entando.aps.system.services.dataobject.authorization;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.agiletec.aps.BaseTestCaseJunit5;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -26,19 +32,16 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectAuthorization extends BaseTestCase {
+public class TestDataObjectAuthorization extends BaseTestCaseJunit5 {
     
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-    
-    public void testCheckAdminUser() throws Throwable {
+    @Test
+    void testCheckAdminUser() throws Throwable {
         UserDetails adminUser = this.getUser("admin");
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
@@ -56,7 +59,8 @@ public class TestDataObjectAuthorization extends BaseTestCase {
         assertTrue(check);
     }
     
-    public void testCheckCustomerUser() throws Throwable {
+    @Test
+    void testCheckCustomerUser() throws Throwable {
         UserDetails extractedUser = this.getUser("pageManagerCustomers");
         assertNotNull(extractedUser);
         assertEquals("pageManagerCustomers", extractedUser.getUsername());
@@ -77,7 +81,8 @@ public class TestDataObjectAuthorization extends BaseTestCase {
     /*
      * This test is fully inherited from the original TestAuthorizationManager in jAPS2 (2.0.6)
      */
-    public void testCheckNewUser() throws Throwable {
+    @Test
+    void testCheckNewUser() throws Throwable {
         String username = "UserForTest";
         String password = "PasswordForTest";
         this.addUserForTest(username, password);
@@ -140,7 +145,8 @@ public class TestDataObjectAuthorization extends BaseTestCase {
         this._authorizationManager.addUserAuthorization(username, auth);
     }
     
-    private void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         try {
             this._authorizationManager = (IAuthorizationManager) this.getService(SystemConstants.AUTHORIZATION_SERVICE);
             this._userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);

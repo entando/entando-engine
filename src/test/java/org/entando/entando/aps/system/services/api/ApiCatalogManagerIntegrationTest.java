@@ -51,6 +51,10 @@ public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
     	this.getApiCatalogManager().updateMethodConfig(method);
     	method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	assertFalse(method.isActive());
+        method.setStatus(true);
+    	this.getApiCatalogManager().updateMethodConfig(method);
+    	method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
+        assertTrue(method.isActive());
     }
     
     @Test

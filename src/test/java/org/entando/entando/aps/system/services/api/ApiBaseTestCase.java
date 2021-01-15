@@ -80,7 +80,6 @@ public class ApiBaseTestCase extends BaseTestCaseJunit5 {
     		helperDao.setDataSource(dataSource);
     		helperDao.cleanApiStatus();
     		helperDao.cleanServices();
-    		super.tearDown();
     	} catch (Throwable t) {
     		throw new Exception(t);
         }

@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class TestValidateDataObject extends BaseTestCaseJunit5 {
 
     @Test
-	public void testValidate_1() throws Throwable {
+	void testValidate_1() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
 			DataObject content = this.createNewVoid("ART", insertedDescr, DataObject.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
@@ -67,7 +67,7 @@ public class TestValidateDataObject extends BaseTestCaseJunit5 {
 	}
 
 	@Test
-	public void testValidate_2() throws Throwable {
+	void testValidate_2() throws Throwable {
 		try {
 			DataObject content = this.createNewVoid("RAH", "descr", DataObject.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			ITextAttribute emailAttribute = (ITextAttribute) content.getAttribute("email");
@@ -84,7 +84,7 @@ public class TestValidateDataObject extends BaseTestCaseJunit5 {
 	}
 
 	@Test
-	public void testValidate_4() throws Throwable {
+	void testValidate_4() throws Throwable {
 		String shortTitle = "short";
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; "
 				+ "Ripeto, Titolo che supera la lunghezza massima di cento caratteri";
@@ -132,15 +132,11 @@ public class TestValidateDataObject extends BaseTestCaseJunit5 {
 	}
 
     @BeforeEach
-	private void init() throws Exception {
-		try {
-			this._contentManager = (IDataObjectManager) this.getService("DataObjectManager");
-			this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
-			this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    private void init() throws Exception {
+        this._contentManager = (IDataObjectManager) this.getService("DataObjectManager");
+        this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+        this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+    }
 
 	private IDataObjectManager _contentManager = null;
 	private IGroupManager _groupManager = null;

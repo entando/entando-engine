@@ -16,15 +16,20 @@ package org.entando.entando.aps.system.services.dataobjectmapper;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper;
-import org.junit.*;
 import org.mockito.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class DataObjectMapperManagerTest {
 	
     @Mock
@@ -36,7 +41,7 @@ public class DataObjectMapperManagerTest {
 	@InjectMocks
     private DataObjectPageMapperManager pageMapperManager;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
