@@ -245,8 +245,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
         this.testFailedAuthentication(authTest, UsernameNotFoundException.class);
     }
 
-    @Test
-    public void testFailedAuthentication(Authentication auth, Class expectedException) throws Exception {
+    private void testFailedAuthentication(Authentication auth, Class expectedException) throws Exception {
         try {
             ((AuthenticationManager) this.authenticationProvider).authenticate(auth);
             fail();

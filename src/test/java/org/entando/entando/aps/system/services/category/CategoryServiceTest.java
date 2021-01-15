@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,8 +78,8 @@ public class CategoryServiceTest {
         Category existingCategory = CategoryTestHelper.stubTestCategory();
         CategoryDto expectedDto = CategoryTestHelper.stubTestCategoryDto();
         when(categoryManager.getCategory(anyString())).thenReturn(existingCategory);
-        when(categoryValidator.areEquals(any(), any())).thenReturn(true);
-        when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
+        Mockito.lenient().when(categoryValidator.areEquals(any(), any())).thenReturn(true);
+        Mockito.lenient().when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
         CategoryDto actualDto = this.categoryService.addCategory(expectedDto);
         verify(categoryManager, times(0)).addCategory(any());
         CategoryTestHelper.assertCategoryDtoEquals(expectedDto, actualDto);
@@ -91,7 +92,7 @@ public class CategoryServiceTest {
 
         when(categoryManager.getCategory(anyString())).thenReturn(existingCategory);
         when(categoryValidator.areEquals(any(), any())).thenReturn(false);
-        when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
+        Mockito.lenient().when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
         Assertions.assertThrows(ValidationConflictException.class, () -> {
             this.categoryService.addCategory(expectedDto);
         });

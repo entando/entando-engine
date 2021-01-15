@@ -24,6 +24,7 @@ import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,7 +82,7 @@ public class ApiCatalogManagerTest {
 
     @Test
     public void testGetServices() throws Throwable {
-        when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
+        Mockito.lenient().when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiService> services = this.apiCatalogManager.getServices();
         assertNotNull(services);
         assertTrue(services.isEmpty());

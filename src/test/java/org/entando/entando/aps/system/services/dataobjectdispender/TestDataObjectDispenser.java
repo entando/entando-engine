@@ -136,8 +136,7 @@ public class TestDataObjectDispenser extends BaseTestCase {
         }
     }
 
-    @Test
-    void addNewDataObjectModel(int id, String shape, String dataTypeCode) throws Throwable {
+    private void addNewDataObjectModel(int id, String shape, String dataTypeCode) throws Throwable {
         DataObjectModel model = new DataObjectModel();
         model.setDataType(dataTypeCode);
         model.setDescription("test");

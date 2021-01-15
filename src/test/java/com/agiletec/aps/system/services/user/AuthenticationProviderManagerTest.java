@@ -89,8 +89,8 @@ public class AuthenticationProviderManagerTest {
     public void getUser_2() throws Exception {
         UserDetails disabledUser = this.createMockUser("admin", false, false, false);
         when(this.userManager.getUser("admin")).thenReturn(disabledUser);
-        when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
-        when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
+        Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
+        Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("admin");
         Assert.assertNull(user);
         Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
@@ -102,8 +102,8 @@ public class AuthenticationProviderManagerTest {
     public void getUser_3() throws Exception {
         UserDetails expiredUser_1 = this.createMockUser("admin", true, false, true);
         when(this.userManager.getUser("admin")).thenReturn(expiredUser_1);
-        when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
-        when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
+        Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
+        Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("admin");
         Assert.assertNotNull(user);
         Assert.assertEquals("admin", user.getUsername());
@@ -127,8 +127,8 @@ public class AuthenticationProviderManagerTest {
     private void execute_getUser_4(String username) throws Exception {
         UserDetails expiredUser_2 = this.createMockUser(username, true, true, false);
         when(this.userManager.getUser(username)).thenReturn(expiredUser_2);
-        when(this.authorizationManager.getUserAuthorizations(username)).thenReturn(this.createMockAuthorization());
-        when(this.tokenManager.createAccessTokenForLocalUser(username)).thenReturn(this.createMockToken());
+        Mockito.lenient().when(this.authorizationManager.getUserAuthorizations(username)).thenReturn(this.createMockAuthorization());
+        Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser(username)).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser(username);
         Assert.assertNotNull(user);
         Assert.assertEquals(username, user.getUsername());
@@ -196,7 +196,7 @@ public class AuthenticationProviderManagerTest {
         UserDetails activeUser = this.createMockUser("admin", true, false, false);
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(activeUser);
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
-        when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
+        Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "password");
         Authentication auth = this.authenticationProviderManager.authenticate(authTest);
         Assert.assertNotNull(auth);
@@ -212,16 +212,18 @@ public class AuthenticationProviderManagerTest {
     public void authenticate_userNotFound_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "");
-        try {
-            Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-            Assert.fail();
-        } catch (UsernameNotFoundException e) {
-            Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
-            Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
-            Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
-            Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
-            throw e;
-        }
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            try {
+                Authentication auth = this.authenticationProviderManager.authenticate(authTest);
+                Assert.fail();
+            } catch (UsernameNotFoundException e) {
+                Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
+                Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
+                Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
+                Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
+                throw e;
+            }
+        });
     }
 
     @Test
@@ -280,7 +282,7 @@ public class AuthenticationProviderManagerTest {
     @Test
     public void failLoadUserByUsername_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(null);
-        Assertions.assertThrows(AuthenticationServiceException.class, () -> {
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             try {
                 org.springframework.security.core.userdetails.UserDetails userDetails
                         = this.authenticationProviderManager.loadUserByUsername("username");

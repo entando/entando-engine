@@ -21,8 +21,8 @@ import java.util.List;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserAuthority;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *

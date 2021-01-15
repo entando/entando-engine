@@ -28,6 +28,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -136,6 +137,7 @@ public class TestUserManager extends BaseTestCase {
         return user;
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this._userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);

@@ -59,16 +59,16 @@ public class CacheInfoManagerTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		Map<String, Date> map = new HashMap<>();
-		Mockito.when(valueWrapperForExpirationTime.get()).thenReturn(map);
-		Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.EXPIRATIONS_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForExpirationTime);
+		Mockito.lenient().when(valueWrapperForExpirationTime.get()).thenReturn(map);
+		Mockito.lenient().when(cache.get(Mockito.startsWith(ICacheInfoManager.EXPIRATIONS_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForExpirationTime);
 		Map<String, List<String>> groupsMap = new HashMap<>();
 		List<String> list_a = Arrays.asList("key_a1", "key_a2", "key_a3");
 		List<String> list_b = Arrays.asList("key_b1", "key_b2", "key_b3", "key_b4");
 		groupsMap.put("group_1", new ArrayList<>(list_a));
 		groupsMap.put("group_2", new ArrayList<>(list_b));
-		Mockito.when(valueWrapperForGroups.get()).thenReturn(groupsMap);
-		Mockito.when(cache.get(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForGroups);
-		Mockito.when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
+		Mockito.lenient().when(valueWrapperForGroups.get()).thenReturn(groupsMap);
+		Mockito.lenient().when(cache.get(Mockito.startsWith(ICacheInfoManager.GROUP_CACHE_NAME_PREFIX))).thenReturn(valueWrapperForGroups);
+		Mockito.lenient().when(cacheManager.getCache(Mockito.anyString())).thenReturn(this.cache);
 	}
 	
     @Test
