@@ -1,8 +1,7 @@
 package org.entando.entando.aps.system.services.label;
 
-import static java.util.Collections.singletonMap;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.agiletec.aps.util.ApsProperties;

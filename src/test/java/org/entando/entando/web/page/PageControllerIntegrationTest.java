@@ -17,13 +17,12 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,8 +65,8 @@ import org.entando.entando.web.page.model.PageStatusRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
@@ -553,7 +552,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             IPage page = this.pageManager.getDraftPage(code);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(6, page.getWidgets().length);
+            Assertions.assertEquals(6, page.getWidgets().length);
 
             //put (move the page changing parent from service to homepage)
             String newParentCode = "homepage";
@@ -604,8 +603,8 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             page = this.pageManager.getDraftPage(code);
-            Assert.assertEquals(4, page.getWidgets().length);
-            Assert.assertEquals("new Italian title", page.getTitle("it"));
+            Assertions.assertEquals(4, page.getWidgets().length);
+            Assertions.assertEquals("new Italian title", page.getTitle("it"));
 
             //status
             PageStatusRequest pageStatusRequest = new PageStatusRequest();
@@ -841,7 +840,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.pageModel", is("service")));
 
             IPage page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             result = mockMvc
                     .perform(put("/pages/{pageCode}", pageCode)
@@ -853,7 +852,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.pageModel", is("home")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
         } finally {
             this.pageManager.deletePage(pageCode);
@@ -870,10 +869,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
         try {
 
             IPage page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             ResultActions result = mockMvc
                     .perform(post("/pages")
@@ -904,10 +903,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.status", is("published")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
@@ -917,10 +916,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.errors[0].message", is("Online pages can not be deleted")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             pageStatusRequest.setStatus("draft");
 
@@ -934,10 +933,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.status", is("unpublished")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
@@ -945,10 +944,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andDo(resultPrint()).andExpect(status().isOk());
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}", pageCode)
@@ -1028,7 +1027,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             IPage page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(0, page.getChildrenCodes().length);
+            Assertions.assertEquals(0, page.getChildrenCodes().length);
 
             //Adding children
             pageRequest.setCode(childrenPageCode);
@@ -1037,11 +1036,11 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             page = this.pageManager.getDraftPage(childrenPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(0, page.getChildrenCodes().length);
+            Assertions.assertEquals(0, page.getChildrenCodes().length);
 
             page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(1, page.getChildrenCodes().length);
+            Assertions.assertEquals(1, page.getChildrenCodes().length);
 
             //Updating parentPage
             pageRequest.setCode(parentPageCode);
@@ -1056,7 +1055,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(1, page.getChildrenCodes().length);
+            Assertions.assertEquals(1, page.getChildrenCodes().length);
 
         } finally {
             this.pageManager.deletePage(childrenPageCode);
@@ -1245,7 +1244,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             resultActions.andExpect(status().isUnauthorized());
 
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
         } finally {
             this.pageManager.deletePage(PageRequestMockHelper.ADD_PAGE_CODE);
         }
@@ -1324,7 +1323,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             PageAssertionHelper.assertUsagePageDetails(resultActions, expectedResult);
 
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
         } finally {
             this.deletePagesForUsageDetailsTest();
         }

@@ -13,17 +13,19 @@
  */
 package org.entando.entando.aps.util.crypto;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.entando.entando.TestEntandoJndiUtils;
-import org.junit.BeforeClass;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.entando.entando.TestEntandoJndiUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {
     "classpath*:spring/testpropertyPlaceholder.xml",
     "classpath*:spring/baseSystemConfig.xml",
@@ -34,7 +36,7 @@ import org.junit.BeforeClass;
 @WebAppConfiguration(value = "")
 public class DefaultTextEncryptorTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         TestEntandoJndiUtils.setupJndi();
     }

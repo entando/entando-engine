@@ -1,9 +1,10 @@
 package org.entando.entando.aps.system.services.page.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class PageDtoBuilderTest {
 

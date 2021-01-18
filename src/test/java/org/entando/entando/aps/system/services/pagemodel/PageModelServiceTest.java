@@ -13,10 +13,7 @@ import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.pagemodel.model.*;
-import org.junit.*;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ReflectionUtils;
 
@@ -28,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.createDefaultWidgetType;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModel;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,9 +33,13 @@ import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PageModelServiceTest {
 
     private static final int DEFAULT_MAIN_FRAME = -1;
@@ -65,7 +66,7 @@ public class PageModelServiceTest {
 
     private PageModelService pageModelService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dtoBuilder = new PageModelDtoBuilder();
         pageModelService = new PageModelService(pageModelManager, widgetTypeManager, dtoBuilder);

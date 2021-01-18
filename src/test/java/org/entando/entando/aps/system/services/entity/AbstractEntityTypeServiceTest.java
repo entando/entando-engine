@@ -9,16 +9,19 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.web.common.model.*;
 import org.junit.*;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class AbstractEntityTypeServiceTest {
 
     private static final String ENTITY_MANAGER_CODE = "TEST_MANAGER";
@@ -32,7 +35,7 @@ public class AbstractEntityTypeServiceTest {
     @Mock
     IApsEntityDOM entityDom;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         service.setEntityManagers(ImmutableList.of(entityManager));
     }

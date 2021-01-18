@@ -17,14 +17,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnit4.class)
+import org.junit.jupiter.api.Test;
+
 public class IgnoreJacksonWriteOnlyAccessTest {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(IgnoreJacksonWriteOnlyAccessTest.class);

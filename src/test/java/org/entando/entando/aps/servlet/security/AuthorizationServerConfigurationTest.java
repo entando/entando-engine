@@ -19,15 +19,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.springframework.security.crypto.codec.Base64;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.is;
-import org.junit.Assert;
-import org.junit.Before;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.web.servlet.ResultActions;
@@ -39,7 +40,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     @Autowired
     private IApiOAuth2TokenManager apiOAuth2TokenManager;
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -70,13 +71,13 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
             System.out.println(resultString);
-            Assert.assertTrue(StringUtils.isNotBlank(resultString));
+            Assertions.assertTrue(StringUtils.isNotBlank(resultString));
             String token = JsonPath.parse(resultString).read("$.access_token");
-            Assert.assertTrue(StringUtils.isNotBlank(token));
+            Assertions.assertTrue(StringUtils.isNotBlank(token));
             Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
-            Assert.assertEquals(1, oauthTokens.size());
+            Assertions.assertEquals(1, oauthTokens.size());
             oauthToken = oauthTokens.stream().findFirst().get();
-            Assert.assertEquals(token, oauthToken.getValue());
+            Assertions.assertEquals(token, oauthToken.getValue());
         } catch (Exception e) {
             throw e;
         } finally {
@@ -100,7 +101,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     private void refreshAccessToken(OAuth2AccessToken accessToken, String username) throws Exception {
         String refreshToken = accessToken.getRefreshToken().getValue();
         try {
-            Assert.assertNotNull(this.apiOAuth2TokenManager.readRefreshToken(refreshToken));
+            Assertions.assertNotNull(this.apiOAuth2TokenManager.readRefreshToken(refreshToken));
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "refresh_token");
             params.add("refresh_token", refreshToken);
@@ -114,17 +115,17 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
             System.out.println(resultString);
-            Assert.assertTrue(StringUtils.isNotBlank(resultString));
+            Assertions.assertTrue(StringUtils.isNotBlank(resultString));
             String newAccesstoken = JsonPath.parse(resultString).read("$.access_token");
-            Assert.assertFalse(newAccesstoken.equals(accessToken.getValue()));
+            Assertions.assertFalse(newAccesstoken.equals(accessToken.getValue()));
             String newRefreshtoken = JsonPath.parse(resultString).read("$.refresh_token");
-            Assert.assertNotEquals(newRefreshtoken, refreshToken);
+            Assertions.assertNotEquals(newRefreshtoken, refreshToken);
             Collection<OAuth2AccessToken> oauthTokens = this.apiOAuth2TokenManager.findTokensByUserName(username);
-            Assert.assertEquals(1, oauthTokens.size());
+            Assertions.assertEquals(1, oauthTokens.size());
             OAuth2AccessToken newOauthToken = oauthTokens.stream().findFirst().get();
-            Assert.assertEquals(newAccesstoken, newOauthToken.getValue());
-            Assert.assertEquals(newRefreshtoken, newOauthToken.getRefreshToken().getValue());
-            Assert.assertNull(this.apiOAuth2TokenManager.readRefreshToken(refreshToken));
+            Assertions.assertEquals(newAccesstoken, newOauthToken.getValue());
+            Assertions.assertEquals(newRefreshtoken, newOauthToken.getRefreshToken().getValue());
+            Assertions.assertNull(this.apiOAuth2TokenManager.readRefreshToken(refreshToken));
         } catch (Exception e) {
             throw e;
         } finally {
@@ -158,12 +159,12 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
-        Assert.assertTrue(StringUtils.isNotBlank(resultString));
+        Assertions.assertTrue(StringUtils.isNotBlank(resultString));
         result.andExpect(jsonPath("$.error", is("unauthorized")));
         result.andExpect(jsonPath("$.error_description", anything()));
         if (!StringUtils.isEmpty(username)) {
             Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
-            Assert.assertEquals(0, oauthTokens.size());
+            Assertions.assertEquals(0, oauthTokens.size());
         }
     }
 
@@ -186,12 +187,12 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
-        Assert.assertTrue(StringUtils.isNotBlank(resultString));
+        Assertions.assertTrue(StringUtils.isNotBlank(resultString));
         result.andExpect(jsonPath("$.error", is("invalid_client")));
         String expectedMessage = "Unauthorized grant type: " + grantType;
         result.andExpect(jsonPath("$.error_description", is(expectedMessage)));
         Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
-        Assert.assertEquals(0, oauthTokens.size());
+        Assertions.assertEquals(0, oauthTokens.size());
     }
 
     @Test
@@ -218,11 +219,11 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
-        Assert.assertTrue(StringUtils.isNotBlank(resultString));
+        Assertions.assertTrue(StringUtils.isNotBlank(resultString));
         result.andExpect(jsonPath("$.error", is("invalid_request")));
         result.andExpect(jsonPath("$.error_description", is("Missing grant type")));
         Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
-        Assert.assertEquals(0, oauthTokens.size());
+        Assertions.assertEquals(0, oauthTokens.size());
     }
 
     @Test
@@ -247,10 +248,10 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
                         .accept("application/json;charset=UTF-8"))
                 .andExpect(status().isUnauthorized());
         String resultString = result.andReturn().getResponse().getContentAsString();
-        Assert.assertTrue(StringUtils.isBlank(resultString));
+        Assertions.assertTrue(StringUtils.isBlank(resultString));
         if (!StringUtils.isEmpty(username)) {
             Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
-            Assert.assertEquals(0, oauthTokens.size());
+            Assertions.assertEquals(0, oauthTokens.size());
         }
     }
 

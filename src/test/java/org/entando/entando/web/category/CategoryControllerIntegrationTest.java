@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import org.assertj.core.api.Assert;
 import org.entando.entando.aps.system.services.category.CategoryTestHelper;
 import org.entando.entando.aps.system.services.category.ICategoryService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
@@ -42,8 +42,8 @@ import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTest
 import org.entando.entando.web.category.validator.CategoryValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -108,16 +108,16 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     public void testAddCategory() throws Exception {
         String categoryCode = "test_cat";
         try {
-            Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
             this.executePostByFile("1_POST_invalid_2.json", accessToken, status().isBadRequest());
             this.executePostByFile("1_POST_invalid_3.json", accessToken, status().isNotFound());
             this.executePostByFile("1_POST_valid.json", accessToken, status().isOk());
-            Assert.assertNotNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNotNull(this.categoryManager.getCategory(categoryCode));
             this.executeDelete(categoryCode, accessToken, status().isOk());
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -131,8 +131,8 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     public void testUpdateCategory() throws Exception {
         String categoryCode = "test_cat2";
         try {
-            Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
             ResultActions result = this.executePostByFile("2_POST_valid.json", accessToken, status().isOk());
@@ -156,13 +156,13 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
             Category modified = this.categoryManager.getCategory(categoryCode);
-            Assert.assertNotNull(modified);
-            Assert.assertTrue(modified.getTitle("en").startsWith("New "));
-            Assert.assertTrue(modified.getTitle("it").startsWith("Nuovo "));
+            Assertions.assertNotNull(modified);
+            Assertions.assertTrue(modified.getTitle("en").startsWith("New "));
+            Assertions.assertTrue(modified.getTitle("it").startsWith("Nuovo "));
             result = this.executeDelete(categoryCode, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
         } finally {
             if (categoryManager.getCategory(categoryCode) != null) {
                 this.categoryManager.deleteCategory(categoryCode);
@@ -174,16 +174,16 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     public void testDeleteCategory() throws Exception {
         String categoryCode = "test_cat";
         try {
-            Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
             ResultActions result = this.executePostByFile("1_POST_valid.json", accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
-            Assert.assertNotNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNotNull(this.categoryManager.getCategory(categoryCode));
             result = this.executeDelete(categoryCode, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
-            Assert.assertNull(this.categoryManager.getCategory(categoryCode));
+            Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
             result = this.executeDelete("invalid_category", accessToken, status().isNotFound());
             result = this.executeDelete("cat1", accessToken, status().isBadRequest());
             result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_REFERENCES)));
@@ -255,8 +255,8 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     @Test
     public void testGetCategoryReferences() throws Exception {
-        Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
-        Assert.assertNull(this.categoryManager.getCategory("test_test"));
+        Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
+        Assertions.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = this.mockOAuthInterceptor(user);
         ResultActions result = this
@@ -273,8 +273,8 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
     @Test
     public void shouldReturnCategoryUsageCount() throws Exception {
-        Assert.assertNotNull(this.categoryManager.getCategory("cat1"));
-        Assert.assertNull(this.categoryManager.getCategory("test_test"));
+        Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
+        Assertions.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = this.mockOAuthInterceptor(user);
         String code = "cat1";
@@ -320,7 +320,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
                 .andDo(resultPrint())
                 .andExpect(status().isOk());
 
-        Assert.assertNotNull(this.categoryManager.getCategory("home"));
+        Assertions.assertNotNull(this.categoryManager.getCategory("home"));
         this.executeDelete("home", accessToken, status().isBadRequest())
                 .andDo(resultPrint())
                 .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))

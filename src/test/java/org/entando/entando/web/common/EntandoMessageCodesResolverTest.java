@@ -16,15 +16,19 @@ package org.entando.entando.web.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class EntandoMessageCodesResolverTest {
 
     @Spy
@@ -33,7 +37,7 @@ public class EntandoMessageCodesResolverTest {
     @InjectMocks
     private EntandoMessageCodesResolver messageCodesResolver;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validationErrorCodeMapping.put("NotNull", "51");
         validationErrorCodeMapping.put("Size", "52");

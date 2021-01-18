@@ -24,7 +24,6 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.NavigatorConfigDto;
 import org.hamcrest.Matchers;
-import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -36,6 +35,7 @@ import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.web.widget.model.NavigatorExpressionDto;
+import org.junit.jupiter.api.Test;
 
 public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
     

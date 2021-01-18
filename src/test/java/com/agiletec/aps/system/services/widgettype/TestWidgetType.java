@@ -6,7 +6,7 @@ import org.entando.entando.ent.exception.EntException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.Test;

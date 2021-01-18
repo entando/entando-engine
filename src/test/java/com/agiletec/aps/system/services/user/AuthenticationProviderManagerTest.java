@@ -25,7 +25,6 @@ import java.util.Calendar;
 import java.util.List;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
-import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -76,10 +75,10 @@ public class AuthenticationProviderManagerTest {
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
         when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("admin");
-        Assert.assertNotNull(user);
-        Assert.assertEquals("admin", user.getUsername());
-        Assert.assertEquals(2, user.getAuthorizations().size());
-        Assert.assertEquals("access_token_x", user.getAccessToken());
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals("admin", user.getUsername());
+        Assertions.assertEquals(2, user.getAuthorizations().size());
+        Assertions.assertEquals("access_token_x", user.getAccessToken());
         Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(1)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(1)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -92,7 +91,7 @@ public class AuthenticationProviderManagerTest {
         Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
         Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("admin");
-        Assert.assertNull(user);
+        Assertions.assertNull(user);
         Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -105,10 +104,10 @@ public class AuthenticationProviderManagerTest {
         Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
         Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("admin");
-        Assert.assertNotNull(user);
-        Assert.assertEquals("admin", user.getUsername());
-        Assert.assertEquals(0, user.getAuthorizations().size());
-        Assert.assertNull(user.getAccessToken());
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals("admin", user.getUsername());
+        Assertions.assertEquals(0, user.getAuthorizations().size());
+        Assertions.assertNull(user.getAccessToken());
         Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -130,17 +129,17 @@ public class AuthenticationProviderManagerTest {
         Mockito.lenient().when(this.authorizationManager.getUserAuthorizations(username)).thenReturn(this.createMockAuthorization());
         Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser(username)).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser(username);
-        Assert.assertNotNull(user);
-        Assert.assertEquals(username, user.getUsername());
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals(username, user.getUsername());
         if (username.equals(SystemConstants.ADMIN_USER_NAME)) {
-            Assert.assertEquals(2, user.getAuthorizations().size());
-            Assert.assertEquals("access_token_x", user.getAccessToken());
+            Assertions.assertEquals(2, user.getAuthorizations().size());
+            Assertions.assertEquals("access_token_x", user.getAccessToken());
             Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
             Mockito.verify(authorizationManager, Mockito.times(1)).getUserAuthorizations(Mockito.anyString());
             Mockito.verify(tokenManager, Mockito.times(1)).createAccessTokenForLocalUser(Mockito.anyString());
         } else {
-            Assert.assertEquals(0, user.getAuthorizations().size());
-            Assert.assertNull(user.getAccessToken());
+            Assertions.assertEquals(0, user.getAuthorizations().size());
+            Assertions.assertNull(user.getAccessToken());
             Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
             Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
             Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -151,7 +150,7 @@ public class AuthenticationProviderManagerTest {
     public void getUser_5() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(null);
         UserDetails user = this.authenticationProviderManager.getUser("test_user");
-        Assert.assertNull(user);
+        Assertions.assertNull(user);
         Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -164,10 +163,10 @@ public class AuthenticationProviderManagerTest {
         when(this.authorizationManager.getUserAuthorizations("test_user")).thenReturn(this.createMockAuthorization());
         when(this.tokenManager.createAccessTokenForLocalUser("test_user")).thenReturn(this.createMockToken());
         UserDetails user = this.authenticationProviderManager.getUser("test_user", "password");
-        Assert.assertNotNull(user);
-        Assert.assertEquals("test_user", user.getUsername());
-        Assert.assertEquals(2, user.getAuthorizations().size());
-        Assert.assertEquals("access_token_x", user.getAccessToken());
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals("test_user", user.getUsername());
+        Assertions.assertEquals(2, user.getAuthorizations().size());
+        Assertions.assertEquals("access_token_x", user.getAccessToken());
         Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(1)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(1)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -177,7 +176,7 @@ public class AuthenticationProviderManagerTest {
     public void getUser_7() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         UserDetails user = this.authenticationProviderManager.getUser("test_user", "password");
-        Assert.assertNull(user);
+        Assertions.assertNull(user);
         Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(0)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -199,10 +198,10 @@ public class AuthenticationProviderManagerTest {
         Mockito.lenient().when(this.tokenManager.createAccessTokenForLocalUser("admin")).thenReturn(this.createMockToken());
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "password");
         Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-        Assert.assertNotNull(auth);
-        Assert.assertTrue(auth instanceof UsernamePasswordAuthenticationToken);
-        Assert.assertEquals("admin", auth.getPrincipal());
-        Assert.assertEquals(2, auth.getAuthorities().size());
+        Assertions.assertNotNull(auth);
+        Assertions.assertTrue(auth instanceof UsernamePasswordAuthenticationToken);
+        Assertions.assertEquals("admin", auth.getPrincipal());
+        Assertions.assertEquals(2, auth.getAuthorities().size());
         Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(authorizationManager, Mockito.times(1)).getUserAuthorizations(Mockito.anyString());
         Mockito.verify(tokenManager, Mockito.times(0)).createAccessTokenForLocalUser(Mockito.anyString());
@@ -215,7 +214,7 @@ public class AuthenticationProviderManagerTest {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             try {
                 Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-                Assert.fail();
+                Assertions.fail();
             } catch (UsernameNotFoundException e) {
                 Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
                 Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
@@ -233,7 +232,7 @@ public class AuthenticationProviderManagerTest {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             try {
                 Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-                Assert.fail();
+                Assertions.fail();
             } catch (UsernameNotFoundException e) {
                 Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
                 Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
@@ -251,7 +250,7 @@ public class AuthenticationProviderManagerTest {
         Assertions.assertThrows(AuthenticationServiceException.class, () -> {
             try {
                 Authentication auth = this.authenticationProviderManager.authenticate(authTest);
-                Assert.fail();
+                Assertions.fail();
             } catch (AuthenticationServiceException e) {
                 Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString(), Mockito.anyString());
                 Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
@@ -269,9 +268,9 @@ public class AuthenticationProviderManagerTest {
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
         org.springframework.security.core.userdetails.UserDetails userDetails
                 = this.authenticationProviderManager.loadUserByUsername("admin");
-        Assert.assertNotNull(userDetails);
-        Assert.assertEquals("admin", userDetails.getUsername());
-        Assert.assertEquals(2, userDetails.getAuthorities().size());
+        Assertions.assertNotNull(userDetails);
+        Assertions.assertEquals("admin", userDetails.getUsername());
+        Assertions.assertEquals(2, userDetails.getAuthorities().size());
         Mockito.verify(userManager, Mockito.times(1)).updateLastAccess(Mockito.any(UserDetails.class));
         Mockito.verify(userManager, Mockito.times(0)).getUser(Mockito.anyString(), Mockito.anyString());
         Mockito.verify(userManager, Mockito.times(1)).getUser(Mockito.anyString());
@@ -286,7 +285,7 @@ public class AuthenticationProviderManagerTest {
             try {
                 org.springframework.security.core.userdetails.UserDetails userDetails
                         = this.authenticationProviderManager.loadUserByUsername("username");
-                Assert.fail();
+                Assertions.fail();
             } catch (UsernameNotFoundException e) {
                 Mockito.verifyZeroInteractions(this.authorizationManager);
                 Mockito.verifyZeroInteractions(this.tokenManager);
@@ -302,7 +301,7 @@ public class AuthenticationProviderManagerTest {
             try {
                 org.springframework.security.core.userdetails.UserDetails userDetails
                         = this.authenticationProviderManager.loadUserByUsername("username");
-                Assert.fail();
+                Assertions.fail();
             } catch (UsernameNotFoundException e) {
                 Mockito.verify(userManager, Mockito.times(0)).updateLastAccess(Mockito.any(UserDetails.class));
                 Mockito.verify(userManager, Mockito.times(0)).getUser(Mockito.anyString(), Mockito.anyString());

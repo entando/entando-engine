@@ -20,15 +20,16 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.user.User;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import org.junit.Assert;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class UserProfileManagerAspectTest {
 
@@ -38,7 +39,7 @@ public class UserProfileManagerAspectTest {
 	@Mock
 	private UserProfileManager userProfileManager;
     
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
@@ -51,13 +52,13 @@ public class UserProfileManagerAspectTest {
         
         User user = new User();
         user.setUsername("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(1)).getProfile("test");
         IUserProfile profile = (IUserProfile) user.getProfile();
-        Assert.assertNotNull(profile);
-        Assert.assertEquals("test", profile.getUsername());
+        Assertions.assertNotNull(profile);
+        Assertions.assertEquals("test", profile.getUsername());
     }
     
     @Test
@@ -66,11 +67,11 @@ public class UserProfileManagerAspectTest {
         
         User user = new User();
         user.setUsername("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(1)).getProfile("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
     }
     
     @Test
@@ -84,8 +85,8 @@ public class UserProfileManagerAspectTest {
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(0)).getProfile("test");
-        Assert.assertNotNull(user.getProfile());
-        Assert.assertSame(profile, user.getProfile());
+        Assertions.assertNotNull(user.getProfile());
+        Assertions.assertSame(profile, user.getProfile());
     }
     
     @Test

@@ -17,8 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.pagemodel.model.FrameDto;
 import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PageModelDtoTest {
 
@@ -35,7 +35,7 @@ public class PageModelDtoTest {
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writer().writeValueAsString(dto);
-        Assert.assertNotNull(json);
+        Assertions.assertNotNull(json);
 
 /*
         String actual = "{\"code\":\"code\",\"description\":\"description\"," +

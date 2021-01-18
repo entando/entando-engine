@@ -1,12 +1,10 @@
 package org.entando.entando.aps.system.services.group;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.agiletec.aps.system.services.group.Group;
-import org.assertj.core.api.Assertions;
-import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.springframework.test.web.servlet.ResultActions;

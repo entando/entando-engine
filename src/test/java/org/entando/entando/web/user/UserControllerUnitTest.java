@@ -52,11 +52,14 @@ import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -68,6 +71,7 @@ import org.springframework.validation.MapBindingResult;
  *
  * @author paddeo
  */
+@ExtendWith(MockitoExtension.class)
 public class UserControllerUnitTest extends AbstractControllerTest {
 
     @Mock
@@ -90,7 +94,7 @@ public class UserControllerUnitTest extends AbstractControllerTest {
     
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -420,17 +424,22 @@ public class UserControllerUnitTest extends AbstractControllerTest {
         return pagedMetadata;
     }
 
-    @Test(expected = ValidationGenericException.class)
+    @Test
     public void deleteAdminReturnsError() throws EntException {
-        when(user.getUsername()).thenReturn("admin");
-        MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-        new UserController().deleteUser(user,"admin", bindingResult);
+        Assertions.assertThrows(ValidationGenericException.class, () -> {
+            when(user.getUsername()).thenReturn("admin");
+            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
+            new UserController().deleteUser(user, "admin", bindingResult);
+        });
     }
 
-    @Test(expected = ValidationGenericException.class)
+    @Test
     public void selfDeleteReturnsError() throws EntException {
-        when(user.getUsername()).thenReturn("test");
-        MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-        new UserController().deleteUser(user,"test", bindingResult);
+        Assertions.assertThrows(ValidationGenericException.class, () -> {
+            when(user.getUsername()).thenReturn("test");
+            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
+            new UserController().deleteUser(user, "test", bindingResult);
+        });
     }
+    
 }

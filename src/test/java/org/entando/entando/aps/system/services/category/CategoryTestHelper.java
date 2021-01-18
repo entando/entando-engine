@@ -1,21 +1,15 @@
 package org.entando.entando.aps.system.services.category;
 
-import static java.util.Collections.singletonMap;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.util.ApsProperties;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
-import org.entando.entando.aps.system.services.group.model.GroupDto;
-import org.entando.entando.web.group.model.GroupRequest;
-import org.hamcrest.Matchers;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class CategoryTestHelper {

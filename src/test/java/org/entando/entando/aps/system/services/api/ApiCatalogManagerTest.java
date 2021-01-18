@@ -1,10 +1,7 @@
 package org.entando.entando.aps.system.services.api;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -21,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.api.cache.ApiResourceCacheWrapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,16 +56,16 @@ public class ApiCatalogManagerTest {
     public void testGetMethod() throws Throwable {
         when(resourceCacheWrapper.getMasterResource("getService")).thenReturn(createResource(null, "getService"));
         ApiMethod method = this.apiCatalogManager.getMethod(ApiMethod.HttpMethod.GET, "getService");
-        assertNotNull(method);
-        assertTrue(method.isActive());
+        Assertions.assertNotNull(method);
+        Assertions.assertTrue(method.isActive());
     }
 
     @Test
     public void testGetMethods() throws Throwable {
         when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         List<ApiMethod> methods = this.apiCatalogManager.getMethods(ApiMethod.HttpMethod.GET);
-        assertNotNull(methods);
-        assertTrue(methods.size() > 0);
+        Assertions.assertNotNull(methods);
+        Assertions.assertTrue(methods.size() > 0);
     }
 
     @Test
@@ -77,15 +75,15 @@ public class ApiCatalogManagerTest {
         method.setStatus(false);
         this.apiCatalogManager.updateMethodConfig(method);
         method = this.apiCatalogManager.getMethod(ApiMethod.HttpMethod.GET, "getService");
-        assertFalse(method.isActive());
+        Assertions.assertFalse(method.isActive());
     }
 
     @Test
     public void testGetServices() throws Throwable {
         Mockito.lenient().when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiService> services = this.apiCatalogManager.getServices();
-        assertNotNull(services);
-        assertTrue(services.isEmpty());
+        Assertions.assertNotNull(services);
+        Assertions.assertTrue(services.isEmpty());
     }
 
     private Map<String, ApiResource> createResources() throws EntException {

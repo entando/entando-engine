@@ -15,13 +15,13 @@
 
 package com.agiletec.aps.util;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.commons.io.input.NullInputStream;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class FileTextReaderTest {
             FileTextReader.createTempFile("../" + A_TMP_FILE, new NullInputStream(100));
             fail("Shouldn't reach this point");
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }

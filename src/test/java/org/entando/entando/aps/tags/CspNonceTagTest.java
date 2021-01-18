@@ -23,9 +23,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -48,7 +49,7 @@ public class CspNonceTagTest {
     @InjectMocks
     private CspNonceTag nonceTag;
     
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(pageContext.getRequest()).thenReturn(this.servletRequest);
@@ -61,7 +62,7 @@ public class CspNonceTagTest {
     public void getNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn(null);
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(SKIP_BODY, result);
+        Assertions.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -70,7 +71,7 @@ public class CspNonceTagTest {
     public void getNotNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(SKIP_BODY, result);
+        Assertions.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -80,7 +81,7 @@ public class CspNonceTagTest {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         this.nonceTag.setVar("var");
         int result = this.nonceTag.doStartTag();
-        Assert.assertEquals(SKIP_BODY, result);
+        Assertions.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(0)).getOut();
         Mockito.verify(pageContext, Mockito.times(1)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -91,7 +92,7 @@ public class CspNonceTagTest {
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
         this.nonceTag.setVar("var");
-        Assert.assertEquals(SKIP_BODY, result);
+        Assertions.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
@@ -101,18 +102,18 @@ public class CspNonceTagTest {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
-        Assert.assertEquals(SKIP_BODY, result);
+        Assertions.assertEquals(SKIP_BODY, result);
         Mockito.verify(pageContext, Mockito.times(1)).getOut();
         Mockito.verify(pageContext, Mockito.times(0)).setAttribute(Mockito.anyString(), Mockito.anyString());
     }
     
-    @Test(expected = JspException.class)
+    @Test
     public void testJspException() throws Exception {
+        Assertions.assertThrows(JspException.class, () -> {
             when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
-        Mockito.doThrow(IOException.class).when(this.writer).write(Mockito.anyString());
-        this.nonceTag.doStartTag();
-
-        
+            Mockito.doThrow(IOException.class).when(this.writer).write(Mockito.anyString());
+            this.nonceTag.doStartTag();
+        });
     }
     
 }

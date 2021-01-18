@@ -29,12 +29,16 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class LabelServiceTest {
 
     @Mock private I18nManager i18nManager;
@@ -43,7 +47,7 @@ public class LabelServiceTest {
     private LabelService labelService;
     private Lang lang;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         labelService = new LabelService();
@@ -109,11 +113,13 @@ public class LabelServiceTest {
         assertThat(labelGroups.getBody().get(0).getTitles()).containsOnly(entry("EN", "some_value"));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void testGetLabelGroupNotFound() throws EntException {
         when(i18nManager.getLabelGroup(eq("not_found"))).thenReturn(null);
-        labelService.getLabelGroup("not_found");
-        verify(i18nManager, times(1)).getLabelGroup(eq("not_found"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            labelService.getLabelGroup("not_found");
+            verify(i18nManager, times(1)).getLabelGroup(eq("not_found"));
+        });
     }
 
     @Test
@@ -126,26 +132,28 @@ public class LabelServiceTest {
         verify(i18nManager, times(1)).getLabelGroup(eq("lab"));
     }
 
-    @Test(expected = RestServerError.class)
+    @Test
     public void testAddLabelGroupError() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));
 
         doThrow(EntException.class).when(i18nManager).addLabelGroup(anyString(), any(ApsProperties.class));
-
-        final LabelDto label = new LabelDto("lab", singletonMap("EN", "some_value"));
-        labelService.addLabelGroup(label);
+        Assertions.assertThrows(RestServerError.class, () -> {
+            final LabelDto label = new LabelDto("lab", singletonMap("EN", "some_value"));
+            labelService.addLabelGroup(label);
+        });
     }
 
-    @Test(expected = ValidationConflictException.class)
+    @Test
     public void testAddLabelGroupNotAssignableLang() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(Collections.emptyList());
         when(langManager.getLangs()).thenReturn(singletonList(lang));
-
-        final LabelDto label = new LabelDto("lab", singletonMap("EN", "some_value"));
-        labelService.addLabelGroup(label);
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            final LabelDto label = new LabelDto("lab", singletonMap("EN", "some_value"));
+            labelService.addLabelGroup(label);
+        });
     }
 
     @Test
@@ -191,7 +199,7 @@ public class LabelServiceTest {
     }
 
 
-    @Test(expected = ValidationConflictException.class)
+    @Test
     public void addExistingLabelGroupWithDifferentValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
@@ -202,12 +210,13 @@ public class LabelServiceTest {
         existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
         when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
 
-        final LabelDto label = LabelTestHelper.stubTestLabelDto();
-
-        labelService.addLabelGroup(label);
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            final LabelDto label = LabelTestHelper.stubTestLabelDto();
+            labelService.addLabelGroup(label);
+        });
     }
 
-    @Test(expected = ValidationConflictException.class)
+    @Test
     public void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
@@ -218,10 +227,12 @@ public class LabelServiceTest {
         existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
         when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
 
-        final LabelDto label = LabelTestHelper.stubTestLabelDto();
-        label.getTitles().put("en", "test");
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            final LabelDto label = LabelTestHelper.stubTestLabelDto();
+            label.getTitles().put("en", "test");
 
-        labelService.addLabelGroup(label);
+            labelService.addLabelGroup(label);
+        });
     }
 
     @Test

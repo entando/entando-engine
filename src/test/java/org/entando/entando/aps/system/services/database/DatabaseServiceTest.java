@@ -20,7 +20,6 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
-import org.junit.Assert;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -62,7 +61,7 @@ public class DatabaseServiceTest {
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         DumpReportDto dto = this.databaseService.getDumpReportDto("reportCode");
-        Assert.assertNotNull(dto);
+        Assertions.assertNotNull(dto);
     }
 
     @Test
@@ -70,7 +69,7 @@ public class DatabaseServiceTest {
         ByteArrayInputStream is = new ByteArrayInputStream("dump".getBytes());
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(is);
         byte[] base64 = this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
-        Assert.assertNotNull(base64);
+        Assertions.assertNotNull(base64);
     }
 
     @Test

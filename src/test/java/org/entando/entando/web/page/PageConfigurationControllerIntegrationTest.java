@@ -24,8 +24,7 @@ import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -40,6 +39,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Assertions;
 
 public class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -58,8 +59,8 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         String pageCode = "test_update_widget_page";
         String newWidgetCode = "test_update_widget_1";
 
-        Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
-        Assert.assertNull(this.pageManager.getDraftPage(pageCode));
+        Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+        Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
         try {
 
             WidgetRequest widgetRequestNotOverridable = getWidgetRequest(newWidgetCode, true);
@@ -67,7 +68,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             ResultActions result = this.executeWidgetPost(widgetRequestNotOverridable, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)))
                   .andExpect(jsonPath("$.payload.widgetCategory", Matchers.is("test")));
-            Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+            Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
             //Create the page
             PageRequest pageRequest = getPageRequest(pageCode);
@@ -124,9 +125,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             throw e;
         } finally {
             this.pageManager.deletePage(pageCode);
-            Assert.assertNull(this.pageManager.getDraftPage(pageCode));
+            Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
             this.widgetTypeManager.deleteWidgetType(newWidgetCode);
-            Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+            Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
 
@@ -137,8 +138,8 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
         String pageCode = "test_update_widget_page";
         String newWidgetCode = "test_update_widget_1";
 
-        Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
-        Assert.assertNull(this.pageManager.getDraftPage(pageCode));
+        Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+        Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
         try {
 
             WidgetRequest widgetRequestOverridable = getWidgetRequest(newWidgetCode, false);
@@ -148,7 +149,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)))
                     .andExpect(jsonPath("$.payload.config.key", Matchers.is("value")));
 
-            Assert.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+            Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
             //Create the page
             PageRequest pageRequest = getPageRequest(pageCode);
@@ -184,9 +185,9 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
             throw e;
         } finally {
             this.pageManager.deletePage(pageCode);
-            Assert.assertNull(this.pageManager.getDraftPage(pageCode));
+            Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
             this.widgetTypeManager.deleteWidgetType(newWidgetCode);
-            Assert.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
+            Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
 

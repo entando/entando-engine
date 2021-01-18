@@ -1,5 +1,7 @@
 package org.entando.entando.aps.system.services.assertionhelper;
 
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -9,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertEquals;
 
 public class PageAssertionHelper {
 

@@ -17,14 +17,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
+
+import org.entando.entando.aps.system.exception.ResourceNotFoundException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -35,6 +40,7 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class ApiOAuth2TokenManagerTest {
 
     @Mock
@@ -43,7 +49,7 @@ public class ApiOAuth2TokenManagerTest {
     @InjectMocks
     private ApiOAuth2TokenManager tokenManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
@@ -52,40 +58,44 @@ public class ApiOAuth2TokenManagerTest {
     public void findTokensByUserName() {
         when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Collection<OAuth2AccessToken> tokens = tokenManager.findTokensByUserName("username");
-        Assert.assertNotNull(tokens);
+        Assertions.assertNotNull(tokens);
     }
 
     @Test
     public void findTokensByClientIdAndUserName() {
         when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Collection<OAuth2AccessToken> tokens = tokenManager.findTokensByClientIdAndUserName("clientId", "username");
-        Assert.assertNotNull(tokens);
+        Assertions.assertNotNull(tokens);
     }
 
     @Test
     public void findTokensByClientId() {
         when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Collection<OAuth2AccessToken> tokens = tokenManager.findTokensByClientId("clientId");
-        Assert.assertNotNull(tokens);
+        Assertions.assertNotNull(tokens);
     }
 
     @Test
     public void createAccessTokenForLocalUser() {
         OAuth2AccessToken token = this.tokenManager.createAccessTokenForLocalUser("username");
-        Assert.assertNotNull(token);
+        Assertions.assertNotNull(token);
         Mockito.verify(tokenDAO, Mockito.times(1)).storeAccessToken(Mockito.any(OAuth2AccessToken.class), Mockito.eq(null));
-        Assert.assertTrue(token instanceof OAuth2AccessTokenImpl);
-        Assert.assertEquals("LOCAL_USER", ((OAuth2AccessTokenImpl) token).getClientId());
+        Assertions.assertTrue(token instanceof OAuth2AccessTokenImpl);
+        Assertions.assertEquals("LOCAL_USER", ((OAuth2AccessTokenImpl) token).getClientId());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void readUnsupportedAuthenticationByAccessTokenObject() throws Exception {
-        this.tokenManager.readAuthentication(this.createMockAccessToken());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            this.tokenManager.readAuthentication(this.createMockAccessToken());
+        });
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void readUnsupportedAuthenticationByAccessToken() throws Exception {
-        this.tokenManager.readAuthentication("token");
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            this.tokenManager.readAuthentication("token");
+        });
     }
 
     @Test
@@ -98,9 +108,9 @@ public class ApiOAuth2TokenManagerTest {
     public void readAccessToken() throws Exception {
         when(tokenDAO.readAccessToken(Mockito.anyString())).thenReturn(new OAuth2AccessTokenImpl("token"));
         OAuth2AccessToken token = tokenManager.readAccessToken("token");
-        Assert.assertNotNull(token);
-        Assert.assertTrue(token instanceof OAuth2AccessTokenImpl);
-        Assert.assertEquals("token", token.getValue());
+        Assertions.assertNotNull(token);
+        Assertions.assertTrue(token instanceof OAuth2AccessTokenImpl);
+        Assertions.assertEquals("token", token.getValue());
     }
 
     @Test
@@ -119,7 +129,7 @@ public class ApiOAuth2TokenManagerTest {
     public void readRefreshToken() throws Exception {
         when(tokenDAO.readRefreshToken(Mockito.anyString())).thenReturn(Mockito.any(OAuth2RefreshToken.class));
         OAuth2RefreshToken refreshToken = this.tokenManager.readRefreshToken("refresh_token");
-        Assert.assertNull(refreshToken);
+        Assertions.assertNull(refreshToken);
         Mockito.verify(tokenDAO, Mockito.times(1)).readRefreshToken("refresh_token");
     }
 
@@ -128,7 +138,7 @@ public class ApiOAuth2TokenManagerTest {
         when(tokenDAO.readAuthenticationForRefreshToken(Mockito.any(OAuth2RefreshToken.class))).thenReturn(Mockito.any(OAuth2Authentication.class));
         OAuth2RefreshToken refreshToken = new DefaultOAuth2RefreshToken("value");
         OAuth2Authentication auth = this.tokenManager.readAuthenticationForRefreshToken(refreshToken);
-        Assert.assertNull(auth);
+        Assertions.assertNull(auth);
         Mockito.verify(tokenDAO, Mockito.times(1)).readAuthenticationForRefreshToken(refreshToken);
     }
 
@@ -149,10 +159,10 @@ public class ApiOAuth2TokenManagerTest {
     @Test
     public void getAccessToken() throws Exception {
         OAuth2AccessToken token = tokenManager.getAccessToken(this.createMockAuthentication());
-        Assert.assertNotNull(token);
-        Assert.assertTrue(token instanceof OAuth2AccessTokenImpl);
-        Assert.assertEquals("clientId", ((OAuth2AccessTokenImpl) token).getClientId());
-        Assert.assertEquals("username", ((OAuth2AccessTokenImpl) token).getLocalUser());
+        Assertions.assertNotNull(token);
+        Assertions.assertTrue(token instanceof OAuth2AccessTokenImpl);
+        Assertions.assertEquals("clientId", ((OAuth2AccessTokenImpl) token).getClientId());
+        Assertions.assertEquals("username", ((OAuth2AccessTokenImpl) token).getLocalUser());
     }
 
     private OAuth2AccessToken createMockAccessToken() {

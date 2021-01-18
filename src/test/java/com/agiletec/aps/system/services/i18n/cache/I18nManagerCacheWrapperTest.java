@@ -13,6 +13,11 @@
  */
 package com.agiletec.aps.system.services.i18n.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.entando.entando.ent.exception.EntException;
 
 import static org.mockito.Mockito.when;
@@ -31,7 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +86,7 @@ public class I18nManagerCacheWrapperTest {
             Mockito.doThrow(RuntimeException.class).when(fakeCache).get(Mockito.anyString());
             try {
                 this.cacheWrapper.initCache(this.i18nDAO);
-                Assert.fail();
+                fail();
             } catch (Exception e) {
                 throw e;
             } finally {
@@ -94,16 +98,16 @@ public class I18nManagerCacheWrapperTest {
     @Test
     public void getLabelsGroup() throws Exception {
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
-        Assert.assertNotNull(properties);
-        Assert.assertEquals("ciao", properties.get("it"));
+        assertNotNull(properties);
+        assertEquals("ciao", properties.get("it"));
     }
     
     @Test
     public void update() {
         cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
-        Assert.assertNotNull(properties);
-        Assert.assertEquals("yes", properties.get("en"));
+        assertNotNull(properties);
+        assertEquals("yes", properties.get("en"));
     }
     
     @Test
@@ -117,7 +121,7 @@ public class I18nManagerCacheWrapperTest {
     public void delete() {
         cacheWrapper.removeLabelGroup(TEST_KEY);
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
-        Assert.assertNull(properties);
+        assertNull(properties);
     }
     
     @BeforeEach

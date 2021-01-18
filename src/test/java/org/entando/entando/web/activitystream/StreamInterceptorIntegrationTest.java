@@ -28,7 +28,6 @@ import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordS
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageStatusRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -36,10 +35,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import org.junit.Assert;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
@@ -78,7 +80,7 @@ public class StreamInterceptorIntegrationTest extends AbstractControllerIntegrat
             this.waitActionLoggerThread();
             List<Integer> logs2 = actionLogManager.getActionRecords(searchBean);
             int size2 = logs2.size();
-            Assert.assertEquals(1, (size2 - size1));
+            Assertions.assertEquals(1, (size2 - size1));
             page = this.pageManager.getDraftPage(code);
             assertThat(page, is(not(nullValue())));
             IPage onlinePage = this.pageManager.getOnlinePage(code);

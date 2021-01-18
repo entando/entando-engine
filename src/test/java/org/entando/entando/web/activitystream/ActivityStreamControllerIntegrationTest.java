@@ -35,24 +35,28 @@ import org.entando.entando.aps.system.services.activitystream.ISocialActivityStr
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+
 import static org.hamcrest.CoreMatchers.is;
-import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import static org.junit.Assert.assertThat;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -127,7 +131,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer secondSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (secondSize - startSize));
+            Assertions.assertEquals(2, (secondSize - startSize));
 
             //add like
             int recordId = this.actionLogManager.getActionRecords(null).stream().findFirst().get();
@@ -212,7 +216,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer actualSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (actualSize - startSize));
+            Assertions.assertEquals(2, (actualSize - startSize));
             ResultActions result = mockMvc
                     .perform(get("/activityStream")
                             .header("Authorization", "Bearer " + accessToken));
@@ -234,8 +238,8 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
             Integer firstIdInNewPos = JsonPath.read(bodyResult, "$.payload[" + (actualSize - 1) + "].id");
             Integer secondIdInNewPos = JsonPath.read(bodyResult, "$.payload[" + (actualSize - 2) + "].id");
 
-            Assert.assertEquals(firstId, firstIdInNewPos);
-            Assert.assertEquals(secondId, secondIdInNewPos);
+            Assertions.assertEquals(firstId, firstIdInNewPos);
+            Assertions.assertEquals(secondId, secondIdInNewPos);
 
             result = mockMvc
                     .perform(get("/activityStream")
@@ -264,7 +268,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer actualSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (actualSize - startSize));
+            Assertions.assertEquals(2, (actualSize - startSize));
             mockMvc.perform(get("/activityStream")
                     .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())

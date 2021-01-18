@@ -40,8 +40,8 @@ import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTest
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -58,7 +58,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    @Before
+    @BeforeEach
     public void init() {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         this.mockMvcHelper = new MockMvcHelper(mockMvc, mockOAuthInterceptor(user));

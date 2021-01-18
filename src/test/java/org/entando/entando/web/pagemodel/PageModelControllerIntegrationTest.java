@@ -43,9 +43,7 @@ import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -53,6 +51,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 public class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -69,7 +69,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     private PageModelManager pageModelManager;
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         this.setupAuthenticationDetails();
@@ -260,13 +260,13 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
                     .andExpect(jsonPath("$.payload.configuration.frames[0].defaultWidget.properties.navSpec", is("code(homepage).subtree(5)")))
                     .andExpect(jsonPath("$.payload.configuration.frames[1].defaultWidget", CoreMatchers.nullValue()));
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_WITH_DOT_CODE);
-            Assert.assertNotNull(pageModel);
-            Assert.assertEquals(3, pageModel.getFrames().length);
-            Assert.assertEquals(3, pageModel.getFramesConfig().length);
-            Assert.assertNotNull(pageModel.getFramesConfig()[0].getDefaultWidget());
-            Assert.assertEquals("leftmenu", pageModel.getFramesConfig()[0].getDefaultWidget().getType().getCode());
-            Assert.assertEquals(1, pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().size());
-            Assert.assertEquals("code(homepage).subtree(5)", pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().getProperty("navSpec"));
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertEquals(3, pageModel.getFramesConfig().length);
+            Assertions.assertNotNull(pageModel.getFramesConfig()[0].getDefaultWidget());
+            Assertions.assertEquals("leftmenu", pageModel.getFramesConfig()[0].getDefaultWidget().getType().getCode());
+            Assertions.assertEquals(1, pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().size());
+            Assertions.assertEquals("code(homepage).subtree(5)", pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().getProperty("navSpec"));
             pageModelRequest.setDescr("description2");
             result = mockMvc.perform(
                     put("/pageModels/{code}", PAGE_MODEL_WITH_DOT_CODE)
@@ -321,7 +321,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("6")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNull(pageModel);
+            Assertions.assertNull(pageModel);
 
             newFrames.getDefaultWidget().setCode("leftmenu");
             newFrames.getDefaultWidget().getProperties().put("wrongParam", "code(homepage).subtree(8)");
@@ -338,7 +338,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("7")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNull(pageModel);
+            Assertions.assertNull(pageModel);
 
             newFrames.getDefaultWidget().getProperties().remove("wrongParam");
             PageModelFrameReq newWrongFrames = new PageModelFrameReq(7, "Position 7");
@@ -356,7 +356,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("5")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNull(pageModel);
+            Assertions.assertNull(pageModel);
 
         } catch (Exception e) {
             throw e;
@@ -402,8 +402,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andDo(resultPrint()).andExpect(status().isOk());
 
             PageModel pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNotNull(pageModel);
-            Assert.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
 
 
 
@@ -429,8 +429,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNotNull(pageModel);
-            Assert.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
 
             result = mockMvc.perform(
                     put("/pageModels/{code}", PAGE_MODEL_CODE)
@@ -443,8 +443,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("6")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNotNull(pageModel);
-            Assert.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
 
             pageModelRequest.setCode(NONEXISTENT_PAGE_MODEL);
             result = mockMvc.perform(
@@ -458,8 +458,8 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
             result.andExpect(jsonPath("$.errors[0].code", is("1")));
             result.andExpect(jsonPath("$.metaData.size()", is(0)));
             pageModel = this.pageModelManager.getPageModel(PAGE_MODEL_CODE);
-            Assert.assertNotNull(pageModel);
-            Assert.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
         } catch (Exception e) {
             throw e;
         } finally {

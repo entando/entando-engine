@@ -15,8 +15,8 @@ package org.entando.entando.aps.system.services.page;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -51,18 +51,18 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PageServiceTest {
     public static final String ADMIN_GROUP_NAME = "administrators";
     public static final String FREE_GROUP_NAME = "free";
@@ -89,7 +89,7 @@ public class PageServiceTest {
     @InjectMocks
     private PageService pageService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         when(groupManager.getGroup("free")).thenReturn(new Group());
         when(groupManager.getGroup("admin")).thenReturn(new Group());
@@ -430,7 +430,7 @@ public class PageServiceTest {
             when(pagedMetadataMapper.getPagedResult(any(), any())).thenReturn(pagedMetadata);
 
         } catch (Exception e) {
-            Assert.fail("Mock Exception");
+            Assertions.fail("Mock Exception");
         }
     }
 

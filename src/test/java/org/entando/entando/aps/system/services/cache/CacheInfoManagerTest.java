@@ -23,8 +23,6 @@ import org.springframework.cache.*;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
-import static org.junit.Assert.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,7 +124,7 @@ public class CacheInfoManagerTest {
 		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
         cacheInfoManager.setExpirationTime(targetCache, cacheKey, 1);
 		boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertFalse(expired);
+		Assertions.assertFalse(expired);
     }
 	
     @Test
@@ -136,12 +134,12 @@ public class CacheInfoManagerTest {
 		cacheInfoManager.putInCache(targetCache, cacheKey, "Some other value");
         cacheInfoManager.setExpirationTime(targetCache, cacheKey, 1L);
 		boolean expired = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertFalse(expired);
+		Assertions.assertFalse(expired);
 		synchronized (this) {
     		this.wait(2000);
 		}
 		boolean expired2 = cacheInfoManager.isExpired(targetCache, cacheKey);
-		assertTrue(expired2);
+		Assertions.assertTrue(expired2);
     }
 	
     @Test
@@ -155,9 +153,9 @@ public class CacheInfoManagerTest {
 		Mockito.verify(cache, Mockito.times(0)).put(Mockito.anyString(), Mockito.any(Map.class));
 		Object requiredMap = cacheInfoManager.getFromCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME, 
 				ICacheInfoManager.GROUP_CACHE_NAME_PREFIX + ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
-		assertTrue(requiredMap instanceof Map);
-		assertNotNull(requiredMap);
-		assertEquals(2, ((Map) requiredMap).size());
+		Assertions.assertTrue(requiredMap instanceof Map);
+		Assertions.assertNotNull(requiredMap);
+		Assertions.assertEquals(2, ((Map) requiredMap).size());
     }
 	
 	@Test

@@ -21,17 +21,20 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class LanguageServiceTest {
 
     @Mock
@@ -40,7 +43,7 @@ public class LanguageServiceTest {
     @InjectMocks
     private LanguageService languageService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         languageService.setUpDto();
 
@@ -167,9 +170,11 @@ public class LanguageServiceTest {
         assertThat(result.getBody().get(1).getCode()).isEqualTo("it");
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void shouldFailDisabilingUnexistingLang() {
-        languageService.disableLang("xx");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            languageService.disableLang("xx");
+        });
     }
 
     private Lang getEn() {

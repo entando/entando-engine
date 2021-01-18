@@ -13,13 +13,13 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper;
 import org.mockito.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

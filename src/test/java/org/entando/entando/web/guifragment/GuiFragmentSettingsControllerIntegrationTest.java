@@ -21,8 +21,7 @@ import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,6 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Assertions;
 
 public class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -45,7 +46,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     @Test
     public void testGetConfiguration() throws Exception {
         String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
-        Assert.assertTrue(null == value || value.equalsIgnoreCase("false"));
+        Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
@@ -59,7 +60,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     @Test
     public void testUpdateConfiguration() throws Exception {
         String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
-        Assert.assertTrue(null == value || value.equalsIgnoreCase("false"));
+        Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         try {
@@ -68,21 +69,21 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload." + GuiFragmentSettingsController.RESULT_PARAM_NAME, is(true)));
             value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
-            Assert.assertEquals("true", value);
+            Assertions.assertEquals("true", value);
 
             payload = "{\"enableEditingWhenEmptyDefaultGui\":false}";
             result = this.executePut(payload, accessToken, status().isOk());
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload." + GuiFragmentSettingsController.RESULT_PARAM_NAME, is(false)));
             value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
-            Assert.assertEquals("false", value);
+            Assertions.assertEquals("false", value);
 
         } catch (Exception e) {
             throw e;
         } finally {
             this.configManager.updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "false");
             value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
-            Assert.assertEquals("false", value);
+            Assertions.assertEquals("false", value);
         }
     }
 

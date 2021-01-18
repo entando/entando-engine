@@ -13,13 +13,12 @@
  */
 package org.entando.entando.web.user;
 
-import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,8 +45,8 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -225,7 +224,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result1.andExpect(jsonPath("$.payload[0].group", is("group1")));
 
             List<Authorization> auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
+            Assertions.assertEquals(1, auths.size());
 
             String mockJson2 = "[{\"group\":\"customers\", \"role\":\"supervisor\"}]";
             ResultActions result2 = mockMvc.perform(
@@ -236,7 +235,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result2.andExpect(jsonPath("$.payload[0].group", is("customers")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
             ResultActions result3 = mockMvc.perform(
                     get("/users/{target}/authorities", username)
@@ -255,8 +254,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result4.andExpect(jsonPath("$.payload[0].group", is("helpdesk")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
-            Assert.assertEquals("helpdesk", auths.get(0).getGroup().getName());
+            Assertions.assertEquals(1, auths.size());
+            Assertions.assertEquals("helpdesk", auths.get(0).getGroup().getName());
 
             String mockJson5 = "[{\"group\":\"wrong_group\", \"role\":\"pageManager\"}]";
             ResultActions result5 = mockMvc.perform(
@@ -268,8 +267,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result5.andExpect(jsonPath("$.errors[0].code", is("2")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
-            Assert.assertEquals("helpdesk", auths.get(0).getGroup().getName());
+            Assertions.assertEquals(1, auths.size());
+            Assertions.assertEquals("helpdesk", auths.get(0).getGroup().getName());
 
         } finally {
             this.authorizationManager.deleteUserAuthorizations(username);
@@ -300,7 +299,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result1.andExpect(jsonPath("$.payload[0].role", is("role100")));
 
             List<Authorization> auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
+            Assertions.assertEquals(1, auths.size());
 
             String mockJson2 = "[{\"group\":\"customers\", \"role\":null}]";
             ResultActions result2 = mockMvc.perform(
@@ -311,7 +310,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result2.andExpect(jsonPath("$.payload[0].group", is("customers")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
             ResultActions result3 = mockMvc.perform(
                     get("/users/{target}/authorities", username)
@@ -330,7 +329,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result4.andExpect(jsonPath("$.errors.size()", is(1)));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
         } finally {
             this.authorizationManager.deleteUserAuthorizations(username);
@@ -532,7 +531,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             System.out.println("resp:" + responseValid1);
             resultValid1.andExpect(jsonPath("$.payload.username", is(validUsername)));
             UserDetails authUser = this.authenticationProviderManager.getUser(validUsername, validPassword);
-            Assert.assertNotNull(authUser);
+            Assertions.assertNotNull(authUser);
 
             String valid2 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"12345678\",\"reset\": true}";
             ResultActions resultValid2 = this.executeUserPut(valid2, validUsername, accessToken, status().isOk());
@@ -540,9 +539,9 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             System.out.println("resp:" + responseValid2);
             resultValid2.andExpect(jsonPath("$.payload.username", is(validUsername)));
             authUser = this.authenticationProviderManager.getUser(validUsername, validPassword);
-            Assert.assertNull(authUser);
+            Assertions.assertNull(authUser);
             authUser = this.authenticationProviderManager.getUser(validUsername, "12345678");
-            Assert.assertNotNull(authUser);
+            Assertions.assertNotNull(authUser);
         } catch (Throwable e) {
             throw e;
         } finally {

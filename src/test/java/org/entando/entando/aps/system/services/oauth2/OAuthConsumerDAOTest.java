@@ -23,18 +23,23 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.apache.derby.client.am.SqlException;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author E.Santoboni
  */
+@ExtendWith(MockitoExtension.class)
 public class OAuthConsumerDAOTest {
 
     @Mock
@@ -49,7 +54,7 @@ public class OAuthConsumerDAOTest {
     @InjectMocks
     private OAuthConsumerDAO consumerDAO;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(this.dataSource.getConnection()).thenReturn(conn);
@@ -61,21 +66,23 @@ public class OAuthConsumerDAOTest {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(true).thenReturn(false);
         List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
-        Assert.assertNotNull(keys);
-        Assert.assertEquals(1, keys.size());
+        Assertions.assertNotNull(keys);
+        Assertions.assertEquals(1, keys.size());
         this.executeFinalCheck(true);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void failGetConsumerKeys() throws Exception {
-        when(this.stat.executeQuery()).thenThrow(SqlException.class);
-        try {
-            List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
-        } catch (RuntimeException e) {
-            throw e;
-        } finally {
-            this.executeFinalCheck(true);
-        }
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            when(this.stat.executeQuery()).thenThrow(SqlException.class);
+            try {
+                List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
+            } catch (RuntimeException e) {
+                throw e;
+            } finally {
+                this.executeFinalCheck(true);
+            }
+        });
     }
 
     @Test
@@ -85,26 +92,28 @@ public class OAuthConsumerDAOTest {
         Mockito.when(res.getString("consumerkey")).thenReturn("client_id");
         Mockito.when(res.getString("consumersecret")).thenReturn("secret");
         ConsumerRecordVO consumer = this.consumerDAO.getConsumer("client_id");
-        Assert.assertNotNull(consumer);
-        Assert.assertEquals("client_id", consumer.getKey());
-        Assert.assertEquals("secret", consumer.getSecret());
+        Assertions.assertNotNull(consumer);
+        Assertions.assertEquals("client_id", consumer.getKey());
+        Assertions.assertEquals("secret", consumer.getSecret());
         this.executeFinalCheck(true);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void failGetConsumer() throws Exception {
-        when(this.stat.executeQuery()).thenReturn(res);
-        Mockito.when(res.next()).thenReturn(true).thenReturn(false);
-        Mockito.when(res.getString("consumerkey")).thenThrow(SqlException.class);
-        try {
-            List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
-        } catch (RuntimeException e) {
-            throw e;
-        } finally {
-            Mockito.verify(stat, Mockito.times(1)).setString(Mockito.anyInt(), Mockito.anyString());
-            Mockito.verify(res, Mockito.times(1)).next();
-            this.executeFinalCheck(true);
-        }
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            when(this.stat.executeQuery()).thenReturn(res);
+            Mockito.when(res.next()).thenReturn(true).thenReturn(false);
+            Mockito.when(res.getString("consumerkey")).thenThrow(SqlException.class);
+            try {
+                List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
+            } catch (RuntimeException e) {
+                throw e;
+            } finally {
+                Mockito.verify(stat, Mockito.times(1)).setString(Mockito.anyInt(), Mockito.anyString());
+                Mockito.verify(res, Mockito.times(1)).next();
+                this.executeFinalCheck(true);
+            }
+        });
     }
 
     @Test
@@ -116,19 +125,21 @@ public class OAuthConsumerDAOTest {
         this.executeFinalCheck(false);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void failAddConsumer() throws Exception {
-        Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-        ConsumerRecordVO record = this.createMockConsumer("key_2", "secret");
-        try {
-            this.consumerDAO.addConsumer(record);
-        } catch (RuntimeException e) {
-            throw e;
-        } finally {
-            Mockito.verify(stat, Mockito.times(7)).setString(Mockito.anyInt(), Mockito.anyString());
-            Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-            this.executeFinalCheck(false);
-        }
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+            ConsumerRecordVO record = this.createMockConsumer("key_2", "secret");
+            try {
+                this.consumerDAO.addConsumer(record);
+            } catch (RuntimeException e) {
+                throw e;
+            } finally {
+                Mockito.verify(stat, Mockito.times(7)).setString(Mockito.anyInt(), Mockito.anyString());
+                Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+                this.executeFinalCheck(false);
+            }
+        });
     }
 
     @Test
@@ -140,19 +151,21 @@ public class OAuthConsumerDAOTest {
         this.executeFinalCheck(false);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void failUpdateConsumer() throws Exception {
-        Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-        ConsumerRecordVO record = this.createMockConsumer("key_4", null);
-        try {
-            this.consumerDAO.updateConsumer(record);
-        } catch (RuntimeException e) {
-            throw e;
-        } finally {
-            Mockito.verify(stat, Mockito.times(6)).setString(Mockito.anyInt(), Mockito.anyString());
-            Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-            this.executeFinalCheck(false);
-        }
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+            ConsumerRecordVO record = this.createMockConsumer("key_4", null);
+            try {
+                this.consumerDAO.updateConsumer(record);
+            } catch (RuntimeException e) {
+                throw e;
+            } finally {
+                Mockito.verify(stat, Mockito.times(6)).setString(Mockito.anyInt(), Mockito.anyString());
+                Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+                this.executeFinalCheck(false);
+            }
+        });
     }
 
     @Test

@@ -1,7 +1,6 @@
 package org.entando.entando.web.assertionhelper;
 
 import org.entando.entando.web.component.ComponentUsageEntity;
-import org.junit.Assert;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -10,6 +9,8 @@ import java.util.stream.IntStream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Assertions;
 
 public class PageAssertionHelper {
 
@@ -31,7 +32,7 @@ public class PageAssertionHelper {
                     .andExpect(jsonPath(prefix + ".code", is(componentUsageEntity.getCode())))
                     .andExpect(jsonPath(prefix + ".status", is(componentUsageEntity.getStatus())));
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
         }
     }
 }

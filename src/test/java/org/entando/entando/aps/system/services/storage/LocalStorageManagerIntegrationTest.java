@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.storage;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,7 +35,6 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -136,7 +136,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         try {
             localStorageManager.getStream(testFilePath, false);
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }
@@ -191,7 +191,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         try {
             localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }
@@ -200,7 +200,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
             localStorageManager.deleteFile(testFilePath, false);
             fail("Shouldn't reach this point");
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }
@@ -252,7 +252,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
             localStorageManager.createDirectory("/../../../dev/mydir", false);
             fail("Shouldn't reach this point");
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }
@@ -260,7 +260,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         try {
             localStorageManager.deleteDirectory("/../../../dev/mydir", false);
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }

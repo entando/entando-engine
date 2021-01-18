@@ -14,10 +14,12 @@
  */
 package com.agiletec.aps.tags;
 
-import org.junit.Assert;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,12 +47,12 @@ public class PageInfoTagTest {
 
     @Test
     public void testSantitizationOfUrisAsHtmlContent() {
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_1),
                 equalTo(TEST_URL_1_EXPECTED)
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_2),
                 allOf(
                         not(containsString("<")),
@@ -59,7 +61,7 @@ public class PageInfoTagTest {
                 )
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_3),
                 allOf(
                         not(containsString("<")),
@@ -68,7 +70,7 @@ public class PageInfoTagTest {
                 )
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_4),
                 allOf(
                         not(containsString("<")),

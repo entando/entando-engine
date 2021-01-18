@@ -25,18 +25,19 @@ import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDt
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.usersettings.model.UserSettingsRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class UserSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -48,7 +49,7 @@ public class UserSettingsControllerIntegrationTest extends AbstractControllerInt
 
     private ObjectMapper mapper;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
         mapper = new ObjectMapper();
