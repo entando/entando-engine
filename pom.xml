@@ -205,6 +205,22 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <argLine>${argLine}</argLine>
+                        <forkCount>1</forkCount>
+                        <shutdown>exit</shutdown>
+                        <parallel>methods</parallel>
+                        <threadCount>8</threadCount>
+                        <excludes>
+                            <exclude>**/*BaseTestCase*</exclude>
+                            <exclude>**/Abstract*</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings
                 only. It has no influence on the Maven build itself. -->
                 <plugin>
@@ -453,17 +469,17 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.3</version>
+            <version>5.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.6.3</version>
+            <version>5.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>3.7.0</version>
+            <version>3.7.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
