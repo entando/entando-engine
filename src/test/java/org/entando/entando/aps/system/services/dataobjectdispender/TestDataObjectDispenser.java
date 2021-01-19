@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -148,6 +149,7 @@ public class TestDataObjectDispenser extends BaseTestCase {
     @Test
     void testGetUnauthorizedContent() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
+        this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
 
         DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals("Current user 'guest' can't view this DataObject", outputInfo.getRenderedDataobject().trim());

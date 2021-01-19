@@ -23,7 +23,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +56,7 @@ public class CspNonceTagTest {
         MockitoAnnotations.initMocks(this);
         when(pageContext.getRequest()).thenReturn(this.servletRequest);
         when(servletRequest.getAttribute(RequestContext.REQCTX)).thenReturn(this.reqCtx);
-        when(pageContext.getOut()).thenReturn(this.writer);
+        Mockito.lenient().when(pageContext.getOut()).thenReturn(this.writer);
         this.nonceTag.release();
     }
     

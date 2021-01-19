@@ -49,7 +49,6 @@ public class UserProfileManagerAspectTest {
     
     @Test
     public void testInjectProfile_1() throws EntException {
-        //IUserProfile mock = this.createFakeProfile("TMP");
         IUserProfile returned = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         when(userProfileManager.getProfile(Mockito.anyString())).thenReturn(returned);
         
@@ -79,7 +78,7 @@ public class UserProfileManagerAspectTest {
     
     @Test
     public void testInjectProfile_3() throws EntException {
-        when(userProfileManager.getProfile(Mockito.anyString())).thenThrow(EntException.class);
+        Mockito.lenient().when(userProfileManager.getProfile(Mockito.anyString())).thenThrow(EntException.class);
         
         IUserProfile profile = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         User user = new User();
