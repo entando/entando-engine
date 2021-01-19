@@ -78,7 +78,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetExistingProfile() throws Exception {
         when(this.profileValidator.existProfile("user_with_profile")).thenReturn(true);
-        when(this.userProfileService.getUserProfile("user_with_profile")).thenReturn(Mockito.mock(EntityDto.class));
+        when(this.userProfileService.getUserProfile("user_with_profile")).thenReturn(new EntityDto());
         ResultActions result = performGetUserProfiles("user_with_profile");
         result.andExpect(status().isOk());
     }
@@ -100,7 +100,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     @Test
     public void testAddProfile() throws Exception {
         when(this.userProfileService.addUserProfile(any(EntityDto.class), any(BindingResult.class)))
-                .thenReturn(Mockito.mock(EntityDto.class));
+                .thenReturn(new EntityDto());
 
         String mockJson = "{\n"
                 + "    \"id\": \"user\",\n"
@@ -117,7 +117,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateProfile() throws Exception {
         when(this.userProfileService.updateUserProfile(any(EntityDto.class), any(BindingResult.class)))
-                .thenReturn(Mockito.mock(EntityDto.class));
+                .thenReturn(new EntityDto());
 
         String mockJson = "{\n"
                 + "    \"id\": \"user\",\n"

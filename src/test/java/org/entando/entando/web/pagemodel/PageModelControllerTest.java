@@ -265,7 +265,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
 
-        verify(pageModelService, times(1)).addPageModel(any());
+        verify(pageModelService, times(1)).addPageModel(any(PageModelRequest.class));
     }
 
     private String simplePageModelJson() {
