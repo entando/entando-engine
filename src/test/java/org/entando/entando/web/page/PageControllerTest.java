@@ -58,6 +58,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
@@ -184,7 +185,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
         doReturn(mockResult).when(pageService).getPages(any(String.class), isNull(), isNull());
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
         doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
 
         ResultActions result = mockMvc.perform(
@@ -218,7 +219,7 @@ public class PageControllerTest extends AbstractControllerTest {
         );
 
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
         doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
 
         ResultActions result = mockMvc.perform(
@@ -263,7 +264,7 @@ public class PageControllerTest extends AbstractControllerTest {
                 + "            \"position\": 7\n"
                 + "        }";
         PageDto mockResult = (PageDto) this.createMetadata(mockJsonResult, PageDto.class);
-        when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
+        Mockito.lenient().when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
@@ -307,7 +308,7 @@ public class PageControllerTest extends AbstractControllerTest {
         page.setPageModel("existing_model");
         page.setParentCode("existing_parent");
         page.setOwnerGroup("existing_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 post("/pages")
@@ -369,7 +370,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setCode("page_to_move");
         request.setParentCode(null);
         request.setPosition(0);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
                 .sessionAttr("user", user)
@@ -393,7 +394,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(1);
         
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
         
         ResultActions result = mockMvc.perform(
@@ -418,8 +419,8 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(0);
         
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
-        when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
@@ -443,7 +444,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(0);
 
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
@@ -476,7 +477,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setParentCode("another_parent_page");
         newParent.setGroup("another_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
@@ -513,7 +514,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setGroup("reserved");
 
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
 
@@ -550,7 +551,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setParentCode("another_parent_page");
         newParent.setGroup("valid_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(

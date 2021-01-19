@@ -58,6 +58,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
@@ -177,7 +178,7 @@ public class UserControllerUnitTest extends AbstractControllerTest {
                 + "    \"password\": \"invalid spaces\"\n"
                 + " }";
 
-        when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
+        Mockito.lenient().when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 put("/users/{target}", "mismach")
                         .sessionAttr("user", user)
@@ -247,7 +248,7 @@ public class UserControllerUnitTest extends AbstractControllerTest {
                 + "    \"status\": \"active\"\n"
                 + "}";
 
-        when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
+        Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
                         .sessionAttr("user", user)
@@ -271,7 +272,7 @@ public class UserControllerUnitTest extends AbstractControllerTest {
 
         when(this.controller.getUserValidator().getGroupManager().getGroup(any(String.class))).thenReturn(mockedGroup());
         when(this.controller.getUserValidator().getRoleManager().getRole(any(String.class))).thenReturn(mockedRole());
-        when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class))).thenReturn(authorities);
+        Mockito.lenient().when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class))).thenReturn(authorities);
         ResultActions result = mockMvc.perform(
                 put("/users/{target}/authorities", "mockuser")
                         .sessionAttr("user", user)
@@ -427,7 +428,7 @@ public class UserControllerUnitTest extends AbstractControllerTest {
     @Test
     public void deleteAdminReturnsError() throws EntException {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
-            when(user.getUsername()).thenReturn("admin");
+            Mockito.lenient().when(user.getUsername()).thenReturn("admin");
             MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
             new UserController().deleteUser(user, "admin", bindingResult);
         });

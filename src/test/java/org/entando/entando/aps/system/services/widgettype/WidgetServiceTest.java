@@ -59,6 +59,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -101,8 +102,8 @@ public class WidgetServiceTest {
     @BeforeEach
     public void setUp() throws Exception {
 
-        when(pageManager.getOnlineWidgetUtilizers(WIDGET_1_CODE)).thenReturn(ImmutableList.of(new Page()));
-        when(pageManager.getDraftWidgetUtilizers(WIDGET_1_CODE)).thenReturn(ImmutableList.of(new Page()));
+        Mockito.lenient().when(pageManager.getOnlineWidgetUtilizers(WIDGET_1_CODE)).thenReturn(ImmutableList.of(new Page()));
+        Mockito.lenient().when(pageManager.getDraftWidgetUtilizers(WIDGET_1_CODE)).thenReturn(ImmutableList.of(new Page()));
 
         WidgetDtoBuilder dtoBuilder = new WidgetDtoBuilder();
         dtoBuilder.setPageManager(pageManager);
@@ -110,7 +111,7 @@ public class WidgetServiceTest {
         dtoBuilder.setStockWidgetCodes("");
         widgetService.setDtoBuilder(dtoBuilder);
 
-        when(widgetManager.getWidgetTypes()).thenReturn(ImmutableList.of(getWidget1(), getWidget2()));
+        Mockito.lenient().when(widgetManager.getWidgetTypes()).thenReturn(ImmutableList.of(getWidget1(), getWidget2()));
     }
 
     @Test
@@ -459,8 +460,7 @@ public class WidgetServiceTest {
             pagedMetadata.setPageSize(pageSize);
             pagedMetadata.setPage(currPage);
             pagedMetadata.imposeLimits();
-            when(pagedMetadataMapper.getPagedResult(any(), any())).thenReturn(pagedMetadata);
-
+            Mockito.lenient().when(pagedMetadataMapper.getPagedResult(any(), any())).thenReturn(pagedMetadata);
         } catch (Exception e) {
             Assertions.fail("Mock Exception");
         }

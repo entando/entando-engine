@@ -27,11 +27,11 @@ import org.mockito.Mock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,10 +46,9 @@ public class LanguageServiceTest {
     @BeforeEach
     public void setUp() throws Exception {
         languageService.setUpDto();
-
-        when(langManager.getLangs()).thenReturn(ImmutableList.of(getEn()));
+        Mockito.lenient().when(langManager.getLangs()).thenReturn(ImmutableList.of(getEn()));
         when(langManager.getAssignableLangs()).thenReturn(ImmutableList.of(getEn(), getIt()));
-        when(langManager.getDefaultLang()).thenReturn(getEn());
+        Mockito.lenient().when(langManager.getDefaultLang()).thenReturn(getEn());
     }
 
     @Test

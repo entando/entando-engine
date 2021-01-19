@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ApiConsumerControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -57,6 +58,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     private String accessToken;
 
     @Override
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 

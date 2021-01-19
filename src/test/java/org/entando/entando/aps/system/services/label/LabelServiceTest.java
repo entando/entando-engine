@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -203,12 +204,12 @@ public class LabelServiceTest {
     public void addExistingLabelGroupWithDifferentValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
-        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
-        when(langManager.getLangs()).thenReturn(singletonList(lang));
+        Mockito.lenient().when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        Mockito.lenient().when(langManager.getLangs()).thenReturn(singletonList(lang));
 
         ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
         existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
-        when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
+        Mockito.lenient().when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
 
         Assertions.assertThrows(ValidationConflictException.class, () -> {
             final LabelDto label = LabelTestHelper.stubTestLabelDto();
@@ -220,12 +221,12 @@ public class LabelServiceTest {
     public void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
-        when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
-        when(langManager.getLangs()).thenReturn(singletonList(lang));
+        Mockito.lenient().when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
+        Mockito.lenient().when(langManager.getLangs()).thenReturn(singletonList(lang));
 
         ApsProperties existinglabels = LabelTestHelper.stubTestApsProperties();
         existinglabels.put(LabelTestHelper.LABEL_KEY, singletonMap(LabelTestHelper.KEY, "some_old_value"));
-        when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
+        Mockito.lenient().when(i18nManager.getLabelGroup(LabelTestHelper.LABEL_KEY)).thenReturn(existinglabels);
 
         Assertions.assertThrows(ValidationConflictException.class, () -> {
             final LabelDto label = LabelTestHelper.stubTestLabelDto();

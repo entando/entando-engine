@@ -23,7 +23,6 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
-import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,7 @@ public class ApiOAuth2TokenManagerTest {
 
     @Test
     public void findTokensByUserName() {
-        when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
+        Mockito.lenient().when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Collection<OAuth2AccessToken> tokens = tokenManager.findTokensByUserName("username");
         Assertions.assertNotNull(tokens);
     }
@@ -70,7 +69,7 @@ public class ApiOAuth2TokenManagerTest {
 
     @Test
     public void findTokensByClientId() {
-        when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
+        Mockito.lenient().when(tokenDAO.findTokensByClientIdAndUserName(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Collection<OAuth2AccessToken> tokens = tokenManager.findTokensByClientId("clientId");
         Assertions.assertNotNull(tokens);
     }

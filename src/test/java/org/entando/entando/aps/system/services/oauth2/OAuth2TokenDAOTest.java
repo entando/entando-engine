@@ -69,13 +69,13 @@ public class OAuth2TokenDAOTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(this.dataSource.getConnection()).thenReturn(conn);
-        when(this.conn.prepareStatement(Mockito.startsWith("SELECT api_oauth_tokens.accesstoken"))).thenReturn(statForSearchId);
-        when(this.conn.prepareStatement(Mockito.startsWith("SELECT * "))).thenReturn(stat);
-        when(this.conn.prepareStatement(Mockito.startsWith("INSERT "))).thenReturn(stat);
-        when(this.conn.prepareStatement(Mockito.startsWith("DELETE "))).thenReturn(stat);
+        Mockito.lenient().when(this.conn.prepareStatement(Mockito.startsWith("SELECT api_oauth_tokens.accesstoken"))).thenReturn(statForSearchId);
+        Mockito.lenient().when(this.conn.prepareStatement(Mockito.startsWith("SELECT * "))).thenReturn(stat);
+        Mockito.lenient().when(this.conn.prepareStatement(Mockito.startsWith("INSERT "))).thenReturn(stat);
+        Mockito.lenient().when(this.conn.prepareStatement(Mockito.startsWith("DELETE "))).thenReturn(stat);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 200);
-        Mockito.when(res.getTimestamp("expiresin")).thenReturn(new Timestamp(calendar.getTime().getTime()));
+        Mockito.lenient().when(res.getTimestamp("expiresin")).thenReturn(new Timestamp(calendar.getTime().getTime()));
     }
 
     @Test
@@ -416,7 +416,7 @@ public class OAuth2TokenDAOTest {
             Mockito.when(res.next()).thenReturn(true).thenReturn(false);
             Mockito.when(res.getString("localuser")).thenReturn("username");
             Mockito.when(res.getString("clientid")).thenThrow(SQLException.class);
-            Mockito.when(res.getString("granttype")).thenReturn("password");
+            Mockito.lenient().when(res.getString("granttype")).thenReturn("password");
             OAuth2Authentication auth = this.tokenDAO.readAuthenticationForRefreshToken(refreshToken);
             Assertions.fail();
         } catch (RuntimeException e) {

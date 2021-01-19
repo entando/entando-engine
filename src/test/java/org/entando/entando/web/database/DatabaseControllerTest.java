@@ -115,7 +115,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
-        when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
+        Mockito.lenient().when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 post("/database/startBackup").content("{}")
                 .header("Authorization", "Bearer " + accessToken));
@@ -157,7 +157,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
-        when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
+        Mockito.lenient().when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 delete("/database/report/{reportCode}", new Object[]{"reportCode"})
                 .header("Authorization", "Bearer " + accessToken));

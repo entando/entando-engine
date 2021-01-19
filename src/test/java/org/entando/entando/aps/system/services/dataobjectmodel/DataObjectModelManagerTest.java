@@ -92,7 +92,7 @@ public class DataObjectModelManagerTest {
         for (int i = 0; i < 4; i++) {
             fakeModels.add(createModel(i, type));
         }
-        when(dataObjectModelManager.getDataObjectModels()).thenReturn(fakeModels);
+        Mockito.lenient().when(dataObjectModelManager.getDataObjectModels()).thenReturn(fakeModels);
 
         DataObjectModel dataModel = new DataObjectModel();
         dataModel.setId(99);

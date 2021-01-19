@@ -45,6 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -70,8 +71,8 @@ public class GuiFragmentServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         Lang defaultLang = mock(Lang.class);
-        when(defaultLang.getCode()).thenReturn("en");
-        when(langManager.getDefaultLang()).thenReturn(defaultLang);
+        Mockito.lenient().when(defaultLang.getCode()).thenReturn("en");
+        Mockito.lenient().when(langManager.getDefaultLang()).thenReturn(defaultLang);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class GuiFragmentServiceTest {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
-        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        Mockito.lenient().when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
@@ -144,7 +145,7 @@ public class GuiFragmentServiceTest {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
-        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        Mockito.lenient().when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given

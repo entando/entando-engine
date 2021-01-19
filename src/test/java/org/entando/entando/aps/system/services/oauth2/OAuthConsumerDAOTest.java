@@ -57,8 +57,8 @@ public class OAuthConsumerDAOTest {
     @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(this.dataSource.getConnection()).thenReturn(conn);
-        when(this.conn.prepareStatement(Mockito.anyString())).thenReturn(stat);
+        Mockito.lenient().when(this.dataSource.getConnection()).thenReturn(conn);
+        Mockito.lenient().when(this.conn.prepareStatement(Mockito.anyString())).thenReturn(stat);
     }
 
     @Test
@@ -101,8 +101,8 @@ public class OAuthConsumerDAOTest {
     @Test
     public void failGetConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
-            when(this.stat.executeQuery()).thenReturn(res);
-            Mockito.when(res.next()).thenReturn(true).thenReturn(false);
+            Mockito.lenient().when(this.stat.executeQuery()).thenReturn(res);
+            Mockito.lenient().when(res.next()).thenReturn(true).thenReturn(false);
             Mockito.when(res.getString("consumerkey")).thenThrow(SqlException.class);
             try {
                 List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});

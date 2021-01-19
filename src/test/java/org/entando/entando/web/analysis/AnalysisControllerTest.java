@@ -154,8 +154,8 @@ public class AnalysisControllerTest extends AbstractControllerTest {
         );
 
         // WIDGETS
-        Mockito.doReturn(true).when(widgetService).exists("1");
-        Mockito.doReturn(true).when(widgetService).exists("2");
+        Mockito.lenient().doReturn(true).when(widgetService).exists("1");
+        Mockito.lenient().doReturn(true).when(widgetService).exists("2");
 
         ResultActions result = mockMvc.perform(
                 post("/analysis/components/diff")

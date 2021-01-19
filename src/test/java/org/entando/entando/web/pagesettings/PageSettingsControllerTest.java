@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -79,7 +80,7 @@ public class PageSettingsControllerTest extends AbstractControllerTest {
     public void should_not_update_with_empty_list_of_settings() throws Exception {
         UserDetails user = createManagePagesUser();
         String accessToken = mockOAuthInterceptor(user);
-        when(pageSettingsService.updatePageSettings(createMockRequestEmptyParams())).thenReturn(createMockDto());
+        Mockito.lenient().when(pageSettingsService.updatePageSettings(createMockRequestEmptyParams())).thenReturn(createMockDto());
         ResultActions result = mockMvc.perform(
                 put("/pageSettings")
                         .contentType(MediaType.APPLICATION_JSON)

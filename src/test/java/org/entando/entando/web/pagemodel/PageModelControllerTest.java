@@ -25,7 +25,6 @@ import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.pagemodel.model.*;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.*;
 import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;

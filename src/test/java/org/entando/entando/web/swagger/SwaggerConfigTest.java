@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.fasterxml.classmate.TypeResolver;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -31,10 +31,9 @@ public class SwaggerConfigTest {
     private TypeResolver typeResolver = new TypeResolver();
 
     @BeforeEach
-    @AfterEach
     public void setup() {
         when(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_AUTH_URL)).thenReturn(authUrl);
-        when(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_REALM)).thenReturn(realm);
+        Mockito.lenient().when(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_REALM)).thenReturn(realm);
         when(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_ENABLED)).thenReturn("true");
     }
 
