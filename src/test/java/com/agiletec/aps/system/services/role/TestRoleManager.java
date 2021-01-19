@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.i18n.II18nManager;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +70,7 @@ public class TestRoleManager extends BaseTestCase {
 		Role role = this.roleManager.getRole("temp");
 		assertNotNull(role);
 		
-		assertEquals(role.getDescription(), "Ruolo temporaneo");
+		assertEquals("Ruolo temporaneo", role.getDescription());
 		Iterator<Permission> iter = this.roleManager.getPermissions().iterator();
 		boolean contains = false;
 		while (iter.hasNext()) {
@@ -100,7 +99,7 @@ public class TestRoleManager extends BaseTestCase {
 	
 	private void getNewRolesAndPermissions() throws Throwable {
 		Role role = this.roleManager.getRole("temp");
-		assertEquals(role.getDescription(), "Ruolo temporaneo 1");
+		assertEquals("Ruolo temporaneo 1", role.getDescription());
 		Iterator<Permission> iter = this.roleManager.getPermissions().iterator();
 		boolean contains = false;
 		while (iter.hasNext()) {

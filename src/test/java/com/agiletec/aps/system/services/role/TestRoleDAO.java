@@ -56,7 +56,7 @@ public class TestRoleDAO extends BaseTestCase {
         }
         assertTrue(roles.containsKey("temp"));
         role = (Role)roles.get("temp");
-        assertEquals(role.getDescription(), "temp");
+        assertEquals("temp", role.getDescription());
         assertTrue(role.getPermissions().contains(Permission.SUPERVISOR));
         this.updateRole(roleDAO);
         this.deleteRole(roleDAO);
@@ -80,7 +80,7 @@ public class TestRoleDAO extends BaseTestCase {
         }
         assertTrue(roles.containsKey("temp"));
         role = (Role) roles.get("temp");
-        assertEquals(role.getDescription(), "temp1");
+        assertEquals("temp1", role.getDescription());
         assertTrue(role.getPermissions().contains(Permission.CONFIG));
 	}
 	

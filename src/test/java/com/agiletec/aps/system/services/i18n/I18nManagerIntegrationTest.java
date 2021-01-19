@@ -88,7 +88,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     public void testGetLabels() throws Throwable {
         String label = this.i18nManager.getLabel("PAGE_TITLE", "it");
         assertNotNull(label);
-        assertEquals(label, "titolo pagina");
+        assertEquals("titolo pagina", label);
         label = this.i18nManager.getLabel("not-exists", "it");
         assertNull(label);
     }

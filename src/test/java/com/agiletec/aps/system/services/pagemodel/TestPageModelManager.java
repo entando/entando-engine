@@ -83,17 +83,17 @@ public class TestPageModelManager extends BaseTestCase {
         PageModel pageModel = this._pageModelManager.getPageModel("home");
         String code = pageModel.getCode();
         String descr = pageModel.getDescription();
-        assertEquals(code, "home");
-        assertEquals(descr, "Modello home page");
+        assertEquals("home", code);
+        assertEquals("Modello home page", descr);
         Widget[] widgets = pageModel.getDefaultWidget();
         for (int i = 0; i < widgets.length; i++) {
             Widget widget = widgets[i];
-            assertEquals(widget, null);
+            assertNull(widget);
         }
         String[] frames = pageModel.getFrames();
-        assertEquals(frames[0], "Box sinistra alto");
+        assertEquals("Box sinistra alto", frames[0]);
         int mainFrame = pageModel.getMainFrame();
-        assertEquals(mainFrame, 3);
+        assertEquals(3, mainFrame);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TestPageModelManager extends BaseTestCase {
             PageModel pageModel = pageModels.get(i);
             String code = pageModel.getCode();
             boolean isNotNull = (code != null);
-            assertEquals(isNotNull, true);
+            assertEquals(true, isNotNull);
             if (code.equals("home")) {
                 assertEquals("Modello home page", pageModel.getDescription());
             } else if (code.equals("service")) {

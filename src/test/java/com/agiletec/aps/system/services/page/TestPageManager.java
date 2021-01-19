@@ -55,7 +55,7 @@ public class TestPageManager extends BaseTestCase {
         assertTrue(root.isOnline());
         assertNotNull(root.getMetadata());
         assertNotNull(root.getMetadata());
-        assertEquals(root.getChildrenCodes().length, 7);
+        assertEquals(7, root.getChildrenCodes().length);
 
         assertEquals("service", root.getChildrenCodes()[0]);
         assertEquals("pagina_1", root.getChildrenCodes()[1]);
@@ -220,8 +220,8 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(firstPos + 1, movedTemp1.getPosition());
 
         String[] pages = movedTemp2Parent.getChildrenCodes();
-        assertEquals(pages[pages.length - 2], "temp2");
-        assertEquals(pages[pages.length - 1], "temp1");
+        assertEquals("temp2", pages[pages.length - 2]);
+        assertEquals("temp1", pages[pages.length - 1]);
 
         _pageManager.movePage("temp2", false);
         movedTemp1 = _pageManager.getDraftPage("temp1");
@@ -230,8 +230,8 @@ public class TestPageManager extends BaseTestCase {
         assertEquals(firstPos + 1, movedTemp2.getPosition());
         movedTemp2Parent = _pageManager.getDraftPage(movedTemp2.getParentCode());
         pages = movedTemp2Parent.getChildrenCodes();
-        assertEquals(pages[pages.length - 2], "temp1");
-        assertEquals(pages[pages.length - 1], "temp2");
+        assertEquals("temp1", pages[pages.length - 2]);
+        assertEquals("temp2", pages[pages.length - 1]);
     }
 
     private void deletePage() throws Throwable {
@@ -245,9 +245,9 @@ public class TestPageManager extends BaseTestCase {
         boolean exists = true;
         try {
             exists = mockWidgetsDAO.exists("temp");
-            assertEquals(exists, false);
+            assertEquals(false, exists);
             exists = mockWidgetsDAO.exists("temp2");
-            assertEquals(exists, false);
+            assertEquals(false, exists);
         } catch (Throwable e) {
             throw e;
         }

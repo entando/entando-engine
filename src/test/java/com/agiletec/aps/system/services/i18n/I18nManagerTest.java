@@ -29,7 +29,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
 import com.agiletec.aps.util.ApsProperties;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +56,7 @@ public class I18nManagerTest {
         Map<String, ApsProperties> labels = this.createMockLabels();
         when(cacheWrapper.getLabelGroups()).thenReturn(labels);
         Map<String, ApsProperties> extractedLabels = this.i18nManager.getLabelGroups();
-        Assertions.assertEquals(extractedLabels.size(), 3);
+        assertEquals(3, extractedLabels.size());
     }
     
     @Test
@@ -65,7 +64,7 @@ public class I18nManagerTest {
         when(cacheWrapper.getLabelGroup("TEST")).thenReturn(createLabel("IT Test", "EN Test"));
         String label = this.i18nManager.getLabel("TEST", "it");
         assertNotNull(label);
-        assertEquals(label, "IT Test");
+        assertEquals("IT Test", label);
         label = i18nManager.getLabel("not-exists", "it");
         assertNull(label);
     }
@@ -89,7 +88,7 @@ public class I18nManagerTest {
     @Test
     public void testGetLabelsKey() throws Throwable {
         when(cacheWrapper.getLabelGroups()).thenReturn(createMockLabels());
-        assertEquals(this.i18nManager.getLabelGroups().size(), 3);
+        assertEquals(3, this.i18nManager.getLabelGroups().size());
         assertEquals(0, i18nManager.searchLabelsKey("*", false, false, null).size());
         assertEquals(3, i18nManager.searchLabelsKey("", false, false, null).size());
         assertEquals(1, i18nManager.searchLabelsKey("one", false, false, null).size());

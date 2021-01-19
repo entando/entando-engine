@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,11 +60,6 @@ public class I18nManagerCacheWrapperTest {
     @InjectMocks
     private I18nManagerCacheWrapper cacheWrapper;
 
-    @BeforeAll
-    public static void setUp() {
-        MockitoAnnotations.initMocks(I18nManagerCacheWrapperTest.class);
-    }
-    
     @Test
     public void testInitCache() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
@@ -112,9 +106,9 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     public void updateInvalidEntry() {
-        Assertions.assertThrows(CacheItemNotFoundException.class, ()
-                -> cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"))
-        );
+        Assertions.assertThrows(CacheItemNotFoundException.class, () -> {
+            cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"));
+        });
     }
     
     @Test
