@@ -35,6 +35,7 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -187,23 +188,14 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     public void testCreateDeleteFile_ShouldBlockPathTraversals() throws Throwable {
         String testFilePath = "../../testfolder/test.txt";
         String content = "Content of new text file";
-
-        try {
-            localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
-        } catch (EntRuntimeException e) {
-            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
-
-        try {
-            localStorageManager.deleteFile(testFilePath, false);
-            fail("Shouldn't reach this point");
-        } catch (EntRuntimeException e) {
-            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
+        EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
+        });
+        assertThat(exc1.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+        EntRuntimeException exc2 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.deleteFile(testFilePath, false);
+        });
+        assertThat(exc2.getMessage(), CoreMatchers.startsWith("Path validation failed"));
     }
 
     @Test
@@ -248,31 +240,21 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
 
     @Test
     public void testCreateDeleteDirectory_ShouldBlockPathTraversals() throws Throwable {
-        try {
-            localStorageManager.createDirectory("/../../../dev/mydir", false);
-            fail("Shouldn't reach this point");
-        } catch (EntRuntimeException e) {
-            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
+        EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.createDirectory("/../../../dev/mydir", false);
+        });
+        assertThat(exc1.getMessage(), CoreMatchers.startsWith("Path validation failed"));
 
-        try {
-            localStorageManager.deleteDirectory("/../../../dev/mydir", false);
-        } catch (EntRuntimeException e) {
-            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
-
-        try {
-            localStorageManager.createDirectory("target/mydir", false);
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        } finally {
-            localStorageManager.deleteDirectory("target/mydir", false);
-            localStorageManager.deleteDirectory("target", false);
-        }
+        EntRuntimeException exc2 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.deleteDirectory("/../../../dev/mydir", false);
+        });
+        assertThat(exc2.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+        this.localStorageManager.createDirectory("target/mydir", false);
+        BasicFileAttributeView[] attributes = this.localStorageManager.listAttributes("target/mydir", false);
+        assertNotNull(attributes);
+        assertEquals(0, attributes.length);
+        this.localStorageManager.deleteDirectory("target/mydir", false);
+        this.localStorageManager.deleteDirectory("target", false);
     }
 
     @BeforeEach

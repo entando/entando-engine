@@ -27,6 +27,7 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.util.DateConverter;
 import java.util.Date;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -128,21 +129,16 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     @Test
     public void testFailLoadClientByClientId() throws Throwable {
         ConsumerRecordVO consumer = this.createConsumer("key_3", "secret_3", true);
-        try {
-            assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
-            oauthConsumerManager.addConsumer(consumer);
-            ConsumerRecordVO extractedConsumer = oauthConsumerManager.getConsumerRecord(consumer.getKey());
-            assertNotNull(extractedConsumer);
+        assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
+        oauthConsumerManager.addConsumer(consumer);
+        ConsumerRecordVO extractedConsumer = oauthConsumerManager.getConsumerRecord(consumer.getKey());
+        assertNotNull(extractedConsumer);
+        ClientRegistrationException exception = Assertions.assertThrows(ClientRegistrationException.class, () -> {
             this.oauthConsumerManager.loadClientByClientId("key_3");
-            fail();
-        } catch (ClientRegistrationException t) {
-            assertEquals("Client 'key_3' is expired", t.getMessage());
-        } catch (Throwable t) {
-            throw t;
-        } finally {
-            oauthConsumerManager.deleteConsumer(consumer.getKey());
-            assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
-        }
+        });
+        assertEquals("Client 'key_3' is expired", exception.getMessage());
+        oauthConsumerManager.deleteConsumer(consumer.getKey());
+        assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
     }
 
     @Test

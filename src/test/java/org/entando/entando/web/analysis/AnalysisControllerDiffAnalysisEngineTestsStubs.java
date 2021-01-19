@@ -33,8 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Test;
-
 /**
  * Stubs of test for the analysis controller differential analysis
  * <pre>
@@ -71,7 +69,6 @@ public class AnalysisControllerDiffAnalysisEngineTestsStubs {
      * @param ctx
      * @throws Exception
      */
-    @Test
     public static void testComponentEngineAnalysisResult(
             String componentType,
             String code,
@@ -92,7 +89,6 @@ public class AnalysisControllerDiffAnalysisEngineTestsStubs {
      * @param ctx
      * @throws Exception
      */
-    @Test
     public static void testComponentCmsAnalysisResult(
             String componentType,
             String code,

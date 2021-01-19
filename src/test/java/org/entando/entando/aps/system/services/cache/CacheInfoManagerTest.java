@@ -222,7 +222,7 @@ public class CacheInfoManagerTest {
 		String[] groups = new String[]{"group_1", "group_2"};
 		cacheInfoManager.putInGroup(targetCache, cacheKey, groups);
 		Mockito.verify(cacheManager, Mockito.times(0)).getCache(targetCache);
-		Mockito.verify(cache, Mockito.times(0)).put(cacheKey, Mockito.eq(Mockito.anyString()));
+		Mockito.verify(cache, Mockito.times(0)).put(Mockito.eq(cacheKey), Mockito.anyString());
 		Mockito.verify(cacheManager, Mockito.times(1)).getCache(ICacheInfoManager.CACHE_INFO_MANAGER_CACHE_NAME);
 	}
 	

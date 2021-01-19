@@ -124,12 +124,8 @@ public class TestWidgetTypeManager extends BaseTestCase {
             type.setLocked(true);
             this._widgetTypeManager.addWidgetType(type);
             assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
-            try {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
-                fail();
-            } catch (Throwable t) {
-                assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
-            }
+            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         } catch (Throwable t) {
             throw t;
         } finally {
@@ -231,7 +227,6 @@ public class TestWidgetTypeManager extends BaseTestCase {
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            System.out.println("WIDGETCATEGORY :" + type.getWidgetCategory());;
             this._widgetTypeManager.addWidgetType(type);
             WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);

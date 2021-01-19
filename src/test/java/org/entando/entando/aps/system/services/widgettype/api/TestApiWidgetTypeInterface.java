@@ -159,7 +159,6 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         this.testInvokeUpdateJaxbNoLogicWidgetType("login_form", titles, true, "Gui of login_form", true);
     }
 
-    @Test
     private void testInvokeUpdateJaxbNoLogicWidgetType(String widgetTypeCode, ApsProperties titles, boolean removeParametersFromCall,
             String customSingleGui, boolean expectedSuccess) throws Throwable {
         WidgetType widgetType = this._widgetTypeManager.getWidgetType(widgetTypeCode);

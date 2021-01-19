@@ -38,6 +38,7 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -491,37 +492,26 @@ public class TestPageManager extends BaseTestCase {
     }
 
     @Test
-    public void testFailureJoinWidget_1() throws Throwable {
+    public void testFailureJoinWidget_1() {
         String pageCode = "wrongPageCode";
         int frame = 2;
-        try {
+        Assertions.assertThrows(EntException.class, () -> {
             Widget widget = this.getWidgetForTest("login", null);
             this._pageManager.joinWidget(pageCode, widget, frame);
-            fail();
-        } catch (EntException e) {
-            // Errore per pagina inesistente
-        } catch (Throwable t) {
-            throw t;
-        }
+        });
     }
-
+    
     @Test
     public void testFailureJoinWidget_2() throws Throwable {
         String pageCode = "pagina_1";
         int frame = 6;
         IPage pagina_1 = this._pageManager.getDraftPage(pageCode);
         assertTrue(pagina_1.getWidgets().length <= frame);
-        try {
+        Assertions.assertThrows(EntException.class, () -> {
             Widget widget = this.getWidgetForTest("login", null);
             this._pageManager.joinWidget(pageCode, widget, frame);
-            fail();
-        } catch (EntException e) {
-            // Errore per frame errato in modello
-        } catch (Throwable t) {
-            throw t;
-        } finally {
-            this._pageManager.updatePage(pagina_1);
-        }
+        });
+        this._pageManager.updatePage(pagina_1);
     }
 
     @Test
