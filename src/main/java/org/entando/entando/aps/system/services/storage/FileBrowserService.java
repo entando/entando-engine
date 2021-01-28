@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.util.FileTextReader;
 import java.security.SecureRandom;
+import org.apache.commons.lang.SystemUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.DtoBuilder;
@@ -112,7 +113,7 @@ public class FileBrowserService implements IFileBrowserService {
     @Override
     public void addFile(FileBrowserFileRequest request, BindingResult bindingResult) {
         String path = request.getPath();
-        String parentFolder = path.substring(0, path.lastIndexOf("/"));
+        String parentFolder = path.substring(0, path.lastIndexOf(File.separator));
 
         try {
             this.createFolderIfNotExists(parentFolder, request.isProtectedFolder());
