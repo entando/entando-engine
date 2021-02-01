@@ -596,6 +596,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         request.setCode(code);
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
+        request.setWidgetCategory(widgetType.getWidgetCategory());
         request.setReadonlyPageWidgetConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
@@ -686,7 +687,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
             //Try to update the config of locked widget with the same config
-
+/*
+            // INVALID BLOCK
             widgetTypeCode = "entando_apis";
             final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
 
@@ -700,7 +702,7 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
             result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
             result.andExpect(jsonPath("$.payload.group", is("free")));
-
+*/
         } catch (Exception e) {
             throw e;
         }

@@ -43,24 +43,28 @@ public class UserServiceIntegrationTest extends BaseTestCase {
 
     @Test
     public void testAddAndRemoveUserAuthorities() throws Throwable {
+        String username = "editorCustomers";
+        List<UserAuthorityDto> master = userService.getUserAuthorities(username);
+        assertEquals(1, master.size());
         try {
             UserAuthoritiesRequest request = new UserAuthoritiesRequest();
             UserAuthority auth = new UserAuthority();
             auth.setGroup("management");
             auth.setRole("pageManager");
             request.add(auth);
-            List<UserAuthorityDto> resp = userService.addUserAuthorities("editorCustomers", request);
+            List<UserAuthorityDto> resp = userService.addUserAuthorities(username, request);
             assertNotNull(resp);
             assertEquals(1, resp.size());
             assertEquals("management", resp.get(0).getGroup());
-
+            List<UserAuthorityDto> authorities = userService.getUserAuthorities(username);
+            assertEquals(2, authorities.size());
         } finally {
             UserAuthoritiesRequest request = new UserAuthoritiesRequest();
             UserAuthority auth = new UserAuthority();
-            auth.setGroup("customers");
-            auth.setRole("editor");
+            auth.setGroup(master.get(0).getGroup());
+            auth.setRole(master.get(0).getRole());
             request.add(auth);
-            List<UserAuthorityDto> resp = userService.addUserAuthorities("editorCustomers", request);
+            List<UserAuthorityDto> resp = userService.updateUserAuthorities(username, request);
             assertNotNull(resp);
             assertEquals(1, resp.size());
             assertEquals("customers", resp.get(0).getGroup());
