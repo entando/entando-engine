@@ -15,7 +15,7 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.SubstituteLogger;
 
-public class EntLoggingTest {
+class EntLoggingTest {
 
     public static final String HEY = "Hey\nThere\rHow\tAre\nYou\rDoing?\t.";
     public static final String HEY_EXP = "Hey\nThere\rHow\tAre\nYou\rDoing?\t.";

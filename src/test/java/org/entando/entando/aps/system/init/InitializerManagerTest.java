@@ -31,7 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.BeanFactory;
 
 @ExtendWith(MockitoExtension.class)
-public class InitializerManagerTest {
+class InitializerManagerTest {
 
 	@Mock
 	private IInitializerManagerCacheWrapper cacheWrapper;

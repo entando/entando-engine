@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestApiUserProfileInterface extends ApiBaseTestCase {
+class TestApiUserProfileInterface extends ApiBaseTestCase {
     
     public static final String TEST_USERNAME = "testusername";
 

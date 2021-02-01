@@ -55,7 +55,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 /**
  * @author paddeo
  */
-public class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     IUserManager userManager;

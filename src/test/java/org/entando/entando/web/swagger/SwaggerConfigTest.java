@@ -20,7 +20,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 
 @ExtendWith(MockitoExtension.class)
-public class SwaggerConfigTest {
+class SwaggerConfigTest {
 
     private final String authUrl =  "http://localhost:9999/auth";
     private final String realm =  "entandoRealm";

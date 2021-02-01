@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class DataObjectMapperManagerTest {
+class DataObjectMapperManagerTest {
 	
     @Mock
     private IPageManager pageManager;

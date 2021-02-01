@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestWidgetTypeDAO extends BaseTestCase {
+class TestWidgetTypeDAO extends BaseTestCase {
 
     @Test
     void testLoadWidgetTypes() throws Throwable {

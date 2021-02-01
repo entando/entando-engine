@@ -46,7 +46,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  * @author paddeo
  */
 @ExtendWith(MockitoExtension.class)
-public class PageSettingsControllerTest extends AbstractControllerTest {
+class PageSettingsControllerTest extends AbstractControllerTest {
 
     @Mock
     protected PageSettingsService pageSettingsService;

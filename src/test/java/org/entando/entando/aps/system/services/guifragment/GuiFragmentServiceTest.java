@@ -50,7 +50,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class GuiFragmentServiceTest {
+class GuiFragmentServiceTest {
 
     @InjectMocks
     private GuiFragmentService guiFragmentService;

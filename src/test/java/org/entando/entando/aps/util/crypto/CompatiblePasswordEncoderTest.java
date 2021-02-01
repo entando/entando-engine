@@ -37,7 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
     "classpath*:spring/web/**.xml"
 })
 @WebAppConfiguration(value = "")
-public class CompatiblePasswordEncoderTest {
+class CompatiblePasswordEncoderTest {
 
     @BeforeAll
     public static void setup() throws Exception {

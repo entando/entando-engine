@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DataTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class DataTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IDataObjectService dataObjectService;

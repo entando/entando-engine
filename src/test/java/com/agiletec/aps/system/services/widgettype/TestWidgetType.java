@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
-public class TestWidgetType extends BaseTestCase {
+class TestWidgetType extends BaseTestCase {
 
     @Test
     void testEqualsAndHashcode() throws EntException {

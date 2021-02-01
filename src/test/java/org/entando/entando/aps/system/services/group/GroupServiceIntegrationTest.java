@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GroupServiceIntegrationTest extends BaseTestCase {
+class GroupServiceIntegrationTest extends BaseTestCase {
 
     private IGroupService groupService;
 

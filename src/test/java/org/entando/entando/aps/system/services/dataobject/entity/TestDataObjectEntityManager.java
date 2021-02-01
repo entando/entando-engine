@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectEntityManager extends BaseTestCase {
+class TestDataObjectEntityManager extends BaseTestCase {
 
     @Test
     void testSearchRecords() throws Throwable {

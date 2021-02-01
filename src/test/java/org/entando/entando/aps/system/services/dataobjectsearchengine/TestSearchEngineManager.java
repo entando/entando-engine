@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class TestSearchEngineManager extends BaseTestCase {
+class TestSearchEngineManager extends BaseTestCase {
 
 	@Test
     void testSearchAllContents() throws Throwable {

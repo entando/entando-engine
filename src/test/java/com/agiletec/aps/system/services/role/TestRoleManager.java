@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Casari
  */
-public class TestRoleManager extends BaseTestCase {
+class TestRoleManager extends BaseTestCase {
 	
     private IRoleManager roleManager;
     

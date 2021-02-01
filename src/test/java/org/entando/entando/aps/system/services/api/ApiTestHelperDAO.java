@@ -25,7 +25,7 @@ import com.agiletec.aps.system.services.user.MockUserDAO;
 /**
  * @author E.Santoboni
  */
-public class ApiTestHelperDAO extends AbstractDAO {
+class ApiTestHelperDAO extends AbstractDAO {
 
 	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(MockUserDAO.class);
 	

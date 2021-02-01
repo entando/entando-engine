@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class PageTokenManagerTest {
+class PageTokenManagerTest {
 
     public static final String TEST_PAGE_CODE = "test_page";
 

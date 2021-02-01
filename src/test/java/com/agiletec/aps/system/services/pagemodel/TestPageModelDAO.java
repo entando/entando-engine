@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestPageModelDAO extends BaseTestCase {
+class TestPageModelDAO extends BaseTestCase {
 
     @Test
     void testLoadModels() throws Throwable {

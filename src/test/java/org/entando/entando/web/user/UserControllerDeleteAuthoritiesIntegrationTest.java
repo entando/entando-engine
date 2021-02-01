@@ -58,7 +58,7 @@ import org.springframework.web.filter.CorsFilter;
     "classpath*:spring/plugins/**/aps/**/**.xml",
     "classpath*:spring/web/**.xml",})
 @WebAppConfiguration(value = "")
-public class UserControllerDeleteAuthoritiesIntegrationTest {
+class UserControllerDeleteAuthoritiesIntegrationTest {
 
     protected MockMvc mockMvc;
 

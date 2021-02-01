@@ -46,7 +46,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class WidgetControllerTest extends AbstractControllerTest {
+class WidgetControllerTest extends AbstractControllerTest {
 
     @Mock
     private WidgetService widgetService;

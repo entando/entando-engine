@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author S.Puddu - E.Santoboni
  */
-public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
+class GuiFragmentManagerIntegrationTest extends BaseTestCase {
 
     @Test
     void testCrud() throws Exception {

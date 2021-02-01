@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestApiWidgetTypeInterface extends BaseTestCase {
+class TestApiWidgetTypeInterface extends BaseTestCase {
 
     @Test
     void testJaxbWidgetType() throws Throwable {

@@ -64,7 +64,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @ExtendWith(MockitoExtension.class)
-public class PageServiceTest {
+class PageServiceTest {
     public static final String ADMIN_GROUP_NAME = "administrators";
     public static final String FREE_GROUP_NAME = "free";
 

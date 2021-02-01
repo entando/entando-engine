@@ -40,7 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class OAuthConsumerDAOTest {
+class OAuthConsumerDAOTest {
 
     @Mock
     private DataSource dataSource;

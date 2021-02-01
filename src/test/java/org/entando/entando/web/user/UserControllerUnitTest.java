@@ -73,7 +73,7 @@ import org.springframework.validation.MapBindingResult;
  * @author paddeo
  */
 @ExtendWith(MockitoExtension.class)
-public class UserControllerUnitTest extends AbstractControllerTest {
+class UserControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     IUserManager userManager;

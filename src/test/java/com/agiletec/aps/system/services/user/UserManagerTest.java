@@ -36,7 +36,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-public class UserManagerTest {
+class UserManagerTest {
 
     @Mock
     private IUserDAO userDao;

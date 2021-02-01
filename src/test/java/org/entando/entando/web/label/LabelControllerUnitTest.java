@@ -37,7 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class LabelControllerUnitTest extends AbstractControllerTest {
+class LabelControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private LabelService labelService;

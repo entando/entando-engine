@@ -26,7 +26,7 @@ import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LangManagerIntegrationTest extends BaseTestCase {
+class LangManagerIntegrationTest extends BaseTestCase {
 
 	private ILangManager langManager = null;
 

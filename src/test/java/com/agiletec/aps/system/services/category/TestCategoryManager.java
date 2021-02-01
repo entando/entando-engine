@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class TestCategoryManager extends BaseTestCase {
+class TestCategoryManager extends BaseTestCase {
 
     @Test
     void testGetCategory() {

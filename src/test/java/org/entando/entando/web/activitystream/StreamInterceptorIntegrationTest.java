@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class StreamInterceptorIntegrationTest extends AbstractControllerIntegrationTest {
+class StreamInterceptorIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;

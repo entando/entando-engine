@@ -77,7 +77,7 @@ import org.springframework.util.LinkedMultiValueMap;
 /**
  * @author paddeo
  */
-public class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;

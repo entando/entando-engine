@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.function.BiFunction;
 import org.junit.jupiter.api.Test;
 
-public class RestNamedIdTest {
+class RestNamedIdTest {
 
     public static final String TEST_ID = "306dadea";
     public static final String TEST_ID2 = "code=306dadea";

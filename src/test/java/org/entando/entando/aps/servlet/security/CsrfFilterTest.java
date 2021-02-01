@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 @ExtendWith(MockitoExtension.class)
-public class CsrfFilterTest {
+class CsrfFilterTest {
 
     private static final EntLogger LOGGER = EntLogFactory.getSanitizedLogger(CsrfFilterTest.class);
 

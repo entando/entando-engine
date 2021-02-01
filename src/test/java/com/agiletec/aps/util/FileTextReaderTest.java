@@ -25,7 +25,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class FileTextReaderTest {
+class FileTextReaderTest {
 
     private static final String A_TMP_FILE = "a-tmp-file";
 

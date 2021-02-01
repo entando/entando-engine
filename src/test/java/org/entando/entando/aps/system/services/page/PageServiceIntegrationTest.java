@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author paddeo
  */
-public class PageServiceIntegrationTest extends BaseTestCase {
+class PageServiceIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;

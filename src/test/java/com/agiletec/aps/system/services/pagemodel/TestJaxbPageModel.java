@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestJaxbPageModel extends BaseTestCase {
+class TestJaxbPageModel extends BaseTestCase {
 
     @Test
     void testLoadModel() throws Throwable {

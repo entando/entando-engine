@@ -26,7 +26,7 @@ import org.entando.entando.aps.system.services.command.util.BulkCommandContainer
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class TestBulkCommandManagerCache {
+class TestBulkCommandManagerCache {
 
     @Disabled("temporary disabling")
 	@Test

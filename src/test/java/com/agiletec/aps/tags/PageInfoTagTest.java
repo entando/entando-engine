@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class PageInfoTagTest {
+class PageInfoTagTest {
 
     private static final String TEST_URL_1 = "http://www.example.com?param1=1&param2=xxx#a_fragment";
     private static final String TEST_URL_1_EXPECTED = "http://www.example.com?param1=1&amp;param2=xxx#a_fragment";

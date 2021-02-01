@@ -29,7 +29,7 @@ import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestDataObjectViewerHelper extends BaseTestCase {
+class TestDataObjectViewerHelper extends BaseTestCase {
 
     @Test
     void testGetRenderedDataObject() throws Throwable {

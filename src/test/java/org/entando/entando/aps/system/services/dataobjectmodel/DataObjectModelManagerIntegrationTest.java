@@ -26,7 +26,7 @@ import org.entando.entando.aps.system.services.dataobject.model.SmallDataType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
+class DataObjectModelManagerIntegrationTest extends BaseTestCase {
 
     private IDataObjectModelManager dataModelManager;
 

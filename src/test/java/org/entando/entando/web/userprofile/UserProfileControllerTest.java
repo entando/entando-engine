@@ -49,7 +49,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 
 @ExtendWith(MockitoExtension.class)
-public class UserProfileControllerTest extends AbstractControllerTest {
+class UserProfileControllerTest extends AbstractControllerTest {
 
     @Mock
     private ProfileValidator profileValidator;

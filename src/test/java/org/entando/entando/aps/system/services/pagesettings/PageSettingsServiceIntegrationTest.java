@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author paddeo
  */
-public class PageSettingsServiceIntegrationTest extends BaseTestCase {
+class PageSettingsServiceIntegrationTest extends BaseTestCase {
 
     private IPageSettingsService pageSettingsService;
 

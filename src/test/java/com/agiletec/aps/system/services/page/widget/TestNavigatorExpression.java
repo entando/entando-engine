@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  * @author E.Santoboni
  */
-public class TestNavigatorExpression extends BaseTestCase {
+class TestNavigatorExpression extends BaseTestCase {
 	
     @Test
 	public void testSetExpression_1() throws Throwable {

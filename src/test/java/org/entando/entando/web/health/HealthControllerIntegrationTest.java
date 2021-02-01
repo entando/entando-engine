@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 
-public class HealthControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class HealthControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private final String healthEndpoint = "/health";
 

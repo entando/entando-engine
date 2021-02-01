@@ -46,7 +46,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * @author E.Santoboni
  */
-public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
+class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
 
     private IAuthenticationProviderManager authenticationProvider = null;
     private IUserManager userManager = null;

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestPageModelDOM extends BaseTestCase {
+class TestPageModelDOM extends BaseTestCase {
 
     @Test
     void testGetFrames() throws Throwable {

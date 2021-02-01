@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class CacheInfoManagerIntegrationTest extends BaseTestCase {
+class CacheInfoManagerIntegrationTest extends BaseTestCase {
 
 	private static final String DEFAULT_CACHE = CacheInfoManager.DEFAULT_CACHE_NAME;
 

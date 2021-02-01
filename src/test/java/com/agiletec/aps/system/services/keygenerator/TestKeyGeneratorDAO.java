@@ -21,7 +21,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockUniqueKeysDAO;
 import org.junit.jupiter.api.Test;
 
-public class TestKeyGeneratorDAO extends BaseTestCase {
+class TestKeyGeneratorDAO extends BaseTestCase {
 	
     @Test
     void testGetUniqueKey() throws Throwable {

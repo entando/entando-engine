@@ -37,7 +37,7 @@ import java.util.List;
 import org.entando.entando.web.widget.model.NavigatorExpressionDto;
 import org.junit.jupiter.api.Test;
 
-public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
     private ObjectMapper mapper = new ObjectMapper();
     

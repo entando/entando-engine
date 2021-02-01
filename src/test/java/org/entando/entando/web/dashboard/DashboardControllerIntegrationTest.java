@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
     void testIntegration() throws Exception {

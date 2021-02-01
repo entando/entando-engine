@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Assertions;
 
-public class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ConfigInterface configManager;

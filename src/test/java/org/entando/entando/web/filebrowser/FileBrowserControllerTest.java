@@ -43,7 +43,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class FileBrowserControllerTest extends AbstractControllerTest {
+class FileBrowserControllerTest extends AbstractControllerTest {
 
     @Mock
     private FileBrowserService fileBrowserService;

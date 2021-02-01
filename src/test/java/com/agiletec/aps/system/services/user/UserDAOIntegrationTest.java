@@ -25,7 +25,7 @@ import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UserDAOIntegrationTest extends BaseTestCase {
+class UserDAOIntegrationTest extends BaseTestCase {
 
     private IUserDAO userDao;
     

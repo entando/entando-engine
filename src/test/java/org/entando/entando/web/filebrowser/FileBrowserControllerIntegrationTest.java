@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Assertions;
 
-public class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IStorageManager storageManager;

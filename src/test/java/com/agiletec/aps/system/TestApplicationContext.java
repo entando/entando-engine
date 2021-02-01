@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author W.Ambu
  */
-public class TestApplicationContext extends BaseTestCase {
+class TestApplicationContext extends BaseTestCase {
 	
     @Test
     void testGetServices() {

@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.MapBindingResult;
 import org.springframework.validation.ObjectError;
 
-public class UserValidatorTest {
+class UserValidatorTest {
 
     @Test
     void deleteAdminIsNotValid() {

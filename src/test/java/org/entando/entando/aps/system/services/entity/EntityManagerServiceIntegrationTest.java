@@ -29,7 +29,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class EntityManagerServiceIntegrationTest extends BaseTestCase {
+class EntityManagerServiceIntegrationTest extends BaseTestCase {
 
     private IEntityManagerService entityManagerService;
 

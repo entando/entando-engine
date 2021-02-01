@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestEntityManager extends BaseTestCase {
+class TestEntityManager extends BaseTestCase {
 	
     @Test
 	public void testGetAttributeTypes() throws Throwable {

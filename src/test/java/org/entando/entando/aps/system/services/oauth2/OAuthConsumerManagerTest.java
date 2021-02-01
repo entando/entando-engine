@@ -38,7 +38,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class OAuthConsumerManagerTest {
+class OAuthConsumerManagerTest {
 
     @Mock
     private IOAuthConsumerDAO consumerDAO;

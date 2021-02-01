@@ -32,7 +32,7 @@ import com.agiletec.aps.system.SystemConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestBulkCommandManager extends BaseTestCase {
+class TestBulkCommandManager extends BaseTestCase {
 
     @Test
 	public void testAddGetCommandWOThread() {

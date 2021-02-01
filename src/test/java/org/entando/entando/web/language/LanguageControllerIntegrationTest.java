@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class LanguageControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class LanguageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ILanguageService languageService;

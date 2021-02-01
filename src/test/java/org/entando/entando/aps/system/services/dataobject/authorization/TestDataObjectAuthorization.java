@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectAuthorization extends BaseTestCase {
+class TestDataObjectAuthorization extends BaseTestCase {
     
     @Test
     void testCheckAdminUser() throws Throwable {

@@ -23,7 +23,7 @@ import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
 import org.junit.jupiter.api.Test;
 
-public class UserManagerIntegrationTest extends BaseTestCase {
+class UserManagerIntegrationTest extends BaseTestCase {
 
     @Test
     void testGetUsers() throws Throwable {

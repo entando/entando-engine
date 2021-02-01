@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestQueryExtractor {
+class TestQueryExtractor {
 
     @Test
 	public void testReadQueries() {

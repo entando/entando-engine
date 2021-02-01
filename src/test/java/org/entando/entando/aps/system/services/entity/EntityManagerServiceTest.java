@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class EntityManagerServiceTest {
+class EntityManagerServiceTest {
 
     @InjectMocks
     private EntityManagerService entityManagerService;

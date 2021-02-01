@@ -19,7 +19,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class StorageManagerUtilTest {
+class StorageManagerUtilTest {
 
     @Test
     void isValidFilename_1() {

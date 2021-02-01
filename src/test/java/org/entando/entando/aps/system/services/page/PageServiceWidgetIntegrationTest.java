@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PageServiceWidgetIntegrationTest extends BaseTestCase {
+class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;

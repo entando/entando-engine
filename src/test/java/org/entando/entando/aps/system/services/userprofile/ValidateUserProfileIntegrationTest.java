@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class ValidateUserProfileIntegrationTest extends BaseTestCase {
+class ValidateUserProfileIntegrationTest extends BaseTestCase {
 
 	@Test
     void testValidate_1() throws Throwable {

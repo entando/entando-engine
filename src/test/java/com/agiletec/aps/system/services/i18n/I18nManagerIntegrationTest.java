@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  * @author W.Ambu
  */
-public class I18nManagerIntegrationTest extends BaseTestCase {
+class I18nManagerIntegrationTest extends BaseTestCase {
     
     private II18nManager i18nManager;
     

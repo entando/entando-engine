@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ApiConsumerControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class ApiConsumerControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String BASE_URL = "/consumers";
 

@@ -47,7 +47,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class PageModelControllerTest extends AbstractControllerTest {
+class PageModelControllerTest extends AbstractControllerTest {
 
     private static final String PAGE_MODEL_CODE = "TEST_PM";
 

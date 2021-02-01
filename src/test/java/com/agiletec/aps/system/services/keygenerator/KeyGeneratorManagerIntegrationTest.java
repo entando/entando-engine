@@ -30,7 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
+class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
 
     private static int currentKey;
     

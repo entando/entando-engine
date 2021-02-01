@@ -44,7 +44,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class DatabaseControllerTest extends AbstractControllerTest {
+class DatabaseControllerTest extends AbstractControllerTest {
 
     private MockMvc mockMvc;
 

@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestApiDataObjectInterface extends ApiBaseTestCase {
+class TestApiDataObjectInterface extends ApiBaseTestCase {
 
     private IDataObjectManager dataObjectManager;
 

@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class UserProfileManagerIntegrationTest extends BaseTestCase {
+class UserProfileManagerIntegrationTest extends BaseTestCase {
 
     private IUserProfileManager profileManager;
     private IUserManager userManager;

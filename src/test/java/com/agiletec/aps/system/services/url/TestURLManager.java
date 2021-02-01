@@ -25,7 +25,7 @@ import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestURLManager extends BaseTestCase {
+class TestURLManager extends BaseTestCase {
 
     private ConfigInterface configManager = null;
     private IURLManager urlManager = null;

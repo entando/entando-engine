@@ -54,7 +54,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-public class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String USERNAME = "jack_bauer";
     private static final String PASSWORD = "0x24";

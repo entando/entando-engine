@@ -47,7 +47,7 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class OAuth2TokenDAOTest {
+class OAuth2TokenDAOTest {
 
     @Mock
     private DataSource dataSource;

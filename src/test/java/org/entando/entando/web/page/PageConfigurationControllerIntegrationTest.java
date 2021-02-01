@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Assertions;
 
-public class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;

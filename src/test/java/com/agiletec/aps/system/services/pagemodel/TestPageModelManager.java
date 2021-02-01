@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestPageModelManager extends BaseTestCase {
+class TestPageModelManager extends BaseTestCase {
 
     @Test
     void testSearch_with_null_empty_filters() throws EntException {

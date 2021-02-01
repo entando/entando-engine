@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class IgnoreJacksonWriteOnlyAccessTest {
+class IgnoreJacksonWriteOnlyAccessTest {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(IgnoreJacksonWriteOnlyAccessTest.class);
 

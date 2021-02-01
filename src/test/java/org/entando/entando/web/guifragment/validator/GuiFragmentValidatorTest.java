@@ -34,7 +34,7 @@ import org.springframework.validation.MapBindingResult;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class GuiFragmentValidatorTest {
+class GuiFragmentValidatorTest {
 
     @Mock
     private IGuiFragmentManager guiFragmentManager;

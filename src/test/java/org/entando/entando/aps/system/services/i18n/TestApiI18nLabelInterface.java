@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestApiI18nLabelInterface extends ApiBaseTestCase {
+class TestApiI18nLabelInterface extends ApiBaseTestCase {
 	
     @Test
 	public void testGetXmlLabel() throws Throwable {

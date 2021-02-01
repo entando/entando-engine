@@ -20,7 +20,7 @@ import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PageModelDtoTest {
+class PageModelDtoTest {
 
     @Test
     void test_json() throws JsonProcessingException {

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestGroupUtilizer extends BaseTestCase {
+class TestGroupUtilizer extends BaseTestCase {
 
     @Test
 	public void testGetGroupsUtilizers_1() throws Throwable {

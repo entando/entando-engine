@@ -28,7 +28,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
-public class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 

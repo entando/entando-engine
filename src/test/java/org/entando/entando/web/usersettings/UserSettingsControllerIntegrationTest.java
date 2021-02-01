@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UserSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserSettingsControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IUserSettingsService userSettingsService;

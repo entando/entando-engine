@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestGroupManager extends BaseTestCase {
+class TestGroupManager extends BaseTestCase {
 
     @Test
     void testGetGroups() {

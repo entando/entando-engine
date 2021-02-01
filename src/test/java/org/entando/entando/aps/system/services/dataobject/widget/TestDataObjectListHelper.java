@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectListHelper extends BaseTestCase {
+class TestDataObjectListHelper extends BaseTestCase {
 
 	@Test
     void testGetFilters() throws Throwable {

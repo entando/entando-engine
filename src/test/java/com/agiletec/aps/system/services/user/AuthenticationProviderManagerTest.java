@@ -49,7 +49,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class AuthenticationProviderManagerTest {
+class AuthenticationProviderManagerTest {
 
     @Mock
     private IUserManager userManager;

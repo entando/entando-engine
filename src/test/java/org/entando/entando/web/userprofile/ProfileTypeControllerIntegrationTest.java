@@ -46,7 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
 import org.junit.jupiter.api.Assertions;
 
-public class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IUserProfileTypeService userProfileTypeService;

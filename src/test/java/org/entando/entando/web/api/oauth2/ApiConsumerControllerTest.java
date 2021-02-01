@@ -44,7 +44,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ApiConsumerControllerTest extends AbstractControllerTest {
+class ApiConsumerControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/consumers";
 

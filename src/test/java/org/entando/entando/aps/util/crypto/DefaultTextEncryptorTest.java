@@ -34,7 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
     "classpath*:spring/web/**.xml"
 })
 @WebAppConfiguration(value = "")
-public class DefaultTextEncryptorTest {
+class DefaultTextEncryptorTest {
 
     @BeforeAll
     public static void setup() throws Exception {

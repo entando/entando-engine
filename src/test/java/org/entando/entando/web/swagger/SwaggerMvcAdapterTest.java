@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistra
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @ExtendWith(MockitoExtension.class)
-public class SwaggerMvcAdapterTest {
+class SwaggerMvcAdapterTest {
 
     @Mock
     private ResourceHandlerRegistry resourceHandlerRegistry;

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestConfigItemDAO extends BaseTestCase {
+class TestConfigItemDAO extends BaseTestCase {
     
     private ConfigItemDAO configItemDAO;
     

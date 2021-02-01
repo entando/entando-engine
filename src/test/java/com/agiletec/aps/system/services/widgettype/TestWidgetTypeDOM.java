@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestWidgetTypeDOM extends BaseTestCase {
+class TestWidgetTypeDOM extends BaseTestCase {
 	
     @Test
     void testParseConfig() throws EntException {

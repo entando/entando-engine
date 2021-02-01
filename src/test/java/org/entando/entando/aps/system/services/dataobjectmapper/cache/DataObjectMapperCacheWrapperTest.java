@@ -44,7 +44,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class DataObjectMapperCacheWrapperTest {
+class DataObjectMapperCacheWrapperTest {
 	
 	@Mock
     private CacheManager cacheManager;

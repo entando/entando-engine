@@ -30,7 +30,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 
 @ExtendWith(MockitoExtension.class)
-public class ApiServiceCacheWrapperTest {
+class ApiServiceCacheWrapperTest {
 
 	private static final String CACHE_NAME = IApiCatalogManager.API_CATALOG_CACHE_NAME;
 

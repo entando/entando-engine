@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author S.Loru - E.Santoboni
  */
-public class LocalStorageManagerIntegrationTest extends BaseTestCase {
+class LocalStorageManagerIntegrationTest extends BaseTestCase {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManagerIntegrationTest.class);
 

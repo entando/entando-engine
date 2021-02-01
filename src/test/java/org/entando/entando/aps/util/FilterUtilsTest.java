@@ -13,7 +13,7 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.junit.jupiter.api.Test;
 
-public class FilterUtilsTest {
+class FilterUtilsTest {
 
     private final TransformingComparator comparator
             = FilterUtils.createCaseInsensitiveComparator();

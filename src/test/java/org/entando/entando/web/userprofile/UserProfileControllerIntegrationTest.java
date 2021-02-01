@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.Assertions;
 import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
 
-public class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IUserProfileService userProfileService;

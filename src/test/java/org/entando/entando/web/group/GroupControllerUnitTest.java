@@ -55,7 +55,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupControllerUnitTest extends AbstractControllerTest {
+class GroupControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private GroupService groupService;

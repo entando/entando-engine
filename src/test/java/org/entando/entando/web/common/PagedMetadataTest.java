@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author paddeo
  */
-public class PagedMetadataTest {
+class PagedMetadataTest {
 
     @Test
     void shuold_create_filters() {

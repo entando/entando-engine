@@ -36,7 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryControllerTest extends AbstractControllerTest {
+class CategoryControllerTest extends AbstractControllerTest {
 
     @Mock
     private CategoryManager categoryManager;

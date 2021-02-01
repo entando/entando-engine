@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestPermissionDAO extends BaseTestCase {
+class TestPermissionDAO extends BaseTestCase {
 	
     @Test
     void testAddUpdateDeletePermission() throws Throwable {

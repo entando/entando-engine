@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestWidgetTypeManager extends BaseTestCase {
+class TestWidgetTypeManager extends BaseTestCase {
 
     @Test
     void testGetWidgetTypes() throws EntException {

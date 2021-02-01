@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 
-public class DatabaseControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class DatabaseControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
     void testReports_1() throws Exception {

@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class LangManagerTest {
+class LangManagerTest {
 
 	@Mock
 	private ConfigInterface configManager;

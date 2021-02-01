@@ -34,7 +34,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class CspNonceTagTest {
+class CspNonceTagTest {
     
     @Mock
     private PageContext pageContext;

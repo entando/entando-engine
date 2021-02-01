@@ -6,7 +6,7 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import org.junit.jupiter.api.Test;
 
-public class PageDtoBuilderTest {
+class PageDtoBuilderTest {
 
     @Test
     void testDefaultContentTypeAndCharSet() {

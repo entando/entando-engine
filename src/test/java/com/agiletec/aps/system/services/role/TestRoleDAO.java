@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestRoleDAO extends BaseTestCase {
+class TestRoleDAO extends BaseTestCase {
 
     @Test
     void testAddUpdateDeleteRole() throws Throwable {

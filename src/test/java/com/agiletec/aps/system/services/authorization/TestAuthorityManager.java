@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestAuthorityManager extends BaseTestCase {
+class TestAuthorityManager extends BaseTestCase {
     
 	private IRoleManager _roleManager = null;
 	private IGroupManager _groupManager = null;

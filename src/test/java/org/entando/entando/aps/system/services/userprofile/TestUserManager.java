@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestUserManager extends BaseTestCase {
+class TestUserManager extends BaseTestCase {
 
     @Test
     void testInitialize() {

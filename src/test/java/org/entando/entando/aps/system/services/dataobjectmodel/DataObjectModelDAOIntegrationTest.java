@@ -25,7 +25,7 @@ import com.agiletec.aps.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
+class DataObjectModelDAOIntegrationTest extends BaseTestCase {
 
     private IDataObjectModelDAO dataModelDAO;
 

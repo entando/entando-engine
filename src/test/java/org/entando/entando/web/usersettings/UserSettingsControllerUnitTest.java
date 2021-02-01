@@ -35,7 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class UserSettingsControllerUnitTest extends AbstractControllerTest {
+class UserSettingsControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private UserSettingsService userSettingsService;

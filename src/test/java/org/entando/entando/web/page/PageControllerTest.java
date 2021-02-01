@@ -70,7 +70,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  * @author paddeo
  */
 @ExtendWith(MockitoExtension.class)
-public class PageControllerTest extends AbstractControllerTest {
+class PageControllerTest extends AbstractControllerTest {
 
     @Mock
     IPageManager pageManager;

@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
-public class TestDataObjectDAO extends BaseTestCase {
+class TestDataObjectDAO extends BaseTestCase {
 
     @Test
     void testDeleteAddDataObject() throws Throwable {

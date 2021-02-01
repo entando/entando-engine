@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestAuthorizationManager extends BaseTestCase {
+class TestAuthorizationManager extends BaseTestCase {
 
     private IAuthorizationManager authorizationManager;
     private IAuthenticationProviderManager authenticationProvider;

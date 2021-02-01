@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestNavigatorParser extends BaseTestCase {
+class TestNavigatorParser extends BaseTestCase {
 	
     @Test
 	public void testGetTargets_1() throws Throwable {

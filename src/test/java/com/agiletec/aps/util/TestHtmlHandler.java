@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author W.Ambu
  */
-public class TestHtmlHandler  {
+class TestHtmlHandler  {
 	
     @Test
     void testGetParsedText() {

@@ -29,7 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 
-import com.agiletec.aps.system.services.i18n.I18nManagerTest;
 import com.agiletec.aps.system.services.i18n.II18nDAO;
 import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.Cache;
 
 @ExtendWith(MockitoExtension.class)
-public class I18nManagerCacheWrapperTest {
+class I18nManagerCacheWrapperTest {
 
     private static final String CACHE_NAME = I18nManagerCacheWrapper.I18N_MANAGER_CACHE_NAME;
 
@@ -64,7 +63,7 @@ public class I18nManagerCacheWrapperTest {
     void testInitCache() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
         when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
-        ApsProperties properties = I18nManagerTest.createLabel("It Label", "En Label");
+        ApsProperties properties = createLabel("It Label", "En Label");
         Map<String, ApsProperties> labels = new HashMap<>();
         labels.put(TEST_KEY, properties);
         when(this.i18nDAO.loadLabelGroups()).thenReturn(labels);
@@ -98,7 +97,7 @@ public class I18nManagerCacheWrapperTest {
     
     @Test
     void update() {
-        cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
+        cacheWrapper.updateLabelGroup(TEST_KEY, createLabel("si", "yes"));
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         assertNotNull(properties);
         assertEquals("yes", properties.get("en"));
@@ -107,7 +106,7 @@ public class I18nManagerCacheWrapperTest {
     @Test
     void updateInvalidEntry() {
         Assertions.assertThrows(CacheItemNotFoundException.class, () -> {
-            cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"));
+            cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", createLabel("si", "yes"));
         });
     }
     
@@ -125,8 +124,15 @@ public class I18nManagerCacheWrapperTest {
         List<String> codes = new ArrayList<>();
         codes.add(TEST_KEY);
         fakeCache.put(I18nManagerCacheWrapper.I18N_CODES_CACHE_NAME, codes);
-        fakeCache.put(I18nManagerCacheWrapper.I18N_CACHE_NAME_PREFIX + TEST_KEY, I18nManagerTest.createLabel("ciao", "hello"));
+        fakeCache.put(I18nManagerCacheWrapper.I18N_CACHE_NAME_PREFIX + TEST_KEY, createLabel("ciao", "hello"));
         when(springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
+    }
+
+    static ApsProperties createLabel(String it, String en) {
+        ApsProperties labelOne = new ApsProperties();
+        labelOne.put("it", it);
+        labelOne.put("en", en);
+        return labelOne;
     }
 
 }

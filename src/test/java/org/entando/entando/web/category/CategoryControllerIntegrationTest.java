@@ -49,7 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-public class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private ICategoryService categoryService;

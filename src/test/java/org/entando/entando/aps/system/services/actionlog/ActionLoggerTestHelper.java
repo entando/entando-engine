@@ -30,7 +30,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
 /**
  * @author E.Santoboni
  */
-public class ActionLoggerTestHelper extends AbstractDAO {
+class ActionLoggerTestHelper extends AbstractDAO {
 
 	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(ActionLoggerTestHelper.class);
 	

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-public class EntSafeXmlUtilsTest {
+class EntSafeXmlUtilsTest {
 
     @Test
     void testNewSafeSAXParser() throws ParserConfigurationException, SAXException, IOException {

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
+class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
 	
     @Test
     void testGetMethod() throws Throwable {

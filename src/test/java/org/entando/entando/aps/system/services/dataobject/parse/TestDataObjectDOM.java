@@ -23,7 +23,7 @@ import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestDataObjectDOM extends BaseTestCase {
+class TestDataObjectDOM extends BaseTestCase {
 
 	@Test
     void testGetXMLDocument() throws EntException {

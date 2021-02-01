@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author paddeo
  */
-public class UserServiceIntegrationTest extends BaseTestCase {
+class UserServiceIntegrationTest extends BaseTestCase {
 
     private IUserService userService;
 

@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 
-public class DataObjectModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class DataObjectModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String BASE_URI = "/dataModels";
 

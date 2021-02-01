@@ -49,7 +49,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ProfileTypeControllerTest extends AbstractControllerTest {
+class ProfileTypeControllerTest extends AbstractControllerTest {
 
     @Mock
     private IUserProfileManager userProfileManager;

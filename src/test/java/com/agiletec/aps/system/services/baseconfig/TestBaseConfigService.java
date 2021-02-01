@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Casari
  */
-public class TestBaseConfigService extends BaseTestCase {
+class TestBaseConfigService extends BaseTestCase {
     
     private ConfigInterface configInterface;
     

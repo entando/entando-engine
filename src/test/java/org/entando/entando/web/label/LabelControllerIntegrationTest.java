@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 
-public class LabelControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class LabelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private II18nManager ii18nManager;

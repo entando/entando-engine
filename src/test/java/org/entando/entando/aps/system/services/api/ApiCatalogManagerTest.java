@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ApiCatalogManagerTest {
+class ApiCatalogManagerTest {
 
     @Mock
     private ApiServiceCacheWrapper cacheWrapper;

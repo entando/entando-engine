@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author paddeo
  */
-public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
+class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
 
     private PageAuthorizationService authorizationService;
 

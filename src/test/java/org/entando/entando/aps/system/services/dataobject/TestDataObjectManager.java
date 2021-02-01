@@ -56,7 +56,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M. Morini - E.Santoboni
  */
-public class TestDataObjectManager extends BaseTestCase {
+class TestDataObjectManager extends BaseTestCase {
 
     @Test
     void testSearchDataObjects_1_1() throws Throwable {

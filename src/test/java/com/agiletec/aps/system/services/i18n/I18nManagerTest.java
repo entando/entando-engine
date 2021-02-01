@@ -35,7 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class I18nManagerTest {
+class I18nManagerTest {
 
     @Mock
     private II18nManagerCacheWrapper cacheWrapper;

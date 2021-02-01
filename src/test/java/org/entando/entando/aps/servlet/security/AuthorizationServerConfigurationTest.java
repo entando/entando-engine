@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class AuthorizationServerConfigurationTest extends AbstractControllerIntegrationTest {
+class AuthorizationServerConfigurationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IApiOAuth2TokenManager apiOAuth2TokenManager;

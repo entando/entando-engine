@@ -40,7 +40,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class LabelServiceTest {
+class LabelServiceTest {
 
     @Mock private I18nManager i18nManager;
     @Mock private ILangManager langManager;

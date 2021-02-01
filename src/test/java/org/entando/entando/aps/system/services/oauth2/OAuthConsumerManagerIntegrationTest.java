@@ -36,7 +36,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
 /**
  * @author E.Santoboni
  */
-public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
+class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
 
     private IOAuthConsumerManager oauthConsumerManager;
 

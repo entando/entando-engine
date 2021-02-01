@@ -40,7 +40,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class PageModelServiceTest {
+class PageModelServiceTest {
 
     private static final int DEFAULT_MAIN_FRAME = -1;
     private static final String PAGE_MODEL_CODE = "TEST_PM_CODE";

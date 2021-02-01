@@ -45,7 +45,7 @@ import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 
 @ExtendWith(MockitoExtension.class)
-public class UserProfileManagerTest {
+class UserProfileManagerTest {
 
     @InjectMocks
     private UserProfileManager userProfileManager;

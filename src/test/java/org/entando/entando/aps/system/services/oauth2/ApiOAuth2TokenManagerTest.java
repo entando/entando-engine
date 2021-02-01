@@ -40,7 +40,7 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
  * @author E.Santoboni
  */
 @ExtendWith(MockitoExtension.class)
-public class ApiOAuth2TokenManagerTest {
+class ApiOAuth2TokenManagerTest {
 
     @Mock
     private OAuth2TokenDAO tokenDAO;

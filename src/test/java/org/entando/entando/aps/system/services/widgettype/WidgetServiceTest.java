@@ -63,7 +63,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class WidgetServiceTest {
+class WidgetServiceTest {
 
     private static final String WIDGET_1_CODE = "widget1";
     private static final String WIDGET_2_CODE = "widget2";

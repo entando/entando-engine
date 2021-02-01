@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author paddeo
  */
-public class RestListRequestTest {
+class RestListRequestTest {
 
     @Test
     void shuold_create_filters() {
