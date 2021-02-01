@@ -61,12 +61,7 @@ public class DataObjectMapperCacheWrapperTest {
 	@InjectMocks
     private DataObjectMapperCacheWrapper cacheWrapper;
 	
-	@BeforeEach
-	void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
-	
-    @Test
+	@Test
     void testInitCacheWithError() throws Throwable {
         Assertions.assertThrows(EntException.class, () -> {
             cacheWrapper.initCache(this.pageManager);
@@ -78,6 +73,7 @@ public class DataObjectMapperCacheWrapperTest {
 		Mockito.when(pageManager.getOnlineRoot()).thenReturn(this.createMockPage());
 		Mockito.when(cacheManager.getCache(IDataObjectMapperCacheWrapper.OBJECT_MAPPER_CACHE_NAME)).thenReturn(this.cache);
 		cacheWrapper.initCache(this.pageManager);
+        Assertions.assertNotNull(cacheManager);
 	}
 	
 	@Test

@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         PageConfigurationDto pageConfigurationDto = (PageConfigurationDto) this.pageService.getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
         ObjectMapper mapper = new ObjectMapper();
         String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pageConfigurationDto);
+        Assertions.assertNotNull(out);
     }
 
     @Test
