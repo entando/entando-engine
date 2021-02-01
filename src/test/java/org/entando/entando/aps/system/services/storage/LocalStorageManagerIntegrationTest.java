@@ -47,12 +47,12 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManagerIntegrationTest.class);
 
     @Test
-    public void testInitialize() {
+    void testInitialize() {
         assertNotNull(localStorageManager);
     }
 
     @Test
-    public void testStorageFileList() throws Throwable {
+    void testStorageFileList() throws Throwable {
         String[] filenames = localStorageManager.listFile("", false);
         assertEquals(1, filenames.length);
         assertEquals("entando_logo.jpg", filenames[0]);
@@ -66,7 +66,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testStorageDirectoryList() throws Throwable {
+    void testStorageDirectoryList() throws Throwable {
         String[] directoryNames = localStorageManager.listDirectory("", false);
         assertTrue(directoryNames.length >= 1);
         List<String> list = Arrays.asList(directoryNames);
@@ -77,7 +77,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testListAttributes() throws Throwable {
+    void testListAttributes() throws Throwable {
         BasicFileAttributeView[] fileAttributes = localStorageManager.listAttributes("", false);
         boolean containsConf = false;
         boolean prevDirectory = true;
@@ -100,7 +100,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testListAttributes_2() throws Throwable {
+    void testListAttributes_2() throws Throwable {
         BasicFileAttributeView[] fileAttributes = localStorageManager.listAttributes("conf" + File.separator, false);
         assertEquals(3, fileAttributes.length);
         int dirCounter = 0;
@@ -118,7 +118,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testListAttributes_3() throws Throwable {
+    void testListAttributes_3() throws Throwable {
         // Non existent directory
         BasicFileAttributeView[] fileAttributes =
                 localStorageManager.listAttributes("non-existent" + File.separator, false);
@@ -131,7 +131,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetStream_ShouldBlockPathTraversal() throws Throwable {
+    void testGetStream_ShouldBlockPathTraversal() throws Throwable {
         String testFilePath = "../testfolder/test.txt";
 
         try {
@@ -144,7 +144,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testSaveEditDeleteFile() throws Throwable {
+    void testSaveEditDeleteFile() throws Throwable {
         String testFilePath = "testfolder/test.txt";
         InputStream stream = localStorageManager.getStream(testFilePath, false);
         assertNull(stream);
@@ -185,7 +185,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testCreateDeleteFile_ShouldBlockPathTraversals() throws Throwable {
+    void testCreateDeleteFile_ShouldBlockPathTraversals() throws Throwable {
         String testFilePath = "../../testfolder/test.txt";
         String content = "Content of new text file";
         EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
@@ -199,7 +199,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testCreateDeleteDir() throws EntException {
+    void testCreateDeleteDir() throws EntException {
         String directoryName = "testfolder";
         String subDirectoryName = "subfolder";
         assertFalse(localStorageManager.exists(directoryName, false));
@@ -217,7 +217,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testCreateDeleteDir_ShouldHandleFailureCases() throws EntException {
+    void testCreateDeleteDir_ShouldHandleFailureCases() throws EntException {
         String baseFolder = "non-existent";
         String endingFolder = "dir-to-create";
         String fullPath = baseFolder + File.separator + endingFolder;
@@ -239,7 +239,7 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testCreateDeleteDirectory_ShouldBlockPathTraversals() throws Throwable {
+    void testCreateDeleteDirectory_ShouldBlockPathTraversals() throws Throwable {
         EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
             this.localStorageManager.createDirectory("/../../../dev/mydir", false);
         });

@@ -53,7 +53,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testGetLangsWithBackendPermission() throws Exception {
+    void testGetLangsWithBackendPermission() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get("/languages")
@@ -65,7 +65,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetLangs() throws Exception {
+    void testGetLangs() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -77,7 +77,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetLangsByActive() throws Exception {
+    void testGetLangsByActive() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -91,7 +91,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetLangValid() throws Exception {
+    void testGetLangValid() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -102,7 +102,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetLangValidAssignable() throws Exception {
+    void testGetLangValidAssignable() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -112,7 +112,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetLangInvalid() throws Exception {
+    void testGetLangInvalid() throws Exception {
         UserDetails user = createUserWithPermission();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -122,7 +122,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testActivateDeactivateLang() throws Exception {
+    void testActivateDeactivateLang() throws Exception {
         String langCode = "de";
         try {
             LanguageDto lang = this.languageService.getLanguage(langCode);
@@ -162,7 +162,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeactivateDefaultLang() throws Exception {
+    void testDeactivateDefaultLang() throws Exception {
         String langCode = this.langManager.getDefaultLang().getCode();
         try {
             LanguageDto lang = this.languageService.getLanguage(langCode);
@@ -203,7 +203,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeactivateDefaultLangUnexistingCode() throws Exception {
+    void testDeactivateDefaultLangUnexistingCode() throws Exception {
         String langCode = "xx";
 
         UserDetails user = createAdminUser();
@@ -222,7 +222,7 @@ public class LanguageControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LANGUAGES,

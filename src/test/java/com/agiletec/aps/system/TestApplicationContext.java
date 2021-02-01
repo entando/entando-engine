@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 public class TestApplicationContext extends BaseTestCase {
 	
     @Test
-    public void testGetServices() {
+    void testGetServices() {
     	ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
         assertNotNull(configManager);
         ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);

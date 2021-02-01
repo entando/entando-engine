@@ -41,7 +41,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorks() {
+    void getShortEntityTypesFilterWorks() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -56,7 +56,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksReversed() {
+    void getShortEntityTypesFilterWorksReversed() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -73,7 +73,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksWithEqualOperator() {
+    void getShortEntityTypesFilterWorksWithEqualOperator() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -89,7 +89,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksWithOrCondition() {
+    void getShortEntityTypesFilterWorksWithOrCondition() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);

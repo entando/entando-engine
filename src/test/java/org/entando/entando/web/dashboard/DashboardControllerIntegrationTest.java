@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 public class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
-    public void testIntegration() throws Exception {
+    void testIntegration() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -45,7 +45,7 @@ public class DashboardControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testPagesStatusGet() throws Exception {
+    void testPagesStatusGet() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND)
                 .build();

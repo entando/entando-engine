@@ -50,7 +50,7 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
      * Controllo che stia correttamente incrementando di uno la sequence
      */
     @Test
-    public void testGetUniqueKeyCurrentValueWithRightIncrement() throws EntException {
+    void testGetUniqueKeyCurrentValueWithRightIncrement() throws EntException {
         IKeyGeneratorManager keyGeneratorManager = (IKeyGeneratorManager) getService(SystemConstants.KEY_GENERATOR_MANAGER);
         int uniqueKeyCurrentValue = 0;
         uniqueKeyCurrentValue = keyGeneratorManager.getUniqueKeyCurrentValue();

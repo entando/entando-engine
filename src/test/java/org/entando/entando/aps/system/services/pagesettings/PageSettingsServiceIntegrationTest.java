@@ -41,7 +41,7 @@ public class PageSettingsServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetSettings() {
+    void testGetSettings() {
         PageSettingsDto settings = pageSettingsService.getPageSettings();
         assertNotNull(settings);
         assertTrue(settings.size() > 0);
@@ -50,7 +50,7 @@ public class PageSettingsServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateSettings() {
+    void testUpdateSettings() {
         PageSettingsDto settings = pageSettingsService.getPageSettings();
         assertNotNull(settings);
         assertTrue(settings.size() > 1);

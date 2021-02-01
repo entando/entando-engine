@@ -67,7 +67,7 @@ public class EntityManagerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getEntityManagers_1() throws Exception {
+    void getEntityManagers_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.entityManagerService.getEntityManagers(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
@@ -85,7 +85,7 @@ public class EntityManagerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getEntityManagers_2() throws Exception {
+    void getEntityManagers_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.entityManagerService.getEntityManagers(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
@@ -105,7 +105,7 @@ public class EntityManagerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_be_unauthorized() throws Exception {
+    void should_be_unauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME).build();
         String accessToken = mockOAuthInterceptor(user);

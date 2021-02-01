@@ -53,14 +53,14 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testGetPage() {
+    void testGetPage() {
         PageDto page = pageService.getPage("pagina_1", IPageService.STATUS_ONLINE);
         assertNotNull(page);
         assertEquals(IPageService.STATUS_ONLINE, page.getStatus());
     }
 
     @Test
-    public void testGetPageTree() {
+    void testGetPageTree() {
         List<PageDto> pages = pageService.getPages("pagina_1");
         assertNotNull(pages);
         assertEquals(2, pages.size());
@@ -68,7 +68,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddAndRemovePage() throws Throwable {
+    void testAddAndRemovePage() throws Throwable {
         PageDto pageToClone = pageService.getPage("pagina_11", "draft");
         assertNotNull(pageToClone);
         PageRequest pageRequest = this.createRequestFromDto(pageToClone);
@@ -94,7 +94,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testUpdatePage() {
+    void testUpdatePage() {
         String newCode = "pagina_13";
         PageDto pageToClone = pageService.getPage("pagina_12", "draft");
         try {
@@ -151,7 +151,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testUpdatePageStatus() {
+    void testUpdatePageStatus() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");
@@ -183,7 +183,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testChangeOnlyPosition() {
+    void testChangeOnlyPosition() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");
@@ -211,7 +211,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testChangeNode() {
+    void testChangeNode() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");

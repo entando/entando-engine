@@ -54,7 +54,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ComponentExistenceAnalysisTest {
 
     @Test
-    public void testRunAnalysis() throws EntException {
+    void testRunAnalysis() throws EntException {
         ComponentExistenceAnalysis oea = new ComponentExistenceAnalysis();
         ComponentExistenceAnalysisResult result = new ComponentExistenceAnalysisResult();
 
@@ -140,7 +140,7 @@ public class ComponentExistenceAnalysisTest {
     }
 
     @Test
-    public void testRunAnalysisWithException() throws EntException {
+    void testRunAnalysisWithException() throws EntException {
         Assertions.assertThrows(EntRuntimeException.class, () -> {
             Mockito.doThrow(new EntException("xxx")).when(fileBrowserService).exists("fb1");
             ComponentExistenceAnalysis oea = new ComponentExistenceAnalysis();

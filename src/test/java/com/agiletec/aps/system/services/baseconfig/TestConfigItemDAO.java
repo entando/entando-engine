@@ -39,7 +39,7 @@ public class TestConfigItemDAO extends BaseTestCase {
     }
     
     @Test
-    public void testLoadVersionItems() throws Throwable {
+    void testLoadVersionItems() throws Throwable {
 		Map<String, String> items = null;
         try {
             items = this.configItemDAO.loadVersionItems("test");
@@ -53,7 +53,7 @@ public class TestConfigItemDAO extends BaseTestCase {
     }
 	
 	@Test
-    public void testLoadVersionItem() throws Throwable {
+    void testLoadVersionItem() throws Throwable {
 		String config = null;
         try {
         	config = this.configItemDAO.loadVersionItem("test", SystemConstants.CONFIG_ITEM_LANGS);

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class TestWidgetType extends BaseTestCase {
 
     @Test
-    public void testEqualsAndHashcode() throws EntException {
+    void testEqualsAndHashcode() throws EntException {
         String widgetTypeCode1 = "testWidgetType1";
         String widgetTypeCode2 = "testWidgetType2";
         String widgetCategory1 = "test";

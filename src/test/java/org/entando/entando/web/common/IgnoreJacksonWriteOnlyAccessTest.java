@@ -37,7 +37,7 @@ public class IgnoreJacksonWriteOnlyAccessTest {
     }
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
 
         String testValue = "testValue";
         JsonTestClass obj = new JsonTestClass();

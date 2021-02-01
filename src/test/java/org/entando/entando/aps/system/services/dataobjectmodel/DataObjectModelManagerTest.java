@@ -54,14 +54,14 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testGetContentModel() {
+    void testGetContentModel() {
         when(cacheWrapper.getModel(Mockito.anyString())).thenReturn(createModel(1, "ART"));
         DataObjectModel model = this.dataObjectModelManager.getDataObjectModel(1L);
         assertNotNull(model);
     }
 
     @Test
-    public void testGetContentModels() {
+    void testGetContentModels() {
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             fakeModels.add(createModel(i, "ART"));
@@ -73,7 +73,7 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testGetModelsForContentType() {
+    void testGetModelsForContentType() {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -86,7 +86,7 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testAddDeleteContentModel() throws Throwable {
+    void testAddDeleteContentModel() throws Throwable {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -110,7 +110,7 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testUpdateContentModel() throws Throwable {
+    void testUpdateContentModel() throws Throwable {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

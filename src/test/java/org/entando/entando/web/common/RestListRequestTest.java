@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 public class RestListRequestTest {
 
     @Test
-    public void shuold_create_filters() {
+    void shuold_create_filters() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -71,7 +71,7 @@ public class RestListRequestTest {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void should_create_default_pagination() {
+    void should_create_default_pagination() {
         RestListRequest request = new RestListRequest();
         //filters
         List<FieldSearchFilter> filters = request.buildFieldSearchFilters();
@@ -84,7 +84,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_exclude_pagination_when_pagesize_0() {
+    void should_exclude_pagination_when_pagesize_0() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -111,7 +111,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_default_direction() {
+    void should_default_direction() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -128,7 +128,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_validate_field_object_property() {
+    void should_validate_field_object_property() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -150,7 +150,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_not_validate_field_object_property() {
+    void should_not_validate_field_object_property() {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
             RestListRequest request = new RestListRequest();
             request.setPage(1);

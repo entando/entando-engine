@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 public class PagedMetadataTest {
 
     @Test
-    public void shuold_create_filters() {
+    void shuold_create_filters() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -64,7 +64,7 @@ public class PagedMetadataTest {
     }
 
     @Test
-    public void lastPage() {
+    void lastPage() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -86,7 +86,7 @@ public class PagedMetadataTest {
     }
 
     @Test
-    public void lastPage2() {
+    void lastPage2() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);

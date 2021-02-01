@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class TestJaxbPageModel extends BaseTestCase {
 
     @Test
-    public void testLoadModel() throws Throwable {
+    void testLoadModel() throws Throwable {
         String testPageModelCode = "test_jabx_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {

@@ -67,7 +67,7 @@ public class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getSetting_1() throws Exception {
+    void getSetting_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("true");
@@ -80,7 +80,7 @@ public class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getSetting_2() throws Exception {
+    void getSetting_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("invalid");
@@ -92,7 +92,7 @@ public class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateWithSuccess() throws Exception {
+    void updateWithSuccess() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{\"enableEditingWhenEmptyDefaultGui\":true}";
@@ -103,7 +103,7 @@ public class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateWithFailure() throws Exception {
+    void updateWithFailure() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{}";

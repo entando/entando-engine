@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 public class TestPageModelManager extends BaseTestCase {
 
     @Test
-    public void testSearch_with_null_empty_filters() throws EntException {
+    void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
         assertThat(result.getCount(), is(3));
@@ -57,7 +57,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testSearch_with_page_filter() throws EntException {
+    void testSearch_with_page_filter() throws EntException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
         restListRequest.setPage(1);
@@ -79,7 +79,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetPageModel() throws EntException {
+    void testGetPageModel() throws EntException {
         PageModel pageModel = this._pageModelManager.getPageModel("home");
         String code = pageModel.getCode();
         String descr = pageModel.getDescription();
@@ -97,7 +97,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetPageModels() throws EntException {
+    void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
         assertEquals(3, pageModels.size());
         for (int i = 0; i < pageModels.size(); i++) {
@@ -114,7 +114,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetModel() throws Throwable {
+    void testGetModel() throws Throwable {
         PageModel model = this._pageModelManager.getPageModel("internal");
         assertNotNull(model);
         assertEquals(9, model.getFrames().length);
@@ -138,7 +138,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testAddRemoveModel() throws Throwable {
+    void testAddRemoveModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -170,7 +170,7 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateModel() throws Throwable {
+    void testUpdateModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -255,7 +255,7 @@ public class TestPageModelManager extends BaseTestCase {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGuiFragmentUtilizer() throws Throwable {
+    void testGuiFragmentUtilizer() throws Throwable {
         String testPageModelACode = "test_pagemodelA";
         String testPageModelBCode = "test_pagemodelB";
         String testPageModelCCode = "test_pagemodelC";

@@ -30,14 +30,14 @@ public class FileTextReaderTest {
     private static final String A_TMP_FILE = "a-tmp-file";
 
     @Test
-    public void testShouldCreateAProperTempFile() throws IOException {
+    void testShouldCreateAProperTempFile() throws IOException {
         assertNotNull(
                 FileTextReader.createTempFile(A_TMP_FILE, new NullInputStream(100))
         );
     }
 
     @Test
-    public void testCreateTempFileShouldBlockPathTraversal() {
+    void testCreateTempFileShouldBlockPathTraversal() {
         EntRuntimeException entException = Assertions.assertThrows(EntRuntimeException.class, () -> {
             FileTextReader.createTempFile("../" + A_TMP_FILE, new NullInputStream(100));
         });

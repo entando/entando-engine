@@ -46,14 +46,14 @@ public class ApiCatalogManagerTest {
     }
 
     @Test
-    public void testResources() throws EntException {
+    void testResources() throws EntException {
         when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiResource> resources = this.apiCatalogManager.getResources();
         assertThat(resources.size(), is(22));
     }
 
     @Test
-    public void testGetMethod() throws Throwable {
+    void testGetMethod() throws Throwable {
         when(resourceCacheWrapper.getMasterResource("getService")).thenReturn(createResource(null, "getService"));
         ApiMethod method = this.apiCatalogManager.getMethod(ApiMethod.HttpMethod.GET, "getService");
         Assertions.assertNotNull(method);
@@ -61,7 +61,7 @@ public class ApiCatalogManagerTest {
     }
 
     @Test
-    public void testGetMethods() throws Throwable {
+    void testGetMethods() throws Throwable {
         when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         List<ApiMethod> methods = this.apiCatalogManager.getMethods(ApiMethod.HttpMethod.GET);
         Assertions.assertNotNull(methods);
@@ -69,7 +69,7 @@ public class ApiCatalogManagerTest {
     }
 
     @Test
-    public void testUpdateMethodStatus() throws Throwable {
+    void testUpdateMethodStatus() throws Throwable {
         when(resourceCacheWrapper.getMasterResource("getService")).thenReturn(createResource(null, "getService"));
         ApiMethod method = this.apiCatalogManager.getMethod(ApiMethod.HttpMethod.GET, "getService");
         method.setStatus(false);
@@ -79,7 +79,7 @@ public class ApiCatalogManagerTest {
     }
 
     @Test
-    public void testGetServices() throws Throwable {
+    void testGetServices() throws Throwable {
         Mockito.lenient().when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiService> services = this.apiCatalogManager.getServices();
         Assertions.assertNotNull(services);

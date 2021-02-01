@@ -69,7 +69,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_1() throws Exception {
+    void getUser_1() throws Exception {
         UserDetails activeUser = this.createMockUser("admin", true, false, false);
         when(this.userManager.getUser("admin")).thenReturn(activeUser);
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
@@ -85,7 +85,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_2() throws Exception {
+    void getUser_2() throws Exception {
         UserDetails disabledUser = this.createMockUser("admin", false, false, false);
         when(this.userManager.getUser("admin")).thenReturn(disabledUser);
         Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
@@ -98,7 +98,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_3() throws Exception {
+    void getUser_3() throws Exception {
         UserDetails expiredUser_1 = this.createMockUser("admin", true, false, true);
         when(this.userManager.getUser("admin")).thenReturn(expiredUser_1);
         Mockito.lenient().when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
@@ -114,12 +114,12 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_4_1() throws Exception {
+    void getUser_4_1() throws Exception {
         this.execute_getUser_4("admin");
     }
 
     @Test
-    public void getUser_4_2() throws Exception {
+    void getUser_4_2() throws Exception {
         this.execute_getUser_4("test_user");
     }
 
@@ -147,7 +147,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_5() throws Exception {
+    void getUser_5() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(null);
         UserDetails user = this.authenticationProviderManager.getUser("test_user");
         Assertions.assertNull(user);
@@ -157,7 +157,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_6() throws Exception {
+    void getUser_6() throws Exception {
         UserDetails testUser = this.createMockUser("test_user", true, false, false);
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(testUser);
         when(this.authorizationManager.getUserAuthorizations("test_user")).thenReturn(this.createMockAuthorization());
@@ -173,7 +173,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_7() throws Exception {
+    void getUser_7() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         UserDetails user = this.authenticationProviderManager.getUser("test_user", "password");
         Assertions.assertNull(user);
@@ -183,7 +183,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void getUser_8() throws Exception {
+    void getUser_8() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
         Assertions.assertThrows(EntException.class, () -> {
             this.authenticationProviderManager.getUser("test_user", "password");
@@ -191,7 +191,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void authenticate() throws Exception {
+    void authenticate() throws Exception {
         UserDetails activeUser = this.createMockUser("admin", true, false, false);
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(activeUser);
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
@@ -208,7 +208,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void authenticate_userNotFound_1() throws Exception {
+    void authenticate_userNotFound_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "");
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
@@ -226,7 +226,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void authenticate_userNotFound_2() throws Exception {
+    void authenticate_userNotFound_2() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("username", "password");
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
@@ -244,7 +244,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void failAuthenticate_serviceError() throws Exception {
+    void failAuthenticate_serviceError() throws Exception {
         when(this.userManager.getUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new EntException("System error"));
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("username", "password");
         Assertions.assertThrows(AuthenticationServiceException.class, () -> {
@@ -262,7 +262,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void loadUserByUsername() throws Exception {
+    void loadUserByUsername() throws Exception {
         UserDetails activeUser = this.createMockUser("admin", true, false, false);
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(activeUser);
         when(this.authorizationManager.getUserAuthorizations("admin")).thenReturn(this.createMockAuthorization());
@@ -279,7 +279,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void failLoadUserByUsername_1() throws Exception {
+    void failLoadUserByUsername_1() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenReturn(null);
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             try {
@@ -295,7 +295,7 @@ public class AuthenticationProviderManagerTest {
     }
 
     @Test
-    public void failLoadUserByUsername_2() throws Exception {
+    void failLoadUserByUsername_2() throws Exception {
         when(this.userManager.getUser(Mockito.anyString())).thenThrow(new EntException("System error"));
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             try {

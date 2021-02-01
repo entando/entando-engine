@@ -37,14 +37,14 @@ import org.junit.jupiter.api.Test;
 public class TestPageModelDAO extends BaseTestCase {
 
     @Test
-    public void testLoadModels() throws Throwable {
+    void testLoadModels() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         assertTrue(models.containsKey("home"));
         assertTrue(models.containsKey("service"));
     }
 
     @Test
-    public void testAddRemoveModel() throws Throwable {
+    void testAddRemoveModel() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {
@@ -79,7 +79,7 @@ public class TestPageModelDAO extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateModel() throws Throwable {
+    void testUpdateModel() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {

@@ -77,7 +77,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testNotFound() throws Exception {
+    void testNotFound() throws Exception {
 
         ResultActions result = authRequest(get(BASE_URL + "/valid_key"));
         result.andExpect(status().isNotFound())
@@ -90,7 +90,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAlreadyExists() throws Exception {
+    void testAlreadyExists() throws Exception {
 
         when(consumerManager.getConsumerRecord("valid_key")).thenReturn(new ConsumerRecordVO());
 
@@ -103,7 +103,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testKeyMismatch() throws Exception {
+    void testKeyMismatch() throws Exception {
 
         ApiConsumer apiConsumer = getValidPayload();
 
@@ -116,7 +116,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testFieldsValidation() throws Exception {
+    void testFieldsValidation() throws Exception {
 
         testValidationErrorPost(c -> c.setKey(null));
         testValidationErrorPost(c -> c.setKey("x")); // too short

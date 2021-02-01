@@ -42,7 +42,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void should_uninstall_component() throws EntException, IOException {
+    void should_uninstall_component() throws EntException, IOException {
         Component component = ComponentUtils.getEntandoComponent("test_component");
 
         when(beanFactory.getBeanNamesForType(DataSource.class)).thenReturn(new String[]{"portDataSource", "servDataSource"});

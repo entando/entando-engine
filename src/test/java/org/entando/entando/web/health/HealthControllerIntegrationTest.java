@@ -38,7 +38,7 @@ public class HealthControllerIntegrationTest extends AbstractControllerIntegrati
     }
 
     @Test
-    public void isHealthy() throws Exception {
+    void isHealthy() throws Exception {
 
         mockMvcHelper.getMockMvc(healthEndpoint).andExpect(status().isOk());
     }

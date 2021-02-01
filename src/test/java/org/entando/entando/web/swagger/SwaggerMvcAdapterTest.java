@@ -22,7 +22,7 @@ public class SwaggerMvcAdapterTest {
     private SwaggerMvcAdapter swaggerMvcAdapter;
 
     @Test
-    public void testaddResourceHandlers() {
+    void testaddResourceHandlers() {
 
         when(resourceHandlerRegistry.addResourceHandler(anyString())).thenReturn(resourceHandlerRegistration);
         when(resourceHandlerRegistration.addResourceLocations(anyString())).thenReturn(resourceHandlerRegistration);

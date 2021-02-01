@@ -31,27 +31,27 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
     private IDataObjectModelManager dataModelManager;
 
     @Test
-    public void testGetContentModel() {
+    void testGetContentModel() {
         DataObjectModel model = this.dataModelManager.getDataObjectModel(1);
         assertNotNull(model);
     }
 
     @Test
-    public void testGetContentModels() {
+    void testGetContentModels() {
         List<DataObjectModel> models = this.dataModelManager.getDataObjectModels();
         assertNotNull(models);
         assertEquals(4, models.size());
     }
 
     @Test
-    public void testGetModelsForContentType() {
+    void testGetModelsForContentType() {
         List<DataObjectModel> models = this.dataModelManager.getModelsForDataObjectType("ART");
         assertNotNull(models);
         assertEquals(4, models.size());
     }
 
     @Test
-    public void testAddDeleteContentModel() throws Throwable {
+    void testAddDeleteContentModel() throws Throwable {
         List<DataObjectModel> contentModels = this.dataModelManager.getDataObjectModels();
         int size = contentModels.size();
         DataObjectModel dataModel = new DataObjectModel();
@@ -77,7 +77,7 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateContentModel() throws Throwable {
+    void testUpdateContentModel() throws Throwable {
         List<DataObjectModel> contentModels = dataModelManager.getDataObjectModels();
         int size = contentModels.size();
         DataObjectModel dataModel = new DataObjectModel();
@@ -112,14 +112,14 @@ public class DataObjectModelManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetReferencingPages() {
+    void testGetReferencingPages() {
         Map<String, List<IPage>> utilizers = this.dataModelManager.getReferencingPages(2);
         assertNotNull(utilizers);
         assertEquals(0, utilizers.size());
     }
 
     @Test
-    public void testGetTypeUtilizer() throws Throwable {
+    void testGetTypeUtilizer() throws Throwable {
         SmallDataType utilizer = this.dataModelManager.getDefaultUtilizer(1);
         assertNotNull(utilizer);
         assertEquals("ART", utilizer.getCode());

@@ -47,7 +47,7 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testIsAuthOnPage() throws Throwable {
+    void testIsAuthOnPage() throws Throwable {
         UserDetails admin = this.getUser("admin");
         UserDetails customer = this.getUser("editorCustomers");
         assertTrue(authorizationService.isAuth(admin, "coach_page"));
@@ -57,7 +57,7 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testFilteredPageTree() throws Throwable {
+    void testFilteredPageTree() throws Throwable {
         UserDetails admin = this.getUser("admin");
         UserDetails customer = this.getUser("editorCustomers");
         List<PageDto> pages = this.pageService.getPages("homepage");

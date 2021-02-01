@@ -76,7 +76,7 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldRaiseExceptionOnDeleteReservedFragment() throws Throwable {
+    void shouldRaiseExceptionOnDeleteReservedFragment() throws Throwable {
         GuiFragment reference = new GuiFragment();
         reference.setCode("referenced_code");
         reference.setGui("<p>Code</p>");
@@ -94,7 +94,7 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldCreateFragment() throws Exception {
+    void shouldCreateFragment() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
@@ -117,7 +117,7 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldUpdateFragment() throws Exception {
+    void shouldUpdateFragment() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
@@ -141,7 +141,7 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateGuiNonce() throws Exception {
+    void shouldNotUpdateGuiNonce() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
@@ -166,13 +166,13 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void getFragmentUsageForNonExistingCodeShouldReturnZero() {
+    void getFragmentUsageForNonExistingCodeShouldReturnZero() {
         int componentUsage = guiFragmentService.getComponentUsage("non_existing");
         Assertions.assertEquals(0, componentUsage);
     }
 
     @Test
-    public void getFragmentUsageTest() throws Exception {
+    void getFragmentUsageTest() throws Exception {
 
         Lang lang = new Lang();
         lang.setCode("IT");

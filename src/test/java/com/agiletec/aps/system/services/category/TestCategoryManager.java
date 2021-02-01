@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class TestCategoryManager extends BaseTestCase {
 
     @Test
-    public void testGetCategory() {
+    void testGetCategory() {
         ICategoryManager categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         Category category = _categoryManager.getCategory("cat1");
         assertNotNull(category);
@@ -44,7 +44,7 @@ public class TestCategoryManager extends BaseTestCase {
     }
 
     @Test
-    public void testAddCategory() throws Throwable {
+    void testAddCategory() throws Throwable {
         Category cat = this.createCategory();
         try {
             assertNull(this._categoryManager.getCategory(cat.getCode()));
@@ -74,7 +74,7 @@ public class TestCategoryManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateRemoveCategory() throws Throwable {
+    void testUpdateRemoveCategory() throws Throwable {
         Category cat = this.createCategory();
         try {
             assertNull(this._categoryManager.getCategory(cat.getCode()));
@@ -97,14 +97,14 @@ public class TestCategoryManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetCategories() {
+    void testGetCategories() {
         List<Category> categories = _categoryManager.getCategoriesList();
         assertNotNull(categories);
         assertTrue(categories.size() > 0);
     }
     
     @Test
-    public void testMove() throws Throwable {
+    void testMove() throws Throwable {
         Category category1 = this.createCategory("st_move_1", "cat1", "AAAA Title start");
         Category category2 = this.createCategory("st_move_2", "cat1", "BBBB Title start");
         Category category3 = this.createCategory("st_move_3", "cat1", "CCCC Title start");

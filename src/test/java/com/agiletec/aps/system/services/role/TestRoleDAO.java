@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class TestRoleDAO extends BaseTestCase {
 
     @Test
-    public void testAddUpdateDeleteRole() throws Throwable {
+    void testAddUpdateDeleteRole() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		RoleDAO roleDAO = new RoleDAO();
 		roleDAO.setDataSource(dataSource);

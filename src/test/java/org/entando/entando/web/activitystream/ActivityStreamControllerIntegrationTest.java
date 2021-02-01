@@ -78,7 +78,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testGetActivityStream() throws Exception {
+    void testGetActivityStream() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -89,7 +89,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testGetActivityStreamDate() throws Exception {
+    void testGetActivityStreamDate() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String start = new Timestamp(DateConverter.parseDate("2017/01/01", "yyyy/MM/dd").getTime()).toString();
@@ -104,7 +104,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testGetActivityStreamDate_2() throws Exception {
+    void testGetActivityStreamDate_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String start = new Timestamp(DateConverter.parseDate("2018/03/01", "yyyy/MM/dd").getTime()).toString();
@@ -119,7 +119,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testActionLogRecordCRUD() throws Exception {
+    void testActionLogRecordCRUD() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {
@@ -205,7 +205,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testOrderLogRecord() throws Exception {
+    void testOrderLogRecord() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {
@@ -257,7 +257,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testFilter() throws Exception {
+    void testFilter() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {

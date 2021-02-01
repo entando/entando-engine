@@ -59,7 +59,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     private ProfileTypeController controller;
     
     @Test
-    public void testGetUserProfileTypes() throws Exception {
+    void testGetUserProfileTypes() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -70,7 +70,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetValidUserProfileType() throws Exception {
+    void testGetValidUserProfileType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -80,7 +80,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetInvalidUserProfileType() throws Exception {
+    void testGetInvalidUserProfileType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -90,7 +90,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddInvalidProfileType() throws Exception {
+    void testAddInvalidProfileType() throws Exception {
         Assertions.assertNull(this.userProfileManager.getEntityPrototype("XXX"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -114,7 +114,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddGetUserProfileType_1() throws Exception {
+    void testAddGetUserProfileType_1() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -142,7 +142,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddUpdateUserProfileType_1() throws Exception {
+    void testAddUpdateUserProfileType_1() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -176,7 +176,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddUpdateUserProfileType_2() throws Exception {
+    void testAddUpdateUserProfileType_2() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -245,7 +245,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     
     // attributes
     @Test
-    public void testGetUserProfileAttributeTypes_1() throws Exception {
+    void testGetUserProfileAttributeTypes_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -256,7 +256,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileAttributeTypes_2() throws Exception {
+    void testGetUserProfileAttributeTypes_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -272,7 +272,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileAttributeTypes_3() throws Exception {
+    void testGetUserProfileAttributeTypes_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -289,7 +289,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
     
     @Test
-    public void testGetUserProfileAttributeType_1() throws Exception {
+    void testGetUserProfileAttributeType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -306,7 +306,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileAttributeType_2() throws Exception {
+    void testGetUserProfileAttributeType_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -319,7 +319,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileAttributeType_3() throws Exception {
+    void testGetUserProfileAttributeType_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -349,7 +349,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     
     // ------------------------------------
     @Test
-    public void testGetUserProfileAttribute() throws Exception {
+    void testGetUserProfileAttribute() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -391,7 +391,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddUserProfileAttribute() throws Exception {
+    void testAddUserProfileAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
@@ -440,7 +440,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testUpdateUserProfileAttribute() throws Exception {
+    void testUpdateUserProfileAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
@@ -486,7 +486,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testDeleteUserProfileAttribute() throws Exception {
+    void testDeleteUserProfileAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
@@ -563,7 +563,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
     
     @Test
-    public void testGetUserProfileTypesStatus() throws Exception {
+    void testGetUserProfileTypesStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -580,7 +580,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testRefreshUserProfileType_1() throws Exception {
+    void testRefreshUserProfileType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -605,7 +605,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testRefreshUserProfileType_2() throws Exception {
+    void testRefreshUserProfileType_2() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype(typeCode));
@@ -644,7 +644,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
     
     @Test
-    public void testRefreshUserProfileType_3() throws Exception {
+    void testRefreshUserProfileType_3() throws Exception {
         String typeCode = "TST";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -711,7 +711,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
     
     @Test
-    public void testGetUserProfileTypesWithAdminPermission() throws Exception {
+    void testGetUserProfileTypesWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -721,7 +721,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileTypesWithoutPermission() throws Exception {
+    void testGetUserProfileTypesWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -731,7 +731,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileTypesWithEditUserProfilePermission() throws Exception {
+    void testGetUserProfileTypesWithEditUserProfilePermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_USER_PROFILES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -742,7 +742,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileTypesWithViewUsersProfilePermission() throws Exception {
+    void testGetUserProfileTypesWithViewUsersProfilePermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.VIEW_USERS).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -753,7 +753,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetUserProfileTypesWithEditUsersProfilePermission() throws Exception {
+    void testGetUserProfileTypesWithEditUsersProfilePermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_USERS).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -764,7 +764,7 @@ public class ProfileTypeControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddUpdateDeleteUserProfileAttributeWithRegex() throws Exception {
+    void testAddUpdateDeleteUserProfileAttributeWithRegex() throws Exception {
         String typeCode = "REX";
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype(typeCode));

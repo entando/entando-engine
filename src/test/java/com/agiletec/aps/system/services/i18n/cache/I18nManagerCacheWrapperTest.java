@@ -61,7 +61,7 @@ public class I18nManagerCacheWrapperTest {
     private I18nManagerCacheWrapper cacheWrapper;
 
     @Test
-    public void testInitCache() throws Exception {
+    void testInitCache() throws Exception {
         Cache fakeCache = Mockito.mock(Cache.class);
         when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
         ApsProperties properties = I18nManagerTest.createLabel("It Label", "En Label");
@@ -73,7 +73,7 @@ public class I18nManagerCacheWrapperTest {
     }
     
     @Test
-    public void testInitCacheWithErrors() {
+    void testInitCacheWithErrors() {
         Assertions.assertThrows(EntException.class, () -> {
             Cache fakeCache = Mockito.mock(Cache.class);
             when(this.springCacheManager.getCache(CACHE_NAME)).thenReturn(fakeCache);
@@ -90,14 +90,14 @@ public class I18nManagerCacheWrapperTest {
     }
     
     @Test
-    public void getLabelsGroup() throws Exception {
+    void getLabelsGroup() throws Exception {
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         assertNotNull(properties);
         assertEquals("ciao", properties.get("it"));
     }
     
     @Test
-    public void update() {
+    void update() {
         cacheWrapper.updateLabelGroup(TEST_KEY, I18nManagerTest.createLabel("si", "yes"));
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         assertNotNull(properties);
@@ -105,14 +105,14 @@ public class I18nManagerCacheWrapperTest {
     }
     
     @Test
-    public void updateInvalidEntry() {
+    void updateInvalidEntry() {
         Assertions.assertThrows(CacheItemNotFoundException.class, () -> {
             cacheWrapper.updateLabelGroup("THIS_DO_NOT_EXISTS", I18nManagerTest.createLabel("si", "yes"));
         });
     }
     
     @Test
-    public void delete() {
+    void delete() {
         cacheWrapper.removeLabelGroup(TEST_KEY);
         ApsProperties properties = this.cacheWrapper.getLabelGroup(TEST_KEY);
         assertNull(properties);

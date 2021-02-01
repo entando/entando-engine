@@ -47,7 +47,7 @@ public class TestAuthorityManager extends BaseTestCase {
     }
     
 	@Test
-    public void testGetUsersByAuthority_1() throws Throwable {
+    void testGetUsersByAuthority_1() throws Throwable {
 		Role role = this.getRole("pageManager");
 		List<String> usersByRole = this._authorizationManager.getUsersByAuthority(role, false);
 		assertNotNull(usersByRole);
@@ -76,7 +76,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testGetUsersByAuthority_2() throws Throwable {
+    void testGetUsersByAuthority_2() throws Throwable {
 		Group groupForTest = this.createGroupForTest("pageManager");//name equal to an existing role
 		try {
 			((IGroupManager) this._groupManager).addGroup(groupForTest);
@@ -102,7 +102,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testSetRemoveUserAuthorization_1() throws Throwable {
+    void testSetRemoveUserAuthorization_1() throws Throwable {
 		String username = "pageManagerCustomers";
 		String groupName = "coach";
 		String roleName = "pageManager";
@@ -128,7 +128,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testSetRemoveUserAuthorization_2() throws Throwable {
+    void testSetRemoveUserAuthorization_2() throws Throwable {
 		String username = "pageManagerCustomers";
 		String groupName = "testgroupname";
 		String roleName = "pageManager";
@@ -144,7 +144,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testSetRemoveUserAuthorizations_1() throws Throwable {
+    void testSetRemoveUserAuthorizations_1() throws Throwable {
 		String username = "pageManagerCustomers";
 		String groupName = "management";
 		String roleName = "pageManager";
@@ -171,7 +171,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testSetRemoveUserAuthorizations_2() throws Throwable {
+    void testSetRemoveUserAuthorizations_2() throws Throwable {
 		String username = "pageManagerCustomers";
 		String notExistentGroupName = "testgroupname";
 		String existentGroupName = "management";
@@ -212,7 +212,7 @@ public class TestAuthorityManager extends BaseTestCase {
 	}
 	
 	@Test
-    public void testGetAuthorizationsByUser() throws Throwable {
+    void testGetAuthorizationsByUser() throws Throwable {
 		String username = "pageManagerCoach";
 		List<Authorization> authorizations = this._authorizationManager.getUserAuthorizations(username);
 		assertNotNull(authorizations);

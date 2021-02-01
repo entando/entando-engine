@@ -36,7 +36,7 @@ public class EntityManagerServiceTest {
     }
 
     @Test
-    public void testGetNotExistingManager() throws ResourceNotFoundException {
+    void testGetNotExistingManager() throws ResourceNotFoundException {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             this.entityManagerService.getEntityManager("customCode");
         });

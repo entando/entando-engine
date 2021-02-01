@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class PageDtoBuilderTest {
 
     @Test
-    public void testDefaultContentTypeAndCharSet() {
+    void testDefaultContentTypeAndCharSet() {
         PageDtoBuilder builder = new PageDtoBuilder();
 
         Page page = new Page();

@@ -62,7 +62,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void getConsumerKeys() throws Exception {
+    void getConsumerKeys() throws Exception {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(true).thenReturn(false);
         List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
@@ -72,7 +72,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void failGetConsumerKeys() throws Exception {
+    void failGetConsumerKeys() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             when(this.stat.executeQuery()).thenThrow(SqlException.class);
             try {
@@ -86,7 +86,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void getConsumer() throws Exception {
+    void getConsumer() throws Exception {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(true).thenReturn(false);
         Mockito.when(res.getString("consumerkey")).thenReturn("client_id");
@@ -99,7 +99,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void failGetConsumer() throws Exception {
+    void failGetConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.lenient().when(this.stat.executeQuery()).thenReturn(res);
             Mockito.lenient().when(res.next()).thenReturn(true).thenReturn(false);
@@ -117,7 +117,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void addConsumer() throws Exception {
+    void addConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_1", "secret");
         this.consumerDAO.addConsumer(record);
         Mockito.verify(stat, Mockito.times(7)).setString(Mockito.anyInt(), Mockito.anyString());
@@ -126,7 +126,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void failAddConsumer() throws Exception {
+    void failAddConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_2", "secret");
@@ -143,7 +143,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void updateConsumer() throws Exception {
+    void updateConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_3", null);
         this.consumerDAO.updateConsumer(record);
         Mockito.verify(stat, Mockito.times(6)).setString(Mockito.anyInt(), Mockito.anyString());
@@ -152,7 +152,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void failUpdateConsumer() throws Exception {
+    void failUpdateConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_4", null);
@@ -169,7 +169,7 @@ public class OAuthConsumerDAOTest {
     }
 
     @Test
-    public void deleteConsumer() throws Exception {
+    void deleteConsumer() throws Exception {
         this.consumerDAO.deleteConsumer("key_4");
         Mockito.verify(stat, Mockito.times(2)).setObject(Mockito.anyInt(), Mockito.anyString());
         Mockito.verify(conn, Mockito.times(2)).prepareStatement(Mockito.anyString());

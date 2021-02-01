@@ -47,19 +47,19 @@ public class DataObjectMapperManagerTest {
 	}
 	
 	@Test
-    public void testInit() throws Throwable {
+    void testInit() throws Throwable {
         pageMapperManager.init();
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
 	
 	@Test
-    public void testReload() throws Throwable {
+    void testReload() throws Throwable {
         pageMapperManager.reloadDataObjectPageMapper();
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
 	
 	@Test
-    public void testGetPage() {
+    void testGetPage() {
 		Mockito.when(cacheWrapper.getPageCode(Mockito.anyString())).thenReturn("pageCode");
         String pageCode = this.pageMapperManager.getPageCode("dataId");
 		assertNotNull(pageCode);
@@ -67,7 +67,7 @@ public class DataObjectMapperManagerTest {
     }
 	
 	@Test
-    public void testUpdate() throws Throwable {
+    void testUpdate() throws Throwable {
         pageMapperManager.updateFromPageChanged(Mockito.any(PageChangedEvent.class));
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }

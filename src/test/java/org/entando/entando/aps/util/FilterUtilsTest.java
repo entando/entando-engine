@@ -19,7 +19,7 @@ public class FilterUtilsTest {
             = FilterUtils.createCaseInsensitiveComparator();
 
     @Test
-    public void comparatorIsCaseInsensitive() {
+    void comparatorIsCaseInsensitive() {
         String a = "B1";
         String b = "b2";
 
@@ -28,7 +28,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void comparatorWorksWithSameCase() {
+    void comparatorWorksWithSameCase() {
         String a = "b1";
         String b = "b2";
 
@@ -37,7 +37,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void comparatorFindsEqualStrings() {
+    void comparatorFindsEqualStrings() {
         String a = "b1";
         String b = "B1";
 
@@ -46,7 +46,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void comparatorWorksWithObjects() {
+    void comparatorWorksWithObjects() {
         Integer a = 1;
         Integer b = 2;
 
@@ -55,7 +55,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void comparatorWorksWithEqualObjects() {
+    void comparatorWorksWithEqualObjects() {
         Integer a = 1;
         Integer b = 1;
 
@@ -64,7 +64,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void shouldFilterStrings() {
+    void shouldFilterStrings() {
         assertTrue(filterString("a", FilterOperator.EQUAL, new String[]{"a", "b"}));
         assertFalse(filterString("a", FilterOperator.EQUAL, new String[]{"A", "B"}));
 
@@ -82,7 +82,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void shouldFilterNumbers() {
+    void shouldFilterNumbers() {
         assertTrue(filterInt(1, FilterOperator.EQUAL, new String[]{"1", "2"}));
         assertFalse(filterInt(1, FilterOperator.EQUAL, new String[]{"2", "3"}));
 
@@ -97,7 +97,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void shouldFilterBooleans() {
+    void shouldFilterBooleans() {
         assertTrue(filterBoolean(true, FilterOperator.EQUAL, "true"));
         assertTrue(filterBoolean(false, FilterOperator.EQUAL, "false"));
 
@@ -106,7 +106,7 @@ public class FilterUtilsTest {
     }
 
     @Test
-    public void shouldFilterDates() throws ParseException {
+    void shouldFilterDates() throws ParseException {
 
         SimpleDateFormat sdf = new SimpleDateFormat(SystemConstants.API_DATE_FORMAT);
 

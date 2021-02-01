@@ -64,7 +64,7 @@ public class PageSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_load_the_list_of_settings() throws Exception {
+    void should_load_the_list_of_settings() throws Exception {
         UserDetails user = createManagePagesUser();
 
         String accessToken = mockOAuthInterceptor(user);
@@ -77,7 +77,7 @@ public class PageSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_not_update_with_empty_list_of_settings() throws Exception {
+    void should_not_update_with_empty_list_of_settings() throws Exception {
         UserDetails user = createManagePagesUser();
         String accessToken = mockOAuthInterceptor(user);
         Mockito.lenient().when(pageSettingsService.updatePageSettings(createMockRequestEmptyParams())).thenReturn(createMockDto());
@@ -91,7 +91,7 @@ public class PageSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_update_with_a_valid_list_of_settings() throws Exception {
+    void should_update_with_a_valid_list_of_settings() throws Exception {
         UserDetails user = createManagePagesUser();
         String accessToken = mockOAuthInterceptor(user);
         when(pageSettingsService.updatePageSettings(createMockRequest())).thenReturn(createMockDto());
@@ -105,7 +105,7 @@ public class PageSettingsControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_be_unauthorized() throws Exception {
+    void should_be_unauthorized() throws Exception {
         UserDetails user = createGuestUser();
         String accessToken = mockOAuthInterceptor(user);
 

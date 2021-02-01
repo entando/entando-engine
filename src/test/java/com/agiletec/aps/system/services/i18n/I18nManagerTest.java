@@ -52,7 +52,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testGetLabels() throws Throwable {
+    void testGetLabels() throws Throwable {
         Map<String, ApsProperties> labels = this.createMockLabels();
         when(cacheWrapper.getLabelGroups()).thenReturn(labels);
         Map<String, ApsProperties> extractedLabels = this.i18nManager.getLabelGroups();
@@ -60,7 +60,7 @@ public class I18nManagerTest {
     }
     
     @Test
-    public void testGetLabel() throws Throwable {
+    void testGetLabel() throws Throwable {
         when(cacheWrapper.getLabelGroup("TEST")).thenReturn(createLabel("IT Test", "EN Test"));
         String label = this.i18nManager.getLabel("TEST", "it");
         assertNotNull(label);
@@ -70,7 +70,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testAddLabelGroup() throws Throwable {
+    void testAddLabelGroup() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = createLabel("prova", "test");
         i18nManager.addLabelGroup(key, labels);
@@ -78,7 +78,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testUpdateLabels() throws Throwable {
+    void testUpdateLabels() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = createLabel("prova", "test");
         i18nManager.updateLabelGroup(key, labels);
@@ -86,7 +86,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testGetLabelsKey() throws Throwable {
+    void testGetLabelsKey() throws Throwable {
         when(cacheWrapper.getLabelGroups()).thenReturn(createMockLabels());
         assertEquals(3, this.i18nManager.getLabelGroups().size());
         assertEquals(0, i18nManager.searchLabelsKey("*", false, false, null).size());
@@ -97,7 +97,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testDeleteLabels() throws Throwable {
+    void testDeleteLabels() throws Throwable {
         String key = "ONE";
         i18nManager.deleteLabelGroup(key);
         Mockito.verify(cacheWrapper, Mockito.times(1)).removeLabelGroup(key);

@@ -61,7 +61,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void getNullToken() throws Throwable {
+    void getNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn(null);
         int result = this.nonceTag.doStartTag();
         Assertions.assertEquals(SKIP_BODY, result);
@@ -70,7 +70,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void getNotNullToken() throws Throwable {
+    void getNotNullToken() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
         Assertions.assertEquals(SKIP_BODY, result);
@@ -79,7 +79,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void getNotNullTokenWithVar() throws Throwable {
+    void getNotNullTokenWithVar() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         this.nonceTag.setVar("var");
         int result = this.nonceTag.doStartTag();
@@ -89,7 +89,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void getNotNullTokenWithVarAndNoEscape() throws Throwable {
+    void getNotNullTokenWithVarAndNoEscape() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
@@ -100,7 +100,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void getNotNullTokenWithNoVarAndNoEscape() throws Throwable {
+    void getNotNullTokenWithNoVarAndNoEscape() throws Throwable {
         when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
         int result = this.nonceTag.doStartTag();
         this.nonceTag.setEscapeXml(false);
@@ -110,7 +110,7 @@ public class CspNonceTagTest {
     }
     
     @Test
-    public void testJspException() throws Exception {
+    void testJspException() throws Exception {
         Assertions.assertThrows(JspException.class, () -> {
             when(reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN)).thenReturn("mytoken");
             Mockito.doThrow(IOException.class).when(this.writer).write(Mockito.anyString());

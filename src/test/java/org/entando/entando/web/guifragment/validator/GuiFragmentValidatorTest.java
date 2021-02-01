@@ -48,7 +48,7 @@ public class GuiFragmentValidatorTest {
     }
 
     @Test
-    public void validateRightFragment() throws Exception {
+    void validateRightFragment() throws Exception {
         when(this.guiFragmentManager.getGuiFragment("not_existing")).thenReturn(null);
         GuiFragmentRequestBody request = new GuiFragmentRequestBody("not_existing", "<h1>code</h1>");
         MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "fragment");
@@ -58,7 +58,7 @@ public class GuiFragmentValidatorTest {
     }
 
     @Test
-    public void validateExistingFragment() throws Exception {
+    void validateExistingFragment() throws Exception {
         GuiFragment existing = new GuiFragment();
         existing.setCode("existing");
         when(this.guiFragmentManager.getGuiFragment("existing")).thenReturn(existing);
@@ -70,7 +70,7 @@ public class GuiFragmentValidatorTest {
     }
 
     @Test
-    public void validateExistingAndInvalidFragment() throws Exception {
+    void validateExistingAndInvalidFragment() throws Exception {
         GuiFragment existing = new GuiFragment();
         existing.setCode("existing");
         when(this.guiFragmentManager.getGuiFragment("existing")).thenReturn(existing);
@@ -82,7 +82,7 @@ public class GuiFragmentValidatorTest {
     }
 
     @Test
-    public void validateInvalidFragmentCode_1() throws Exception {
+    void validateInvalidFragmentCode_1() throws Exception {
         String code = "very_long";
         for (int i = 0; i < 10; i++) {
             code += code;
@@ -96,7 +96,7 @@ public class GuiFragmentValidatorTest {
     }
 
     @Test
-    public void validateInvalidFragmentCode_2() throws Exception {
+    void validateInvalidFragmentCode_2() throws Exception {
         String code = "wrong_characters_&_$_123";
         when(this.guiFragmentManager.getGuiFragment(code)).thenReturn(null);
         GuiFragmentRequestBody request = new GuiFragmentRequestBody(code, "<h1>prova</h1>");

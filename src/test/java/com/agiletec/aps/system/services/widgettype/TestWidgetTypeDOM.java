@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 public class TestWidgetTypeDOM extends BaseTestCase {
 	
     @Test
-    public void testParseConfig() throws EntException {
+    void testParseConfig() throws EntException {
 		String framesXml = "<config>" +
 							"<parameter name=\"contentType\">" +
 							"Tipo di contenuto (obbligatorio)" +
@@ -51,7 +51,7 @@ public class TestWidgetTypeDOM extends BaseTestCase {
 	}
     
     @Test
-    public void testCreateConfig() throws EntException {
+    void testCreateConfig() throws EntException {
     	WidgetTypeParameter params1 = new WidgetTypeParameter();
     	params1.setName("param1");
     	params1.setDescr("Param1 Descr");

@@ -101,7 +101,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
+    void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.prepareInit();
@@ -113,7 +113,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
+    void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
         this.emptyUsers();
         this.prepareInit();
         userManager.init();
@@ -123,7 +123,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
+    void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersPlainText();
@@ -141,7 +141,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
+    void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersMixed();

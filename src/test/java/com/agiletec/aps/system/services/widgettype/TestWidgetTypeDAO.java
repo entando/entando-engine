@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 public class TestWidgetTypeDAO extends BaseTestCase {
 
     @Test
-    public void testLoadWidgetTypes() throws Throwable {
+    void testLoadWidgetTypes() throws Throwable {
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
         WidgetTypeDAO widgetTypeDao = new WidgetTypeDAO();
         widgetTypeDao.setDataSource(dataSource);
@@ -56,7 +56,7 @@ public class TestWidgetTypeDAO extends BaseTestCase {
     }
 
     @Test
-    public void testGetWidgetType()  {
+    void testGetWidgetType()  {
         String code="login_form";
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
         WidgetTypeDAO widgetTypeDao = new WidgetTypeDAO();

@@ -56,12 +56,12 @@ public class CompatiblePasswordEncoderTest {
     private CompatiblePasswordEncoder passwordEncoder;
 
     @Test
-    public void testBCrypt() {
+    void testBCrypt() {
         testMatches("{bcrypt}" + bcryptEncoder.encode(SECRET), SECRET);
     }
 
     @Test
-    public void testBCryptBuildInProdPwd() {
+    void testBCryptBuildInProdPwd() {
         // Test the passwords inserted via SQL (look for "{DIRECT USERS INSERT SQL}" in code)
         testMatches("{bcrypt}$2a$10$TMRaAmZE4w5LEeELdmpJguuSuJc2D9hUelMGmsJyK35K3PBiePqXu", "adminadmin");
         testMatches("{bcrypt}$2a$10$CkUsRinB3JkFlRE4M.FOg.XrUpYX5HySBxpEasdex7L5bh05RnX.G", "editoreditor");
@@ -80,7 +80,7 @@ public class CompatiblePasswordEncoderTest {
     }
 
     @Test
-    public void testArgon2() throws Exception {
+    void testArgon2() throws Exception {
         testMatches(argon2Encoder.encode(SECRET), SECRET);
     }
 

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
 
     @Test
-    public void testCrud() throws Exception {
+    void testCrud() throws Exception {
         String code = "mockCrud_1";
         try {
             assertNull(this._guiFragmentManager.getGuiFragment(code));
@@ -57,7 +57,7 @@ public class GuiFragmentManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testReferences() throws Exception {
+    void testReferences() throws Exception {
         List<String> codes = this._guiFragmentManager.searchGuiFragments(null);
         assertEquals(1, codes.size());
         String codeMaster = "masterCode_1";

@@ -72,7 +72,7 @@ public class DataTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateNoPayload() throws Exception {
+    void testUpdateNoPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -84,7 +84,7 @@ public class DataTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testPayloadOk() throws Exception {
+    void testPayloadOk() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         InputStream isJsonPost = this.getClass().getResourceAsStream("1_POST_valid.json");
@@ -99,7 +99,7 @@ public class DataTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testReloadReferences() throws Exception {
+    void testReloadReferences() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc

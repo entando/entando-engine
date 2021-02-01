@@ -22,20 +22,20 @@ public class EntLoggingTest {
     public static final String HEY_EXP_ESC = "Hey_There_How_Are_You_Doing?_.";
 
     @Test
-    public void testNonSanitizedLog() {
+    void testNonSanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock), mock, HEY_EXP, false);
     }
 
     @Test
-    public void testSanitizedLog() {
+    void testSanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock), mock, HEY_EXP_ESC, false);
         runBaseChecks(SanitizedLogger.from(mock), mock, HEY_EXP_ESC, false);
     }
 
     @Test
-    public void testFullySanitizedLog() {
+    void testFullySanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock), mock, HEY_EXP_ESC, true);
     }
@@ -71,7 +71,7 @@ public class EntLoggingTest {
     }
 
     @Test
-    public void testModifiers() {
+    void testModifiers() {
         LoggerMock mock = new LoggerMock();
         EntLogger rln, rlb, rlf;
 
@@ -95,7 +95,7 @@ public class EntLoggingTest {
     }
 
     @Test
-    public void testBase() {
+    void testBase() {
         LoggerMock mock = new LoggerMock();
         EntLogger rl = EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock);
         Marker m = MarkerFactory.getMarker("x");
@@ -328,7 +328,7 @@ public class EntLoggingTest {
     }
 
     @Test
-    public void testFactory() {
+    void testFactory() {
         EntLogger logger;
 
         logger = EntLogFactory.getLogger(SanitizationLevel.NO_SANITIZATION, this.getClass());
@@ -345,7 +345,7 @@ public class EntLoggingTest {
     }
 
     @Test
-    public void testCase01() {
+    void testCase01() {
         LoggerMock mock = new LoggerMock();
         SanitizedLogger.from(mock).error("A{}", HEY);
         assertEquals("|A{}" + "|" + HEY_EXP_ESC, mock.logged);

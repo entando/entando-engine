@@ -47,7 +47,7 @@ public class CsrfFilterTest {
     //ORIGIN
     //Domain different from those set in the environment variable ENTANDO_CSRF_ALLOWED_DOMAINS
     @Test
-    public void originForbidden() {
+    void originForbidden() {
         testFilter("http://xxxx.it", null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
@@ -55,7 +55,7 @@ public class CsrfFilterTest {
     //ORIGIN
     //Domain contained in the environment variable
     @Test
-    public void originWithWhiteList() {
+    void originWithWhiteList() {
         testFilter("http://organization.it", null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
@@ -63,7 +63,7 @@ public class CsrfFilterTest {
     //ORIGIN
     //Domain contained in the environment variable with wildcard
     @Test
-    public void originWithWildCard() {
+    void originWithWildCard() {
         testFilter("http://xxx.test.entando.com", null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
@@ -71,7 +71,7 @@ public class CsrfFilterTest {
     //REFERER
     //Domain different from those set in the environment variable ENTANDO_CSRF_ALLOWED_DOMAINS
     @Test
-    public void refererForbidden() {
+    void refererForbidden() {
         testFilter(null, "http://xxxx.it/index.html", HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
@@ -79,7 +79,7 @@ public class CsrfFilterTest {
     //REFERER
     //Domain contained in the environment variable ENTANDO_CSRF_ALLOWED_DOMAINS
     @Test
-    public void refererWithWhiteList() {
+    void refererWithWhiteList() {
         testFilter(null, "http://organization.it/test/index.html", HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
@@ -87,14 +87,14 @@ public class CsrfFilterTest {
     //REFERER
     //Domain contained in the environment variable with wildcard
     @Test
-    public void refererWithWildCard() {
+    void refererWithWildCard() {
         testFilter(null, "http://xxx.yyy.zzz.entando.com/test/index.html", HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
 
     // ENTANDO_CSRF_PROTECTION environment variable other than basic
     @Test
-    public void csrfProtectionNotEnabled() {
+    void csrfProtectionNotEnabled() {
         mockEnvironment.setProperty(SystemConstants.ENTANDO_CSRF_PROTECTION, "basic");
         testFilter("http://test.it", null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
@@ -102,7 +102,7 @@ public class CsrfFilterTest {
 
     // referer not valid
     @Test
-    public void refererNotValid() {
+    void refererNotValid() {
         Assertions.assertThrows(CSRFProtectionException.class, () -> {
             testFilter(null, "xxxxxx", HttpMethod.POST.name());
         });
@@ -110,7 +110,7 @@ public class CsrfFilterTest {
 
     // origin not valid
     @Test
-    public void originNotValid() {
+    void originNotValid() {
         Assertions.assertThrows(CSRFProtectionException.class, () -> {
             testFilter("xxxxx", null, HttpMethod.POST.name());
         });
@@ -119,14 +119,14 @@ public class CsrfFilterTest {
 
     //REFERER and Origin null
     @Test
-    public void refererAndOriginNull() {
+    void refererAndOriginNull() {
         testFilter(null, null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
 
     //REFERER and Origin null
     @Test
-    public void refererAndOriginNullAsString() {
+    void refererAndOriginNullAsString() {
         testFilter("null", null, HttpMethod.POST.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
 
@@ -136,7 +136,7 @@ public class CsrfFilterTest {
 
     //REFERER and Origin null
     @Test
-    public void refererAndOriginNullAsStringAndMethodGET() {
+    void refererAndOriginNullAsStringAndMethodGET() {
         testFilter("null", null, HttpMethod.GET.name());
         assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
 
@@ -146,13 +146,13 @@ public class CsrfFilterTest {
 
 
     @Test
-    public void instanceFilter() {
+    void instanceFilter() {
         CsrfFilter csrfFilter = new CsrfFilter();
         assertNotNull(csrfFilter);
     }
 
     @Test
-    public void shouldRequestBeCsrfChecked() {
+    void shouldRequestBeCsrfChecked() {
         //Origin and Referer not initialized
         //Not authenticated
         boolean result = CsrfFilter.shouldRequestBeCsrfChecked(true, "", "POST");
@@ -215,7 +215,7 @@ public class CsrfFilterTest {
     }
 
     @Test
-    public void getUrlFromOriginReferer() {
+    void getUrlFromOriginReferer() {
         String result = CsrfFilter.getUrl("http://origin.it", null);
         assertNotNull(result);
 

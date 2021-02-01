@@ -41,7 +41,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     private IOAuthConsumerManager oauthConsumerManager;
 
     @Test
-    public void testGetConsumer() throws Exception {
+    void testGetConsumer() throws Exception {
         ConsumerRecordVO consumer = oauthConsumerManager.getConsumerRecord("test1_consumer");
         assertNotNull(consumer);
         assertEquals(consumer.getName(), "Test 1 Consumer");
@@ -54,7 +54,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddConsumer() throws Exception {
+    void testAddConsumer() throws Exception {
         ConsumerRecordVO consumer = this.createConsumer("key", "secret", false);
         try {
             assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
@@ -80,7 +80,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateRemoveCategory() throws Throwable {
+    void testUpdateRemoveCategory() throws Throwable {
         ConsumerRecordVO consumer = this.createConsumer("key_2", "secret_2", false);
         try {
             assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
@@ -110,7 +110,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetConsumers() throws Exception {
+    void testGetConsumers() throws Exception {
         FieldSearchFilter filter = new FieldSearchFilter(IOAuthConsumerManager.CONSUMER_DESCRIPTION_FILTER_KEY, "1 Consumer", true);
         List<String> keys = this.oauthConsumerManager.getConsumerKeys(new FieldSearchFilter[]{filter});
         assertNotNull(keys);
@@ -119,7 +119,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testLoadClientByClientId() {
+    void testLoadClientByClientId() {
         ClientDetails client = this.oauthConsumerManager.loadClientByClientId("test1_consumer");
         assertNotNull(client);
         assertEquals(3, client.getScope().size());
@@ -127,7 +127,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testFailLoadClientByClientId() throws Throwable {
+    void testFailLoadClientByClientId() throws Throwable {
         ConsumerRecordVO consumer = this.createConsumer("key_3", "secret_3", true);
         assertNull(this.oauthConsumerManager.getConsumerRecord(consumer.getKey()));
         oauthConsumerManager.addConsumer(consumer);
@@ -142,7 +142,7 @@ public class OAuthConsumerManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testLoadClientByInvalidClientId() {
+    void testLoadClientByInvalidClientId() {
         try {
             this.oauthConsumerManager.loadClientByClientId("invalid");
             fail();

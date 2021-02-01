@@ -30,7 +30,7 @@ public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
     private IDataObjectModelDAO dataModelDAO;
 
     @Test
-    public void testLoadContentModels() throws Throwable {
+    void testLoadContentModels() throws Throwable {
         Map<Long, DataObjectModel> models = null;
         try {
             models = this.dataModelDAO.loadDataModels();
@@ -50,7 +50,7 @@ public class DataObjectModelDAOIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddUpdateContentModel() throws Throwable {
+    void testAddUpdateContentModel() throws Throwable {
         DataObjectModel contentModel = new DataObjectModel();
         contentModel.setId(99);
         contentModel.setDataType("ART");

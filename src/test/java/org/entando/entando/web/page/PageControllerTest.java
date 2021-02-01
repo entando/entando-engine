@@ -101,7 +101,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldLoadAPageTree() throws Exception {
+    void shouldLoadAPageTree() throws Exception {
         // NOTE: the test only tests the interface logic, the business logic is tested at service level
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -202,7 +202,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldLoadPageTreeForOwnerGroupAndExtraGroups() throws Exception {
+    void shouldLoadPageTreeForOwnerGroupAndExtraGroups() throws Exception {
         // NOTE: the test only tests the interface logic, the business logic is tested at service level
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -238,7 +238,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePutPathMismatch() throws Exception {
+    void shouldValidatePutPathMismatch() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -282,7 +282,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldBeUnauthorized() throws Exception {
+    void shouldBeUnauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();
@@ -299,7 +299,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePostConflict() throws EntException, Exception {
+    void shouldValidatePostConflict() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -324,7 +324,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeleteOnlinePage() throws EntException, Exception {
+    void shouldValidateDeleteOnlinePage() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
@@ -341,7 +341,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeletePageWithChildren() throws EntException, Exception {
+    void shouldValidateDeletePageWithChildren() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -362,7 +362,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidRequest() throws EntException, Exception {
+    void shouldValidateMovePageInvalidRequest() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -385,7 +385,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void shouldValidateMovePageNameMismatch() throws EntException, Exception {
+    void shouldValidateMovePageNameMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -410,7 +410,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidPosition() throws EntException, Exception {
+    void shouldValidateMovePageInvalidPosition() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -435,7 +435,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageMissingParent() throws EntException, Exception {
+    void shouldValidateMovePageMissingParent() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -459,7 +459,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageGroupMismatch() throws EntException, Exception {
+    void shouldValidateMovePageGroupMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -494,7 +494,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void shouldValidateMoveFreePageUnderReservedPage() throws Exception {
+    void shouldValidateMoveFreePageUnderReservedPage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -531,7 +531,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageStatusMismatch() throws EntException, Exception {
+    void shouldValidateMovePageStatusMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();

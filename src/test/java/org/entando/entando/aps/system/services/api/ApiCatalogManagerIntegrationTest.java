@@ -31,21 +31,21 @@ import org.junit.jupiter.api.Test;
 public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
 	
     @Test
-    public void testGetMethod() throws Throwable {
+    void testGetMethod() throws Throwable {
     	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	assertNotNull(method);
     	assertTrue(method.isActive());
     }
     
     @Test
-    public void testGetMethods() throws Throwable {
+    void testGetMethods() throws Throwable {
     	List<ApiMethod> methods = this.getApiCatalogManager().getMethods(ApiMethod.HttpMethod.GET);
     	assertNotNull(methods);
     	assertTrue(methods.size() > 0);
     }
     
     @Test
-    public void testUpdateMethodStatus() throws Throwable {
+    void testUpdateMethodStatus() throws Throwable {
     	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	method.setStatus(false);
     	this.getApiCatalogManager().updateMethodConfig(method);
@@ -58,7 +58,7 @@ public class ApiCatalogManagerIntegrationTest extends ApiBaseTestCase {
     }
     
     @Test
-    public void testGetServices() throws Throwable {
+    void testGetServices() throws Throwable {
     	Map<String, ApiService> services = this.getApiCatalogManager().getServices();
     	assertNotNull(services);
     	assertTrue(services.size() == 0);

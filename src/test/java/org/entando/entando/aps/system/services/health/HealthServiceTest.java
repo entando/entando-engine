@@ -29,7 +29,7 @@ public class HealthServiceTest {
     }
 
     @Test
-    public void withPortSchemaNotReachableShouldReturnFalse() {
+    void withPortSchemaNotReachableShouldReturnFalse() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(false);
 
@@ -37,7 +37,7 @@ public class HealthServiceTest {
     }
 
     @Test
-    public void withServSchemaNotReachableShouldReturnFalse() {
+    void withServSchemaNotReachableShouldReturnFalse() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(true);
         when(healthDAO.isServDBConnectionHealthy()).thenReturn(false);
@@ -46,7 +46,7 @@ public class HealthServiceTest {
     }
 
     @Test
-    public void withAllSchemaaReachableShouldReturnTrue() {
+    void withAllSchemaaReachableShouldReturnTrue() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(true);
         when(healthDAO.isServDBConnectionHealthy()).thenReturn(true);

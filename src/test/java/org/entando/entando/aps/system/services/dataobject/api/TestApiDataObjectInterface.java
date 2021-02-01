@@ -53,25 +53,25 @@ public class TestApiDataObjectInterface extends ApiBaseTestCase {
     private IDataObjectManager dataObjectManager;
 
     @Test
-    public void testGetXmlDataObject() throws Throwable {
+    void testGetXmlDataObject() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testGetDataObject(mediaType, "admin", "ALL4", "it");
     }
 
     @Test
-    public void testGetJsonDataObject() throws Throwable {
+    void testGetJsonDataObject() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testGetDataObject(mediaType, "admin", "ALL4", "en");
     }
 
     @Test
-    public void testCreateNewDataObjectFromXml() throws Throwable {
+    void testCreateNewDataObjectFromXml() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testCreateNewDataObject(mediaType, "ALL4");
     }
 
     @Test
-    public void testCreateNewDataObjectFromJson() throws Throwable {
+    void testCreateNewDataObjectFromJson() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testCreateNewDataObject(mediaType, "ALL4");
     }

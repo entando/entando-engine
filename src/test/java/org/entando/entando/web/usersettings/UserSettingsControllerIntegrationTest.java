@@ -56,7 +56,7 @@ public class UserSettingsControllerIntegrationTest extends AbstractControllerInt
     }
 
     @Test
-    public void testGetSettings() throws Throwable {
+    void testGetSettings() throws Throwable {
 
         Map<String, String> params = this.getSystemParams();
 
@@ -82,7 +82,7 @@ public class UserSettingsControllerIntegrationTest extends AbstractControllerInt
     }
 
     @Test
-    public void testUpdateSettings() throws Throwable {
+    void testUpdateSettings() throws Throwable {
         String xmlParams = this.configInterface.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
         try {
 

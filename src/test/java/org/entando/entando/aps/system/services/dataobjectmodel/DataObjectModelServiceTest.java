@@ -55,7 +55,7 @@ public class DataObjectModelServiceTest {
     }
 
     @Test
-    public void should_raise_exception_on_delete_referenced_dataModel() throws Throwable {
+    void should_raise_exception_on_delete_referenced_dataModel() throws Throwable {
         DataObjectModel mockDataModel = new DataObjectModel();
         mockDataModel.setId(234l);
         when(this.dataObjectModelManager.getDataObjectModel(any(Long.class))).thenReturn(mockDataModel);

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class TestPageModelDOM extends BaseTestCase {
 
     @Test
-    public void testGetFrames() throws Throwable {
+    void testGetFrames() throws Throwable {
         IWidgetTypeManager widgetTypeManager
                 = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         PageModelDOM pageModelDOM = new PageModelDOM(FRAMES_XML, widgetTypeManager);

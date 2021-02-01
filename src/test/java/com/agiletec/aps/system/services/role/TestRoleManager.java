@@ -40,7 +40,7 @@ public class TestRoleManager extends BaseTestCase {
     }
     
     @Test
-    public void testAddUpdateDeletePermission() throws Throwable {
+    void testAddUpdateDeletePermission() throws Throwable {
 		Role role = new Role();
 		role.setName("temp");
 		try {

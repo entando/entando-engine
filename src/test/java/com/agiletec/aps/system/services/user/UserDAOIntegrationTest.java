@@ -40,7 +40,7 @@ public class UserDAOIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddDeleteUser() throws Throwable {
+    void testAddDeleteUser() throws Throwable {
         String username = "UserForTest1";
         User user = this.createUserForTest(username);
         try {
@@ -60,7 +60,7 @@ public class UserDAOIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateUser() throws Throwable {
+    void testUpdateUser() throws Throwable {
         String username = "UserForTest2";
         User user = this.createUserForTest(username);
         try {

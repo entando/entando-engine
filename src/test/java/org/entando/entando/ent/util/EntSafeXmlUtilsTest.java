@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 public class EntSafeXmlUtilsTest {
 
     @Test
-    public void testNewSafeSAXParser() throws ParserConfigurationException, SAXException, IOException {
+    void testNewSafeSAXParser() throws ParserConfigurationException, SAXException, IOException {
         SAXParser p = EntSafeXmlUtils.newSafeSAXParser();
         assertNotNull(p);
         assertFalse(p.getXMLReader().getFeature("http://xml.org/sax/features/external-general-entities"));
@@ -33,7 +33,7 @@ public class EntSafeXmlUtilsTest {
     }
 
     @Test
-    public void testNewSafeSchemaFactory() throws SAXException, IOException {
+    void testNewSafeSchemaFactory() throws SAXException, IOException {
         InputStream schemaIs = getResIs("components/test_schema/componentDef-4.2.xsd");
         assertNotNull(schemaIs);
         InputStream xmlIs = getResIs("components/test_component/component.xml");

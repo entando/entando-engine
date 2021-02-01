@@ -47,7 +47,7 @@ public class EntandoMessageCodesResolverTest {
     }
 
     @Test
-    public void testResolveCode() {
+    void testResolveCode() {
         String[] codes = messageCodesResolver.resolveMessageCodes("Size", "test");
         assertThat(codes[codes.length - 1], is("52"));
     }

@@ -53,25 +53,25 @@ public class TestApiUserProfileInterface extends ApiBaseTestCase {
     private IUserProfileManager userProfileManager;
 
     @Test
-    public void testGetXmlUserProfile() throws Throwable {
+    void testGetXmlUserProfile() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testGetUserProfile(mediaType, "admin", "supervisorCoach", "it");
     }
     
     @Test
-    public void testGetJsonUserProfile() throws Throwable {
+    void testGetJsonUserProfile() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testGetUserProfile(mediaType, "admin", "supervisorCoach", "en");
     }
 
     @Test
-    public void testCreateNewUserProfileFromXml() throws Throwable {
+    void testCreateNewUserProfileFromXml() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testCreateNewUserProfile(mediaType, "supervisorCoach");
     }
     
     @Test
-    public void testCreateNewUserProfileFromJson() throws Throwable {
+    void testCreateNewUserProfileFromJson() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testCreateNewUserProfile(mediaType, "supervisorCoach");
     }

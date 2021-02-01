@@ -38,7 +38,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetPageConfiguration() throws JsonProcessingException {
+    void testGetPageConfiguration() throws JsonProcessingException {
         IPage draftRoot = this.pageManager.getDraftRoot();
         PageConfigurationDto pageConfigurationDto = (PageConfigurationDto) this.pageService.getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
         ObjectMapper mapper = new ObjectMapper();
@@ -46,7 +46,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdatePageWidget() throws JsonProcessingException, EntException {
+    void testUpdatePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();
@@ -72,7 +72,7 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testRemovePageWidget() throws JsonProcessingException, EntException {
+    void testRemovePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();

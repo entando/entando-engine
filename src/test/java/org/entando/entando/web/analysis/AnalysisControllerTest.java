@@ -62,7 +62,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class AnalysisControllerTest extends AbstractControllerTest {
 
     @Test
-    public void testRunAnalysis() throws Exception {
+    void testRunAnalysis() throws Exception {
         String accessToken = mockAccessToken();
 
         Map<String, List<String>> request = ImmutableMap.<String, List<String>>builder()
@@ -146,7 +146,7 @@ public class AnalysisControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRunAnalysisWrongObjectType() throws Exception {
+    void testRunAnalysisWrongObjectType() throws Exception {
         String accessToken = mockAccessToken();
 
         Map<String, List<String>> request = ImmutableMap.of(

@@ -11,17 +11,17 @@ import org.springframework.validation.ObjectError;
 public class UserValidatorTest {
 
     @Test
-    public void deleteAdminIsNotValid() {
+    void deleteAdminIsNotValid() {
         Assertions.assertTrue(UserValidator.isAdminUser("admin"));
     }
 
     @Test
-    public void deleteNotAdminIsValid() {
+    void deleteNotAdminIsValid() {
         Assertions.assertFalse(UserValidator.isAdminUser("notAdmin"));
     }
 
     @Test
-    public void createErrorDeleteAdminContainsErrorMessage() {
+    void createErrorDeleteAdminContainsErrorMessage() {
         BindingResult bindingAdminDeleteError = UserValidator.createDeleteAdminError();
 
         Assertions.assertEquals(1, bindingAdminDeleteError.getErrorCount());
@@ -34,7 +34,7 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void createErrorSelfDeleteContainsErrorMessage() {
+    void createErrorSelfDeleteContainsErrorMessage() {
         MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "username");
 
         BindingResult bindingSelfDeleteError = UserValidator.createSelfDeleteUserError(bindingResult);

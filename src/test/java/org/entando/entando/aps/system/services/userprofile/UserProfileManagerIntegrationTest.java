@@ -50,18 +50,18 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
     private CacheInfoManager cacheInfoManager;
 
     @Test
-    public void testInitialize() {
+    void testInitialize() {
         assertNotNull(this.profileManager);
     }
 
     @Test
-    public void testAttributeSupportObjects() throws Throwable {
+    void testAttributeSupportObjects() throws Throwable {
         assertTrue(this.profileManager.getAttributeRoles().size() >= 2);
         assertEquals(this.profileManager.getAttributeDisablingCodes().size(), 1);
     }
 
     @Test
-    public void testAddProfile_1() throws Throwable {
+    void testAddProfile_1() throws Throwable {
         String username = "admin";
         Date birthdate = this.getBirthdate(1982, 10, 25);
         IUserProfile profile = this.createProfile("stefano", "puddu", "spuddu@agiletec.it", birthdate, "it");
@@ -85,7 +85,7 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddProfile_2() throws Throwable {
+    void testAddProfile_2() throws Throwable {
         String username = "test_user";
         Date birthdate = this.getBirthdate(1982, 10, 25);
         IUserProfile profile = this.createProfile("joe", "black", "jblack@entando.com", birthdate, "en");
@@ -163,13 +163,13 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testRemoveInsesistentUser() throws EntException {
+    void testRemoveInsesistentUser() throws EntException {
         assertNull(this.profileManager.getProfile("missing_user"));
         this.profileManager.deleteProfile("missing_user");
     }
 
     @Test
-    public void testSearchProfiles_1() throws Throwable {
+    void testSearchProfiles_1() throws Throwable {
         List<String> usernames = this.profileManager.searchId(null);
         assertNotNull(usernames);
         assertEquals(5, usernames.size());
@@ -192,7 +192,7 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testSearchProfiles_2() throws Throwable {
+    void testSearchProfiles_2() throws Throwable {
         EntitySearchFilter fullnameRoleFilter = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
         fullnameRoleFilter.setOrder(EntitySearchFilter.Order.ASC);
         EntitySearchFilter[] filters1 = {fullnameRoleFilter};
@@ -224,7 +224,7 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testSearchProfileRecords() throws Throwable {
+    void testSearchProfileRecords() throws Throwable {
         List<ApsEntityRecord> records = this.profileManager.searchRecords(null);
         assertNotNull(records);
         assertEquals(5, records.size());

@@ -102,7 +102,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
     }
 
     @Test
-    public void testDeleteAuthorities() throws Exception {
+    void testDeleteAuthorities() throws Exception {
         String accessToken = "ok";
         when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token("admin", "ok"));
 
@@ -131,7 +131,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
     }
 
     @Test
-    public void testDeleteAuthoritiesSameUser() throws Exception {
+    void testDeleteAuthoritiesSameUser() throws Exception {
         String currentUserName = "admin";
         String accessToken = "ok";
         when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token(currentUserName, "ok"));

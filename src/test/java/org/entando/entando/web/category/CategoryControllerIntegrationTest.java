@@ -63,7 +63,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
-    public void testGetCategories() throws Exception {
+    void testGetCategories() throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/categories"));
         result.andExpect(status().isOk());
@@ -71,7 +71,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetValidCategoryTree() throws Exception {
+    void testGetValidCategoryTree() throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/categories")
                         .param("parentCode", "home"));
@@ -79,7 +79,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetInvalidCategoryTree() throws Exception {
+    void testGetInvalidCategoryTree() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("invalid_code", accessToken, status().isNotFound());
@@ -91,21 +91,21 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetValidCategory() throws Exception {
+    void testGetValidCategory() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("cat1", accessToken, status().isOk());
     }
 
     @Test
-    public void testGetInvalidCategory() throws Exception {
+    void testGetInvalidCategory() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("invalid_code", accessToken, status().isNotFound());
     }
 
     @Test
-    public void testAddCategory() throws Exception {
+    void testAddCategory() throws Exception {
         String categoryCode = "test_cat";
         try {
             Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
@@ -128,7 +128,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testUpdateCategory() throws Exception {
+    void testUpdateCategory() throws Exception {
         String categoryCode = "test_cat2";
         try {
             Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
@@ -171,7 +171,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteCategory() throws Exception {
+    void testDeleteCategory() throws Exception {
         String categoryCode = "test_cat";
         try {
             Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
@@ -195,7 +195,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteCategoryWithChildren() throws Exception {
+    void testDeleteCategoryWithChildren() throws Exception {
         String parentCategoryCode = "parent_category";
         String childCategoryCode = "child_category";
 
@@ -254,7 +254,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetCategoryReferences() throws Exception {
+    void testGetCategoryReferences() throws Exception {
         Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
         Assertions.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -272,7 +272,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void shouldReturnCategoryUsageCount() throws Exception {
+    void shouldReturnCategoryUsageCount() throws Exception {
         Assertions.assertNotNull(this.categoryManager.getCategory("cat1"));
         Assertions.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -290,21 +290,21 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
 
     @Test
-    public void testGetCategoryWithAdminPermission() throws Exception {
+    void testGetCategoryWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("cat1", accessToken, status().isOk());
     }
 
     @Test
-    public void testGetCategoryWithoutPermission() throws Exception {
+    void testGetCategoryWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
         this.executeGet("cat1", accessToken, status().isForbidden());
     }
 
     @Test
-    public void testGetCategoryWithEnterBackendPermission() throws Exception {
+    void testGetCategoryWithEnterBackendPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -312,7 +312,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteRootCategory() throws Exception {
+    void testDeleteRootCategory() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
 
         String accessToken = mockOAuthInterceptor(user);
@@ -331,7 +331,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
 
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_CATEGORIES,
@@ -409,7 +409,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void addExistingCategoryShouldReturnTheReceivedCategory() throws Exception {
+    void addExistingCategoryShouldReturnTheReceivedCategory() throws Exception {
 
         CategoryDto expected = null;
 
@@ -432,7 +432,7 @@ public class CategoryControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void addExistingGroupWithDifferentParentCodeOrTitlesShouldReturn409() throws Exception {
+    void addExistingGroupWithDifferentParentCodeOrTitlesShouldReturn409() throws Exception {
 
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();

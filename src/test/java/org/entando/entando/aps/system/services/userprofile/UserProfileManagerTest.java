@@ -82,7 +82,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testGetDefaultProfileType() throws EntException {
+    void testGetDefaultProfileType() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,
@@ -100,7 +100,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testAddProfile() throws EntException {
+    void testAddProfile() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,

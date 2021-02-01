@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 public class PageModelDtoTest {
 
     @Test
-    public void test_json() throws JsonProcessingException {
+    void test_json() throws JsonProcessingException {
         FrameDto frameDto = new FrameDto();
         frameDto.setPos(0);
         frameDto.setDescr("description");

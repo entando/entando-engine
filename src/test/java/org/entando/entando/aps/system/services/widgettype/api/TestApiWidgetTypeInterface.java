@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
 public class TestApiWidgetTypeInterface extends BaseTestCase {
 
     @Test
-    public void testJaxbWidgetType() throws Throwable {
+    void testJaxbWidgetType() throws Throwable {
         this.testJaxbWidgetType("login_form");
         this.testJaxbWidgetType("formAction");
         this.testJaxbWidgetType("logic_type");
@@ -72,7 +72,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
     }
 
     @Test
-    public void testGetJaxbWidgetType() throws Throwable {
+    void testGetJaxbWidgetType() throws Throwable {
         this.testInvokeGetJaxbWidgetType("login_form");
         this.testInvokeGetJaxbWidgetType("formAction");
         this.testInvokeGetJaxbWidgetType("logic_type");
@@ -99,7 +99,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
     }
 
     @Test
-    public void testAddJaxbWidgetType() throws Throwable {
+    void testAddJaxbWidgetType() throws Throwable {
         this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", null, false);
         this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", "**testjaxb_login_form** gui", true);
         this.testInvokeAddJaxbWidgetType("testjaxb_formAction", "formAction", null, false);
@@ -151,7 +151,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateJaxbWidgetType() throws Throwable {
+    void testUpdateJaxbWidgetType() throws Throwable {
         ApsProperties titles = new ApsProperties();
         titles.setProperty("en", "English title");
         titles.setProperty("it", "Italian title");
@@ -237,13 +237,13 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
     }
 
     @Test
-    public void testDeleteJaxbWidgetType_1() throws Throwable {
+    void testDeleteJaxbWidgetType_1() throws Throwable {
         this.testInvokeDeleteJaxbNoLogicWidgetType("login_form", false);
         this.testInvokeDeleteJaxbNoLogicWidgetType("formAction", false);
     }
 
     @Test
-    public void testDeleteJaxbWidgetType_2() throws Throwable {
+    void testDeleteJaxbWidgetType_2() throws Throwable {
         String code = "jaxb_test_delete_1";
         assertNull(this._widgetTypeManager.getWidgetType(code));
         try {
@@ -259,7 +259,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
     }
     
     @Test
-    public void testDeleteJaxbWidgetType_3() throws Throwable {
+    void testDeleteJaxbWidgetType_3() throws Throwable {
         String code = "jaxb_test_delete_2";
         String pageCode = "homepage";
         int frame = 5;

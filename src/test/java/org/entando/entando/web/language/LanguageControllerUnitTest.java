@@ -52,7 +52,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateNoPayload() throws Exception {
+    void testUpdateNoPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{}";
@@ -65,7 +65,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateWrongPayload() throws Exception {
+    void testUpdateWrongPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{\"isActive\": \"WRONG\"}";
@@ -78,7 +78,7 @@ public class LanguageControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdatePayloadOk() throws Exception {
+    void testUpdatePayloadOk() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String payload = "{\"isActive\": false}";

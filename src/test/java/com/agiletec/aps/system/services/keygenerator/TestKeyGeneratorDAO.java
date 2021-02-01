@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class TestKeyGeneratorDAO extends BaseTestCase {
 	
     @Test
-    public void testGetUniqueKey() throws Throwable {
+    void testGetUniqueKey() throws Throwable {
     	DataSource dataSource = (DataSource) getApplicationContext().getBean("portDataSource");
 		KeyGeneratorDAO keyGeneratorDao = new KeyGeneratorDAO();
 		keyGeneratorDao.setDataSource(dataSource);

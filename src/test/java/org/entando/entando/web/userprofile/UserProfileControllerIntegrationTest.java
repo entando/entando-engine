@@ -66,7 +66,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     private ProfileController controller;
     
     @Test
-    public void testGetUserProfileType() throws Exception {
+    void testGetUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
@@ -77,7 +77,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetInvalidUserProfileType() throws Exception {
+    void testGetInvalidUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{"xxxxx"})
@@ -87,7 +87,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetValidUserProfileType() throws Exception {
+    void testGetValidUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
                 .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
@@ -97,7 +97,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddUpdateUserProfile() throws Exception {
+    void testAddUpdateUserProfile() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             String accessToken = this.createAccessToken();
@@ -169,7 +169,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     }
     
     @Test
-    public void testAddUserProfileWithEmail() throws Exception {
+    void testAddUserProfileWithEmail() throws Exception {
         try {
             String accessToken = this.createAccessToken();
 
@@ -197,7 +197,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     /* For an user created without profile, the profile has to be created the
        first time the "/userProfiles/{user}" endpoint is requested. */
     @Test
-    public void testGetProfileForNewUser() throws Exception {
+    void testGetProfileForNewUser() throws Exception {
         String username = "another_new_user";
 
         try {
@@ -223,7 +223,7 @@ public class UserProfileControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetProfileForNewUserAndUpdateIt() throws Exception {
+    void testGetProfileForNewUserAndUpdateIt() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TSU"));

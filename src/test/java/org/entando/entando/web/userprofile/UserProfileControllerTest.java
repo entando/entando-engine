@@ -76,7 +76,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldGetExistingProfile() throws Exception {
+    void shouldGetExistingProfile() throws Exception {
         when(this.profileValidator.existProfile("user_with_profile")).thenReturn(true);
         when(this.userProfileService.getUserProfile("user_with_profile")).thenReturn(new EntityDto());
         ResultActions result = performGetUserProfiles("user_with_profile");
@@ -84,7 +84,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldGetNewlyCreatedProfile() throws Exception {
+    void shouldGetNewlyCreatedProfile() throws Exception {
         when(this.userManager.getUser("user_without_profile")).thenReturn(Mockito.mock(UserDetails.class));
         when(this.userProfileManager.getDefaultProfileType()).thenReturn(Mockito.mock(IUserProfile.class));
         ResultActions result = performGetUserProfiles("user_without_profile");
@@ -92,13 +92,13 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUnexistingProfile() throws Exception {
+    void testUnexistingProfile() throws Exception {
         ResultActions result = performGetUserProfiles("user_without_profile");
         result.andExpect(status().isNotFound());
     }
 
     @Test
-    public void testAddProfile() throws Exception {
+    void testAddProfile() throws Exception {
         when(this.userProfileService.addUserProfile(any(EntityDto.class), any(BindingResult.class)))
                 .thenReturn(new EntityDto());
 
@@ -115,7 +115,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateProfile() throws Exception {
+    void testUpdateProfile() throws Exception {
         when(this.userProfileService.updateUserProfile(any(EntityDto.class), any(BindingResult.class)))
                 .thenReturn(new EntityDto());
 

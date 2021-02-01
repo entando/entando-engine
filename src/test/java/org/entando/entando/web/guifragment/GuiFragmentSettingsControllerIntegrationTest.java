@@ -44,7 +44,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     private IGuiFragmentManager guiFragmentManager;
 
     @Test
-    public void testGetConfiguration() throws Exception {
+    void testGetConfiguration() throws Exception {
         String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
         Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -58,7 +58,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     }
 
     @Test
-    public void testUpdateConfiguration() throws Exception {
+    void testUpdateConfiguration() throws Exception {
         String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
         Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -88,7 +88,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     }
 
     @Test
-    public void testGetPlugins() throws Exception {
+    void testGetPlugins() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = this.executeGet("/fragments/info/plugins", accessToken, status().isOk());
@@ -96,7 +96,7 @@ public class GuiFragmentSettingsControllerIntegrationTest extends AbstractContro
     }
 
     @Test
-    public void testGetPluginsMapping() throws Exception {
+    void testGetPluginsMapping() throws Exception {
         String code = "info";
         GuiFragment fragment = new GuiFragment();
         fragment.setCode(code);

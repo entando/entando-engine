@@ -42,7 +42,7 @@ public class UserServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddAndRemoveUserAuthorities() throws Throwable {
+    void testAddAndRemoveUserAuthorities() throws Throwable {
         String username = "editorCustomers";
         List<UserAuthorityDto> master = userService.getUserAuthorities(username);
         assertEquals(1, master.size());

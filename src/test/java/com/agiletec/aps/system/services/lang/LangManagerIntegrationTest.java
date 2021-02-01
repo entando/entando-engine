@@ -31,7 +31,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 	private ILangManager langManager = null;
 
 	@Test
-    public void testGetLang() throws EntException {
+    void testGetLang() throws EntException {
 		Lang lang = this.langManager.getLang("en");
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
@@ -40,7 +40,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 	}
 
 	@Test
-    public void testGetDefaultLang() throws EntException {
+    void testGetDefaultLang() throws EntException {
 		Lang lang = this.langManager.getDefaultLang();
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
@@ -49,7 +49,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 	}
 
 	@Test
-    public void testGetLangs() throws EntException {
+    void testGetLangs() throws EntException {
 		List<Lang> langs = this.langManager.getLangs();
 		assertEquals(2, langs.size());
 		for (Lang lang : langs) {
@@ -65,7 +65,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 	}
 
 	@Test
-    public void testGetAssignableLangs() throws Throwable {
+    void testGetAssignableLangs() throws Throwable {
 		List<Lang> assignableLangs = this.langManager.getAssignableLangs();
 		assertTrue(!assignableLangs.isEmpty());
 		Lang firstLang = (Lang) assignableLangs.get(0);
@@ -78,7 +78,7 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 	}
 
 	@Test
-    public void testAddUpdateRemoveLang() throws Throwable {
+    void testAddUpdateRemoveLang() throws Throwable {
 		int systemLangs = this.langManager.getLangs().size();
 		try {
 			this.langManager.addLang("ro");

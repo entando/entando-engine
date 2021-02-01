@@ -97,7 +97,7 @@ public class PageServiceTest {
     }
 
     @Test
-    public void shouldAddExtraGroup() {
+    void shouldAddExtraGroup() {
         PageDto dto = new PageDto();
         dto.addJoinGroup("free");
         dto.addJoinGroup("admin");
@@ -119,7 +119,7 @@ public class PageServiceTest {
     }
 
     @Test
-    public void shouldRemoveExtraGroup() {
+    void shouldRemoveExtraGroup() {
         PageDto dto = new PageDto();
         dto.addJoinGroup("free");
         when(dtoBuilder.convert(any(IPage.class))).thenReturn(dto);
@@ -250,14 +250,14 @@ public class PageServiceTest {
 
 
     @Test
-    public void getPageUsageForNonExistingCodeShouldReturnZero() {
+    void getPageUsageForNonExistingCodeShouldReturnZero() {
 
         int componentUsage = pageService.getComponentUsage("non_existing");
         assertEquals(0, componentUsage);
     }
 
     @Test
-    public void getPageUsageDetailsWithPublishedPageShouldAddItself() {
+    void getPageUsageDetailsWithPublishedPageShouldAddItself() {
 
         PageDto pageDto = PageMockHelper.mockPageDto();
 
@@ -265,7 +265,7 @@ public class PageServiceTest {
     }
 
     @Test
-    public void getPageUsageDetailsWithPaginationAndWithPublishedPageShouldAddItself() {
+    void getPageUsageDetailsWithPaginationAndWithPublishedPageShouldAddItself() {
 
         PageDto pageDto = PageMockHelper.mockPageDto();
 
@@ -274,7 +274,7 @@ public class PageServiceTest {
 
 
     @Test
-    public void getPageUsageDetailsWithInvalidCodeShouldThrowResourceNotFoundException() {
+    void getPageUsageDetailsWithInvalidCodeShouldThrowResourceNotFoundException() {
         
         PageDto pageDto = PageMockHelper.mockPageDto();
         mockForSinglePage(PageMockHelper.mockTestPage(PageMockHelper.PAGE_CODE), pageDto, PageMockHelper.UTILIZERS);
@@ -292,7 +292,7 @@ public class PageServiceTest {
 
 
     @Test
-    public void getPageUsageDetailsWithDraftPageShouldNOTAddItself() {
+    void getPageUsageDetailsWithDraftPageShouldNOTAddItself() {
 
         PageDto pageDto = PageMockHelper.mockPageDto();
         pageDto.setStatus(IPageService.STATUS_DRAFT);
@@ -302,7 +302,7 @@ public class PageServiceTest {
 
 
     @Test
-    public void getPageUsageDetailsWithPaginationAndWithDraftPageShouldNOTAddItself() {
+    void getPageUsageDetailsWithPaginationAndWithDraftPageShouldNOTAddItself() {
 
         PageDto pageDto = PageMockHelper.mockPageDto();
         pageDto.setStatus(IPageService.STATUS_DRAFT);
@@ -312,7 +312,7 @@ public class PageServiceTest {
 
 
     @Test
-    public void getPageUsageDetailsWithNoChildrenShouldReturnItself() {
+    void getPageUsageDetailsWithNoChildrenShouldReturnItself() {
 
         PageDto pageDto = PageMockHelper.mockPageDto();
         pageDto.setChildren(new ArrayList<>());

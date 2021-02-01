@@ -65,7 +65,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetGroupsPagination() throws Exception {
+    void testGetGroupsPagination() throws Exception {
         List<Group> testGroups = new ArrayList<>();
         try {
             for (int i = 0; i < 25; i++) {
@@ -164,7 +164,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetGroupsSort() throws Exception {
+    void testGetGroupsSort() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -194,7 +194,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void testGetInvalidGroup() throws Exception {
+    void testGetInvalidGroup() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -213,7 +213,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testUpdateInvalidGroup() throws Exception {
+    void testUpdateInvalidGroup() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -236,7 +236,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetGroupDetails() throws Exception {
+    void testGetGroupDetails() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
@@ -256,7 +256,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetGroupDetailsWithEnterBackendPermission() throws Exception {
+    void testGetGroupDetailsWithEnterBackendPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, Permission.ENTER_BACKEND, Permission.ENTER_BACKEND)
                 .build();
@@ -269,7 +269,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void shouldTestGetGroupUsage() throws Exception {
+    void shouldTestGetGroupUsage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.ADMINS_GROUP_NAME, Permission.SUPERUSER, Permission.SUPERUSER)
                 .build();
@@ -288,7 +288,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void testParamSize() throws EntException, Exception {
+    void testParamSize() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -310,7 +310,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetGroupsWithBackendPermission() throws Exception {
+    void testGetGroupsWithBackendPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, Permission.ENTER_BACKEND, Permission.ENTER_BACKEND)
                 .build();
@@ -323,7 +323,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void addExistingGroupShouldReturnTheReceivedCategory() throws Exception {
+    void addExistingGroupShouldReturnTheReceivedCategory() throws Exception {
 
         GroupRequest groupRequest = GroupTestHelper.stubTestGroupRequest();
 
@@ -339,7 +339,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void addExistingGroupWithDifferentNameShouldReturn409() throws Exception {
+    void addExistingGroupWithDifferentNameShouldReturn409() throws Exception {
 
         GroupRequest groupRequest = GroupTestHelper.stubTestGroupRequest();
 
@@ -359,7 +359,7 @@ public class GroupControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_GROUPS,

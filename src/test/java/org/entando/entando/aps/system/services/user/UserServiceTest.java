@@ -47,7 +47,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void getMyGroupPermissionsTest() {
+    void getMyGroupPermissionsTest() {
 
         userDetails.addAuthorizations(authorizationList);
 
@@ -61,14 +61,14 @@ public class UserServiceTest {
 
 
     @Test
-    public void getMyGroupPermissionsWithNoAuthorizationsTest() {
+    void getMyGroupPermissionsWithNoAuthorizationsTest() {
 
         List<UserGroupPermissions> actualList = userService.getMyGroupPermissions(userDetails);
         assertEquals(0, actualList.size());
     }
 
     @Test
-    public void getMyGroupPermissionsWithNullUserShouldReturnEmptyListTest() {
+    void getMyGroupPermissionsWithNullUserShouldReturnEmptyListTest() {
 
         List<UserGroupPermissions> actualList = userService.getMyGroupPermissions(null);
         assertEquals(0, actualList.size());

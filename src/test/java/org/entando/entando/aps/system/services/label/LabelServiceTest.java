@@ -59,7 +59,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testGetLabelGroupsFilteringEqual() {
+    void testGetLabelGroupsFilteringEqual() {
         RestListRequest request = new RestListRequest();
         Filter filter = new Filter("value", "some_value", FilterOperator.EQUAL.getValue());
 
@@ -86,7 +86,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testGetLabelGroupsFilteringLike() {
+    void testGetLabelGroupsFilteringLike() {
         RestListRequest request = new RestListRequest();
         Filter filter = new Filter("value", "some_value", FilterOperator.LIKE.getValue());
 
@@ -115,7 +115,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testGetLabelGroupNotFound() throws EntException {
+    void testGetLabelGroupNotFound() throws EntException {
         when(i18nManager.getLabelGroup(eq("not_found"))).thenReturn(null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             labelService.getLabelGroup("not_found");
@@ -124,7 +124,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testGetLabelGroup() throws EntException {
+    void testGetLabelGroup() throws EntException {
         when(i18nManager.getLabelGroup(eq("lab"))).thenReturn(create(singletonMap("EN", "some_value")));
         final LabelDto label = labelService.getLabelGroup("lab");
         assertThat(label.getKey()).isEqualTo("lab");
@@ -134,7 +134,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testAddLabelGroupError() throws EntException {
+    void testAddLabelGroupError() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));
@@ -147,7 +147,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testAddLabelGroupNotAssignableLang() throws EntException {
+    void testAddLabelGroupNotAssignableLang() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(Collections.emptyList());
         when(langManager.getLangs()).thenReturn(singletonList(lang));
@@ -158,7 +158,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testAddLabelGroup() throws EntException {
+    void testAddLabelGroup() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));
@@ -178,7 +178,7 @@ public class LabelServiceTest {
 
 
     @Test
-    public void addExistingLabelShouldReturnTheReceivedLabel() throws EntException {
+    void addExistingLabelShouldReturnTheReceivedLabel() throws EntException {
 
         String value = "some_value";
         String key = "lab";
@@ -201,7 +201,7 @@ public class LabelServiceTest {
 
 
     @Test
-    public void addExistingLabelGroupWithDifferentValuesShouldThrowValidationConflictException() throws EntException {
+    void addExistingLabelGroupWithDifferentValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
         Mockito.lenient().when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
@@ -218,7 +218,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
+    void addExistingLabelGroupWithMoreValuesShouldThrowValidationConflictException() throws EntException {
 
         when(langManager.getDefaultLang()).thenReturn(lang);
         Mockito.lenient().when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
@@ -237,7 +237,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testGetLabelsPagination() {
+    void testGetLabelsPagination() {
         RestListRequest request = new RestListRequest();
         Map<String, String> labelsMap = new HashMap<>();
 
@@ -278,7 +278,7 @@ public class LabelServiceTest {
     }
 
     @Test
-    public void testUpdateLabelGroup() throws EntException {
+    void testUpdateLabelGroup() throws EntException {
         when(langManager.getDefaultLang()).thenReturn(lang);
         when(langManager.getAssignableLangs()).thenReturn(singletonList(lang));
         when(langManager.getLangs()).thenReturn(singletonList(lang));

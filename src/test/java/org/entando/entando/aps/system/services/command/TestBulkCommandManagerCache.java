@@ -30,7 +30,7 @@ public class TestBulkCommandManagerCache {
 
     @Disabled("temporary disabling")
 	@Test
-    public void testClean() {
+    void testClean() {
         BulkCommandManager bulkCommandManager = new BulkCommandManager();
 		for (int i = 0; i < 10; i++) {
 			String name = "test" + i;

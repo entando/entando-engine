@@ -40,7 +40,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void should_raise_exception_on_delete_reserved_group() {
+    void should_raise_exception_on_delete_reserved_group() {
         Group group = new Group();
         group.setName(Group.ADMINS_GROUP_NAME);
         when(groupManager.getGroup(group.getName())).thenReturn(group);
@@ -50,7 +50,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addExistingGroupShouldReturnTheReceivedGroup() throws EntException {
+    void addExistingGroupShouldReturnTheReceivedGroup() throws EntException {
 
         Group existingGroup = GroupTestHelper.stubTestGroup();
         GroupDto expectedDto = GroupTestHelper.stubGroupDto();
@@ -66,7 +66,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
+    void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
 
         Group existingGroup = GroupTestHelper.stubTestGroup();
         existingGroup.setDescription("Description old");

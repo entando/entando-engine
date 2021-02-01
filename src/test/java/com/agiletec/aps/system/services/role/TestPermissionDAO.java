@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class TestPermissionDAO extends BaseTestCase {
 	
     @Test
-    public void testAddUpdateDeletePermission() throws Throwable {
+    void testAddUpdateDeletePermission() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		PermissionDAO permissionDao = new PermissionDAO();
 		permissionDao.setDataSource(dataSource);

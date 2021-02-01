@@ -27,7 +27,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups() throws JsonProcessingException {
+    void testGetGroups() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(5);
         PagedMetadata<GroupDto> res = this.groupService.getGroups(restListRequest);
@@ -71,7 +71,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups_filter() throws JsonProcessingException {
+    void testGetGroups_filter() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.addFilter(new Filter("groupname", "fr"));
 
@@ -83,7 +83,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups_filter_and_pagination() throws JsonProcessingException {
+    void testGetGroups_filter_and_pagination() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
         restListRequest.addFilter(new Filter("groupname", "s"));

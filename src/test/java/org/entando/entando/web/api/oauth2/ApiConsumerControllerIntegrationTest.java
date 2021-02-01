@@ -68,7 +68,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testCRUDConsumer() throws Exception {
+    void testCRUDConsumer() throws Exception {
 
         try {
             ApiConsumer consumer = getPayload();
@@ -137,7 +137,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testFilterAndSort() throws Exception {
+    void testFilterAndSort() throws Exception {
 
         try {
             consumerManager.addConsumer(getConsumer1());

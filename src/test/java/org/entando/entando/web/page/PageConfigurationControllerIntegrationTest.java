@@ -53,7 +53,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testUpdateWidgetNotOverridable() throws Exception {
+    void testUpdateWidgetNotOverridable() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String pageCode = "test_update_widget_page";
@@ -132,7 +132,7 @@ public class PageConfigurationControllerIntegrationTest extends AbstractControll
     }
 
     @Test
-    public void testUpdateWidgetOverridable() throws Exception {
+    void testUpdateWidgetOverridable() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String pageCode = "test_update_widget_page";

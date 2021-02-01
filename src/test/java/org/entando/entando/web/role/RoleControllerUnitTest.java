@@ -59,7 +59,7 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddWithEmptyPayload() throws Exception {
+    void testAddWithEmptyPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -79,7 +79,7 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddWithInvalidCodeAndName() throws Exception {
+    void testAddWithInvalidCodeAndName() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

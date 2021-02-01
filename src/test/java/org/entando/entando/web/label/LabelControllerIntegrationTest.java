@@ -69,7 +69,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetLabels_1() throws Exception {
+    void testGetLabels_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -83,7 +83,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetLabels_2() throws Exception {
+    void testGetLabels_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -100,7 +100,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetLabels_3() throws Exception {
+    void testGetLabels_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -113,7 +113,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetInvalidFilter() throws Exception {
+    void testGetInvalidFilter() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -127,7 +127,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetLabelGroupOk() throws Exception {
+    void testGetLabelGroupOk() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -137,7 +137,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testGetLabelGroupNotPresent() throws Exception {
+    void testGetLabelGroupNotPresent() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result
@@ -148,7 +148,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testValidateKey() throws Exception {
+    void testValidateKey() throws Exception {
         String code = null;
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -194,7 +194,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testCrudLabelGroup() throws Exception {
+    void testCrudLabelGroup() throws Exception {
         String code = "Label_KEY_123";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -284,7 +284,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testAddLabelWithMissingTextForDefaultLang() throws Exception {
+    void testAddLabelWithMissingTextForDefaultLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -309,7 +309,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testAddLabelWithMissingDefaultLang() throws Exception {
+    void testAddLabelWithMissingDefaultLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -334,7 +334,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testAddLabelWithInvalidLang() throws Exception {
+    void testAddLabelWithInvalidLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -360,7 +360,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testUpdateLabelWithInvalidLang() throws Exception {
+    void testUpdateLabelWithInvalidLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -394,7 +394,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testUpdateLabelWithUnexistingLang() throws Exception {
+    void testUpdateLabelWithUnexistingLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -428,7 +428,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testUpdateLabelWithUnexistingCode() throws Exception {
+    void testUpdateLabelWithUnexistingCode() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -458,7 +458,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testAddLabelWithoutDefaultLang() throws Exception {
+    void testAddLabelWithoutDefaultLang() throws Exception {
         String code = "THIS_LABEL_HAS_NO_NAME";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -502,7 +502,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void addExistingLabelShouldReturnTheReceivedLabel() throws Exception {
+    void addExistingLabelShouldReturnTheReceivedLabel() throws Exception {
 
         LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
 
@@ -523,7 +523,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void addExistingLabelShouldReturnTheSameLabel() throws Exception {
+    void addExistingLabelShouldReturnTheSameLabel() throws Exception {
 
         LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
 
@@ -543,7 +543,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
 
 
     @Test
-    public void addExistingLabelWithDifferentValuesShouldReturnReturn40() throws Exception {
+    void addExistingLabelWithDifferentValuesShouldReturnReturn40() throws Exception {
 
         LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
 
@@ -561,7 +561,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void addExistingLabelWithMoreValuesShouldReturn409() throws Exception {
+    void addExistingLabelWithMoreValuesShouldReturn409() throws Exception {
 
         LabelRequest labelRequest = LabelTestHelper.stubTestLabelRequest();
 
@@ -579,7 +579,7 @@ public class LabelControllerIntegrationTest extends AbstractControllerIntegratio
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_LABELS,

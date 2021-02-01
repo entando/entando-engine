@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class StorageManagerUtilTest {
 
     @Test
-    public void isValidFilename_1() {
+    void isValidFilename_1() {
         Assertions.assertFalse(StorageManagerUtil.isValidFilename(null));
         Assertions.assertFalse(StorageManagerUtil.isValidFilename(""));
         Assertions.assertFalse(StorageManagerUtil.isValidFilename("   "));
@@ -38,7 +38,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void isValidFilename_2() {
+    void isValidFilename_2() {
         Assertions.assertFalse(StorageManagerUtil.isValidFilename(null, null));
         Assertions.assertFalse(StorageManagerUtil.isValidFilename("", null));
         Assertions.assertFalse(StorageManagerUtil.isValidFilename("   ", null));
@@ -58,7 +58,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void isValidFilenameNoExtension() {
+    void isValidFilenameNoExtension() {
         Assertions.assertFalse(StorageManagerUtil.isValidFilenameNoExtension(null));
         Assertions.assertFalse(StorageManagerUtil.isValidFilenameNoExtension(""));
         Assertions.assertFalse(StorageManagerUtil.isValidFilenameNoExtension("   "));
@@ -77,7 +77,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void isValidDirName() {
+    void isValidDirName() {
         Assertions.assertTrue(StorageManagerUtil.isValidDirName(null));         // TODO: THIS IS QUESTIONABLE
         Assertions.assertTrue(StorageManagerUtil.isValidDirName(""));           // TODO: THIS IS QUESTIONABLE
         Assertions.assertTrue(StorageManagerUtil.isValidDirName("dirname"));
@@ -98,7 +98,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void isValidExtension() {
+    void isValidExtension() {
         Assertions.assertFalse(StorageManagerUtil.isValidExtension(null));
         Assertions.assertFalse(StorageManagerUtil.isValidExtension(""));
         Assertions.assertTrue(StorageManagerUtil.isValidExtension("extension"));
@@ -115,7 +115,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void testMustBeValidFilename() {
+    void testMustBeValidFilename() {
         Exception ex = null;
 
         //  VALID FILENAME
@@ -138,7 +138,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void testMustBeValidDirName() {
+    void testMustBeValidDirName() {
         Exception ex = null;
 
         //  VALID DIR NAME
@@ -162,7 +162,7 @@ public class StorageManagerUtilTest {
 
 
     @Test
-    public void testDoesPathContainsPath() throws IOException {
+    void testDoesPathContainsPath() throws IOException {
         Assertions.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc/x"));
         Assertions.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc/", "/etc/x"));
         Assertions.assertTrue(StorageManagerUtil.doesPathContainsPath("/etc", "/etc//x"));
@@ -194,7 +194,7 @@ public class StorageManagerUtilTest {
     }
 
     @Test
-    public void testIsSamePath() {
+    void testIsSamePath() {
         Assertions.assertTrue(StorageManagerUtil.isSamePath("a/b/c", "a/b/c/"));
         Assertions.assertTrue(StorageManagerUtil.isSamePath("a/b/../b/c", "a/b/c/"));
         Assertions.assertFalse(StorageManagerUtil.isSamePath(null, "a/b/c/"));

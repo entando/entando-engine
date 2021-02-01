@@ -115,7 +115,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldReturnAll() {
+    void shouldReturnAll() {
         PagedMetadata<WidgetDto> result = widgetService.getWidgets(new RestListRequest());
 
         assertThat(result.getBody()).hasSize(2);
@@ -128,7 +128,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldFilterByCode() {
+    void shouldFilterByCode() {
 
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
@@ -142,7 +142,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldFilterByUsed() {
+    void shouldFilterByUsed() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("used");
@@ -156,7 +156,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldFilterByTypology() {
+    void shouldFilterByTypology() {
 
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
@@ -170,7 +170,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldFilterByGroup() {
+    void shouldFilterByGroup() {
 
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
@@ -184,7 +184,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldSortByCode() {
+    void shouldSortByCode() {
         RestListRequest requestList = new RestListRequest();
 
         PagedMetadata<WidgetDto> result = widgetService.getWidgets(requestList);
@@ -194,7 +194,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldSortByUsed() {
+    void shouldSortByUsed() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("used");
 
@@ -205,7 +205,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldSortByTypology() {
+    void shouldSortByTypology() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("typology");
         requestList.setDirection("DESC");
@@ -217,7 +217,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldSortByGroup() {
+    void shouldSortByGroup() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("typology");
         requestList.setDirection("DESC");
@@ -229,7 +229,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldAddNewWidget() throws Exception {
+    void shouldAddNewWidget() throws Exception {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
@@ -254,7 +254,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldUpdateWidget() throws Exception {
+    void shouldUpdateWidget() throws Exception {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
@@ -283,7 +283,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
+    void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
         WidgetRequest widgetRequest = getWidgetRequest1();
@@ -350,7 +350,7 @@ public class WidgetServiceTest {
 
 
     @Test
-    public void getWidgetUsageForNonExistingCodeShouldReturnZero() {
+    void getWidgetUsageForNonExistingCodeShouldReturnZero() {
 
         int componentUsage = widgetService.getComponentUsage("non_existing");
         assertEquals(0, componentUsage);
@@ -359,7 +359,7 @@ public class WidgetServiceTest {
 
 
     @Test
-    public void getWidgetUsageDetails() throws Exception {
+    void getWidgetUsageDetails() throws Exception {
 
         this.mockPagedMetadata(Arrays.asList(PageMockHelper.PAGE_CODE), 1, 1, 100, 2);
 
@@ -370,7 +370,7 @@ public class WidgetServiceTest {
 
 
     @Test
-    public void getWidgetUsageDetailsWithPagination() throws Exception {
+    void getWidgetUsageDetailsWithPagination() throws Exception {
 
         int pageSize = 3;
 
@@ -406,7 +406,7 @@ public class WidgetServiceTest {
 
 
     @Test
-    public void getWidgetUsageDetailsWithInvalidCodeShouldThrowResourceNotFoundException() throws Exception {
+    void getWidgetUsageDetailsWithInvalidCodeShouldThrowResourceNotFoundException() throws Exception {
 
         Page page1 = PageMockHelper.mockTestPage(PageMockHelper.PAGE_MISSION_CODE, WidgetMockHelper.WIDGET_1_CODE);
         Page page2 = PageMockHelper.mockTestPage(PageMockHelper.PAGE_CODE, WidgetMockHelper.WIDGET_1_CODE);

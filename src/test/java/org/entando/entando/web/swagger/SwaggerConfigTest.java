@@ -38,7 +38,7 @@ public class SwaggerConfigTest {
     }
 
     @Test
-    public void createSwaggerConfigWithKeycloakEnabled() {
+    void createSwaggerConfigWithKeycloakEnabled() {
 
         new SwaggerConfig(environment, typeResolver);
 
@@ -46,7 +46,7 @@ public class SwaggerConfigTest {
     }
 
     @Test
-    public void createSwaggerConfigWithKeycloakDisabled() {
+    void createSwaggerConfigWithKeycloakDisabled() {
 
         when(environment.getProperty(SystemConstants.SYSTEM_PROP_KEYCLOAK_ENABLED)).thenReturn("false");
 
@@ -57,7 +57,7 @@ public class SwaggerConfigTest {
 
 
     @Test
-    public void getDocketTest() {
+    void getDocketTest() {
 
         SwaggerConfig swaggerConfig = new SwaggerConfig(environment, typeResolver);
         Docket docket = swaggerConfig.api();
@@ -68,7 +68,7 @@ public class SwaggerConfigTest {
 
 
     @Test
-    public void securityTest() {
+    void securityTest() {
 
         SecurityConfiguration security = new SwaggerConfig(environment, typeResolver).security();
 

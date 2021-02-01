@@ -61,7 +61,7 @@ public class FileBrowserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidRequest() throws Exception {
+    void testValidRequest() throws Exception {
         List<BasicFileAttributeViewDto> dtos = new ArrayList<>();
         BasicFileAttributeViewDto dto = new BasicFileAttributeViewDto();
         dto.setName("folder");

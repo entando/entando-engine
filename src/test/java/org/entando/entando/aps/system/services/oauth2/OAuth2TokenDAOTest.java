@@ -79,17 +79,17 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void findTokensByClientIdAndUserName() throws Exception {
+    void findTokensByClientIdAndUserName() throws Exception {
         this.executeFindTokens("client_id", "username");
     }
 
     @Test
-    public void findTokensByClientId() throws Exception {
+    void findTokensByClientId() throws Exception {
         this.executeFindTokens("client_id", null);
     }
 
     @Test
-    public void findTokensByUserName() throws Exception {
+    void findTokensByUserName() throws Exception {
         this.executeFindTokens(null, "username");
     }
 
@@ -124,21 +124,21 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failFindTokensByClientIdAndUserName_1() throws Exception {
+    void failFindTokensByClientIdAndUserName_1() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_1("client_id", "username");
         });
     }
 
     @Test
-    public void failFindTokensByClientId_1() throws Exception {
+    void failFindTokensByClientId_1() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_1("client_id", null);
         });
     }
 
     @Test
-    public void failFindTokensByUserName_1() throws Exception {
+    void failFindTokensByUserName_1() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_1(null, "username");
         });
@@ -179,21 +179,21 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failFindTokensByClientIdAndUserName_2() throws Exception {
+    void failFindTokensByClientIdAndUserName_2() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_2("client_id", "username");
         });
     }
 
     @Test
-    public void failFindTokensByClientId_2() throws Exception {
+    void failFindTokensByClientId_2() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_2("client_id", null);
         });
     }
 
     @Test
-    public void failFindTokensByUserName_2() throws Exception {
+    void failFindTokensByUserName_2() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             this.failExecuteFindTokens_2(null, "username");
         });
@@ -230,7 +230,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void storeAccessToken() throws Exception {
+    void storeAccessToken() throws Exception {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(false);
         this.tokenDAO.storeAccessToken(this.createMockAccessToken(), this.createMockAuthentication());
@@ -242,7 +242,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failStoreAccessToken() throws Exception {
+    void failStoreAccessToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         try {
             when(this.stat.executeQuery()).thenReturn(res);
@@ -262,7 +262,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void getAccessToken() throws Exception {
+    void getAccessToken() throws Exception {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(true).thenReturn(false);
         OAuth2AccessToken token = this.tokenDAO.readAccessToken("token");
@@ -276,7 +276,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failReadAccessToken() throws Exception {
+    void failReadAccessToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         try {
             when(this.stat.executeQuery()).thenReturn(res);
@@ -297,7 +297,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void removeAccessToken() throws Exception {
+    void removeAccessToken() throws Exception {
         this.tokenDAO.removeAccessToken("token");
         Mockito.verify(stat, Mockito.times(1)).setObject(Mockito.anyInt(), Mockito.any());
         Mockito.verify(stat, Mockito.times(1)).close();
@@ -305,7 +305,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failRemoveAccessToken() throws Exception {
+    void failRemoveAccessToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         try {
             Mockito.doThrow(SQLException.class).when(stat).setObject(Mockito.anyInt(), Mockito.any());
@@ -320,7 +320,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void deleteExpiredToken() throws Exception {
+    void deleteExpiredToken() throws Exception {
         this.tokenDAO.deleteExpiredToken(3600);
         Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
         Mockito.verify(stat, Mockito.times(1)).close();
@@ -328,7 +328,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failDeleteExpiredToken() throws Exception {
+    void failDeleteExpiredToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         try {
             Mockito.doThrow(SQLException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
@@ -343,7 +343,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void readRefreshToken() throws Exception {
+    void readRefreshToken() throws Exception {
         when(this.statForSearchId.executeQuery()).thenReturn(resForSearchId);
         Mockito.when(resForSearchId.next()).thenReturn(true).thenReturn(false);
         Mockito.when(resForSearchId.getString(Mockito.anyString())).thenReturn("refresh_token");
@@ -357,7 +357,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void readRefreshToken_noteExists() throws Exception {
+    void readRefreshToken_noteExists() throws Exception {
         when(this.statForSearchId.executeQuery()).thenReturn(resForSearchId);
         Mockito.when(resForSearchId.next()).thenReturn(false);
         OAuth2RefreshToken refreshToken = this.tokenDAO.readRefreshToken("refresh_token");
@@ -369,7 +369,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failReadRefreshToken() throws Exception {
+    void failReadRefreshToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         try {
             when(this.statForSearchId.executeQuery()).thenReturn(resForSearchId);
@@ -388,7 +388,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void readAuthenticationForRefreshToken() throws Exception {
+    void readAuthenticationForRefreshToken() throws Exception {
         when(this.stat.executeQuery()).thenReturn(res);
         Mockito.when(res.next()).thenReturn(true).thenReturn(false);
         Mockito.when(res.getString("localuser")).thenReturn("username");
@@ -408,7 +408,7 @@ public class OAuth2TokenDAOTest {
     }
 
     @Test
-    public void failReadAuthenticationForRefreshToken() throws Exception {
+    void failReadAuthenticationForRefreshToken() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
         OAuth2RefreshToken refreshToken = new DefaultOAuth2RefreshToken("value_X2");
         try {

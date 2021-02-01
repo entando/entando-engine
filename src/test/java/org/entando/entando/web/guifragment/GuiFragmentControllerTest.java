@@ -69,7 +69,7 @@ public class GuiFragmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_load_the_list_of_fragments() throws Exception {
+    void should_load_the_list_of_fragments() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.guiFragmentService.getGuiFragments(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
@@ -87,7 +87,7 @@ public class GuiFragmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_load_the_list_of_fragments_2() throws Exception {
+    void should_load_the_list_of_fragments_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(this.guiFragmentService.getGuiFragments(any(RestListRequest.class))).thenReturn(new PagedMetadata<>());
@@ -107,7 +107,7 @@ public class GuiFragmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_be_unauthorized() throws Exception {
+    void should_be_unauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -119,7 +119,7 @@ public class GuiFragmentControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_validate_put_path_mismatch() throws EntException, Exception {
+    void should_validate_put_path_mismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ObjectMapper mapper = new ObjectMapper();

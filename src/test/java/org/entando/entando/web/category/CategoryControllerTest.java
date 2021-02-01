@@ -61,7 +61,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetTreeOk() throws Exception {
+    void testGetTreeOk() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageCategories", Permission.MANAGE_CATEGORIES)
                 .build();
@@ -79,7 +79,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetCategory() throws Exception {
+    void testGetCategory() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageCategories", Permission.ENTER_BACKEND)
                 .build();

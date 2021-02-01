@@ -40,13 +40,13 @@ import org.junit.jupiter.api.Test;
 public class TestGroupManager extends BaseTestCase {
 
     @Test
-    public void testGetGroups() {
+    void testGetGroups() {
         List<Group> groups = groupManager.getGroups();
         assertTrue(groups.size() >= 6);
     }
 
     @Test
-    public void testAddDeleteGroup() throws Throwable {
+    void testAddDeleteGroup() throws Throwable {
         int initSize = groupManager.getGroups().size();
         String groupCode = "Gruppo_Prova";
         Group group = new Group();
@@ -70,7 +70,7 @@ public class TestGroupManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateGroup() throws Throwable {
+    void testUpdateGroup() throws Throwable {
         int initSize = groupManager.getGroups().size();
         Group group = new Group();
         String groupCode = "Gruppo_Prova";
@@ -102,7 +102,7 @@ public class TestGroupManager extends BaseTestCase {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void test_search_should_return_all_results() throws EntException {
+    void test_search_should_return_all_results() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = null;
         SearcherDaoPaginatedResult<Group> result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(6));
@@ -116,7 +116,7 @@ public class TestGroupManager extends BaseTestCase {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void test_search_by_filter() throws EntException {
+    void test_search_by_filter() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = new FieldSearchFilter[0];
 
         FieldSearchFilter groupNameFilter = new FieldSearchFilter<>("groupname", "s", true, LikeOptionType.COMPLETE);

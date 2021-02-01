@@ -19,7 +19,7 @@ public class PageTokenManagerTest {
     ConfigInterface mockedConfigManager;
 
     @Test
-    public void testTokenEncryptDecrypt() throws Exception {
+    void testTokenEncryptDecrypt() throws Exception {
         PageTokenManager pageTokenManager = new PageTokenManager();
         Mockito.doReturn("ZDQdIPZ0XOc8izJJCiIv").when(mockedConfigManager).getParam("page_preview_hash");
         pageTokenManager.setConfigManager(mockedConfigManager);
@@ -37,7 +37,7 @@ public class PageTokenManagerTest {
     SecureRandom secureRandomMock2;
 
     @Test
-    public void testMkRandomString() {
+    void testMkRandomString() {
         Assertions.assertEquals(33, PageTokenManager.mkRandomString(33).length());
         Mockito.doReturn(0).when(secureRandomMock1).nextInt(Mockito.anyInt());
         Assertions.assertEquals("AAAAAAAAAAAAAAA", PageTokenManager.mkRandomString(secureRandomMock1, 15));

@@ -52,7 +52,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void getConsumer() throws Exception {
+    void getConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_1", "secret", false);
         when(this.consumerDAO.getConsumer(Mockito.anyString())).thenReturn(record);
         ConsumerRecordVO extracted = this.consumerManager.getConsumerRecord("key");
@@ -61,7 +61,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void failGetConsumer() throws Exception {
+    void failGetConsumer() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).getConsumer(Mockito.anyString());
             try {
@@ -75,14 +75,14 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void addConsumer() throws Exception {
+    void addConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_1", "secret", false);
         this.consumerManager.addConsumer(record);
         Mockito.verify(consumerDAO, Mockito.times(1)).addConsumer(Mockito.any(ConsumerRecordVO.class));
     }
 
     @Test
-    public void failAddConsumer() throws Exception {
+    void failAddConsumer() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             ConsumerRecordVO record = this.createMockConsumer("key_2", "secret", false);
             Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).addConsumer(record);
@@ -97,14 +97,14 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void updateConsumer() throws Exception {
+    void updateConsumer() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_1", "secret", false);
         this.consumerManager.updateConsumer(record);
         Mockito.verify(consumerDAO, Mockito.times(1)).updateConsumer(Mockito.any(ConsumerRecordVO.class));
     }
 
     @Test
-    public void failUpdateConsumer() throws Exception {
+    void failUpdateConsumer() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             ConsumerRecordVO record = this.createMockConsumer("key_2", "secret", false);
             Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).updateConsumer(record);
@@ -119,13 +119,13 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void deleteConsumer() throws Exception {
+    void deleteConsumer() throws Exception {
         this.consumerManager.deleteConsumer("key_test_1");
         Mockito.verify(consumerDAO, Mockito.times(1)).deleteConsumer(Mockito.anyString());
     }
 
     @Test
-    public void failDeleteConsumer() throws Exception {
+    void failDeleteConsumer() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).deleteConsumer(Mockito.anyString());
             try {
@@ -139,7 +139,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void getConsumerKeys() throws Exception {
+    void getConsumerKeys() throws Exception {
         List<String> mockKeys = new ArrayList<>();
         mockKeys.add("key_1");
         when(this.consumerDAO.getConsumerKeys(Mockito.any(FieldSearchFilter[].class))).thenReturn(mockKeys);
@@ -150,7 +150,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void failGetConsumerKeys_2() throws Exception {
+    void failGetConsumerKeys_2() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             Mockito.doThrow(RuntimeException.class).when(this.consumerDAO).getConsumerKeys(Mockito.any(FieldSearchFilter[].class));
             try {
@@ -164,7 +164,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void loadClient() throws Exception {
+    void loadClient() throws Exception {
         ConsumerRecordVO record = this.createMockConsumer("key_1", "secret", false);
         when(this.consumerDAO.getConsumer(Mockito.anyString())).thenReturn(record);
         ClientDetails extracted = this.consumerManager.loadClientByClientId("key_1");
@@ -173,7 +173,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void loadClientNotFound() throws Exception {
+    void loadClientNotFound() throws Exception {
         Assertions.assertThrows(ClientRegistrationException.class, () -> {
             ConsumerRecordVO record = this.createMockConsumer("key_1", "secret", true);
             when(this.consumerDAO.getConsumer(Mockito.anyString())).thenReturn(record);
@@ -188,7 +188,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void loadClientNotFound_2() throws Exception {
+    void loadClientNotFound_2() throws Exception {
         Assertions.assertThrows(ClientRegistrationException.class, () -> {
             when(this.consumerDAO.getConsumer(Mockito.anyString())).thenReturn(null);
             try {
@@ -202,7 +202,7 @@ public class OAuthConsumerManagerTest {
     }
 
     @Test
-    public void loadClientNotFound_3() throws Exception {
+    void loadClientNotFound_3() throws Exception {
         Assertions.assertThrows(ClientRegistrationException.class, () -> {
             when(this.consumerDAO.getConsumer(Mockito.anyString())).thenThrow(RuntimeException.class);
             try {

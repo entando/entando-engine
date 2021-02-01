@@ -45,7 +45,7 @@ public class DefaultTextEncryptorTest {
     private DefaultTextEncryptor encryptor;
 
     @Test
-    public void testEncryptAndDecrypt() throws Exception {
+    void testEncryptAndDecrypt() throws Exception {
 
         String secret = "my secret";
 

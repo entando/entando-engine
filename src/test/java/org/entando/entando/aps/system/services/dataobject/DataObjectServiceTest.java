@@ -53,7 +53,7 @@ public class DataObjectServiceTest {
     }
 
     @Test
-    public void deleteReferencedDataType() throws Throwable {
+    void deleteReferencedDataType() throws Throwable {
         when(this.dataObjectManager.getName()).thenReturn(SystemConstants.DATA_OBJECT_MANAGER);
         DataObject dataObject = new DataObject();
         dataObject.setTypeCode("ABC");

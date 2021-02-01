@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class GenericResourceUtilsTest {
 
     @Test
-    public void testIsResourceLinkableByContent() {
+    void testIsResourceLinkableByContent() {
         int d0 = -1, d1 = -1, d2 = -1, d3 = -1;
         int e0 = TD.GROUPS.length, e1 = TD.GROUPS[1].length, e2 = TD.GROUPS[2].length, e3 = TD.GROUPS[3].length;
 

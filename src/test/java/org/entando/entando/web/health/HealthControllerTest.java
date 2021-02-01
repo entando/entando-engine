@@ -29,7 +29,7 @@ public class HealthControllerTest {
     }
 
     @Test
-    public void isHealthyWithWorkingSystemShouldReturnStatus200() {
+    void isHealthyWithWorkingSystemShouldReturnStatus200() {
 
         when(healthService.isHealthy()).thenReturn(true);
 
@@ -37,7 +37,7 @@ public class HealthControllerTest {
     }
 
     @Test
-    public void isHealthyWithNotWorkingSystemShouldReturnStatus500() {
+    void isHealthyWithNotWorkingSystemShouldReturnStatus500() {
 
         when(healthService.isHealthy()).thenReturn(false);
 

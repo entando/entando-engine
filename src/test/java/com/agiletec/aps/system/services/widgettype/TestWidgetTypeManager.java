@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 public class TestWidgetTypeManager extends BaseTestCase {
 
     @Test
-    public void testGetWidgetTypes() throws EntException {
+    void testGetWidgetTypes() throws EntException {
         List<WidgetType> list = _widgetTypeManager.getWidgetTypes();
         Iterator<WidgetType> iter = list.iterator();
         Map<String, String> widgetTypes = new HashMap<>();
@@ -63,7 +63,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetWidgetType_1() throws EntException {
+    void testGetWidgetType_1() throws EntException {
         WidgetType widgetType = _widgetTypeManager.getWidgetType("leftmenu");
         assertEquals("leftmenu", widgetType.getCode());
         assertEquals("Menu di navigazione verticale", widgetType.getTitles().get("it"));
@@ -87,7 +87,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetWidgetType_2() throws EntException {
+    void testGetWidgetType_2() throws EntException {
         WidgetType widgetType = _widgetTypeManager.getWidgetType("entando_apis");
         assertEquals("entando_apis", widgetType.getCode());
         assertEquals("APIs", widgetType.getTitles().get("it"));
@@ -104,7 +104,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testFailureDeleteWidgetType_1() throws Throwable {
+    void testFailureDeleteWidgetType_1() throws Throwable {
         String widgetTypeCode = "formAction";
         assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -116,7 +116,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testFailureDeleteWidgetType_2() throws Throwable {
+    void testFailureDeleteWidgetType_2() throws Throwable {
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -138,7 +138,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testAddDeleteWidgetType() throws Throwable {
+    void testAddDeleteWidgetType() throws Throwable {
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -157,7 +157,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateTitles() throws Throwable {
+    void testUpdateTitles() throws Throwable {
         String widgetTypeCode = "test_widgetType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -187,7 +187,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdate() throws Throwable {
+    void testUpdate() throws Throwable {
         String widgetTypeCode = "test_showletType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -222,7 +222,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateWithoutWidgetCategory() throws Throwable {
+    void testUpdateWithoutWidgetCategory() throws Throwable {
         String widgetTypeCode = "test_showletType";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
@@ -258,7 +258,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateReadOnlyPageConfigLockedWidget() throws Throwable {
+    void testUpdateReadOnlyPageConfigLockedWidget() throws Throwable {
         String widgetTypeCode = "entando_apis";
         WidgetType widgetType = _widgetTypeManager.getWidgetType(widgetTypeCode);
         try {

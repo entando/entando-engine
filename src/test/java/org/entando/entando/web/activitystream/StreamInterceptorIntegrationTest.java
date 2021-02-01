@@ -57,7 +57,7 @@ public class StreamInterceptorIntegrationTest extends AbstractControllerIntegrat
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testAddPublishUnpublishDelete() throws Exception {
+    void testAddPublishUnpublishDelete() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String code = "testAddDelete";

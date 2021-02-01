@@ -71,7 +71,7 @@ public class UserProfileTypeServiceTest {
     }
 
     @Test
-    public void testGetShortUserProfileTypesDefaultSort() {
+    void testGetShortUserProfileTypesDefaultSort() {
         RestListRequest requestList = new RestListRequest();
         PagedMetadata<EntityTypeShortDto> pagedMetadata = userProfileTypeService.getShortUserProfileTypes(requestList);
         List<EntityTypeShortDto> list = pagedMetadata.getBody();
@@ -85,7 +85,7 @@ public class UserProfileTypeServiceTest {
      * Sorting must be case insensitive.
      */
     @Test
-    public void testGetShortUserProfileTypesSortByName() {
+    void testGetShortUserProfileTypesSortByName() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("name");
 

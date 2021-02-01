@@ -31,7 +31,7 @@ public class TestURLManager extends BaseTestCase {
     private IURLManager urlManager = null;
 
     @Test
-    public void testGetURLString_1() throws Throwable {
+    void testGetURLString_1() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("it");
@@ -50,7 +50,7 @@ public class TestURLManager extends BaseTestCase {
     }
 
     @Test
-    public void testGetURLString_2() throws Throwable {
+    void testGetURLString_2() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");

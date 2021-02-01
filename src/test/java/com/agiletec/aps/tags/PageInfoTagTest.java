@@ -46,7 +46,7 @@ public class PageInfoTagTest {
     private static final String TEST_URL_5_EXPECTED = "javascript:&lt;script&gt;something bad&lt;/script&gt;";
 
     @Test
-    public void testSantitizationOfUrisAsHtmlContent() {
+    void testSantitizationOfUrisAsHtmlContent() {
         assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_1),
                 equalTo(TEST_URL_1_EXPECTED)

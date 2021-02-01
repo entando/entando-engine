@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class DatabaseControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
-    public void testReports_1() throws Exception {
+    void testReports_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -41,7 +41,7 @@ public class DatabaseControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testReports_2() throws Exception {
+    void testReports_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -52,7 +52,7 @@ public class DatabaseControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testInitBackup() throws Exception {
+    void testInitBackup() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -61,7 +61,7 @@ public class DatabaseControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetReport() throws Exception {
+    void testGetReport() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -72,7 +72,7 @@ public class DatabaseControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteReport() throws Exception {
+    void testDeleteReport() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -82,7 +82,7 @@ public class DatabaseControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetStatus() throws Exception {
+    void testGetStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc

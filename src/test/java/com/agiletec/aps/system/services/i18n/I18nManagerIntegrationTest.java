@@ -42,7 +42,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testRenderLabel() throws Throwable {
+    void testRenderLabel() throws Throwable {
         assertEquals("titolo pagina", this.i18nManager.renderLabel("PAGE_TITLE", "it", false));
         assertEquals("page title", this.i18nManager.renderLabel("PAGE_TITLE", "en", false));
 
@@ -53,7 +53,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testRenderLabelWithParams() throws Throwable {
+    void testRenderLabelWithParams() throws Throwable {
         assertEquals("titolo pagina", this.i18nManager.renderLabel("PAGE_TITLE", "it", false, null));
 
         Map<String, String> params = new HashMap<String, String>();
@@ -67,7 +67,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetLabelGroup() throws Throwable {
+    void testGetLabelGroup() throws Throwable {
         ApsProperties labelsProp = this.i18nManager.getLabelGroup("PAGE_TITLE");
         assertNotNull(labelsProp);
         assertEquals(2, labelsProp.size());
@@ -85,7 +85,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetLabels() throws Throwable {
+    void testGetLabels() throws Throwable {
         String label = this.i18nManager.getLabel("PAGE_TITLE", "it");
         assertNotNull(label);
         assertEquals("titolo pagina", label);
@@ -94,7 +94,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddDeleteLabels() throws Throwable {
+    void testAddDeleteLabels() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = new ApsProperties();
         labels.put("it", "Testo Italiano");
@@ -115,7 +115,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateLabels() throws Throwable {
+    void testUpdateLabels() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = new ApsProperties();
         labels.put("it", "Testo Italiano");
@@ -141,7 +141,7 @@ public class I18nManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetLabelsKey() throws Throwable {
+    void testGetLabelsKey() throws Throwable {
         assertEquals(10, this.i18nManager.getLabelGroups().size());
         assertEquals(0, this.i18nManager.searchLabelsKey("*", false, false, null).size());
         assertEquals(10, this.i18nManager.searchLabelsKey("", false, false, null).size());

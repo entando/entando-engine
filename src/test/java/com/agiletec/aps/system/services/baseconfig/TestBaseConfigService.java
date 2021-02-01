@@ -37,7 +37,7 @@ public class TestBaseConfigService extends BaseTestCase {
     }
 
     @Test
-    public void testGetParam() throws EntException {
+    void testGetParam() throws EntException {
         String param = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", param);
         param = this.configInterface.getParam(SystemConstants.PAR_CSP_ENABLED);
@@ -45,7 +45,7 @@ public class TestBaseConfigService extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateParam_1() throws EntException {
+    void testUpdateParam_1() throws EntException {
         String value = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", value);
         this.configInterface.updateParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "newValue");
@@ -57,7 +57,7 @@ public class TestBaseConfigService extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateParam_2() throws EntException {
+    void testUpdateParam_2() throws EntException {
         String paramName = "wrongParamName";
         String value = this.configInterface.getParam(paramName);
         assertNull(value);
@@ -67,7 +67,7 @@ public class TestBaseConfigService extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateParams() throws EntException {
+    void testUpdateParams() throws EntException {
         String paramName1 = SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
         String paramName2 = "wrongParamName";
         try {

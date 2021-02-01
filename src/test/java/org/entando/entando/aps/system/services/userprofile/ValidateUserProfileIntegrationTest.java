@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 
 	@Test
-    public void testValidate_1() throws Throwable {
+    void testValidate_1() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getDefaultProfileType();
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
@@ -69,7 +69,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 	}
 
 	@Test
-    public void testValidate_2() throws Throwable {
+    void testValidate_2() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getProfileType("OTH");
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
@@ -108,7 +108,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 	}
     
 	@Test
-    public void testValidate_3() throws Throwable {
+    void testValidate_3() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getProfileType("ALL");
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);

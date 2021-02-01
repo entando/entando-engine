@@ -43,7 +43,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetManagers() {
+    void testGetManagers() {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(5);
         PagedMetadata<String> res = this.entityManagerService.getEntityManagers(restListRequest);
@@ -57,7 +57,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetManager_1() {
+    void testGetManager_1() {
         EntityManagerDto dto = this.entityManagerService.getEntityManager(SystemConstants.USER_PROFILE_MANAGER);
         assertNotNull(dto);
         assertEquals(SystemConstants.USER_PROFILE_MANAGER, dto.getCode());
@@ -68,7 +68,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetNotExistingManager() throws ResourceNotFoundException {
+    void testGetNotExistingManager() throws ResourceNotFoundException {
         try {
             this.entityManagerService.getEntityManager("customManagerName");
             fail();
@@ -78,7 +78,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetEntityTypes_1() {
+    void testGetEntityTypes_1() {
         RestListRequest restListRequest = new RestListRequest();
         PagedMetadata<EntityTypeShortDto> dtos = this.entityManagerService.getShortEntityTypes(SystemConstants.USER_PROFILE_MANAGER, restListRequest);
         assertNotNull(dtos);

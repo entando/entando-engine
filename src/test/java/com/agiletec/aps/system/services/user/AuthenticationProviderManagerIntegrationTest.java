@@ -59,7 +59,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     private IAuthorizationManager authorizationManager;
 
     @Test
-    public void testGetUser() throws Throwable {
+    void testGetUser() throws Throwable {
         UserDetails adminUser = this.authenticationProvider.getUser("admin", "admin");//nel database di test, username e password sono uguali
         assertNotNull(adminUser);
         assertEquals("admin", adminUser.getUsername());
@@ -73,7 +73,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateUserAuthorities() throws Throwable {
+    void testUpdateUserAuthorities() throws Throwable {
         String username = "UserForTest2";
         String password = "PasswordForTest2";
         this.addUserForTest(username, password);
@@ -99,7 +99,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetUserWithPrivacyModuleEnabled() throws Throwable {
+    void testGetUserWithPrivacyModuleEnabled() throws Throwable {
         String username = "MEMisUserExpired";
         String password = "123456";
 
@@ -143,7 +143,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAuthWithPrivacyModuleEnabled() throws Throwable {
+    void testAuthWithPrivacyModuleEnabled() throws Throwable {
         String username = "MEMhasAuthExpired";
         String password = "123456";
         String newPassword = "EequalsMsquareC";
@@ -190,7 +190,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateRoleWithPrivacyModuleEnabled() throws Throwable {
+    void testUpdateRoleWithPrivacyModuleEnabled() throws Throwable {
         String username = "MEMisToUpdateRole";
         String password = "123456";
         this.addUserForTest(username, password);
@@ -222,7 +222,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAuthentication() throws Exception {
+    void testAuthentication() throws Exception {
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "admin");
         try {
             Authentication auth = ((AuthenticationManager) this.authenticationProvider).authenticate(authTest);
@@ -236,7 +236,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testFailedAuthentication() throws Exception {
+    void testFailedAuthentication() throws Exception {
         TestingAuthenticationToken authTest = new TestingAuthenticationToken("admin", "wrong");
         this.testFailedAuthentication(authTest, UsernameNotFoundException.class);
         authTest = new TestingAuthenticationToken("admin", "");
@@ -255,7 +255,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testLoadUserByUsername() throws Exception {
+    void testLoadUserByUsername() throws Exception {
         try {
             org.springframework.security.core.userdetails.UserDetails userDetails
                     = this.authenticationProvider.loadUserByUsername("admin");
@@ -268,7 +268,7 @@ public class AuthenticationProviderManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testFailedLoadUserByUsername() throws Exception {
+    void testFailedLoadUserByUsername() throws Exception {
         try {
             org.springframework.security.core.userdetails.UserDetails userDetails
                     = this.authenticationProvider.loadUserByUsername("wrong_username");

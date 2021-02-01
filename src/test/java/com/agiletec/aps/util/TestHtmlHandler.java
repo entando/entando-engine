@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 public class TestHtmlHandler  {
 	
     @Test
-    public void testGetParsedText() {
+    void testGetParsedText() {
         String textToParse = "<title> This is the<b>first</b></title><body><b>this is</b>the next</body>";
         HtmlHandler htmlHandler = new HtmlHandler();
         String resultText = htmlHandler.getParsedText(textToParse);

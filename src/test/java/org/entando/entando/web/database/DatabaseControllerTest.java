@@ -76,7 +76,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReports() throws Exception {
+    void getReports() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get("/database")
@@ -85,7 +85,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReport_1() throws Exception {
+    void getReport_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
@@ -99,7 +99,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReport_2() throws Exception {
+    void getReport_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
@@ -110,7 +110,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startBackup() throws Exception {
+    void startBackup() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
@@ -124,7 +124,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startRestore_1() throws Exception {
+    void startRestore_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
@@ -139,7 +139,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startRestore_2() throws Exception {
+    void startRestore_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
@@ -152,7 +152,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void deleteReport() throws Exception {
+    void deleteReport() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;

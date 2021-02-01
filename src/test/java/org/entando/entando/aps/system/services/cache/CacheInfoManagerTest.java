@@ -70,7 +70,7 @@ public class CacheInfoManagerTest {
 	}
 	
     @Test
-    public void testAroundCacheableMethod() throws Throwable {
+    void testAroundCacheableMethod() throws Throwable {
         CacheableInfo cacheableInfo = new CacheableInfo() {
             @Override
             public int expiresInMinute() {
@@ -96,7 +96,7 @@ public class CacheInfoManagerTest {
     }
 	
     @Test
-    public void testAroundCacheInfoEvictMethod() throws Throwable {
+    void testAroundCacheInfoEvictMethod() throws Throwable {
         CacheInfoEvict cacheInfoEvict = new CacheInfoEvict() {
             @Override
             public String[] value() {
@@ -118,7 +118,7 @@ public class CacheInfoManagerTest {
     }
 	
     @Test
-    public void setExpirationTimeInMinutes() {
+    void setExpirationTimeInMinutes() {
 		String targetCache = "targetCacheName1";
 		String cacheKey = "testkey1";
 		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
@@ -128,7 +128,7 @@ public class CacheInfoManagerTest {
     }
 	
     @Test
-    public void setExpirationTimeInSeconds() throws Throwable {
+    void setExpirationTimeInSeconds() throws Throwable {
 		String targetCache = "targetCacheName2";
 		String cacheKey = "testkey2";
 		cacheInfoManager.putInCache(targetCache, cacheKey, "Some other value");
@@ -143,7 +143,7 @@ public class CacheInfoManagerTest {
     }
 	
     @Test
-    public void updateFromPageChanged() {
+    void updateFromPageChanged() {
 		PageChangedEvent event = new PageChangedEvent();
 		Page page = new Page();
 		page.setCode("code");
@@ -159,7 +159,7 @@ public class CacheInfoManagerTest {
     }
 	
 	@Test
-    public void destroy() {
+    void destroy() {
 		cacheInfoManager.destroy();
 		Mockito.verify(cacheManager, Mockito.times(0)).getCacheNames();
 		Mockito.verify(cacheManager, Mockito.times(4)).getCache(Mockito.anyString());
@@ -167,7 +167,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void flushAll() {
+    void flushAll() {
 		cacheInfoManager.flushAll();
 		Mockito.verify(cacheManager, Mockito.times(1)).getCacheNames();
 		Mockito.verify(cacheManager, Mockito.times(0)).getCache(Mockito.anyString());
@@ -175,7 +175,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void flushAllWithCaches() {
+    void flushAllWithCaches() {
 		List<String> cacheNames = new ArrayList<>();
 		cacheNames.add("cache1");
 		cacheNames.add("cache2");
@@ -187,7 +187,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void flushEntry() {
+    void flushEntry() {
 		String targetCache = "targetCacheName3";
 		String cacheKey = "testkey3";
 		cacheInfoManager.flushEntry(targetCache, cacheKey);
@@ -196,7 +196,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void putInCache() {
+    void putInCache() {
 		String targetCache = "targetCacheName3";
 		String cacheKey = "testkey3";
 		cacheInfoManager.putInCache(targetCache, cacheKey, "Some value");
@@ -205,7 +205,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void putInCacheWithGroups() {
+    void putInCacheWithGroups() {
 		String targetCache = "targetCacheName3";
 		String cacheKey = "testkey3";
 		String[] groups = new String[]{"group_1", "group_2"};
@@ -216,7 +216,7 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void putInGroup() {
+    void putInGroup() {
 		String targetCache = "targetCacheName4";
 		String cacheKey = "testkey4";
 		String[] groups = new String[]{"group_1", "group_2"};
@@ -227,12 +227,12 @@ public class CacheInfoManagerTest {
 	}
 	
 	@Test
-    public void flushGroup_1() {
+    void flushGroup_1() {
 		this.flushGroup("group_1", 3);
 	}
 	
 	@Test
-    public void flushGroup_2() {
+    void flushGroup_2() {
 		this.flushGroup("group_2", 4);
 	}
 	

@@ -56,7 +56,7 @@ public class UserSettingsControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateSettingsWithEmptyParams() throws Throwable {
+    void testUpdateSettingsWithEmptyParams() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -72,7 +72,7 @@ public class UserSettingsControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateSettingsWithInvalidParams() throws Throwable {
+    void testUpdateSettingsWithInvalidParams() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

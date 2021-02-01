@@ -26,14 +26,14 @@ import org.junit.jupiter.api.Test;
 public class UserManagerIntegrationTest extends BaseTestCase {
 
     @Test
-    public void testGetUsers() throws Throwable {
+    void testGetUsers() throws Throwable {
         IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         List<UserDetails> users = userManager.getUsers();
         assertTrue(users.size() >= 8);
     }
 
     @Test
-    public void testAdminUserPasswordIsBCrypt() throws Throwable {
+    void testAdminUserPasswordIsBCrypt() throws Throwable {
         IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         UserDetails admin = this.getUser("admin");
         assertNotNull(admin);
@@ -41,7 +41,7 @@ public class UserManagerIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAllUsersPasswordsIsArgon2() throws Throwable {
+    void testAllUsersPasswordsIsArgon2() throws Throwable {
         IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
         for (UserDetails user : userManager.getUsers()) {
             assertTrue(CompatiblePasswordEncoder.isBCrypt(user.getPassword()));

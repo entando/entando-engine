@@ -58,7 +58,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void getTreeWithInvalidParent() {
+    void getTreeWithInvalidParent() {
         when(categoryManager.getCategory(ArgumentMatchers.anyString())).thenReturn(null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             this.categoryService.getTree("some_code");
@@ -66,7 +66,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void getInvalidCategory() {
+    void getInvalidCategory() {
         when(categoryManager.getCategory(ArgumentMatchers.anyString())).thenReturn(null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             this.categoryService.getTree("some_code");
@@ -74,7 +74,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void addExistingCategoryShouldReturnTheReceivedCategory() throws EntException {
+    void addExistingCategoryShouldReturnTheReceivedCategory() throws EntException {
         Category existingCategory = CategoryTestHelper.stubTestCategory();
         CategoryDto expectedDto = CategoryTestHelper.stubTestCategoryDto();
         when(categoryManager.getCategory(anyString())).thenReturn(existingCategory);
@@ -86,7 +86,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
+    void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
         Category existingCategory = CategoryTestHelper.stubTestCategory();
         CategoryDto expectedDto = CategoryTestHelper.stubTestCategoryDto();
 

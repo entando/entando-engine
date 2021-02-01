@@ -77,7 +77,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void addPageModelCallsPageModelManager() throws Exception {
+    void addPageModelCallsPageModelManager() throws Exception {
         WidgetType mockType = Mockito.mock(WidgetType.class);
         when(mockType.hasParameter(Mockito.anyString())).thenReturn(true);
         when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(mockType);
@@ -92,7 +92,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void get_page_models_returns_page_models() throws EntException {
+    void get_page_models_returns_page_models() throws EntException {
         when(pageModelManager.searchPageModels(any())).thenReturn(pageModels());
         PagedMetadata<PageModelDto> result = pageModelService.getPageModels(EMPTY_REQUEST, null);
         PagedMetadata<PageModelDto> expected = resultPagedMetadata();
@@ -100,14 +100,14 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void getPageModelUsageForNonExistingCodeShouldReturnZero() {
+    void getPageModelUsageForNonExistingCodeShouldReturnZero() {
 
         int componentUsage = pageModelService.getComponentUsage("non_existing");
         assertEquals(0, componentUsage);
     }
 
     @Test
-    public void getPageModelUsageTest() {
+    void getPageModelUsageTest() {
         String managerName = "PageManager";
         PageModel pageModel = PageMockHelper.mockServicePageModel();
         PageDto pageDto = PageMockHelper.mockPageDto();
@@ -131,7 +131,7 @@ public class PageModelServiceTest {
 
 
     @Test
-    public void shouldCreateTheRightPageModel() {
+    void shouldCreateTheRightPageModel() {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
@@ -149,7 +149,7 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void shouldUpdatePageModel() throws Exception {
+    void shouldUpdatePageModel() throws Exception {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
@@ -170,7 +170,7 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void shouldNotChangeTemplateWithNonce() throws Exception {
+    void shouldNotChangeTemplateWithNonce() throws Exception {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 

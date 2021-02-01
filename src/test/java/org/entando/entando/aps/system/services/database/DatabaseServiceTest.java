@@ -48,7 +48,7 @@ public class DatabaseServiceTest {
     }
 
     @Test
-    public void getInvalidReport() throws Throwable {
+    void getInvalidReport() throws Throwable {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             this.databaseService.getDumpReportDto("reportCode");
@@ -56,7 +56,7 @@ public class DatabaseServiceTest {
     }
 
     @Test
-    public void getValidReport() throws Throwable {
+    void getValidReport() throws Throwable {
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
@@ -65,7 +65,7 @@ public class DatabaseServiceTest {
     }
 
     @Test
-    public void getValidTableDump() throws Throwable {
+    void getValidTableDump() throws Throwable {
         ByteArrayInputStream is = new ByteArrayInputStream("dump".getBytes());
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(is);
         byte[] base64 = this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
@@ -73,7 +73,7 @@ public class DatabaseServiceTest {
     }
 
     @Test
-    public void getInValidTableDump_1() throws Throwable {
+    void getInValidTableDump_1() throws Throwable {
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
@@ -81,7 +81,7 @@ public class DatabaseServiceTest {
     }
 
     @Test
-    public void getInValidTableDump_2() throws Throwable {
+    void getInValidTableDump_2() throws Throwable {
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenThrow(new EntException("Error"));
         Assertions.assertThrows(RestServerError.class, () -> {

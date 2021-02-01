@@ -44,7 +44,7 @@ public class HealthDAOTest {
     }
     
     @Test
-    public void isServDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
+    void isServDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
 
@@ -52,33 +52,33 @@ public class HealthDAOTest {
     }
 
     @Test
-    public void isServDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
+    void isServDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
         assertFalse(healthDAO.isServDBConnectionHealthy());
     }
 
     @Test
-    public void isServDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
+    void isServDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
         when(servDataSource.getConnection()).thenThrow(new SQLException());
         assertFalse(healthDAO.isServDBConnectionHealthy());
     }
 
     @Test
-    public void isPortDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
+    void isPortDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
         assertTrue(healthDAO.isPortDBConnectionHealthy());
     }
 
     @Test
-    public void isPortDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
+    void isPortDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
         when(portDataSource.getConnection()).thenThrow(new SQLException());
         assertFalse(healthDAO.isPortDBConnectionHealthy());
     }
 
     @Test
-    public void isPortDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
+    void isPortDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
         assertFalse(healthDAO.isPortDBConnectionHealthy());

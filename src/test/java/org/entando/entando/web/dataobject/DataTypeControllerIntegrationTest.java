@@ -59,7 +59,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     private DataTypeController controller;
 
     @Test
-    public void testGetDataTypes() throws Exception {
+    void testGetDataTypes() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -69,12 +69,12 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDataTypesCors() throws Exception {
+    void testDataTypesCors() throws Exception {
         super.testCors("/dataTypes", HttpMethod.GET);
     }
 
     @Test
-    public void testGetValidDataType() throws Exception {
+    void testGetValidDataType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -84,7 +84,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetInvalidDataType() throws Exception {
+    void testGetInvalidDataType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -94,7 +94,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataType_1() throws Exception {
+    void testAddUpdateDataType_1() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -127,7 +127,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataTypeDateValidationRules() throws Exception {
+    void testAddUpdateDataTypeDateValidationRules() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -182,7 +182,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateListWithNestedDateValidationRules() throws Exception {
+    void testAddUpdateListWithNestedDateValidationRules() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -222,7 +222,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testValidateTypeCode() throws Exception {
+    void testValidateTypeCode() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         try {
@@ -275,7 +275,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataType_2() throws Exception {
+    void testAddUpdateDataType_2() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -341,7 +341,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
 
     // attributes
     @Test
-    public void testGetDataTypeAttributeTypes_1() throws Exception {
+    void testGetDataTypeAttributeTypes_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -352,7 +352,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeTypes_2() throws Exception {
+    void testGetDataTypeAttributeTypes_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -368,7 +368,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeTypes_3() throws Exception {
+    void testGetDataTypeAttributeTypes_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -385,7 +385,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeType_1() throws Exception {
+    void testGetDataTypeAttributeType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -399,7 +399,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeType_2() throws Exception {
+    void testGetDataTypeAttributeType_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -413,7 +413,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
 
     // ------------------------------------
     @Test
-    public void testGetDataTypeAttribute() throws Exception {
+    void testGetDataTypeAttribute() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -455,7 +455,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddDataTypeAttribute() throws Exception {
+    void testAddDataTypeAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
@@ -504,7 +504,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testUpdateDataTypeAttribute() throws Exception {
+    void testUpdateDataTypeAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
@@ -550,7 +550,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteDataAttribute() throws Exception {
+    void testDeleteDataAttribute() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
@@ -627,7 +627,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testRefreshDataTypeType() throws Exception {
+    void testRefreshDataTypeType() throws Exception {
         String typeCode = "TST";
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
@@ -666,7 +666,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypesStatus() throws Exception {
+    void testGetDataTypesStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -683,7 +683,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testRefreshUserProfileTypes() throws Exception {
+    void testRefreshUserProfileTypes() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -708,7 +708,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testMoveAttribute() throws Exception {
+    void testMoveAttribute() throws Exception {
         try {
             Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();

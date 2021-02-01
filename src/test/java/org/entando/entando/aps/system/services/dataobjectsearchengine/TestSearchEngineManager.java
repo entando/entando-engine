@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
 public class TestSearchEngineManager extends BaseTestCase {
 
 	@Test
-    public void testSearchAllContents() throws Throwable {
+    void testSearchAllContents() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -64,7 +64,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_1() throws Throwable {
+    void testSearchContentsId_1() throws Throwable {
 		try {
 			DataObject content_1 = this.createDataObject_1();
 			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
@@ -89,7 +89,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_2() throws Throwable {
+    void testSearchContentsId_2() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -120,7 +120,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_3() throws Throwable {
+    void testSearchContentsId_3() throws Throwable {
 		try {
 			DataObject content_1 = this.createDataObject_1();
 			content_1.setMainGroup(Group.ADMINS_GROUP_NAME);
@@ -146,7 +146,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_4() throws Throwable {
+    void testSearchContentsId_4() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -172,7 +172,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_5() throws Throwable {
+    void testSearchContentsId_5() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -201,7 +201,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_6() throws Throwable {
+    void testSearchContentsId_6() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -221,7 +221,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchContentsId_7() throws Throwable {
+    void testSearchContentsId_7() throws Throwable {
 		try {
 			DataObject content_1 = this.createDataObject_1();
 			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
@@ -278,7 +278,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testFacetedAllContents() throws Throwable {
+    void testFacetedAllContents() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();
@@ -298,7 +298,7 @@ public class TestSearchEngineManager extends BaseTestCase {
 	}
 
 	@Test
-    public void testSearchFacetedContents_1() throws Throwable {
+    void testSearchFacetedContents_1() throws Throwable {
 		try {
 			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
 			thread.join();

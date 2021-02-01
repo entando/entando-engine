@@ -77,7 +77,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
         // should return DIFF for existing component
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_PAGE_TEMPLATES,
@@ -107,7 +107,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void getAllPageModelsReturnOK() throws Exception {
+    void getAllPageModelsReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels")
                         .header("Authorization", "Bearer " + accessToken));
@@ -115,7 +115,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void getPageModelReturnOK() throws Exception {
+    void getPageModelReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", "home")
                         .header("Authorization", "Bearer " + accessToken));
@@ -124,7 +124,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void getPageModelsReference1() throws Exception {
+    void getPageModelsReference1() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "home", "PageManager")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -134,7 +134,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void getPageModelsReference2() throws Exception {
+    void getPageModelsReference2() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}/references/{manager}", "service", "PageManager")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -155,7 +155,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void shouldTestGetPageModelUsage() throws Exception {
+    void shouldTestGetPageModelUsage() throws Exception {
         String code = "home";
         mockMvc.perform(get("/pageModels/{code}/usage", code)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -168,7 +168,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void addRepeatedPageModelReturnConflict() throws Exception {
+    void addRepeatedPageModelReturnConflict() throws Exception {
         // pageModel home always exists because it's created with DB.
         String payload = createPageModelPayload("home");
         ResultActions result = mockMvc.perform(
@@ -179,7 +179,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void addPageModelReturnOK() throws Exception {
+    void addPageModelReturnOK() throws Exception {
         String payload = createPageModelPayload(PAGE_MODEL_CODE);
         ResultActions result = mockMvc.perform(
                 post("/pageModels")
@@ -212,7 +212,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void getNonexistentPageModelReturnNotFound() throws Exception {
+    void getNonexistentPageModelReturnNotFound() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -221,7 +221,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void deletePageModelReturnOK() throws Exception {
+    void deletePageModelReturnOK() throws Exception {
         PageModel pageModel = new PageModel();
         pageModel.setCode(PAGE_MODEL_CODE);
         pageModel.setDescription(PAGE_MODEL_CODE);
@@ -234,7 +234,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void deletePageModelNonexistentCodeReturnOK() throws Exception {
+    void deletePageModelNonexistentCodeReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 delete("/pageModels/{code}", NONEXISTENT_PAGE_MODEL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -243,7 +243,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void addPageModelWithDotReturnOK() throws Exception {
+    void addPageModelWithDotReturnOK() throws Exception {
         try {
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
             pageModelRequest.setCode(PAGE_MODEL_WITH_DOT_CODE);
@@ -295,7 +295,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void addPageModelWithErrors() throws Exception {
+    void addPageModelWithErrors() throws Exception {
         try {
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
 
@@ -367,7 +367,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
 
 
     @Test
-    public void addPageModelWithoutConfigurationReturnBadRequest() throws Exception {
+    void addPageModelWithoutConfigurationReturnBadRequest() throws Exception {
         try {
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
             pageModelRequest.setConfiguration(null);
@@ -389,7 +389,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
         }
     }
     @Test
-    public void updatePageModelWithErrors() throws Exception {
+    void updatePageModelWithErrors() throws Exception {
         try {
 
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
@@ -468,7 +468,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testGetPageModelWithAdminPermission() throws Exception {
+    void testGetPageModelWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", "home")
@@ -477,7 +477,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testGetPageModelWithoutPermission() throws Exception {
+    void testGetPageModelWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         ResultActions result = mockMvc.perform(
                 get("/pageModels/{code}", "home")
@@ -486,7 +486,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testGetPageModelWithManagePagesPermission() throws Exception {
+    void testGetPageModelWithManagePagesPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_PAGES).build();
         ResultActions result = mockMvc.perform(
@@ -496,7 +496,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testPostPageTemplateValidations() throws Exception {
+    void testPostPageTemplateValidations() throws Exception {
         try {
             // x1 with negative value
             ResultActions result = mockMvc.perform(
@@ -587,7 +587,7 @@ public class PageModelControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testPutPageTemplateValidations() throws Exception {
+    void testPutPageTemplateValidations() throws Exception {
         try {
             final String PUT_PAGE_TEMPLATE_CODE = "test-template";
             ResultActions result = mockMvc.perform(

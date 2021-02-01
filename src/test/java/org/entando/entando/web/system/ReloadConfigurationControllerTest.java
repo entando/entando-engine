@@ -32,7 +32,7 @@ public class ReloadConfigurationControllerTest extends AbstractControllerIntegra
     private ReloadConfigurationController controller;
 
     @Test
-    public void should_execute_reload_and_have_headers() throws Exception {
+    void should_execute_reload_and_have_headers() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc

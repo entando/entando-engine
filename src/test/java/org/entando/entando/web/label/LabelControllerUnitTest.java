@@ -59,7 +59,7 @@ public class LabelControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateNoLanguages() throws Exception {
+    void testUpdateNoLanguages() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -77,7 +77,7 @@ public class LabelControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateEmpyLanguages() throws Exception {
+    void testUpdateEmpyLanguages() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

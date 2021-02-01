@@ -37,13 +37,13 @@ import org.junit.jupiter.api.Test;
 public class TestUserManager extends BaseTestCase {
 
     @Test
-    public void testInitialize() {
+    void testInitialize() {
         assertNotNull(this._userManager);
         assertNotNull(this._profileManager);
     }
 
     @Test
-    public void testAddDeleteUser() throws Throwable {
+    void testAddDeleteUser() throws Throwable {
         String username = "UserForTest1";
         MockUser user = this.createUserForTest(username);
         Date birthdate = this.steBirthdate(1982, 10, 25);
@@ -68,7 +68,7 @@ public class TestUserManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateUser() throws Throwable {
+    void testUpdateUser() throws Throwable {
         String username = "UserForTest2";
         Date birthdate = this.steBirthdate(1982, 10, 25);
         MockUser user = this.createUserForTest(username);

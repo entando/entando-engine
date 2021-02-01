@@ -48,7 +48,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void obtainAccessToken() throws Exception {
+    void obtainAccessToken() throws Exception {
         this.obtainAccessToken("admin", "admin", true);
         this.obtainAccessToken("mainEditor", "mainEditor", true);
         this.obtainAccessToken("supervisorCustomers", "supervisorCustomers", true);
@@ -89,7 +89,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void refreshAccessToken() throws Exception {
+    void refreshAccessToken() throws Exception {
         OAuth2AccessToken accessToken = this.obtainAccessToken("admin", "admin", false);
         this.refreshAccessToken(accessToken, "admin");
         accessToken = this.obtainAccessToken("mainEditor", "mainEditor", false);
@@ -137,7 +137,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void authenticationFailed() throws Exception {
+    void authenticationFailed() throws Exception {
         this.authenticationFailed("admin", "adminxx");
         this.authenticationFailed("admin", "");
         this.authenticationFailed("", "admin");
@@ -169,7 +169,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void invalidClient() throws Exception {
+    void invalidClient() throws Exception {
         this.invalidClient("mainEditor", "mainEditor", "test2_consumer", "secret", "password");
     }
 
@@ -196,7 +196,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void missingGrant() throws Exception {
+    void missingGrant() throws Exception {
         this.missingGrant("admin", "admin", "test1_consumer", "secret", "");
         this.missingGrant("admin", "adminxx", "test1_consumer", "secret", "");
         this.missingGrant("mainEditor", "mainEditor", "test1_consumer", "secret", "");
@@ -227,7 +227,7 @@ public class AuthorizationServerConfigurationTest extends AbstractControllerInte
     }
 
     @Test
-    public void unauthorized() throws Exception {
+    void unauthorized() throws Exception {
         this.unauthorized("admin", "admin", "test1_consumer", "secretwrong");
         this.unauthorized("admin", "admin", "", "secret");
         this.unauthorized("admin", "admin", "test1_consumer", "");

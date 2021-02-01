@@ -71,7 +71,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void should_load_the_list_of_dataModels() throws Exception {
+    void should_load_the_list_of_dataModels() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(dataObjectModelService.getDataObjectModels(any(RestListRequest.class))).thenReturn(new PagedMetadata<DataModelDto>());
@@ -89,7 +89,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void should_load_the_list_of_dataModels_2() throws Exception {
+    void should_load_the_list_of_dataModels_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(dataObjectModelService.getDataObjectModels(any(RestListRequest.class))).thenReturn(new PagedMetadata<DataModelDto>());
@@ -109,7 +109,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_be_unauthorized() throws Exception {
+    void should_be_unauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();
@@ -123,7 +123,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_validate_put_path_mismatch() throws EntException, Exception {
+    void should_validate_put_path_mismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ObjectMapper mapper = new ObjectMapper();
