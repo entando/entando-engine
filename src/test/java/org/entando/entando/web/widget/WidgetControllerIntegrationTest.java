@@ -687,8 +687,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
-            //Try to update the config of locked widget with the old value
-
+            //Try to update the config of locked widget with the same config
+/*
+            // INVALID BLOCK
+            widgetTypeCode = "entando_apis";
             final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
 
             titles = new HashMap<>();
@@ -701,8 +703,13 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             Map<String, String> configMap = (Map) config;
 
             request.setConfig(configMap);
-            this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result.andDo(resultPrint());
 
+            result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
+            result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
+            result.andExpect(jsonPath("$.payload.group", is("free")));
+*/
         } catch (Exception e) {
             throw e;
         }
