@@ -17,7 +17,6 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -363,7 +362,8 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         String parentCustomUi = "<h1>Parent Custom UI</h1>";
         String childCustomUi = "<h1>Child Custom UI</h1>";
         String childCode = "test_new_type_2";
-        Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(parentCode));
+        WidgetType oldParent = this.widgetTypeManager.getWidgetType(parentCode);
+        Assertions.assertNotNull(oldParent);
         try {
             WidgetRequest request = new WidgetRequest();
             request.setCode(parentCode);
@@ -443,7 +443,9 @@ public class WidgetControllerIntegrationTest extends AbstractControllerIntegrati
         } catch (Exception e) {
             throw e;
         } finally {
-            this.widgetTypeManager.deleteWidgetType(parentCode);
+            this.widgetTypeManager.updateWidgetType(oldParent.getCode(), 
+                    oldParent.getTitles(), oldParent.getConfig(), oldParent.getMainGroup(), oldParent.getConfigUi(), 
+                    oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory());
             this.widgetTypeManager.deleteWidgetType(childCode);
         }
     }
