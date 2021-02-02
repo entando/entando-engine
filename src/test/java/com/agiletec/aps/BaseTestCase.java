@@ -16,8 +16,6 @@ package com.agiletec.aps;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.TestCase;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,22 +36,23 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 import java.util.Set;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author W.Ambu - E.Santoboni
  */
-public class BaseTestCase extends TestCase {
-
-    @Override
-    protected void setUp() throws Exception {
+public class BaseTestCase {
+    
+    @BeforeAll
+    public static void setUp() throws Exception {
         try {
-            super.setUp();
             ServletContext srvCtx = new MockServletContext("", new FileSystemResourceLoader());
-            ApplicationContext applicationContext = this.getConfigUtils().createApplicationContext(srvCtx);
-            this.setApplicationContext(applicationContext);
+            ApplicationContext applicationContext = getConfigUtils().createApplicationContext(srvCtx);
+            setApplicationContext(applicationContext);
             RequestContext reqCtx = createRequestContext(applicationContext, srvCtx);
-            this.setRequestContext(reqCtx);
-            this.setUserOnSession("guest");
+            setRequestContext(reqCtx);
+            setUserOnSession("guest");
         } catch (Exception e) {
             throw e;
         }
@@ -78,13 +77,11 @@ public class BaseTestCase extends TestCase {
         reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, defaultLang);
         return reqCtx;
     }
-
-    @Override
-    protected void tearDown() throws Exception {
-        this.waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
-        super.tearDown();
-        //this.getConfigUtils().closeDataSources(this.getApplicationContext());
-        this.getConfigUtils().destroyContext(this.getApplicationContext());
+    
+    @AfterAll
+    public static void tearDown() throws Exception {
+        waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
+        getConfigUtils().destroyContext(getApplicationContext());
         Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
         //Iterate over set to find yours
         for (Thread thread : setOfThread) {
@@ -96,11 +93,11 @@ public class BaseTestCase extends TestCase {
         }
     }
 
-    protected void waitNotifyingThread() throws InterruptedException {
-        this.waitThreads(NotifyManager.NOTIFYING_THREAD_NAME);
+    protected static void waitNotifyingThread() throws InterruptedException {
+        waitThreads(NotifyManager.NOTIFYING_THREAD_NAME);
     }
 
-    protected void waitThreads(String threadNamePrefix) throws InterruptedException {
+    protected static void waitThreads(String threadNamePrefix) throws InterruptedException {
         Thread[] threads = new Thread[Thread.activeCount()];
         Thread.enumerate(threads);
         for (int i = 0; i < threads.length; i++) {
@@ -120,9 +117,9 @@ public class BaseTestCase extends TestCase {
      * @return The required user.
      * @throws Exception In case of error.
      */
-    protected UserDetails getUser(String username, String password) throws Exception {
-        IAuthenticationProviderManager provider = (IAuthenticationProviderManager) this.getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
-        IUserManager userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);
+    protected static UserDetails getUser(String username, String password) throws Exception {
+        IAuthenticationProviderManager provider = (IAuthenticationProviderManager) getService(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER);
+        IUserManager userManager = (IUserManager) getService(SystemConstants.USER_MANAGER);
         UserDetails user = null;
         if (username.equals(SystemConstants.GUEST_USER_NAME)) {
             user = userManager.getGuestUser();
@@ -140,42 +137,42 @@ public class BaseTestCase extends TestCase {
      * @return The required user.
      * @throws Exception In case of error.
      */
-    protected UserDetails getUser(String username) throws Exception {
-        return this.getUser(username, username);
+    protected static UserDetails getUser(String username) throws Exception {
+        return getUser(username, username);
     }
 
-    protected void setUserOnSession(String username) throws Exception {
-        UserDetails currentUser = this.getUser(username);
+    protected static void setUserOnSession(String username) throws Exception {
+        UserDetails currentUser = getUser(username);
         HttpSession session = _reqCtx.getRequest().getSession();
         session.setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, currentUser);
     }
 
-    protected RequestContext getRequestContext() {
-        return this._reqCtx;
+    protected static RequestContext getRequestContext() {
+        return _reqCtx;
     }
 
-    protected void setRequestContext(RequestContext reqCtx) {
-        this._reqCtx = reqCtx;
+    protected static void setRequestContext(RequestContext reqCtx) {
+        _reqCtx = reqCtx;
     }
 
-    protected IManager getService(String name) {
-        return (IManager) this.getApplicationContext().getBean(name);
+    protected static IManager getService(String name) {
+        return (IManager) getApplicationContext().getBean(name);
     }
 
-    protected ApplicationContext getApplicationContext() {
-        return this._applicationContext;
+    public static ApplicationContext getApplicationContext() {
+        return _applicationContext;
     }
 
-    protected void setApplicationContext(ApplicationContext applicationContext) {
-        this._applicationContext = applicationContext;
+    protected static void setApplicationContext(ApplicationContext applicationContext) {
+        _applicationContext = applicationContext;
     }
 
-    protected ConfigTestUtils getConfigUtils() {
+    protected static ConfigTestUtils getConfigUtils() {
         return new ConfigTestUtils();
     }
 
-    private RequestContext _reqCtx;
+    private static RequestContext _reqCtx;
 
-    private ApplicationContext _applicationContext;
+    private static ApplicationContext _applicationContext;
 
 }

@@ -16,7 +16,6 @@ package org.entando.entando.aps.system.services.dataobject.widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -24,16 +23,16 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 
 import static org.entando.entando.Jdk11CompatibleDateFormatter.formatMediumDate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestDataObjectViewerHelper extends BaseTestCase {
+import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
+class TestDataObjectViewerHelper extends BaseTestCase {
 
-    public void testGetRenderedDataObject() throws Throwable {
+    @Test
+    void testGetRenderedDataObject() throws Throwable {
         try {
             String dataId = "ART1";
             String modelId = "3";
@@ -59,7 +58,8 @@ public class TestDataObjectViewerHelper extends BaseTestCase {
         return input;
     }
 
-    public void testGetRenderedDataObjectNotApproved() throws Throwable {
+    @Test
+    void testGetRenderedDataObjectNotApproved() throws Throwable {
         try {
             String dataId = "ART2";
             String modelId = "3";
@@ -71,7 +71,8 @@ public class TestDataObjectViewerHelper extends BaseTestCase {
         }
     }
 
-    public void testGetRenderedDataObjectNotPresent() throws Throwable {
+    @Test
+    void testGetRenderedDataObjectNotPresent() throws Throwable {
         try {
             String dataId = "ART3";
             String modelId = "3";
@@ -83,24 +84,21 @@ public class TestDataObjectViewerHelper extends BaseTestCase {
         }
     }
 
-    private void init() throws Exception {
-        try {
-            _requestContext = this.getRequestContext();
-            Lang lang = new Lang();
-            lang.setCode("it");
-            lang.setDescr("italiano");
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
-            Widget widget = new Widget();
-            IWidgetTypeManager showletTypeMan
-                    = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            WidgetType showletType = showletTypeMan.getWidgetType("content_viewer");
-            widget.setType(showletType);
-            widget.setConfig(new ApsProperties());
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
-            this._helper = (IDataObjectViewerHelper) this.getApplicationContext().getBean("DataObjectViewerHelper");
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    @BeforeEach
+    void init() {
+        _requestContext = this.getRequestContext();
+        Lang lang = new Lang();
+        lang.setCode("it");
+        lang.setDescr("italiano");
+        _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
+        Widget widget = new Widget();
+        IWidgetTypeManager showletTypeMan
+                = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        WidgetType showletType = showletTypeMan.getWidgetType("content_viewer");
+        widget.setType(showletType);
+        widget.setConfig(new ApsProperties());
+        _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
+        this._helper = (IDataObjectViewerHelper) this.getApplicationContext().getBean("DataObjectViewerHelper");
     }
 
     private RequestContext _requestContext;

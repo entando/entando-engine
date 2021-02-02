@@ -13,15 +13,21 @@
  */
 package org.entando.entando.aps.system.init.util;
 
-import com.agiletec.aps.BaseTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.util.FileTextReader;
 import java.io.InputStream;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestQueryExtractor extends BaseTestCase {
+class TestQueryExtractor {
 
+    @Test
 	public void testReadQueries() {
 		try {
 			InputStream is = this.getClass().getResourceAsStream("guifragment.sql");

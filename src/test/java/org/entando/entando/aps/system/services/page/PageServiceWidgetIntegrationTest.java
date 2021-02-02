@@ -17,20 +17,18 @@ import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PageServiceWidgetIntegrationTest extends BaseTestCase {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;
-
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    
+    @BeforeEach
     private void init() throws Exception {
         try {
             pageService = (IPageService) this.getApplicationContext().getBean(IPageService.BEAN_NAME);
@@ -40,14 +38,17 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testGetPageConfiguration() throws JsonProcessingException {
+    @Test
+    void testGetPageConfiguration() throws JsonProcessingException {
         IPage draftRoot = this.pageManager.getDraftRoot();
         PageConfigurationDto pageConfigurationDto = (PageConfigurationDto) this.pageService.getPageConfiguration(draftRoot.getCode(), IPageService.STATUS_DRAFT);
         ObjectMapper mapper = new ObjectMapper();
         String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(pageConfigurationDto);
+        Assertions.assertNotNull(out);
     }
 
-    public void testUpdatePageWidget() throws JsonProcessingException, EntException {
+    @Test
+    void testUpdatePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();
@@ -70,10 +71,10 @@ public class PageServiceWidgetIntegrationTest extends BaseTestCase {
         } finally {
             pageManager.deletePage(pageCode);
         }
-
     }
 
-    public void testRemovePageWidget() throws JsonProcessingException, EntException {
+    @Test
+    void testRemovePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
         PageModel pageModel = parentPage.getMetadata().getModel();

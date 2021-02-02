@@ -13,6 +13,9 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import java.util.Collections;
@@ -23,16 +26,19 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
-public class UserProfileTypeServiceTest {
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class UserProfileTypeServiceTest {
 
     @Mock
     private IUserProfileManager userProfileManager;
@@ -40,7 +46,7 @@ public class UserProfileTypeServiceTest {
     @InjectMocks
     private UserProfileTypeService userProfileTypeService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         userProfileTypeService.setEntityManagers(Collections.singletonList(userProfileManager));
@@ -65,7 +71,7 @@ public class UserProfileTypeServiceTest {
     }
 
     @Test
-    public void testGetShortUserProfileTypesDefaultSort() {
+    void testGetShortUserProfileTypesDefaultSort() {
         RestListRequest requestList = new RestListRequest();
         PagedMetadata<EntityTypeShortDto> pagedMetadata = userProfileTypeService.getShortUserProfileTypes(requestList);
         List<EntityTypeShortDto> list = pagedMetadata.getBody();
@@ -79,7 +85,7 @@ public class UserProfileTypeServiceTest {
      * Sorting must be case insensitive.
      */
     @Test
-    public void testGetShortUserProfileTypesSortByName() {
+    void testGetShortUserProfileTypesSortByName() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("name");
 

@@ -14,7 +14,7 @@
 package org.entando.entando.web.user;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,17 +32,17 @@ import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,16 +50,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CorsFilter;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {
     "classpath*:spring/testpropertyPlaceholder.xml",
     "classpath*:spring/baseSystemConfig.xml",
     "classpath*:spring/aps/**/**.xml",
     "classpath*:spring/plugins/**/aps/**/**.xml",
     "classpath*:spring/web/**.xml",})
-
 @WebAppConfiguration(value = "")
-public class UserControllerDeleteAuthoritiesIntegrationTest {
+class UserControllerDeleteAuthoritiesIntegrationTest {
 
     protected MockMvc mockMvc;
 
@@ -85,12 +84,12 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
     @Autowired
     protected CorsFilter corsFilter;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         TestEntandoJndiUtils.setupJndi();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
@@ -103,7 +102,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
     }
 
     @Test
-    public void testDeleteAuthorities() throws Exception {
+    void testDeleteAuthorities() throws Exception {
         String accessToken = "ok";
         when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token("admin", "ok"));
 
@@ -132,7 +131,7 @@ public class UserControllerDeleteAuthoritiesIntegrationTest {
     }
 
     @Test
-    public void testDeleteAuthoritiesSameUser() throws Exception {
+    void testDeleteAuthoritiesSameUser() throws Exception {
         String currentUserName = "admin";
         String accessToken = "ok";
         when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token(currentUserName, "ok"));

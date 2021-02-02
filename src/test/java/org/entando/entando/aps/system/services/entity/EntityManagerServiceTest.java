@@ -15,28 +15,31 @@ package org.entando.entando.aps.system.services.entity;
 
 import java.util.ArrayList;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.fail;
-
-public class EntityManagerServiceTest {
+@ExtendWith(MockitoExtension.class)
+class EntityManagerServiceTest {
 
     @InjectMocks
     private EntityManagerService entityManagerService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         entityManagerService.setEntityManagers(new ArrayList<>());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void testGetNotExistingManager() throws ResourceNotFoundException {
-        this.entityManagerService.getEntityManager("customCode");
-        fail();
+    @Test
+    void testGetNotExistingManager() throws ResourceNotFoundException {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            this.entityManagerService.getEntityManager("customCode");
+        });
     }
 
 }

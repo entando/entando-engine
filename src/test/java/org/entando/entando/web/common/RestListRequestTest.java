@@ -16,26 +16,29 @@ package org.entando.entando.web.common;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.List;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
-import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import javax.servlet.jsp.JspException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author paddeo
  */
-public class RestListRequestTest {
+class RestListRequestTest {
 
     @Test
-    public void shuold_create_filters() {
+    void shuold_create_filters() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -68,7 +71,7 @@ public class RestListRequestTest {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void should_create_default_pagination() {
+    void should_create_default_pagination() {
         RestListRequest request = new RestListRequest();
         //filters
         List<FieldSearchFilter> filters = request.buildFieldSearchFilters();
@@ -81,7 +84,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_exclude_pagination_when_pagesize_0() {
+    void should_exclude_pagination_when_pagesize_0() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -108,7 +111,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_default_direction() {
+    void should_default_direction() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -125,7 +128,7 @@ public class RestListRequestTest {
     }
 
     @Test
-    public void should_validate_field_object_property() {
+    void should_validate_field_object_property() {
 
         RestListRequest request = new RestListRequest();
         request.setPage(1);
@@ -146,25 +149,26 @@ public class RestListRequestTest {
         assertThat(filters.get(0).getOrder(), is(FieldSearchFilter.Order.ASC));
     }
 
-    @Test(expected = ValidationGenericException.class)
-    public void should_not_validate_field_object_property() {
+    @Test
+    void should_not_validate_field_object_property() {
+        Assertions.assertThrows(ValidationGenericException.class, () -> {
+            RestListRequest request = new RestListRequest();
+            request.setPage(1);
+            request.setPageSize(10);
 
-        RestListRequest request = new RestListRequest();
-        request.setPage(1);
-        request.setPageSize(10);
+            request.setSort("code");
+            request.setDirection(FieldSearchFilter.Order.ASC.name());
 
-        request.setSort("code");
-        request.setDirection(FieldSearchFilter.Order.ASC.name());
+            request.addFilter(new Filter("widgetType.date", "21/07/2018"));
 
-        request.addFilter(new Filter("widgetType.date", "21/07/2018"));
+            AbstractPaginationValidator validator = new GuiFragmentValidator();
+            validator.validateRestListRequest(request, GuiFragmentDto.class);
 
-        AbstractPaginationValidator validator = new GuiFragmentValidator();
-        validator.validateRestListRequest(request, GuiFragmentDto.class);
+            //filters
+            List<FieldSearchFilter> filters = request.buildFieldSearchFilters();
+            assertThat(filters.size(), is(1));
 
-        //filters
-        List<FieldSearchFilter> filters = request.buildFieldSearchFilters();
-        assertThat(filters.size(), is(1));
-
-        assertThat(filters.get(0).getOrder(), is(FieldSearchFilter.Order.ASC));
+            assertThat(filters.get(0).getOrder(), is(FieldSearchFilter.Order.ASC));
+        });
     }
 }

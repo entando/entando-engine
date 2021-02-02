@@ -13,6 +13,9 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
@@ -24,19 +27,16 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.Arrays;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class ValidateUserProfileIntegrationTest extends BaseTestCase {
+class ValidateUserProfileIntegrationTest extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testValidate_1() throws Throwable {
+	@Test
+    void testValidate_1() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getDefaultProfileType();
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
@@ -68,7 +68,8 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 		}
 	}
 
-	public void testValidate_2() throws Throwable {
+	@Test
+    void testValidate_2() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getProfileType("OTH");
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
@@ -106,7 +107,8 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 		}
 	}
     
-	public void testValidate_3() throws Throwable {
+	@Test
+    void testValidate_3() throws Throwable {
 		try {
 			IUserProfile profile = this.userProfileManager.getProfileType("ALL");
 			List<FieldError> errors = profile.validate(this._groupManager, this._langManager);
@@ -127,6 +129,7 @@ public class ValidateUserProfileIntegrationTest extends BaseTestCase {
 		}
 	}
 
+    @BeforeEach
 	private void init() throws Exception {
 		try {
 			this.userProfileManager = this.getApplicationContext().getBean(IUserProfileManager.class);

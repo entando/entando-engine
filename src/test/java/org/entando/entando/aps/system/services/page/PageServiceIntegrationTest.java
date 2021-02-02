@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -25,23 +30,19 @@ import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageStatusRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author paddeo
  */
-public class PageServiceIntegrationTest extends BaseTestCase {
+class PageServiceIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             pageService = (IPageService) this.getApplicationContext().getBean(IPageService.BEAN_NAME);
@@ -52,14 +53,14 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testGetPage() {
+    void testGetPage() {
         PageDto page = pageService.getPage("pagina_1", IPageService.STATUS_ONLINE);
         assertNotNull(page);
         assertEquals(IPageService.STATUS_ONLINE, page.getStatus());
     }
 
     @Test
-    public void testGetPageTree() {
+    void testGetPageTree() {
         List<PageDto> pages = pageService.getPages("pagina_1");
         assertNotNull(pages);
         assertEquals(2, pages.size());
@@ -67,7 +68,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testAddAndRemovePage() throws Throwable {
+    void testAddAndRemovePage() throws Throwable {
         PageDto pageToClone = pageService.getPage("pagina_11", "draft");
         assertNotNull(pageToClone);
         PageRequest pageRequest = this.createRequestFromDto(pageToClone);
@@ -93,7 +94,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testUpdatePage() {
+    void testUpdatePage() {
         String newCode = "pagina_13";
         PageDto pageToClone = pageService.getPage("pagina_12", "draft");
         try {
@@ -150,7 +151,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testUpdatePageStatus() {
+    void testUpdatePageStatus() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");
@@ -182,7 +183,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testChangeOnlyPosition() {
+    void testChangeOnlyPosition() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");
@@ -210,7 +211,7 @@ public class PageServiceIntegrationTest extends BaseTestCase {
     }
     
     @Test
-    public void testChangeNode() {
+    void testChangeNode() {
         String newPageCode = "pagina_13";
         try {
             PageDto pageToClone = pageService.getPage("pagina_11", "draft");

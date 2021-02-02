@@ -13,6 +13,8 @@
  */
 package com.agiletec.aps.system.services.url;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Map;
 
 import com.agiletec.aps.BaseTestCase;
@@ -20,19 +22,16 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TestURLManager extends BaseTestCase {
+class TestURLManager extends BaseTestCase {
 
     private ConfigInterface configManager = null;
     private IURLManager urlManager = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testGetURLString_1() throws Throwable {
+    @Test
+    void testGetURLString_1() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("it");
@@ -50,7 +49,8 @@ public class TestURLManager extends BaseTestCase {
         }
     }
 
-    public void testGetURLString_2() throws Throwable {
+    @Test
+    void testGetURLString_2() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");
@@ -80,13 +80,10 @@ public class TestURLManager extends BaseTestCase {
         }
     }
 
-    private void init() throws Exception {
-        try {
-            this.urlManager = (IURLManager) this.getService(SystemConstants.URL_MANAGER);
-            this.configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
-        } catch (Exception e) {
-            throw e;
-        }
+    @BeforeEach
+    private void init() {
+        this.urlManager = (IURLManager) this.getService(SystemConstants.URL_MANAGER);
+        this.configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
     }
 
 }

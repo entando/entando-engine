@@ -13,43 +13,43 @@
  */
 package com.agiletec.aps.system.services.lang;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-/**
- * @version 1.0
- * @author M.Diana - W.Ambu - S.Didaci
- */
-public class LangManagerIntegrationTest extends BaseTestCase {
+class LangManagerIntegrationTest extends BaseTestCase {
 
 	private ILangManager langManager = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testGetLang() throws EntException {
+	@Test
+    void testGetLang() throws EntException {
 		Lang lang = this.langManager.getLang("en");
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
-		assertEquals(langCode, "en");
-		assertEquals(langDescr, "English");
+		assertEquals("en", langCode);
+		assertEquals("English", langDescr);
 	}
 
-	public void testGetDefaultLang() throws EntException {
+	@Test
+    void testGetDefaultLang() throws EntException {
 		Lang lang = this.langManager.getDefaultLang();
 		String langCode = lang.getCode();
 		String langDescr = lang.getDescr();
-		assertEquals(langCode, "it");
-		assertEquals(langDescr, "Italiano");
+		assertEquals("it", langCode);
+		assertEquals("Italiano", langDescr);
 	}
 
-	public void testGetLangs() throws EntException {
+	@Test
+    void testGetLangs() throws EntException {
 		List<Lang> langs = this.langManager.getLangs();
 		assertEquals(2, langs.size());
 		for (Lang lang : langs) {
@@ -64,7 +64,8 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		}
 	}
 
-	public void testGetAssignableLangs() throws Throwable {
+	@Test
+    void testGetAssignableLangs() throws Throwable {
 		List<Lang> assignableLangs = this.langManager.getAssignableLangs();
 		assertTrue(!assignableLangs.isEmpty());
 		Lang firstLang = (Lang) assignableLangs.get(0);
@@ -76,7 +77,8 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		assertEquals("Zulu", lastLang.getDescr());
 	}
 
-	public void testAddUpdateRemoveLang() throws Throwable {
+	@Test
+    void testAddUpdateRemoveLang() throws Throwable {
 		int systemLangs = this.langManager.getLangs().size();
 		try {
 			this.langManager.addLang("ro");
@@ -100,12 +102,9 @@ public class LangManagerIntegrationTest extends BaseTestCase {
 		}
 	}
 
-	private void init() throws Exception {
-		try {
-			this.langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    @BeforeEach
+    private void init() throws Exception {
+        this.langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+    }
 
 }

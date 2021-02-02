@@ -6,21 +6,18 @@ import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class GroupServiceIntegrationTest extends BaseTestCase {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class GroupServiceIntegrationTest extends BaseTestCase {
 
     private IGroupService groupService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             groupService = (IGroupService) this.getApplicationContext().getBean(IGroupService.BEAN_NAME);
@@ -30,7 +27,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups() throws JsonProcessingException {
+    void testGetGroups() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(5);
         PagedMetadata<GroupDto> res = this.groupService.getGroups(restListRequest);
@@ -74,7 +71,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups_filter() throws JsonProcessingException {
+    void testGetGroups_filter() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.addFilter(new Filter("groupname", "fr"));
 
@@ -86,7 +83,7 @@ public class GroupServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetGroups_filter_and_pagination() throws JsonProcessingException {
+    void testGetGroups_filter_and_pagination() throws JsonProcessingException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
         restListRequest.addFilter(new Filter("groupname", "s"));

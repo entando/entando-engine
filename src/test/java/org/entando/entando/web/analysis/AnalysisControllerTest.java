@@ -37,8 +37,6 @@ import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -55,10 +53,16 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class AnalysisControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class AnalysisControllerTest extends AbstractControllerTest {
 
     @Test
-    public void testRunAnalysis() throws Exception {
+    void testRunAnalysis() throws Exception {
         String accessToken = mockAccessToken();
 
         Map<String, List<String>> request = ImmutableMap.<String, List<String>>builder()
@@ -142,7 +146,7 @@ public class AnalysisControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRunAnalysisWrongObjectType() throws Exception {
+    void testRunAnalysisWrongObjectType() throws Exception {
         String accessToken = mockAccessToken();
 
         Map<String, List<String>> request = ImmutableMap.of(
@@ -150,8 +154,8 @@ public class AnalysisControllerTest extends AbstractControllerTest {
         );
 
         // WIDGETS
-        Mockito.doReturn(true).when(widgetService).exists("1");
-        Mockito.doReturn(true).when(widgetService).exists("2");
+        Mockito.lenient().doReturn(true).when(widgetService).exists("1");
+        Mockito.lenient().doReturn(true).when(widgetService).exists("2");
 
         ResultActions result = mockMvc.perform(
                 post("/analysis/components/diff")
@@ -210,7 +214,7 @@ public class AnalysisControllerTest extends AbstractControllerTest {
     @Mock
     LanguageDto language;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)

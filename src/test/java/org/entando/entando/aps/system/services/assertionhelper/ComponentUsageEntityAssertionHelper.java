@@ -1,8 +1,8 @@
 package org.entando.entando.aps.system.services.assertionhelper;
 
-import org.entando.entando.web.component.ComponentUsageEntity;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.Assert.assertEquals;
+import org.entando.entando.web.component.ComponentUsageEntity;
 
 public class ComponentUsageEntityAssertionHelper {
 

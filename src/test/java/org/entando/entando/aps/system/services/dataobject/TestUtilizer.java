@@ -13,15 +13,20 @@
  */
 package org.entando.entando.aps.system.services.dataobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
+import org.junit.jupiter.api.Test;
 
-public class TestUtilizer extends BaseTestCase {
+class TestUtilizer extends BaseTestCase {
 
-    public void testGetGroupsUtilizers() throws Throwable {
+    @Test
+    void testGetGroupsUtilizers() throws Throwable {
         String[] names = this.getApplicationContext().getBeanNamesForType(GroupUtilizer.class);
         assertTrue(names.length >= 2);
         for (int i = 0; i < names.length; i++) {
@@ -33,7 +38,8 @@ public class TestUtilizer extends BaseTestCase {
         }
     }
 
-    public void testGetCategoryUtilizers() throws Throwable {
+    @Test
+    void testGetCategoryUtilizers() throws Throwable {
         String[] names = this.getApplicationContext().getBeanNamesForType(CategoryUtilizer.class);
         assertTrue(names.length >= 1);
         for (int i = 0; i < names.length; i++) {

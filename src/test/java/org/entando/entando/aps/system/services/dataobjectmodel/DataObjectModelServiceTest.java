@@ -22,15 +22,23 @@ import java.util.Map;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.DataModelDto;
 import org.entando.entando.aps.system.services.dataobjectmodel.model.DataModelDtoBuilder;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.junit.Before;
-import org.junit.Test;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 
-public class DataObjectModelServiceTest {
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DataObjectModelServiceTest {
 
     @InjectMocks
     private DataObjectModelService dataObjectModelService;
@@ -41,13 +49,13 @@ public class DataObjectModelServiceTest {
     @Mock
     private DataModelDtoBuilder dtoBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = ValidationConflictException.class)
-    public void should_raise_exception_on_delete_referenced_dataModel() throws Throwable {
+    @Test
+    void should_raise_exception_on_delete_referenced_dataModel() throws Throwable {
         DataObjectModel mockDataModel = new DataObjectModel();
         mockDataModel.setId(234l);
         when(this.dataObjectModelManager.getDataObjectModel(any(Long.class))).thenReturn(mockDataModel);
@@ -60,6 +68,8 @@ public class DataObjectModelServiceTest {
         pages.add(referencedPage);
         utilizers.put("ABC123", pages);
         when(this.dataObjectModelManager.getReferencingPages(any(Long.class))).thenReturn(utilizers);
-        this.dataObjectModelService.removeDataObjectModel(34l);
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            this.dataObjectModelService.removeDataObjectModel(34l);
+        });
     }
 }

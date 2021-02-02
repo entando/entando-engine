@@ -13,17 +13,21 @@
  */
 package com.agiletec.aps.system.services.pagemodel;
 
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestPageModelDOM extends BaseTestCase {
+class TestPageModelDOM extends BaseTestCase {
 
-    public void testGetFrames() throws Throwable {
+    @Test
+    void testGetFrames() throws Throwable {
         IWidgetTypeManager widgetTypeManager
                 = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         PageModelDOM pageModelDOM = new PageModelDOM(FRAMES_XML, widgetTypeManager);

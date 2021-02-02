@@ -25,7 +25,6 @@ import org.entando.entando.aps.system.services.oauth2.model.ApiConsumer;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -36,11 +35,13 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApiConsumerControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ApiConsumerControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String BASE_URL = "/consumers";
 
@@ -57,6 +58,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     private String accessToken;
 
     @Override
+    @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
@@ -66,7 +68,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testCRUDConsumer() throws Exception {
+    void testCRUDConsumer() throws Exception {
 
         try {
             ApiConsumer consumer = getPayload();
@@ -135,7 +137,7 @@ public class ApiConsumerControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testFilterAndSort() throws Exception {
+    void testFilterAndSort() throws Exception {
 
         try {
             consumerManager.addConsumer(getConsumer1());

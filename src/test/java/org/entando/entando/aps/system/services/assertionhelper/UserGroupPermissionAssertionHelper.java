@@ -1,12 +1,12 @@
 package org.entando.entando.aps.system.services.assertionhelper;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
 
 import java.util.List;
 import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 public class UserGroupPermissionAssertionHelper {
 

@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.actionlog;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -22,16 +26,13 @@ import com.agiletec.aps.util.DateConverter;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class TestActionLogDAO extends BaseTestCase {
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-		this._helper.cleanRecords();
-	}
-
+class TestActionLogDAO extends BaseTestCase {
+    
+    @Test
 	public void testGetActionRecords() {
 		IActionLogRecordSearchBean bean = null;
 		List<Integer> ids = this._actionLoggerDAO.getActionRecords(bean);
@@ -68,6 +69,7 @@ public class TestActionLogDAO extends BaseTestCase {
 
 	}
 
+	@Test
 	public void testActionLogSearch() {
 		IActionLogRecordSearchBean bean = null;
 		List<Integer> ids = this._actionLoggerDAO.getActionRecords(bean);
@@ -88,6 +90,7 @@ public class TestActionLogDAO extends BaseTestCase {
 		this.compareIds(new Integer[]{3}, ids);
 	}
 
+	@Test
 	public void testAddGetDeleteActionRecord() {
 		ActionLogRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1",
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
@@ -127,21 +130,21 @@ public class TestActionLogDAO extends BaseTestCase {
 				DateConverter.getFormattedDate(received.getActionDate(), "ddMMyyyyHHmm"));
 	}
 
+    @BeforeAll
 	private void init() {
 		ActionLogDAO actionLoggerDAO = new ActionLogDAO();
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		actionLoggerDAO.setDataSource(dataSource);
 		this._actionLoggerDAO = actionLoggerDAO;
-
 		this._helper = new ActionLoggerTestHelper(this.getApplicationContext());
+        this._helper.cleanRecords();
 	}
-
-	@Override
-	protected void tearDown() throws Exception {
+    
+    @AfterAll
+	protected void destroy() throws Exception {
 		this._helper.cleanRecords();
-		super.tearDown();
 	}
-
+    
 	private IActionLogDAO _actionLoggerDAO;
 	private ActionLoggerTestHelper _helper;
 

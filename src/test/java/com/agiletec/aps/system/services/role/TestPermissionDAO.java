@@ -13,20 +13,24 @@
  */
 package com.agiletec.aps.system.services.role;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.Test;
 
 /**
- * @version 1.0
  * @author M.Diana
  */
-public class TestPermissionDAO extends BaseTestCase {
+class TestPermissionDAO extends BaseTestCase {
 	
-    public void testAddUpdateDeletePermission() throws Throwable {
+    @Test
+    void testAddUpdateDeletePermission() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		PermissionDAO permissionDao = new PermissionDAO();
 		permissionDao.setDataSource(dataSource);

@@ -28,8 +28,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.group.model.GroupRequest;
 import org.entando.entando.web.group.validator.GroupValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -51,7 +50,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class GroupControllerUnitTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class GroupControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private GroupService groupService;
@@ -62,7 +66,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     @InjectMocks
     private GroupController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -72,7 +76,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSeachGroups() throws Exception {
+    void testSeachGroups() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(groupService.getGroups(any(RestListRequest.class))).thenReturn(new PagedMetadata<GroupDto>());
@@ -91,7 +95,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSearchGroupsWithFilters() throws Exception {
+    void testSearchGroupsWithFilters() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -115,7 +119,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidatePermission() throws Exception {
+    void testValidatePermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();
@@ -130,7 +134,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidateOnUpdateWithInvalidPathAndPayload() throws EntException, Exception {
+    void testValidateOnUpdateWithInvalidPathAndPayload() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -152,7 +156,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testValidateOnDeleteReservedGroups() throws EntException, Exception {
+    void testValidateOnDeleteReservedGroups() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -173,7 +177,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testParamSize() throws EntException, Exception {
+    void testParamSize() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -196,7 +200,7 @@ public class GroupControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testDeleteGroup() throws Exception {
+    void testDeleteGroup() throws Exception {
         String code = "group_to_delete";
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);

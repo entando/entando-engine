@@ -2,12 +2,12 @@ package org.entando.entando.aps.system.services.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class NonceInjectorTest {
+class NonceInjectorTest {
 
     @Test
-    public void shouldProcessHtmlAndInsertNonce() {
+    void shouldProcessHtmlAndInsertNonce() {
         String source = "<script    \t key=\"value\"   \tanother_key=\"value\">";
         String expected = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script nonce=\"<@wp.cspNonce />\" key=\"value\" another_key=\"value\">";
 
@@ -15,21 +15,21 @@ public class NonceInjectorTest {
     }
 
     @Test
-    public void shouldNotChangeAlreadyProcessedHtml() {
+    void shouldNotChangeAlreadyProcessedHtml() {
         String source = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script   \tnonce=\"<@wp.cspNonce />\"     \tkey=value another_key=\"value\">";
 
         assertThat(NonceInjector.process(source)).isEqualTo(source);
     }
 
     @Test
-    public void shouldNotInjectApsCoreLibIfDoesntHaveNonce() {
+    void shouldNotInjectApsCoreLibIfDoesntHaveNonce() {
         String source = "<h1>My Title<h1>";
 
         assertThat(NonceInjector.process(source)).isEqualTo(source);
     }
 
     @Test
-    public void shouldProcessComplexHtmlAndInsertNonceWhereAppropriate() {
+    void shouldProcessComplexHtmlAndInsertNonceWhereAppropriate() {
         String source = "<html><body>\n"
                 + "<script nonce=\"what\" key=\"value\" another_key=\"value\">\n"
                 + "<script   key=\"value\"  \t   another_key=\"value\">\n"

@@ -1,44 +1,50 @@
 package com.agiletec.aps.system.services.health;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HealthDAOTest {
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class HealthDAOTest {
 
     @Mock
-    private DataSource portDataSource;
+    private static DataSource portDataSource;
     @Mock
-    private DataSource servDataSource;
+    private static DataSource servDataSource;
     @Mock
-    private Connection connection;
+    private static Connection connection;
 
-    private HealthDAO healthDAO;
+    private static HealthDAO healthDAO;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeAll
+    public static void setup() {
+        MockitoAnnotations.initMocks(HealthDAOTest.class);
+    }
+    
+    @BeforeEach
+    private void init() {
         healthDAO = new HealthDAO()
                 .setPortDataSource(portDataSource)
                 .setServDataSource(servDataSource);
     }
-
+    
     @Test
-    public void isServDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
-
+    void isServDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
 
@@ -46,46 +52,36 @@ public class HealthDAOTest {
     }
 
     @Test
-    public void isServDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
-
+    void isServDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
         when(servDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
-
         assertFalse(healthDAO.isServDBConnectionHealthy());
     }
 
     @Test
-    public void isServDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
-
+    void isServDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
         when(servDataSource.getConnection()).thenThrow(new SQLException());
-
         assertFalse(healthDAO.isServDBConnectionHealthy());
     }
 
     @Test
-    public void isPortDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
-
+    void isPortDBConnectionHealthyWithWorkingDataSourceShouldReturnTrue() throws Exception {
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(true);
-
         assertTrue(healthDAO.isPortDBConnectionHealthy());
     }
 
     @Test
-    public void isPortDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
-
+    void isPortDBConnectionHealthyWithNotWorkingDataSourceShouldReturnFalse() throws Exception {
         when(portDataSource.getConnection()).thenThrow(new SQLException());
-
         assertFalse(healthDAO.isPortDBConnectionHealthy());
     }
-
 
     @Test
-    public void isPortDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
-
+    void isPortDBConnectionHealthyWithNotValidConnectionShouldReturnFalse() throws Exception {
         when(portDataSource.getConnection()).thenReturn(connection);
         when(connection.isValid(anyInt())).thenReturn(false);
-
         assertFalse(healthDAO.isPortDBConnectionHealthy());
     }
+    
 }

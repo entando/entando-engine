@@ -24,7 +24,6 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.NavigatorConfigDto;
 import org.hamcrest.Matchers;
-import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -36,13 +35,14 @@ import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.web.widget.model.NavigatorExpressionDto;
+import org.junit.jupiter.api.Test;
 
-public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class NavigatorWidgetConfigControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
     private ObjectMapper mapper = new ObjectMapper();
     
     @Test
-    public void testGetExpressions_1() throws Exception {
+    void testGetExpressions_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -56,7 +56,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetExpressions_2() throws Exception {
+    void testGetExpressions_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -67,7 +67,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_1() throws Exception {
+    void testGetNavSpec_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -107,7 +107,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_2() throws Exception {
+    void testGetNavSpec_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -120,7 +120,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_3() throws Exception {
+    void testGetNavSpec_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -139,7 +139,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_4() throws Exception {
+    void testGetNavSpec_4() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -156,7 +156,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_5() throws Exception {
+    void testGetNavSpec_5() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -173,7 +173,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_6() throws Exception {
+    void testGetNavSpec_6() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -190,7 +190,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_7() throws Exception {
+    void testGetNavSpec_7() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -208,7 +208,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_8() throws Exception {
+    void testGetNavSpec_8() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -226,7 +226,7 @@ public class NavigatorWidgetConfigControllerIntegrationTest extends AbstractCont
     }
     
     @Test
-    public void testGetNavSpec_9() throws Exception {
+    void testGetNavSpec_9() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);

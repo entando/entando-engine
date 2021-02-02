@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
@@ -35,38 +40,38 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestApiUserProfileInterface extends ApiBaseTestCase {
+class TestApiUserProfileInterface extends ApiBaseTestCase {
     
     public static final String TEST_USERNAME = "testusername";
 
     private IUserProfileManager userProfileManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-    
-    public void testGetXmlUserProfile() throws Throwable {
+    @Test
+    void testGetXmlUserProfile() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testGetUserProfile(mediaType, "admin", "supervisorCoach", "it");
     }
     
-    public void testGetJsonUserProfile() throws Throwable {
+    @Test
+    void testGetJsonUserProfile() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testGetUserProfile(mediaType, "admin", "supervisorCoach", "en");
     }
 
-    public void testCreateNewUserProfileFromXml() throws Throwable {
+    @Test
+    void testCreateNewUserProfileFromXml() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
         this.testCreateNewUserProfile(mediaType, "supervisorCoach");
     }
     
-    public void testCreateNewUserProfileFromJson() throws Throwable {
+    @Test
+    void testCreateNewUserProfileFromJson() throws Throwable {
         MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
         this.testCreateNewUserProfile(mediaType, "supervisorCoach");
     }
@@ -147,12 +152,10 @@ public class TestApiUserProfileInterface extends ApiBaseTestCase {
         return jaxbData;
     }
 
-    private void init() throws Exception {
-        try {
-            this.userProfileManager = (IUserProfileManager) this.getApplicationContext().getBean(SystemConstants.USER_PROFILE_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    @BeforeEach
+    protected void init() {
+        super.init();
+        this.userProfileManager = (IUserProfileManager) this.getApplicationContext().getBean(SystemConstants.USER_PROFILE_MANAGER);
     }
 
 }

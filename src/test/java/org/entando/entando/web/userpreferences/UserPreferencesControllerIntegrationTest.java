@@ -13,14 +13,8 @@
  */
 package org.entando.entando.web.userpreferences;
 
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.fail;
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,11 +30,11 @@ import org.entando.entando.aps.system.services.userpreferences.IUserPreferencesM
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-public class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IUserManager userManager;
@@ -48,7 +42,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     private IUserPreferencesManager userPreferencesManager;
 
     @Test
-    public void testGetWithUnknownUser() throws Exception {
+    void testGetWithUnknownUser() throws Exception {
         String username = "unknown_user";
         UserDetails user = new OAuth2TestUtils.UserBuilder(username, "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -66,7 +60,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testGetUsersPreferencesWithAdminPrivileges() throws Exception {
+    void testGetUsersPreferencesWithAdminPrivileges() throws Exception {
         String username = "user_with_admin_privileges";
 
         try {
@@ -90,7 +84,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testGetUsersPreferencesWithoutPrivileges() throws Exception {
+    void testGetUsersPreferencesWithoutPrivileges() throws Exception {
         String username = "user_without_privileges";
 
         try {
@@ -114,7 +108,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testUpdateWithUnknownUser() throws Exception {
+    void testUpdateWithUnknownUser() throws Exception {
         String username = "unknown_user";
         UserDetails user = new OAuth2TestUtils.UserBuilder(username, "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -135,7 +129,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testUpdateUsersPreferencesWithAdminPrivileges() throws Exception {
+    void testUpdateUsersPreferencesWithAdminPrivileges() throws Exception {
         String username = "user_with_admin_privileges";
 
         try {
@@ -159,7 +153,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testUpdateUsersPreferencesWithoutPrivileges() throws Exception {
+    void testUpdateUsersPreferencesWithoutPrivileges() throws Exception {
         String username = "user_without_privileges";
 
         try {
@@ -183,7 +177,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testUpdateUsersPreferencesComplete() throws Exception {
+    void testUpdateUsersPreferencesComplete() throws Exception {
         String username = "user_complete_update";
 
         try {
@@ -231,7 +225,7 @@ public class UserPreferencesControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testUpdateUsersPreferencesPartial() throws Exception {
+    void testUpdateUsersPreferencesPartial() throws Exception {
         String username = "user_complete_partial";
 
         try {

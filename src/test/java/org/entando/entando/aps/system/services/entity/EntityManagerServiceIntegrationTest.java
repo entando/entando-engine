@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import java.util.List;
@@ -21,18 +26,14 @@ import org.entando.entando.aps.system.services.entity.model.EntityManagerDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class EntityManagerServiceIntegrationTest extends BaseTestCase {
+class EntityManagerServiceIntegrationTest extends BaseTestCase {
 
     private IEntityManagerService entityManagerService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             entityManagerService = (IEntityManagerService) this.getApplicationContext().getBean("EntityManagerService");
@@ -42,7 +43,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetManagers() {
+    void testGetManagers() {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(5);
         PagedMetadata<String> res = this.entityManagerService.getEntityManagers(restListRequest);
@@ -56,7 +57,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetManager_1() {
+    void testGetManager_1() {
         EntityManagerDto dto = this.entityManagerService.getEntityManager(SystemConstants.USER_PROFILE_MANAGER);
         assertNotNull(dto);
         assertEquals(SystemConstants.USER_PROFILE_MANAGER, dto.getCode());
@@ -67,7 +68,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetNotExistingManager() throws ResourceNotFoundException {
+    void testGetNotExistingManager() throws ResourceNotFoundException {
         try {
             this.entityManagerService.getEntityManager("customManagerName");
             fail();
@@ -77,7 +78,7 @@ public class EntityManagerServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetEntityTypes_1() {
+    void testGetEntityTypes_1() {
         RestListRequest restListRequest = new RestListRequest();
         PagedMetadata<EntityTypeShortDto> dtos = this.entityManagerService.getShortEntityTypes(SystemConstants.USER_PROFILE_MANAGER, restListRequest);
         assertNotNull(dtos);

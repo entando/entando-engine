@@ -13,20 +13,20 @@
  */
 package org.entando.entando.aps.system.services.dataobject.parse;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.BaseTestCase;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TestDataObjectDOM extends BaseTestCase {
+class TestDataObjectDOM extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testGetXMLDocument() throws EntException {
+	@Test
+    void testGetXMLDocument() throws EntException {
 		DataObject dataObjectTest = this._dataObjectManager.createDataObject("ART");
 		assertNotNull(dataObjectTest);
 		dataObjectTest.addGroup("tempGroupName");
@@ -35,7 +35,8 @@ public class TestDataObjectDOM extends BaseTestCase {
 		assertTrue((index != -1));
 	}
 
-	private void init() throws Exception {
+    @BeforeEach
+	void init() throws Exception {
 		try {
 			_dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
 		} catch (Throwable t) {

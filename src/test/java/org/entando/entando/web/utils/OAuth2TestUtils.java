@@ -95,7 +95,7 @@ public class OAuth2TestUtils {
             String accessToken = OAuth2TestUtils.getValidAccessToken();
             when(apiOAuth2TokenManager.readAccessToken(Mockito.anyString())).thenReturn(OAuth2TestUtils.getOAuth2Token(user.getUsername(), accessToken));
             when(authenticationProviderManager.getUser(user.getUsername())).thenReturn(user);
-            when(authorizationManager.isAuthOnPermission(any(UserDetails.class), anyString())).then(invocation -> {
+            Mockito.lenient().when(authorizationManager.isAuthOnPermission(any(UserDetails.class), anyString())).then(invocation -> {
                 UserDetails user1 = (UserDetails) invocation.getArguments()[0];
                 String permissionName = (String) invocation.getArguments()[1];
                 return new AuthorizationManager().isAuthOnPermission(user1, permissionName);

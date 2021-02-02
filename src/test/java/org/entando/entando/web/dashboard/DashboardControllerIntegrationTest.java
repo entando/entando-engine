@@ -18,7 +18,6 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,13 +25,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.Test;
+
 /**
  * @author E.Santoboni
  */
-public class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
-    public void testIntegration() throws Exception {
+    void testIntegration() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -44,7 +45,7 @@ public class DashboardControllerIntegrationTest extends AbstractControllerIntegr
     }
 
     @Test
-    public void testPagesStatusGet() throws Exception {
+    void testPagesStatusGet() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND)
                 .build();

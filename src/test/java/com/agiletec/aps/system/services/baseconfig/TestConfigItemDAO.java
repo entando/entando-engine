@@ -13,25 +13,36 @@
  */
 package com.agiletec.aps.system.services.baseconfig;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestConfigItemDAO extends BaseTestCase {
-	
-    public void testLoadVersionItems() throws Throwable {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		ConfigItemDAO configItemDAO = new ConfigItemDAO();
-		configItemDAO.setDataSource(dataSource);
+class TestConfigItemDAO extends BaseTestCase {
+    
+    private ConfigItemDAO configItemDAO;
+    
+    @BeforeEach
+    private void init() {
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+		this.configItemDAO = new ConfigItemDAO();
+		this.configItemDAO.setDataSource(dataSource);
+    }
+    
+    @Test
+    void testLoadVersionItems() throws Throwable {
 		Map<String, String> items = null;
         try {
-            items = configItemDAO.loadVersionItems("test");
+            items = this.configItemDAO.loadVersionItems("test");
         } catch (Throwable e) {
         	throw e;
         }
@@ -41,13 +52,11 @@ public class TestConfigItemDAO extends BaseTestCase {
 		assertTrue(index != -1);
     }
 	
-	public void testLoadVersionItem() throws Throwable {
-		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		ConfigItemDAO configItemDAO = new ConfigItemDAO();
-		configItemDAO.setDataSource(dataSource);
+	@Test
+    void testLoadVersionItem() throws Throwable {
 		String config = null;
         try {
-        	config = configItemDAO.loadVersionItem("test", SystemConstants.CONFIG_ITEM_LANGS);
+        	config = this.configItemDAO.loadVersionItem("test", SystemConstants.CONFIG_ITEM_LANGS);
         } catch (Throwable e) {
         	throw e;
         }

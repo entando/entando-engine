@@ -13,6 +13,12 @@
  */
 package org.entando.entando.aps.system.services.dataobject.widget;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -28,19 +34,16 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectListHelper extends BaseTestCase {
+class TestDataObjectListHelper extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testGetFilters() throws Throwable {
+	@Test
+    void testGetFilters() throws Throwable {
 		String filtersShowletParam = "(key=DataInizio;attributeFilter=true;start=21/10/2007;order=DESC)+(key=Titolo;attributeFilter=true;order=ASC)";
 		EntitySearchFilter[] filters = this._helper.getFilters("EVN", filtersShowletParam, this.getRequestContext());
 		assertEquals(2, filters.length);
@@ -52,7 +55,8 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		assertEquals("DESC", filter.getOrder().toString());
 	}
 
-	public void testGetFilters_OneDefinition() {
+	@Test
+    void testGetFilters_OneDefinition() {
 		RequestContext reqCtx = this.getRequestContext();
 		String contentType = "ART";
 		String showletParam = "(key=Titolo;attributeFilter=TRUE;start=START;end=END;like=FALSE;order=ASC)";
@@ -100,7 +104,8 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		assertEquals("ASC", entitySearchFilter.getOrder().toString());
 	}
 
-	public void testGetFilters_TwoDefinition() {
+	@Test
+    void testGetFilters_TwoDefinition() {
 		RequestContext reqCtx = this.getRequestContext();
 		String contentType = "ART";
 		String showletParam = "(key=Titolo;attributeFilter=TRUE;start=START;end=END;like=FALSE;order=ASC)+(key=descr;value=VALUE;attributeFilter=FALSE;order=ASC)";
@@ -133,7 +138,8 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		assertEquals("VALUE", (String) obj);
 	}
 
-	public void testGetContents_1() throws Throwable {
+	@Test
+    void testGetContents_1() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		try {
@@ -157,7 +163,8 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		}
 	}
 
-	public void testGetContents_2() throws Throwable {
+	@Test
+    void testGetContents_2() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		try {
@@ -217,15 +224,12 @@ public class TestDataObjectListHelper extends BaseTestCase {
 		return widget;
 	}
 
-	private void init() throws Exception {
-		try {
-			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-			this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-			this._helper = (IDataObjectListWidgetHelper) this.getApplicationContext().getBean("DataObjectListHelper");
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    @BeforeEach
+    void init() throws Exception {
+        this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+        this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this._helper = (IDataObjectListWidgetHelper) this.getApplicationContext().getBean("DataObjectListHelper");
+    }
 
 	private IPageManager _pageManager = null;
 	private IWidgetTypeManager _showletTypeManager;

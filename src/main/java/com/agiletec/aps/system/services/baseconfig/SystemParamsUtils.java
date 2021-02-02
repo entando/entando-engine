@@ -79,7 +79,7 @@ public class SystemParamsUtils {
     public static String getNewXmlParams(String oldXmlParams, Map<String, String> newSystemParams) throws Exception {
         return getNewXmlParams(oldXmlParams, newSystemParams, true);
     }
-
+    
     /**
      * Return the XML of the configuration with updated parameters.
      *

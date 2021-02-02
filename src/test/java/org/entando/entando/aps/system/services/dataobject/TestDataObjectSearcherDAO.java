@@ -13,26 +13,26 @@
  */
 package org.entando.entando.aps.system.services.dataobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectSearcherDAO extends BaseTestCase {
+class TestDataObjectSearcherDAO extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    //TODO DA AGGIUNGERE TEST
-    public void testLoadDataObjectsId_1() throws Throwable {
+    @Test
+    void testLoadDataObjectsId_1() throws Throwable {
         List<String> list = null;
         try {
             list = _dataObjectSearcherDao.loadDataObjectsId("ART", null, null, null);
@@ -47,7 +47,8 @@ public class TestDataObjectSearcherDAO extends BaseTestCase {
         assertFalse(list.contains("ART102"));//contenuto di gruppo customers
     }
 
-    public void testLoadDataObjectsId_2() throws Throwable {
+    @Test
+    void testLoadDataObjectsId_2() throws Throwable {
         List<String> list = null;
         try {
             List<String> groups = new ArrayList<String>();
@@ -67,14 +68,11 @@ public class TestDataObjectSearcherDAO extends BaseTestCase {
         assertTrue(list.contains("ART112"));
     }
 
+    @BeforeEach
     private void init() throws Exception {
-        try {
-            _dataObjectSearcherDao = new DataObjectSearcherDAO();
-            DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
-            ((DataObjectSearcherDAO) _dataObjectSearcherDao).setDataSource(dataSource);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._dataObjectSearcherDao = new DataObjectSearcherDAO();
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
+        ((DataObjectSearcherDAO) _dataObjectSearcherDao).setDataSource(dataSource);
     }
 
     private DataObjectSearcherDAO _dataObjectSearcherDao;

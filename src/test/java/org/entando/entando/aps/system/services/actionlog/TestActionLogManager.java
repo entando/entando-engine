@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.actionlog;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
@@ -21,16 +25,13 @@ import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSe
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class TestActionLogManager extends BaseTestCase {
+class TestActionLogManager extends BaseTestCase {
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-		this._helper.cleanRecords();
-	}
-	
+    @Test
 	public void testGetActionRecords() throws Throwable {
 		List<Integer> ids = this._actionLoggerManager.getActionRecords(null);
 		this.compareIds(new Integer [] {}, ids);
@@ -67,6 +68,7 @@ public class TestActionLogManager extends BaseTestCase {
 		
 	}
 	
+	@Test
 	public void testAddGetDeleteActionRecord() throws Throwable {
 		ActionLogRecord record1 = this._helper.createActionRecord(0, "username1", "actionName1", "namespace1", null, "params1");
 		ActionLogRecord record2 = this._helper.createActionRecord(0, "username2", "actionName2", "namespace2", null, "params2");
@@ -106,15 +108,16 @@ public class TestActionLogManager extends BaseTestCase {
 				DateConverter.getFormattedDate(received.getActionDate(), "ddMMyyyyHHmm"));
 	}
 	
+	@BeforeAll
 	private void init() {
 		this._actionLoggerManager = (IActionLogManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
 		this._helper = new ActionLoggerTestHelper(this.getApplicationContext());
+        this._helper.cleanRecords();
 	}
 	
-	@Override
-	protected void tearDown() throws Exception {
+	@AfterAll
+	protected void destroy() throws Exception {
 		this._helper.cleanRecords();
-		super.tearDown();
 	}
 	
 	private IActionLogManager _actionLoggerManager;

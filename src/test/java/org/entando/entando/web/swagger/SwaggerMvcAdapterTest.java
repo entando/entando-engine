@@ -5,16 +5,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SwaggerMvcAdapterTest {
+@ExtendWith(MockitoExtension.class)
+class SwaggerMvcAdapterTest {
 
     @Mock
     private ResourceHandlerRegistry resourceHandlerRegistry;
@@ -23,7 +22,7 @@ public class SwaggerMvcAdapterTest {
     private SwaggerMvcAdapter swaggerMvcAdapter;
 
     @Test
-    public void testaddResourceHandlers() {
+    void testaddResourceHandlers() {
 
         when(resourceHandlerRegistry.addResourceHandler(anyString())).thenReturn(resourceHandlerRegistration);
         when(resourceHandlerRegistration.addResourceLocations(anyString())).thenReturn(resourceHandlerRegistration);

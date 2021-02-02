@@ -13,26 +13,27 @@
  */
 package org.entando.entando.aps.system.services.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Classe test del servizio gestore cache.
  *
  * @author E.Santoboni
  */
-public class CacheInfoManagerIntegrationTest extends BaseTestCase {
+class CacheInfoManagerIntegrationTest extends BaseTestCase {
 
 	private static final String DEFAULT_CACHE = CacheInfoManager.DEFAULT_CACHE_NAME;
 
 	private CacheInfoManager cacheInfoManager = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
+    @Test
 	public void testPutGetFromCache_1() {
 		String value = "Stringa prova";
 		String key = "Chiave_prova";
@@ -44,6 +45,7 @@ public class CacheInfoManagerIntegrationTest extends BaseTestCase {
 		assertNull(extracted);
 	}
 
+    @Test
 	public void testPutGetFromCache_2() {
 		String key = "Chiave_prova";
 		Object extracted = this.cacheInfoManager.getFromCache(DEFAULT_CACHE, key);
@@ -62,6 +64,7 @@ public class CacheInfoManagerIntegrationTest extends BaseTestCase {
 		assertNull(extracted);
 	}
 
+	@Test
 	public void testPutGetFromCacheOnRefreshPeriod() throws Throwable {
 		String value = "Stringa prova";
 		String key = "Chiave prova";
@@ -76,6 +79,7 @@ public class CacheInfoManagerIntegrationTest extends BaseTestCase {
 		assertNull(extracted);
 	}
 
+	@Test
 	public void testPutGetFromCacheGroup() {
 		String value = "Stringa prova";
 		String key = "Chiave prova";
@@ -89,12 +93,9 @@ public class CacheInfoManagerIntegrationTest extends BaseTestCase {
 		assertNull(extracted);
 	}
 
-	private void init() throws Exception {
-		try {
-			cacheInfoManager = (CacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
+    @BeforeEach
+	private void init() {
+		cacheInfoManager = (CacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
 	}
 
 }

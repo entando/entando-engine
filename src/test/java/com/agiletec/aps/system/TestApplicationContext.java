@@ -13,6 +13,8 @@
  */
 package com.agiletec.aps.system;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
@@ -27,13 +29,15 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author W.Ambu
  */
-public class TestApplicationContext extends BaseTestCase {
+class TestApplicationContext extends BaseTestCase {
 	
-    public void testGetServices() {
+    @Test
+    void testGetServices() {
     	ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
         assertNotNull(configManager);
         ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);

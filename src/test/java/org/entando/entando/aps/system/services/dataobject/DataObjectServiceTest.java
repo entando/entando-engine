@@ -19,17 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author E.Santoboni
  */
-public class DataObjectServiceTest {
+@ExtendWith(MockitoExtension.class)
+class DataObjectServiceTest {
 
     @InjectMocks
     private DataObjectService dataObjectService;
@@ -37,7 +43,7 @@ public class DataObjectServiceTest {
     @Mock
     private IDataObjectManager dataObjectManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         List<IEntityManager> managers = new ArrayList<>();
@@ -46,8 +52,8 @@ public class DataObjectServiceTest {
         when(this.dataObjectManager.getName()).thenReturn(SystemConstants.DATA_OBJECT_MANAGER);
     }
 
-    @Test(expected = ValidationConflictException.class)
-    public void deleteReferencedDataType() throws Throwable {
+    @Test
+    void deleteReferencedDataType() throws Throwable {
         when(this.dataObjectManager.getName()).thenReturn(SystemConstants.DATA_OBJECT_MANAGER);
         DataObject dataObject = new DataObject();
         dataObject.setTypeCode("ABC");
@@ -55,6 +61,9 @@ public class DataObjectServiceTest {
         List<String> list = new ArrayList<>();
         list.add("ABC123");
         when(this.dataObjectManager.searchId("ABC", null)).thenReturn(list);
-        this.dataObjectService.deleteDataType("ABC");
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            this.dataObjectService.deleteDataType("ABC");
+        });
     }
+    
 }

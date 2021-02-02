@@ -13,18 +13,15 @@
  */
 package com.agiletec.aps.system.services.i18n;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,8 +29,13 @@ import org.mockito.MockitoAnnotations;
 
 import com.agiletec.aps.system.services.i18n.cache.II18nManagerCacheWrapper;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class I18nManagerTest {
+@ExtendWith(MockitoExtension.class)
+class I18nManagerTest {
 
     @Mock
     private II18nManagerCacheWrapper cacheWrapper;
@@ -44,31 +46,31 @@ public class I18nManagerTest {
     @InjectMocks
     private I18nManager i18nManager = null;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    @BeforeAll
+    public static void setUp() throws Exception {
+        MockitoAnnotations.initMocks(I18nManagerTest.class);
     }
 
     @Test
-    public void testGetLabels() throws Throwable {
+    void testGetLabels() throws Throwable {
         Map<String, ApsProperties> labels = this.createMockLabels();
         when(cacheWrapper.getLabelGroups()).thenReturn(labels);
         Map<String, ApsProperties> extractedLabels = this.i18nManager.getLabelGroups();
-        assertThat(extractedLabels.size(), is(3));
+        assertEquals(3, extractedLabels.size());
     }
     
     @Test
-    public void testGetLabel() throws Throwable {
+    void testGetLabel() throws Throwable {
         when(cacheWrapper.getLabelGroup("TEST")).thenReturn(createLabel("IT Test", "EN Test"));
         String label = this.i18nManager.getLabel("TEST", "it");
         assertNotNull(label);
-        assertEquals(label, "IT Test");
+        assertEquals("IT Test", label);
         label = i18nManager.getLabel("not-exists", "it");
         assertNull(label);
     }
 
     @Test
-    public void testAddLabelGroup() throws Throwable {
+    void testAddLabelGroup() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = createLabel("prova", "test");
         i18nManager.addLabelGroup(key, labels);
@@ -76,7 +78,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testUpdateLabels() throws Throwable {
+    void testUpdateLabels() throws Throwable {
         String key = "TEST_KEY";
         ApsProperties labels = createLabel("prova", "test");
         i18nManager.updateLabelGroup(key, labels);
@@ -84,9 +86,9 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testGetLabelsKey() throws Throwable {
+    void testGetLabelsKey() throws Throwable {
         when(cacheWrapper.getLabelGroups()).thenReturn(createMockLabels());
-        assertThat(this.i18nManager.getLabelGroups().size(), is(3));
+        assertEquals(3, this.i18nManager.getLabelGroups().size());
         assertEquals(0, i18nManager.searchLabelsKey("*", false, false, null).size());
         assertEquals(3, i18nManager.searchLabelsKey("", false, false, null).size());
         assertEquals(1, i18nManager.searchLabelsKey("one", false, false, null).size());
@@ -95,7 +97,7 @@ public class I18nManagerTest {
     }
 
     @Test
-    public void testDeleteLabels() throws Throwable {
+    void testDeleteLabels() throws Throwable {
         String key = "ONE";
         i18nManager.deleteLabelGroup(key);
         Mockito.verify(cacheWrapper, Mockito.times(1)).removeLabelGroup(key);

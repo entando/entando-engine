@@ -13,6 +13,12 @@
  */
 package org.entando.entando.aps.system.services.widgettype.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -33,19 +39,16 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestApiWidgetTypeInterface extends BaseTestCase {
+class TestApiWidgetTypeInterface extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-    
-    public void testJaxbWidgetType() throws Throwable {
+    @Test
+    void testJaxbWidgetType() throws Throwable {
         this.testJaxbWidgetType("login_form");
         this.testJaxbWidgetType("formAction");
         this.testJaxbWidgetType("logic_type");
@@ -68,7 +71,8 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         return writer.toString();
     }
 
-    public void testGetJaxbWidgetType() throws Throwable {
+    @Test
+    void testGetJaxbWidgetType() throws Throwable {
         this.testInvokeGetJaxbWidgetType("login_form");
         this.testInvokeGetJaxbWidgetType("formAction");
         this.testInvokeGetJaxbWidgetType("logic_type");
@@ -94,7 +98,8 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         }
     }
 
-    public void testAddJaxbWidgetType() throws Throwable {
+    @Test
+    void testAddJaxbWidgetType() throws Throwable {
         this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", null, false);
         this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", "**testjaxb_login_form** gui", true);
         this.testInvokeAddJaxbWidgetType("testjaxb_formAction", "formAction", null, false);
@@ -145,7 +150,8 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         }
     }
 
-    public void testUpdateJaxbWidgetType() throws Throwable {
+    @Test
+    void testUpdateJaxbWidgetType() throws Throwable {
         ApsProperties titles = new ApsProperties();
         titles.setProperty("en", "English title");
         titles.setProperty("it", "Italian title");
@@ -230,12 +236,14 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         return new JAXBWidgetType(widgetType, singleGuiFragment, fragments);
     }
 
-    public void testDeleteJaxbWidgetType_1() throws Throwable {
+    @Test
+    void testDeleteJaxbWidgetType_1() throws Throwable {
         this.testInvokeDeleteJaxbNoLogicWidgetType("login_form", false);
         this.testInvokeDeleteJaxbNoLogicWidgetType("formAction", false);
     }
 
-    public void testDeleteJaxbWidgetType_2() throws Throwable {
+    @Test
+    void testDeleteJaxbWidgetType_2() throws Throwable {
         String code = "jaxb_test_delete_1";
         assertNull(this._widgetTypeManager.getWidgetType(code));
         try {
@@ -250,7 +258,8 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         }
     }
     
-    public void testDeleteJaxbWidgetType_3() throws Throwable {
+    @Test
+    void testDeleteJaxbWidgetType_3() throws Throwable {
         String code = "jaxb_test_delete_2";
         String pageCode = "homepage";
         int frame = 5;
@@ -332,6 +341,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
         this._widgetTypeManager.addWidgetType(type);
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this._widgetTypeManager = (IWidgetTypeManager) this.getApplicationContext().getBean(SystemConstants.WIDGET_TYPE_MANAGER);

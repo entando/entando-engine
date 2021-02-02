@@ -25,7 +25,6 @@ import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.pagemodel.model.*;
 import org.entando.entando.web.pagemodel.validator.PageModelValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.*;
 import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;
@@ -42,7 +41,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PageModelControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class PageModelControllerTest extends AbstractControllerTest {
 
     private static final String PAGE_MODEL_CODE = "TEST_PM";
 
@@ -59,7 +64,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     @InjectMocks
     private PageModelController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -73,8 +78,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
         dtoBuilder = new PageModelDtoBuilder();
     }
 
-    @Test public void
-    getAllPageModelsReturnOk() throws Exception {
+    @Test
+    void getAllPageModelsReturnOk() throws Exception {
 
         when(pageModelService.getPageModels(any(RestListRequest.class), any())).thenReturn(pagedMetadata());
 
@@ -121,8 +126,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
         return pageModel;
     }
 
-    @Test public void
-    addPageModelEmptyReturnBadRequest() throws Exception {
+    @Test
+    void addPageModelEmptyReturnBadRequest() throws Exception {
         PageModelRequest pageModel = new PageModelRequest();
 
         mockMvc.perform(
@@ -134,7 +139,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
                .andExpect(jsonPath("$.errors.length()", is(3)));
     }
 
-    @Test public void addPageModelWithInvalidFirstFrameReturnBadRequest() throws Exception {
+    @Test
+    void addPageModelWithInvalidFirstFrameReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithInvalidFirstFrame();
 
@@ -164,8 +170,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void
-    addPageModeWithInvalidLastFrameReturnBadRequest() throws Exception {
+    void addPageModeWithInvalidLastFrameReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithInvalidLastFrame();
 
@@ -194,8 +199,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
         return pageModel;
     }
 
-    @Test public void
-    addPageModelWithMultipleInvalidFramesReturnBadRequest() throws Exception {
+    @Test 
+    void addPageModelWithMultipleInvalidFramesReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithMultipleInvalidFrames();
 
@@ -223,8 +228,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
         return pageModel;
     }
 
-    @Test public void
-    addPageModelWithFrameMissingDescriptionReturnBadRequest() throws Exception {
+    @Test 
+    void addPageModelWithFrameMissingDescriptionReturnBadRequest() throws Exception {
 
         PageModelRequest pageModel = pageModelWithFrameMissingDescription();
 
@@ -251,7 +256,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
         return pageModel;
     }
 
-    @Test public void addSimpleValidPageModelReturnOK() throws Exception {
+    @Test
+    void addSimpleValidPageModelReturnOK() throws Exception {
         ResultActions result = mockMvc.perform(
                 post("/pageModels")
                         .content(simplePageModelJson())
@@ -259,7 +265,7 @@ public class PageModelControllerTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
 
-        verify(pageModelService, times(1)).addPageModel(any());
+        verify(pageModelService, times(1)).addPageModel(any(PageModelRequest.class));
     }
 
     private String simplePageModelJson() {
@@ -285,8 +291,8 @@ public class PageModelControllerTest extends AbstractControllerTest {
                     + " }";
     }
 
-    @Test public void
-    addComplexValidPageModelReturnOk() throws Exception {
+    @Test
+    void addComplexValidPageModelReturnOk() throws Exception {
 
         mockMvc.perform(
                 post("/pageModels")

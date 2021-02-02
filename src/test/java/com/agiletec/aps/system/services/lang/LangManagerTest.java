@@ -18,19 +18,21 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.cache.ILangManagerCacheWrapper;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import java.util.List;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author E.Santoboni
  */
-public class LangManagerTest {
+@ExtendWith(MockitoExtension.class)
+class LangManagerTest {
 
 	@Mock
 	private ConfigInterface configManager;
@@ -44,9 +46,9 @@ public class LangManagerTest {
 	@InjectMocks
 	private LangManager langManager;
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
+	@BeforeEach
+	public static void setUp() throws Exception {
+		MockitoAnnotations.initMocks(LangManagerTest.class);
 	}
 
 	@Test
@@ -55,13 +57,13 @@ public class LangManagerTest {
 		defaultLang.setCode("de");
 		defaultLang.setCode("German");
 		Mockito.when(cacheWrapper.getDefaultLang()).thenReturn(defaultLang);
-		Assert.assertThat(this.langManager.getDefaultLang(), CoreMatchers.is(CoreMatchers.notNullValue()));
+		Assertions.assertNotNull(this.langManager.getDefaultLang());
 	}
 
 	@Test
 	public void getAssignableLangs() throws Throwable {
 		List<Lang> langs = this.langManager.getAssignableLangs();
-		Assert.assertTrue(langs.size() > 100);
+		Assertions.assertTrue(langs.size() > 100);
 	}
 
 	/*

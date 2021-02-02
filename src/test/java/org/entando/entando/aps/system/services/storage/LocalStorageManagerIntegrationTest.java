@@ -13,43 +13,46 @@
  */
 package org.entando.entando.aps.system.services.storage;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
-
 import org.apache.commons.lang3.Functions;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author S.Loru - E.Santoboni
  */
-public class LocalStorageManagerIntegrationTest extends BaseTestCase {
+class LocalStorageManagerIntegrationTest extends BaseTestCase {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(LocalStorageManagerIntegrationTest.class);
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testInitialize() {
+    @Test
+    void testInitialize() {
         assertNotNull(localStorageManager);
     }
 
-    public void testStorageFileList() throws Throwable {
+    @Test
+    void testStorageFileList() throws Throwable {
         String[] filenames = localStorageManager.listFile("", false);
         assertEquals(1, filenames.length);
         assertEquals("entando_logo.jpg", filenames[0]);
@@ -62,7 +65,8 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testStorageDirectoryList() throws Throwable {
+    @Test
+    void testStorageDirectoryList() throws Throwable {
         String[] directoryNames = localStorageManager.listDirectory("", false);
         assertTrue(directoryNames.length >= 1);
         List<String> list = Arrays.asList(directoryNames);
@@ -72,7 +76,8 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         assertEquals(0, directoryNames.length);
     }
 
-    public void testListAttributes() throws Throwable {
+    @Test
+    void testListAttributes() throws Throwable {
         BasicFileAttributeView[] fileAttributes = localStorageManager.listAttributes("", false);
         boolean containsConf = false;
         boolean prevDirectory = true;
@@ -94,7 +99,8 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         assertTrue(containsConf);
     }
 
-    public void testListAttributes_2() throws Throwable {
+    @Test
+    void testListAttributes_2() throws Throwable {
         BasicFileAttributeView[] fileAttributes = localStorageManager.listAttributes("conf" + File.separator, false);
         assertEquals(3, fileAttributes.length);
         int dirCounter = 0;
@@ -111,7 +117,8 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         assertEquals(3, fileCounter);
     }
 
-    public void testListAttributes_3() throws Throwable {
+    @Test
+    void testListAttributes_3() throws Throwable {
         // Non existent directory
         BasicFileAttributeView[] fileAttributes =
                 localStorageManager.listAttributes("non-existent" + File.separator, false);
@@ -123,19 +130,21 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         assertEquals(0, fileAttributes.length);
     }
 
-    public void testGetStream_ShouldBlockPathTraversal() throws Throwable {
+    @Test
+    void testGetStream_ShouldBlockPathTraversal() throws Throwable {
         String testFilePath = "../testfolder/test.txt";
 
         try {
             localStorageManager.getStream(testFilePath, false);
         } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+            assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
         } catch (Throwable t) {
             fail("Shouldn't reach this point");
         }
     }
 
-    public void testSaveEditDeleteFile() throws Throwable {
+    @Test
+    void testSaveEditDeleteFile() throws Throwable {
         String testFilePath = "testfolder/test.txt";
         InputStream stream = localStorageManager.getStream(testFilePath, false);
         assertNull(stream);
@@ -175,29 +184,22 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         );
     }
 
-    public void testCreateDeleteFile_ShouldBlockPathTraversals() throws Throwable {
+    @Test
+    void testCreateDeleteFile_ShouldBlockPathTraversals() throws Throwable {
         String testFilePath = "../../testfolder/test.txt";
         String content = "Content of new text file";
-
-        try {
-            localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
-        } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
-
-        try {
-            localStorageManager.deleteFile(testFilePath, false);
-            fail("Shouldn't reach this point");
-        } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
+        EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
+        });
+        assertThat(exc1.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+        EntRuntimeException exc2 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.deleteFile(testFilePath, false);
+        });
+        assertThat(exc2.getMessage(), CoreMatchers.startsWith("Path validation failed"));
     }
 
-    public void testCreateDeleteDir() throws EntException {
+    @Test
+    void testCreateDeleteDir() throws EntException {
         String directoryName = "testfolder";
         String subDirectoryName = "subfolder";
         assertFalse(localStorageManager.exists(directoryName, false));
@@ -214,7 +216,8 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testCreateDeleteDir_ShouldHandleFailureCases() throws EntException {
+    @Test
+    void testCreateDeleteDir_ShouldHandleFailureCases() throws EntException {
         String baseFolder = "non-existent";
         String endingFolder = "dir-to-create";
         String fullPath = baseFolder + File.separator + endingFolder;
@@ -235,35 +238,26 @@ public class LocalStorageManagerIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testCreateDeleteDirectory_ShouldBlockPathTraversals() throws Throwable {
-        try {
-            localStorageManager.createDirectory("/../../../dev/mydir", false);
-            fail("Shouldn't reach this point");
-        } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
+    @Test
+    void testCreateDeleteDirectory_ShouldBlockPathTraversals() throws Throwable {
+        EntRuntimeException exc1 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.createDirectory("/../../../dev/mydir", false);
+        });
+        assertThat(exc1.getMessage(), CoreMatchers.startsWith("Path validation failed"));
 
-        try {
-            localStorageManager.deleteDirectory("/../../../dev/mydir", false);
-        } catch (EntRuntimeException e) {
-            Assert.assertThat(e.getMessage(), CoreMatchers.startsWith("Path validation failed"));
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        }
-
-        try {
-            localStorageManager.createDirectory("target/mydir", false);
-        } catch (Throwable t) {
-            fail("Shouldn't reach this point");
-        } finally {
-            localStorageManager.deleteDirectory("target/mydir", false);
-            localStorageManager.deleteDirectory("target", false);
-        }
+        EntRuntimeException exc2 = Assertions.assertThrows(EntRuntimeException.class, () -> {
+            this.localStorageManager.deleteDirectory("/../../../dev/mydir", false);
+        });
+        assertThat(exc2.getMessage(), CoreMatchers.startsWith("Path validation failed"));
+        this.localStorageManager.createDirectory("target/mydir", false);
+        BasicFileAttributeView[] attributes = this.localStorageManager.listAttributes("target/mydir", false);
+        assertNotNull(attributes);
+        assertEquals(0, attributes.length);
+        this.localStorageManager.deleteDirectory("target/mydir", false);
+        this.localStorageManager.deleteDirectory("target", false);
     }
 
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             localStorageManager = (IStorageManager) this.getApplicationContext().getBean(SystemConstants.STORAGE_MANAGER);

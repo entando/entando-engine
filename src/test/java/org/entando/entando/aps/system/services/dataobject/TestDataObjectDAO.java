@@ -13,6 +13,12 @@
  */
 package org.entando.entando.aps.system.services.dataobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -26,27 +32,19 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test del Data Access Object per gli oggetti DataObject.
  *
  * @author E.Santoboni
  */
-public class TestDataObjectDAO extends BaseTestCase {
+class TestDataObjectDAO extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.dispose();
-    }
-
-    public void testDeleteAddDataObject() throws Throwable {
+    @Test
+    void testDeleteAddDataObject() throws Throwable {
         try {
             DataObject mockDataObject = this.getMockDataObject();
             this.deleteDataObject(mockDataObject);
@@ -70,7 +68,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         assertTrue(dataObjectRecord.isOnLine());
     }
 
-    public void testGetAllDataObjectIds() throws Throwable {
+    @Test
+    void testGetAllDataObjectIds() throws Throwable {
         List<String> dataObjectIds1 = this._dataObjectDao.getAllEntityId();
         List<String> dataObjectIds2 = this._dataObjectManager.searchId(null);
         assertEquals(dataObjectIds1.size(), dataObjectIds2.size());
@@ -80,7 +79,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         }
     }
 
-    public void testInsertRemoveOnlineDataObject() throws Throwable {
+    @Test
+    void testInsertRemoveOnlineDataObject() throws Throwable {
         try {
             DataObject mockDataObject = this.getMockDataObject();
             this.insertOnLineDataObject(mockDataObject);
@@ -108,7 +108,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         assertFalse(dataObjectRecord.isOnLine());
     }
 
-    public void testUpdateDataObject() throws Throwable {
+    @Test
+    void testUpdateDataObject() throws Throwable {
         try {
             DataObject mockDataObject = this.getMockDataObject();
             mockDataObject.setDescription("New Description");
@@ -119,7 +120,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         }
     }
 
-    public void testGetGroupUtilizers() throws Throwable {
+    @Test
+    void testGetGroupUtilizers() throws Throwable {
         List<String> dataObjectIds = _dataObjectDao.getGroupUtilizers("customers");
         assertNotNull(dataObjectIds);
         assertEquals(5, dataObjectIds.size());
@@ -166,7 +168,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         return dataObject;
     }
 
-    private void dispose() throws Exception {
+    @AfterEach
+    void dispose() throws Exception {
         DataObject mockDataObject = this.getMockDataObject();
         try {
             this._dataObjectDao.deleteEntity(mockDataObject.getId());
@@ -175,7 +178,8 @@ public class TestDataObjectDAO extends BaseTestCase {
         }
     }
 
-    private void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         this._dataObjectDao = new DataObjectDAO();
         try {
             this._dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");

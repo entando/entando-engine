@@ -19,15 +19,18 @@ import java.util.HashMap;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 
-public class ApiServiceCacheWrapperTest {
+@ExtendWith(MockitoExtension.class)
+class ApiServiceCacheWrapperTest {
 
 	private static final String CACHE_NAME = IApiCatalogManager.API_CATALOG_CACHE_NAME;
 
@@ -37,7 +40,7 @@ public class ApiServiceCacheWrapperTest {
 	@InjectMocks
 	private ApiServiceCacheWrapper cacheWrapper;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		ConcurrentMapCache fakeCache = new ConcurrentMapCache(CACHE_NAME);

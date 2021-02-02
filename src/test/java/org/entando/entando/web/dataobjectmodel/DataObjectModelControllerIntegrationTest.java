@@ -22,7 +22,6 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.JsonPatchBuilder;
 import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
@@ -39,7 +38,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataObjectModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.Test;
+
+class DataObjectModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String BASE_URI = "/dataModels";
 
@@ -49,7 +50,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testGetDataModelDictionary() throws Exception {
+    void testGetDataModelDictionary() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get(BASE_URI + "/dictionary")
@@ -59,7 +60,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testGetDataModelDictionaryWithTypeCode() throws Exception {
+    void testGetDataModelDictionaryWithTypeCode() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get(BASE_URI + "/dictionary")
@@ -69,7 +70,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testGetDataModelDictionaryValidTypeCodeInvalid() throws Exception {
+    void testGetDataModelDictionaryValidTypeCodeInvalid() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get(BASE_URI + "/dictionary")
@@ -80,7 +81,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testGetDataModelsDefaultSorting() throws Exception {
+    void testGetDataModelsDefaultSorting() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get("/dataModels")
@@ -92,7 +93,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testSearch() throws Exception {
+    void testSearch() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -140,7 +141,7 @@ public class DataObjectModelControllerIntegrationTest extends AbstractController
     }
 
     @Test
-    public void testCrud() throws Exception {
+    void testCrud() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         long id = 12345;

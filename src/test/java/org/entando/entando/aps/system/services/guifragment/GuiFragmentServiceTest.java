@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.guifragment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.guifragment.FragmentTestUtil.validFragmentRequest;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -39,15 +38,19 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.page.model.PageSearchRequest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class GuiFragmentServiceTest {
+@ExtendWith(MockitoExtension.class)
+class GuiFragmentServiceTest {
 
     @InjectMocks
     private GuiFragmentService guiFragmentService;
@@ -64,16 +67,16 @@ public class GuiFragmentServiceTest {
     @Mock
     private PagedMetadataMapper pagedMetadataMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         Lang defaultLang = mock(Lang.class);
-        when(defaultLang.getCode()).thenReturn("en");
-        when(langManager.getDefaultLang()).thenReturn(defaultLang);
+        Mockito.lenient().when(defaultLang.getCode()).thenReturn("en");
+        Mockito.lenient().when(langManager.getDefaultLang()).thenReturn(defaultLang);
     }
 
-    @Test(expected = ValidationGenericException.class)
-    public void shouldRaiseExceptionOnDeleteReservedFragment() throws Throwable {
+    @Test
+    void shouldRaiseExceptionOnDeleteReservedFragment() throws Throwable {
         GuiFragment reference = new GuiFragment();
         reference.setCode("referenced_code");
         reference.setGui("<p>Code</p>");
@@ -85,11 +88,13 @@ public class GuiFragmentServiceTest {
         GuiFragment fragment = new GuiFragment();
         fragment.setCode("test_code");
         when(guiFragmentManager.getGuiFragment("test_code")).thenReturn(fragment);
-        this.guiFragmentService.removeGuiFragment(fragment.getCode());
+        Assertions.assertThrows(ValidationGenericException.class, () -> {
+            this.guiFragmentService.removeGuiFragment(fragment.getCode());
+        });
     }
 
     @Test
-    public void shouldCreateFragment() throws Exception {
+    void shouldCreateFragment() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
@@ -112,11 +117,11 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldUpdateFragment() throws Exception {
+    void shouldUpdateFragment() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
-        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        Mockito.lenient().when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
@@ -136,11 +141,11 @@ public class GuiFragmentServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateGuiNonce() throws Exception {
+    void shouldNotUpdateGuiNonce() throws Exception {
         GuiFragment fragment = FragmentMockHelper.mockGuiFragment();
         GuiFragmentDto fragmentDto = FragmentMockHelper.mockGuiFragmentDto(fragment, langManager);
 
-        when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
+        Mockito.lenient().when(guiFragmentManager.getGuiFragment(anyString())).thenReturn(fragment);
         when(this.dtoBuilder.convert(any(GuiFragment.class))).thenReturn(fragmentDto);
 
         // Given
@@ -160,16 +165,14 @@ public class GuiFragmentServiceTest {
         assertThat(argument.getGui()).isEqualTo(expectedGui);
     }
 
-
     @Test
-    public void getFragmentUsageForNonExistingCodeShouldReturnZero() {
-
+    void getFragmentUsageForNonExistingCodeShouldReturnZero() {
         int componentUsage = guiFragmentService.getComponentUsage("non_existing");
-        assertEquals(0, componentUsage);
+        Assertions.assertEquals(0, componentUsage);
     }
 
     @Test
-    public void getFragmentUsageTest() throws Exception {
+    void getFragmentUsageTest() throws Exception {
 
         Lang lang = new Lang();
         lang.setCode("IT");
@@ -218,7 +221,7 @@ public class GuiFragmentServiceTest {
             when(pagedMetadataMapper.getPagedResult(any(), any())).thenReturn(pagedMetadata);
 
         } catch (Exception e) {
-            Assert.fail("Mock Exception");
+            Assertions.fail("Mock Exception");
         }
     }
 }

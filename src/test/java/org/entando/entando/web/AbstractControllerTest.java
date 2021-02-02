@@ -30,9 +30,11 @@ import org.entando.entando.web.common.handlers.RestExceptionHandler;
 import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +45,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+@ExtendWith(MockitoExtension.class)
 public class AbstractControllerTest {
 
     protected MockMvc mockMvc;
@@ -133,7 +136,7 @@ public class AbstractControllerTest {
         return new AuthRequestBuilder(mockMvc, getAccessToken(), requestBuilder);
     }
     
-    @Before
+    @BeforeEach
     public void cleanToken() {
         accessToken = null;
     }

@@ -16,15 +16,14 @@ package org.entando.entando.web.health;
 import org.entando.entando.aps.system.services.health.IHealthService;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class HealthControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.BeforeEach;
+
+class HealthControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private final String healthEndpoint = "/health";
 
@@ -33,13 +32,13 @@ public class HealthControllerIntegrationTest extends AbstractControllerIntegrati
 
     private MockMvcHelper mockMvcHelper;
 
-    @Before
+    @BeforeEach
     public void setupTests() {
         mockMvcHelper = new MockMvcHelper(mockMvc);
     }
 
     @Test
-    public void isHealthy() throws Exception {
+    void isHealthy() throws Exception {
 
         mockMvcHelper.getMockMvc(healthEndpoint).andExpect(status().isOk());
     }

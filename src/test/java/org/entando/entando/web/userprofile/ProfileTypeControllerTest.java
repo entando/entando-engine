@@ -22,10 +22,11 @@ import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.userprofile.model.ProfileTypeDtoRequest;
 import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+
 import static org.hamcrest.CoreMatchers.is;
+
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,13 +35,21 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.springframework.validation.BindingResult;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class ProfileTypeControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class ProfileTypeControllerTest extends AbstractControllerTest {
 
     @Mock
     private IUserProfileManager userProfileManager;
@@ -54,7 +63,7 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
     @InjectMocks
     private ProfileTypeController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -65,7 +74,7 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateNoPayload() throws Exception {
+    void testUpdateNoPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -77,7 +86,7 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testPayloadOk() throws Exception {
+    void testPayloadOk() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         InputStream isJsonPost = this.getClass().getResourceAsStream("1_POST_valid.json");
@@ -92,7 +101,7 @@ public class ProfileTypeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testReloadReferences() throws Exception {
+    void testReloadReferences() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc

@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.i18n;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.util.ApsProperties;
@@ -30,33 +35,33 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestApiI18nLabelInterface extends ApiBaseTestCase {
+class TestApiI18nLabelInterface extends ApiBaseTestCase {
 	
-	@Override
-    protected void setUp() throws Exception {
-    	super.setUp();
-    	this.init();
-    }
-	
+    @Test
 	public void testGetXmlLabel() throws Throwable {
 		MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
 		this.testGetLabel(mediaType, "admin", "PAGE_TITLE");
 	}
 	
+	@Test
 	public void testGetJsonLabel() throws Throwable {
 		MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
 		this.testGetLabel(mediaType, "admin", "PAGE_TITLE");
 	}
 	
+	@Test
 	public void testCreateNewLabelFromXml() throws Throwable {
 		MediaType mediaType = MediaType.APPLICATION_XML_TYPE;
 		this.testCreateNewLabel(mediaType);
 	}
 	
+	@Test
 	public void testCreateNewContentFromJson() throws Throwable {
 		MediaType mediaType = MediaType.APPLICATION_JSON_TYPE;
 		this.testCreateNewLabel(mediaType);
@@ -106,12 +111,10 @@ public class TestApiI18nLabelInterface extends ApiBaseTestCase {
 		return jaxbLabel;
 	}
 	
-	private void init() throws Exception {
-    	try {
-    		this._i18nManager = (II18nManager) this.getApplicationContext().getBean(SystemConstants.I18N_MANAGER);
-    	} catch (Throwable t) {
-    		throw new Exception(t);
-        }
+    @BeforeEach
+	protected void init() {
+        super.init();
+    	this._i18nManager = (II18nManager) this.getApplicationContext().getBean(SystemConstants.I18N_MANAGER);
     }
 	
 	private II18nManager _i18nManager;
