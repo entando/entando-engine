@@ -21,7 +21,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.userpreferences.model.UserPreferencesDto;
 import org.entando.entando.web.userpreferences.model.UserPreferencesRequest;
-import org.entando.entando.web.userpreferences.validator.UserPreferencesValidator;
+import org.entando.entando.web.userprofile.validator.ProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,13 +45,13 @@ public class UserPreferencesController {
     private IUserPreferencesService userPreferencesService;
 
     @Autowired
-    private UserPreferencesValidator userPreferencesValidator;
+    private ProfileValidator profileValidator;
 
     @GetMapping(value = "/userPreferences/{username:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> getUserPreferences(
             @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult) {
         logger.debug("Getting user '{}' preferences ", username);
-        userPreferencesValidator.validate(user, username, bindingResult);
+        profileValidator.validate(user, username, bindingResult);
         UserPreferencesDto response = userPreferencesService.getUserPreferences(username);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class UserPreferencesController {
             @ModelAttribute("user") UserDetails user, @PathVariable String username,
             @Valid @RequestBody UserPreferencesRequest bodyRequest, BindingResult bindingResult) {
         logger.debug("Updating user '{}' preferences to -> {}", username, bodyRequest);
-        userPreferencesValidator.validate(user, username, bindingResult);
+        profileValidator.validate(user, username, bindingResult);
         UserPreferencesDto response = userPreferencesService.updateUserPreferences(username, bodyRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }

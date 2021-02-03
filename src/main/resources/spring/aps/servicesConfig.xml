@@ -200,4 +200,10 @@
         <property name="userPreferencesManager" ref="UserPreferencesManager" />
     </bean>
 
+    <bean id="UserProfilePictureService"
+            class="org.entando.entando.aps.system.services.userprofilepicture.UserProfilePictureService" >
+        <property name="userProfilePictureManager" ref="UserProfilePictureManager" />
+        <property name="storageManager" ref="StorageManager" />
+    </bean>
+
 </beans>

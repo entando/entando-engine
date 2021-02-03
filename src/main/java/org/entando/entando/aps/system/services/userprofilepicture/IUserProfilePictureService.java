@@ -11,21 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.userprofile;
+package org.entando.entando.aps.system.services.userprofilepicture;
 
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.web.userprofilepicture.model.UserProfilePictureDto;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * @author E.Santoboni
- */
-public interface IUserProfileService {
-
-    EntityDto getUserProfile(String username);
-    EntityDto addUserProfile(EntityDto request, BindingResult bindingResult);
-    EntityDto updateUserProfile(EntityDto request, BindingResult bindingResult);
-
+public interface IUserProfilePictureService {
+    UserProfilePictureDto getUserProfilePicture(UserDetails user);
+    UserProfilePictureDto addUserProfilePicture(MultipartFile file, UserDetails user);
+    UserProfilePictureDto updateUserProfilePicture(MultipartFile file, UserDetails user);
+    void deleteUserProfilePicture(UserDetails user);
 }

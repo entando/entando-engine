@@ -396,6 +396,11 @@
         <property name="userPreferencesDAO" ref="UserPreferencesDAO" />
     </bean>
 
+    <bean id="UserProfilePictureManager"
+            class="org.entando.entando.aps.system.services.userprofilepicture.UserProfilePictureManager">
+        <property name="userProfilePictureDAO" ref="UserProfilePictureDAO" />
+    </bean>
+
     <task:scheduler id="entandoScheduler" pool-size="10"/>
 
     <task:scheduled-tasks scheduler="entandoScheduler">

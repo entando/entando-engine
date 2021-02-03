@@ -67,6 +67,8 @@
         <value>org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft</value>
         <value>org.entando.entando.aps.system.init.model.portdb.Uniquekeys</value>
         <value>org.entando.entando.aps.system.init.model.portdb.UserPreferences</value>
+        <value>org.entando.entando.aps.system.init.model.portdb.UserProfilePicture</value>
+        <value>org.entando.entando.aps.system.init.model.portdb.UserProfilePictureVersion</value>
     </util:list>
 
     <util:list id="entandoServTableClasses">
