@@ -13,14 +13,16 @@
  */
 package com.agiletec.aps.system.services.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang3.time.DateUtils;
 import org.entando.entando.aps.system.services.widgettype.*;
 
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 public class PageTestUtil {
 

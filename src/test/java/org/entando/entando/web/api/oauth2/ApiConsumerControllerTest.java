@@ -25,14 +25,10 @@ import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.api.oauth2.validator.ApiConsumerValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -42,8 +38,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ApiConsumerControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class ApiConsumerControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/consumers";
 
@@ -59,7 +60,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     private final ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     private String accessToken;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         apiConsumerService = new ApiConsumerServiceImpl(consumerManager);
@@ -76,7 +77,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testNotFound() throws Exception {
+    void testNotFound() throws Exception {
 
         ResultActions result = authRequest(get(BASE_URL + "/valid_key"));
         result.andExpect(status().isNotFound())
@@ -89,7 +90,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAlreadyExists() throws Exception {
+    void testAlreadyExists() throws Exception {
 
         when(consumerManager.getConsumerRecord("valid_key")).thenReturn(new ConsumerRecordVO());
 
@@ -102,7 +103,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testKeyMismatch() throws Exception {
+    void testKeyMismatch() throws Exception {
 
         ApiConsumer apiConsumer = getValidPayload();
 
@@ -115,7 +116,7 @@ public class ApiConsumerControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testFieldsValidation() throws Exception {
+    void testFieldsValidation() throws Exception {
 
         testValidationErrorPost(c -> c.setKey(null));
         testValidationErrorPost(c -> c.setKey("x")); // too short

@@ -26,8 +26,6 @@ import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedE
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.aps.system.services.userprofile.parse.UserProfileTypeDOM;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -36,12 +34,18 @@ import org.mockito.MockitoAnnotations;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 
-public class UserProfileManagerTest {
+@ExtendWith(MockitoExtension.class)
+class UserProfileManagerTest {
 
     @InjectMocks
     private UserProfileManager userProfileManager;
@@ -67,7 +71,7 @@ public class UserProfileManagerTest {
 
     private String configItemName = "userProfileTypes";
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockServletContext servletContext = new MockServletContext("", new FileSystemResourceLoader());
         new ConfigTestUtils().createApplicationContext(servletContext);
@@ -78,7 +82,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testGetDefaultProfileType() throws EntException {
+    void testGetDefaultProfileType() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,
@@ -96,7 +100,7 @@ public class UserProfileManagerTest {
     }
 
     @Test
-    public void testAddProfile() throws EntException {
+    void testAddProfile() throws EntException {
         // @formatter:off
         when(entityTypeFactory.extractEntityType(
                 SystemConstants.DEFAULT_PROFILE_TYPE_CODE,

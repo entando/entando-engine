@@ -17,13 +17,12 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,8 +65,8 @@ import org.entando.entando.web.page.model.PageStatusRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
@@ -78,7 +77,7 @@ import org.springframework.util.LinkedMultiValueMap;
 /**
  * @author paddeo
  */
-public class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;
@@ -92,7 +91,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testPageTree() throws Throwable {
+    void testPageTree() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .grantedToRoleAdmin()
                 .build();
@@ -157,7 +156,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPageTreeWithManagePagesPermission() throws Throwable {
+    void testPageTreeWithManagePagesPermission() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -169,7 +168,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
     
     @Test
-    public void testPageSearch() throws Exception {
+    void testPageSearch() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -185,7 +184,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetPage_1() throws Exception {
+    void testGetPage_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -199,7 +198,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetPage_2() throws Throwable {
+    void testGetPage_2() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -260,7 +259,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetPageUsage() throws Exception {
+    void testGetPageUsage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String code = "pagina_11";
@@ -276,7 +275,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPatchPage() throws Exception {
+    void testPatchPage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .grantedToRoleAdmin()
                 .build();
@@ -339,7 +338,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPageSearchFreeOnlinePages() throws Exception {
+    void testPageSearchFreeOnlinePages() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -353,7 +352,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testMove() throws Throwable {
+    void testMove() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -533,7 +532,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddPublishUnpublishDelete() throws Exception {
+    void testAddPublishUnpublishDelete() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -553,7 +552,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             IPage page = this.pageManager.getDraftPage(code);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(6, page.getWidgets().length);
+            Assertions.assertEquals(6, page.getWidgets().length);
 
             //put (move the page changing parent from service to homepage)
             String newParentCode = "homepage";
@@ -604,8 +603,8 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             page = this.pageManager.getDraftPage(code);
-            Assert.assertEquals(4, page.getWidgets().length);
-            Assert.assertEquals("new Italian title", page.getTitle("it"));
+            Assertions.assertEquals(4, page.getWidgets().length);
+            Assertions.assertEquals("new Italian title", page.getTitle("it"));
 
             //status
             PageStatusRequest pageStatusRequest = new PageStatusRequest();
@@ -652,7 +651,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testMovePage() throws Exception {
+    void testMovePage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .grantedToRoleAdmin()
                 .build();
@@ -733,7 +732,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPageStatus() throws Exception {
+    void testPageStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .grantedToRoleAdmin()
                 .build();
@@ -823,7 +822,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUpdatePageModel() throws Exception {
+    void testUpdatePageModel() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -841,7 +840,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.pageModel", is("service")));
 
             IPage page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             result = mockMvc
                     .perform(put("/pages/{pageCode}", pageCode)
@@ -853,7 +852,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.pageModel", is("home")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
         } finally {
             this.pageManager.deletePage(pageCode);
@@ -861,7 +860,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testRecreatePage() throws Exception {
+    void testRecreatePage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .grantedToRoleAdmin()
                 .build();
@@ -870,10 +869,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
         try {
 
             IPage page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             ResultActions result = mockMvc
                     .perform(post("/pages")
@@ -904,10 +903,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.status", is("published")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
@@ -917,10 +916,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.errors[0].message", is("Online pages can not be deleted")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             pageStatusRequest.setStatus("draft");
 
@@ -934,10 +933,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.status", is("unpublished")));
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNotNull(page);
+            Assertions.assertNotNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             result = mockMvc
                     .perform(delete("/pages/{code}", pageCode)
@@ -945,10 +944,10 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             result.andDo(resultPrint()).andExpect(status().isOk());
 
             page = this.pageManager.getDraftPage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             page = this.pageManager.getOnlinePage(pageCode);
-            Assert.assertNull(page);
+            Assertions.assertNull(page);
 
             result = mockMvc
                     .perform(get("/pages/{pageCode}", pageCode)
@@ -969,7 +968,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testListViewPages() throws Throwable {
+    void testListViewPages() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -1005,7 +1004,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPutOnPageWithChildren() throws Exception {
+    void testPutOnPageWithChildren() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -1028,7 +1027,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             IPage page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(0, page.getChildrenCodes().length);
+            Assertions.assertEquals(0, page.getChildrenCodes().length);
 
             //Adding children
             pageRequest.setCode(childrenPageCode);
@@ -1037,11 +1036,11 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             page = this.pageManager.getDraftPage(childrenPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(0, page.getChildrenCodes().length);
+            Assertions.assertEquals(0, page.getChildrenCodes().length);
 
             page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(1, page.getChildrenCodes().length);
+            Assertions.assertEquals(1, page.getChildrenCodes().length);
 
             //Updating parentPage
             pageRequest.setCode(parentPageCode);
@@ -1056,7 +1055,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
             page = this.pageManager.getDraftPage(parentPageCode);
             assertThat(page, is(not(nullValue())));
-            Assert.assertEquals(1, page.getChildrenCodes().length);
+            Assertions.assertEquals(1, page.getChildrenCodes().length);
 
         } finally {
             this.pageManager.deletePage(childrenPageCode);
@@ -1065,7 +1064,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testPageAddUpdateDelete() throws Exception {
+    void testPageAddUpdateDelete() throws Exception {
         String pageCode = "page_update_test";
         String widgetCode = "login_form";
 
@@ -1121,7 +1120,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetPageWithoutPermission() throws Exception {
+    void testGetPageWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -1131,7 +1130,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetPageTreeWithManagePagesPermission() throws Exception {
+    void testGetPageTreeWithManagePagesPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_PAGES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -1222,7 +1221,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
 
     @Test
-    public void testPageUsageDetailsWithoutPermissionWillResultIn401() throws Exception {
+    void testPageUsageDetailsWithoutPermissionWillResultIn401() throws Exception {
 
         UserDetails admin = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String adminAccessToken = mockOAuthInterceptor(admin);
@@ -1245,7 +1244,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             resultActions.andExpect(status().isUnauthorized());
 
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
         } finally {
             this.pageManager.deletePage(PageRequestMockHelper.ADD_PAGE_CODE);
         }
@@ -1253,7 +1252,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
 
     @Test
-    public void testPageUsageDetailsWithPublishedPageShouldBeIncluded() throws Exception {
+    void testPageUsageDetailsWithPublishedPageShouldBeIncluded() throws Exception {
 
         List<ComponentUsageEntity> expectedResult = Arrays.asList(
                 new ComponentUsageEntity(ComponentUsageEntity.TYPE_PAGE, PageRequestMockHelper.ADD_FIRST_CHILD_PAGE_CODE, IPageService.STATUS_UNPUBLISHED),
@@ -1264,7 +1263,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
 
     @Test
-    public void testPageUsageDetailsWithUnpublishedPageShouldNOTBeIncluded() throws Exception {
+    void testPageUsageDetailsWithUnpublishedPageShouldNOTBeIncluded() throws Exception {
 
         List<ComponentUsageEntity> expectedResult = Arrays.asList(new ComponentUsageEntity(ComponentUsageEntity.TYPE_PAGE, PageRequestMockHelper.ADD_FIRST_CHILD_PAGE_CODE, IPageService.STATUS_UNPUBLISHED));
 
@@ -1273,7 +1272,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
 
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         String pageCode = "funny_page";
 
@@ -1324,7 +1323,7 @@ public class PageControllerIntegrationTest extends AbstractControllerIntegration
             PageAssertionHelper.assertUsagePageDetails(resultActions, expectedResult);
 
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
         } finally {
             this.deletePagesForUsageDetailsTest();
         }

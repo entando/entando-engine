@@ -23,8 +23,6 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobject.parse.DataObjectDOM;
 import org.entando.entando.aps.system.services.dataobject.parse.DataTypeDOM;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,10 +32,16 @@ import org.springframework.beans.factory.BeanFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class DataObjectManagerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DataObjectManagerTest {
 
 	private class FakeKeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
 
@@ -80,7 +84,7 @@ public class DataObjectManagerTest {
 	@InjectMocks
 	private DataObjectManager dataObjectManager;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		this.dataObjectManager.setEntityClassName(className);

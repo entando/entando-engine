@@ -1,12 +1,14 @@
 package org.entando.entando.web.common.model;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.BiFunction;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-
-public class RestNamedIdTest {
+class RestNamedIdTest {
 
     public static final String TEST_ID = "306dadea";
     public static final String TEST_ID2 = "code=306dadea";
@@ -19,7 +21,7 @@ public class RestNamedIdTest {
     public static final String TEST_ID9 = "=";
 
     @Test
-    public void testSimpleCostruction() {
+    void testSimpleCostruction() {
         RestNamedId res = RestNamedId.from(TEST_ID);
         assertEquals("", res.name);
         assertEquals(TEST_ID, res.value);
@@ -42,7 +44,7 @@ public class RestNamedIdTest {
     }
 
     @Test
-    public void testCostructionWithOf() {
+    void testCostructionWithOf() {
         BiFunction<String, String, Boolean> test = (name, value) -> {
             RestNamedId res = RestNamedId.of(name, value);
             assertEquals((name == null) ? "" : name, res.name);
@@ -58,7 +60,7 @@ public class RestNamedIdTest {
     }
 
     @Test
-    public void testCostructionSpecials() {
+    void testCostructionSpecials() {
         RestNamedId res = RestNamedId.from(TEST_ID8);
         assertEquals("", res.name);
         assertEquals("", res.value);
@@ -87,7 +89,7 @@ public class RestNamedIdTest {
     }
 
     @Test
-    public void testValueExtraction() {
+    void testValueExtraction() {
         assertEquals("306dadea", RestNamedId.from(TEST_ID).getValidValue(RestNamedId.NO_NAME).orElse(null));
         assertEquals("306dadea", RestNamedId.from(TEST_ID2).getValidValue("code").orElse(null));
         assertNull(RestNamedId.from(TEST_ID2).getValidValue("a-wrong-name").orElse(null));
@@ -96,7 +98,7 @@ public class RestNamedIdTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals("306dadea", RestNamedId.from(TEST_ID).toString());
         assertEquals("code=306dadea", RestNamedId.from(TEST_ID2).toString());
         assertEquals("", RestNamedId.from(TEST_ID8).toString());

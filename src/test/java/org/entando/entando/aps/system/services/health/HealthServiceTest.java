@@ -1,33 +1,35 @@
 package org.entando.entando.aps.system.services.health;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.system.services.health.IHealthDAO;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HealthServiceTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class HealthServiceTest {
 
     @Mock
     private IHealthDAO healthDAO;
 
     private HealthService healthService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         healthService = new HealthService(healthDAO);
     }
 
     @Test
-    public void withPortSchemaNotReachableShouldReturnFalse() {
+    void withPortSchemaNotReachableShouldReturnFalse() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(false);
 
@@ -35,7 +37,7 @@ public class HealthServiceTest {
     }
 
     @Test
-    public void withServSchemaNotReachableShouldReturnFalse() {
+    void withServSchemaNotReachableShouldReturnFalse() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(true);
         when(healthDAO.isServDBConnectionHealthy()).thenReturn(false);
@@ -44,7 +46,7 @@ public class HealthServiceTest {
     }
 
     @Test
-    public void withAllSchemaaReachableShouldReturnTrue() {
+    void withAllSchemaaReachableShouldReturnTrue() {
 
         when(healthDAO.isPortDBConnectionHealthy()).thenReturn(true);
         when(healthDAO.isServDBConnectionHealthy()).thenReturn(true);

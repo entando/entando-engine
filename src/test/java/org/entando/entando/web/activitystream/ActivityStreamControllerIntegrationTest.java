@@ -35,26 +35,30 @@ import org.entando.entando.aps.system.services.activitystream.ISocialActivityStr
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+
 import static org.hamcrest.CoreMatchers.is;
-import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import static org.junit.Assert.assertThat;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;
@@ -74,7 +78,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testGetActivityStream() throws Exception {
+    void testGetActivityStream() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -85,7 +89,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testGetActivityStreamDate() throws Exception {
+    void testGetActivityStreamDate() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String start = new Timestamp(DateConverter.parseDate("2017/01/01", "yyyy/MM/dd").getTime()).toString();
@@ -100,7 +104,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testGetActivityStreamDate_2() throws Exception {
+    void testGetActivityStreamDate_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String start = new Timestamp(DateConverter.parseDate("2018/03/01", "yyyy/MM/dd").getTime()).toString();
@@ -115,7 +119,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testActionLogRecordCRUD() throws Exception {
+    void testActionLogRecordCRUD() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {
@@ -127,7 +131,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer secondSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (secondSize - startSize));
+            Assertions.assertEquals(2, (secondSize - startSize));
 
             //add like
             int recordId = this.actionLogManager.getActionRecords(null).stream().findFirst().get();
@@ -201,7 +205,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testOrderLogRecord() throws Exception {
+    void testOrderLogRecord() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {
@@ -212,7 +216,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer actualSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (actualSize - startSize));
+            Assertions.assertEquals(2, (actualSize - startSize));
             ResultActions result = mockMvc
                     .perform(get("/activityStream")
                             .header("Authorization", "Bearer " + accessToken));
@@ -234,8 +238,8 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
             Integer firstIdInNewPos = JsonPath.read(bodyResult, "$.payload[" + (actualSize - 1) + "].id");
             Integer secondIdInNewPos = JsonPath.read(bodyResult, "$.payload[" + (actualSize - 2) + "].id");
 
-            Assert.assertEquals(firstId, firstIdInNewPos);
-            Assert.assertEquals(secondId, secondIdInNewPos);
+            Assertions.assertEquals(firstId, firstIdInNewPos);
+            Assertions.assertEquals(secondId, secondIdInNewPos);
 
             result = mockMvc
                     .perform(get("/activityStream")
@@ -253,7 +257,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
     }
 
     @Test
-    public void testFilter() throws Exception {
+    void testFilter() throws Exception {
         String pageCode1 = "draft_page_100";
         String pageCode2 = "draft_page_200";
         try {
@@ -264,7 +268,7 @@ public class ActivityStreamControllerIntegrationTest extends AbstractControllerI
 
             //assert record is present
             Integer actualSize = this.extractCurrentSize(accessToken);
-            Assert.assertEquals(2, (actualSize - startSize));
+            Assertions.assertEquals(2, (actualSize - startSize));
             mockMvc.perform(get("/activityStream")
                     .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())

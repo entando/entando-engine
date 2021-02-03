@@ -18,21 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import org.entando.entando.aps.util.crypto.Argon2PasswordEncoder;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UserManagerTest {
+@ExtendWith(MockitoExtension.class)
+class UserManagerTest {
 
     @Mock
     private IUserDAO userDao;
@@ -84,16 +88,20 @@ public class UserManagerTest {
 
     private final PasswordEncoder passwordEncoder = getCompatiblePasswordEncoder();
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        when(userDao.getPasswordEncoder()).thenReturn(passwordEncoder);
-        doNothing().when(configManager).updateConfigItem(anyString(), anyString());
-        when(configManager.getConfigItem(Mockito.anyString())).thenReturn(params);
+    @BeforeAll
+    public static void setUp() throws Exception {
+        MockitoAnnotations.initMocks(UserManagerTest.class);
+    }
+
+    @BeforeEach
+    private void init() throws EntException {
+        Mockito.lenient().when(userDao.getPasswordEncoder()).thenReturn(passwordEncoder);
+        Mockito.lenient().doNothing().when(configManager).updateConfigItem(anyString(), anyString());
+        Mockito.lenient().when(configManager.getConfigItem(Mockito.anyString())).thenReturn(params);
     }
 
     @Test
-    public void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
+    void testUserManagerInitWithBCrypt_OnlyAdmin() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.prepareInit();
@@ -105,7 +113,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
+    void testUserManagerInitWithBCrypt_AdminNull() throws Exception {
         this.emptyUsers();
         this.prepareInit();
         userManager.init();
@@ -115,14 +123,14 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
+    void testUserManagerInitPortingToBCryptPlainTextPasswords() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersPlainText();
         this.prepareInit();
-        Mockito.when(userDao.loadUser(Mockito.anyString())).thenReturn(this.getMockUser("admin"));
+        Mockito.lenient().when(userDao.loadUser(Mockito.anyString())).thenReturn(this.getMockUser("admin"));
         Mockito.when(userDao.searchUsers(null)).thenReturn(users);
-        Mockito.when(userDao.searchUsers(Mockito.anyString())).thenReturn(users);
+        Mockito.lenient().when(userDao.searchUsers(Mockito.anyString())).thenReturn(users);
         userManager.init();
         List<UserDetails> usersList = this.userManager.getUsers();
         assertNotNull(usersList);
@@ -133,14 +141,14 @@ public class UserManagerTest {
     }
 
     @Test
-    public void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
+    void testUserManagerInitPortingToBCryptOldEncryptionAndPlainTextPasswords() throws Exception {
         this.emptyUsers();
         this.mockAdminPlainText();
         this.mockUsersMixed();
         this.prepareInit();
-        Mockito.when(userDao.loadUser(Mockito.anyString())).thenReturn(this.getMockUser("admin"));
+        Mockito.lenient().when(userDao.loadUser(Mockito.anyString())).thenReturn(this.getMockUser("admin"));
         Mockito.when(userDao.searchUsers(null)).thenReturn(users);
-        Mockito.when(userDao.searchUsers(Mockito.anyString())).thenReturn(users);
+        Mockito.lenient().when(userDao.searchUsers(Mockito.anyString())).thenReturn(users);
         userManager.init();
         List<UserDetails> usersList = this.userManager.getUsers();
         assertNotNull(usersList);
@@ -210,13 +218,13 @@ public class UserManagerTest {
             String username = "user_" + i;
             UserDetails user = this.getMockUser(username);
             if (user != null) {
-                Mockito.doNothing().when(userDao).changePassword(user.getUsername(), user.getPassword());
+                Mockito.lenient().doNothing().when(userDao).changePassword(user.getUsername(), user.getPassword());
                 this.changePasswordMock(username, user.getPassword());
             }
         }
         UserDetails admin;
         if ((admin = this.getMockUser("admin")) != null) {
-            Mockito.doNothing().when(userDao).changePassword(admin.getUsername(), admin.getPassword());
+            Mockito.lenient().doNothing().when(userDao).changePassword(admin.getUsername(), admin.getPassword());
             this.changePasswordMock("admin", admin.getPassword());
         }
     }
@@ -228,4 +236,5 @@ public class UserManagerTest {
     private CompatiblePasswordEncoder getCompatiblePasswordEncoder() {
         return new CompatiblePasswordEncoder(new BCryptPasswordEncoder(), new Argon2PasswordEncoder());
     }
+    
 }

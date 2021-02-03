@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.dataobjectdispender;
 
 import org.entando.entando.aps.system.services.dataobjectdispenser.DataObjectRenderizationInfo;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModel;
@@ -24,19 +23,21 @@ import org.entando.entando.aps.system.services.dataobjectdispenser.IDataObjectDi
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
 
 import static org.entando.entando.Jdk11CompatibleDateFormatter.formatMediumDate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectDispenser extends BaseTestCase {
+class TestDataObjectDispenser extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testGetRenderedContent_1() throws Throwable {
+    @Test
+    void testGetRenderedContent_1() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
 
         DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
@@ -58,7 +59,8 @@ public class TestDataObjectDispenser extends BaseTestCase {
         assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
     }
 
-    public void testGetRenderedContent_2() throws Throwable {
+    @Test
+    void testGetRenderedContent_2() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
         this.setUserOnSession("admin");
 
@@ -78,7 +80,8 @@ public class TestDataObjectDispenser extends BaseTestCase {
         assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getRenderedDataobject().trim()));
     }
 
-    public void testGetRenderedContent_3() throws Throwable {
+    @Test
+    void testGetRenderedContent_3() throws Throwable {
         DataObject dataobject = this._dataObjectManager.loadDataObject("ART120", true);
         dataobject.setId(null);
         try {
@@ -104,7 +107,8 @@ public class TestDataObjectDispenser extends BaseTestCase {
         }
     }
 
-    public void testGetRenderedContent_4() throws Throwable {
+    @Test
+    void testGetRenderedContent_4() throws Throwable {
         String dataobjectId = "ART120";
         String dataobjectShapeModel = "title (Text): testo=$data.Titolo.getText()";
         int modelId = 1972;
@@ -133,7 +137,7 @@ public class TestDataObjectDispenser extends BaseTestCase {
         }
     }
 
-    public void addNewDataObjectModel(int id, String shape, String dataTypeCode) throws Throwable {
+    private void addNewDataObjectModel(int id, String shape, String dataTypeCode) throws Throwable {
         DataObjectModel model = new DataObjectModel();
         model.setDataType(dataTypeCode);
         model.setDescription("test");
@@ -142,8 +146,10 @@ public class TestDataObjectDispenser extends BaseTestCase {
         this._dataObjectModelManager.addDataObjectModel(model);
     }
 
-    public void testGetUnauthorizedContent() throws Throwable {
+    @Test
+    void testGetUnauthorizedContent() throws Throwable {
         RequestContext reqCtx = this.getRequestContext();
+        this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
 
         DataObjectRenderizationInfo outputInfo = this._dataObjectDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
         assertEquals("Current user 'guest' can't view this DataObject", outputInfo.getRenderedDataobject().trim());
@@ -163,15 +169,11 @@ public class TestDataObjectDispenser extends BaseTestCase {
         return input;
     }
 
+    @BeforeEach
     private void init() throws Exception {
-        try {
-            this._dataObjectDispenser = (IDataObjectDispenser) this.getService("DataObjectDispenserManager");
-            this._dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
-            this._dataObjectModelManager = (IDataObjectModelManager) this.getService("DataObjectModelManager");
-            //this._cacheInfoManager = (CacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._dataObjectDispenser = (IDataObjectDispenser) this.getService("DataObjectDispenserManager");
+        this._dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
+        this._dataObjectModelManager = (IDataObjectModelManager) this.getService("DataObjectModelManager");
     }
 
     private IDataObjectDispenser _dataObjectDispenser = null;

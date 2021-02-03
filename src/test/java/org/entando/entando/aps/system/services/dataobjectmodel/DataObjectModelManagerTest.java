@@ -13,23 +13,28 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmodel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.common.notify.INotifyManager;
 import org.entando.entando.aps.system.services.dataobjectmodel.cache.IDataObjectModelCacheWrapper;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class DataObjectModelManagerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DataObjectModelManagerTest {
 
     @Mock
     private INotifyManager notifyManager;
@@ -43,20 +48,20 @@ public class DataObjectModelManagerTest {
     @InjectMocks
     private DataObjectModelManager dataObjectModelManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testGetContentModel() {
+    void testGetContentModel() {
         when(cacheWrapper.getModel(Mockito.anyString())).thenReturn(createModel(1, "ART"));
         DataObjectModel model = this.dataObjectModelManager.getDataObjectModel(1L);
         assertNotNull(model);
     }
 
     @Test
-    public void testGetContentModels() {
+    void testGetContentModels() {
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             fakeModels.add(createModel(i, "ART"));
@@ -68,7 +73,7 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testGetModelsForContentType() {
+    void testGetModelsForContentType() {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -81,13 +86,13 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testAddDeleteContentModel() throws Throwable {
+    void testAddDeleteContentModel() throws Throwable {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             fakeModels.add(createModel(i, type));
         }
-        when(dataObjectModelManager.getDataObjectModels()).thenReturn(fakeModels);
+        Mockito.lenient().when(dataObjectModelManager.getDataObjectModels()).thenReturn(fakeModels);
 
         DataObjectModel dataModel = new DataObjectModel();
         dataModel.setId(99);
@@ -105,7 +110,7 @@ public class DataObjectModelManagerTest {
     }
 
     @Test
-    public void testUpdateContentModel() throws Throwable {
+    void testUpdateContentModel() throws Throwable {
         String type = "ART";
         List<DataObjectModel> fakeModels = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

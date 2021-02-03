@@ -13,24 +13,26 @@
  */
 package org.entando.entando.aps.system.services.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
 import org.entando.entando.aps.system.services.assertionhelper.UserGroupPermissionAssertionHelper;
 import org.entando.entando.aps.system.services.mockhelper.AuthorizationMockHelper;
 import org.entando.entando.aps.system.services.mockhelper.UserMockHelper;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertEquals;
-
-
-public class UserServiceTest {
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
@@ -38,14 +40,14 @@ public class UserServiceTest {
     private UserDetails userDetails = UserMockHelper.mockUser();
     private List<Authorization> authorizationList = AuthorizationMockHelper.mockAuthorizationList(3);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
 
     @Test
-    public void getMyGroupPermissionsTest() {
+    void getMyGroupPermissionsTest() {
 
         userDetails.addAuthorizations(authorizationList);
 
@@ -59,14 +61,14 @@ public class UserServiceTest {
 
 
     @Test
-    public void getMyGroupPermissionsWithNoAuthorizationsTest() {
+    void getMyGroupPermissionsWithNoAuthorizationsTest() {
 
         List<UserGroupPermissions> actualList = userService.getMyGroupPermissions(userDetails);
         assertEquals(0, actualList.size());
     }
 
     @Test
-    public void getMyGroupPermissionsWithNullUserShouldReturnEmptyListTest() {
+    void getMyGroupPermissionsWithNullUserShouldReturnEmptyListTest() {
 
         List<UserGroupPermissions> actualList = userService.getMyGroupPermissions(null);
         assertEquals(0, actualList.size());

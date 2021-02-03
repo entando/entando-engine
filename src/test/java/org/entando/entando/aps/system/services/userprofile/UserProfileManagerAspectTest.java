@@ -20,17 +20,21 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.user.User;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import org.junit.Assert;
 import static org.mockito.Mockito.when;
 
-public class UserProfileManagerAspectTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class UserProfileManagerAspectTest {
 
 	@InjectMocks
 	private UserProfileManagerAspect userProfileManagerAspect;
@@ -38,44 +42,43 @@ public class UserProfileManagerAspectTest {
 	@Mock
 	private UserProfileManager userProfileManager;
     
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
     
     @Test
-    public void testInjectProfile_1() throws EntException {
-        //IUserProfile mock = this.createFakeProfile("TMP");
+    void testInjectProfile_1() throws EntException {
         IUserProfile returned = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         when(userProfileManager.getProfile(Mockito.anyString())).thenReturn(returned);
         
         User user = new User();
         user.setUsername("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(1)).getProfile("test");
         IUserProfile profile = (IUserProfile) user.getProfile();
-        Assert.assertNotNull(profile);
-        Assert.assertEquals("test", profile.getUsername());
+        Assertions.assertNotNull(profile);
+        Assertions.assertEquals("test", profile.getUsername());
     }
     
     @Test
-    public void testInjectProfile_2() throws EntException {
+    void testInjectProfile_2() throws EntException {
         when(userProfileManager.getProfile(Mockito.anyString())).thenThrow(EntException.class);
         
         User user = new User();
         user.setUsername("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(1)).getProfile("test");
-        Assert.assertNull(user.getProfile());
+        Assertions.assertNull(user.getProfile());
     }
     
     @Test
-    public void testInjectProfile_3() throws EntException {
-        when(userProfileManager.getProfile(Mockito.anyString())).thenThrow(EntException.class);
+    void testInjectProfile_3() throws EntException {
+        Mockito.lenient().when(userProfileManager.getProfile(Mockito.anyString())).thenThrow(EntException.class);
         
         IUserProfile profile = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         User user = new User();
@@ -84,12 +87,12 @@ public class UserProfileManagerAspectTest {
         
         userProfileManagerAspect.injectProfile(user);
         Mockito.verify(userProfileManager, Mockito.times(0)).getProfile("test");
-        Assert.assertNotNull(user.getProfile());
-        Assert.assertSame(profile, user.getProfile());
+        Assertions.assertNotNull(user.getProfile());
+        Assertions.assertSame(profile, user.getProfile());
     }
     
     @Test
-    public void testAddProfile_1() throws EntException {
+    void testAddProfile_1() throws EntException {
         IUserProfile profile = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         User user = new User();
         user.setUsername("test");
@@ -99,7 +102,7 @@ public class UserProfileManagerAspectTest {
     }
     
     @Test
-    public void testAddProfile_2() throws EntException {
+    void testAddProfile_2() throws EntException {
         User user = new User();
         user.setUsername("test");
         userProfileManagerAspect.addProfile(user);
@@ -107,7 +110,7 @@ public class UserProfileManagerAspectTest {
     }
     
     @Test
-    public void testUpdateProfile_1() throws EntException {
+    void testUpdateProfile_1() throws EntException {
         IUserProfile profile = this.createFakeProfile("test", SystemConstants.DEFAULT_PROFILE_TYPE_CODE);
         User user = new User();
         user.setUsername("test");
@@ -117,7 +120,7 @@ public class UserProfileManagerAspectTest {
     }
     
     @Test
-    public void testUpdateProfile_2() throws EntException {
+    void testUpdateProfile_2() throws EntException {
         User user = new User();
         user.setUsername("test");
         userProfileManagerAspect.updateProfile(user);
@@ -125,7 +128,7 @@ public class UserProfileManagerAspectTest {
     }
     
     @Test
-    public void testDeleteProfile_1() throws EntException {
+    void testDeleteProfile_1() throws EntException {
         User user = new User();
         user.setUsername("test");
         userProfileManagerAspect.deleteProfile(user);
@@ -133,13 +136,13 @@ public class UserProfileManagerAspectTest {
     }
     
     @Test
-    public void testDeleteProfile_2() throws EntException {
+    void testDeleteProfile_2() throws EntException {
         userProfileManagerAspect.deleteProfile("test");
         Mockito.verify(userProfileManager, Mockito.times(1)).deleteProfile("test");
     }
     
     @Test
-    public void testDeleteProfile_3() throws EntException {
+    void testDeleteProfile_3() throws EntException {
         userProfileManagerAspect.deleteProfile(null);
         Mockito.verify(userProfileManager, Mockito.times(0)).deleteProfile("test");
     }

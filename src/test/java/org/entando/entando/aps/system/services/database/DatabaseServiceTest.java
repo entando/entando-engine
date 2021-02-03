@@ -20,16 +20,21 @@ import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 
-public class DatabaseServiceTest {
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DatabaseServiceTest {
 
     @InjectMocks
     private DatabaseService databaseService;
@@ -37,45 +42,51 @@ public class DatabaseServiceTest {
     @Mock
     private IDatabaseManager databaseManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void getInvalidReport() throws Throwable {
+    @Test
+    void getInvalidReport() throws Throwable {
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
-        this.databaseService.getDumpReportDto("reportCode");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            this.databaseService.getDumpReportDto("reportCode");
+        });
     }
 
     @Test
-    public void getValidReport() throws Throwable {
+    void getValidReport() throws Throwable {
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         DumpReportDto dto = this.databaseService.getDumpReportDto("reportCode");
-        Assert.assertNotNull(dto);
+        Assertions.assertNotNull(dto);
     }
 
     @Test
-    public void getValidTableDump() throws Throwable {
+    void getValidTableDump() throws Throwable {
         ByteArrayInputStream is = new ByteArrayInputStream("dump".getBytes());
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(is);
         byte[] base64 = this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
-        Assert.assertNotNull(base64);
+        Assertions.assertNotNull(base64);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void getInValidTableDump_1() throws Throwable {
+    @Test
+    void getInValidTableDump_1() throws Throwable {
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(null);
-        this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
+        });
     }
 
-    @Test(expected = RestServerError.class)
-    public void getInValidTableDump_2() throws Throwable {
+    @Test
+    void getInValidTableDump_2() throws Throwable {
         when(databaseManager.getTableDump(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenThrow(new EntException("Error"));
-        this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
+        Assertions.assertThrows(RestServerError.class, () -> {
+            this.databaseService.getTableDump("reportCode", "dataSourcePort", "categories");
+        });
     }
 
 }

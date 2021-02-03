@@ -13,13 +13,12 @@
  */
 package org.entando.entando.web.user;
 
-import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,8 +45,8 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.MockMvcHelper;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -56,7 +55,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 /**
  * @author paddeo
  */
-public class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     IUserManager userManager;
@@ -79,7 +78,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     private MockMvcHelper mockMvcHelper;
 
     @Test
-    public void testGetUsersDefaultSorting() throws Exception {
+    void testGetUsersDefaultSorting() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -92,7 +91,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithProfile() throws Exception {
+    void testGetUsersWithProfile() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -108,7 +107,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithoutProfile() throws Exception {
+    void testGetUsersWithoutProfile() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -122,7 +121,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithProfileAndProfileAttributesFilters() throws Exception {
+    void testGetUsersWithProfileAndProfileAttributesFilters() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -157,7 +156,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserAuthorities_1() throws Exception {
+    void testAddUserAuthorities_1() throws Exception {
         Group group = createGroup(1);
         Role role = createRole(1);
         UserDetails mockuser = this.createUser("mockuser");
@@ -205,7 +204,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserAuthorities_2() throws Exception {
+    void testAddUserAuthorities_2() throws Exception {
         Group group = createGroup(1);
         Role role = createRole(1);
         String username = "mockuser_1";
@@ -225,7 +224,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result1.andExpect(jsonPath("$.payload[0].group", is("group1")));
 
             List<Authorization> auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
+            Assertions.assertEquals(1, auths.size());
 
             String mockJson2 = "[{\"group\":\"customers\", \"role\":\"supervisor\"}]";
             ResultActions result2 = mockMvc.perform(
@@ -236,7 +235,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result2.andExpect(jsonPath("$.payload[0].group", is("customers")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
             ResultActions result3 = mockMvc.perform(
                     get("/users/{target}/authorities", username)
@@ -255,8 +254,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result4.andExpect(jsonPath("$.payload[0].group", is("helpdesk")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
-            Assert.assertEquals("helpdesk", auths.get(0).getGroup().getName());
+            Assertions.assertEquals(1, auths.size());
+            Assertions.assertEquals("helpdesk", auths.get(0).getGroup().getName());
 
             String mockJson5 = "[{\"group\":\"wrong_group\", \"role\":\"pageManager\"}]";
             ResultActions result5 = mockMvc.perform(
@@ -268,8 +267,8 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result5.andExpect(jsonPath("$.errors[0].code", is("2")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
-            Assert.assertEquals("helpdesk", auths.get(0).getGroup().getName());
+            Assertions.assertEquals(1, auths.size());
+            Assertions.assertEquals("helpdesk", auths.get(0).getGroup().getName());
 
         } finally {
             this.authorizationManager.deleteUserAuthorizations(username);
@@ -280,7 +279,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserAuthorities_3() throws Exception {
+    void testAddUserAuthorities_3() throws Exception {
         Group group = this.createGroup(100);
         Role role = this.createRole(100);
         String username = "mockuser_2";
@@ -300,7 +299,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result1.andExpect(jsonPath("$.payload[0].role", is("role100")));
 
             List<Authorization> auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(1, auths.size());
+            Assertions.assertEquals(1, auths.size());
 
             String mockJson2 = "[{\"group\":\"customers\", \"role\":null}]";
             ResultActions result2 = mockMvc.perform(
@@ -311,7 +310,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result2.andExpect(jsonPath("$.payload[0].group", is("customers")));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
             ResultActions result3 = mockMvc.perform(
                     get("/users/{target}/authorities", username)
@@ -330,7 +329,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             result4.andExpect(jsonPath("$.errors.size()", is(1)));
 
             auths = this.authorizationManager.getUserAuthorizations(username);
-            Assert.assertEquals(2, auths.size());
+            Assertions.assertEquals(2, auths.size());
 
         } finally {
             this.authorizationManager.deleteUserAuthorizations(username);
@@ -341,7 +340,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddRemoveUser_1() throws Exception {
+    void testAddRemoveUser_1() throws Exception {
         String validUsername = "valid.username_ok";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -389,7 +388,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddRemoveUser_2() throws Exception {
+    void testAddRemoveUser_2() throws Exception {
         String validUsername = "valid.username_ok";
         String validPassword = "valid.123_ok";
         try {
@@ -428,7 +427,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserWithLongName() throws Exception {
+    void testAddUserWithLongName() throws Exception {
         String validUsername = "valid.username_with_very_long_name_with_a_total_of_80_characters_maximum_allowed";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -461,7 +460,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserWithNameTooLong() throws Exception {
+    void testAddUserWithNameTooLong() throws Exception {
         String invalidUsername = "invalid.username_with_too_many_characters_81_one_more_than_the_maximum_allowed_80";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -480,7 +479,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserUppercase() throws Exception {
+    void testAddUserUppercase() throws Exception {
         String invalidUsername = "Username";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -500,7 +499,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
 
 
     @Test
-    public void testUpdateUser() throws Exception {
+    void testUpdateUser() throws Exception {
         String validUsername = "test_test";
         String validPassword = "password";
         try {
@@ -532,7 +531,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             System.out.println("resp:" + responseValid1);
             resultValid1.andExpect(jsonPath("$.payload.username", is(validUsername)));
             UserDetails authUser = this.authenticationProviderManager.getUser(validUsername, validPassword);
-            Assert.assertNotNull(authUser);
+            Assertions.assertNotNull(authUser);
 
             String valid2 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"12345678\",\"reset\": true}";
             ResultActions resultValid2 = this.executeUserPut(valid2, validUsername, accessToken, status().isOk());
@@ -540,9 +539,9 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
             System.out.println("resp:" + responseValid2);
             resultValid2.andExpect(jsonPath("$.payload.username", is(validUsername)));
             authUser = this.authenticationProviderManager.getUser(validUsername, validPassword);
-            Assert.assertNull(authUser);
+            Assertions.assertNull(authUser);
             authUser = this.authenticationProviderManager.getUser(validUsername, "12345678");
-            Assert.assertNotNull(authUser);
+            Assertions.assertNotNull(authUser);
         } catch (Throwable e) {
             throw e;
         } finally {
@@ -551,7 +550,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUpdatePassword_1() throws Exception {
+    void testUpdatePassword_1() throws Exception {
         String validUsername = "valid.username_ok";
         String validPassword = "valid.123_ok";
         String newValidPassword = "valid.1234_ok";
@@ -604,7 +603,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUpdatePassword_2() throws Exception {
+    void testUpdatePassword_2() throws Exception {
         String validUsername = "valid_ok.2";
         String validPassword = "valid.123_ok";
         String newValidPassword = "valid.1234_ok";
@@ -644,7 +643,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUpdatePasswordInactiveUser() throws Exception {
+    void testUpdatePasswordInactiveUser() throws Exception {
         String validUsername = "user1";
         String validPassword = "password1";
         String newValidPassword = "password2";
@@ -669,7 +668,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUserPagination() throws Exception {
+    void testUserPagination() throws Exception {
         String userPrefix = "test_pager_";
         for (int i = 0; i < 20; i++) {
             UserDetails user = this.createUser(userPrefix + i);
@@ -743,7 +742,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithAdminPermission() throws Exception {
+    void testGetUsersWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -753,7 +752,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithoutPermission() throws Exception {
+    void testGetUsersWithoutPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -763,7 +762,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithEnterBackendPermission() throws Exception {
+    void testGetUsersWithEnterBackendPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -774,7 +773,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithManagerUserProfilePermission() throws Exception {
+    void testGetUsersWithManagerUserProfilePermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_USER_PROFILES).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -785,7 +784,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithManageUsersPermission() throws Exception {
+    void testGetUsersWithManageUsersPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.MANAGE_USERS).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -796,7 +795,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetUsersWithViewUsersPermission() throws Exception {
+    void testGetUsersWithViewUsersPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.VIEW_USERS).build();
         String accessToken = mockOAuthInterceptor(user);
@@ -807,7 +806,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserWithDefaultProfile() throws Exception {
+    void testAddUserWithDefaultProfile() throws Exception {
         String username = "user_with_default_profile";
         try {
             InputStream file = this.getClass().getResourceAsStream("1_POST_user_with_default_profile.json");
@@ -836,7 +835,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testAddUserWithProfile() throws Exception {
+    void testAddUserWithProfile() throws Exception {
         String username = "user_with_profile";
         try {
 
@@ -880,7 +879,7 @@ public class UserControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testUpdateUserWithProfile() throws Exception {
+    void testUpdateUserWithProfile() throws Exception {
         String username = "user_with_profile";
         try {
             InputStream file = this.getClass().getResourceAsStream("1_POST_user_with_default_profile.json");

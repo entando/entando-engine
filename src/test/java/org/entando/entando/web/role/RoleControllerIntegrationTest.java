@@ -22,7 +22,7 @@ import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.JsonPatchBuilder;
 import org.entando.entando.web.role.model.RoleRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
@@ -40,13 +40,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RoleControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class RoleControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IRoleManager roleManager;
 
     @Test
-    public void testGetRoles() throws Exception {
+    void testGetRoles() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -57,7 +57,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRolesFilterByCode() throws Exception {
+    void testGetRolesFilterByCode() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -71,7 +71,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRolesFilterByName() throws Exception {
+    void testGetRolesFilterByName() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -85,7 +85,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRolesFilterByNameAndSort() throws Exception {
+    void testGetRolesFilterByNameAndSort() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -113,7 +113,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRoleOk() throws Exception {
+    void testGetRoleOk() throws Exception {
         String code = "editor";
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -125,7 +125,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRoleUserReferences() throws Exception {
+    void testGetRoleUserReferences() throws Exception {
         String code = "editor";
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -137,7 +137,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testGetRoleNotFound() throws Exception {
+    void testGetRoleNotFound() throws Exception {
         String code = "this_role_has_no_name";
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -167,7 +167,7 @@ public class RoleControllerIntegrationTest extends AbstractControllerIntegration
      * @throws Exception
      */
     @Test
-    public void testCrudRole() throws Exception {
+    void testCrudRole() throws Exception {
         String code = "test";
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();

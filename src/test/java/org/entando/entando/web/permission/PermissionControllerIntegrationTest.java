@@ -18,7 +18,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,11 +26,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PermissionControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class PermissionControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
 
     @Test
-    public void testGetPermissions() throws Exception {
+    void testGetPermissions() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -42,7 +42,7 @@ public class PermissionControllerIntegrationTest extends AbstractControllerInteg
 
 
     @Test
-    public void testGetPermissionsFilterByCode() throws Exception {
+    void testGetPermissionsFilterByCode() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -57,7 +57,7 @@ public class PermissionControllerIntegrationTest extends AbstractControllerInteg
 
 
     @Test
-    public void testGetPermissionsFilterByDescr() throws Exception {
+    void testGetPermissionsFilterByDescr() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -71,7 +71,7 @@ public class PermissionControllerIntegrationTest extends AbstractControllerInteg
     }
 
     @Test
-    public void testGetPermissionsWithoutPermission() throws Exception {
+    void testGetPermissionsWithoutPermission() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("normal_user", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
@@ -82,7 +82,7 @@ public class PermissionControllerIntegrationTest extends AbstractControllerInteg
     }
 
     @Test
-    public void testGetPermissionsWithEnterBackEndPermission() throws Exception {
+    void testGetPermissionsWithEnterBackEndPermission() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("enter_backend_user", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "admin", Permission.ENTER_BACKEND).build();

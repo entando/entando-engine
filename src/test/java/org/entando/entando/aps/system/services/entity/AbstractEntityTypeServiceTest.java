@@ -9,17 +9,20 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.web.common.model.*;
 import org.junit.*;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AbstractEntityTypeServiceTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class AbstractEntityTypeServiceTest {
 
     private static final String ENTITY_MANAGER_CODE = "TEST_MANAGER";
 
@@ -32,13 +35,13 @@ public class AbstractEntityTypeServiceTest {
     @Mock
     IApsEntityDOM entityDom;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         service.setEntityManagers(ImmutableList.of(entityManager));
     }
 
     @Test
-    public void getShortEntityTypesFilterWorks() {
+    void getShortEntityTypesFilterWorks() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -53,7 +56,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksReversed() {
+    void getShortEntityTypesFilterWorksReversed() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -70,7 +73,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksWithEqualOperator() {
+    void getShortEntityTypesFilterWorksWithEqualOperator() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);
@@ -86,7 +89,7 @@ public class AbstractEntityTypeServiceTest {
     }
 
     @Test
-    public void getShortEntityTypesFilterWorksWithOrCondition() {
+    void getShortEntityTypesFilterWorksWithOrCondition() {
         UserProfile user2 = createUserProfile("user2");
         UserProfile user1 = createUserProfile("USER1");
         mockUserEntities(user1, user2);

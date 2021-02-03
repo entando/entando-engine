@@ -15,17 +15,22 @@ package com.agiletec.aps.system.services.user;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserDAOIntegrationTest extends BaseTestCase {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class UserDAOIntegrationTest extends BaseTestCase {
 
     private IUserDAO userDao;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    
+    @BeforeEach
+    private void init() throws Exception {
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
         PasswordEncoder passwordEncoder = (PasswordEncoder) this.getApplicationContext().getBean("compatiblePasswordEncoder");
         UserDAO dao = new UserDAO();
@@ -34,7 +39,8 @@ public class UserDAOIntegrationTest extends BaseTestCase {
         this.userDao = dao;
     }
 
-    public void testAddDeleteUser() throws Throwable {
+    @Test
+    void testAddDeleteUser() throws Throwable {
         String username = "UserForTest1";
         User user = this.createUserForTest(username);
         try {
@@ -53,7 +59,8 @@ public class UserDAOIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testUpdateUser() throws Throwable {
+    @Test
+    void testUpdateUser() throws Throwable {
         String username = "UserForTest2";
         User user = this.createUserForTest(username);
         try {
@@ -79,4 +86,5 @@ public class UserDAOIntegrationTest extends BaseTestCase {
         user.setPassword("temp");
         return user;
     }
+    
 }

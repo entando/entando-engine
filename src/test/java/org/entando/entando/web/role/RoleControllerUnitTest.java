@@ -21,8 +21,7 @@ import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.role.model.RoleRequest;
 import org.entando.entando.web.role.validator.RoleValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,7 +33,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RoleControllerUnitTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class RoleControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private RoleService roleService;
@@ -45,7 +49,7 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
     @InjectMocks
     private RoleController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -55,7 +59,7 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddWithEmptyPayload() throws Exception {
+    void testAddWithEmptyPayload() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -75,7 +79,7 @@ public class RoleControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddWithInvalidCodeAndName() throws Exception {
+    void testAddWithInvalidCodeAndName() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

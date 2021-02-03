@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,24 +28,22 @@ import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestUserManager extends BaseTestCase {
+class TestUserManager extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testInitialize() {
+    @Test
+    void testInitialize() {
         assertNotNull(this._userManager);
         assertNotNull(this._profileManager);
     }
 
-    public void testAddDeleteUser() throws Throwable {
+    @Test
+    void testAddDeleteUser() throws Throwable {
         String username = "UserForTest1";
         MockUser user = this.createUserForTest(username);
         Date birthdate = this.steBirthdate(1982, 10, 25);
@@ -65,7 +67,8 @@ public class TestUserManager extends BaseTestCase {
         }
     }
 
-    public void testUpdateUser() throws Throwable {
+    @Test
+    void testUpdateUser() throws Throwable {
         String username = "UserForTest2";
         Date birthdate = this.steBirthdate(1982, 10, 25);
         MockUser user = this.createUserForTest(username);
@@ -134,6 +137,7 @@ public class TestUserManager extends BaseTestCase {
         return user;
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this._userManager = (IUserManager) this.getService(SystemConstants.USER_MANAGER);

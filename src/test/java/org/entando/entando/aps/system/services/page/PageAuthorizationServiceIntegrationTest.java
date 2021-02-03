@@ -13,30 +13,30 @@
  */
 package org.entando.entando.aps.system.services.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.util.List;
 import org.entando.entando.aps.system.services.auth.IAuthorizationService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author paddeo
  */
-public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
+class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
 
     private PageAuthorizationService authorizationService;
 
     private IPageService pageService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             authorizationService = (PageAuthorizationService) this.getApplicationContext().getBean(IAuthorizationService.BEAN_NAME_FOR_PAGE);
@@ -47,7 +47,7 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testIsAuthOnPage() throws Throwable {
+    void testIsAuthOnPage() throws Throwable {
         UserDetails admin = this.getUser("admin");
         UserDetails customer = this.getUser("editorCustomers");
         assertTrue(authorizationService.isAuth(admin, "coach_page"));
@@ -57,7 +57,7 @@ public class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testFilteredPageTree() throws Throwable {
+    void testFilteredPageTree() throws Throwable {
         UserDetails admin = this.getUser("admin");
         UserDetails customer = this.getUser("editorCustomers");
         List<PageDto> pages = this.pageService.getPages("homepage");

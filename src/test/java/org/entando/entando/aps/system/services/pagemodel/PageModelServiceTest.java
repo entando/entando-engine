@@ -13,10 +13,7 @@ import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.pagemodel.model.*;
-import org.junit.*;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ReflectionUtils;
 
@@ -28,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.createDefaultWidgetType;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModel;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,10 +33,14 @@ import static org.mockito.Mockito.when;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PageModelServiceTest {
+@ExtendWith(MockitoExtension.class)
+class PageModelServiceTest {
 
     private static final int DEFAULT_MAIN_FRAME = -1;
     private static final String PAGE_MODEL_CODE = "TEST_PM_CODE";
@@ -65,7 +66,7 @@ public class PageModelServiceTest {
 
     private PageModelService pageModelService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dtoBuilder = new PageModelDtoBuilder();
         pageModelService = new PageModelService(pageModelManager, widgetTypeManager, dtoBuilder);
@@ -76,7 +77,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void addPageModelCallsPageModelManager() throws Exception {
+    void addPageModelCallsPageModelManager() throws Exception {
         WidgetType mockType = Mockito.mock(WidgetType.class);
         when(mockType.hasParameter(Mockito.anyString())).thenReturn(true);
         when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(mockType);
@@ -91,7 +92,7 @@ public class PageModelServiceTest {
     }
 
     @Test 
-    public void get_page_models_returns_page_models() throws EntException {
+    void get_page_models_returns_page_models() throws EntException {
         when(pageModelManager.searchPageModels(any())).thenReturn(pageModels());
         PagedMetadata<PageModelDto> result = pageModelService.getPageModels(EMPTY_REQUEST, null);
         PagedMetadata<PageModelDto> expected = resultPagedMetadata();
@@ -99,14 +100,14 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void getPageModelUsageForNonExistingCodeShouldReturnZero() {
+    void getPageModelUsageForNonExistingCodeShouldReturnZero() {
 
         int componentUsage = pageModelService.getComponentUsage("non_existing");
         assertEquals(0, componentUsage);
     }
 
     @Test
-    public void getPageModelUsageTest() {
+    void getPageModelUsageTest() {
         String managerName = "PageManager";
         PageModel pageModel = PageMockHelper.mockServicePageModel();
         PageDto pageDto = PageMockHelper.mockPageDto();
@@ -130,7 +131,7 @@ public class PageModelServiceTest {
 
 
     @Test
-    public void shouldCreateTheRightPageModel() {
+    void shouldCreateTheRightPageModel() {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
@@ -148,7 +149,7 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void shouldUpdatePageModel() throws Exception {
+    void shouldUpdatePageModel() throws Exception {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 
@@ -169,7 +170,7 @@ public class PageModelServiceTest {
     }
 
     @Test
-    public void shouldNotChangeTemplateWithNonce() throws Exception {
+    void shouldNotChangeTemplateWithNonce() throws Exception {
         String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
 

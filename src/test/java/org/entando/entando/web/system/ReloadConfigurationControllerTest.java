@@ -16,7 +16,7 @@ package org.entando.entando.web.system;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -24,16 +24,15 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
-public class ReloadConfigurationControllerTest extends AbstractControllerIntegrationTest {
+class ReloadConfigurationControllerTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     @InjectMocks
     private ReloadConfigurationController controller;
 
     @Test
-    public void should_execute_reload_and_have_headers() throws Exception {
+    void should_execute_reload_and_have_headers() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc

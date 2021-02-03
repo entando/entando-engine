@@ -13,6 +13,9 @@
  */
 package org.entando.entando.aps.system.services.dataobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
@@ -24,19 +27,16 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestValidateDataObject extends BaseTestCase {
+class TestValidateDataObject extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testValidate_1() throws Throwable {
+    @Test
+	void testValidate_1() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
 			DataObject content = this.createNewVoid("ART", insertedDescr, DataObject.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
@@ -66,7 +66,8 @@ public class TestValidateDataObject extends BaseTestCase {
 		}
 	}
 
-	public void testValidate_2() throws Throwable {
+	@Test
+	void testValidate_2() throws Throwable {
 		try {
 			DataObject content = this.createNewVoid("RAH", "descr", DataObject.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			ITextAttribute emailAttribute = (ITextAttribute) content.getAttribute("email");
@@ -82,7 +83,8 @@ public class TestValidateDataObject extends BaseTestCase {
 		}
 	}
 
-	public void testValidate_4() throws Throwable {
+	@Test
+	void testValidate_4() throws Throwable {
 		String shortTitle = "short";
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; "
 				+ "Ripeto, Titolo che supera la lunghezza massima di cento caratteri";
@@ -129,15 +131,12 @@ public class TestValidateDataObject extends BaseTestCase {
 		return content;
 	}
 
-	private void init() throws Exception {
-		try {
-			this._contentManager = (IDataObjectManager) this.getService("DataObjectManager");
-			this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
-			this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-		} catch (Throwable t) {
-			throw new Exception(t);
-		}
-	}
+    @BeforeEach
+    private void init() throws Exception {
+        this._contentManager = (IDataObjectManager) this.getService("DataObjectManager");
+        this._groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
+        this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+    }
 
 	private IDataObjectManager _contentManager = null;
 	private IGroupManager _groupManager = null;

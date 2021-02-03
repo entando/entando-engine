@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.dataobject.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Date;
 import java.util.List;
 
@@ -23,19 +28,16 @@ import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
 import org.entando.entando.aps.system.services.dataobject.model.DataObjectRecordVO;
 import org.entando.entando.aps.system.services.dataobject.IDataObjectManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestDataObjectEntityManager extends BaseTestCase {
+class TestDataObjectEntityManager extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testSearchRecords() throws Throwable {
+    @Test
+    void testSearchRecords() throws Throwable {
         List<ApsEntityRecord> dataObjects = this._dataObjectManager.searchRecords(null);
         assertNotNull(dataObjects);
         assertEquals(25, dataObjects.size());
@@ -90,7 +92,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testSearchEvents() throws EntException {
+    @Test
+    void testSearchEvents() throws EntException {
         EntitySearchFilter filterIt = new EntitySearchFilter("Titolo", true, "it", false);
         filterIt.setLangCode("it");
         EntitySearchFilter[] filters = {filterIt};
@@ -136,7 +139,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testSearchEntities() throws EntException {
+    @Test
+    void testSearchEntities() throws EntException {
         EntitySearchFilter filter = new EntitySearchFilter("Data", true);
         EntitySearchFilter[] filters = {filter};
         List<String> dataObjects = this._dataObjectManager.searchId("ART", filters);
@@ -156,7 +160,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadOrderedEvents_1() throws EntException {
+    @Test
+    void testLoadOrderedEvents_1() throws EntException {
         EntitySearchFilter filterForDescr = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_DESCR_FILTER_KEY, false);
         filterForDescr.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filterForDescr};
@@ -178,7 +183,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadOrderedEvents_2() throws EntException {
+    @Test
+    void testLoadOrderedEvents_2() throws EntException {
         EntitySearchFilter filterForCreation = new EntitySearchFilter(IDataObjectManager.DATA_OBJECT_CREATION_DATE_FILTER_KEY, false);
         filterForCreation.setOrder(EntitySearchFilter.ASC_ORDER);
         EntitySearchFilter[] filters = {filterForCreation};
@@ -199,7 +205,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadEvents2() throws EntException {
+    @Test
+    void testLoadEvents2() throws EntException {
         Date start = DateConverter.parseDate("1997-06-10", "yyyy-MM-dd");
         Date end = DateConverter.parseDate("2020-09-19", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, start, end);
@@ -235,7 +242,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents1() throws EntException {
+    @Test
+    void testLoadFutureEvents1() throws EntException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, today, null);
         filter.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -250,7 +258,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents2() throws EntException {
+    @Test
+    void testLoadFutureEvents2() throws EntException {
         Date date = DateConverter.parseDate("2008-01-01", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, date, null);
         filter.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -264,7 +273,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEvents3() throws EntException {
+    @Test
+    void testLoadFutureEvents3() throws EntException {
         Date today = DateConverter.parseDate("2005-01-01", "yyyy-MM-dd");
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, today, null);
         filter.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -279,7 +289,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadPastEvents1() throws EntException {
+    @Test
+    void testLoadPastEvents1() throws EntException {
         Date today = DateConverter.parseDate("2008-10-01", "yyyy-MM-dd");
 
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, null, today);
@@ -295,7 +306,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadPastEvents2() throws EntException {
+    @Test
+    void testLoadPastEvents2() throws EntException {
         Date today = DateConverter.parseDate("2008-10-01", "yyyy-MM-dd");
 
         EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, null, today);
@@ -310,7 +322,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEntityEvents1() throws Throwable {
+    @Test
+    void testLoadFutureEntityEvents1() throws Throwable {
         Date dateForTest = DateConverter.parseDate("1999-03-14", "yyyy-MM-dd");
 
         EntitySearchFilter filter1 = new EntitySearchFilter("DataInizio", true, dateForTest, null);
@@ -336,7 +349,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    public void testLoadFutureEntityEvents2() throws Throwable {
+    @Test
+    void testLoadFutureEntityEvents2() throws Throwable {
         Date startDateForTest = DateConverter.parseDate("1999-03-14", "yyyy-MM-dd");
         EntitySearchFilter filter1 = new EntitySearchFilter("DataInizio", true, startDateForTest, null);
         filter1.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -387,7 +401,8 @@ public class TestDataObjectEntityManager extends BaseTestCase {
         }
     }
 
-    private void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         try {
             this._dataObjectManager = (IDataObjectManager) this.getService("DataObjectManager");
         } catch (Throwable t) {

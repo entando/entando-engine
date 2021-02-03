@@ -21,8 +21,6 @@ import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.category.validator.CategoryValidator;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,7 +32,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CategoryServiceTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class CategoryServiceTest {
 
     @InjectMocks
     private CategoryService categoryService;
@@ -46,50 +52,49 @@ public class CategoryServiceTest {
     @Mock
     private CategoryValidator categoryValidator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void getTreeWithInvalidParent() {
+    @Test
+    void getTreeWithInvalidParent() {
         when(categoryManager.getCategory(ArgumentMatchers.anyString())).thenReturn(null);
-        this.categoryService.getTree("some_code");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            this.categoryService.getTree("some_code");
+        });
     }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void getInvalidCategory() {
-        when(categoryManager.getCategory(ArgumentMatchers.anyString())).thenReturn(null);
-        this.categoryService.getTree("some_code");
-    }
-
 
     @Test
-    public void addExistingCategoryShouldReturnTheReceivedCategory() throws EntException {
+    void getInvalidCategory() {
+        when(categoryManager.getCategory(ArgumentMatchers.anyString())).thenReturn(null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            this.categoryService.getTree("some_code");
+        });
+    }
 
+    @Test
+    void addExistingCategoryShouldReturnTheReceivedCategory() throws EntException {
         Category existingCategory = CategoryTestHelper.stubTestCategory();
         CategoryDto expectedDto = CategoryTestHelper.stubTestCategoryDto();
-
         when(categoryManager.getCategory(anyString())).thenReturn(existingCategory);
-        when(categoryValidator.areEquals(any(), any())).thenReturn(true);
-        when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
-
+        Mockito.lenient().when(categoryValidator.areEquals(any(), any())).thenReturn(true);
+        Mockito.lenient().when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
         CategoryDto actualDto = this.categoryService.addCategory(expectedDto);
-
         verify(categoryManager, times(0)).addCategory(any());
         CategoryTestHelper.assertCategoryDtoEquals(expectedDto, actualDto);
     }
 
-    @Test(expected = ValidationConflictException.class)
-    public void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
-
+    @Test
+    void addExistingGroupWithDifferentDescriptionsShouldThrowValidationConflictException() {
         Category existingCategory = CategoryTestHelper.stubTestCategory();
         CategoryDto expectedDto = CategoryTestHelper.stubTestCategoryDto();
 
         when(categoryManager.getCategory(anyString())).thenReturn(existingCategory);
         when(categoryValidator.areEquals(any(), any())).thenReturn(false);
-        when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
-
-        this.categoryService.addCategory(expectedDto);
+        Mockito.lenient().when(dtoBuilder.convert(existingCategory)).thenReturn(expectedDto);
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            this.categoryService.addCategory(expectedDto);
+        });
     }
 }

@@ -21,18 +21,21 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LanguageServiceTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class LanguageServiceTest {
 
     @Mock
     private ILangManager langManager;
@@ -40,23 +43,22 @@ public class LanguageServiceTest {
     @InjectMocks
     private LanguageService languageService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         languageService.setUpDto();
-
-        when(langManager.getLangs()).thenReturn(ImmutableList.of(getEn()));
+        Mockito.lenient().when(langManager.getLangs()).thenReturn(ImmutableList.of(getEn()));
         when(langManager.getAssignableLangs()).thenReturn(ImmutableList.of(getEn(), getIt()));
-        when(langManager.getDefaultLang()).thenReturn(getEn());
+        Mockito.lenient().when(langManager.getDefaultLang()).thenReturn(getEn());
     }
 
     @Test
-    public void shouldReturnAll() {
+    void shouldReturnAll() {
         PagedMetadata<LanguageDto> result = languageService.getLanguages(new RestListRequest());
         assertThat(result.getBody()).hasSize(2);
     }
 
     @Test
-    public void shouldFilterByCode() {
+    void shouldFilterByCode() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("code");
@@ -69,7 +71,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldFilterByCodeWithOrCondition() {
+    void shouldFilterByCodeWithOrCondition() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("code");
@@ -81,7 +83,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldFilterByDescription() {
+    void shouldFilterByDescription() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("description");
@@ -94,7 +96,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldFilterByIsActive() {
+    void shouldFilterByIsActive() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("isActive");
@@ -108,7 +110,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldFilterByIsDefault() {
+    void shouldFilterByIsDefault() {
         RestListRequest requestList = new RestListRequest();
         Filter filter = new Filter();
         filter.setAttribute("isDefault");
@@ -122,7 +124,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldSortByCode() {
+    void shouldSortByCode() {
         RestListRequest requestList = new RestListRequest();
         requestList.setDirection("DESC");
 
@@ -133,7 +135,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldSortByDescription() {
+    void shouldSortByDescription() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("description");
 
@@ -144,7 +146,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldSortByIsDefault() {
+    void shouldSortByIsDefault() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("isDefault");
         requestList.setDirection("DESC");
@@ -156,7 +158,7 @@ public class LanguageServiceTest {
     }
 
     @Test
-    public void shouldSortByIsActive() {
+    void shouldSortByIsActive() {
         RestListRequest requestList = new RestListRequest();
         requestList.setSort("isActive");
         requestList.setDirection("DESC");
@@ -167,9 +169,11 @@ public class LanguageServiceTest {
         assertThat(result.getBody().get(1).getCode()).isEqualTo("it");
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void shouldFailDisabilingUnexistingLang() {
-        languageService.disableLang("xx");
+    @Test
+    void shouldFailDisabilingUnexistingLang() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            languageService.disableLang("xx");
+        });
     }
 
     private Lang getEn() {

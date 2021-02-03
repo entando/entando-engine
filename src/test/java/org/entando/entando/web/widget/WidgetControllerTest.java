@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.widget;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -34,16 +34,19 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-public class WidgetControllerTest extends AbstractControllerTest {
+@ExtendWith(MockitoExtension.class)
+class WidgetControllerTest extends AbstractControllerTest {
 
     @Mock
     private WidgetService widgetService;
@@ -54,7 +57,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     @InjectMocks
     private WidgetController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -64,7 +67,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetWidget() throws Exception {
+    void testGetWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -80,7 +83,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetWidgetInfo() throws Exception {
+    void testGetWidgetInfo() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         // @formatter:off
@@ -93,7 +96,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetWidgetList() throws Exception {
+    void testGetWidgetList() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -111,7 +114,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRemoveWidget() throws Exception {
+    void testRemoveWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         // @formatter:off
@@ -125,7 +128,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddWidget() throws Exception {
+    void testAddWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         this.controller.setWidgetValidator(new WidgetValidator());
@@ -142,7 +145,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateWidget() throws Exception {
+    void testUpdateWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(widgetService.updateWidget(any(), any())).thenReturn(new WidgetDto());
@@ -158,7 +161,7 @@ public class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUnauthorized() throws Exception {
+    void testUnauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();

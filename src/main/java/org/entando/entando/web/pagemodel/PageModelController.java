@@ -45,8 +45,8 @@ public class PageModelController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
-    private final IPageModelService pageModelService;
-    private final PageModelValidator pageModelValidator;
+    private IPageModelService pageModelService;
+    private PageModelValidator pageModelValidator;
 
     @Autowired
     public PageModelController(IPageModelService pageModelService, PageModelValidator pageModelValidator) {

@@ -26,8 +26,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.dataobjectmodel.model.DataObjectModelRequest;
 import org.entando.entando.web.dataobjectmodel.validator.DataObjectModelValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -43,7 +42,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataObjectModelControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DataObjectModelControllerTest extends AbstractControllerTest {
 
     private MockMvc mockMvc;
 
@@ -56,7 +60,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     @InjectMocks
     private DataObjectModelController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -67,7 +71,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void should_load_the_list_of_dataModels() throws Exception {
+    void should_load_the_list_of_dataModels() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(dataObjectModelService.getDataObjectModels(any(RestListRequest.class))).thenReturn(new PagedMetadata<DataModelDto>());
@@ -85,7 +89,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void should_load_the_list_of_dataModels_2() throws Exception {
+    void should_load_the_list_of_dataModels_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(dataObjectModelService.getDataObjectModels(any(RestListRequest.class))).thenReturn(new PagedMetadata<DataModelDto>());
@@ -105,7 +109,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_be_unauthorized() throws Exception {
+    void should_be_unauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();
@@ -119,7 +123,7 @@ public class DataObjectModelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void should_validate_put_path_mismatch() throws EntException, Exception {
+    void should_validate_put_path_mismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ObjectMapper mapper = new ObjectMapper();

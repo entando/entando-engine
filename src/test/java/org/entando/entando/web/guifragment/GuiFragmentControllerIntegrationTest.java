@@ -15,7 +15,6 @@ package org.entando.entando.web.guifragment;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,15 +25,15 @@ import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTest
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
-public class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testGetFragments_1() throws Exception {
+    void testGetFragments_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -58,7 +57,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetFragments_2() throws Exception {
+    void testGetFragments_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
@@ -94,7 +93,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetFragments_3() throws Exception {
+    void testGetFragments_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(
@@ -130,7 +129,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetFragmentUsage() throws Exception {
+    void testGetFragmentUsage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String code = "login_form";
@@ -147,7 +146,7 @@ public class GuiFragmentControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
         // should return DIFF for existing component
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_FRAGMENTS,

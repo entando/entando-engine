@@ -22,8 +22,7 @@ import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -37,7 +36,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.Assertions;
+
+class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IStorageManager storageManager;
@@ -45,7 +46,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testCheckRequest() throws Exception {
+    void testCheckRequest() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -56,7 +57,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testBrowseRootFolder() throws Exception {
+    void testBrowseRootFolder() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -75,7 +76,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testBrowseFolder_1() throws Exception {
+    void testBrowseFolder_1() throws Exception {
         this.storageManager.deleteDirectory("cms", false);
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -99,7 +100,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testBrowseFolder_2() throws Exception {
+    void testBrowseFolder_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -123,7 +124,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testBrowseFolder_3() throws Exception {
+    void testBrowseFolder_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -136,7 +137,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetFile_1() throws Exception {
+    void testGetFile_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -153,7 +154,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testGetFile_2() throws Exception {
+    void testGetFile_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -166,8 +167,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddFile_1() throws Exception {
-        Assert.assertFalse(this.storageManager.exists("test_folder/", false));
+    void testAddFile_1() throws Exception {
+        Assertions.assertFalse(this.storageManager.exists("test_folder/", false));
         this.storageManager.createDirectory("test_folder/", false);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -193,10 +194,10 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddFile_2() throws Exception {
+    void testAddFile_2() throws Exception {
         String folderName = "test_folder_2";
         boolean protectedFolder = true;
-        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
         this.storageManager.createDirectory(folderName, protectedFolder);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -237,10 +238,10 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddFileAndCreateParentFolderIfNotExists() throws Exception {
+    void testAddFileAndCreateParentFolderIfNotExists() throws Exception {
         String folderName = "test_folder_3";
         boolean protectedFolder = false;
-        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
 
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -263,8 +264,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddFileWithoutExtension() throws Exception {
-        Assert.assertFalse(this.storageManager.exists("test_folder/", false));
+    void testAddFileWithoutExtension() throws Exception {
+        Assertions.assertFalse(this.storageManager.exists("test_folder/", false));
         this.storageManager.createDirectory("test_folder/", false);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -290,10 +291,10 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testUpdateFile() throws Exception {
+    void testUpdateFile() throws Exception {
         String folderName = "test_folder_3";
         boolean protectedFolder = true;
-        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
         this.storageManager.createDirectory(folderName, protectedFolder);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -301,9 +302,9 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
 
             String body = this.createBody("test.txt", folderName + "/test.txt", protectedFolder, "test test");
             this.executeFilePost(body, accessToken, status().isOk());
-            Assert.assertTrue(this.storageManager.exists(folderName + "/test.txt", protectedFolder));
+            Assertions.assertTrue(this.storageManager.exists(folderName + "/test.txt", protectedFolder));
             String text = this.storageManager.readFile(folderName + "/test.txt", protectedFolder);
-            Assert.assertEquals("test test", text);
+            Assertions.assertEquals("test test", text);
 
             String body1 = this.createBody("wrong.txt", folderName + "/test.txt", protectedFolder, "Modified test test");
             ResultActions result1 = this.executeFilePut(body1, accessToken, status().isConflict());
@@ -319,7 +320,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             result3.andExpect(jsonPath("$.errors[0].code", is("52")));
 
             text = this.storageManager.readFile(folderName + "/test.txt", protectedFolder);
-            Assert.assertEquals("test test", text);
+            Assertions.assertEquals("test test", text);
 
             String body4 = this.createBody("test_test.txt", folderName + "/test_test.txt", protectedFolder, "Modified test test");
             ResultActions result4 = this.executeFilePut(body4, accessToken, status().isNotFound());
@@ -340,7 +341,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
             result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
 
             text = this.storageManager.readFile(folderName + "/test.txt", protectedFolder);
-            Assert.assertEquals("Modified test test", text);
+            Assertions.assertEquals("Modified test test", text);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -349,10 +350,10 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testDeleteFile_1() throws Exception {
+    void testDeleteFile_1() throws Exception {
         String folderName = "test_folder_4";
         boolean protectedFolder = true;
-        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
         this.storageManager.createDirectory(folderName, protectedFolder);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -360,9 +361,9 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
 
             String body = this.createBody("testDelete.txt", folderName + "/testDelete.txt", protectedFolder, "test test");
             this.executeFilePost(body, accessToken, status().isOk());
-            Assert.assertTrue(this.storageManager.exists(folderName + "/testDelete.txt", protectedFolder));
+            Assertions.assertTrue(this.storageManager.exists(folderName + "/testDelete.txt", protectedFolder));
             String text = this.storageManager.readFile(folderName + "/testDelete.txt", protectedFolder);
-            Assert.assertEquals("test test", text);
+            Assertions.assertEquals("test test", text);
 
             ResultActions result = mockMvc
                     .perform(delete("/fileBrowser/file").param("currentPath", folderName + "/testDelete.txt").param("protectedFolder", "true")
@@ -382,10 +383,10 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testDeleteFile_2() throws Exception {
+    void testDeleteFile_2() throws Exception {
         String folderName = "test_folder_5";
         boolean protectedFolder = true;
-        Assert.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
@@ -439,8 +440,8 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testAddDeleteDirectory() throws Exception {
-        Assert.assertFalse(this.storageManager.exists("test_folder", false));
+    void testAddDeleteDirectory() throws Exception {
+        Assertions.assertFalse(this.storageManager.exists("test_folder", false));
         this.storageManager.createDirectory("test_folder", false);
         try {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -480,7 +481,7 @@ public class FileBrowserControllerIntegrationTest extends AbstractControllerInte
     }
 
     @Test
-    public void testComponentExistenceAnalysis() throws Exception {
+    void testComponentExistenceAnalysis() throws Exception {
 
         AnalysisControllerDiffAnalysisEngineTestsStubs.testComponentEngineAnalysisResult(
                 AnalysisControllerDiffAnalysisEngineTestsStubs.COMPONENT_RESOURCES,

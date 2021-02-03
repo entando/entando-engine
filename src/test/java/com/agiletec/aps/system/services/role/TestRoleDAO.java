@@ -13,19 +13,24 @@
  */
 package com.agiletec.aps.system.services.role;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.Test;
 
 /**
- * @version 1.0
  * @author M.Diana
  */
-public class TestRoleDAO extends BaseTestCase {
+class TestRoleDAO extends BaseTestCase {
 
-    public void testAddUpdateDeleteRole() throws Throwable {
+    @Test
+    void testAddUpdateDeleteRole() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		RoleDAO roleDAO = new RoleDAO();
 		roleDAO.setDataSource(dataSource);
@@ -51,7 +56,7 @@ public class TestRoleDAO extends BaseTestCase {
         }
         assertTrue(roles.containsKey("temp"));
         role = (Role)roles.get("temp");
-        assertEquals(role.getDescription(), "temp");
+        assertEquals("temp", role.getDescription());
         assertTrue(role.getPermissions().contains(Permission.SUPERVISOR));
         this.updateRole(roleDAO);
         this.deleteRole(roleDAO);
@@ -75,7 +80,7 @@ public class TestRoleDAO extends BaseTestCase {
         }
         assertTrue(roles.containsKey("temp"));
         role = (Role) roles.get("temp");
-        assertEquals(role.getDescription(), "temp1");
+        assertEquals("temp1", role.getDescription());
         assertTrue(role.getPermissions().contains(Permission.CONFIG));
 	}
 	

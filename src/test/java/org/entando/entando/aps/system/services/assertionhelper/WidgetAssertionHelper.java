@@ -1,5 +1,7 @@
 package org.entando.entando.aps.system.services.assertionhelper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -7,10 +9,7 @@ import org.entando.entando.web.component.ComponentUsageEntity;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertEquals;
 
 public class WidgetAssertionHelper {
 

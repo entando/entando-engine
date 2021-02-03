@@ -13,6 +13,9 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
@@ -27,7 +30,6 @@ import java.util.List;
 import org.entando.entando.aps.system.services.dataobjectmapper.DataObjectPageMapper;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.junit.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,10 +37,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class DataObjectMapperCacheWrapperTest {
+@ExtendWith(MockitoExtension.class)
+class DataObjectMapperCacheWrapperTest {
 	
 	@Mock
     private CacheManager cacheManager;
@@ -55,25 +61,23 @@ public class DataObjectMapperCacheWrapperTest {
 	@InjectMocks
     private DataObjectMapperCacheWrapper cacheWrapper;
 	
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test(expected = EntException.class)
-    public void testInitCacheWithError() throws Throwable {
-        cacheWrapper.initCache(this.pageManager);
+	@Test
+    void testInitCacheWithError() throws Throwable {
+        Assertions.assertThrows(EntException.class, () -> {
+            cacheWrapper.initCache(this.pageManager);
+        });
     }
 	
 	@Test
-	public void testInitCache() throws Throwable {
+	void testInitCache() throws Throwable {
 		Mockito.when(pageManager.getOnlineRoot()).thenReturn(this.createMockPage());
 		Mockito.when(cacheManager.getCache(IDataObjectMapperCacheWrapper.OBJECT_MAPPER_CACHE_NAME)).thenReturn(this.cache);
 		cacheWrapper.initCache(this.pageManager);
+        Assertions.assertNotNull(cacheManager);
 	}
 	
 	@Test
-	public void testGetPageCode() {
+	void testGetPageCode() {
 		DataObjectPageMapper dataObjectPageMapper = new DataObjectPageMapper();
 		dataObjectPageMapper.add("dataId", "temp_model");
 		dataObjectPageMapper.add("dataId2", "wring_page");

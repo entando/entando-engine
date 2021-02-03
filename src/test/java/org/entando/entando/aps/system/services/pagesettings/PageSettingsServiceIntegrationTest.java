@@ -13,24 +13,25 @@
  */
 package org.entando.entando.aps.system.services.pagesettings;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.services.pagesettings.model.PageSettingsDto;
 import org.entando.entando.web.pagesettings.model.PageSettingsRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author paddeo
  */
-public class PageSettingsServiceIntegrationTest extends BaseTestCase {
+class PageSettingsServiceIntegrationTest extends BaseTestCase {
 
     private IPageSettingsService pageSettingsService;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
+    @BeforeEach
     private void init() throws Exception {
         try {
             pageSettingsService = (IPageSettingsService) this.getApplicationContext().getBean(IPageSettingsService.BEAN_NAME);
@@ -40,29 +41,42 @@ public class PageSettingsServiceIntegrationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetSettings() {
+    void testGetSettings() {
         PageSettingsDto settings = pageSettingsService.getPageSettings();
         assertNotNull(settings);
         assertTrue(settings.size() > 0);
-        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals("baseUrl")));
-        assertEquals("request", settings.get(settings.keySet().stream().filter(param -> param.equals("baseUrl")).findFirst().get()));
+        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL)));
+        assertEquals("request", settings.get(settings.keySet().stream().filter(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL)).findFirst().get()));
     }
 
     @Test
-    public void testUpdateSettings() {
-        PageSettingsRequest request = new PageSettingsRequest();
-        request.put("baseUrlContext", "false");
-        PageSettingsDto settings = pageSettingsService.updatePageSettings(request);
+    void testUpdateSettings() {
+        PageSettingsDto settings = pageSettingsService.getPageSettings();
         assertNotNull(settings);
         assertTrue(settings.size() > 1);
-        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals("baseUrlContext")));
-        assertEquals("false", settings.get(settings.keySet().stream().filter(param -> param.equals("baseUrlContext")).findFirst().get()));
+        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)));
+        assertEquals("true", settings.get(settings.keySet().stream().filter(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).findFirst().get()));
+        
+        PageSettingsRequest request = new PageSettingsRequest();
+        request.put(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT, "false");
+        settings = pageSettingsService.updatePageSettings(request);
+        assertNotNull(settings);
+        assertTrue(settings.size() > 1);
+        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)));
+        assertEquals("false", settings.get(settings.keySet().stream().filter(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).findFirst().get()));
 
         settings = pageSettingsService.getPageSettings();
         assertNotNull(settings);
         assertTrue(settings.size() > 1);
-        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals("baseUrlContext")));
-        assertEquals("false", settings.get(settings.keySet().stream().filter(param -> param.equals("baseUrlContext")).findFirst().get()));
+        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)));
+        assertEquals("false", settings.get(settings.keySet().stream().filter(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).findFirst().get()));
+        
+        request.put(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT, "true");
+        settings = pageSettingsService.updatePageSettings(request);
+        assertNotNull(settings);
+        assertTrue(settings.size() > 1);
+        assertTrue(settings.keySet().stream().anyMatch(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)));
+        assertEquals("true", settings.get(settings.keySet().stream().filter(param -> param.equals(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).findFirst().get()));
     }
 
 }

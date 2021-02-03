@@ -13,19 +13,24 @@
  */
 package org.entando.entando.aps.system.services.dataobjectmapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper;
-import org.junit.*;
 import org.mockito.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author E.Santoboni
  */
-public class DataObjectMapperManagerTest {
+@ExtendWith(MockitoExtension.class)
+class DataObjectMapperManagerTest {
 	
     @Mock
     private IPageManager pageManager;
@@ -36,25 +41,25 @@ public class DataObjectMapperManagerTest {
 	@InjectMocks
     private DataObjectPageMapperManager pageMapperManager;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 	}
 	
 	@Test
-    public void testInit() throws Throwable {
+    void testInit() throws Throwable {
         pageMapperManager.init();
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
 	
 	@Test
-    public void testReload() throws Throwable {
+    void testReload() throws Throwable {
         pageMapperManager.reloadDataObjectPageMapper();
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }
 	
 	@Test
-    public void testGetPage() {
+    void testGetPage() {
 		Mockito.when(cacheWrapper.getPageCode(Mockito.anyString())).thenReturn("pageCode");
         String pageCode = this.pageMapperManager.getPageCode("dataId");
 		assertNotNull(pageCode);
@@ -62,7 +67,7 @@ public class DataObjectMapperManagerTest {
     }
 	
 	@Test
-    public void testUpdate() throws Throwable {
+    void testUpdate() throws Throwable {
         pageMapperManager.updateFromPageChanged(Mockito.any(PageChangedEvent.class));
 		Mockito.verify(cacheWrapper, Mockito.times(1)).initCache(pageManager);
     }

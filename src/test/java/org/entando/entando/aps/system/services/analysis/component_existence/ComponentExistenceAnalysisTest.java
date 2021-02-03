@@ -36,23 +36,25 @@ import org.entando.entando.aps.system.services.widgettype.WidgetService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ComponentExistenceAnalysisTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class ComponentExistenceAnalysisTest {
 
     @Test
-    public void testRunAnalysis() throws EntException {
+    void testRunAnalysis() throws EntException {
         ComponentExistenceAnalysis oea = new ComponentExistenceAnalysis();
         ComponentExistenceAnalysisResult result = new ComponentExistenceAnalysisResult();
 
@@ -137,14 +139,16 @@ public class ComponentExistenceAnalysisTest {
         assertThat(map.get(prefix + "y"), equalTo(Status.NEW));
     }
 
-    @Test(expected = EntRuntimeException.class)
-    public void testRunAnalysisWithException() throws EntException {
-        Mockito.doThrow(new EntException("xxx")).when(fileBrowserService).exists("fb1");
-        ComponentExistenceAnalysis oea = new ComponentExistenceAnalysis();
-        ComponentExistenceAnalysisResult result = new ComponentExistenceAnalysisResult();
-        oea.run(result, ImmutableList.of(
-                new ServiceParams(fileBrowserService, ImmutableList.of("fb1", "fbx", "fbx1", "fby"))
-        ));
+    @Test
+    void testRunAnalysisWithException() throws EntException {
+        Assertions.assertThrows(EntRuntimeException.class, () -> {
+            Mockito.doThrow(new EntException("xxx")).when(fileBrowserService).exists("fb1");
+            ComponentExistenceAnalysis oea = new ComponentExistenceAnalysis();
+            ComponentExistenceAnalysisResult result = new ComponentExistenceAnalysisResult();
+            oea.run(result, ImmutableList.of(
+                    new ServiceParams(fileBrowserService, ImmutableList.of("fb1", "fbx", "fbx1", "fby"))
+            ));
+        });
     }
 
     @Mock

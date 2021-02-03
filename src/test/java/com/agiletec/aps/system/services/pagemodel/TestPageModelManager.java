@@ -16,7 +16,6 @@ package com.agiletec.aps.system.services.pagemodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -29,20 +28,23 @@ import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.RestListRequest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
-public class TestPageModelManager extends BaseTestCase {
+class TestPageModelManager extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testSearch_with_null_empty_filters() throws EntException {
+    @Test
+    void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
         assertThat(result.getCount(), is(3));
@@ -54,7 +56,8 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(3));
     }
 
-    public void testSearch_with_page_filter() throws EntException {
+    @Test
+    void testSearch_with_page_filter() throws EntException {
         RestListRequest restListRequest = new RestListRequest();
         restListRequest.setPageSize(2);
         restListRequest.setPage(1);
@@ -75,31 +78,33 @@ public class TestPageModelManager extends BaseTestCase {
         assertThat(result.getList().size(), is(2));
     }
 
-    public void testGetPageModel() throws EntException {
+    @Test
+    void testGetPageModel() throws EntException {
         PageModel pageModel = this._pageModelManager.getPageModel("home");
         String code = pageModel.getCode();
         String descr = pageModel.getDescription();
-        assertEquals(code, "home");
-        assertEquals(descr, "Modello home page");
+        assertEquals("home", code);
+        assertEquals("Modello home page", descr);
         Widget[] widgets = pageModel.getDefaultWidget();
         for (int i = 0; i < widgets.length; i++) {
             Widget widget = widgets[i];
-            assertEquals(widget, null);
+            assertNull(widget);
         }
         String[] frames = pageModel.getFrames();
-        assertEquals(frames[0], "Box sinistra alto");
+        assertEquals("Box sinistra alto", frames[0]);
         int mainFrame = pageModel.getMainFrame();
-        assertEquals(mainFrame, 3);
+        assertEquals(3, mainFrame);
     }
 
-    public void testGetPageModels() throws EntException {
+    @Test
+    void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
         assertEquals(3, pageModels.size());
         for (int i = 0; i < pageModels.size(); i++) {
             PageModel pageModel = pageModels.get(i);
             String code = pageModel.getCode();
             boolean isNotNull = (code != null);
-            assertEquals(isNotNull, true);
+            assertEquals(true, isNotNull);
             if (code.equals("home")) {
                 assertEquals("Modello home page", pageModel.getDescription());
             } else if (code.equals("service")) {
@@ -108,7 +113,8 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
-    public void testGetModel() throws Throwable {
+    @Test
+    void testGetModel() throws Throwable {
         PageModel model = this._pageModelManager.getPageModel("internal");
         assertNotNull(model);
         assertEquals(9, model.getFrames().length);
@@ -131,7 +137,8 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
-    public void testAddRemoveModel() throws Throwable {
+    @Test
+    void testAddRemoveModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -162,7 +169,8 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
-    public void testUpdateModel() throws Throwable {
+    @Test
+    void testUpdateModel() throws Throwable {
         String testPageModelCode = "test_pagemodel";
         assertNull(this._pageModelManager.getPageModel(testPageModelCode));
         try {
@@ -246,7 +254,8 @@ public class TestPageModelManager extends BaseTestCase {
     }
 
     @SuppressWarnings("unchecked")
-    public void testGuiFragmentUtilizer() throws Throwable {
+    @Test
+    void testGuiFragmentUtilizer() throws Throwable {
         String testPageModelACode = "test_pagemodelA";
         String testPageModelBCode = "test_pagemodelB";
         String testPageModelCCode = "test_pagemodelC";
@@ -305,13 +314,10 @@ public class TestPageModelManager extends BaseTestCase {
         }
     }
 
+    @BeforeEach
     private void init() throws Exception {
-        try {
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
     }
 
     private IWidgetTypeManager _widgetTypeManager;

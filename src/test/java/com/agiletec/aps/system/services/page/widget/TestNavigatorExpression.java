@@ -13,15 +13,21 @@
  */
 package com.agiletec.aps.system.services.page.widget;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
+import org.junit.jupiter.api.Test;
 
 /**
  * @version 1.0
  * @author E.Santoboni
  */
-public class TestNavigatorExpression extends BaseTestCase {
+class TestNavigatorExpression extends BaseTestCase {
 	
+    @Test
 	public void testSetExpression_1() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression("super(3)");
 		assertEquals(NavigatorExpression.SPEC_SUPER_ID, navExpr.getSpecId());
@@ -29,6 +35,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertTrue(navExpr.getOperatorId()<0);
 	}
 	
+	@Test
 	public void testSetExpression_2() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression("abs(1).subtree(2)");
 		assertEquals(NavigatorExpression.SPEC_ABS_ID, navExpr.getSpecId());
@@ -37,12 +44,14 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertEquals(2, navExpr.getOperatorSubtreeLevel());
 	}
 	
+	@Test
 	public void testSetExpression_3() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression("current.path");
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, navExpr.getSpecId());
 		assertEquals(NavigatorExpression.OPERATOR_PATH_ID, navExpr.getOperatorId());
 	}
 	
+	@Test
 	public void testSetWrongExpression_1() throws Throwable {
 		NavigatorExpression navExpr = null;
 		try {
@@ -55,6 +64,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertNull(navExpr);
 	}
 	
+	@Test
 	public void testSetWrongExpression_2() throws Throwable {
 		NavigatorExpression navExpr = null;
 		try {
@@ -67,6 +77,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertNull(navExpr);
 	}
 	
+	@Test
 	public void testGetExpression_1() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(NavigatorExpression.SPEC_SUPER_ID);
@@ -75,6 +86,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertEquals("super(4)", expression);
 	}
 	
+	@Test
 	public void testGetExpression_2() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(NavigatorExpression.SPEC_CURRENT_PAGE_ID);
@@ -83,6 +95,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertEquals("current.children", expression);
 	}
 	
+	@Test
 	public void testGetExpression_3() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(NavigatorExpression.SPEC_SUPER_ID);
@@ -93,6 +106,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertEquals("super(2).subtree(3)", expression);
 	}
 	
+	@Test
 	public void testGetExpression_4() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(NavigatorExpression.SPEC_PAGE_ID);
@@ -102,6 +116,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertEquals("code(pagina_11).path", expression);
 	}
 	
+	@Test
 	public void testGetWrongExpression_1() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(7);
@@ -117,6 +132,7 @@ public class TestNavigatorExpression extends BaseTestCase {
 		assertNull(expression);
 	}
 	
+	@Test
 	public void testGetWrongExpression_2() throws Throwable {
 		NavigatorExpression navExpr = new NavigatorExpression();
 		navExpr.setSpecId(NavigatorExpression.SPEC_PAGE_ID);

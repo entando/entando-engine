@@ -13,6 +13,11 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,32 +37,31 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class UserProfileManagerIntegrationTest extends BaseTestCase {
+class UserProfileManagerIntegrationTest extends BaseTestCase {
 
     private IUserProfileManager profileManager;
     private IUserManager userManager;
     private CacheInfoManager cacheInfoManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testInitialize() {
+    @Test
+    void testInitialize() {
         assertNotNull(this.profileManager);
     }
 
-    public void testAttributeSupportObjects() throws Throwable {
+    @Test
+    void testAttributeSupportObjects() throws Throwable {
         assertTrue(this.profileManager.getAttributeRoles().size() >= 2);
         assertEquals(this.profileManager.getAttributeDisablingCodes().size(), 1);
     }
 
-    public void testAddProfile_1() throws Throwable {
+    @Test
+    void testAddProfile_1() throws Throwable {
         String username = "admin";
         Date birthdate = this.getBirthdate(1982, 10, 25);
         IUserProfile profile = this.createProfile("stefano", "puddu", "spuddu@agiletec.it", birthdate, "it");
@@ -80,7 +84,8 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
         }
     }
 
-    public void testAddProfile_2() throws Throwable {
+    @Test
+    void testAddProfile_2() throws Throwable {
         String username = "test_user";
         Date birthdate = this.getBirthdate(1982, 10, 25);
         IUserProfile profile = this.createProfile("joe", "black", "jblack@entando.com", birthdate, "en");
@@ -157,12 +162,14 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
         return birthdate;
     }
 
-    public void testRemoveInsesistentUser() throws EntException {
+    @Test
+    void testRemoveInsesistentUser() throws EntException {
         assertNull(this.profileManager.getProfile("missing_user"));
         this.profileManager.deleteProfile("missing_user");
     }
 
-    public void testSearchProfiles_1() throws Throwable {
+    @Test
+    void testSearchProfiles_1() throws Throwable {
         List<String> usernames = this.profileManager.searchId(null);
         assertNotNull(usernames);
         assertEquals(5, usernames.size());
@@ -184,7 +191,8 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
         this.verifyOrder(usernames, expected2);
     }
 
-    public void testSearchProfiles_2() throws Throwable {
+    @Test
+    void testSearchProfiles_2() throws Throwable {
         EntitySearchFilter fullnameRoleFilter = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
         fullnameRoleFilter.setOrder(EntitySearchFilter.Order.ASC);
         EntitySearchFilter[] filters1 = {fullnameRoleFilter};
@@ -215,7 +223,8 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
         this.verifyOrder(usernames, expected3);
     }
 
-    public void testSearchProfileRecords() throws Throwable {
+    @Test
+    void testSearchProfileRecords() throws Throwable {
         List<ApsEntityRecord> records = this.profileManager.searchRecords(null);
         assertNotNull(records);
         assertEquals(5, records.size());
@@ -252,6 +261,7 @@ public class UserProfileManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this.profileManager = (IUserProfileManager) this.getService(SystemConstants.USER_PROFILE_MANAGER);

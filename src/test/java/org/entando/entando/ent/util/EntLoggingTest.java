@@ -1,33 +1,41 @@
 package org.entando.entando.ent.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogger.SanitizationLevel;
 import org.entando.entando.ent.util.EntLogging.SanitizedLogger;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.SubstituteLogger;
 
-public class EntLoggingTest extends TestCase {
+class EntLoggingTest {
 
     public static final String HEY = "Hey\nThere\rHow\tAre\nYou\rDoing?\t.";
     public static final String HEY_EXP = "Hey\nThere\rHow\tAre\nYou\rDoing?\t.";
     public static final String HEY_EXP_ESC = "Hey_There_How_Are_You_Doing?_.";
 
-    public void testNonSanitizedLog() {
+    @Test
+    void testNonSanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock), mock, HEY_EXP, false);
     }
 
-    public void testSanitizedLog() {
+    @Test
+    void testSanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.BASIC_SANITIZATION, mock), mock, HEY_EXP_ESC, false);
         runBaseChecks(SanitizedLogger.from(mock), mock, HEY_EXP_ESC, false);
     }
 
-    public void testFullySanitizedLog() {
+    @Test
+    void testFullySanitizedLog() {
         LoggerMock mock = new LoggerMock();
         runBaseChecks(EntLogFactory.from(SanitizationLevel.FULL_SANITIZATION, mock), mock, HEY_EXP_ESC, true);
     }
@@ -62,7 +70,8 @@ public class EntLoggingTest extends TestCase {
                 , mock.logged);
     }
 
-    public void testModifiers() {
+    @Test
+    void testModifiers() {
         LoggerMock mock = new LoggerMock();
         EntLogger rln, rlb, rlf;
 
@@ -85,7 +94,8 @@ public class EntLoggingTest extends TestCase {
         assertSame(rlb, rlf.withBasicSan());
     }
 
-    public void testBase() {
+    @Test
+    void testBase() {
         LoggerMock mock = new LoggerMock();
         EntLogger rl = EntLogFactory.from(SanitizationLevel.NO_SANITIZATION, mock);
         Marker m = MarkerFactory.getMarker("x");
@@ -317,7 +327,8 @@ public class EntLoggingTest extends TestCase {
         assertEquals((mock.level > currLev) ? "" : "|x|A|java.lang.Exception: X", mock.logged);
     }
 
-    public void testFactory() {
+    @Test
+    void testFactory() {
         EntLogger logger;
 
         logger = EntLogFactory.getLogger(SanitizationLevel.NO_SANITIZATION, this.getClass());
@@ -333,7 +344,8 @@ public class EntLoggingTest extends TestCase {
         assertEquals(SanitizationLevel.FULL_SANITIZATION, logger.getSanitizationLevel());
     }
 
-    public void testCase01() {
+    @Test
+    void testCase01() {
         LoggerMock mock = new LoggerMock();
         SanitizedLogger.from(mock).error("A{}", HEY);
         assertEquals("|A{}" + "|" + HEY_EXP_ESC, mock.logged);

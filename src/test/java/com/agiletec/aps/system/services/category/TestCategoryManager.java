@@ -13,6 +13,11 @@
  */
 package com.agiletec.aps.system.services.category;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
@@ -20,27 +25,26 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.util.ApsProperties;
 import java.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for Category Manager
  *
  * @author E.Santoboni
  */
-public class TestCategoryManager extends BaseTestCase {
+class TestCategoryManager extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testGetCategory() {
+    @Test
+    void testGetCategory() {
+        ICategoryManager categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
         Category category = _categoryManager.getCategory("cat1");
         assertNotNull(category);
         assertEquals(category.getTitle(), "Animali");
     }
 
-    public void testAddCategory() throws Throwable {
+    @Test
+    void testAddCategory() throws Throwable {
         Category cat = this.createCategory();
         try {
             assertNull(this._categoryManager.getCategory(cat.getCode()));
@@ -69,7 +73,8 @@ public class TestCategoryManager extends BaseTestCase {
         assertTrue(Arrays.asList(extractedParent.getChildrenCodes()).containsAll(Arrays.asList("general_cat1", "general_cat2", "general_cat3")));
     }
 
-    public void testUpdateRemoveCategory() throws Throwable {
+    @Test
+    void testUpdateRemoveCategory() throws Throwable {
         Category cat = this.createCategory();
         try {
             assertNull(this._categoryManager.getCategory(cat.getCode()));
@@ -91,13 +96,15 @@ public class TestCategoryManager extends BaseTestCase {
         }
     }
 
-    public void testGetCategories() {
+    @Test
+    void testGetCategories() {
         List<Category> categories = _categoryManager.getCategoriesList();
         assertNotNull(categories);
         assertTrue(categories.size() > 0);
     }
     
-    public void testMove() throws Throwable {
+    @Test
+    void testMove() throws Throwable {
         Category category1 = this.createCategory("st_move_1", "cat1", "AAAA Title start");
         Category category2 = this.createCategory("st_move_2", "cat1", "BBBB Title start");
         Category category3 = this.createCategory("st_move_3", "cat1", "CCCC Title start");
@@ -179,12 +186,10 @@ public class TestCategoryManager extends BaseTestCase {
         return cat;
     }
 
+    @BeforeEach
     private void init() throws Exception {
-        try {
-            _categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+        this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+        
     }
 
     private ICategoryManager _categoryManager = null;

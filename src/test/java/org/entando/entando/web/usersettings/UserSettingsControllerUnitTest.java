@@ -19,8 +19,7 @@ import org.entando.entando.aps.system.services.usersettings.UserSettingsService;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.usersettings.model.UserSettingsRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -31,7 +30,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserSettingsControllerUnitTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class UserSettingsControllerUnitTest extends AbstractControllerTest {
 
     @Mock
     private UserSettingsService userSettingsService;
@@ -41,7 +45,7 @@ public class UserSettingsControllerUnitTest extends AbstractControllerTest {
 
     private ObjectMapper mapper;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -52,7 +56,7 @@ public class UserSettingsControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateSettingsWithEmptyParams() throws Throwable {
+    void testUpdateSettingsWithEmptyParams() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -68,7 +72,7 @@ public class UserSettingsControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateSettingsWithInvalidParams() throws Throwable {
+    void testUpdateSettingsWithInvalidParams() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 

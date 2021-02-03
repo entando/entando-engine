@@ -21,8 +21,6 @@ import org.entando.entando.aps.system.services.database.DatabaseService;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.database.validator.DatabaseValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,7 +38,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DatabaseControllerTest extends AbstractControllerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class DatabaseControllerTest extends AbstractControllerTest {
 
     private MockMvc mockMvc;
 
@@ -59,7 +63,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     @InjectMocks
     private DatabaseController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -72,7 +76,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReports() throws Exception {
+    void getReports() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc.perform(get("/database")
@@ -81,7 +85,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReport_1() throws Exception {
+    void getReport_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
@@ -95,7 +99,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void getReport_2() throws Exception {
+    void getReport_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
@@ -106,12 +110,12 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startBackup() throws Exception {
+    void startBackup() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
-        when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
+        Mockito.lenient().when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 post("/database/startBackup").content("{}")
                 .header("Authorization", "Bearer " + accessToken));
@@ -120,7 +124,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startRestore_1() throws Exception {
+    void startRestore_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
@@ -135,7 +139,7 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void startRestore_2() throws Exception {
+    void startRestore_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(null);
@@ -148,12 +152,12 @@ public class DatabaseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void deleteReport() throws Exception {
+    void deleteReport() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         String xml = null;
         DataSourceDumpReport report = new DataSourceDumpReport(xml);
-        when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
+        Mockito.lenient().when(databaseManager.getBackupReport(ArgumentMatchers.anyString())).thenReturn(report);
         ResultActions result = mockMvc.perform(
                 delete("/database/report/{reportCode}", new Object[]{"reportCode"})
                 .header("Authorization", "Bearer " + accessToken));

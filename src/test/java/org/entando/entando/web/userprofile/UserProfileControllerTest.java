@@ -23,24 +23,33 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.userprofile.validator.ProfileValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
+
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 
-public class UserProfileControllerTest extends AbstractControllerTest {
+@ExtendWith(MockitoExtension.class)
+class UserProfileControllerTest extends AbstractControllerTest {
 
     @Mock
     private ProfileValidator profileValidator;
@@ -57,7 +66,7 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     @InjectMocks
     private ProfileController controller;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -67,15 +76,15 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldGetExistingProfile() throws Exception {
+    void shouldGetExistingProfile() throws Exception {
         when(this.profileValidator.existProfile("user_with_profile")).thenReturn(true);
-        when(this.userProfileService.getUserProfile("user_with_profile")).thenReturn(Mockito.mock(EntityDto.class));
+        when(this.userProfileService.getUserProfile("user_with_profile")).thenReturn(new EntityDto());
         ResultActions result = performGetUserProfiles("user_with_profile");
         result.andExpect(status().isOk());
     }
 
     @Test
-    public void shouldGetNewlyCreatedProfile() throws Exception {
+    void shouldGetNewlyCreatedProfile() throws Exception {
         when(this.userManager.getUser("user_without_profile")).thenReturn(Mockito.mock(UserDetails.class));
         when(this.userProfileManager.getDefaultProfileType()).thenReturn(Mockito.mock(IUserProfile.class));
         ResultActions result = performGetUserProfiles("user_without_profile");
@@ -83,15 +92,15 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUnexistingProfile() throws Exception {
+    void testUnexistingProfile() throws Exception {
         ResultActions result = performGetUserProfiles("user_without_profile");
         result.andExpect(status().isNotFound());
     }
 
     @Test
-    public void testAddProfile() throws Exception {
+    void testAddProfile() throws Exception {
         when(this.userProfileService.addUserProfile(any(EntityDto.class), any(BindingResult.class)))
-                .thenReturn(Mockito.mock(EntityDto.class));
+                .thenReturn(new EntityDto());
 
         String mockJson = "{\n"
                 + "    \"id\": \"user\",\n"
@@ -106,9 +115,9 @@ public class UserProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testUpdateProfile() throws Exception {
+    void testUpdateProfile() throws Exception {
         when(this.userProfileService.updateUserProfile(any(EntityDto.class), any(BindingResult.class)))
-                .thenReturn(Mockito.mock(EntityDto.class));
+                .thenReturn(new EntityDto());
 
         String mockJson = "{\n"
                 + "    \"id\": \"user\",\n"

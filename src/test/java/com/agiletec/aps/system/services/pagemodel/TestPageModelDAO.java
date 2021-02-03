@@ -13,6 +13,11 @@
  */
 package com.agiletec.aps.system.services.pagemodel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -23,25 +28,23 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestPageModelDAO extends BaseTestCase {
+class TestPageModelDAO extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testLoadModels() throws Throwable {
+    @Test
+    void testLoadModels() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         assertTrue(models.containsKey("home"));
         assertTrue(models.containsKey("service"));
     }
 
-    public void testAddRemoveModel() throws Throwable {
+    @Test
+    void testAddRemoveModel() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {
@@ -75,7 +78,8 @@ public class TestPageModelDAO extends BaseTestCase {
         }
     }
 
-    public void testUpdateModel() throws Throwable {
+    @Test
+    void testUpdateModel() throws Throwable {
         Map<String, PageModel> models = this._pageModelDAO.loadModels();
         String testPageModelCode = "test_pagemodel";
         try {
@@ -168,16 +172,13 @@ public class TestPageModelDAO extends BaseTestCase {
         return model;
     }
 
-    private void init() throws Exception {
-        try {
-            this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-            this._pageModelDAO = new PageModelDAO();
-            this._pageModelDAO.setDataSource(dataSource);
-            this._pageModelDAO.setWidgetTypeManager(this._widgetTypeManager);
-        } catch (Throwable t) {
-            throw new Exception(t);
-        }
+    @BeforeEach
+    private void init() {
+        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+        this._pageModelDAO = new PageModelDAO();
+        this._pageModelDAO.setDataSource(dataSource);
+        this._pageModelDAO.setWidgetTypeManager(this._widgetTypeManager);
     }
 
     private PageModelDAO _pageModelDAO;

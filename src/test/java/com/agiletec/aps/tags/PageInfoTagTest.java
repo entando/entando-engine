@@ -12,25 +12,21 @@
  * details.
  *
  */
-
 package com.agiletec.aps.tags;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 
-import javax.servlet.jsp.JspWriter;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PageInfoTagTest {
+@ExtendWith(MockitoExtension.class)
+class PageInfoTagTest {
 
     private static final String TEST_URL_1 = "http://www.example.com?param1=1&param2=xxx#a_fragment";
     private static final String TEST_URL_1_EXPECTED = "http://www.example.com?param1=1&amp;param2=xxx#a_fragment";
@@ -50,13 +46,13 @@ public class PageInfoTagTest {
     private static final String TEST_URL_5_EXPECTED = "javascript:&lt;script&gt;something bad&lt;/script&gt;";
 
     @Test
-    public void testSantitizationOfUrisAsHtmlContent() {
-        Assert.assertThat(
+    void testSantitizationOfUrisAsHtmlContent() {
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_1),
                 equalTo(TEST_URL_1_EXPECTED)
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_2),
                 allOf(
                         not(containsString("<")),
@@ -65,7 +61,7 @@ public class PageInfoTagTest {
                 )
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_3),
                 allOf(
                         not(containsString("<")),
@@ -74,7 +70,7 @@ public class PageInfoTagTest {
                 )
         );
 
-        Assert.assertThat(
+        assertThat(
                 PageInfoTag.mkSafeForHtmlContent(TEST_URL_4),
                 allOf(
                         not(containsString("<")),

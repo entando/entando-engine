@@ -21,17 +21,10 @@ import org.entando.entando.TestEntandoJndiUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -50,7 +43,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {
     "classpath*:spring/testpropertyPlaceholder.xml",
     "classpath*:spring/baseSystemConfig.xml",
@@ -71,31 +70,31 @@ public class AbstractControllerIntegrationTest {
     @Autowired
     private Filter springSecurityFilterChain;
 
-    @Mock
     protected IApiOAuth2TokenManager apiOAuth2TokenManager;
 
-    @Mock
     protected IAuthenticationProviderManager authenticationProviderManager;
 
-    @Mock
     protected IAuthorizationManager authorizationManager;
-
+    
     @Autowired
-    @InjectMocks
     protected EntandoOauth2Interceptor entandoOauth2Interceptor;
 
     @Autowired
     protected CorsFilter corsFilter;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         TestEntandoJndiUtils.setupJndi();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
+        this.apiOAuth2TokenManager = Mockito.mock(IApiOAuth2TokenManager.class);
+        this.authenticationProviderManager = Mockito.mock(IAuthenticationProviderManager.class);
+        this.authorizationManager = Mockito.mock(IAuthorizationManager.class);
+        this.entandoOauth2Interceptor.setAuthenticationProviderManager(this.authenticationProviderManager);
+        this.entandoOauth2Interceptor.setAuthorizationManager(this.authorizationManager);
+        this.entandoOauth2Interceptor.setoAuth2TokenManager(this.apiOAuth2TokenManager);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .dispatchOptions(true)
                 .addFilters(springSecurityFilterChain, corsFilter)

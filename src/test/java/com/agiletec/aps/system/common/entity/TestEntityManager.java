@@ -13,6 +13,11 @@
  */
 package com.agiletec.aps.system.common.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -21,27 +26,26 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestEntityManager extends BaseTestCase {
+class TestEntityManager extends BaseTestCase {
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-	
+    @Test
 	public void testGetAttributeTypes() throws Throwable {
-		if (null == this._entityManager) return;
+		this.init();
+        if (null == this._entityManager) return;
 		Map<String, AttributeInterface> attributes = this._entityManager.getEntityAttributePrototypes();
 		assertNotNull(attributes);
 		assertNotNull(attributes.get("Text"));
 	}
 	
+	@Test
 	public void testGetEntityTypes() throws Throwable {
-		if (null == this._entityManager) return;
+		this.init();
+        if (null == this._entityManager) return;
 		Map<String, AttributeInterface> attributes = this._entityManager.getEntityAttributePrototypes();
 		String testTypeCode = "XXX";
 		String testAttributeName = "testAttributeName";

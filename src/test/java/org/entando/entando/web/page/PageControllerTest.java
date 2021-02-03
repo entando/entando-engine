@@ -53,11 +53,14 @@ import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.validator.PageValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -66,7 +69,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  *
  * @author paddeo
  */
-public class PageControllerTest extends AbstractControllerTest {
+@ExtendWith(MockitoExtension.class)
+class PageControllerTest extends AbstractControllerTest {
 
     @Mock
     IPageManager pageManager;
@@ -82,7 +86,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
     private static Validator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -97,7 +101,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldLoadAPageTree() throws Exception {
+    void shouldLoadAPageTree() throws Exception {
         // NOTE: the test only tests the interface logic, the business logic is tested at service level
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -181,7 +185,7 @@ public class PageControllerTest extends AbstractControllerTest {
 
         doReturn(mockResult).when(pageService).getPages(any(String.class), isNull(), isNull());
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
         doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
 
         ResultActions result = mockMvc.perform(
@@ -198,7 +202,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldLoadPageTreeForOwnerGroupAndExtraGroups() throws Exception {
+    void shouldLoadPageTreeForOwnerGroupAndExtraGroups() throws Exception {
         // NOTE: the test only tests the interface logic, the business logic is tested at service level
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -215,7 +219,7 @@ public class PageControllerTest extends AbstractControllerTest {
         );
 
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
+        Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
         doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
 
         ResultActions result = mockMvc.perform(
@@ -234,7 +238,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePutPathMismatch() throws Exception {
+    void shouldValidatePutPathMismatch() throws Exception {
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -260,7 +264,7 @@ public class PageControllerTest extends AbstractControllerTest {
                 + "            \"position\": 7\n"
                 + "        }";
         PageDto mockResult = (PageDto) this.createMetadata(mockJsonResult, PageDto.class);
-        when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
+        Mockito.lenient().when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
@@ -278,7 +282,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldBeUnauthorized() throws Exception {
+    void shouldBeUnauthorized() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withGroup(Group.FREE_GROUP_NAME)
                 .build();
@@ -295,7 +299,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidatePostConflict() throws EntException, Exception {
+    void shouldValidatePostConflict() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -304,7 +308,7 @@ public class PageControllerTest extends AbstractControllerTest {
         page.setPageModel("existing_model");
         page.setParentCode("existing_parent");
         page.setOwnerGroup("existing_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 post("/pages")
@@ -320,7 +324,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeleteOnlinePage() throws EntException, Exception {
+    void shouldValidateDeleteOnlinePage() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
@@ -337,7 +341,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateDeletePageWithChildren() throws EntException, Exception {
+    void shouldValidateDeletePageWithChildren() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -358,7 +362,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidRequest() throws EntException, Exception {
+    void shouldValidateMovePageInvalidRequest() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -366,7 +370,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setCode("page_to_move");
         request.setParentCode(null);
         request.setPosition(0);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
                 .sessionAttr("user", user)
@@ -381,7 +385,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void shouldValidateMovePageNameMismatch() throws EntException, Exception {
+    void shouldValidateMovePageNameMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -390,7 +394,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(1);
         
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
         
         ResultActions result = mockMvc.perform(
@@ -406,7 +410,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageInvalidPosition() throws EntException, Exception {
+    void shouldValidateMovePageInvalidPosition() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -415,8 +419,8 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(0);
         
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
-        when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(new Page());
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
@@ -431,7 +435,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageMissingParent() throws EntException, Exception {
+    void shouldValidateMovePageMissingParent() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -440,7 +444,7 @@ public class PageControllerTest extends AbstractControllerTest {
         request.setParentCode("new_parent_page");
         request.setPosition(0);
 
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
@@ -455,7 +459,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageGroupMismatch() throws EntException, Exception {
+    void shouldValidateMovePageGroupMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -473,7 +477,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setParentCode("another_parent_page");
         newParent.setGroup("another_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
@@ -490,7 +494,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void shouldValidateMoveFreePageUnderReservedPage() throws Exception {
+    void shouldValidateMoveFreePageUnderReservedPage() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -510,7 +514,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setGroup("reserved");
 
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
 
@@ -527,7 +531,7 @@ public class PageControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldValidateMovePageStatusMismatch() throws EntException, Exception {
+    void shouldValidateMovePageStatusMismatch() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -547,7 +551,7 @@ public class PageControllerTest extends AbstractControllerTest {
         newParent.setCode("new_parent_page");
         newParent.setParentCode("another_parent_page");
         newParent.setGroup("valid_group");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("page_to_move")).thenReturn(pageToMove);
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(

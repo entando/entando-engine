@@ -13,9 +13,13 @@
  */
 package com.agiletec.aps.system.services.group;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.FieldSearchFilter.LikeOptionType;
@@ -24,98 +28,101 @@ import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang3.ArrayUtils;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import com.agiletec.aps.BaseTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestGroupManager extends BaseTestCase {
+class TestGroupManager extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testGetGroups() {
-        List<Group> groups = this._groupManager.getGroups();
+    @Test
+    void testGetGroups() {
+        List<Group> groups = groupManager.getGroups();
         assertTrue(groups.size() >= 6);
     }
 
-    public void testAddDeleteGroup() throws Throwable {
-        int initSize = this._groupManager.getGroups().size();
+    @Test
+    void testAddDeleteGroup() throws Throwable {
+        int initSize = groupManager.getGroups().size();
         String groupCode = "Gruppo_Prova";
         Group group = new Group();
         group.setName(groupCode);
         group.setDescription("descr_gruppo_prova");
         try {
-            assertNull(_groupManager.getGroup(groupCode));
-            _groupManager.addGroup(group);
-            List<Group> groups = _groupManager.getGroups();
+            assertNull(groupManager.getGroup(groupCode));
+            groupManager.addGroup(group);
+            List<Group> groups = groupManager.getGroups();
             assertEquals(initSize + 1, groups.size());
-            assertNotNull(_groupManager.getGroup(groupCode));
-            _groupManager.removeGroup(group);
-            groups = _groupManager.getGroups();
+            assertNotNull(groupManager.getGroup(groupCode));
+            groupManager.removeGroup(group);
+            groups = groupManager.getGroups();
             assertEquals(initSize, groups.size());
-            assertNull(_groupManager.getGroup(groupCode));
+            assertNull(groupManager.getGroup(groupCode));
         } catch (Throwable t) {
             throw t;
         } finally {
-            _groupManager.removeGroup(group);
+            groupManager.removeGroup(group);
         }
     }
 
-    public void testUpdateGroup() throws Throwable {
-        int initSize = this._groupManager.getGroups().size();
+    @Test
+    void testUpdateGroup() throws Throwable {
+        int initSize = groupManager.getGroups().size();
         Group group = new Group();
         String groupCode = "Gruppo_Prova";
         group.setName(groupCode);
         group.setDescription("descr_gruppo_prova");
         try {
-            assertNull(_groupManager.getGroup(groupCode));
-            _groupManager.addGroup(group);
-            List<Group> groups = _groupManager.getGroups();
+            assertNull(groupManager.getGroup(groupCode));
+            groupManager.addGroup(group);
+            List<Group> groups = groupManager.getGroups();
             assertEquals(initSize + 1, groups.size());
 
             Group groupNew = new Group();
             groupNew.setName(groupCode);
             groupNew.setDescription("Nuova_descr");
-            _groupManager.updateGroup(groupNew);
-            Group extracted = _groupManager.getGroup(groupCode);
+            groupManager.updateGroup(groupNew);
+            Group extracted = groupManager.getGroup(groupCode);
             assertEquals(groupNew.getDescription(), extracted.getDescription());
 
-            _groupManager.removeGroup(group);
-            groups = _groupManager.getGroups();
+            groupManager.removeGroup(group);
+            groups = groupManager.getGroups();
             assertEquals(initSize, groups.size());
-            assertNull(_groupManager.getGroup(groupCode));
+            assertNull(groupManager.getGroup(groupCode));
         } catch (Throwable t) {
             throw t;
         } finally {
-            _groupManager.removeGroup(group);
+            groupManager.removeGroup(group);
         }
     }
 
     @SuppressWarnings("rawtypes")
-    public void test_search_should_return_all_results() throws EntException {
+    @Test
+    void test_search_should_return_all_results() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = null;
-        SearcherDaoPaginatedResult<Group> result = this._groupManager.getGroups(fieldSearchFilters);
+        SearcherDaoPaginatedResult<Group> result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(6));
         assertThat(result.getList().size(), is(6));
 
         fieldSearchFilters = new FieldSearchFilter[0];
-        result = this._groupManager.getGroups(fieldSearchFilters);
+        result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(6));
         assertThat(result.getList().size(), is(6));
     }
 
     @SuppressWarnings("rawtypes")
-    public void test_search_by_filter() throws EntException {
+    @Test
+    void test_search_by_filter() throws EntException {
         FieldSearchFilter[] fieldSearchFilters = new FieldSearchFilter[0];
 
         FieldSearchFilter groupNameFilter = new FieldSearchFilter<>("groupname", "s", true, LikeOptionType.COMPLETE);
         fieldSearchFilters = ArrayUtils.add(fieldSearchFilters, groupNameFilter);
 
-        SearcherDaoPaginatedResult<Group> result = this._groupManager.getGroups(fieldSearchFilters);
+        SearcherDaoPaginatedResult<Group> result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(3));
         assertThat(result.getList().size(), is(3));
 
@@ -123,7 +130,7 @@ public class TestGroupManager extends BaseTestCase {
         FieldSearchFilter limitFilter = new FieldSearchFilter<>(2, 0);
         fieldSearchFilters = ArrayUtils.add(fieldSearchFilters, groupNameFilter);
         fieldSearchFilters = ArrayUtils.add(fieldSearchFilters, limitFilter);
-        result = this._groupManager.getGroups(fieldSearchFilters);
+        result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(3));
         assertThat(result.getList().size(), is(2));
 
@@ -131,20 +138,16 @@ public class TestGroupManager extends BaseTestCase {
         limitFilter = new FieldSearchFilter<>(2, 2);
         fieldSearchFilters = ArrayUtils.add(fieldSearchFilters, limitFilter);
         fieldSearchFilters = ArrayUtils.add(fieldSearchFilters, groupNameFilter);
-        result = this._groupManager.getGroups(fieldSearchFilters);
+        result = groupManager.getGroups(fieldSearchFilters);
         assertThat(result.getCount(), is(3));
         assertThat(result.getList().size(), is(1));
-
     }
 
-    private void init() throws Exception {
-        try {
-            _groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
-        } catch (Exception e) {
-            throw e;
-        }
+    @BeforeEach
+    private void init() {
+        this.groupManager = (IGroupManager) this.getService(SystemConstants.GROUP_MANAGER);
     }
 
-    private IGroupManager _groupManager = null;
+    private IGroupManager groupManager = null;
 
 }

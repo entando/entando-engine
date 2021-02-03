@@ -27,8 +27,6 @@ import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -45,7 +43,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class DataTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IDataObjectService dataObjectService;
@@ -58,7 +59,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     private DataTypeController controller;
 
     @Test
-    public void testGetDataTypes() throws Exception {
+    void testGetDataTypes() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -68,12 +69,12 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDataTypesCors() throws Exception {
+    void testDataTypesCors() throws Exception {
         super.testCors("/dataTypes", HttpMethod.GET);
     }
 
     @Test
-    public void testGetValidDataType() throws Exception {
+    void testGetValidDataType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -83,7 +84,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetInvalidDataType() throws Exception {
+    void testGetInvalidDataType() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -93,31 +94,31 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataType_1() throws Exception {
+    void testAddUpdateDataType_1() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("1_POST_valid.json", accessToken, status().isOk());
             DataObject addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertNotNull(addedType);
-            Assert.assertEquals("Type AAA", addedType.getTypeDescription());
-            Assert.assertEquals(1, addedType.getAttributeList().size());
+            Assertions.assertNotNull(addedType);
+            Assertions.assertEquals("Type AAA", addedType.getTypeDescription());
+            Assertions.assertEquals(1, addedType.getAttributeList().size());
 
             this.executeDataTypePut("1_PUT_invalid.json", "AAA", accessToken, status().isBadRequest());
 
             this.executeDataTypePut("1_PUT_valid.json", "AAA", accessToken, status().isOk());
 
             addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertEquals("Type AAA Modified", addedType.getTypeDescription());
-            Assert.assertEquals(2, addedType.getAttributeList().size());
+            Assertions.assertEquals("Type AAA Modified", addedType.getTypeDescription());
+            Assertions.assertEquals(2, addedType.getAttributeList().size());
 
             ResultActions result4 = mockMvc
                     .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"AAA"})
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype("AAA")) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("AAA");
@@ -126,53 +127,53 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataTypeDateValidationRules() throws Exception {
+    void testAddUpdateDataTypeDateValidationRules() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("1_POST_valid.json", accessToken, status().isOk());
             DataObject addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertNotNull(addedType);
-            Assert.assertEquals("Type AAA", addedType.getTypeDescription());
-            Assert.assertEquals(1, addedType.getAttributeList().size());
+            Assertions.assertNotNull(addedType);
+            Assertions.assertEquals("Type AAA", addedType.getTypeDescription());
+            Assertions.assertEquals(1, addedType.getAttributeList().size());
 
             this.executeDataTypePut("5_PUT_valid_date_validation_1.json", "AAA", accessToken, status().isOk());
 
             addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertEquals("Type AAA Modified", addedType.getTypeDescription());
-            Assert.assertEquals(2, addedType.getAttributeList().size());
+            Assertions.assertEquals("Type AAA Modified", addedType.getTypeDescription());
+            Assertions.assertEquals(2, addedType.getAttributeList().size());
             DateAttributeValidationRules dateAttributeValidationRules = (DateAttributeValidationRules) addedType.getAttributeList().get(1).getValidationRules();
-            Assert.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
-            Assert.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
-            Assert.assertEquals("01/01/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
+            Assertions.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
+            Assertions.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
+            Assertions.assertEquals("01/01/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
 
             this.executeDataTypePut("5_PUT_valid_date_validation_2.json", "AAA", accessToken, status().isOk());
 
             addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertEquals("Type AAA Modified", addedType.getTypeDescription());
-            Assert.assertEquals(2, addedType.getAttributeList().size());
+            Assertions.assertEquals("Type AAA Modified", addedType.getTypeDescription());
+            Assertions.assertEquals(2, addedType.getAttributeList().size());
             dateAttributeValidationRules = (DateAttributeValidationRules) addedType.getAttributeList().get(1).getValidationRules();
-            Assert.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
-            Assert.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
-            Assert.assertNull(dateAttributeValidationRules.getValue());
+            Assertions.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
+            Assertions.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
+            Assertions.assertNull(dateAttributeValidationRules.getValue());
 
             this.executeDataTypePut("5_PUT_valid_date_validation_3.json", "AAA", accessToken, status().isOk());
 
             addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertEquals("Type AAA Modified", addedType.getTypeDescription());
-            Assert.assertEquals(2, addedType.getAttributeList().size());
+            Assertions.assertEquals("Type AAA Modified", addedType.getTypeDescription());
+            Assertions.assertEquals(2, addedType.getAttributeList().size());
             dateAttributeValidationRules = (DateAttributeValidationRules) addedType.getAttributeList().get(1).getValidationRules();
-            Assert.assertNull(dateAttributeValidationRules.getRangeStart());
-            Assert.assertNull(dateAttributeValidationRules.getRangeEnd());
-            Assert.assertEquals("10/03/2021",DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
+            Assertions.assertNull(dateAttributeValidationRules.getRangeStart());
+            Assertions.assertNull(dateAttributeValidationRules.getRangeEnd());
+            Assertions.assertEquals("10/03/2021",DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
 
             ResultActions result4 = mockMvc
                     .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"AAA"})
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype("AAA")) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("AAA");
@@ -181,38 +182,38 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateListWithNestedDateValidationRules() throws Exception {
+    void testAddUpdateListWithNestedDateValidationRules() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("1_POST_valid.json", accessToken, status().isOk());
             DataObject addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertNotNull(addedType);
-            Assert.assertEquals("Type AAA", addedType.getTypeDescription());
-            Assert.assertEquals(1, addedType.getAttributeList().size());
+            Assertions.assertNotNull(addedType);
+            Assertions.assertEquals("Type AAA", addedType.getTypeDescription());
+            Assertions.assertEquals(1, addedType.getAttributeList().size());
 
             this.executeDataTypePut("5_PUT_valid_list_date_nested_attribute.json", "AAA", accessToken, status().isOk());
 
             addedType = (DataObject) this.dataObjectManager.getEntityPrototype("AAA");
-            Assert.assertEquals("MyDataType", addedType.getTypeDescription());
+            Assertions.assertEquals("MyDataType", addedType.getTypeDescription());
             ListAttribute listAttribute = (ListAttribute) addedType.getAttributeList().get(1);
             final AttributeInterface nestedAttributeType = listAttribute.getNestedAttributeType();
 
             final DateAttributeValidationRules dateAttributeValidationRules = (DateAttributeValidationRules) nestedAttributeType.getValidationRules();
 
 
-            Assert.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
-            Assert.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
-            Assert.assertEquals("10/03/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
+            Assertions.assertEquals("20/03/2020", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeStart(), DATE_PATTERN));
+            Assertions.assertEquals("11/04/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getRangeEnd(), DATE_PATTERN));
+            Assertions.assertEquals("10/03/2021", DateConverter.getFormattedDate((Date) dateAttributeValidationRules.getValue(), DATE_PATTERN));
 
 
             ResultActions result4 = mockMvc
                     .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"AAA"})
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("AAA"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype("AAA")) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("AAA");
@@ -221,7 +222,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testValidateTypeCode() throws Exception {
+    void testValidateTypeCode() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         try {
@@ -241,8 +242,8 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             String payload2 = "{\"code\": \"T12\",\"name\": \"Data Type Invalid\",\"attributes\": []}";
             this.executeDataTypePostByPayload(payload2, accessToken, status().isOk());
             DataObject addedDataObject = (DataObject) this.dataObjectManager.getEntityPrototype("T12");
-            Assert.assertNotNull(addedDataObject);
-            Assert.assertEquals(0, addedDataObject.getAttributeList().size());
+            Assertions.assertNotNull(addedDataObject);
+            Assertions.assertEquals(0, addedDataObject.getAttributeList().size());
         } catch (Exception e) {
             throw e;
         } finally {
@@ -274,19 +275,19 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddUpdateDataType_2() throws Exception {
+    void testAddUpdateDataType_2() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("2_POST_invalid.json", accessToken, status().isBadRequest());
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isOk());
             DataObject addedDataObject = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertNotNull(addedDataObject);
-            Assert.assertEquals(3, addedDataObject.getAttributeList().size());
+            Assertions.assertNotNull(addedDataObject);
+            Assertions.assertEquals(3, addedDataObject.getAttributeList().size());
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isConflict());
 
@@ -295,14 +296,14 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             this.executeDataTypePut("2_PUT_valid.json", "TST", accessToken, status().isOk());
 
             DataObject modifiedDataObject = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertNotNull(modifiedDataObject);
-            Assert.assertEquals(5, modifiedDataObject.getAttributeList().size());
+            Assertions.assertNotNull(modifiedDataObject);
+            Assertions.assertEquals(5, modifiedDataObject.getAttributeList().size());
 
             ResultActions result4 = mockMvc
                     .perform(delete("/dataTypes/{dataTypeCode}", new Object[]{"TST"})
                             .header("Authorization", "Bearer " + accessToken));
             result4.andExpect(status().isOk());
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("TST");
@@ -340,7 +341,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
 
     // attributes
     @Test
-    public void testGetDataTypeAttributeTypes_1() throws Exception {
+    void testGetDataTypeAttributeTypes_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -351,7 +352,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeTypes_2() throws Exception {
+    void testGetDataTypeAttributeTypes_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -367,7 +368,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeTypes_3() throws Exception {
+    void testGetDataTypeAttributeTypes_3() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -384,7 +385,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeType_1() throws Exception {
+    void testGetDataTypeAttributeType_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -398,7 +399,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypeAttributeType_2() throws Exception {
+    void testGetDataTypeAttributeType_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -412,9 +413,9 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
 
     // ------------------------------------
     @Test
-    public void testGetDataTypeAttribute() throws Exception {
+    void testGetDataTypeAttribute() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
@@ -454,10 +455,10 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testAddDataTypeAttribute() throws Exception {
+    void testAddDataTypeAttribute() throws Exception {
         String typeCode = "TST";
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
@@ -494,7 +495,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             result5.andExpect(jsonPath("$.metaData.dataTypeCode", is(typeCode)));
 
             IApsEntity dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(4, dataType.getAttributeList().size());
+            Assertions.assertEquals(4, dataType.getAttributeList().size());
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype(typeCode)) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype(typeCode);
@@ -503,16 +504,16 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testUpdateDataTypeAttribute() throws Exception {
+    void testUpdateDataTypeAttribute() throws Exception {
         String typeCode = "TST";
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isOk());
             IApsEntity dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(3, dataType.getAttributeList().size());
+            Assertions.assertEquals(3, dataType.getAttributeList().size());
 
             ResultActions result1 = this.executeDataTypeAttributePut("4_PUT_attribute_invalid_1.json", typeCode, "list_wrong", accessToken, status().isNotFound());
             result1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -539,8 +540,8 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             result4.andExpect(jsonPath("$.metaData.dataTypeCode", is(typeCode)));
 
             dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(3, dataType.getAttributeList().size());
-            Assert.assertNotNull(dataType.getAttribute("list"));
+            Assertions.assertEquals(3, dataType.getAttributeList().size());
+            Assertions.assertNotNull(dataType.getAttribute("list"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype(typeCode)) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype(typeCode);
@@ -549,17 +550,17 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testDeleteDataAttribute() throws Exception {
+    void testDeleteDataAttribute() throws Exception {
         String typeCode = "TST";
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isOk());
             IApsEntity dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(3, dataType.getAttributeList().size());
-            Assert.assertNotNull(dataType.getAttribute("list"));
+            Assertions.assertEquals(3, dataType.getAttributeList().size());
+            Assertions.assertNotNull(dataType.getAttribute("list"));
 
             ResultActions result1 = this.executeDataTypeAttributeDelete("wrongCode", "list_wrong", accessToken, status().isNotFound());
             result1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
@@ -574,7 +575,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             result2.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(3, dataType.getAttributeList().size());
+            Assertions.assertEquals(3, dataType.getAttributeList().size());
 
             ResultActions result3 = this.executeDataTypeAttributeDelete(typeCode, "list", accessToken, status().isOk());
             result3.andExpect(jsonPath("$.payload.dataTypeCode", is(typeCode)));
@@ -583,8 +584,8 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
 
             dataType = this.dataObjectManager.getEntityPrototype(typeCode);
-            Assert.assertEquals(2, dataType.getAttributeList().size());
-            Assert.assertNull(dataType.getAttribute("list"));
+            Assertions.assertEquals(2, dataType.getAttributeList().size());
+            Assertions.assertNull(dataType.getAttribute("list"));
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype(typeCode)) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype(typeCode);
@@ -626,16 +627,16 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testRefreshDataTypeType() throws Exception {
+    void testRefreshDataTypeType() throws Exception {
         String typeCode = "TST";
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("XXX"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype(typeCode));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("XXX"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isOk());
-            Assert.assertNotNull(this.dataObjectManager.getEntityPrototype(typeCode));
+            Assertions.assertNotNull(this.dataObjectManager.getEntityPrototype(typeCode));
 
             ResultActions result1 = mockMvc
                     .perform(post("/dataTypes/refresh/{dataTypeCode}", new Object[]{typeCode})
@@ -665,7 +666,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testGetDataTypesStatus() throws Exception {
+    void testGetDataTypesStatus() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -682,7 +683,7 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testRefreshUserProfileTypes() throws Exception {
+    void testRefreshUserProfileTypes() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
@@ -707,43 +708,43 @@ public class DataTypeControllerIntegrationTest extends AbstractControllerIntegra
     }
 
     @Test
-    public void testMoveAttribute() throws Exception {
+    void testMoveAttribute() throws Exception {
         try {
-            Assert.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.dataObjectManager.getEntityPrototype("TST"));
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
             this.executeDataTypePost("2_POST_valid.json", accessToken, status().isOk());
             DataObject addedDataObject = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertNotNull(addedDataObject);
-            Assert.assertEquals(3, addedDataObject.getAttributeList().size());
-            Assert.assertEquals("TextAttribute", addedDataObject.getAttributeList().get(0).getName());
-            Assert.assertEquals("DataAttribute", addedDataObject.getAttributeList().get(1).getName());
-            Assert.assertEquals("list", addedDataObject.getAttributeList().get(2).getName());
+            Assertions.assertNotNull(addedDataObject);
+            Assertions.assertEquals(3, addedDataObject.getAttributeList().size());
+            Assertions.assertEquals("TextAttribute", addedDataObject.getAttributeList().get(0).getName());
+            Assertions.assertEquals("DataAttribute", addedDataObject.getAttributeList().get(1).getName());
+            Assertions.assertEquals("list", addedDataObject.getAttributeList().get(2).getName());
 
             this.executeMoveAttribute("TST", "TextAttribute", true, accessToken, status().isBadRequest());
             this.executeMoveAttribute("TST", "TextAttribute", false, accessToken, status().isOk());
             DataObject modified = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertEquals(3, modified.getAttributeList().size());
-            Assert.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
-            Assert.assertEquals("TextAttribute", modified.getAttributeList().get(1).getName());
-            Assert.assertEquals("list", modified.getAttributeList().get(2).getName());
+            Assertions.assertEquals(3, modified.getAttributeList().size());
+            Assertions.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
+            Assertions.assertEquals("TextAttribute", modified.getAttributeList().get(1).getName());
+            Assertions.assertEquals("list", modified.getAttributeList().get(2).getName());
 
             this.executeMoveAttribute("TST", "TextAttribute", false, accessToken, status().isOk());
             modified = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertEquals(3, modified.getAttributeList().size());
-            Assert.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
-            Assert.assertEquals("list", modified.getAttributeList().get(1).getName());
-            Assert.assertEquals("TextAttribute", modified.getAttributeList().get(2).getName());
+            Assertions.assertEquals(3, modified.getAttributeList().size());
+            Assertions.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
+            Assertions.assertEquals("list", modified.getAttributeList().get(1).getName());
+            Assertions.assertEquals("TextAttribute", modified.getAttributeList().get(2).getName());
 
             this.executeMoveAttribute("TST", "TextAttribute", false, accessToken, status().isBadRequest());
 
             this.executeMoveAttribute("TST", "TextAttribute", true, accessToken, status().isOk());
             modified = (DataObject) this.dataObjectManager.getEntityPrototype("TST");
-            Assert.assertEquals(3, modified.getAttributeList().size());
-            Assert.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
-            Assert.assertEquals("TextAttribute", modified.getAttributeList().get(1).getName());
-            Assert.assertEquals("list", modified.getAttributeList().get(2).getName());
+            Assertions.assertEquals(3, modified.getAttributeList().size());
+            Assertions.assertEquals("DataAttribute", modified.getAttributeList().get(0).getName());
+            Assertions.assertEquals("TextAttribute", modified.getAttributeList().get(1).getName());
+            Assertions.assertEquals("list", modified.getAttributeList().get(2).getName());
         } finally {
             if (null != this.dataObjectManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.dataObjectManager).removeEntityPrototype("TST");

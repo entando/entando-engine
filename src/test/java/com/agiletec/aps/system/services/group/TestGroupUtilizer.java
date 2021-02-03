@@ -13,16 +13,21 @@
  */
 package com.agiletec.aps.system.services.group;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestGroupUtilizer extends BaseTestCase {
+class TestGroupUtilizer extends BaseTestCase {
 
+    @Test
 	public void testGetGroupsUtilizers_1() throws Throwable {
 		String[] names = this.getApplicationContext().getBeanNamesForType(GroupUtilizer.class);
 		assertTrue(names.length >= 4);
@@ -37,6 +42,7 @@ public class TestGroupUtilizer extends BaseTestCase {
 		}
 	}
 
+    @Test
 	public void testGetGroupsUtilizers_2() throws Throwable {
 		String[] names = this.getApplicationContext().getBeanNamesForType(GroupUtilizer.class);
 		assertTrue(names.length >= 4);

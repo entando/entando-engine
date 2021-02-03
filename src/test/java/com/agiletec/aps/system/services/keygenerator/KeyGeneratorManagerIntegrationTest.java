@@ -13,6 +13,8 @@
  */
 package com.agiletec.aps.system.services.keygenerator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,31 +26,32 @@ import javax.sql.DataSource;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-/**
- * @version 1.0
- * @author W.Ambu
- */
-public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
+class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
 
-    private int currentKey;
-    private IKeyGeneratorManager keyGeneratorManager = null;
-
-	protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-        this.extractSequenceNumber();
+    private static int currentKey;
+    
+    @BeforeAll
+	public static void setUp() throws Exception {
+        BaseTestCase.setUp();
+        extractSequenceNumber();
     }
-
-    protected void tearDown() throws Exception {
-    	this.updateSequenceNumber();
-        super.tearDown();
+    
+    @AfterAll
+    public static void tearDown() throws Exception {
+    	updateSequenceNumber();
+        BaseTestCase.tearDown();
     }
 
     /*
      * Controllo che stia correttamente incrementando di uno la sequence
      */
-    public void testGetUniqueKeyCurrentValueWithRightIncrement() throws EntException {
+    @Test
+    void testGetUniqueKeyCurrentValueWithRightIncrement() throws EntException {
+        IKeyGeneratorManager keyGeneratorManager = (IKeyGeneratorManager) getService(SystemConstants.KEY_GENERATOR_MANAGER);
         int uniqueKeyCurrentValue = 0;
         uniqueKeyCurrentValue = keyGeneratorManager.getUniqueKeyCurrentValue();
         int expectedUniqueKeyCurrentValue = currentKey + 1;
@@ -61,8 +64,8 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
         assertEquals(expectedUniqueKeyCurrentValue,uniqueKeyCurrentValue);
     }
     
-    private void extractSequenceNumber() throws Exception {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+    private static void extractSequenceNumber() throws Exception {
+    	DataSource dataSource = (DataSource) getApplicationContext().getBean("portDataSource");
 		String SELECT_KEY = "SELECT keyvalue FROM uniquekeys WHERE id = 1";
     	Statement prepStat = null;
     	ResultSet result = null;
@@ -84,8 +87,8 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
     /*
      * Riallinea il dato sul db con quello estratto precedentemente.
      */
-    private void updateSequenceNumber() throws Exception {
-    	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
+    private static void updateSequenceNumber() throws Exception {
+    	DataSource dataSource = (DataSource) getApplicationContext().getBean("portDataSource");
 		String UPDATE_KEY = "UPDATE uniquekeys SET keyvalue = ? WHERE id = 1";
         PreparedStatement prepStat = null;
         ResultSet result = null;
@@ -103,7 +106,7 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
         }
     }
     
-    private void closeDaoStatement(ResultSet res, Statement stat) {
+    private static void closeDaoStatement(ResultSet res, Statement stat) {
         if (res != null) {
             try {
                 res.close();
@@ -113,14 +116,6 @@ public class KeyGeneratorManagerIntegrationTest extends BaseTestCase {
             try {
                 stat.close();
             } catch (SQLException e) { }
-        }
-    }
-    
-    private void init() throws Exception {
-    	try {
-            keyGeneratorManager = (IKeyGeneratorManager) this.getService(SystemConstants.KEY_GENERATOR_MANAGER);
-    	} catch (Throwable t) {
-            throw new Exception(t);
         }
     }
 
