@@ -29,7 +29,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,20 +51,20 @@ public class UserProfilePictureControllerIntegrationTest extends AbstractControl
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("3 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[0].path",
+                            is("/Entando/resources/profile/admin/image_test_d0.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
                     .andExpect(jsonPath("$.payload.versions[1].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[1].path",
+                            is("/Entando/resources/profile/admin/image_test_d1.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
                     .andExpect(jsonPath("$.payload.versions[2].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[2].path",
+                            is("/Entando/resources/profile/admin/image_test_d2.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
                     .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")))*/;
+                    .andExpect(jsonPath("$.payload.versions[3].path",
+                            is("/Entando/resources/profile/admin/image_test_d3.jpeg")));
 
             performGetProfilePicture(username, accessToken)
                     .andDo(print())
@@ -72,20 +73,20 @@ public class UserProfilePictureControllerIntegrationTest extends AbstractControl
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("3 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[0].path",
+                            is("/Entando/resources/profile/admin/image_test_d0.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
                     .andExpect(jsonPath("$.payload.versions[1].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[1].path",
+                            is("/Entando/resources/profile/admin/image_test_d1.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
                     .andExpect(jsonPath("$.payload.versions[2].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[2].path",
+                            is("/Entando/resources/profile/admin/image_test_d2.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
                     .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")))*/;
+                    .andExpect(jsonPath("$.payload.versions[3].path",
+                            is("/Entando/resources/profile/admin/image_test_d3.jpeg")));
 
             performEditProfilePicture(username, accessToken)
                     .andDo(print())
@@ -94,20 +95,20 @@ public class UserProfilePictureControllerIntegrationTest extends AbstractControl
                     .andExpect(jsonPath("$.payload.versions.size()", is(4)))
                     .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload.versions[0].size", is("3 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[0].path",
+                            is("/Entando/resources/profile/admin/image_test_d0.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
                     .andExpect(jsonPath("$.payload.versions[1].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[1].path",
+                            is("/Entando/resources/profile/admin/image_test_d1.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
                     .andExpect(jsonPath("$.payload.versions[2].size", is("1 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))*/
+                    .andExpect(jsonPath("$.payload.versions[2].path",
+                            is("/Entando/resources/profile/admin/image_test_d2.jpeg")))
                     .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
                     .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    /*.andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")))*/;
+                    .andExpect(jsonPath("$.payload.versions[3].path",
+                            is("/Entando/resources/profile/admin/image_test_d3.jpeg")));
         } finally {
             performDeleteProfilePicture(username, accessToken)
                     .andDo(print())

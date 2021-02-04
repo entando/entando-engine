@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.swing.ImageIcon;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.image.DefaultImageResizer;
 import org.entando.entando.aps.system.services.image.IImageResizer;
@@ -41,7 +42,7 @@ public class UserProfilePictureService implements IUserProfilePictureService {
     private IUserProfilePictureManager userProfilePictureManager;
     private IStorageManager storageManager;
 
-    private String folder = "testingfolders";
+    private String folder = "profile";
     private List<ImageDimension> dimensions = createDimensions();
     private PNGImageResizer pngImageResizer = new PNGImageResizer();
     private DefaultImageResizer defaultImageResizer = new DefaultImageResizer();
@@ -78,9 +79,9 @@ public class UserProfilePictureService implements IUserProfilePictureService {
     @Override
     public UserProfilePictureDto updateUserProfilePicture(MultipartFile file, UserDetails user) {
         try {
+            deleteUserProfilePictureFiles(user);
             UserProfilePicture userProfilePicture = createUserProfilePicture(file, user);
             userProfilePictureManager.updateUserProfilePicture(userProfilePicture);
-            deleteUserProfilePictureFiles(user);
             return getUserProfilePicture(user);
         } catch (EntException e) {
             throw new RestServerError("Error updating user profile picture", e);
@@ -90,8 +91,8 @@ public class UserProfilePictureService implements IUserProfilePictureService {
     @Override
     public void deleteUserProfilePicture(UserDetails user) {
         try {
-            userProfilePictureManager.deleteUserProfilePicture(user.getUsername());
             deleteUserProfilePictureFiles(user);
+            userProfilePictureManager.deleteUserProfilePicture(user.getUsername());
         } catch (EntException e) {
             throw new RestServerError("Error updating user profile picture", e);
         }
@@ -110,16 +111,15 @@ public class UserProfilePictureService implements IUserProfilePictureService {
             file.setMimeType(multipartFile.getContentType());
             file.setUser(user);
 
-            String masterImageFileName = getNewInstanceFileName(file.getFileName(), 0, null);
-            String subPath = folder + masterImageFileName;
+            String masterImageFileName = getNewInstanceFileName(file.getFileName(), 0, null, user.getUsername());
+            String subPath = createVersionPath(masterImageFileName, user.getUsername());
             storageManager.deleteFile(subPath, false);
             File tempMasterFile = this.saveTempFile(masterImageFileName, file.getInputStream());
-
             file.setFile(tempMasterFile);
 
             UserProfilePictureVersion version = new UserProfilePictureVersion();
             version.setUsername(result.getUsername());
-            version.setPath(subPath);
+            version.setPath(createVersionPath(masterImageFileName, user.getUsername()));
             version.setSize(file.getFileSize() + " Kb");
             result.getVersions().add(version);
 
@@ -131,36 +131,6 @@ public class UserProfilePictureService implements IUserProfilePictureService {
             //TODO e.printStackTrace();
         }
 
-        /*UserProfilePicture result = new UserProfilePicture();
-        result.setUsername(user.getUsername());
-
-        UserProfilePictureVersion ppv1 = new UserProfilePictureVersion();
-        ppv1.setUsername(user.getUsername());
-        ppv1.setPath("/entando-de-app/engine/admin/profile/image_d0.jpg");
-        ppv1.setSize("2 Kb");
-        result.getVersions().add(ppv1);
-
-        UserProfilePictureVersion ppv2 = new UserProfilePictureVersion();
-        ppv2.setUsername(user.getUsername());
-        ppv2.setDimensions("90x90 px");
-        ppv2.setPath("/entando-de-app/engine/admin/profile/image_d1.jpg");
-        ppv2.setSize("2 Kb");
-        result.getVersions().add(ppv2);
-
-        UserProfilePictureVersion ppv3 = new UserProfilePictureVersion();
-        ppv3.setUsername(user.getUsername());
-        ppv3.setDimensions("130x130 px");
-        ppv3.setPath("/entando-de-app/engine/admin/profile/image_d2.jpg");
-        ppv3.setSize("2 Kb");
-        result.getVersions().add(ppv3);
-
-        UserProfilePictureVersion ppv4 = new UserProfilePictureVersion();
-        ppv4.setUsername(user.getUsername());
-        ppv4.setDimensions("150x150 px");
-        ppv4.setPath("/entando-de-app/engine/admin/profile/image_d3.jpg");
-        ppv4.setSize("2 Kb");
-        result.getVersions().add(ppv4);*/
-
         return result;
     }
 
@@ -168,7 +138,7 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         return (int)Math.ceil(length / 1000.0);
     }
 
-    String getNewInstanceFileName(String masterFileName, int size, String langCode) {
+    private String getNewInstanceFileName(String masterFileName, int size, String langCode, String username) {
         String baseName = FilenameUtils.getBaseName(masterFileName);
         String extension = FilenameUtils.getExtension(masterFileName);
         String suffix = "";
@@ -178,20 +148,20 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         if (langCode != null) {
             suffix += "_" + langCode;
         }
-        return this.createFileName(getMultiFileUniqueBaseName(baseName, suffix, extension), extension);
+        return this.createFileName(getMultiFileUniqueBaseName(baseName, suffix, extension, username), extension);
     }
 
     protected String createFileName(String baseName, String extension) {
         return extension == null ? baseName : baseName + '.' + extension;
     }
 
-    protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension) {
+    protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension, String username) {
         Assert.hasLength(baseName, "base name of file can't be null or empty");
         Assert.notNull(suffix, "file suffix can't be null");
         baseName = this.purgeBaseName(baseName);
         String suggestedName = baseName + suffix;
         int fileOrder = 1;
-        while(this.exists(this.createFileName(suggestedName, extension))) {
+        while(this.exists(this.createFileName(suggestedName, extension), username)) {
             suggestedName = baseName + '_' + fileOrder + suffix;
             fileOrder ++;
         }
@@ -203,9 +173,9 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         return purgedName.trim().replace(' ', '_');
     }
 
-    protected boolean exists(String instanceFileName) {
+    protected boolean exists(String instanceFileName, String username) {
         try {
-            String subPath = folder + instanceFileName;
+            String subPath = createVersionPath(instanceFileName, username);
             return storageManager.exists(subPath, false);
         } catch (Throwable t) {
             throw new RuntimeException("Error testing existing file " + instanceFileName, t);
@@ -258,8 +228,8 @@ public class UserProfilePictureService implements IUserProfilePictureService {
             return;
         }
 
-        String imageName = getNewInstanceFileName(file.getFileName(), dimension.getIdDim(), null);
-        String subPath = folder + imageName;
+        String imageName = getNewInstanceFileName(file.getFileName(), dimension.getIdDim(), null, file.getUser().getUsername());
+        String subPath = createVersionPath(imageName, file.getUser().getUsername());
 
         try {
             version.setDimensions(String.format("%dx%d px", dimension.getDimx(), dimension.getDimy()));
@@ -278,6 +248,10 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         }
     }
 
+    private String createVersionPath(String imageName, String username) {
+        return StringUtils.join(storageManager.getResourceUrl(folder, false), "/", username, "/", imageName);
+    }
+
     private IImageResizer getImageResizer(String filePath) {
         String extension = FilenameUtils.getExtension(filePath);
         if ("png".equals(extension)) {
@@ -287,9 +261,11 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         }
     }
 
-    //TODO Implement
-    private void deleteUserProfilePictureFiles(UserDetails user) {
-        return;
+    private void deleteUserProfilePictureFiles(UserDetails user) throws EntException {
+        UserProfilePicture userProfilePicture = userProfilePictureManager.getUserProfilePicture(user.getUsername());
+        for (UserProfilePictureVersion version : userProfilePicture.getVersions()) {
+            storageManager.deleteFile(version.getPath(), false);
+        }
     }
 
     private UserProfilePictureDto userProfilePictureToDto(UserProfilePicture userProfilePicture) {

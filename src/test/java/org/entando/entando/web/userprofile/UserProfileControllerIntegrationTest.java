@@ -36,20 +36,18 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -60,19 +58,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
-    private IUserProfileService userProfileService;
-
-    @Autowired
     private IUserProfileManager userProfileManager;
 
     @Autowired
     private IUserManager userManager;
 
-    @Autowired
-    private ProfileController controller;
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    
     @Test
     void testGetUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
@@ -383,7 +373,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    public void testCreateEditDeleteProfilePicture() throws Exception {
+    void testCreateEditDeleteProfilePicture() throws Exception {
         String accessToken = createAccessToken();
         String username = "admin";
 
