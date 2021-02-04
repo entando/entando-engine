@@ -71,7 +71,7 @@
     </bean>
 
     <bean id="DataObjectPageMapperManager" class="org.entando.entando.aps.system.services.dataobjectmapper.DataObjectPageMapperManager"
-          parent="abstractService" >
+          parent="abstractService" depends-on="PageManager" >
         <property name="pageManager" ref="PageManager" />
         <property name="cacheWrapper">
             <bean class="org.entando.entando.aps.system.services.dataobjectmapper.cache.DataObjectMapperCacheWrapper" />

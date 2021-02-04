@@ -24,6 +24,9 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This is the representation of a portal page metadata
@@ -52,11 +55,19 @@ public class PageMetadata implements Cloneable, Serializable {
 
     private Date updatedAt;
 
+    private ApsProperties descriptions = new ApsProperties();
+    private ApsProperties keywords = new ApsProperties();
+    private boolean useExtraDescriptions = false;
+
+    private String friendlyCode;
+
+    private Map<String, Map<String, PageMetatag>> complexParameters;
+
     @Override
     public PageMetadata clone() {
         PageMetadata copy = null;
         try {
-            copy = this.getClass().newInstance();
+            copy = this.getClass().getDeclaredConstructor().newInstance();
             copy.setGroup(this.getGroup());
             ApsProperties titles = new ApsProperties();
             titles.putAll(this.getTitles());
@@ -71,6 +82,36 @@ public class PageMetadata implements Cloneable, Serializable {
             copy.setMimeType(this.getMimeType());
             copy.setCharset(this.getCharset());
             copy.setUpdatedAt(this.getUpdatedAt());
+            if (null != this.getDescriptions()) {
+                copy.setDescriptions(this.getDescriptions().clone());
+            }
+            if (null != this.getKeywords()) {
+                copy.setKeywords(this.getKeywords().clone());
+            }
+            copy.setUseExtraDescriptions(this.isUseExtraDescriptions());
+            if (null != this.getComplexParameters()) {
+                Map<String, Map<String, PageMetatag>> cloneComplex = new HashMap<>();
+                Iterator<String> iter = this.getComplexParameters().keySet().iterator();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    Map<String, PageMetatag> map = this.getComplexParameters().get(key);
+                    Map<String, PageMetatag> mapClone = new HashMap<>();
+                    if (null != map && !map.isEmpty()) {
+                        Iterator<String> iter2 = map.keySet().iterator();
+                        while (iter2.hasNext()) {
+                            String mapKey = iter2.next();
+                            PageMetatag origin = map.get(mapKey);
+                            if (null != origin) {
+                                mapClone.put(mapKey, origin.clone());
+                            }
+                        }
+                        cloneComplex.put(key, mapClone);
+                    }
+                }
+                copy.setComplexParameters(cloneComplex);
+            }
+            copy.setFriendlyCode(this.getFriendlyCode());
+
         } catch (Throwable t) {
             logger.error("Error cloning {}" + this.getClass(), t);
             throw new RuntimeException("Error cloning " + this.getClass(), t);
@@ -203,6 +244,57 @@ public class PageMetadata implements Cloneable, Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+    
+    public String getDescription(String langCode) {
+        PageMetatag metatag = (PageMetatag) this.getDescriptions().get(langCode);
+        if (null != metatag) {
+            return metatag.getValue();
+        }
+        return null;
+    }
+    
+    public ApsProperties getDescriptions() {
+        return descriptions;
+    }
+    public void setDescriptions(ApsProperties descriptions) {
+        this.descriptions = descriptions;
+    }
+    
+    public String getKeywords(String langCode) {
+        PageMetatag metatag = (PageMetatag) this.getKeywords().get(langCode);
+        if (null != metatag) {
+            return metatag.getValue();
+        }
+        return null;
+    }
+    
+    public ApsProperties getKeywords() {
+        return keywords;
+    }
+    public void setKeywords(ApsProperties keywords) {
+        this.keywords = keywords;
+    }
+    
+    public boolean isUseExtraDescriptions() {
+        return useExtraDescriptions;
+    }
+    public void setUseExtraDescriptions(boolean useExtraDescriptions) {
+        this.useExtraDescriptions = useExtraDescriptions;
+    }
+
+    public String getFriendlyCode() {
+        return friendlyCode;
+    }
+    public void setFriendlyCode(String friendlyCode) {
+        this.friendlyCode = friendlyCode;
+    }
+
+    public Map<String, Map<String, PageMetatag>> getComplexParameters() {
+        return complexParameters;
+    }
+    public void setComplexParameters(Map<String, Map<String, PageMetatag>> complexParameters) {
+        this.complexParameters = complexParameters;
+    }
 
     @Override
     public String toString() {
@@ -301,6 +393,31 @@ public class PageMetadata implements Cloneable, Serializable {
             return false;
         }
         if (useExtraTitles != other.useExtraTitles) {
+            return false;
+        }
+        if (this.getFriendlyCode() == null) {
+            if (other.getFriendlyCode() != null) {
+                return false;
+            }
+        } else if (!this.getFriendlyCode().equals(other.getFriendlyCode())) {
+            return false;
+        }
+        if ((null != other.getComplexParameters() && null == this.getComplexParameters())
+                || (null == other.getComplexParameters() && null != this.getComplexParameters())
+                || (null != other.getComplexParameters() && null != this.getComplexParameters()) && !other.getComplexParameters().equals(this.getComplexParameters())) {
+            return false;
+        }
+        if ((null != other.getDescriptions() && null == this.getDescriptions())
+                || (null == other.getDescriptions() && null != this.getDescriptions())
+                || (null != other.getDescriptions() && null != this.getDescriptions()) && !other.getDescriptions().equals(this.getDescriptions())) {
+            return false;
+        }
+        if ((null != other.getKeywords() && null == this.getKeywords())
+                || (null == other.getKeywords() && null != this.getKeywords())
+                || (null != other.getKeywords() && null != this.getKeywords()) && !other.getKeywords().equals(this.getKeywords())) {
+            return false;
+        }
+        if (other.isUseExtraDescriptions() != this.isUseExtraDescriptions()) {
             return false;
         }
         return true;

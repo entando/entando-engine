@@ -490,13 +490,13 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
 
     @Override
     public IPage getOnlineRoot() {
-        IPage page = this.get(ONLINE_ROOT_CACHE_NAME, IPage.class).clone();
+        IPage page = this.get(ONLINE_ROOT_CACHE_NAME, IPage.class);
         return this.returnClone(page);
     }
 
     @Override
     public IPage getDraftRoot() {
-        IPage page = this.get(DRAFT_ROOT_CACHE_NAME, IPage.class).clone();
+        IPage page = this.get(DRAFT_ROOT_CACHE_NAME, IPage.class);
         return this.returnClone(page);
     }
     

@@ -36,8 +36,11 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.metatag.Metatag;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +49,7 @@ import org.junit.jupiter.api.Test;
  * @author M.Diana, E.Mezzano
  */
 class TestPageManager extends BaseTestCase {
-
+    
     @Test
     void testGetPage_1() throws Throwable {
         IPage root = _pageManager.getDraftRoot();
@@ -481,16 +484,7 @@ class TestPageManager extends BaseTestCase {
             assertEquals(onlineCodes, Arrays.asList(extractedOnlineParent.getChildrenCodes()));
         }
     }
-
-    private IPage createPageForTest(String code, String parentCode) throws Throwable {
-        IPage prototype = _pageManager.getDraftPage("service");
-        PageModel pageModel = prototype.getMetadata().getModel();
-        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
-                true, "pagina temporanea", null, null, false, null, null);
-        Widget[] widgets = new Widget[pageModel.getFrames().length];
-        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
-    }
-
+    
     @Test
     void testFailureJoinWidget_1() {
         String pageCode = "wrongPageCode";
@@ -798,7 +792,101 @@ class TestPageManager extends BaseTestCase {
         }
         assertTrue(found);
     }
-
+    
+    @Test
+    void testCreatePageWithSeoParameters() throws Exception {
+        String code = "seo_page";
+        try {
+            IPage page = this.createPageForTest(code, "service");
+            ApsProperties descriptions = new ApsProperties();
+            descriptions.put("en", new PageMetatag("en", PageMetatag.DESCRIPTION_KEY, "Seo Description Lang EN", false));
+            descriptions.put("it", new PageMetatag("it", PageMetatag.DESCRIPTION_KEY, "Descrizione SEO per LINGUA IT"));
+            page.getMetadata().setDescriptions(descriptions);
+            ApsProperties keywords = new ApsProperties();
+            keywords.put("en", new PageMetatag("en", PageMetatag.KEYWORDS_KEY, "Keywords Lang EN", true));
+            keywords.put("it", new PageMetatag("it", PageMetatag.KEYWORDS_KEY, "Keywords LINGUA IT"));
+            page.getMetadata().setKeywords(keywords);
+            PageMetatag custom1En = new PageMetatag("en", "key1", "en value", true);
+            PageMetatag custom1It = new PageMetatag("it", "key1", "it value");
+            PageMetatag custom2En = new PageMetatag("en", "key2", "en 2 value", Metatag.ATTRIBUTE_NAME_PROPERTY, true);
+            PageMetatag custom2It = new PageMetatag("it", "key2", "it 2 value");
+            PageMetatag custom3It = new PageMetatag("it", "key3", "it 3 value", Metatag.ATTRIBUTE_NAME_HTTP_EQUIV, true);
+            Map<String, Map<String, PageMetatag>> complexParameters = new HashMap<>();
+            Map<String, PageMetatag> enMap = new HashMap<>();
+            enMap.put("key1", custom1En);
+            enMap.put("key2", custom2En);
+            Map<String, PageMetatag> itMap = new HashMap<>();
+            itMap.put("key1", custom1It);
+            itMap.put("key2", custom2It);
+            itMap.put("key3", custom3It);
+            complexParameters.put("it", itMap);
+            complexParameters.put("en", enMap);
+            page.getMetadata().setComplexParameters(complexParameters);
+            
+            assertEquals("Seo Description Lang EN", page.getMetadata().getDescription("en"));
+            
+            this._pageManager.addPage(page);
+            ((IManager)this._pageManager).init();
+            
+            IPage extracted = this._pageManager.getDraftPage(code);
+            
+            assertEquals("Seo Description Lang EN", extracted.getMetadata().getDescription("en"));
+            assertEquals("Descrizione SEO per LINGUA IT", extracted.getMetadata().getDescription("it"));
+            assertEquals("Keywords Lang EN", extracted.getMetadata().getKeywords("en"));
+            assertEquals("Keywords LINGUA IT", extracted.getMetadata().getKeywords("it"));
+            
+            Map<String, Map<String, PageMetatag>> extractedComplexParameters = extracted.getMetadata().getComplexParameters();
+            assertNotNull(extractedComplexParameters);
+            Map<String, PageMetatag> extractedEnMap = extractedComplexParameters.get("en");
+            Map<String, PageMetatag> extractedItMap = extractedComplexParameters.get("it");
+            assertNotNull(extractedEnMap);
+            assertEquals(2, extractedEnMap.size());
+            assertNotNull(extractedItMap);
+            assertEquals(3, extractedItMap.size());
+            
+            PageMetatag key1It = extractedItMap.get("key1");
+            assertNotNull(key1It);
+            assertEquals("key1", key1It.getKey());
+            assertEquals(Metatag.ATTRIBUTE_NAME_NAME, key1It.getKeyAttribute());
+            assertEquals("it", key1It.getLangCode());
+            assertEquals("it value", key1It.getValue());
+            assertEquals(false, key1It.isUseDefaultLangValue());
+            
+            // "en", "key2", "en 2 value", Metatag.ATTRIBUTE_NAME_PROPERTY, true);
+            PageMetatag key2En = extractedEnMap.get("key2");
+            assertNotNull(key2En);
+            assertEquals("key2", key2En.getKey());
+            assertEquals(Metatag.ATTRIBUTE_NAME_PROPERTY, key2En.getKeyAttribute());
+            assertEquals("en", key2En.getLangCode());
+            assertEquals("en 2 value", key2En.getValue());
+            assertEquals(true, key2En.isUseDefaultLangValue());
+            
+            
+            // ("it", "key3", "it 3 value", Metatag.ATTRIBUTE_NAME_HTTP_EQUIV, true);
+            PageMetatag key3It = extractedItMap.get("key3");
+            assertNotNull(key3It);
+            assertEquals("key3", key3It.getKey());
+            assertEquals(Metatag.ATTRIBUTE_NAME_HTTP_EQUIV, key3It.getKeyAttribute());
+            assertEquals("it", key3It.getLangCode());
+            assertEquals("it 3 value", key3It.getValue());
+            assertEquals(true, key3It.isUseDefaultLangValue());
+            
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this._pageManager.deletePage(code);
+        }
+    }
+    
+    private IPage createPageForTest(String code, String parentCode) throws Exception {
+        IPage prototype = _pageManager.getDraftPage("service");
+        PageModel pageModel = prototype.getMetadata().getModel();
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
+                true, "pagina temporanea", null, null, false, null, null);
+        Widget[] widgets = new Widget[pageModel.getFrames().length];
+        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
+    }
+    
     @BeforeEach
     private void init() {
         this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);

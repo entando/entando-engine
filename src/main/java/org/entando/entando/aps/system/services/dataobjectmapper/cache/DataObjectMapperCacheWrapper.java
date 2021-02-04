@@ -50,12 +50,15 @@ public class DataObjectMapperCacheWrapper extends AbstractCacheWrapper implement
 	}
 
 	private void searchPublishedDataObjects(DataObjectPageMapper dataObjectPageMapper, IPage page, IPageManager pageManager) {
+        if (null == page) {
+            return;
+        }
 		PageModel pageModel = page.getModel();
 		if (pageModel != null) {
 			int mainFrame = pageModel.getMainFrame();
 			Widget[] widgets = page.getWidgets();
 			Widget widget = null;
-			if (null != widgets && mainFrame != -1) {
+			if (null != widgets && mainFrame != -1 && mainFrame < widgets.length) {
 				widget = widgets[mainFrame];
 			}
 			ApsProperties config = (null != widget) ? widget.getConfig() : null;
