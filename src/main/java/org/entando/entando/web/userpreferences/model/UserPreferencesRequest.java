@@ -13,11 +13,16 @@
  */
 package org.entando.entando.web.userpreferences.model;
 
+import java.util.List;
+
 public class UserPreferencesRequest {
 
     private Boolean wizard;
     private Boolean loadOnPageSelect;
     private Boolean translationWarning;
+    private Boolean displayAttributes;
+    private String defaultOwnerGroup;
+    private List<String> defaultJoinGroups;
 
     public Boolean getWizard() {
         return wizard;
@@ -43,12 +48,39 @@ public class UserPreferencesRequest {
         this.translationWarning = translationWarning;
     }
 
+    public Boolean getDisplayAttributes() {
+        return displayAttributes;
+    }
+
+    public void setDisplayAttributes(Boolean displayAttributes) {
+        this.displayAttributes = displayAttributes;
+    }
+
+    public String getDefaultOwnerGroup() {
+        return defaultOwnerGroup;
+    }
+
+    public void setDefaultOwnerGroup(String defaultOwnerGroup) {
+        this.defaultOwnerGroup = defaultOwnerGroup;
+    }
+
+    public List<String> getDefaultJoinGroups() {
+        return defaultJoinGroups;
+    }
+
+    public void setDefaultJoinGroups(List<String> defaultJoinGroups) {
+        this.defaultJoinGroups = defaultJoinGroups;
+    }
+
     @Override
     public String toString() {
         return "UserPreferencesRequest{" +
                 "wizard=" + wizard +
                 ", loadOnPageSelect=" + loadOnPageSelect +
                 ", translationWarning=" + translationWarning +
+                ", displayAttributes=" + displayAttributes +
+                ", defaultOwnerGroup='" + defaultOwnerGroup + '\'' +
+                ", defaultJoinGroups=" + defaultJoinGroups +
                 '}';
     }
 }

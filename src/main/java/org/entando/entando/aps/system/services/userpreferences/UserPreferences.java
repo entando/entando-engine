@@ -19,8 +19,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "userPreferences")
-@XmlType(propOrder = {"username", "wizard", "loadOnPageSelect", "translationWarning"})
+@XmlType(propOrder = {"username", "wizard", "loadOnPageSelect", "translationWarning", "displayAttributes",
+		"defaultOwnerGroup",
+		"defaultJoinGroups"})
 public class UserPreferences implements Serializable {
+
+	private String username;
+	private boolean wizard;
+	private boolean loadOnPageSelect;
+	private boolean translationWarning;
+	private boolean displayAttributes;
+	private String defaultOwnerGroup;
+	private String defaultJoinGroups;
 
 	@XmlElement(name = "username", required = true)
 	public String getUsername() {
@@ -58,10 +68,32 @@ public class UserPreferences implements Serializable {
 		this.translationWarning = translationWarning;
 	}
 
-	private String username;
-	private boolean wizard;
-	private boolean loadOnPageSelect;
-	private boolean translationWarning;
+	@XmlElement(name = "displayAttributes", required = true)
+	public boolean isDisplayAttributes() {
+		return displayAttributes;
+	}
+
+	public void setDisplayAttributes(boolean displayAttributes) {
+		this.displayAttributes = displayAttributes;
+	}
+
+	@XmlElement(name = "defaultOwnerGroup")
+	public String getDefaultOwnerGroup() {
+		return defaultOwnerGroup;
+	}
+
+	public void setDefaultOwnerGroup(String defaultOwnerGroup) {
+		this.defaultOwnerGroup = defaultOwnerGroup;
+	}
+
+	@XmlElement(name = "defaultJoinGroups")
+	public String getDefaultJoinGroups() {
+		return defaultJoinGroups;
+	}
+
+	public void setDefaultJoinGroups(String defaultJoinGroups) {
+		this.defaultJoinGroups = defaultJoinGroups;
+	}
 
 	@Override
 	public String toString() {
@@ -70,6 +102,9 @@ public class UserPreferences implements Serializable {
 				", wizard=" + wizard +
 				", loadOnPageSelect=" + loadOnPageSelect +
 				", translationWarning=" + translationWarning +
+				", displayAttributes=" + displayAttributes +
+				", defaultOwnerGroup='" + defaultOwnerGroup + '\'' +
+				", defaultJoinGroups='" + defaultJoinGroups + '\'' +
 				'}';
 	}
 }
