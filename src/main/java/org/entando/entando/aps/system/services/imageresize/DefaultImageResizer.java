@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.image;
+package org.entando.entando.aps.system.services.imageresize;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -36,7 +35,7 @@ public class DefaultImageResizer extends AbstractImageResizer {
 
 	@Override
 	@Deprecated
-	public void saveResizedImage(ImageIcon imageIcon, String filePath, ImageDimension dimension) throws EntException {
+	public void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResizeDimension dimension) throws EntException {
 		BufferedImage outImage = this.getResizedImage(imageIcon, dimension.getDimx(), dimension.getDimy());
 		try {
 			File file = new File(filePath);

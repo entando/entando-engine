@@ -204,6 +204,24 @@
             class="org.entando.entando.aps.system.services.userprofilepicture.UserProfilePictureService" >
         <property name="userProfilePictureManager" ref="UserProfilePictureManager" />
         <property name="storageManager" ref="StorageManager" />
+        <property name="imageResizeService" ref="ImageResizeService" />
+    </bean>
+
+    <bean id="ImageResizeService"
+            class="org.entando.entando.aps.system.services.imageresize.ImageResizeService" >
+        <property name="storageManager" ref="StorageManager" />
+        <property name="pngImageResizer" ref="PNGImageResizer" />
+        <property name="defaultImageResizer" ref="DefaultImageResizer" />
+    </bean>
+
+    <bean id="PNGImageResizer"
+            class="org.entando.entando.aps.system.services.imageresize.PNGImageResizer" >
+        <property name="storageManager" ref="StorageManager" />
+    </bean>
+
+    <bean id="DefaultImageResizer"
+            class="org.entando.entando.aps.system.services.imageresize.DefaultImageResizer" >
+        <property name="storageManager" ref="StorageManager" />
     </bean>
 
 </beans>

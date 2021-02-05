@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.image;
+package org.entando.entando.aps.system.services.imageresize;
 
 import javax.swing.ImageIcon;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
@@ -35,10 +35,10 @@ public interface IImageResizer {
 	 * @throws EntException In caso di errore.
 	 * @deprecated 
 	 */
-	void saveResizedImage(ImageIcon imageIcon, String filePath, ImageDimension dimension) throws EntException;
+	void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResizeDimension dimension) throws EntException;
 
 	void saveResizedImage(String subPath, boolean isProtectedResource,
-			ImageIcon imageIcon, ImageDimension dimension, UserProfilePictureVersion version) throws EntException;
+			ImageIcon imageIcon, ImageResizeDimension dimension, UserProfilePictureVersion version) throws EntException;
 	
 	void setStorageManager(IStorageManager storageManager);
 	

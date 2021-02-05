@@ -16,43 +16,27 @@ package org.entando.entando.aps.system.services.userprofilepicture;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.swing.ImageIcon;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
-import org.entando.entando.aps.system.services.image.DefaultImageResizer;
-import org.entando.entando.aps.system.services.image.IImageResizer;
-import org.entando.entando.aps.system.services.image.ImageDimension;
-import org.entando.entando.aps.system.services.image.PNGImageResizer;
+import org.entando.entando.aps.system.services.imageresize.ImageResizeService;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.userprofilepicture.model.UserProfilePictureDto;
 import org.entando.entando.web.userprofilepicture.model.UserProfilePictureVersionDto;
-import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserProfilePictureService implements IUserProfilePictureService {
 
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserProfilePictureService.class);
+
     private IUserProfilePictureManager userProfilePictureManager;
     private IStorageManager storageManager;
+    private ImageResizeService imageResizeService;
 
     private String folder = "profile";
-    private List<ImageDimension> dimensions = createDimensions();
-    private PNGImageResizer pngImageResizer = new PNGImageResizer();
-    private DefaultImageResizer defaultImageResizer = new DefaultImageResizer();
-
-    @PostConstruct
-    public void setup() {
-        pngImageResizer.setStorageManager(storageManager);
-        defaultImageResizer.setStorageManager(storageManager);
-    }
-
 
     @Override
     public UserProfilePictureDto getUserProfilePicture(UserDetails user) {
@@ -79,7 +63,7 @@ public class UserProfilePictureService implements IUserProfilePictureService {
     @Override
     public UserProfilePictureDto updateUserProfilePicture(MultipartFile file, UserDetails user) {
         try {
-            deleteUserProfilePictureFiles(user);
+            deleteFiles(user);
             UserProfilePicture userProfilePicture = createUserProfilePicture(file, user);
             userProfilePictureManager.updateUserProfilePicture(userProfilePicture);
             return getUserProfilePicture(user);
@@ -91,7 +75,7 @@ public class UserProfilePictureService implements IUserProfilePictureService {
     @Override
     public void deleteUserProfilePicture(UserDetails user) {
         try {
-            deleteUserProfilePictureFiles(user);
+            deleteFiles(user);
             userProfilePictureManager.deleteUserProfilePicture(user.getUsername());
         } catch (EntException e) {
             throw new RestServerError("Error updating user profile picture", e);
@@ -100,168 +84,63 @@ public class UserProfilePictureService implements IUserProfilePictureService {
 
     private UserProfilePicture createUserProfilePicture(MultipartFile multipartFile, UserDetails user) {
         UserProfilePicture result = new UserProfilePicture();
-        result.setUsername(user.getUsername());
+        String username = user.getUsername();
+        result.setUsername(username);
 
         try {
-            UserProfilePictureFile file = new UserProfilePictureFile();
+            UserProfilePictureFile file = createUserProfilePictureFile(multipartFile, user);
 
-            file.setInputStream(multipartFile.getInputStream());
-            file.setFileSize(calculateSize(multipartFile.getBytes().length));
-            file.setFileName(multipartFile.getOriginalFilename());
-            file.setMimeType(multipartFile.getContentType());
-            file.setUser(user);
-
-            String masterImageFileName = getNewInstanceFileName(file.getFileName(), 0, null, user.getUsername());
-            String subPath = createVersionPath(masterImageFileName, user.getUsername());
-            storageManager.deleteFile(subPath, false);
-            File tempMasterFile = this.saveTempFile(masterImageFileName, file.getInputStream());
-            file.setFile(tempMasterFile);
+            String fullPath =
+                    getVersionPath(username) + getUniqueFilename(getVersionPath(username) + file.getFilename());
 
             UserProfilePictureVersion version = new UserProfilePictureVersion();
-            version.setUsername(result.getUsername());
-            version.setPath(createVersionPath(masterImageFileName, user.getUsername()));
-            version.setSize(file.getFileSize() + " Kb");
+            version.setUsername(username);
+            version.setPath(fullPath);
+            version.setSize((int)Math.ceil(file.getFileSize() / 1000.0) + " Kb");
             result.getVersions().add(version);
 
-            this.saveResizedInstances(result, subPath, file);
-            this.storageManager.saveFile(subPath,false, new FileInputStream(tempMasterFile));
+            storageManager.saveFile(fullPath,false, new FileInputStream(file.getFile()));
+            imageResizeService.saveResizedImages(result, fullPath, file, getVersionPath(username));
 
-            tempMasterFile.delete();
+            boolean tempFileDeleted = file.getFile().delete();
+            if (!tempFileDeleted) {
+                logger.warn("Failed to delete temp file {}", file.getFilename());
+            }
         } catch (IOException | EntException e) {
-            //TODO e.printStackTrace();
+            //TODO treat this properly
+            e.printStackTrace();
         }
 
         return result;
     }
 
-    private int calculateSize(long length) {
-        return (int)Math.ceil(length / 1000.0);
+    private File saveTempFile(UserProfilePictureFile file, String notResizedFilename) throws EntException, IOException {
+        return imageResizeService.saveTempFile(notResizedFilename, file.getInputStream());
     }
 
-    private String getNewInstanceFileName(String masterFileName, int size, String langCode, String username) {
-        String baseName = FilenameUtils.getBaseName(masterFileName);
-        String extension = FilenameUtils.getExtension(masterFileName);
-        String suffix = "";
-        if (size >= 0) {
-            suffix += "_d" + size;
-        }
-        if (langCode != null) {
-            suffix += "_" + langCode;
-        }
-        return this.createFileName(getMultiFileUniqueBaseName(baseName, suffix, extension, username), extension);
+    private String getUniqueFilename(String filename) {
+        return imageResizeService.getNewInstanceFileName(filename, 0, null);
     }
 
-    protected String createFileName(String baseName, String extension) {
-        return extension == null ? baseName : baseName + '.' + extension;
+    private UserProfilePictureFile createUserProfilePictureFile(MultipartFile multipartFile, UserDetails user)
+            throws IOException, EntException {
+        UserProfilePictureFile file = new UserProfilePictureFile();
+
+        file.setInputStream(multipartFile.getInputStream());
+        file.setFileSize(multipartFile.getBytes().length);
+        file.setFilename(multipartFile.getOriginalFilename());
+        file.setMimeType(multipartFile.getContentType());
+        file.setUser(user);
+        file.setFile(saveTempFile(file, multipartFile.getOriginalFilename()));
+
+        return file;
     }
 
-    protected String getMultiFileUniqueBaseName(String baseName, String suffix, String extension, String username) {
-        Assert.hasLength(baseName, "base name of file can't be null or empty");
-        Assert.notNull(suffix, "file suffix can't be null");
-        baseName = this.purgeBaseName(baseName);
-        String suggestedName = baseName + suffix;
-        int fileOrder = 1;
-        while(this.exists(this.createFileName(suggestedName, extension), username)) {
-            suggestedName = baseName + '_' + fileOrder + suffix;
-            fileOrder ++;
-        }
-        return suggestedName;
+    private String getVersionPath(String username) {
+        return StringUtils.join(storageManager.getResourceUrl(folder, false), "/", username, "/");
     }
 
-    private String purgeBaseName(String baseName) {
-        String purgedName = baseName.replaceAll("[^ _.a-zA-Z0-9]", "");
-        return purgedName.trim().replace(' ', '_');
-    }
-
-    protected boolean exists(String instanceFileName, String username) {
-        try {
-            String subPath = createVersionPath(instanceFileName, username);
-            return storageManager.exists(subPath, false);
-        } catch (Throwable t) {
-            throw new RuntimeException("Error testing existing file " + instanceFileName, t);
-        }
-    }
-
-    protected File saveTempFile(String filename, InputStream is) throws EntException, IOException {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        String filePath = tempDir + File.separator + filename;
-        FileOutputStream outStream = null;
-        try {
-            byte[] buffer = new byte[1024];
-            int length;
-            outStream = new FileOutputStream(filePath);
-            while ((length = is.read(buffer)) != -1) {
-                outStream.write(buffer, 0, length);
-                outStream.flush();
-            }
-        } catch (Throwable t) {
-            throw new EntException("Error on saving temporary file", t);
-        } finally {
-            if (null != outStream) {
-                outStream.close();
-            }
-            if (null != is) {
-                is.close();
-            }
-        }
-        return new File(filePath);
-    }
-
-    private void saveResizedInstances(UserProfilePicture result, String masterFilePath, UserProfilePictureFile file)
-            throws EntException {
-        try {
-            for (ImageDimension dimension : dimensions) {
-                UserProfilePictureVersion version = new UserProfilePictureVersion();
-                version.setUsername(result.getUsername());
-                result.getVersions().add(version);
-                ImageIcon imageIcon = new ImageIcon(masterFilePath);
-                this.saveResizedImage(file, imageIcon, dimension, version);
-            }
-        } catch (Throwable t) {
-            throw new EntException("Error saving resized image resource instances", t);
-        }
-    }
-
-    private void saveResizedImage(UserProfilePictureFile file, ImageIcon imageIcon, ImageDimension dimension,
-            UserProfilePictureVersion version) throws EntException {
-        if (dimension.getIdDim() == 0) {
-            return;
-        }
-
-        String imageName = getNewInstanceFileName(file.getFileName(), dimension.getIdDim(), null, file.getUser().getUsername());
-        String subPath = createVersionPath(imageName, file.getUser().getUsername());
-
-        try {
-            version.setDimensions(String.format("%dx%d px", dimension.getDimx(), dimension.getDimy()));
-            version.setPath(subPath);
-            if(file.getMimeType().contains("svg")) {
-                long realLength = calculateSize(file.getFile().length());
-                version.setSize(realLength + " Kb");
-                this.storageManager.saveFile(subPath, false, new FileInputStream(file.getFile()));
-            }else {
-                storageManager.deleteFile(subPath, false);
-                IImageResizer resizer = this.getImageResizer(subPath);
-                resizer.saveResizedImage(subPath, false, imageIcon, dimension, version);
-            }
-        } catch (Throwable t) {
-            throw new EntException("Error creating resource file instance '" + subPath + "'", t);
-        }
-    }
-
-    private String createVersionPath(String imageName, String username) {
-        return StringUtils.join(storageManager.getResourceUrl(folder, false), "/", username, "/", imageName);
-    }
-
-    private IImageResizer getImageResizer(String filePath) {
-        String extension = FilenameUtils.getExtension(filePath);
-        if ("png".equals(extension)) {
-            return pngImageResizer;
-        } else {
-            return defaultImageResizer;
-        }
-    }
-
-    private void deleteUserProfilePictureFiles(UserDetails user) throws EntException {
+    private void deleteFiles(UserDetails user) throws EntException {
         UserProfilePicture userProfilePicture = userProfilePictureManager.getUserProfilePicture(user.getUsername());
         for (UserProfilePictureVersion version : userProfilePicture.getVersions()) {
             storageManager.deleteFile(version.getPath(), false);
@@ -286,14 +165,8 @@ public class UserProfilePictureService implements IUserProfilePictureService {
         return null;
     }
 
-    private List<ImageDimension> createDimensions() {
-        List<ImageDimension> result = new ArrayList();
-
-        result.add(new ImageDimension(1, 90, 90));
-        result.add(new ImageDimension(2, 130, 130));
-        result.add(new ImageDimension(3, 150, 150));
-
-        return result;
+    public void setImageResizeService(ImageResizeService imageResizeService) {
+        this.imageResizeService = imageResizeService;
     }
 
     public void setUserProfilePictureManager(

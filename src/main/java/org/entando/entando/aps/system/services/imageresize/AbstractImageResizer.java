@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.image;
+package org.entando.entando.aps.system.services.imageresize;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,7 +30,7 @@ public abstract class AbstractImageResizer implements IImageResizer {
 
 	@Override
 	public void saveResizedImage(String subPath, boolean isProtectedResource,
-			ImageIcon imageIcon, ImageDimension dimension, UserProfilePictureVersion version) throws EntException {
+			ImageIcon imageIcon, ImageResizeDimension dimension, UserProfilePictureVersion version) throws EntException {
 		BufferedImage outImage = this.getResizedImage(imageIcon, dimension.getDimx(), dimension.getDimy());
 		String filename = subPath.substring(subPath.lastIndexOf("/") + 1);
 		String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "temp_" + filename;

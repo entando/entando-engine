@@ -8,7 +8,7 @@ public class UserProfilePictureFile {
 
     private File file;
     private String mimeType;
-    private String fileName;
+    private String filename;
     private InputStream inputStream;
     private int fileSize;
     private UserDetails user;
@@ -29,12 +29,12 @@ public class UserProfilePictureFile {
         this.mimeType = mimeType;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     public InputStream getInputStream() {

@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package org.entando.entando.aps.system.services.image;
+package org.entando.entando.aps.system.services.imageresize;
 
 import java.io.Serializable;
 
@@ -19,13 +19,13 @@ import java.io.Serializable;
  * Classe rappresentante una dimensione di resize di una risorsa immagine.
  * @author E.Santoboni
  */
-public class ImageDimension implements Serializable {
+public class ImageResizeDimension implements Serializable {
 
     private int idDim;
     private int dimx;
     private int dimy;
 
-    public ImageDimension(int idDim, int dimx, int dimy) {
+    public ImageResizeDimension(int idDim, int dimx, int dimy) {
         this.idDim = idDim;
         this.dimx = dimx;
         this.dimy = dimy;
