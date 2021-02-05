@@ -1,12 +1,13 @@
 package org.entando.entando.aps.system.services.userprofilepicture;
 
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "userProfilePictureVersion")
 @XmlType(propOrder = {"username, dimensions", "path", "size"})
-public class UserProfilePictureVersion {
+public class UserProfilePictureVersion implements Serializable {
 
     private String username;
     private String dimensions;

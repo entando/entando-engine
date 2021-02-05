@@ -34,10 +34,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-public class UserProfilePictureControllerIntegrationTest extends AbstractControllerIntegrationTest {
+class UserProfilePictureControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Test
-    public void testCreateEditDeleteProfilePicture() throws Exception {
+    void testCreateEditDeleteProfilePicture() throws Exception {
         String accessToken = createAccessToken();
         String username = "admin";
 

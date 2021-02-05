@@ -15,7 +15,6 @@ package org.entando.entando.web.userprofilepicture;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.HashMap;
 import java.util.Map;
 import org.entando.entando.aps.system.services.userprofilepicture.IUserProfilePictureService;
@@ -70,8 +69,7 @@ public class ProfilePictureController {
     @RestAccessControl(permission = Permission.MANAGE_USER_PROFILES)
     @GetMapping(value = "/userProfiles/{username}/profilePicture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfilePictureDto>> getProfilePicture(
-            @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult)
-            throws JsonProcessingException {
+            @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult) {
         logger.debug("REST request - get profile picture");
         profileValidator.validate(user, username, bindingResult);
         UserProfilePictureDto result = service.getUserProfilePicture(user);
@@ -82,7 +80,7 @@ public class ProfilePictureController {
     @PostMapping(value = "/userProfiles/{username}/profilePicture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfilePictureDto>> addProfilePicture(
             @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult,
-            @RequestParam(value = "file") MultipartFile file) throws JsonProcessingException {
+            @RequestParam(value = "file") MultipartFile file) {
         logger.debug("REST request - create profile picture");
         profileValidator.validate(user, username, bindingResult);
         UserProfilePictureDto result = service.addUserProfilePicture(file, user);
@@ -93,7 +91,7 @@ public class ProfilePictureController {
     @PutMapping(value = "/userProfiles/{username}/profilePicture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfilePictureDto>> editProfilePicture(
             @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult,
-            @RequestParam(value = "file") MultipartFile file) throws JsonProcessingException {
+            @RequestParam(value = "file") MultipartFile file) {
         logger.debug("REST request - edit profile picture");
         profileValidator.validate(user, username, bindingResult);
         UserProfilePictureDto result = service.updateUserProfilePicture(file, user);
@@ -103,8 +101,7 @@ public class ProfilePictureController {
     @RestAccessControl(permission = Permission.MANAGE_USER_PROFILES)
     @DeleteMapping(value = "/userProfiles/{username}/profilePicture", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteProfilePicture(
-            @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult)
-            throws JsonProcessingException {
+            @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult) {
         logger.debug("REST request - remove profile picture");
         profileValidator.validate(user, username, bindingResult);
         service.deleteUserProfilePicture(user);

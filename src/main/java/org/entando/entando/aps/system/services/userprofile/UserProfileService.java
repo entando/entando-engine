@@ -21,6 +21,9 @@ import org.entando.entando.aps.system.services.entity.model.EntityDto;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.springframework.validation.BindingResult;
 
+/**
+ * @author E.Santoboni
+ */
 public class UserProfileService extends AbstractEntityService<IUserProfile, EntityDto> implements IUserProfileService {
 
     @Override

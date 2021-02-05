@@ -13,11 +13,8 @@
  */
 package org.entando.entando.aps.system.services.userprofile;
 
-import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.aps.system.services.entity.model.EntityDto;
-import org.entando.entando.web.userprofilepicture.model.UserProfilePictureDto;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author E.Santoboni
