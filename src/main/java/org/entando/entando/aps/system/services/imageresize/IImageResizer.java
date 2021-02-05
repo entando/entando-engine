@@ -35,6 +35,7 @@ public interface IImageResizer {
 	 * @throws EntException In caso di errore.
 	 * @deprecated 
 	 */
+	@Deprecated
 	void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResizeDimension dimension) throws EntException;
 
 	void saveResizedImage(String subPath, boolean isProtectedResource,

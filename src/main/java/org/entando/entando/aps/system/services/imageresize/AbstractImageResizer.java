@@ -21,12 +21,18 @@ import javax.swing.ImageIcon;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.aps.system.services.userprofilepicture.UserProfilePictureVersion;
 import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * Classe astratta base a servizio delle classi delegate al redimensionameno e salvataggio di file tipo immagine.
  * @author E.Santoboni
  */
 public abstract class AbstractImageResizer implements IImageResizer {
+
+	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AbstractImageResizer.class);
+
+	private IStorageManager storageManager;
 
 	@Override
 	public void saveResizedImage(String subPath, boolean isProtectedResource,
@@ -40,9 +46,12 @@ public abstract class AbstractImageResizer implements IImageResizer {
 			this.getStorageManager().saveFile(subPath, isProtectedResource, new FileInputStream(tempFile));
 			long realLength = (int)Math.ceil(tempFile.length() / 1000.0);
 			version.setSize(realLength + " Kb");
-			tempFile.delete();
-		} catch (Throwable t) {
-			throw new EntException("Error creating resigned Image", t);
+			boolean tempFileDeleted = tempFile.delete();
+			if (!tempFileDeleted) {
+				logger.warn("Failed to delete temp file {}", tempFilePath);
+			}
+		} catch (Exception e) {
+			throw new EntException("Error creating resigned Image", e);
 		}
 	}
 	
@@ -76,13 +85,13 @@ public abstract class AbstractImageResizer implements IImageResizer {
 	}
 	
 	protected IStorageManager getStorageManager() {
-		return _storageManager;
+		return storageManager;
 	}
 	@Override
 	public void setStorageManager(IStorageManager storageManager) {
-		this._storageManager = storageManager;
+		this.storageManager = storageManager;
 	}
 	
-	private IStorageManager _storageManager;
+
 	
 }

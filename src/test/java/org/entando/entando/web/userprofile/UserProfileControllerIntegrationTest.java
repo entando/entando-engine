@@ -15,14 +15,9 @@ package org.entando.entando.web.userprofile;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +34,6 @@ import com.agiletec.aps.util.FileTextReader;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
-import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -50,10 +44,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -372,157 +364,6 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
         }
     }
 
-    @Test
-    void testCreateEditDeleteProfilePicture() throws Exception {
-        String accessToken = createAccessToken();
-        String username = "admin";
-
-        try {
-            performCreateProfilePicture(username, accessToken, "application/jpeg")
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.username", is("admin")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
-                    .andExpect(jsonPath("$.payload.versions[1].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
-                    .andExpect(jsonPath("$.payload.versions[2].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
-                    .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")));
-
-            performGetProfilePicture(username, accessToken)
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.username", is("admin")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
-                    .andExpect(jsonPath("$.payload.versions[1].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
-                    .andExpect(jsonPath("$.payload.versions[2].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
-                    .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")));
-
-            performEditProfilePicture(username, accessToken)
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.username", is("admin")))
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)))
-                    .andExpect(jsonPath("$.payload.versions[0].dimensions", isEmptyOrNullString()))
-                    .andExpect(jsonPath("$.payload.versions[0].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[0].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d0.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[1].dimensions", is("90x90 px")))
-                    .andExpect(jsonPath("$.payload.versions[1].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[1].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d1.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[2].dimensions", is("130x130 px")))
-                    .andExpect(jsonPath("$.payload.versions[2].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[2].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d2.jpg")))
-                    .andExpect(jsonPath("$.payload.versions[3].dimensions", is("150x150 px")))
-                    .andExpect(jsonPath("$.payload.versions[3].size", is("2 Kb")))
-                    .andExpect(jsonPath("$.payload.versions[3].path",
-                            startsWith("/entando-de-app/engine/admin/profile/image_d3.jpg")));
-        } finally {
-            performDeleteProfilePicture(username, accessToken)
-                    .andDo(print())
-                    .andExpect(status().isOk());
-
-            performGetProfilePicture(username, accessToken)
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.versions.size()", is(4)));
-        }
-    }
-
-    private ResultActions performCreateProfilePicture(String username, String accessToken, String mimeType) throws Exception {
-
-        String contents = "some text very big so it has more than 1Kb size asdklasdhadsjakhdsjadjasdhjhjasd some garbage to make it bigger!!!" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x";
-
-        String path = StringUtils.join("/userProfiles/", username, "/profilePicture");
-        MockMultipartFile file = new MockMultipartFile("file", "image_test.jpeg", mimeType, contents.getBytes());
-
-        MockHttpServletRequestBuilder request = multipart(path)
-                .file(file)
-                .header("Authorization", "Bearer " + accessToken);
-        return mockMvc.perform(request);
-    }
-
-    private ResultActions performGetProfilePicture(String username, String accessToken) throws Exception {
-        String path = StringUtils.join("/userProfiles/", username, "/profilePicture");
-        return mockMvc.perform(
-                get(path)
-                        .header("Authorization", "Bearer " + accessToken));
-    }
-
-    private ResultActions performDeleteProfilePicture(String username, String accessToken) throws Exception {
-        String path = StringUtils.join("/userProfiles/", username, "/profilePicture");
-        return mockMvc.perform(
-                delete(path)
-                        .header("Authorization", "Bearer " + accessToken));
-    }
-
-    private ResultActions performEditProfilePicture(String username, String accessToken) throws Exception {
-
-        String contents = "some text very big so it has more than 1Kb size asdklasdhadsjakhdsjadjasdhjhjasd some garbage to make it bigger!!!" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x" +
-                "a;lsdka;lsdka;lsdka;lsdk;alskd;laskd;aslkd;alsdk;alskda;lskldaskl;sdjodpasu0i9728938701o7i186r890347974209817409823740bgbdf98dw787012378b1789b13281328701b39871029371x";
-
-        String path = StringUtils.join("/userProfiles/", username, "/profilePicture");
-
-        ResultActions result = mockMvc
-                .perform(multipart(path)
-                        .file(new MockMultipartFile("file", "image_test.jpeg", "application/jpeg", contents.getBytes()))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer " + accessToken));
-
-        return result.andDo(print());
-    }
-    
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageUserProfile", Permission.MANAGE_USER_PROFILES)

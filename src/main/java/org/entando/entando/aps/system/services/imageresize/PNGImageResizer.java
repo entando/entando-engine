@@ -48,10 +48,8 @@ public class PNGImageResizer extends AbstractImageResizer {
 		try {
 			File file = new File(filePath);
 	        ImageIO.write(imageResized, this.getFileExtension(filePath), file);
-		} catch (Throwable t) {
-			String msg = this.getClass().getName() + ": saveResizedImage: " + t.toString();
-			_logger.error(" Error in saveResizedImage",t);
-			throw new EntException(msg, t);
+		} catch (Exception e) {
+			throw new EntException("Error in saveResizedImage: " + filePath, e);
 		}
 	}
 	
@@ -153,12 +151,11 @@ public class PNGImageResizer extends AbstractImageResizer {
             BufferedImage bimage = (BufferedImage)image;
             return bimage.getColorModel().hasAlpha();
         }
-        // Use a pixel grabber to retrieve the image's color model;
-        // grabbing a single pixel is usually sufficient
+        // Use a pixel grabber to retrieve the image's color model. Grabbing a single pixel is usually sufficient
         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
         try {
             pg.grabPixels();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
         	throw new EntException("Error grabbing a single pixel", e);
         }
         // Get the image's color model

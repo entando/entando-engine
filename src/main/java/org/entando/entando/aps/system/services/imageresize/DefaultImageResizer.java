@@ -22,16 +22,12 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import org.entando.entando.ent.exception.EntException;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * Classe di default delegata al redimensionameno e salvataggio di file tipo immagine.
  * @author E.Santoboni
  */
 public class DefaultImageResizer extends AbstractImageResizer {
-
-	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DefaultImageResizer.class);
 
 	@Override
 	@Deprecated
@@ -40,11 +36,8 @@ public class DefaultImageResizer extends AbstractImageResizer {
 		try {
 			File file = new File(filePath);
 	        ImageIO.write(outImage, this.getFileExtension(filePath), file);
-		} catch (Throwable t) {
-			_logger.error("Error creating resized Image", t);
-			//String msg = "Error creating resigned Image";
-			//ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
-			throw new EntException("Error creating resized Image", t);
+		} catch (Exception e) {
+			throw new EntException("Error creating resized Image " + filePath, e);
 		}
 	}
 	
@@ -65,10 +58,8 @@ public class DefaultImageResizer extends AbstractImageResizer {
 			g2d.drawImage(image, tx, null);
 			g2d.dispose();
 			return outImage;
-		} catch (Throwable t) {
-			_logger.error("Error creating resized Image", t);
-			//ApsSystemUtils.logThrowable(t, this, "getResizedImage", msg);
-			throw new EntException("Error creating resized Image", t);
+		} catch (Exception e) {
+			throw new EntException("Error creating resized Image " + imageIcon, e);
 		}
 	}
 	
