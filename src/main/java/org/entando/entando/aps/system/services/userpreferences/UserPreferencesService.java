@@ -26,6 +26,7 @@ public class UserPreferencesService implements IUserPreferencesService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final String ERRCODE_USER_PREFERENCES_DOES_NOT_EXISTS = "1";
+    public static final String DEFAULT_JOIN_GROUP_DELIMITER = ";";
 
     IUserPreferencesManager userPreferencesManager;
 
@@ -58,6 +59,20 @@ public class UserPreferencesService implements IUserPreferencesService {
                 if (request.getTranslationWarning() != null) {
                     userPreferences.setTranslationWarning(request.getTranslationWarning());
                 }
+                if (request.getDisplayAttributes() != null) {
+                    userPreferences.setDisplayAttributes(request.getDisplayAttributes());
+                }
+                if (request.getDefaultOwnerGroup() != null) {
+                    userPreferences.setDefaultOwnerGroup(request.getDefaultOwnerGroup());
+                }
+                if (request.getDefaultJoinGroups() != null) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String group : request.getDefaultJoinGroups()) {
+                        sb.append(group);
+                        sb.append(DEFAULT_JOIN_GROUP_DELIMITER);
+                    }
+                    userPreferences.setDefaultJoinGroups(sb.toString());
+                }
                 userPreferencesManager.updateUserPreferences(userPreferences);
                 return new UserPreferencesDto(userPreferencesManager.getUserPreferences(username));
             } else {
@@ -75,8 +90,9 @@ public class UserPreferencesService implements IUserPreferencesService {
             UserPreferences userPreferences = new UserPreferences();
             userPreferences.setUsername(username);
             userPreferences.setWizard(true);
-            userPreferences.setLoadOnPageSelect(true);
             userPreferences.setTranslationWarning(true);
+            userPreferences.setLoadOnPageSelect(true);
+            userPreferences.setDisplayAttributes(false);
             userPreferencesManager.addUserPreferences(userPreferences);
         } catch (EntException e) {
             logger.error("Error in creating new default userPreferences for {}", username, e);

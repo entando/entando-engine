@@ -1,5 +1,13 @@
 {
     "wizard": false,
     "loadOnPageSelect": false,
-    "translationWarning": false
+    "translationWarning": false,
+    "displayAttributes": false,
+    "defaultOwnerGroup": "group1",
+    "defaultJoinGroups": [
+        "group2",
+        "group3",
+        "group4",
+        "group5"
+    ]
 }
