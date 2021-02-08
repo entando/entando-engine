@@ -74,6 +74,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         dest.setBundleId(src.getBundleId());
         dest.setReadonlyPageWidgetConfig(src.isReadonlyPageWidgetConfig());
         dest.setWidgetCategory(src.getWidgetCategory());
+        dest.setIcon(src.getIcon());
         if (null != pluginCode && pluginCode.trim().length() > 0) {
             dest.setTypology(pluginCode);
         } else if (src.isUserType()) {

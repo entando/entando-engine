@@ -17,6 +17,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -28,6 +29,7 @@ import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.WidgetRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -45,8 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.jupiter.api.Assertions;
 
 class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
@@ -200,9 +200,6 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
     }
-
-
-
 
     @Test
     void testAddUpdateWidget_1() throws Exception {
@@ -445,7 +442,8 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         } finally {
             this.widgetTypeManager.updateWidgetType(oldParent.getCode(), 
                     oldParent.getTitles(), oldParent.getConfig(), oldParent.getMainGroup(), oldParent.getConfigUi(), 
-                    oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory());
+                    oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
+                    oldParent.getIcon());
             this.widgetTypeManager.deleteWidgetType(childCode);
         }
     }
@@ -599,6 +597,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setTitles((Map) widgetType.getTitles());
         request.setWidgetCategory(widgetType.getWidgetCategory());
+        request.setIcon(widgetType.getIcon());
         request.setReadonlyPageWidgetConfig(true);
         ResultActions result = this.executeWidgetPut(request, code, accessToken, status().isOk());
         result.andExpect(jsonPath("$.payload.code", is("login_form")));
@@ -688,23 +687,22 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
-            //Try to update the config of locked widget with the same config
-/*
-            // INVALID BLOCK
-            widgetTypeCode = "entando_apis";
+            //Try to update the config of locked widget with the old value
+
             final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
+
+            titles = new HashMap<>();
+            titles.put("it", "APIs");
+            titles.put("en", "APIs");
+
+            request.setTitles(titles);
 
             request.setCode(widgetTypeCode);
             Map<String, String> configMap = (Map) config;
 
             request.setConfig(configMap);
-            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
-            result.andDo(resultPrint());
+            this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
 
-            result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
-            result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
-            result.andExpect(jsonPath("$.payload.group", is("free")));
-*/
         } catch (Exception e) {
             throw e;
         }

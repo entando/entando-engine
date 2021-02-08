@@ -38,20 +38,20 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     private ILangManager langManager;
 
     private static final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon FROM widgetcatalog";
 
     private static final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory) "
-            + "VALUES (? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?)";
+            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon) "
+            + "VALUES (? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?, ?)";
 
     private static final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
     private static final String UPDATE_WIDGET_TYPE
-            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ?, widgetcategory = ? WHERE code = ? ";
+            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ?, widgetcategory = ?, icon = ? WHERE code = ? ";
 
     private static final String GET_WIDGET_TYPE
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog WHERE code = ?";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon FROM widgetcatalog WHERE code = ?";
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -148,6 +148,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             widgetType.setReadonlyPageWidgetConfig(isReadonlyPageWidgetConfig == 1);
             String widgetCategory = res.getString(12);
             widgetType.setWidgetCategory(widgetCategory);
+            String icon = res.getString(13);
+            widgetType.setIcon(icon);
+
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
             throw new EntException("Error in the parsing in the Widget Type '" + code + "'", t);
@@ -193,6 +196,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 stat.setInt(11, 0);
             }
             stat.setString(12, widgetType.getWidgetCategory());
+            stat.setString(13, widgetType.getIcon());
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -233,20 +237,74 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) {
         String widgetCategory;
+        String icon;
 
         try {
             widgetCategory = getWidgetType(widgetTypeCode).getWidgetCategory();
+            icon = getWidgetType(widgetTypeCode).getIcon();
         } catch (EntException | RuntimeException e) {
             throw new EntRuntimeException("Error updating widget type", e);
         }
 
         updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
-                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory);
+                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory, icon);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) {
+        Connection conn = null;
+        PreparedStatement stat = null;
+        String icon;
+
+        try {
+            icon = getWidgetType(widgetTypeCode).getIcon();
+        } catch (EntException | RuntimeException e) {
+            throw new EntRuntimeException("Error updating widget type", e);
+        }
+
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            stat = conn.prepareStatement(UPDATE_WIDGET_TYPE);
+            stat.setString(1, titles.toXml());
+            if (null == defaultConfig || defaultConfig.isEmpty()) {
+                stat.setNull(2, Types.VARCHAR);
+            } else {
+                stat.setString(2, defaultConfig.toXml());
+            }
+            stat.setString(3, mainGroup);
+            stat.setString(4, configUi);
+            stat.setString(5, bundleId);
+
+            if (Boolean.TRUE.equals(readonlyPageWidgetConfig)) {
+                stat.setInt(6, 1);
+            } else {
+                stat.setInt(6, 0);
+            }
+
+            stat.setString(7, widgetCategory);
+            stat.setString(8, icon);
+            stat.setString(9, widgetTypeCode);
+
+            stat.executeUpdate();
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            logger.error("Error updating widget type {}", widgetTypeCode, t);
+            throw new RuntimeException("Error updating widget type", t);
+        } finally {
+            closeDaoResources(null, stat, conn);
+        }
+    }
+
+    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory,
+                                 String icon) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {
@@ -270,7 +328,10 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             }
 
             stat.setString(7, widgetCategory);
-            stat.setString(8, widgetTypeCode);
+
+
+            stat.setString(8, icon);
+            stat.setString(9, widgetTypeCode);
 
             stat.executeUpdate();
             conn.commit();
@@ -282,6 +343,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             closeDaoResources(null, stat, conn);
         }
     }
+
 
     protected ILangManager getLangManager() {
         return langManager;

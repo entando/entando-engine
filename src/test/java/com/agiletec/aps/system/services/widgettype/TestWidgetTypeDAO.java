@@ -13,21 +13,18 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.Map;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author M.Diana
@@ -73,6 +70,7 @@ class TestWidgetTypeDAO extends BaseTestCase {
         assertEquals("login_form",widgetType.getCode());
         assertTrue(widgetType.isReadonlyPageWidgetConfig());
         assertEquals("system",widgetType.getWidgetCategory());
+        assertEquals("font-awesome:fa-sign-in",widgetType.getIcon());
     }
     
 }

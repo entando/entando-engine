@@ -39,9 +39,15 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,16 +57,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class WidgetServiceTest {
@@ -272,7 +270,7 @@ class WidgetServiceTest {
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> bundleIdCaptor = ArgumentCaptor.forClass(String.class);
         verify(widgetManager).updateWidgetType(anyString(), any(), any(), anyString(), configUiCaptor.capture(),
-                bundleIdCaptor.capture(), anyBoolean(), anyString());
+                bundleIdCaptor.capture(), anyBoolean(), anyString(), anyString());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
 
@@ -301,7 +299,7 @@ class WidgetServiceTest {
         ArgumentCaptor<String> configUiCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> bundleIdCaptor = ArgumentCaptor.forClass(String.class);
         verify(widgetManager).updateWidgetType(anyString(), any(), any(), anyString(), configUiCaptor.capture(),
-                bundleIdCaptor.capture(), anyBoolean(), anyString());
+                bundleIdCaptor.capture(), anyBoolean(), anyString(), anyString());
         assertThat(configUiCaptor.getValue()).isEqualTo(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         assertThat(bundleIdCaptor.getValue()).isEqualTo(widgetRequest.getBundleId());
 
@@ -345,6 +343,7 @@ class WidgetServiceTest {
         widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));
         widgetRequest.setBundleId(BUNDLE_1);
         widgetRequest.setWidgetCategory("test");
+        widgetRequest.setIcon("test");
         return widgetRequest;
     }
 

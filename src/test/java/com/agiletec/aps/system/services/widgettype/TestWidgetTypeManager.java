@@ -13,13 +13,6 @@
  */
 package com.agiletec.aps.system.services.widgettype;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
@@ -29,14 +22,16 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author M.Diana - E.Santoboni
@@ -189,6 +184,7 @@ class TestWidgetTypeManager extends BaseTestCase {
     @Test
     void testUpdate() throws Throwable {
         String widgetTypeCode = "test_showletType";
+        String icon= "font-awesome:fa-box";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -199,15 +195,16 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
             ApsProperties newProperties = new ApsProperties();
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), true, type.getWidgetCategory());
+                    type.getConfigUi(), type.getBundleId(), true, type.getWidgetCategory(),icon);
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals(0, extracted.getConfig().size());
             assertTrue(extracted.isReadonlyPageWidgetConfig());
+            assertEquals(icon, extracted.getIcon());
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory(),icon);
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));
@@ -224,6 +221,7 @@ class TestWidgetTypeManager extends BaseTestCase {
     @Test
     void testUpdateWithoutWidgetCategory() throws Throwable {
         String widgetTypeCode = "test_showletType";
+        String icon= "font-awesome:fa-box";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -243,7 +241,7 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             newProperties.put("contentId", "EVN103");
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory());
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory(), icon);
             extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));
@@ -264,11 +262,13 @@ class TestWidgetTypeManager extends BaseTestCase {
         try {
             assertNotNull(widgetType);
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup(),
-                    widgetType.getConfigUi(), widgetType.getBundleId(), false);
+                    widgetType.getConfigUi(), widgetType.getBundleId(), false, "test", "test");
             WidgetType updated = this._widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(updated);
             assertNotNull(updated.getConfig());
             assertTrue(updated.isReadonlyPageWidgetConfig());
+            assertEquals(widgetType.getWidgetCategory(),updated.getWidgetCategory());
+            assertEquals(widgetType.getIcon(),updated.getIcon());
         } catch (Throwable t) {
             throw t;
         }
@@ -289,6 +289,7 @@ class TestWidgetTypeManager extends BaseTestCase {
         config.put("actionPath", "/myNewJsp.jsp");
         type.setConfig(config);
         type.setWidgetCategory("test");
+        type.setIcon("iconTest");
         type.setReadonlyPageWidgetConfig(false);
         return type;
     }

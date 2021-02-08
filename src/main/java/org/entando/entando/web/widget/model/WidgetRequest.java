@@ -44,6 +44,8 @@ public class WidgetRequest {
 
     private String widgetCategory;
 
+    private String icon;
+
     public String getCode() {
         return code;
     }
@@ -122,5 +124,13 @@ public class WidgetRequest {
 
     public void setWidgetCategory(String widgetCategory) {
         this.widgetCategory = widgetCategory;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

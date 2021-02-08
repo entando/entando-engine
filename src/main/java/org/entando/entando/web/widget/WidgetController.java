@@ -14,9 +14,6 @@
 package org.entando.entando.web.widget;
 
 import com.agiletec.aps.system.services.role.Permission;
-import java.util.HashMap;
-import java.util.Map;
-import javax.validation.Valid;
 import org.entando.entando.aps.system.services.widgettype.IWidgetService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
@@ -24,11 +21,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.Filter;
-import org.entando.entando.web.common.model.PagedMetadata;
-import org.entando.entando.web.common.model.PagedRestResponse;
-import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -39,11 +32,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class WidgetController {
@@ -58,7 +51,7 @@ public class WidgetController {
     private WidgetValidator widgetValidator;
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/widgets/{widgetCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/widgets/{widgetCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<WidgetDto>> getWidget(@PathVariable String widgetCode) {
         logger.trace("getWidget by code {}", widgetCode);
         WidgetDto widgetDto = this.widgetService.getWidget(widgetCode);
@@ -66,7 +59,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/widgets/{widgetCode}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/widgets/{widgetCode}/usage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String widgetCode) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, widgetCode);
 
@@ -80,7 +73,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/widgets/{widgetCode}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/widgets/{widgetCode}/usage/details", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@PathVariable String widgetCode, PageSearchRequest searchRequest) {
 
         logger.trace("get {} usage details by code {}", COMPONENT_ID, widgetCode);
@@ -95,7 +88,7 @@ public class WidgetController {
 
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/widgets/{widgetCode}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
+    @DeleteMapping(value = "/widgets/{widgetCode}", produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteWidget(@PathVariable String widgetCode) {
         logger.info("deleting widget {}", widgetCode);
         this.widgetService.removeWidget(widgetCode);
@@ -105,7 +98,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/widgets/{widgetCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
+    @PutMapping(value = "/widgets/{widgetCode}", produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
     public ResponseEntity<SimpleRestResponse<WidgetDto>> updateWidget(@PathVariable String widgetCode, @Valid @RequestBody WidgetRequest widgetRequest, BindingResult bindingResult) {
         logger.trace("update widget. Code: {} and body {}: ", widgetCode, widgetRequest);
         //field validations
@@ -121,7 +114,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/widgets", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
+    @PostMapping(value = "/widgets", produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
     public ResponseEntity<SimpleRestResponse<WidgetDto>> addWidget(
             @Valid @RequestBody WidgetRequest widgetRequest,
             BindingResult bindingResult) {
@@ -140,7 +133,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
-    @RequestMapping(value = "/widgets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/widgets", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PagedRestResponse<WidgetDto>> getWidgets(RestListRequest requestList) {
         logger.trace("get widget list {}", requestList);
         this.getWidgetValidator().validateRestListRequest(requestList, WidgetDto.class);
@@ -150,7 +143,7 @@ public class WidgetController {
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
-    @RequestMapping(value = "/widgets/{widgetCode}/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/widgets/{widgetCode}/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<WidgetInfoDto>> getWidgetInfo(@PathVariable String widgetCode) {
         logger.trace("getWidgetInfo by code {}", widgetCode);
         WidgetInfoDto info = this.widgetService.getWidgetInfo(widgetCode);

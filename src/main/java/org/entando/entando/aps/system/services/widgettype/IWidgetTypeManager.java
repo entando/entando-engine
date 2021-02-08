@@ -75,7 +75,12 @@ public interface IWidgetTypeManager {
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException;
 
+    @Deprecated
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException;
+
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                          String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory,
+                          String icon) throws EntException;
 
 }
