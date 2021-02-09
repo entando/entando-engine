@@ -71,9 +71,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 WidgetType widgetType = this.createWidgetTypeFromResultSet(res);
                 widgetTypes.put(widgetType.getCode(), widgetType);
             }
-        } catch (Throwable t) {
-            logger.error( ERROR_LOADING_WIDGETS , t);
-            throw new RuntimeException(ERROR_LOADING_WIDGETS, t);
+        } catch (EntException | SQLException e) {
+            logger.error( ERROR_LOADING_WIDGETS , e);
+            throw new EntRuntimeException(ERROR_LOADING_WIDGETS, e);
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -97,7 +97,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             }
         } catch (EntException | SQLException e) {
             logger.error(ERROR_LOADING_WIDGET, e);
-            throw new EntException(String.format("%s %s", ERROR_LOADING_WIDGET, e));
+            throw new EntException(ERROR_LOADING_WIDGET, e);
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -260,8 +260,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) {
-        Connection conn = null;
-        PreparedStatement stat = null;
+
         String icon;
 
         try {
@@ -270,37 +269,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         }
 
-        try {
-            conn = this.getConnection();
-            conn.setAutoCommit(false);
-            stat = conn.prepareStatement(UPDATE_WIDGET_TYPE);
-            stat.setString(1, titles.toXml());
-            if (null == defaultConfig || defaultConfig.isEmpty()) {
-                stat.setNull(2, Types.VARCHAR);
-            } else {
-                stat.setString(2, defaultConfig.toXml());
-            }
-            stat.setString(3, mainGroup);
-            stat.setString(4, configUi);
-            stat.setString(5, bundleId);
-
-            if (Boolean.TRUE.equals(readonlyPageWidgetConfig)) {
-                stat.setInt(6, 1);
-            } else {
-                stat.setInt(6, 0);
-            }
-            stat.setString(7, widgetCategory);
-            stat.setString(8, icon);
-            stat.setString(9, widgetTypeCode);
-            stat.executeUpdate();
-            conn.commit();
-        } catch (EntException | SQLException | IOException e ) {
-            this.executeRollback(conn);
-            logger.error("{} {}", ERROR_UPDATE_WIDGET, widgetTypeCode, e);
-            throw new EntRuntimeException(String.format("%s %s", ERROR_UPDATE_WIDGET, e));
-        } finally {
-            closeDaoResources(null, stat, conn);
-        }
+        updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
+                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory, icon);
     }
 
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
@@ -337,7 +307,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
         } catch (EntException | SQLException | IOException e) {
             this.executeRollback(conn);
             logger.error("{} {}", ERROR_UPDATE_WIDGET, widgetTypeCode, e);
-            throw new EntRuntimeException(String.format("%s %s", ERROR_UPDATE_WIDGET, e));
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         } finally {
             closeDaoResources(null, stat, conn);
         }
