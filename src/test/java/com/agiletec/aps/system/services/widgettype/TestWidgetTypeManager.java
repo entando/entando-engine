@@ -221,7 +221,6 @@ class TestWidgetTypeManager extends BaseTestCase {
     @Test
     void testUpdateWithoutWidgetCategory() throws Throwable {
         String widgetTypeCode = "test_showletType";
-        String icon= "font-awesome:fa-box";
         assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -237,6 +236,45 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals("test",extracted.getWidgetCategory());
+            assertEquals("iconTest", extracted.getIcon());
+            assertEquals(0, extracted.getConfig().size());
+            assertTrue(extracted.isReadonlyPageWidgetConfig());
+            newProperties.put("contentId", "EVN103");
+            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory());
+            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(extracted);
+            assertEquals("EVN103", extracted.getConfig().get("contentId"));
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            }
+            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        }
+    }
+
+    @Test
+    void testUpdateWithoutIcon() throws Throwable {
+        String widgetTypeCode = "test_showletType";
+        String icon= "font-awesome:fa-box";
+        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        try {
+            WidgetType type = this.createNewWidgetType(widgetTypeCode);
+            this._widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(extracted);
+            assertEquals("formAction", extracted.getParentType().getCode());
+            assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
+            ApsProperties newProperties = new ApsProperties();
+            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+                    type.getConfigUi(), type.getBundleId(), true, "test");
+            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(extracted);
+            assertNotNull(extracted.getConfig());
+            assertEquals("test",extracted.getWidgetCategory());
+            assertEquals("iconTest", extracted.getIcon());
             assertEquals(0, extracted.getConfig().size());
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             newProperties.put("contentId", "EVN103");

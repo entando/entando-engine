@@ -328,7 +328,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 		Path to an action or to a JSP. You must prepend ''/ExtStr2'' to any Struts2 action path
 	</parameter>
 	<action name="configSimpleParameter"/>
-</config>', NULL, NULL, NULL, 1, NULL, 0, 'system', 'asset:en-form-action');
+</config>', NULL, NULL, NULL, 1, NULL, 0, 'system', 'asset:ent-form-action');
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory, icon) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">APIs</property>
@@ -338,7 +338,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free', 1, 'system', 'asset:en-entando_apis');
+', 1, 'free', 1, 'system', 'asset:ent-entando_apis');
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig, widgetcategory, icon) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Profile and Password</property>
@@ -346,7 +346,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 </properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/CurrentUser/edit.action</property>
-</properties>', 1, 1, 'user','font-awesome:fa-address-card');
+</properties>', 1, 1, 'user','asset:ent-user-profile-edit');
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig, widgetcategory, icon) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit User Password</property>

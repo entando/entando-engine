@@ -22,6 +22,7 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,9 @@ import java.util.Map;
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetTypeDAO.class);
+    private static final String ERROR_UPDATE_WIDGET = "Error updating the widget type";
+    private static final String ERROR_LOADING_WIDGETS = "Error loading widgets";
+    private static final String ERROR_LOADING_WIDGET  = "Error loading the widget type";
 
     private ILangManager langManager;
 
@@ -68,8 +72,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 widgetTypes.put(widgetType.getCode(), widgetType);
             }
         } catch (Throwable t) {
-            logger.error("Error loading widgets", t);
-            throw new RuntimeException("Error loading widgets", t);
+            logger.error( ERROR_LOADING_WIDGETS , t);
+            throw new RuntimeException(ERROR_LOADING_WIDGETS, t);
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -92,9 +96,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 widgetType = this.createWidgetTypeFromResultSet(res);
             }
         } catch (EntException | SQLException e) {
-            String msg ="Error loading the widget type";
-            logger.error(msg, e);
-            throw new EntException(String.format("%s %s", msg, e));
+            logger.error(ERROR_LOADING_WIDGET, e);
+            throw new EntException(String.format("%s %s", ERROR_LOADING_WIDGET, e));
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -243,7 +246,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             widgetCategory = getWidgetType(widgetTypeCode).getWidgetCategory();
             icon = getWidgetType(widgetTypeCode).getIcon();
         } catch (EntException | RuntimeException e) {
-            throw new EntRuntimeException("Error updating widget type", e);
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         }
 
         updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
@@ -264,7 +267,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
         try {
             icon = getWidgetType(widgetTypeCode).getIcon();
         } catch (EntException | RuntimeException e) {
-            throw new EntRuntimeException("Error updating widget type", e);
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         }
 
         try {
@@ -286,17 +289,15 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             } else {
                 stat.setInt(6, 0);
             }
-
             stat.setString(7, widgetCategory);
             stat.setString(8, icon);
             stat.setString(9, widgetTypeCode);
-
             stat.executeUpdate();
             conn.commit();
-        } catch (Throwable t) {
+        } catch (EntException | SQLException | IOException e ) {
             this.executeRollback(conn);
-            logger.error("Error updating widget type {}", widgetTypeCode, t);
-            throw new RuntimeException("Error updating widget type", t);
+            logger.error("{} {}", ERROR_UPDATE_WIDGET, widgetTypeCode, e);
+            throw new EntRuntimeException(String.format("%s %s", ERROR_UPDATE_WIDGET, e));
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -328,17 +329,15 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             }
 
             stat.setString(7, widgetCategory);
-
-
             stat.setString(8, icon);
             stat.setString(9, widgetTypeCode);
 
             stat.executeUpdate();
             conn.commit();
-        } catch (Throwable t) {
+        } catch (EntException | SQLException | IOException e) {
             this.executeRollback(conn);
-            logger.error("Error updating widget type {}", widgetTypeCode, t);
-            throw new RuntimeException("Error updating widget type", t);
+            logger.error("{} {}", ERROR_UPDATE_WIDGET, widgetTypeCode, e);
+            throw new EntRuntimeException(String.format("%s %s", ERROR_UPDATE_WIDGET, e));
         } finally {
             closeDaoResources(null, stat, conn);
         }
