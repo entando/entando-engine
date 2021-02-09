@@ -13,18 +13,35 @@
  */
 package org.entando.entando.web.userpreferences.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.entando.entando.aps.system.services.userpreferences.UserPreferences;
+import static org.entando.entando.aps.system.services.userpreferences.UserPreferencesService.DEFAULT_JOIN_GROUP_DELIMITER;
 
 public class UserPreferencesDto {
 
     private Boolean wizard;
     private Boolean loadOnPageSelect;
     private Boolean translationWarning;
+    private Boolean displayAttributes;
+    private String defaultOwnerGroup;
+    private List<String> defaultJoinGroups;
 
     public UserPreferencesDto(UserPreferences userPreferences) {
-        this.wizard = userPreferences.isWizard();
-        this.loadOnPageSelect = userPreferences.isLoadOnPageSelect();
-        this.translationWarning = userPreferences.isTranslationWarning();
+        wizard = userPreferences.isWizard();
+        loadOnPageSelect = userPreferences.isLoadOnPageSelect();
+        translationWarning = userPreferences.isTranslationWarning();
+        displayAttributes = userPreferences.isDisplayAttributes();
+        defaultOwnerGroup = userPreferences.getDefaultOwnerGroup();
+        String defaultJoinGroupsString = userPreferences.getDefaultJoinGroups();
+        if (defaultJoinGroupsString != null) {
+            for (String group : userPreferences.getDefaultJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                if (defaultJoinGroups == null) {
+                    defaultJoinGroups = new ArrayList<>();
+                }
+                defaultJoinGroups.add(group);
+            }
+        }
     }
 
     public Boolean getWizard() {
@@ -51,12 +68,39 @@ public class UserPreferencesDto {
         this.translationWarning = translationWarning;
     }
 
+    public Boolean getDisplayAttributes() {
+        return displayAttributes;
+    }
+
+    public void setDisplayAttributes(Boolean displayAttributes) {
+        this.displayAttributes = displayAttributes;
+    }
+
+    public String getDefaultOwnerGroup() {
+        return defaultOwnerGroup;
+    }
+
+    public void setDefaultOwnerGroup(String defaultOwnerGroup) {
+        this.defaultOwnerGroup = defaultOwnerGroup;
+    }
+
+    public List<String> getDefaultJoinGroups() {
+        return defaultJoinGroups;
+    }
+
+    public void setDefaultJoinGroups(List<String> defaultJoinGroups) {
+        this.defaultJoinGroups = defaultJoinGroups;
+    }
+
     @Override
     public String toString() {
-        return "UserPreferencesRequest{" +
+        return "UserPreferencesDto{" +
                 "wizard=" + wizard +
                 ", loadOnPageSelect=" + loadOnPageSelect +
                 ", translationWarning=" + translationWarning +
+                ", displayAttributes=" + displayAttributes +
+                ", defaultOwnerGroup='" + defaultOwnerGroup + '\'' +
+                ", defaultJoinGroups=" + defaultJoinGroups +
                 '}';
     }
 }

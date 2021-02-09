@@ -43,4 +43,19 @@ public class UserPreferences {
             canBeNull = false)
     private short translationwarning;
 
+    @DatabaseField(columnName = "displayAttributes",
+            dataType = DataType.SHORT,
+            canBeNull = false)
+    private short displayAttributes;
+
+    @DatabaseField(columnName = "defaultOwnerGroup",
+            dataType = DataType.STRING,
+            width = 64)
+    private String defaultOwnerGroup;
+
+    @DatabaseField(columnName = "defaultJoinGroups",
+            dataType = DataType.STRING,
+            width = 256)
+    private String defaultJoinGroups;
+
 }
