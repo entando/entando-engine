@@ -177,36 +177,15 @@ public class WidgetTypeManager extends AbstractService
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException {
-        try {
 
-            boolean readonlyPageWidgetConfigLocalVar;
             WidgetType type = this.getWidgetType(widgetTypeCode);
             if (null == type) {
                 logger.error(WIDGET_TYPE_NOT_EXIST, widgetTypeCode);
                 return;
             }
-            if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
-                defaultConfig = type.getConfig();
-            }
-            if (type.isLocked()) {
-                readonlyPageWidgetConfigLocalVar = type.isReadonlyPageWidgetConfig();
-            } else {
-                readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
-            }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory);
-            type.setTitles(titles);
-            type.setConfig(defaultConfig);
-            type.setMainGroup(mainGroup);
-            type.setConfigUi(configUi);
-            type.setBundleId(bundleId);
-            type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfigLocalVar);
-            type.setWidgetCategory(widgetCategory);
-            this.getCacheWrapper().updateWidgetType(type);
-            this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
-        } catch (Throwable t) {
-            logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
-            throw new EntException("Error updating Widget type titles : type code" + widgetTypeCode, t);
-        }
+
+            updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig,
+                    widgetCategory, type.getIcon());
     }
 
     @Override
