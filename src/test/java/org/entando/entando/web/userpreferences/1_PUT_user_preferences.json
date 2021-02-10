@@ -1,6 +1,5 @@
 {
     "wizard": true,
     "loadOnPageSelect": true,
-    "translationWarning": true,
-    "displayAttributes": true
+    "translationWarning": true
 }

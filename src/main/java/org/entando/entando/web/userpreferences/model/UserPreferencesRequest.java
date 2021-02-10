@@ -20,9 +20,10 @@ public class UserPreferencesRequest {
     private Boolean wizard;
     private Boolean loadOnPageSelect;
     private Boolean translationWarning;
-    private Boolean displayAttributes;
-    private String defaultOwnerGroup;
-    private List<String> defaultJoinGroups;
+    private String defaultPageOwnerGroup;
+    private List<String> defaultPageJoinGroups;
+    private String defaultContentOwnerGroup;
+    private List<String> defaultContentJoinGroups;
 
     public Boolean getWizard() {
         return wizard;
@@ -48,28 +49,36 @@ public class UserPreferencesRequest {
         this.translationWarning = translationWarning;
     }
 
-    public Boolean getDisplayAttributes() {
-        return displayAttributes;
+    public String getDefaultPageOwnerGroup() {
+        return defaultPageOwnerGroup;
     }
 
-    public void setDisplayAttributes(Boolean displayAttributes) {
-        this.displayAttributes = displayAttributes;
+    public void setDefaultPageOwnerGroup(String defaultPageOwnerGroup) {
+        this.defaultPageOwnerGroup = defaultPageOwnerGroup;
     }
 
-    public String getDefaultOwnerGroup() {
-        return defaultOwnerGroup;
+    public List<String> getDefaultPageJoinGroups() {
+        return defaultPageJoinGroups;
     }
 
-    public void setDefaultOwnerGroup(String defaultOwnerGroup) {
-        this.defaultOwnerGroup = defaultOwnerGroup;
+    public void setDefaultPageJoinGroups(List<String> defaultPageJoinGroups) {
+        this.defaultPageJoinGroups = defaultPageJoinGroups;
     }
 
-    public List<String> getDefaultJoinGroups() {
-        return defaultJoinGroups;
+    public String getDefaultContentOwnerGroup() {
+        return defaultContentOwnerGroup;
     }
 
-    public void setDefaultJoinGroups(List<String> defaultJoinGroups) {
-        this.defaultJoinGroups = defaultJoinGroups;
+    public void setDefaultContentOwnerGroup(String defaultContentOwnerGroup) {
+        this.defaultContentOwnerGroup = defaultContentOwnerGroup;
+    }
+
+    public List<String> getDefaultContentJoinGroups() {
+        return defaultContentJoinGroups;
+    }
+
+    public void setDefaultContentJoinGroups(List<String> defaultContentJoinGroups) {
+        this.defaultContentJoinGroups = defaultContentJoinGroups;
     }
 
     @Override
@@ -78,9 +87,10 @@ public class UserPreferencesRequest {
                 "wizard=" + wizard +
                 ", loadOnPageSelect=" + loadOnPageSelect +
                 ", translationWarning=" + translationWarning +
-                ", displayAttributes=" + displayAttributes +
-                ", defaultOwnerGroup='" + defaultOwnerGroup + '\'' +
-                ", defaultJoinGroups=" + defaultJoinGroups +
+                ", defaultPageOwnerGroup='" + defaultPageOwnerGroup + '\'' +
+                ", defaultPageJoinGroups=" + defaultPageJoinGroups +
+                ", defaulContnttOwnerGroup='" + defaultContentOwnerGroup + '\'' +
+                ", defaultContentJoinGroups=" + defaultContentJoinGroups +
                 '}';
     }
 }
