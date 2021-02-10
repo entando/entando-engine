@@ -233,6 +233,7 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ENTANDO_API_S
 INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('single_frame_page', 'Single Frame Page', '<frames>
 	<frame pos="0">
 		<descr>Sample Frame</descr>
+		<sketch x1="0" y1="0" x2="11" y2="1" />
 	</frame>
 </frames>', NULL, '<#assign wp=JspTaglibs["/aps-core"]>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
