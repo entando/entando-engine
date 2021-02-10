@@ -59,19 +59,27 @@ public class UserPreferencesService implements IUserPreferencesService {
                 if (request.getTranslationWarning() != null) {
                     userPreferences.setTranslationWarning(request.getTranslationWarning());
                 }
-                if (request.getDisplayAttributes() != null) {
-                    userPreferences.setDisplayAttributes(request.getDisplayAttributes());
+                if (request.getDefaultPageOwnerGroup() != null) {
+                    userPreferences.setDefaultPageOwnerGroup(request.getDefaultPageOwnerGroup());
                 }
-                if (request.getDefaultOwnerGroup() != null) {
-                    userPreferences.setDefaultOwnerGroup(request.getDefaultOwnerGroup());
-                }
-                if (request.getDefaultJoinGroups() != null) {
+                if (request.getDefaultPageJoinGroups() != null) {
                     StringBuilder sb = new StringBuilder();
-                    for (String group : request.getDefaultJoinGroups()) {
+                    for (String group : request.getDefaultPageJoinGroups()) {
                         sb.append(group);
                         sb.append(DEFAULT_JOIN_GROUP_DELIMITER);
                     }
-                    userPreferences.setDefaultJoinGroups(sb.toString());
+                    userPreferences.setDefaultPageJoinGroups(sb.toString());
+                }
+                if (request.getDefaultContentOwnerGroup() != null) {
+                    userPreferences.setDefaultContentOwnerGroup(request.getDefaultContentOwnerGroup());
+                }
+                if (request.getDefaultContentJoinGroups() != null) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String group : request.getDefaultContentJoinGroups()) {
+                        sb.append(group);
+                        sb.append(DEFAULT_JOIN_GROUP_DELIMITER);
+                    }
+                    userPreferences.setDefaultContentJoinGroups(sb.toString());
                 }
                 userPreferencesManager.updateUserPreferences(userPreferences);
                 return new UserPreferencesDto(userPreferencesManager.getUserPreferences(username));
@@ -92,7 +100,6 @@ public class UserPreferencesService implements IUserPreferencesService {
             userPreferences.setWizard(true);
             userPreferences.setTranslationWarning(true);
             userPreferences.setLoadOnPageSelect(true);
-            userPreferences.setDisplayAttributes(false);
             userPreferencesManager.addUserPreferences(userPreferences);
         } catch (EntException e) {
             logger.error("Error in creating new default userPreferences for {}", username, e);
