@@ -33,6 +33,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -246,6 +247,38 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[1]", Matchers.is("group8")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[2]", Matchers.is("group9")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")));
+
+            file = this.getClass().getResourceAsStream("9_PUT_user_preferences.json");
+            bodyRequest = FileTextReader.getText(file);
+
+            mockMvc.perform(
+                    put("/userPreferences/{username}", username)
+                            .content(bodyRequest)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(0)))
+                    .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)));
+
+            mockMvc.perform(
+                    get("/userPreferences/{username}", username)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
+                    .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(0)))
+                    .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
