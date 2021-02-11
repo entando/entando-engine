@@ -15,6 +15,7 @@ package org.entando.entando.web.userpreferences.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.userpreferences.UserPreferences;
 import static org.entando.entando.aps.system.services.userpreferences.UserPreferencesService.DEFAULT_JOIN_GROUP_DELIMITER;
 
@@ -35,21 +36,25 @@ public class UserPreferencesDto {
         defaultPageOwnerGroup = userPreferences.getDefaultPageOwnerGroup();
         String defaultJoinPageGroupsString = userPreferences.getDefaultPageJoinGroups();
         if (defaultJoinPageGroupsString != null) {
-            for (String group : userPreferences.getDefaultPageJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
-                if (defaultPageJoinGroups == null) {
-                    defaultPageJoinGroups = new ArrayList<>();
+            if (defaultPageJoinGroups == null) {
+                defaultPageJoinGroups = new ArrayList<>();
+            }
+            if (!StringUtils.isEmpty(defaultJoinPageGroupsString)) {
+                for (String group : userPreferences.getDefaultPageJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                    defaultPageJoinGroups.add(group);
                 }
-                defaultPageJoinGroups.add(group);
             }
         }
         defaultContentOwnerGroup = userPreferences.getDefaultContentOwnerGroup();
         String defaultJoinContentGroupsString = userPreferences.getDefaultContentJoinGroups();
         if (defaultJoinContentGroupsString != null) {
-            for (String group : userPreferences.getDefaultContentJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
-                if (defaultContentJoinGroups == null) {
-                    defaultContentJoinGroups = new ArrayList<>();
+            if (defaultContentJoinGroups == null) {
+                defaultContentJoinGroups = new ArrayList<>();
+            }
+            if (!StringUtils.isEmpty(defaultJoinContentGroupsString)) {
+                for (String group : userPreferences.getDefaultContentJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                    defaultContentJoinGroups.add(group);
                 }
-                defaultContentJoinGroups.add(group);
             }
         }
     }
