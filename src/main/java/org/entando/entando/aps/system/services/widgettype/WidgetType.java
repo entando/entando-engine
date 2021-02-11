@@ -83,6 +83,12 @@ public class WidgetType implements Serializable {
      */
     private String widgetCategory;
 
+    /**
+     * The icon string field is used to save the icon to show for the widget in app-builder
+     */
+    private String icon;
+
+
     public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 
     @Override
@@ -97,6 +103,7 @@ public class WidgetType implements Serializable {
         clone.setParentType(this.getParentType());
         clone.setParentTypeCode(this.getParentTypeCode());
         clone.setPluginCode(this.getPluginCode());
+        clone.setIcon(this.getIcon());
         if (null != this.getTitles()) {
             clone.setTitles(this.getTitles().clone());
         }
@@ -328,6 +335,14 @@ public class WidgetType implements Serializable {
         this.bundleId = bundleId;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     public String getJspPath() {
         WidgetType widgetType = (this.isLogic()) ? this.getParentType() : this;
         return getJspPath(widgetType.getCode(), widgetType.getPluginCode());
@@ -377,6 +392,7 @@ public class WidgetType implements Serializable {
         result = prime * result + ((_titles == null) ? 0 : _titles.hashCode());
         result = prime * result + (readonlyPageWidgetConfig ? 1231 : 1237);
         result = prime * result + ((widgetCategory == null) ? 0 : widgetCategory.hashCode());
+        result = prime * result + ((icon == null) ? 0 : icon.hashCode());
         return result;
     }
 
@@ -466,6 +482,14 @@ public class WidgetType implements Serializable {
                 return false;
             }
         } else if (!widgetCategory.equals(other.widgetCategory)) {
+            return false;
+        }
+
+        if (icon == null) {
+            if (other.icon != null) {
+                return false;
+            }
+        } else if (!icon.equals(other.icon)) {
             return false;
         }
         return true;

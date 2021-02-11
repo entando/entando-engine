@@ -22,6 +22,7 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,24 +35,27 @@ import java.util.Map;
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetTypeDAO.class);
+    private static final String ERROR_UPDATE_WIDGET = "Error updating the widget type";
+    private static final String ERROR_LOADING_WIDGETS = "Error loading widgets";
+    private static final String ERROR_LOADING_WIDGET  = "Error loading the widget type";
 
     private ILangManager langManager;
 
     private static final String ALL_WIDGET_TYPES
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon FROM widgetcatalog";
 
     private static final String ADD_WIDGET_TYPE
-            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory) "
-            + "VALUES (? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?)";
+            = "INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon) "
+            + "VALUES (? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ?, ?, ?)";
 
     private static final String DELETE_WIDGET_TYPE
             = "DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 
     private static final String UPDATE_WIDGET_TYPE
-            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ?, widgetcategory = ? WHERE code = ? ";
+            = "UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ?, configui = ?, bundleid = ?, readonlypagewidgetconfig = ?, widgetcategory = ?, icon = ? WHERE code = ? ";
 
     private static final String GET_WIDGET_TYPE
-            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory FROM widgetcatalog WHERE code = ?";
+            = "SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, configui, bundleid, readonlypagewidgetconfig, widgetcategory, icon FROM widgetcatalog WHERE code = ?";
 
     @Override
     public Map<String, WidgetType> loadWidgetTypes() {
@@ -67,9 +71,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 WidgetType widgetType = this.createWidgetTypeFromResultSet(res);
                 widgetTypes.put(widgetType.getCode(), widgetType);
             }
-        } catch (Throwable t) {
-            logger.error("Error loading widgets", t);
-            throw new RuntimeException("Error loading widgets", t);
+        } catch (EntException | SQLException e) {
+            logger.error( ERROR_LOADING_WIDGETS , e);
+            throw new EntRuntimeException(ERROR_LOADING_WIDGETS, e);
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -92,9 +96,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 widgetType = this.createWidgetTypeFromResultSet(res);
             }
         } catch (EntException | SQLException e) {
-            String msg ="Error loading the widget type";
-            logger.error(msg, e);
-            throw new EntException(String.format("%s %s", msg, e));
+            logger.error(ERROR_LOADING_WIDGET, e);
+            throw new EntException(ERROR_LOADING_WIDGET, e);
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -148,6 +151,9 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             widgetType.setReadonlyPageWidgetConfig(isReadonlyPageWidgetConfig == 1);
             String widgetCategory = res.getString(12);
             widgetType.setWidgetCategory(widgetCategory);
+            String icon = res.getString(13);
+            widgetType.setIcon(icon);
+
         } catch (Throwable t) {
             logger.error("Error parsing the Widget Type '{}'", code, t);
             throw new EntException("Error in the parsing in the Widget Type '" + code + "'", t);
@@ -193,6 +199,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
                 stat.setInt(11, 0);
             }
             stat.setString(12, widgetType.getWidgetCategory());
+            stat.setString(13, widgetType.getIcon());
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -233,20 +240,42 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) {
         String widgetCategory;
+        String icon;
 
         try {
             widgetCategory = getWidgetType(widgetTypeCode).getWidgetCategory();
+            icon = getWidgetType(widgetTypeCode).getIcon();
         } catch (EntException | RuntimeException e) {
-            throw new EntRuntimeException("Error updating widget type", e);
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         }
 
         updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
-                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory);
+                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory, icon);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) {
+
+        String icon;
+
+        try {
+            icon = getWidgetType(widgetTypeCode).getIcon();
+        } catch (EntException | RuntimeException e) {
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
+        }
+
+        updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup,
+                configUi,  bundleId, readonlyPageWidgetConfig , widgetCategory, icon);
+    }
+
+    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory,
+                                 String icon) {
         Connection conn = null;
         PreparedStatement stat = null;
         try {
@@ -270,18 +299,20 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
             }
 
             stat.setString(7, widgetCategory);
-            stat.setString(8, widgetTypeCode);
+            stat.setString(8, icon);
+            stat.setString(9, widgetTypeCode);
 
             stat.executeUpdate();
             conn.commit();
-        } catch (Throwable t) {
+        } catch (EntException | SQLException | IOException e) {
             this.executeRollback(conn);
-            logger.error("Error updating widget type {}", widgetTypeCode, t);
-            throw new RuntimeException("Error updating widget type", t);
+            logger.error("{} {}", ERROR_UPDATE_WIDGET, widgetTypeCode, e);
+            throw new EntRuntimeException(ERROR_UPDATE_WIDGET, e);
         } finally {
             closeDaoResources(null, stat, conn);
         }
     }
+
 
     protected ILangManager getLangManager() {
         return langManager;

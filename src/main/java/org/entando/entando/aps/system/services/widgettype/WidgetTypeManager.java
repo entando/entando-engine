@@ -166,12 +166,32 @@ public class WidgetTypeManager extends AbstractService
             logger.error(WIDGET_TYPE_NOT_EXIST, widgetTypeCode);
             return;
         }
-        updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig, type.getWidgetCategory());
+        updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig,
+                type.getWidgetCategory(), type.getIcon());
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    @Override
+    public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException {
+
+            WidgetType type = this.getWidgetType(widgetTypeCode);
+            if (null == type) {
+                logger.error(WIDGET_TYPE_NOT_EXIST, widgetTypeCode);
+                return;
+            }
+
+            updateWidgetType( widgetTypeCode,  titles,  defaultConfig,  mainGroup, configUi,  bundleId,  readonlyPageWidgetConfig,
+                    widgetCategory, type.getIcon());
     }
 
     @Override
     public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
-                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException {
+                                 String configUi, String bundleId, Boolean readonlyPageWidgetConfig,
+                                 String widgetCategory, String icon) throws EntException {
         try {
 
             boolean readonlyPageWidgetConfigLocalVar;
@@ -188,7 +208,7 @@ public class WidgetTypeManager extends AbstractService
             } else {
                 readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
             }
-            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory);
+            this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory, icon);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
             type.setMainGroup(mainGroup);
@@ -196,6 +216,7 @@ public class WidgetTypeManager extends AbstractService
             type.setBundleId(bundleId);
             type.setReadonlyPageWidgetConfig(readonlyPageWidgetConfigLocalVar);
             type.setWidgetCategory(widgetCategory);
+            type.setIcon(icon);
             this.getCacheWrapper().updateWidgetType(type);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
@@ -203,7 +224,6 @@ public class WidgetTypeManager extends AbstractService
             throw new EntException("Error updating Widget type titles : type code" + widgetTypeCode, t);
         }
     }
-
     @Override
     public List<WidgetType> getGroupUtilizers(String groupName) throws EntException {
         List<WidgetType> utilizers = null;

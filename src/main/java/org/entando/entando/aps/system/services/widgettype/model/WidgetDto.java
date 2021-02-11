@@ -45,6 +45,7 @@ public class WidgetDto {
     private Boolean readonlyPageWidgetConfig;
     private boolean locked;
     private String widgetCategory;
+    private String icon;
 
     public class GuiFragmentRef {
 
@@ -265,5 +266,13 @@ public class WidgetDto {
 
     public void setWidgetCategory(String widgetCategory) {
         this.widgetCategory = widgetCategory;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

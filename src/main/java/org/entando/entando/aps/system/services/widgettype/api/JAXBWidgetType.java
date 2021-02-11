@@ -35,7 +35,7 @@ import java.util.List;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "widgetType")
-@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments", "readonlyPageWidgetConfig", "widgetCategory"})
+@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments", "readonlyPageWidgetConfig", "widgetCategory", "icon"})
 public class JAXBWidgetType implements Serializable {
 
 	public JAXBWidgetType() {}
@@ -54,6 +54,7 @@ public class JAXBWidgetType implements Serializable {
 		this.setTypeParameters(widgetType.getTypeParameters());
         this.setReadonlyPageWidgetConfig(widgetType.isReadonlyPageWidgetConfig());
         this.setWidgetCategory(widgetType.getWidgetCategory());
+        this.setIcon(widgetType.getIcon());
         if (null != fragment) {
 			this.setGui(fragment.getCurrentGui());
 		}
@@ -226,6 +227,15 @@ public class JAXBWidgetType implements Serializable {
         this.widgetCategory = widgetCategory;
     }
 
+    @XmlElement(name = "icon")
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     private String _code;
 	private ApsProperties _titles;
 	private List<WidgetTypeParameter> _parameters;
@@ -239,5 +249,6 @@ public class JAXBWidgetType implements Serializable {
 	private List<JAXBGuiFragment> _fragments;
 	private boolean readonlyPageWidgetConfig;
     private String widgetCategory;
+    private String icon;
 
 }

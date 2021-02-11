@@ -19,3 +19,4 @@ CREATE TABLE userpreferences
 ALTER TABLE widgetcatalog DROP COLUMN readonlydefaultconfig;
 ALTER TABLE widgetcatalog ADD COLUMN readonlypagewidgetconfig smallint SET DEFAULT 0;
 ALTER TABLE widgetcatalog ADD COLUMN widgetcategory character varying(80);
+ALTER TABLE widgetcatalog ADD COLUMN icon character varying(80);

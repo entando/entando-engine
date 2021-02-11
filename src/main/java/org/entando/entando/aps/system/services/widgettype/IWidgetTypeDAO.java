@@ -50,6 +50,15 @@ public interface IWidgetTypeDAO {
 
     WidgetType getWidgetType(String widgetTypeCode) throws EntException;
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                           String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory);
+
+
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                          String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory, String icon);
+
 }

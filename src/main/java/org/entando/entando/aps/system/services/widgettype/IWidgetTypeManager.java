@@ -74,8 +74,39 @@ public interface IWidgetTypeManager {
     @Deprecated
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig) throws EntException;
-
+    /**
+     * Update a Widget type on the catalogue.
+     *
+     * @deprecated
+     * @param widgetTypeCode The code of the widget type to update.
+     * @param titles The titles of the widget type to update.
+     * @param defaultConfig The configuration of the widget type to update.
+     * @param mainGroup The main group of the widget type to update.
+     * @param configUi The config UI of the widget type to update.
+     * @param bundleId The bundle id of the widget type to update.
+     * @param readonlyPageWidgetConfig The Boolean field to set if Page Widget config is readonly
+     * @param widgetCategory The category of the widget type to update.
+     * @throws EntException in case of error
+     */
+    @Deprecated
     void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
                                  String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory) throws EntException;
+    /**
+     * Update a Widget type on the catalogue.
+     *
+     * @param widgetTypeCode The code of the widget type to update.
+     * @param titles The titles of the widget type to update.
+     * @param defaultConfig The configuration of the widget type to update.
+     * @param mainGroup The main group of the widget type to update.
+     * @param configUi The config UI of the widget type to update.
+     * @param bundleId The bundle id of the widget type to update.
+     * @param readonlyPageWidgetConfig The Boolean field to set if Page Widget config is readonly
+     * @param widgetCategory The category of the widget type to update.
+     * @param icon The icon of the widget type to update.
+     * @throws EntException in case of error
+     */
+    void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup,
+                          String configUi, String bundleId, Boolean readonlyPageWidgetConfig, String widgetCategory,
+                          String icon) throws EntException;
 
 }

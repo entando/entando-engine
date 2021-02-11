@@ -389,11 +389,11 @@ INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu
 </config>', '2017-02-17 13:06:24');
 
 
-INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory, icon) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Login Widget</property>
 <property key="it">Widget di Login</property>
-</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1, 'system');
+</properties>', NULL, NULL, NULL, NULL, 1, NULL, 1, 'system','font-awesome:fa-sign-in');
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">System Messages</property>

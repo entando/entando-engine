@@ -82,6 +82,11 @@ public class WidgetCatalog {
             width = 80)
     private String widgetCategory;
 
+    @DatabaseField(columnName = "icon",
+            dataType = DataType.STRING,
+            width = 80)
+    private String icon;
+
     public static final String TABLE_NAME = "widgetcatalog";
 	
 }
@@ -100,6 +105,7 @@ CREATE TABLE widgetcatalog
   bundleid character varying(150),
   readonlypagewidgetconfig smallint,
   widgetcategory character varying(80),
+  icon character varying(80),
   CONSTRAINT showletcatalog_pkey PRIMARY KEY (code )
 )
  */
