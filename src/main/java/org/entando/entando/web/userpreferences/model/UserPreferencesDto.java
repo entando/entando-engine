@@ -23,23 +23,33 @@ public class UserPreferencesDto {
     private Boolean wizard;
     private Boolean loadOnPageSelect;
     private Boolean translationWarning;
-    private Boolean displayAttributes;
-    private String defaultOwnerGroup;
-    private List<String> defaultJoinGroups;
+    private String defaultPageOwnerGroup;
+    private List<String> defaultPageJoinGroups;
+    private String defaultContentOwnerGroup;
+    private List<String> defaultContentJoinGroups;
 
     public UserPreferencesDto(UserPreferences userPreferences) {
         wizard = userPreferences.isWizard();
         loadOnPageSelect = userPreferences.isLoadOnPageSelect();
         translationWarning = userPreferences.isTranslationWarning();
-        displayAttributes = userPreferences.isDisplayAttributes();
-        defaultOwnerGroup = userPreferences.getDefaultOwnerGroup();
-        String defaultJoinGroupsString = userPreferences.getDefaultJoinGroups();
-        if (defaultJoinGroupsString != null) {
-            for (String group : userPreferences.getDefaultJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
-                if (defaultJoinGroups == null) {
-                    defaultJoinGroups = new ArrayList<>();
+        defaultPageOwnerGroup = userPreferences.getDefaultPageOwnerGroup();
+        String defaultJoinPageGroupsString = userPreferences.getDefaultPageJoinGroups();
+        if (defaultJoinPageGroupsString != null) {
+            for (String group : userPreferences.getDefaultPageJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                if (defaultPageJoinGroups == null) {
+                    defaultPageJoinGroups = new ArrayList<>();
                 }
-                defaultJoinGroups.add(group);
+                defaultPageJoinGroups.add(group);
+            }
+        }
+        defaultContentOwnerGroup = userPreferences.getDefaultContentOwnerGroup();
+        String defaultJoinContentGroupsString = userPreferences.getDefaultContentJoinGroups();
+        if (defaultJoinContentGroupsString != null) {
+            for (String group : userPreferences.getDefaultContentJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                if (defaultContentJoinGroups == null) {
+                    defaultContentJoinGroups = new ArrayList<>();
+                }
+                defaultContentJoinGroups.add(group);
             }
         }
     }
@@ -68,28 +78,36 @@ public class UserPreferencesDto {
         this.translationWarning = translationWarning;
     }
 
-    public Boolean getDisplayAttributes() {
-        return displayAttributes;
+    public String getDefaultPageOwnerGroup() {
+        return defaultPageOwnerGroup;
     }
 
-    public void setDisplayAttributes(Boolean displayAttributes) {
-        this.displayAttributes = displayAttributes;
+    public void setDefaultPageOwnerGroup(String defaultPageOwnerGroup) {
+        this.defaultPageOwnerGroup = defaultPageOwnerGroup;
     }
 
-    public String getDefaultOwnerGroup() {
-        return defaultOwnerGroup;
+    public List<String> getDefaultPageJoinGroups() {
+        return defaultPageJoinGroups;
     }
 
-    public void setDefaultOwnerGroup(String defaultOwnerGroup) {
-        this.defaultOwnerGroup = defaultOwnerGroup;
+    public void setDefaultPageJoinGroups(List<String> defaultPageJoinGroups) {
+        this.defaultPageJoinGroups = defaultPageJoinGroups;
     }
 
-    public List<String> getDefaultJoinGroups() {
-        return defaultJoinGroups;
+    public String getDefaultContentOwnerGroup() {
+        return defaultContentOwnerGroup;
     }
 
-    public void setDefaultJoinGroups(List<String> defaultJoinGroups) {
-        this.defaultJoinGroups = defaultJoinGroups;
+    public void setDefaultContentOwnerGroup(String defaultContentOwnerGroup) {
+        this.defaultContentOwnerGroup = defaultContentOwnerGroup;
+    }
+
+    public List<String> getDefaultContentJoinGroups() {
+        return defaultContentJoinGroups;
+    }
+
+    public void setDefaultContentJoinGroups(List<String> defaultContentJoinGroups) {
+        this.defaultContentJoinGroups = defaultContentJoinGroups;
     }
 
     @Override
@@ -98,9 +116,10 @@ public class UserPreferencesDto {
                 "wizard=" + wizard +
                 ", loadOnPageSelect=" + loadOnPageSelect +
                 ", translationWarning=" + translationWarning +
-                ", displayAttributes=" + displayAttributes +
-                ", defaultOwnerGroup='" + defaultOwnerGroup + '\'' +
-                ", defaultJoinGroups=" + defaultJoinGroups +
+                ", defaultPageOwnerGroup='" + defaultPageOwnerGroup + '\'' +
+                ", defaultPageJoinGroups=" + defaultPageJoinGroups +
+                ", defaultContentOwnerGroup='" + defaultContentOwnerGroup + '\'' +
+                ", defaultContentJoinGroups=" + defaultContentJoinGroups +
                 '}';
     }
 }

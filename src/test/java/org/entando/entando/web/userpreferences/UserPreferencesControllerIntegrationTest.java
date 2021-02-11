@@ -76,8 +76,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
@@ -101,8 +100,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
@@ -196,9 +194,10 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.defaultOwnerGroup", Matchers.isEmptyOrNullString()))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups", Matchers.isEmptyOrNullString()));
+                    .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups", Matchers.isEmptyOrNullString()));
 
             InputStream file = this.getClass().getResourceAsStream("2_PUT_user_preferences.json");
             String bodyRequest = FileTextReader.getText(file);
@@ -213,13 +212,18 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.defaultOwnerGroup", Matchers.is("group1")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups.size()", Matchers.is(4)))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[0]", Matchers.is("group2")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[1]", Matchers.is("group3")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[2]", Matchers.is("group4")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[3]", Matchers.is("group5")));
+                    .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[0]", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[1]", Matchers.is("group3")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[2]", Matchers.is("group4")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[3]", Matchers.is("group5")))
+                    .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[0]", Matchers.is("group7")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[1]", Matchers.is("group8")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[2]", Matchers.is("group9")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -230,13 +234,18 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.defaultOwnerGroup", Matchers.is("group1")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups.size()", Matchers.is(4)))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[0]", Matchers.is("group2")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[1]", Matchers.is("group3")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[2]", Matchers.is("group4")))
-                    .andExpect(jsonPath("$.payload.defaultJoinGroups[3]", Matchers.is("group5")));
+                    .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[0]", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[1]", Matchers.is("group3")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[2]", Matchers.is("group4")))
+                    .andExpect(jsonPath("$.payload.defaultPageJoinGroups[3]", Matchers.is("group5")))
+                    .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(4)))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[0]", Matchers.is("group7")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[1]", Matchers.is("group8")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[2]", Matchers.is("group9")))
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
@@ -260,8 +269,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             InputStream file = this.getClass().getResourceAsStream("3_PUT_user_preferences.json");
             String bodyRequest = FileTextReader.getText(file);
@@ -275,8 +283,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -286,8 +293,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             file = this.getClass().getResourceAsStream("4_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -301,8 +307,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -312,8 +317,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             file = this.getClass().getResourceAsStream("5_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -327,8 +331,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -338,8 +341,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(false)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             file = this.getClass().getResourceAsStream("6_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -353,8 +355,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -364,8 +365,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             file = this.getClass().getResourceAsStream("7_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -379,8 +379,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -390,8 +389,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(false)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(false)));
 
             file = this.getClass().getResourceAsStream("8_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -405,8 +403,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(true)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -416,8 +413,7 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.wizard", Matchers.is(true)))
                     .andExpect(jsonPath("$.payload.loadOnPageSelect", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)))
-                    .andExpect(jsonPath("$.payload.displayAttributes", Matchers.is(true)));
+                    .andExpect(jsonPath("$.payload.translationWarning", Matchers.is(true)));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
