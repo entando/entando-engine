@@ -168,7 +168,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     }
     
     @Test
-    void testPageSearch() throws Exception {
+    void testPageSearchByCode() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -181,6 +181,53 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.metaData.totalItems", is(6)));
         result.andExpect(jsonPath("$.payload[0].code", is("pagina_1")));
+    }
+
+    @Test
+    void testPageSearchByTitle() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/pages/search")
+                        .param("pageSize", "20")
+                        .param("title", "errore")
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andDo(resultPrint());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(1)));
+        result.andExpect(jsonPath("$.payload[0].code", is("errorpage")));
+
+        result = mockMvc
+                .perform(get("/pages/search")
+                        .param("pageSize", "20")
+                        .param("title", "pagina")
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andDo(resultPrint());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(12)));
+        result.andExpect(jsonPath("$.payload[0].code", is("administrators_page")));
+
+        result = mockMvc
+                .perform(get("/pages/search")
+                        .param("pageSize", "20")
+                        .param("title", "di")
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andDo(resultPrint());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(4)));
+        result.andExpect(jsonPath("$.payload[0].code", is("errorpage")));
+
+        result = mockMvc
+                .perform(get("/pages/search")
+                        .param("pageSize", "20")
+                        .param("title", "start")
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andDo(resultPrint());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(1)));
+        result.andExpect(jsonPath("$.payload[0].code", is("homepage")));
     }
 
     @Test

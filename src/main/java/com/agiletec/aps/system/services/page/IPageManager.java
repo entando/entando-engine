@@ -145,9 +145,9 @@ public interface IPageManager extends ITreeNodeManager {
      * the pages.
      * @throws EntException in case of error.
      */
-    public List<IPage> searchPages(String pageCodeToken, List<String> allowedGroups) throws EntException;
+    public List<IPage> searchPages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException;
 
-    public List<IPage> searchOnlinePages(String pageCodeToken, List<String> allowedGroups) throws EntException;
+    public List<IPage> searchOnlinePages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException;
 
     public List<String> getOnlineWidgetUtilizerCodes(String widgetTypeCode) throws EntException;
 

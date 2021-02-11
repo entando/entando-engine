@@ -13,15 +13,9 @@
  */
 package com.agiletec.aps.system.services.page;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -32,9 +26,15 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserver;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -484,14 +484,14 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public List<IPage> searchOnlinePages(String pageCodeToken, List<String> allowedGroups) throws EntException {
+    public List<IPage> searchOnlinePages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException {
         List<IPage> searchResult = new ArrayList<>();
         try {
             if (null == allowedGroups || allowedGroups.isEmpty()) {
                 return searchResult;
             }
             IPage root = this.getOnlineRoot();
-            this.searchPages(root, pageCodeToken, allowedGroups, searchResult);
+            this.searchPages(root, pageCodeToken, title, allowedGroups, searchResult);
         } catch (Throwable t) {
             String message = "Error during searching pages online with token " + pageCodeToken;
             _logger.error("Error during searching online pages with token {}", pageCodeToken, t);
@@ -501,14 +501,14 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public List<IPage> searchPages(String pageCodeToken, List<String> allowedGroups) throws EntException {
+    public List<IPage> searchPages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException {
         List<IPage> searchResult = new ArrayList<>();
         try {
             if (null == allowedGroups || allowedGroups.isEmpty()) {
                 return searchResult;
             }
             IPage root = this.getDraftRoot();
-            this.searchPages(root, pageCodeToken, allowedGroups, searchResult);
+            this.searchPages(root, pageCodeToken, title, allowedGroups, searchResult);
         } catch (Throwable t) {
             String message = "Error during searching pages with token " + pageCodeToken;
             _logger.error("Error during searching pages with token {}", pageCodeToken, t);
@@ -517,16 +517,43 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         return searchResult;
     }
 
-    private void searchPages(IPage currentTarget, String pageCodeToken, List<String> allowedGroups, List<IPage> searchResult) {
-        if ((null == pageCodeToken || currentTarget.getCode().toLowerCase().contains(pageCodeToken.toLowerCase())) && (allowedGroups.contains(currentTarget.getGroup())
-                || allowedGroups.contains(Group.ADMINS_GROUP_NAME))) {
+    private void searchPages(IPage currentTarget, String pageCodeToken, String title, List<String> allowedGroups,
+            List<IPage> searchResult) {
+        if (allowedGroup(allowedGroups, currentTarget) &&
+                noFilter(pageCodeToken, title) ||
+                filterByCode(pageCodeToken, currentTarget) ||
+                filterByTitle(title, currentTarget)) {
             searchResult.add(currentTarget);
         }
         String[] childrenCodes = currentTarget.getChildrenCodes();
         for (int i = 0; i < childrenCodes.length; i++) {
             IPage child = this.getDraftPage(childrenCodes[i]);
-            this.searchPages(child, pageCodeToken, allowedGroups, searchResult);
+            this.searchPages(child, pageCodeToken, title, allowedGroups, searchResult);
         }
+    }
+
+    private boolean allowedGroup(List<String> allowedGroups, IPage currentTarget) {
+        return allowedGroups.contains(currentTarget.getGroup()) || allowedGroups.contains(Group.ADMINS_GROUP_NAME);
+    }
+
+    private boolean noFilter(String pageCodeToken, String title) {
+        return pageCodeToken == null && title == null;
+    }
+
+    private boolean filterByCode(String pageCodeToken, IPage currentTarget) {
+        return pageCodeToken != null && currentTarget.getCode().toLowerCase().contains(pageCodeToken.toLowerCase());
+    }
+
+    private boolean filterByTitle(String title, IPage currentTarget) {
+        if (title != null) {
+            for (Entry<Object, Object> entry : currentTarget.getTitles().entrySet()) {
+                if (entry.getValue() instanceof String &&
+                        ((String) entry.getValue()).toLowerCase().contains(title.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
