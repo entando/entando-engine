@@ -23,7 +23,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 public class PageSearchRequest extends RestListRequest {
 
     private String pageCodeToken;
-
+    private String title;
 
     public PageSearchRequest() {
         super();
@@ -34,6 +34,12 @@ public class PageSearchRequest extends RestListRequest {
         this.pageCodeToken = pageCodeToken;
     }
 
+    public PageSearchRequest(String pageCodeToken, String title) {
+        super();
+        this.pageCodeToken = pageCodeToken;
+        this.title = title;
+    }
+
     public String getPageCodeToken() {
         return pageCodeToken;
     }
@@ -42,8 +48,18 @@ public class PageSearchRequest extends RestListRequest {
         this.pageCodeToken = pageCodeToken;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
-        return "RestListRequest{" + "sort=" + this.getSort() + ", direction=" + this.getDirection() + ", page=" + this.getPage() + ", pageSize=" + this.getPageSize() + ", pageCodeToken=" + pageCodeToken + '}';
+        return "RestListRequest{" + "sort=" + this.getSort() + ", direction=" + this.getDirection() + ", page=" + this
+                .getPage() + ", pageSize=" + this.getPageSize() + ", pageCodeToken=" + pageCodeToken + ", "
+                + "title=" + title + '}';
     }
 }

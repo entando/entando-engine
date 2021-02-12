@@ -628,11 +628,11 @@ class TestPageManager extends BaseTestCase {
         List<String> allowedGroupCodes = new ArrayList<>();
         allowedGroupCodes.add(Group.ADMINS_GROUP_NAME);
         try {
-            List<IPage> pagesFound = this._pageManager.searchPages("aGIna_", allowedGroupCodes);
+            List<IPage> pagesFound = this._pageManager.searchPages("aGIna_", null, allowedGroupCodes);
             assertNotNull(pagesFound);
             assertEquals(5, pagesFound.size());
             String pageCodeToken = "agina";
-            pagesFound = this._pageManager.searchPages(pageCodeToken, allowedGroupCodes);
+            pagesFound = this._pageManager.searchPages(pageCodeToken, null, allowedGroupCodes);
             // verify the result found
             assertNotNull(pagesFound);
             Iterator<IPage> itr = pagesFound.iterator();
@@ -641,10 +641,10 @@ class TestPageManager extends BaseTestCase {
                 IPage currentCode = itr.next();
                 assertTrue(currentCode.getCode().contains(pageCodeToken));
             }
-            pagesFound = this._pageManager.searchPages("", allowedGroupCodes);
+            pagesFound = this._pageManager.searchPages("", null, allowedGroupCodes);
             assertNotNull(pagesFound);
             assertEquals(18, pagesFound.size());
-            pagesFound = this._pageManager.searchPages(null, allowedGroupCodes);
+            pagesFound = this._pageManager.searchPages(null, null, allowedGroupCodes);
             assertNotNull(pagesFound);
             assertEquals(18, pagesFound.size());
         } catch (Throwable t) {
