@@ -339,7 +339,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 <properties>
 <property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
 </properties>
-', 1, 'free', 1, 'system', 'asset:ent-entando_apis');
+', 1, 'free', 1, 'system', 'asset:ent-entando-apis');
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, readonlypagewidgetconfig, widgetcategory, icon) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Edit Profile and Password</property>
