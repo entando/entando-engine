@@ -31,6 +31,7 @@
     <bean name="defaultCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="pageCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="pageModelCache" class="java.util.concurrent.ConcurrentHashMap"/>
+    <bean name="seoMappingCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="categoryCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="widgetTypeCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="configCache" class="java.util.concurrent.ConcurrentHashMap"/>
@@ -57,6 +58,8 @@
                       p:name="Entando_PageManager" p:store-ref="pageCache" />
                 <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
                       p:name="Entando_PageModelManager" p:store-ref="pageModelCache" />
+                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                      p:name="Entando_SeoMappingManager" p:store-ref="seoMappingCache" />
                 <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
                       p:name="Entando_WidgetTypeManager" p:store-ref="widgetTypeCache" />
                 <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
@@ -301,6 +304,20 @@
         </property>
         <property name="cacheWrapper">
             <bean class="com.agiletec.aps.system.services.page.cache.PageManagerCacheWrapper" />
+        </property>
+    </bean>
+    
+    <bean id="SeoMappingManager" class="org.entando.entando.aps.system.services.seomapping.SeoMappingManager"
+          parent="abstractService" >
+        <property name="seoMappingDAO" >
+            <bean class="org.entando.entando.aps.system.services.seomapping.SeoMappingDAO">
+                <property name="dataSource" ref="portDataSource" />
+                <property name="dataSourceClassName"><value>${portDataSourceClassName}</value></property>
+            </bean>
+        </property>
+        <property name="pageManager" ref="PageManager" />
+        <property name="cacheWrapper">
+            <bean class="org.entando.entando.aps.system.services.seomapping.cache.SeoMappingCacheWrapper"/>
         </property>
     </bean>
 
