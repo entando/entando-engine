@@ -28,17 +28,20 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 
 	private static final String LOAD_USER_PREFERENCES =
 			"SELECT wizard, loadonpageselect, translationwarning, defaultPageOwnerGroup, defaultPageJoinGroups, "
-					+ "defaultContentOwnerGroup, defaultContentJoinGroups FROM userpreferences WHERE username = ? ";
+					+ "defaultContentOwnerGroup, defaultContentJoinGroups, defaultWidgetOwnerGroup, "
+					+ "defaultWidgetJoinGroups FROM userpreferences WHERE username = ? ";
 
 	private static final String ADD_USER_PREFERENCES =
 			"INSERT INTO userpreferences (username, wizard, loadonpageselect, translationwarning, "
 					+ "defaultPageOwnerGroup, defaultPageJoinGroups, defaultContentOwnerGroup, "
-					+ "defaultContentJoinGroups) VALUES ( ? , ? , ? , ? , ? , ?, ?, ? )";
+					+ "defaultContentJoinGroups, defaultWidgetOwnerGroup, defaultWidgetJoinGroups) VALUES ( ? , ? ,"
+					+ " ? , ? , ? , ?, ?, ?, ?, ? )";
 
 	private static final String UPDATE_USER_PREFERENCES =
 			"UPDATE userpreferences SET wizard = ? , loadonpageselect = ? , translationwarning = ? , "
 					+ "defaultPageOwnerGroup = ? , defaultPageJoinGroups = ? , defaultContentOwnerGroup = ? , "
-					+ "defaultContentJoinGroups = ? WHERE username = ? ";
+					+ "defaultContentJoinGroups = ? , defaultWidgetOwnerGroup = ?, defaultWidgetJoinGroups = ? WHERE "
+					+ "username = ? ";
 
 	private static final String DELETE_USER_PREFERENCES =
 			"DELETE FROM userpreferences WHERE username = ? ";
@@ -64,6 +67,8 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 				response.setDefaultPageJoinGroups(res.getString(5));
 				response.setDefaultContentOwnerGroup(res.getString(6));
 				response.setDefaultContentJoinGroups(res.getString(7));
+				response.setDefaultWidgetOwnerGroup(res.getString(8));
+				response.setDefaultWidgetJoinGroups(res.getString(9));
 			}
 		} catch (SQLException e) {
 			_logger.error("Error loading user preferences for user {}", username,  e);
@@ -90,6 +95,8 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			stat.setString(6, userPreferences.getDefaultPageJoinGroups());
 			stat.setString(7, userPreferences.getDefaultContentOwnerGroup());
 			stat.setString(8, userPreferences.getDefaultContentJoinGroups());
+			stat.setString(9, userPreferences.getDefaultWidgetOwnerGroup());
+			stat.setString(10, userPreferences.getDefaultWidgetJoinGroups());
 			stat.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
@@ -116,7 +123,9 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 			stat.setString(5, userPreferences.getDefaultPageJoinGroups());
 			stat.setString(6, userPreferences.getDefaultContentOwnerGroup());
 			stat.setString(7, userPreferences.getDefaultContentJoinGroups());
-			stat.setString(8, userPreferences.getUsername());
+			stat.setString(8, userPreferences.getDefaultWidgetOwnerGroup());
+			stat.setString(9, userPreferences.getDefaultWidgetJoinGroups());
+			stat.setString(10, userPreferences.getUsername());
 			stat.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {

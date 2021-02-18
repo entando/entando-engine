@@ -24,6 +24,8 @@ public class UserPreferencesRequest {
     private List<String> defaultPageJoinGroups;
     private String defaultContentOwnerGroup;
     private List<String> defaultContentJoinGroups;
+    private String defaultWidgetOwnerGroup;
+    private List<String> defaultWidgetJoinGroups;
 
     public Boolean getWizard() {
         return wizard;
@@ -81,6 +83,22 @@ public class UserPreferencesRequest {
         this.defaultContentJoinGroups = defaultContentJoinGroups;
     }
 
+    public String getDefaultWidgetOwnerGroup() {
+        return defaultWidgetOwnerGroup;
+    }
+
+    public void setDefaultWidgetOwnerGroup(String defaultWidgetOwnerGroup) {
+        this.defaultWidgetOwnerGroup = defaultWidgetOwnerGroup;
+    }
+
+    public List<String> getDefaultWidgetJoinGroups() {
+        return defaultWidgetJoinGroups;
+    }
+
+    public void setDefaultWidgetJoinGroups(List<String> defaultWidgetJoinGroups) {
+        this.defaultWidgetJoinGroups = defaultWidgetJoinGroups;
+    }
+
     @Override
     public String toString() {
         return "UserPreferencesRequest{" +
@@ -89,8 +107,10 @@ public class UserPreferencesRequest {
                 ", translationWarning=" + translationWarning +
                 ", defaultPageOwnerGroup='" + defaultPageOwnerGroup + '\'' +
                 ", defaultPageJoinGroups=" + defaultPageJoinGroups +
-                ", defaulContnttOwnerGroup='" + defaultContentOwnerGroup + '\'' +
+                ", defaultContentOwnerGroup='" + defaultContentOwnerGroup + '\'' +
                 ", defaultContentJoinGroups=" + defaultContentJoinGroups +
+                ", defaultWidgetOwnerGroup='" + defaultWidgetOwnerGroup + '\'' +
+                ", defaultWidgetJoinGroups=" + defaultWidgetJoinGroups +
                 '}';
     }
 }

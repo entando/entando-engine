@@ -81,6 +81,17 @@ public class UserPreferencesService implements IUserPreferencesService {
                     }
                     userPreferences.setDefaultContentJoinGroups(sb.toString());
                 }
+                if (request.getDefaultWidgetOwnerGroup() != null) {
+                    userPreferences.setDefaultWidgetOwnerGroup(request.getDefaultWidgetOwnerGroup());
+                }
+                if (request.getDefaultWidgetJoinGroups() != null) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String group : request.getDefaultWidgetJoinGroups()) {
+                        sb.append(group);
+                        sb.append(DEFAULT_JOIN_GROUP_DELIMITER);
+                    }
+                    userPreferences.setDefaultWidgetJoinGroups(sb.toString());
+                }
                 userPreferencesManager.updateUserPreferences(userPreferences);
                 return new UserPreferencesDto(userPreferencesManager.getUserPreferences(username));
             } else {

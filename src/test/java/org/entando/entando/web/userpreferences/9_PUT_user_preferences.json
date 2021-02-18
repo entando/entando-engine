@@ -5,5 +5,7 @@
     "defaultPageOwnerGroup": "group1",
     "defaultPageJoinGroups": [],
     "defaultContentOwnerGroup": "group6",
-    "defaultContentJoinGroups": []
+    "defaultContentJoinGroups": [],
+    "defaultWidgetOwnerGroup": "group2",
+    "defaultWidgetJoinGroups": []
 }
