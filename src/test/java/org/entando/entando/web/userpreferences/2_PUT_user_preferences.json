@@ -15,5 +15,10 @@
         "group8",
         "group9",
         "group10"
+    ],
+    "defaultWidgetOwnerGroup": "group2",
+    "defaultWidgetJoinGroups": [
+        "group5",
+        "group9"
     ]
 }

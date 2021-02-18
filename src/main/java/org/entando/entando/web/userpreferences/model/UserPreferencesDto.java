@@ -13,11 +13,12 @@
  */
 package org.entando.entando.web.userpreferences.model;
 
+import static org.entando.entando.aps.system.services.userpreferences.UserPreferencesService.DEFAULT_JOIN_GROUP_DELIMITER;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.userpreferences.UserPreferences;
-import static org.entando.entando.aps.system.services.userpreferences.UserPreferencesService.DEFAULT_JOIN_GROUP_DELIMITER;
 
 public class UserPreferencesDto {
 
@@ -28,11 +29,14 @@ public class UserPreferencesDto {
     private List<String> defaultPageJoinGroups;
     private String defaultContentOwnerGroup;
     private List<String> defaultContentJoinGroups;
+    private String defaultWidgetOwnerGroup;
+    private List<String> defaultWidgetJoinGroups;
 
     public UserPreferencesDto(UserPreferences userPreferences) {
         wizard = userPreferences.isWizard();
         loadOnPageSelect = userPreferences.isLoadOnPageSelect();
         translationWarning = userPreferences.isTranslationWarning();
+
         defaultPageOwnerGroup = userPreferences.getDefaultPageOwnerGroup();
         String defaultJoinPageGroupsString = userPreferences.getDefaultPageJoinGroups();
         if (defaultJoinPageGroupsString != null) {
@@ -45,6 +49,7 @@ public class UserPreferencesDto {
                 }
             }
         }
+
         defaultContentOwnerGroup = userPreferences.getDefaultContentOwnerGroup();
         String defaultJoinContentGroupsString = userPreferences.getDefaultContentJoinGroups();
         if (defaultJoinContentGroupsString != null) {
@@ -54,6 +59,19 @@ public class UserPreferencesDto {
             if (!StringUtils.isEmpty(defaultJoinContentGroupsString)) {
                 for (String group : userPreferences.getDefaultContentJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
                     defaultContentJoinGroups.add(group);
+                }
+            }
+        }
+
+        defaultWidgetOwnerGroup = userPreferences.getDefaultWidgetOwnerGroup();
+        String defaultJoinWidgetGroupsString = userPreferences.getDefaultWidgetJoinGroups();
+        if (defaultJoinWidgetGroupsString != null) {
+            if (defaultWidgetJoinGroups == null) {
+                defaultWidgetJoinGroups = new ArrayList<>();
+            }
+            if (!StringUtils.isEmpty(defaultJoinWidgetGroupsString)) {
+                for (String group : userPreferences.getDefaultWidgetJoinGroups().split(DEFAULT_JOIN_GROUP_DELIMITER)) {
+                    defaultWidgetJoinGroups.add(group);
                 }
             }
         }
@@ -115,6 +133,22 @@ public class UserPreferencesDto {
         this.defaultContentJoinGroups = defaultContentJoinGroups;
     }
 
+    public String getDefaultWidgetOwnerGroup() {
+        return defaultWidgetOwnerGroup;
+    }
+
+    public void setDefaultWidgetOwnerGroup(String defaultWidgetOwnerGroup) {
+        this.defaultWidgetOwnerGroup = defaultWidgetOwnerGroup;
+    }
+
+    public List<String> getDefaultWidgetJoinGroups() {
+        return defaultWidgetJoinGroups;
+    }
+
+    public void setDefaultWidgetJoinGroups(List<String> defaultWidgetJoinGroups) {
+        this.defaultWidgetJoinGroups = defaultWidgetJoinGroups;
+    }
+
     @Override
     public String toString() {
         return "UserPreferencesDto{" +
@@ -125,6 +159,8 @@ public class UserPreferencesDto {
                 ", defaultPageJoinGroups=" + defaultPageJoinGroups +
                 ", defaultContentOwnerGroup='" + defaultContentOwnerGroup + '\'' +
                 ", defaultContentJoinGroups=" + defaultContentJoinGroups +
+                ", defaultWidgetOwnerGroup='" + defaultWidgetOwnerGroup + '\'' +
+                ", defaultWidgetJoinGroups=" + defaultWidgetJoinGroups +
                 '}';
     }
 }

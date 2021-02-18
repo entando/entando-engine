@@ -20,7 +20,8 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "userPreferences")
 @XmlType(propOrder = {"username", "wizard", "loadOnPageSelect", "translationWarning", "defaultPageOwnerGroup",
-		"defaultPageJoinGroups", "defaultContentOwnerGroup", "defaultContentJoinGroups"})
+		"defaultPageJoinGroups", "defaultContentOwnerGroup", "defaultContentJoinGroups", "defaultWidgetOwnerGroup",
+		"defaultWidgetJoinGroups"})
 public class UserPreferences implements Serializable {
 
 	private String username;
@@ -31,6 +32,8 @@ public class UserPreferences implements Serializable {
 	private String defaultPageJoinGroups;
 	private String defaultContentOwnerGroup;
 	private String defaultContentJoinGroups;
+	private String defaultWidgetOwnerGroup;
+	private String defaultWidgetJoinGroups;
 
 	@XmlElement(name = "username", required = true)
 	public String getUsername() {
@@ -104,6 +107,24 @@ public class UserPreferences implements Serializable {
 		this.defaultContentJoinGroups = defaultContentJoinGroups;
 	}
 
+	@XmlElement(name = "defaultWidgetOwnerGroup")
+	public String getDefaultWidgetOwnerGroup() {
+		return defaultWidgetOwnerGroup;
+	}
+
+	public void setDefaultWidgetOwnerGroup(String defaultWidgetOwnerGroup) {
+		this.defaultWidgetOwnerGroup = defaultWidgetOwnerGroup;
+	}
+
+	@XmlElement(name = "defaultWidgetJoinGroups")
+	public String getDefaultWidgetJoinGroups() {
+		return defaultWidgetJoinGroups;
+	}
+
+	public void setDefaultWidgetJoinGroups(String defaultWidgetJoinGroups) {
+		this.defaultWidgetJoinGroups = defaultWidgetJoinGroups;
+	}
+
 	@Override
 	public String toString() {
 		return "UserPreferences{" +
@@ -115,6 +136,8 @@ public class UserPreferences implements Serializable {
 				", defaultPageJoinGroups='" + defaultPageJoinGroups + '\'' +
 				", defaultContentOwnerGroup='" + defaultContentOwnerGroup + '\'' +
 				", defaultContentJoinGroups='" + defaultContentJoinGroups + '\'' +
+				", defaultWidgetOwnerGroup='" + defaultWidgetOwnerGroup + '\'' +
+				", defaultWidgetJoinGroups='" + defaultWidgetJoinGroups + '\'' +
 				'}';
 	}
 }

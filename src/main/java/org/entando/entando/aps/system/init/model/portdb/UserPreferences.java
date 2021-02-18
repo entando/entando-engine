@@ -63,4 +63,14 @@ public class UserPreferences {
             width = 256)
     private String defaultContentJoinGroups;
 
+    @DatabaseField(columnName = "defaultWidgetOwnerGroup",
+            dataType = DataType.STRING,
+            width = 64)
+    private String defaultWidgetOwnerGroup;
+
+    @DatabaseField(columnName = "defaultWidgetJoinGroups",
+            dataType = DataType.STRING,
+            width = 256)
+    private String defaultWidgetJoinGroups;
+
 }

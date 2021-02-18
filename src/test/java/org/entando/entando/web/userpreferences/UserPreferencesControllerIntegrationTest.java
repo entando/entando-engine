@@ -198,7 +198,9 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload.defaultPageJoinGroups", Matchers.isEmptyOrNullString()))
                     .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.isEmptyOrNullString()))
-                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups", Matchers.isEmptyOrNullString()));
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload.defaultWidgetOwnerGroup", Matchers.isEmptyOrNullString()))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups", Matchers.isEmptyOrNullString()));
 
             InputStream file = this.getClass().getResourceAsStream("2_PUT_user_preferences.json");
             String bodyRequest = FileTextReader.getText(file);
@@ -224,7 +226,11 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[0]", Matchers.is("group7")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[1]", Matchers.is("group8")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[2]", Matchers.is("group9")))
-                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")));
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetOwnerGroup", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups.size()", Matchers.is(2)))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups[0]", Matchers.is("group5")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups[1]", Matchers.is("group9")));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -246,7 +252,11 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[0]", Matchers.is("group7")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[1]", Matchers.is("group8")))
                     .andExpect(jsonPath("$.payload.defaultContentJoinGroups[2]", Matchers.is("group9")))
-                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")));
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups[3]", Matchers.is("group10")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetOwnerGroup", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups.size()", Matchers.is(2)))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups[0]", Matchers.is("group5")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups[1]", Matchers.is("group9")));
 
             file = this.getClass().getResourceAsStream("9_PUT_user_preferences.json");
             bodyRequest = FileTextReader.getText(file);
@@ -264,7 +274,9 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
                     .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(0)))
                     .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
-                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)));
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)))
+                    .andExpect(jsonPath("$.payload.defaultWidgetOwnerGroup", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups.size()", Matchers.is(0)));
 
             mockMvc.perform(
                     get("/userPreferences/{username}", username)
@@ -278,7 +290,9 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
                     .andExpect(jsonPath("$.payload.defaultPageOwnerGroup", Matchers.is("group1")))
                     .andExpect(jsonPath("$.payload.defaultPageJoinGroups.size()", Matchers.is(0)))
                     .andExpect(jsonPath("$.payload.defaultContentOwnerGroup", Matchers.is("group6")))
-                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)));
+                    .andExpect(jsonPath("$.payload.defaultContentJoinGroups.size()", Matchers.is(0)))
+                    .andExpect(jsonPath("$.payload.defaultWidgetOwnerGroup", Matchers.is("group2")))
+                    .andExpect(jsonPath("$.payload.defaultWidgetJoinGroups.size()", Matchers.is(0)));
         } finally {
             this.userManager.removeUser(username);
             this.userPreferencesManager.deleteUserPreferences(username);
