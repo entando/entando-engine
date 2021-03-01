@@ -27,20 +27,20 @@ public class UserPreferencesDAO extends AbstractDAO implements IUserPreferencesD
 	private static final EntLogger _logger =  EntLogFactory.getSanitizedLogger(UserPreferencesDAO.class);
 
 	private static final String LOAD_USER_PREFERENCES =
-			"SELECT wizard, loadonpageselect, translationwarning, defaultPageOwnerGroup, defaultPageJoinGroups, "
-					+ "defaultContentOwnerGroup, defaultContentJoinGroups, defaultWidgetOwnerGroup, "
-					+ "defaultWidgetJoinGroups FROM userpreferences WHERE username = ? ";
+			"SELECT wizard, loadonpageselect, translationwarning, defaultpageownergroup, defaultpagejoingroups, "
+					+ "defaultcontentownergroup, defaultcontentjoingroups, defaultwidgetownergroup, "
+					+ "defaultwidgetjoingroups FROM userpreferences WHERE username = ? ";
 
 	private static final String ADD_USER_PREFERENCES =
 			"INSERT INTO userpreferences (username, wizard, loadonpageselect, translationwarning, "
-					+ "defaultPageOwnerGroup, defaultPageJoinGroups, defaultContentOwnerGroup, "
-					+ "defaultContentJoinGroups, defaultWidgetOwnerGroup, defaultWidgetJoinGroups) VALUES ( ? , ? ,"
+					+ "defaultpageownergroup, defaultpagejoingroups, defaultcontentownergroup, "
+					+ "defaultcontentjoingroups, defaultwidgetownergroup, defaultwidgetjoingroups) VALUES ( ? , ? ,"
 					+ " ? , ? , ? , ?, ?, ?, ?, ? )";
 
 	private static final String UPDATE_USER_PREFERENCES =
 			"UPDATE userpreferences SET wizard = ? , loadonpageselect = ? , translationwarning = ? , "
-					+ "defaultPageOwnerGroup = ? , defaultPageJoinGroups = ? , defaultContentOwnerGroup = ? , "
-					+ "defaultContentJoinGroups = ? , defaultWidgetOwnerGroup = ?, defaultWidgetJoinGroups = ? WHERE "
+					+ "defaultpageownergroup = ? , defaultpagejoingroups = ? , defaultcontentownergroup = ? , "
+					+ "defaultcontentjoingroups = ? , defaultwidgetownergroup = ?, defaultwidgetjoingroups = ? WHERE "
 					+ "username = ? ";
 
 	private static final String DELETE_USER_PREFERENCES =
