@@ -64,7 +64,7 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
         ResultActions result = mockMvc
                                       .perform(get("/permissions")
                                                             .param("filter[0].attribute", "descr")
-                                                            .param("filter[0].value", "Accesso")
+                                                            .param("filter[0].value", "Access")
                                                             .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.length()", is(1)));
@@ -91,6 +91,40 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
                 .perform(get("/permissions")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetPermissionsDescriptions() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/permissions")
+                        .header("Authorization", "Bearer " + accessToken));
+        result
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.length()", is(10)))
+                .andExpect(jsonPath("$.payload[0].code", is("editContents")))
+                .andExpect(jsonPath("$.payload[0].descr", is("Content Editing")))
+                .andExpect(jsonPath("$.payload[1].code", is("editUserProfile")))
+                .andExpect(jsonPath("$.payload[1].descr", is("User Profile Editing")))
+                .andExpect(jsonPath("$.payload[2].code", is("editUsers")))
+                .andExpect(jsonPath("$.payload[2].descr", is("User Management")))
+                .andExpect(jsonPath("$.payload[3].code", is("enterBackend")))
+                .andExpect(jsonPath("$.payload[3].descr", is("Access to Administration Area")))
+                .andExpect(jsonPath("$.payload[4].code", is("manageCategories")))
+                .andExpect(jsonPath("$.payload[4].descr", is("Operations on Categories")))
+                .andExpect(jsonPath("$.payload[5].code", is("managePages")))
+                .andExpect(jsonPath("$.payload[5].descr", is("Operations on Pages")))
+                .andExpect(jsonPath("$.payload[6].code", is("manageResources")))
+                .andExpect(jsonPath("$.payload[6].descr", is("Operations on Resources")))
+                .andExpect(jsonPath("$.payload[7].code", is("superuser")))
+                .andExpect(jsonPath("$.payload[7].descr", is("All functions")))
+                .andExpect(jsonPath("$.payload[8].code", is("validateContents")))
+                .andExpect(jsonPath("$.payload[8].descr", is("Supervision of contents")))
+                .andExpect(jsonPath("$.payload[9].code", is("viewUsers")))
+                .andExpect(jsonPath("$.payload[9].descr", is("View Users and Profiles")));
     }
 
 }

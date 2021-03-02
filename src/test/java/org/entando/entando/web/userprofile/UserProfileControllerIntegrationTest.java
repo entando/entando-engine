@@ -77,6 +77,20 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
+    void testGetUserProfileTypePermission() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "manageUser", Permission.MANAGE_USERS)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/userProfiles/{username}", new Object[]{"editorCoach"})
+                        .header("Authorization", "Bearer " + accessToken));
+        result
+                .andDo(resultPrint())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void testGetInvalidUserProfileType() throws Exception {
         String accessToken = this.createAccessToken();
         ResultActions result = mockMvc
@@ -137,6 +151,10 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             result3.andExpect(jsonPath("$.errors.size()", is(1)));
             result3.andExpect(jsonPath("$.errors[0].code", is("2")));
             result3.andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            mockOAuthInterceptor(new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "manageUser", Permission.MANAGE_USERS)
+                    .build());
 
             ResultActions result4 = this.executeProfilePut("5_PUT_valid.json", "new_user", accessToken, status().isOk());
             result4.andExpect(jsonPath("$.payload.id", is("new_user")));
