@@ -13,16 +13,16 @@ INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Gestore di Contenuti 
 INSERT INTO authroles (rolename, descr) VALUES ('supervisor', 'Supervisore di Contenuti');
 INSERT INTO authroles (rolename, descr) VALUES ('pageManager', 'Gestore di Pagine');
 
-
-
-
-INSERT INTO authpermissions (permissionname, descr) VALUES ('managePages', 'Operazioni su Pagine');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('enterBackend', 'Accesso all''Area di Amministrazione');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('manageResources', 'Operazioni su Risorse');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('editContents', 'Redazione di Contenuti');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Supervisione di Contenuti');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('superuser', 'Tutte le funzioni');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('manageCategories', 'Operazioni su Categorie');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('superuser', 'All functions');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Supervision of contents');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('manageResources', 'Operations on Resources');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('managePages', 'Operations on Pages');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('enterBackend', 'Access to Administration Area');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('manageCategories', 'Operations on Categories');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('editContents', 'Content Editing');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Management');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
 
 
 
