@@ -155,9 +155,6 @@ public class ProfileController {
     public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyProfile(@ModelAttribute("user") UserDetails user,
                                                                          @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update profile for the logged user {} -> {}", user.getUsername(), bodyRequest);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
-        }
         this.getProfileValidator().validateBodyName(user.getUsername(), bodyRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
