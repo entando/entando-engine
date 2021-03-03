@@ -1,0 +1,17 @@
+{
+  "id": "new_user",
+  "typeCode": "TST",
+  "typeDescription": "Type for test",
+  "description": "Profile of user",
+  "mainGroup": "free",
+  "groups": [
+    "group1",
+    "group2"
+  ],
+  "attributes": [
+    {
+      "code": "Name",
+      "value": "Name"
+    }
+  ]
+}
