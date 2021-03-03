@@ -23,33 +23,30 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Date;
+import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
-
-import org.hamcrest.Matchers;
-
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-import org.junit.jupiter.api.Assertions;
-import org.entando.entando.aps.system.common.entity.model.attribute.EmailAttribute;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserProfileControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -373,7 +370,69 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             }
         }
     }
-    
+
+    @Test
+    void testUpdateMyUserProfileConflict() throws Exception {
+        try {
+            Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeProfileTypePost("11_POST_type_valid.json", accessToken, status().isOk());
+
+            Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
+
+            UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withGroup(Group.FREE_GROUP_NAME)
+                    .build();
+            String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
+
+            this.executePutUpdateMyProfile("11_PUT_invalid.json", userEditMyProfile, userEditMyProfileToken, status().isConflict())
+            .andExpect(jsonPath("$.payload.size()", is(0)))
+            .andExpect(jsonPath("$.errors.size()", is(1)));
+        } finally {
+            this.userProfileManager.deleteProfile("my_profile_user");
+            if (null != this.userProfileManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+
+    @Test
+    void testUpdateMyUserProfileOk() throws Exception {
+        try {
+            Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            String accessToken = this.createAccessToken();
+
+            this.executeProfileTypePost("11_POST_type_valid.json", accessToken, status().isOk());
+
+            Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
+            this.executeProfilePost("11_POST_valid.json", accessToken, status().isOk())
+                .andExpect(jsonPath("$.payload.id", is("new_user")))
+                .andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            Assertions.assertNotNull(this.userProfileManager.getProfile("new_user"));
+
+            UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
+                    .withGroup(Group.FREE_GROUP_NAME)
+                    .build();
+            String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
+
+            this.executePutUpdateMyProfile("11_PUT_valid.json", userEditMyProfile, userEditMyProfileToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("TST")))
+                    .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TST")));
+
+        } finally {
+            this.userProfileManager.deleteProfile("my_profile_user");
+            this.userManager.removeUser("new_user");
+            if (null != this.userProfileManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "manageUserProfile", Permission.MANAGE_USER_PROFILES)
@@ -410,6 +469,19 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andDo(resultPrint()).andExpect(expected);
+        return result;
+    }
+
+    private ResultActions executePutUpdateMyProfile(String fileName, UserDetails user, String accessToken, ResultMatcher expected) throws Exception {
+        InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
+        String jsonPostValid = FileTextReader.getText(isJsonPostValid);
+        ResultActions result = mockMvc
+                .perform(put("/userProfiles/updateMyProfile")
+                        .flashAttr("user", user)
+                        .content(jsonPostValid)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 

@@ -1,0 +1,12 @@
+{
+  "code": "TST",
+  "name": "Profile Type TST",
+  "attributes": [
+    {
+      "code": "Name",
+      "type": "Monotext",
+      "name": "Description of text attribute",
+      "mandatory": true
+    }
+  ]
+}
