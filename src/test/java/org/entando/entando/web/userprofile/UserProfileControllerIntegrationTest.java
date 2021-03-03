@@ -494,7 +494,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(put("/userProfiles/updateMyProfile")
+                .perform(put("/userProfiles/myProfile")
                         .flashAttr("user", user)
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -151,7 +151,7 @@ public class ProfileController {
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/userProfiles/updateMyProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/userProfiles/myProfile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyProfile(@ModelAttribute("user") UserDetails user,
                                                                          @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update profile for the logged user {} -> {}", user.getUsername(), bodyRequest);
