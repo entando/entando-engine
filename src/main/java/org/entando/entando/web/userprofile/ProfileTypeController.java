@@ -14,32 +14,43 @@
 package org.entando.entando.web.userprofile;
 
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
-import org.entando.entando.aps.system.services.entity.model.*;
+import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
+import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileTypeDto;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
-import org.entando.entando.web.common.exceptions.*;
+import org.entando.entando.web.common.exceptions.ValidationConflictException;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
-import org.entando.entando.web.userprofile.model.*;
+import org.entando.entando.web.userprofile.model.ProfileTypeDtoRequest;
+import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
 import org.entando.entando.web.userprofile.validator.ProfileTypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author E.Santoboni
  */
 @RestController
+@SessionAttributes("user")
 public class ProfileTypeController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
@@ -76,7 +87,28 @@ public class ProfileTypeController {
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = Permission.MANAGE_USER_PROFILES)
+    @RestAccessControl(permission = {Permission.BACKOFFICE})
+    @GetMapping(value = "/myProfileType", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) throws JsonProcessingException {
+        logger.debug("Requested profile type for the logged user-> {}", user.getUsername());
+        String profileTypeCode;
+        if (user.getProfile() != null) {
+            IUserProfile userProfile = (IUserProfile) user.getProfile();
+            profileTypeCode = userProfile.getTypeCode();
+            logger.debug("Requested profile profileTypeCode -> {}", profileTypeCode);
+            if (!this.getProfileTypeValidator().existType(profileTypeCode)) {
+                throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Profile Type", profileTypeCode);
+            }
+        }
+        else {
+            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Profile Type", "");
+        }
+        UserProfileTypeDto dto = this.getUserProfileTypeService().getUserProfileType(profileTypeCode);
+        logger.debug("Main Response -> {}", dto);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = {Permission.MANAGE_USER_PROFILES})
     @RequestMapping(value = "/profileTypes/{profileTypeCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getUserProfileType(@PathVariable String profileTypeCode) throws JsonProcessingException {
         logger.debug("Requested profile type -> {}", profileTypeCode);

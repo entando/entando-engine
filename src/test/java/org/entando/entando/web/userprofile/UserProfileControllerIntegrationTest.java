@@ -539,7 +539,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
 
     private ResultActions executeGetMyProfile(UserDetails user, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/userProfiles/myProfile")
+                .perform(get("/myUserProfile")
                         .flashAttr("user", user)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
@@ -551,7 +551,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(fileName);
         String jsonPostValid = FileTextReader.getText(isJsonPostValid);
         ResultActions result = mockMvc
-                .perform(put("/userProfiles/myProfile")
+                .perform(put("/myUserProfile")
                         .flashAttr("user", user)
                         .content(jsonPostValid)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
