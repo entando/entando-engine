@@ -400,7 +400,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
 
             UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
                     .build();
 
             String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
@@ -422,7 +422,8 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             String accessTokenAdmin = createAccessToken();
             this.executeProfileTypePost("11_POST_type_valid.json", accessTokenAdmin, status().isOk());
             UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME).build();
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .build();
             String accessToken = mockOAuthInterceptor(loggedUser);
             Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
             Assertions.assertNull(this.userManager.getUser("new_user"));
@@ -451,7 +452,8 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             String accessTokenAdmin = createAccessToken();
             this.executeProfileTypePost("11_POST_type_valid.json", accessTokenAdmin, status().isOk());
             UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME).build();
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .build();
             String accessToken = mockOAuthInterceptor(loggedUser);
             Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
             executeGetMyProfile(loggedUser, accessToken, status().isNotFound());
@@ -479,7 +481,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNotNull(this.userProfileManager.getProfile("new_user"));
 
             UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
                     .build();
             String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
 
