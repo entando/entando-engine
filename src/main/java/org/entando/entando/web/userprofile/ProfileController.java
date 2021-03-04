@@ -81,6 +81,20 @@ public class ProfileController {
     @RequestMapping(value = "/userProfiles/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<EntityDto>> getUserProfile(@PathVariable String username) throws JsonProcessingException {
         logger.debug("Requested profile -> {}", username);
+        final EntityDto dto = getUserProfileEntityDto(username);
+        logger.debug("Main Response -> {}", dto);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
+    }
+
+    @RestAccessControl(permission = Permission.BACKOFFICE)
+    @GetMapping(value = "/userProfiles/myProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<EntityDto>> getMyProfile(@ModelAttribute("user") UserDetails user) {
+        final EntityDto userProfileEntityDto = getUserProfileEntityDto(user.getUsername());
+        logger.debug("Main Response -> {}", userProfileEntityDto);
+        return new ResponseEntity<>(new SimpleRestResponse<>(userProfileEntityDto), HttpStatus.OK);
+    }
+
+    private EntityDto getUserProfileEntityDto(final String username) {
         EntityDto dto;
         if (!this.getProfileValidator().existProfile(username)) {
             if (userExists(username)) {
@@ -93,8 +107,7 @@ public class ProfileController {
         } else {
             dto = this.getUserProfileService().getUserProfile(username);
         }
-        logger.debug("Main Response -> {}", dto);
-        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
+        return dto;
     }
 
     private boolean userExists(String username) {
@@ -152,6 +165,7 @@ public class ProfileController {
     }
 
     @PutMapping(value = "/userProfiles/myProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RestAccessControl(permission = Permission.BACKOFFICE)
     public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyProfile(@ModelAttribute("user") UserDetails user,
                                                                          @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update profile for the logged user {} -> {}", user.getUsername(), bodyRequest);

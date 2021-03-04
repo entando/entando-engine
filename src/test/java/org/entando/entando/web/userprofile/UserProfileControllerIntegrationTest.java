@@ -390,7 +390,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
-    void testUpdateMyUserProfileConflict() throws Exception {
+    void testPostMyProfileConflict() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             String accessToken = this.createAccessToken();
@@ -400,24 +400,73 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
 
             UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
                     .build();
+
             String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
 
             this.executePutUpdateMyProfile("11_PUT_invalid.json", userEditMyProfile, userEditMyProfileToken, status().isConflict())
             .andExpect(jsonPath("$.payload.size()", is(0)))
             .andExpect(jsonPath("$.errors.size()", is(1)));
         } finally {
-            this.userProfileManager.deleteProfile("my_profile_user");
             if (null != this.userProfileManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
             }
         }
     }
 
+    @Test
+    void testGetMyProfileOk() throws Exception {
+        try {
+            Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            String accessTokenAdmin = createAccessToken();
+            this.executeProfileTypePost("11_POST_type_valid.json", accessTokenAdmin, status().isOk());
+            UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .build();
+            String accessToken = mockOAuthInterceptor(loggedUser);
+            Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
+            Assertions.assertNull(this.userManager.getUser("new_user"));
+            User user = new User();
+            user.setUsername("new_user");
+            user.setPassword("new_user");
+            this.userManager.addUser(user);
+            executeGetMyProfile(loggedUser, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user")))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            Assertions.assertNotNull(this.userProfileManager.getProfile("new_user"));
+        } finally {
+            this.userProfileManager.deleteProfile("new_user");
+            this.userManager.removeUser("new_user");
+            if (null != this.userProfileManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            }
+        }
+    }
 
     @Test
-    void testUpdateMyUserProfileOk() throws Exception {
+    void testGetMyProfileUserNotFound() throws Exception {
+        try {
+            Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
+            String accessTokenAdmin = createAccessToken();
+            this.executeProfileTypePost("11_POST_type_valid.json", accessTokenAdmin, status().isOk());
+            UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .build();
+            String accessToken = mockOAuthInterceptor(loggedUser);
+            Assertions.assertNotNull(this.userProfileManager.getEntityPrototype("TST"));
+            executeGetMyProfile(loggedUser, accessToken, status().isNotFound());
+            Assertions.assertNull(this.userProfileManager.getProfile("new_user"));
+        } finally {
+            if (null != this.userProfileManager.getEntityPrototype("TST")) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
+            }
+        }
+    }
+
+    @Test
+    void testPostMyProfileOk() throws Exception {
         try {
             Assertions.assertNull(this.userProfileManager.getEntityPrototype("TST"));
             String accessToken = this.createAccessToken();
@@ -432,7 +481,7 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNotNull(this.userProfileManager.getProfile("new_user"));
 
             UserDetails userEditMyProfile = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
-                    .withGroup(Group.FREE_GROUP_NAME)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
                     .build();
             String userEditMyProfileToken =  mockOAuthInterceptor(userEditMyProfile);
 
@@ -442,14 +491,12 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
                     .andExpect(jsonPath("$.payload.typeDescription", is("Type for test TST")));
 
         } finally {
-            this.userProfileManager.deleteProfile("my_profile_user");
             this.userManager.removeUser("new_user");
             if (null != this.userProfileManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
             }
         }
     }
-
 
     private String createAccessToken() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -487,6 +534,16 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andDo(resultPrint()).andExpect(expected);
+        return result;
+    }
+
+    private ResultActions executeGetMyProfile(UserDetails user, String accessToken, ResultMatcher expected) throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/userProfiles/myProfile")
+                        .flashAttr("user", user)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print()).andExpect(expected);
         return result;
     }
 
