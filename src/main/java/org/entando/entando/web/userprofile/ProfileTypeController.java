@@ -55,6 +55,8 @@ public class ProfileTypeController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
+    private static final String OBJECT_NAME_PROFILE_TYPE = "Profile Type";
+
     @Autowired
     private IUserProfileTypeService userProfileTypeService;
 
@@ -89,7 +91,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = {Permission.BACKOFFICE})
     @GetMapping(value = "/myProfileType", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) throws JsonProcessingException {
+    public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) {
         logger.debug("Requested profile type for the logged user-> {}", user.getUsername());
         String profileTypeCode;
         if (user.getProfile() != null) {
@@ -97,11 +99,11 @@ public class ProfileTypeController {
             profileTypeCode = userProfile.getTypeCode();
             logger.debug("Requested profile profileTypeCode -> {}", profileTypeCode);
             if (!this.getProfileTypeValidator().existType(profileTypeCode)) {
-                throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Profile Type", profileTypeCode);
+                throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, OBJECT_NAME_PROFILE_TYPE, profileTypeCode);
             }
         }
         else {
-            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Profile Type", "");
+            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, OBJECT_NAME_PROFILE_TYPE, "");
         }
         UserProfileTypeDto dto = this.getUserProfileTypeService().getUserProfileType(profileTypeCode);
         logger.debug("Main Response -> {}", dto);
@@ -113,7 +115,7 @@ public class ProfileTypeController {
     public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getUserProfileType(@PathVariable String profileTypeCode) throws JsonProcessingException {
         logger.debug("Requested profile type -> {}", profileTypeCode);
         if (!this.getProfileTypeValidator().existType(profileTypeCode)) {
-            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, "Profile Type", profileTypeCode);
+            throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, OBJECT_NAME_PROFILE_TYPE, profileTypeCode);
         }
         UserProfileTypeDto dto = this.getUserProfileTypeService().getUserProfileType(profileTypeCode);
         logger.debug("Main Response -> {}", dto);
