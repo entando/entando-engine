@@ -808,6 +808,9 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             PageStatusRequest statusRequest = new PageStatusRequest();
 
+            mockOAuthInterceptor(new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "validateContents", Permission.CONTENT_SUPERVISOR)
+                    .build());
             //put
             ResultActions result = this.executeUpdatePageStatus(codeParent,
                     statusRequest, accessToken, status().isBadRequest());
