@@ -238,7 +238,7 @@ public class PageController {
 
 
     @ActivityStreamAuditable
-    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RestAccessControl(permission = {Permission.MANAGE_PAGES, Permission.CONTENT_SUPERVISOR})
     @RequestMapping(value = "/pages/{pageCode}/status", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<PageDto, Map<String, String>>> updatePageStatus(
             @ModelAttribute("user") UserDetails user, @PathVariable String pageCode,
