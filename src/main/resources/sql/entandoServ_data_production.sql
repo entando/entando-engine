@@ -3,7 +3,7 @@ INSERT INTO authgroups (groupname, descr) VALUES ('free', 'Free Access');
 
 
 INSERT INTO authpermissions (permissionname, descr) VALUES ('superuser', 'All functions');
-INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Supervision of contents');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Content Supervision');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('manageResources', 'Operations on Resources');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('managePages', 'Operations on Pages');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('enterBackend', 'Access to Administration Area');
