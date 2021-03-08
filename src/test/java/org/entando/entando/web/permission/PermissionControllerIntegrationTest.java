@@ -118,7 +118,7 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
                 .andExpect(jsonPath("$.payload[5].code", is("managePages")))
                 .andExpect(jsonPath("$.payload[5].descr", is("Operations on Pages")))
                 .andExpect(jsonPath("$.payload[6].code", is("manageResources")))
-                .andExpect(jsonPath("$.payload[6].descr", is("Operations on Resources")))
+                .andExpect(jsonPath("$.payload[6].descr", is("Asset Editing")))
                 .andExpect(jsonPath("$.payload[7].code", is("superuser")))
                 .andExpect(jsonPath("$.payload[7].descr", is("All functions")))
                 .andExpect(jsonPath("$.payload[8].code", is("validateContents")))
