@@ -13,20 +13,23 @@
  */
 package org.entando.entando.web.userprofile;
 
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.role.Permission;
-import java.io.InputStream;
-
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.system.services.user.UserManager;
 import com.agiletec.aps.util.FileTextReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +37,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.io.InputStream;
+
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
-import org.junit.jupiter.api.Assertions;
 
 class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -53,6 +52,9 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
 
     @Autowired
     private IUserProfileManager userProfileManager;
+
+    @Autowired
+    private UserManager userManager;
 
     @Autowired
     @InjectMocks
@@ -139,6 +141,73 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
             }
         }
+    }
+
+    @Test
+    void testGetMyUserProfileTypeOk() throws Exception {
+        String loggedUsername = "logged_user";
+        String loggedUserPassword = "0x24";
+        String testTypeCode = "TST";
+        try {
+            Assertions.assertNull(this.userProfileManager.getEntityPrototype(testTypeCode));
+            UserDetails adminUser = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                    .withAuthorization(Group.FREE_GROUP_NAME, "manageUserProfile", Permission.MANAGE_USER_PROFILES)
+                    .build();
+            String accessTokenAdmin = mockOAuthInterceptor(adminUser);
+            this.executeProfileTypePost("11_POST_type_valid.json", accessTokenAdmin, status().isOk());
+            Assertions.assertNotNull(this.userProfileManager.getEntityPrototype(testTypeCode));
+            Assertions.assertNull(userManager.getUser(loggedUsername));
+
+            final IUserProfile loggedUserProfile = userProfileManager.getProfileType(testTypeCode);
+
+            UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .withUserProfile(loggedUserProfile)
+                    .build();
+
+            String accessToken = mockOAuthInterceptor(loggedUser);
+
+            executeGetMyProfileType(loggedUser, accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is(testTypeCode)));;
+
+        } finally {
+            this.userProfileManager.deleteProfile(loggedUsername);
+            this.userManager.removeUser(loggedUsername);
+            if (null != this.userProfileManager.getEntityPrototype(testTypeCode)) {
+                ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype(testTypeCode);
+            }
+        }
+    }
+
+    @Test
+    void testGetMyUserProfileTypeInvalid() throws Exception {
+        String loggedUsername = "logged_user";
+        String loggedUserPassword = "0x24";
+            final IUserProfile invalidProfile = new UserProfile();
+            invalidProfile.setTypeCode("ABC");
+            UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .withUserProfile(invalidProfile)
+                    .build();
+
+            String accessToken = mockOAuthInterceptor(loggedUser);
+
+            executeGetMyProfileType(loggedUser, accessToken, status().isNotFound());
+    }
+
+    @Test
+    void testGetMyUserProfileTypeNotFound() throws Exception {
+        String loggedUsername = "logged_user";
+        String loggedUserPassword = "0x24";
+
+        UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                .withUserProfile(null)
+                .build();
+
+        String accessToken = mockOAuthInterceptor(loggedUser);
+
+        executeGetMyProfileType(loggedUser, accessToken, status().isNotFound());
     }
 
     @Test
@@ -709,7 +778,17 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
     }
-    
+
+    private ResultActions executeGetMyProfileType(UserDetails user, String accessToken, ResultMatcher expected) throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/myProfileType")
+                        .flashAttr("user", user)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andDo(print()).andExpect(expected);
+        return result;
+    }
+
     @Test
     void testGetUserProfileTypesWithAdminPermission() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();

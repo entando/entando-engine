@@ -87,8 +87,8 @@ public class ProfileController {
     }
 
     @RestAccessControl(permission = Permission.BACKOFFICE)
-    @GetMapping(value = "/userProfiles/myProfile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> getMyProfile(@ModelAttribute("user") UserDetails user) {
+    @GetMapping(value = "/myUserProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<EntityDto>> getMyUserProfile(@ModelAttribute("user") UserDetails user) {
         final EntityDto userProfileEntityDto = getUserProfileEntityDto(user.getUsername());
         logger.debug("Main Response -> {}", userProfileEntityDto);
         return new ResponseEntity<>(new SimpleRestResponse<>(userProfileEntityDto), HttpStatus.OK);
@@ -164,9 +164,9 @@ public class ProfileController {
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/userProfiles/myProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/myUserProfile", produces = MediaType.APPLICATION_JSON_VALUE)
     @RestAccessControl(permission = Permission.BACKOFFICE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyProfile(@ModelAttribute("user") UserDetails user,
+    public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyUserProfile(@ModelAttribute("user") UserDetails user,
                                                                          @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update profile for the logged user {} -> {}", user.getUsername(), bodyRequest);
         this.getProfileValidator().validateBodyName(user.getUsername(), bodyRequest, bindingResult);
