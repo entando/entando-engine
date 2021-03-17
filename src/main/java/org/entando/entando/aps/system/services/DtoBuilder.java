@@ -34,7 +34,10 @@ public abstract class DtoBuilder<I, O> implements IDtoBuilder<I, O> {
         }
         List<O> dto = new ArrayList<>();
         for (I entry : list) {
-            dto.add(convert(entry));
+            O convertedEntry = convert(entry);
+            if (convertedEntry != null) {
+                dto.add(convertedEntry);
+            }
         }
         return dto;
     }
