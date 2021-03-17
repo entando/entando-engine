@@ -31,6 +31,7 @@ import org.entando.entando.aps.system.services.mockhelper.WidgetMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDtoBuilder;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
@@ -425,6 +426,33 @@ class WidgetServiceTest {
                         assertTrue(e instanceof NoSuchElementException || e instanceof NullPointerException);
                     }
                 });
+    }
+
+    @Test
+    void shouldNotThrowExceptionIfWidgetItsBroken() throws Exception {
+
+        WidgetService service = new WidgetService();
+        service.setWidgetManager(widgetManager);
+
+        WidgetDtoBuilder dtoBuilder = new WidgetDtoBuilder();
+        dtoBuilder.setPageManager(pageManager);
+        dtoBuilder.setComponentManager(componentManager);
+        dtoBuilder.setStockWidgetCodes("");
+        service.setDtoBuilder(dtoBuilder);
+
+        Mockito.lenient().when(pageManager.getOnlineWidgetUtilizers(WIDGET_1_CODE)).thenThrow(new EntException("Failure"));
+        Mockito.lenient().when(pageManager.getDraftWidgetUtilizers(WIDGET_1_CODE)).thenThrow(new EntException("Failure"));
+        Mockito.lenient().when(widgetManager.getWidgetTypes()).thenReturn(ImmutableList.of(getWidget1(), getWidget2()));
+
+        RestListRequest requestList = new RestListRequest();
+        Filter filter = new Filter();
+        filter.setAttribute("used");
+        filter.setValue("1");
+        filter.setOperator(FilterOperator.EQUAL.getValue());
+        requestList.addFilter(filter);
+
+        PagedMetadata<WidgetDto> result = service.getWidgets(requestList);
+        assertThat(result.getBody()).hasSize(0);
     }
 
 

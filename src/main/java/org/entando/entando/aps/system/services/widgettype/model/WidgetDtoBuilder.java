@@ -58,7 +58,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
             getPageManager().getDraftWidgetUtilizers(src.getCode()).forEach(p -> usedMap.put(p.getCode(), p));
         } catch (Exception e) {
             logger.error("Error extracting utilizers for widget {}", src.getCode(), e);
-            throw new RestServerError("Error extracting utilizers for widget " + src.getCode(), e);
+            return null;
         }
         dest.setUsed(usedMap.keySet().size());
         String pluginCode = src.getPluginCode();
