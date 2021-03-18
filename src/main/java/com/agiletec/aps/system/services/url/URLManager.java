@@ -28,6 +28,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Servizio di gestione degli url; crea un URL completo ad una pagina del
@@ -168,6 +169,12 @@ public class URLManager extends AbstractURLManager {
     protected void addBaseURL(StringBuilder link, HttpServletRequest request) {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
+            return;
+        }
+        RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
+        String webUiApplicationBaseUrl = (null != reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_WEBUI_APPL_BASE_URL) : null;
+        if (!StringUtils.isBlank(webUiApplicationBaseUrl)) {
+            link.append(webUiApplicationBaseUrl);
             return;
         }
         if (this.isForceAddSchemeHost()) {
