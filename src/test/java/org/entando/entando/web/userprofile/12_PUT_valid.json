@@ -1,0 +1,17 @@
+{
+  "id": "new_user_2",
+  "typeCode": "OTH",
+  "typeDescription": "Type for test OTH",
+  "description": "Profile of user",
+  "mainGroup": "free",
+  "groups": [
+    "group1",
+    "group2"
+  ],
+  "attributes": [
+    {
+      "code": "profilepicture",
+      "value": "picture2.png"
+    }
+  ]
+}
