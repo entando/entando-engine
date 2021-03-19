@@ -16,6 +16,7 @@ package org.entando.entando.web.userprofile;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -495,6 +496,42 @@ class UserProfileControllerIntegrationTest extends AbstractControllerIntegration
             if (null != this.userProfileManager.getEntityPrototype("TST")) {
                 ((IEntityTypesConfigurer) this.userProfileManager).removeEntityPrototype("TST");
             }
+        }
+    }
+
+    @Test
+    void testAddUserProfileWithProfilePicture() throws Exception {
+        try {
+            String accessToken = this.createAccessToken();
+
+            this.executeProfilePost("12_POST_valid.json", accessToken, status().isOk()).andDo(resultPrint())
+                    .andExpect(jsonPath("$.payload.id", is("new_user_2")))
+                    .andExpect(jsonPath("$.errors.size()", is(0)))
+                    .andExpect(jsonPath("$.metaData.size()", is(0)));
+
+            IUserProfile profile = this.userProfileManager.getProfile("new_user_2");
+            Assertions.assertNotNull(profile);
+            MonoTextAttribute profilePicture = (MonoTextAttribute) profile.getAttribute("profilepicture");
+            Assertions.assertEquals("picture.png", profilePicture.getText());
+
+            executeProfileGet("new_user_2", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user_2")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("OTH")))
+                    .andExpect(jsonPath("$.payload.attributes[0].value", is("Eric")))
+                    .andExpect(jsonPath("$.payload.attributes[1].value", is("Brown")))
+                    .andExpect(jsonPath("$.payload.attributes[2].value", is("eric.brown@entando.com")))
+                    .andExpect(jsonPath("$.payload.attributes[3].value", is("picture.png")));
+
+            executeProfilePut("12_PUT_valid.json", "new_user_2", accessToken, status().isOk())
+                    .andExpect(jsonPath("$.payload.id", is("new_user_2")))
+                    .andExpect(jsonPath("$.payload.typeCode", is("OTH")))
+                    .andExpect(jsonPath("$.payload.attributes[0].value", is("Eric")))
+                    .andExpect(jsonPath("$.payload.attributes[1].value", is("Brown")))
+                    .andExpect(jsonPath("$.payload.attributes[2].value", is("eric.brown@entando.com")))
+                    .andExpect(jsonPath("$.payload.attributes[3].value", is("picture2.png")));
+        } finally {
+            this.userProfileManager.deleteProfile("new_user_2");
+            Assertions.assertNull(this.userProfileManager.getProfile("new_user_2"));
         }
     }
 

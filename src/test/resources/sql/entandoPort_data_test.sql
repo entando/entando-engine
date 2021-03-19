@@ -667,6 +667,11 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 					<role>userprofile:email</role>
 				</roles>
 			</attribute>
+			<attribute name="profilepicture" attributetype="Monotext" >
+                <roles>
+                    <role>userprofile:profilepicture</role>
+                </roles>
+            </attribute>
 		</attributes>
 	</profiletype>
 	<profiletype typecode="ALL" typedescr="Profile type with all attribute types">
