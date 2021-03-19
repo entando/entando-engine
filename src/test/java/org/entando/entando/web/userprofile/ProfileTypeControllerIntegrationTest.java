@@ -368,7 +368,7 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
         result.andExpect(jsonPath("$.payload.code", is("Monotext")));
         result.andExpect(jsonPath("$.payload.multilingual", is(false)));
         result.andExpect(jsonPath("$.payload.dateFilterSupported", is(false)));
-        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(4)));
+        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.payload.simple", is(true)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
@@ -409,7 +409,7 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
         result.andExpect(jsonPath("$.payload.assignedRoles.size()", is(2)));
         result.andExpect(jsonPath("$.payload.assignedRoles.userprofile:fullname", is("fullname")));
         result.andExpect(jsonPath("$.payload.assignedRoles.userprofile:email", is("email")));
-        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(4)));
+        result.andExpect(jsonPath("$.payload.allowedRoles", Matchers.hasSize(5)));
         result.andExpect(jsonPath("$.payload.dateFilterSupported", is(false)));
         result.andExpect(jsonPath("$.payload.simple", is(true)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
