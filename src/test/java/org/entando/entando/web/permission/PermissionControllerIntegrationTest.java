@@ -104,7 +104,7 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
         result
                 .andDo(resultPrint())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.length()", is(10)))
+                .andExpect(jsonPath("$.payload.length()", is(11)))
                 .andExpect(jsonPath("$.payload[0].code", is("editContents")))
                 .andExpect(jsonPath("$.payload[0].descr", is("Content Editing")))
                 .andExpect(jsonPath("$.payload[1].code", is("editUserProfile")))
@@ -119,12 +119,14 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
                 .andExpect(jsonPath("$.payload[5].descr", is("Operations on Pages")))
                 .andExpect(jsonPath("$.payload[6].code", is("manageResources")))
                 .andExpect(jsonPath("$.payload[6].descr", is("Asset Editing")))
-                .andExpect(jsonPath("$.payload[7].code", is("superuser")))
-                .andExpect(jsonPath("$.payload[7].descr", is("All functions")))
-                .andExpect(jsonPath("$.payload[8].code", is("validateContents")))
-                .andExpect(jsonPath("$.payload[8].descr", is("Content Supervision")))
-                .andExpect(jsonPath("$.payload[9].code", is("viewUsers")))
-                .andExpect(jsonPath("$.payload[9].descr", is("View Users and Profiles")));
+                .andExpect(jsonPath("$.payload[7].code", is("reviewer")))
+                .andExpect(jsonPath("$.payload[7].descr", is("Reviewer")))
+                .andExpect(jsonPath("$.payload[8].code", is("superuser")))
+                .andExpect(jsonPath("$.payload[8].descr", is("All functions")))
+                .andExpect(jsonPath("$.payload[9].code", is("validateContents")))
+                .andExpect(jsonPath("$.payload[9].descr", is("Content Supervision")))
+                .andExpect(jsonPath("$.payload[10].code", is("viewUsers")))
+                .andExpect(jsonPath("$.payload[10].descr", is("View Users and Profiles")));
     }
 
 }

@@ -82,6 +82,8 @@ public class Permission implements Comparable, Serializable {
 	public static final String MANAGE_PAGES = "managePages";
 	public static final String MANAGE_CATEGORIES = "manageCategories";
 	public static final String ENTER_BACKEND = "enterBackend";
+
+	public static final String REVIEWER = "reviewer";
 	
 	/**
 	 * Nome del permesso di Supervisore contenuto
