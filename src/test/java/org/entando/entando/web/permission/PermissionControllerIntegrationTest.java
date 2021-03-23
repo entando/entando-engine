@@ -52,7 +52,7 @@ class PermissionControllerIntegrationTest extends AbstractControllerIntegrationT
                                                                   .param("filter[0].value", "manage")
                                                                   .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload.length()", is(3)));
+        result.andExpect(jsonPath("$.payload.length()", is(4)));
     }
 
 
