@@ -133,25 +133,7 @@ public class FileTextReader {
     }
 
     public static byte[] fileToByteArray(File parentDirectory, File file) throws IOException {
-        FileInputStream fis = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            if (FileUtils.directoryContains(parentDirectory, file)) {
-                fis = new FileInputStream(file);
-                byte[] buf = new byte[1024];
-                for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                    bos.write(buf, 0, readNum);
-                }
-            }
-        } catch (IOException ex) {
-            logger.error("Error creating byte array", ex);
-            throw ex;
-        } finally {
-            if (null != fis) {
-                fis.close();
-            }
-        }
-        return bos.toByteArray();
+        return fileToByteArray(file, FileUtils.directoryContains(parentDirectory, file));
     }
 
     /**
@@ -163,20 +145,26 @@ public class FileTextReader {
      */
     @Deprecated
     public static byte[] fileToByteArray(File file) throws IOException {
+        return fileToByteArray(file, true);
+    }
+    
+    private static byte[] fileToByteArray(File file, boolean checkParent) throws IOException {
         FileInputStream fis = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            fis = new FileInputStream(file);
-            byte[] buf = new byte[1024];
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
-            }
-        } catch (IOException ex) {
-            logger.error("Error creating byte array", ex);
-            throw ex;
-        } finally {
-            if (null != fis) {
-                fis.close();
+        if (checkParent) {
+            try {
+                fis = new FileInputStream(file);
+                byte[] buf = new byte[1024];
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum);
+                }
+            } catch (IOException ex) {
+                logger.error("Error creating byte array", ex);
+                throw ex;
+            } finally {
+                if (null != fis) {
+                    fis.close();
+                }
             }
         }
         return bos.toByteArray();
