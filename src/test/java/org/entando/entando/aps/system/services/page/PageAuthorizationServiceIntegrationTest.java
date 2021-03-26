@@ -64,7 +64,7 @@ class PageAuthorizationServiceIntegrationTest extends BaseTestCase {
         List<PageDto> pagesForAdmin = this.authorizationService.filterList(admin, pages);
         List<PageDto> pagesForCustomer = this.authorizationService.filterList(customer, pages);
         assertEquals(7, pagesForAdmin.size());
-        assertEquals(5, pagesForCustomer.size());
+        assertEquals(1, pagesForCustomer.size());
         pagesForCustomer.forEach(page -> assertTrue((page.getOwnerGroup().equals(Group.FREE_GROUP_NAME)
                 || page.getOwnerGroup().equals("customers"))));
     }
