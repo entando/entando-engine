@@ -40,7 +40,7 @@ public interface IAuthorizationManager {
 	 * @deprecated Since Entando 4.1.1, use getRelatedAuthorities(UserDetails, IApsAuthority)
 	 */
 	public boolean isAuth(UserDetails user, IApsAuthority auth);
-	
+
 	public boolean isAuthOnGroupAndPermission(UserDetails user, String groupName, String permissionName, boolean chechAdmin);
 	
 	public boolean isAuthOnGroupAndRole(UserDetails user, String groupName, String roleName, boolean chechAdmin);
@@ -78,6 +78,15 @@ public interface IAuthorizationManager {
 	 * @return True se l'utente è abilitato all'accesso alla pagina specificata, false in caso contrario.
 	 */
 	public boolean isAuth(UserDetails user, IPage page);
+
+	/**
+	 * Verifica se l'utente specificato è abilitato all'accesso alla pagina specificata.
+	 * @param user L'utente di cui verificare l'autorizzazione.
+	 * @param page La pagina da analizzare.
+	 * @param allowFreeGroup Se il gruppo libero deve essere permesso.
+	 * @return True se l'utente è abilitato all'accesso alla pagina specificata, false in caso contrario.
+	 */
+	public boolean isAuth(UserDetails user, IPage page, boolean allowFreeGroup);
 	
 	/**
 	 * Verifica se l'utente specificato appartiene al gruppo specificato.

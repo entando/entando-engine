@@ -25,6 +25,7 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View U
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Management');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('manageReview', 'Review Management');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('enterECR', 'ECR Access Permission');
 
 
 

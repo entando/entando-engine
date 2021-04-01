@@ -290,6 +290,11 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 
     @Override
     public boolean isAuth(UserDetails user, IPage page) {
+        return isAuth(user, page, true);
+    }
+
+    @Override
+    public boolean isAuth(UserDetails user, IPage page, boolean allowFreeGroup) {
         if (null == user) {
             return false;
         }
@@ -297,7 +302,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             return true;
         }
         String pageGroup = page.getGroup();
-        if (Group.FREE_GROUP_NAME.equals(pageGroup)) {
+        if (allowFreeGroup && Group.FREE_GROUP_NAME.equals(pageGroup)) {
             return true;
         }
         boolean isAuthorized = this.isAuthOnGroup(user, pageGroup);

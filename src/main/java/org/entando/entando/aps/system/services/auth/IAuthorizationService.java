@@ -28,7 +28,11 @@ public interface IAuthorizationService<T> {
 
     boolean isAuth(UserDetails user, T entityDto);
 
+    boolean isAuth(UserDetails user, T entityDto, boolean allowFreeGroup);
+
     boolean isAuth(UserDetails user, String entityCode);
+
+    boolean isAuth(UserDetails user, String entityCode, boolean allowFreeGroup);
 
     List<T> filterList(UserDetails user, List<T> toBeFiltered);
 }

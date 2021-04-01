@@ -1190,6 +1190,24 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         result.andExpect(status().isOk());
     }
 
+    @Test
+    void testUserPermissionToSeePages() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("user_group_coach", "0x24")
+                .withAuthorization("coach", "tempRole", Permission.MANAGE_PAGES, Permission.BACKOFFICE)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        mockMvc
+                .perform(get("/pages")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", is(1)))
+                .andExpect(jsonPath("$.payload[0].code", is("coach_page")))
+                .andExpect(jsonPath("$.payload[0].ownerGroup", is("coach")))
+                .andExpect(jsonPath("$.metaData.parentCode", is("homepage")));
+    }
+
     private ResultActions performListViewPages(String accessToken) throws Exception {
         return mockMvc.perform(get("/pages/viewpages")
                 .header("Authorization", "Bearer " + accessToken));
