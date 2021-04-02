@@ -15,8 +15,12 @@ package org.entando.entando.web.userprofile;
 
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.common.entity.parse.attribute.MonoTextAttributeHandler;
+import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserManager;
 import com.agiletec.aps.util.FileTextReader;
@@ -159,6 +163,14 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNull(userManager.getUser(loggedUsername));
 
             final IUserProfile loggedUserProfile = userProfileManager.getProfileType(testTypeCode);
+
+            User newUser = new User();
+            newUser.setUsername(loggedUsername);
+            newUser.setPassword(loggedUserPassword);
+            newUser.setProfile(loggedUserProfile);
+            Assertions.assertNull(userManager.getUser(loggedUsername));
+            this.userManager.addUser(newUser);
+            Assertions.assertNotNull(userManager.getUser(loggedUsername));
 
             UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
                     .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
