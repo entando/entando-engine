@@ -1840,7 +1840,7 @@ INSERT INTO sysconfig (version, item, descr, config) values ('production', 'user
 					<role>userprofile:email</role>
 				</roles>
 			</attribute>
-			<attribute name="profilepicture" attributetype="Monotext" >
+			<attribute name="profilepicture" attributetype="Monotext" description="Profile Picture" >
                 <roles>
                     <role>userprofile:profilepicture</role>
                 </roles>
