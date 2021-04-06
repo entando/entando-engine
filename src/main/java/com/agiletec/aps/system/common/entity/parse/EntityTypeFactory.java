@@ -36,17 +36,22 @@ public class EntityTypeFactory implements IEntityTypeFactory {
 	private static final EntLogger logger = EntLogFactory.getSanitizedLogger(EntityTypeFactory.class);
 	
 	private ConfigInterface configManager;
+    
+    @Override
+	public String extractConfigItem(String configItemName) throws EntException {
+        return this.getConfigManager().getConfigItem(configItemName);
+    }
 	
 	@Override
 	public List<SmallEntityType> extractSmallEntityTypes(String configItemName, IEntityTypeDOM entityTypeDom) throws EntException {
-		String xml = this.getConfigManager().getConfigItem(configItemName);
+		String xml = this.extractConfigItem(configItemName);
 		return entityTypeDom.extractSmallEntityTypes(xml);
 	}
 	
 	@Override
 	public IApsEntity extractEntityType(String typeCode, Class entityClass, String configItemName, 
 			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws EntException {
-		String xml = this.getConfigManager().getConfigItem(configItemName);
+		String xml = this.extractConfigItem(configItemName);
 		logger.debug("{} : {}", configItemName , xml);
 		return entityTypeDom.extractEntityType(typeCode, xml, entityClass, entityDom, entityManagerName);
 	}
@@ -68,7 +73,7 @@ public class EntityTypeFactory implements IEntityTypeFactory {
 			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws EntException {
 		Map<String, IApsEntity> entityTypes = null;
 		try {
-			String xml = this.getConfigManager().getConfigItem(configItemName);
+			String xml = this.extractConfigItem(configItemName);
 			logger.debug("{} : {}", configItemName , xml);
 			entityTypes = entityTypeDom.extractEntityTypes(xml, entityClass, entityDom, entityManagerName);
 		} catch (Throwable t) {

@@ -31,6 +31,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
@@ -52,6 +53,13 @@ class UserProfileManagerIntegrationTest extends BaseTestCase {
     @Test
     void testInitialize() {
         assertNotNull(this.profileManager);
+    }
+
+    @Test
+    void testGetConfig() throws Exception {
+        ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
+        String config = configManager.getConfigItem("userProfileTypes");
+        assertEquals(config, this.profileManager.getConfigItem());
     }
 
     @Test

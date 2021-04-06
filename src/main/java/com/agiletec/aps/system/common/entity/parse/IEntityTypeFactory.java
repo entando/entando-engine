@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity.parse;
 
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import java.util.Map;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -26,6 +27,8 @@ import java.util.List;
  * @author E.Santoboni
  */
 public interface IEntityTypeFactory {
+    
+    public String extractConfigItem(String configItemName) throws EntException;
 	
 	public List<SmallEntityType> extractSmallEntityTypes(String configItemName, IEntityTypeDOM entityTypeDom) throws EntException;
 	
