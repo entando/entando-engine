@@ -20,3 +20,5 @@ ALTER TABLE widgetcatalog DROP COLUMN readonlydefaultconfig;
 ALTER TABLE widgetcatalog ADD COLUMN readonlypagewidgetconfig smallint SET DEFAULT 0;
 ALTER TABLE widgetcatalog ADD COLUMN widgetcategory character varying(80);
 ALTER TABLE widgetcatalog ADD COLUMN icon character varying(80);
+DELETE FROM sysconfig WHERE item = "dataTypeDefinitions";
+DELETE FROM sysconfig WHERE item = "dataobjectsubdir";

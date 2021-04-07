@@ -4,3 +4,7 @@ ALTER TABLE authuserprofileattrroles ALTER COLUMN username TYPE character varyin
 ALTER TABLE authusershortcuts ALTER COLUMN username TYPE character varying(80);
 ALTER TABLE authusers ADD COLUMN wizardenabled TYPE smallint;
 ALTER TABLE authusers DROP COLUMN wizardenabled;
+DROP TABLE dataobjectmodels;
+DROP TABLE dataobjectrelations;
+DROP TABLE dataobjectsearch;
+DROP TABLE dataobjects;
