@@ -169,7 +169,6 @@ INSERT INTO pages (code, parentcode, pos) VALUES ('pagina_12', 'pagina_1', 2);
 INSERT INTO pages (code, parentcode, pos) VALUES ('pagina_11', 'pagina_1', 1);
 INSERT INTO pages (code, parentcode, pos) VALUES ('customer_subpage_1', 'customers_page', 1);
 INSERT INTO pages (code, parentcode, pos) VALUES ('pagina_1', 'homepage', 2);
-INSERT INTO pages (code, parentcode, pos) VALUES ('dataObjectview', 'service', 6);
 INSERT INTO pages (code, parentcode, pos) VALUES ('contentview', 'service', 4);
 INSERT INTO pages (code, parentcode, pos) VALUES ('pagina_2', 'homepage', 3);
 INSERT INTO pages (code, parentcode, pos) VALUES ('pagina_draft', 'homepage', 7);
@@ -248,14 +247,6 @@ INSERT INTO pages_metadata_online (code, groupcode, titles, modelcode, showinmen
 <properties>
 <property key="en">Page 1</property>
 <property key="it">Pagina 1</property>
-</properties>', 'home', 1, '<?xml version="1.0" encoding="UTF-8"?>
-<config>
-  <useextratitles>false</useextratitles>
-</config>', '2017-02-17 13:06:24');
-INSERT INTO pages_metadata_online (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('dataObjectview', 'free', '<?xml version="1.0" encoding="UTF-8"?>
-<properties>
-<property key="en">DataObject Publishing</property>
-<property key="it">Publicazione DataObject</property>
 </properties>', 'home', 1, '<?xml version="1.0" encoding="UTF-8"?>
 <config>
   <useextratitles>false</useextratitles>
@@ -351,14 +342,6 @@ INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu
 <properties>
 <property key="en">Page 1</property>
 <property key="it">Pagina 1</property>
-</properties>', 'home', 1, '<?xml version="1.0" encoding="UTF-8"?>
-<config>
-  <useextratitles>false</useextratitles>
-</config>', '2017-02-17 13:06:24');
-INSERT INTO pages_metadata_draft (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) VALUES ('dataObjectview', 'free', '<?xml version="1.0" encoding="UTF-8"?>
-<properties>
-<property key="en">DataObject Publishing</property>
-<property key="it">Publicazione DataObject</property>
 </properties>', 'home', 1, '<?xml version="1.0" encoding="UTF-8"?>
 <config>
   <useextratitles>false</useextratitles>
@@ -523,7 +506,6 @@ INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('pagin
 </properties>
 
 ');
-INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('dataObjectview', 1, 'login_form', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('contentview', 1, 'login_form', NULL);
 INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config) VALUES ('contentview', 2, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
@@ -545,7 +527,6 @@ INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES (
 </properties>
 
 ');
-INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('dataObjectview', 1, 'login_form', NULL);
 INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('contentview', 1, 'login_form', NULL);
 INSERT INTO widgetconfig_draft (pagecode, framepos, widgetcode, config) VALUES ('contentview', 2, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
@@ -786,262 +767,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 		</attributes>
 	</profiletype>
 </profiletypes>');
-INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'dataTypeDefinitions', 'Definition of the Data Types', '<?xml version="1.0" encoding="UTF-8"?>
-<datatypes>
-	<datatype typecode="ALL" typedescr="DataObject type with all attribute types" viewpage="announcements_read" listmodel="**NULL**" defaultmodel="**NULL**">
-		<attributes>
-			<attribute name="Boolean" attributetype="Boolean" />
-			<attribute name="CheckBox" attributetype="CheckBox" />
-			<attribute name="Date" attributetype="Date" />
-			<attribute name="Date2" attributetype="Date">
-				<validations>
-					<rangestart attribute="Date" />
-					<rangeend>25/11/2020</rangeend>
-				</validations>
-			</attribute>
-			<attribute name="Enumerator" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
-			<attribute name="EnumeratorMap" attributetype="EnumeratorMap" separator=";"><![CDATA[01=Value 1;02=Value 2;03=Value 3]]></attribute>
-			<attribute name="Hypertext" attributetype="Hypertext" />
-			<attribute name="Longtext" attributetype="Longtext" />
-			<attribute name="Monotext" attributetype="Monotext" />
-			<attribute name="Monotext2" attributetype="Monotext">
-				<validations>
-					<minlength>15</minlength>
-					<maxlength>30</maxlength>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="Number" attributetype="Number" />
-			<attribute name="Number2" attributetype="Number">
-				<validations>
-					<rangestart>50</rangestart>
-					<rangeend>300</rangeend>
-				</validations>
-			</attribute>
-			<attribute name="Text" attributetype="Text">
-				<roles>
-					<role>dataObject:title</role>
-				</roles>
-			</attribute>
-			<attribute name="Text2" attributetype="Text">
-				<validations>
-					<minlength>15</minlength>
-					<maxlength>30</maxlength>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="ThreeState" attributetype="ThreeState" />
-			<attribute name="Composite" attributetype="Composite">
-				<attributes>
-					<attribute name="Boolean" attributetype="Boolean" />
-					<attribute name="CheckBox" attributetype="CheckBox" />
-					<attribute name="Date" attributetype="Date">
-						<validations>
-							<rangestart attribute="Date" />
-							<rangeend>10/10/2030</rangeend>
-						</validations>
-					</attribute>
-					<attribute name="Enumerator" attributetype="Enumerator" separator="," />
-					<attribute name="Hypertext" attributetype="Hypertext" />
-					<attribute name="Longtext" attributetype="Longtext" />
-					<attribute name="Monotext" attributetype="Monotext" />
-					<attribute name="Number" attributetype="Number">
-						<validations>
-							<expression evalOnValuedAttribute="true">
-								<ognlexpression><![CDATA[#entity.getAttribute(''Number'').value == null || (#entity.getAttribute(''Number'').value != null && value > #entity.getAttribute(''Number'').value)]]></ognlexpression>
-								<errormessage><![CDATA[Value has to be upper then ''Number'' attribute]]></errormessage>
-								<helpmessage><![CDATA[If ''Number'' valued attribute, Value has to be upper]]></helpmessage>
-							</expression>
-						</validations>
-					</attribute>
-					<attribute name="Text" attributetype="Text" />
-					<attribute name="ThreeState" attributetype="ThreeState" />
-				</attributes>
-			</attribute>
-			<list name="ListBoolea" attributetype="List">
-				<nestedtype>
-					<attribute name="ListBoolea" attributetype="Boolean" />
-				</nestedtype>
-			</list>
-			<list name="ListCheck" attributetype="List">
-				<nestedtype>
-					<attribute name="ListCheck" attributetype="CheckBox" />
-				</nestedtype>
-			</list>
-			<list name="ListDate" attributetype="List">
-				<nestedtype>
-					<attribute name="ListDate" attributetype="Date" />
-				</nestedtype>
-			</list>
-			<list name="ListEnum" attributetype="List">
-				<nestedtype>
-					<attribute name="ListEnum" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
-				</nestedtype>
-			</list>
-			<list name="ListMonot" attributetype="List">
-				<nestedtype>
-					<attribute name="ListMonot" attributetype="Monotext" />
-				</nestedtype>
-			</list>
-			<list name="ListNumber" attributetype="List">
-				<nestedtype>
-					<attribute name="ListNumber" attributetype="Number" />
-				</nestedtype>
-			</list>
-			<list name="List3Stat" attributetype="List">
-				<nestedtype>
-					<attribute name="List3Stat" attributetype="ThreeState" />
-				</nestedtype>
-			</list>
-			<list name="MonoLBool" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLBool" attributetype="Boolean" />
-				</nestedtype>
-			</list>
-			<list name="MonoLChec" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLChec" attributetype="CheckBox" />
-				</nestedtype>
-			</list>
-			<list name="MonoLCom" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLCom" attributetype="Composite">
-						<attributes>
-							<attribute name="Date" attributetype="Date">
-								<validations>
-									<rangestart>10/10/1971</rangestart>
-									<rangeend attribute="Date" />
-								</validations>
-							</attribute>
-							<attribute name="Enumerator" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
-							<attribute name="EnumeratorMapTris" attributetype="EnumeratorMap" separator=";"><![CDATA[01=Value 1 Tris;02=Value 2 Tris;03=Value 3 Tris]]></attribute>
-							<attribute name="Hypertext" attributetype="Hypertext" />
-							<attribute name="Longtext" attributetype="Longtext" />
-							<attribute name="Monotext" attributetype="Monotext" />
-							<attribute name="Number" attributetype="Number">
-								<validations>
-									<rangestart>25</rangestart>
-									<rangeend attribute="Number" />
-								</validations>
-							</attribute>
-							<attribute name="Text" attributetype="Text" />
-						</attributes>
-					</attribute>
-				</nestedtype>
-			</list>
-			<list name="MonoLCom2" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLCom2" attributetype="Composite">
-						<attributes>
-							<attribute name="Boolean" attributetype="Boolean" />
-							<attribute name="CheckBox" attributetype="CheckBox" />
-							<attribute name="ThreeState" attributetype="ThreeState" />
-						</attributes>
-					</attribute>
-				</nestedtype>
-			</list>
-			<list name="MonoLDate" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLDate" attributetype="Date" />
-				</nestedtype>
-			</list>
-			<list name="MonoLEnum" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLEnum" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
-				</nestedtype>
-			</list>
-			<list name="MonoLHyper" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLHyper" attributetype="Hypertext" />
-				</nestedtype>
-			</list>
-			<list name="MonoLLong" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLLong" attributetype="Longtext" />
-				</nestedtype>
-			</list>
-			<list name="MonoLMonot" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLMonot" attributetype="Monotext" />
-				</nestedtype>
-			</list>
-			<list name="MonoLNumb" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLNumb" attributetype="Number" />
-				</nestedtype>
-			</list>
-			<list name="MonoLText" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoLText" attributetype="Text" />
-				</nestedtype>
-			</list>
-			<list name="MonoL3stat" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="MonoL3stat" attributetype="ThreeState" />
-				</nestedtype>
-			</list>
-			<attribute name="EnumeratorMapBis" attributetype="EnumeratorMap" separator=";"><![CDATA[01=Value 1 Bis;02=Value 2 Bis;03=Value 3 Bis]]></attribute>
-			<attribute name="MARKER" attributetype="Monotext">
-				<validations>
-					<required>true</required>
-				</validations>
-			</attribute>
-		</attributes>
-	</datatype>
-	<datatype typecode="ART" typedescr="Articolo rassegna stampa" viewpage="dataObjectview" listmodel="11" defaultmodel="1">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" indexingtype="TEXT">
-				<validations>
-					<required>true</required>
-				</validations>
-				<roles>
-					<role>dataObject:title</role>
-				</roles>
-			</attribute>
-			<list name="Autori" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="Autori" attributetype="Monotext" />
-				</nestedtype>
-			</list>
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="Data" attributetype="Date" searchable="true" />
-			<attribute name="Numero" attributetype="Number" searchable="true" />
-		</attributes>
-	</datatype>
-	<datatype typecode="EVN" typedescr="Evento" viewpage="dataObjectview" listmodel="51" defaultmodel="5">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" searchable="true" indexingtype="TEXT">
-				<validations />
-				<roles>
-					<role>dataObject:title</role>
-				</roles>
-			</attribute>
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="DataInizio" attributetype="Date" searchable="true" />
-			<attribute name="DataFine" attributetype="Date" searchable="true" />
-		</attributes>
-	</datatype>
-	<datatype typecode="RAH" typedescr="Tipo_Semplice" viewpage="dataObjectview" listmodel="126" defaultmodel="457">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" indexingtype="text">
-				<validations>
-					<minlength>10</minlength>
-					<maxlength>100</maxlength>
-				</validations>
-			</attribute>
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="email" attributetype="Monotext">
-				<validations>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="Numero" attributetype="Number" />
-			<attribute name="Checkbox" attributetype="CheckBox" />
-		</attributes>
-	</datatype>
-</datatypes>
-');
-INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'dataobjectsubdir', 'Name of the sub-directory containing dataobject indexing files', 'index');
+
 
 
 INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 200);

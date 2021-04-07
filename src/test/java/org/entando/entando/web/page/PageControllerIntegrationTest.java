@@ -395,7 +395,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .param("pageSize", "50")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(12)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(11)));
     }
 
     @Test
