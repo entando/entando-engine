@@ -96,20 +96,17 @@ public class FileBrowserService implements IFileBrowserService {
             String[] sections = currentPath.split("/");
             InputStream stream = this.getStorageManager().getStream(currentPath, protectedFolder);
             tempFile = FileTextReader.createTempFile(new SecureRandom().nextInt(100) + sections[sections.length - 1], stream);
-            bytes = FileTextReader.fileToByteArray(tempDir, tempFile);
+            bytes = FileTextReader.fileToByteArray(tempFile, tempDir);
         } catch (Throwable t) {
             logger.error("error extracting stream for path {} - type {}", currentPath, protectedFolder);
             throw new RestServerError("error extracting stream", t);
         } finally {
             try {
-                if (null != tempFile && FileUtils.directoryContains(tempDir, tempFile)) {
-                    boolean deleted = tempFile.delete();
-                    if (!deleted) {
-                        logger.warn("Failed to delete temp file {}", tempFile.getAbsolutePath());
-                    }
+                if (null != tempFile && FileUtils.directoryContains(tempDir, tempFile)) { // security check
+                    FileUtils.forceDelete(tempFile); // NOSONAR
                 }
             } catch (IOException ex) {
-                logger.error("Error checking temp file", ex);
+                logger.error("Error deleting temp file", ex);
             }
         }
         return bytes;

@@ -24,7 +24,9 @@ import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.services.database.model.ComponentDto;
 import org.entando.entando.aps.system.services.database.model.DumpReportDto;
 import org.entando.entando.aps.system.services.database.model.ShortDumpReportDto;
+
 import static org.entando.entando.aps.system.services.storage.StorageManagerUtil.mustBeValidFilename;
+
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.database.validator.DatabaseValidator;
@@ -149,7 +151,6 @@ public class DatabaseService implements IDatabaseService {
         try {
             InputStream stream = this.getDatabaseManager().getTableDump(tableName, dataSource, reportCode);
             String safeReportCode = mustBeValidFilename(reportCode);
-
             if (null == stream) {
                 logger.warn("no dump found with code {}, dataSource {}, table {}",
                         reportCode, dataSource, tableName);
@@ -159,7 +160,8 @@ public class DatabaseService implements IDatabaseService {
                         "'" + safeReportCode + "' - '" + dataSource + "' - '" + tableName + "'");
             }
             tempFile = FileTextReader.createTempFile(new SecureRandom().nextInt(100) + safeReportCode + "_" + dataSource + "_" + tableName, stream);
-            bytes = FileTextReader.fileToByteArray(tempFile);
+            File tempDir = new File(FileTextReader.getTempDirectory());
+            bytes = FileTextReader.fileToByteArray(tempFile, tempDir);
         } catch (ResourceNotFoundException r) {
             throw r;
         } catch (Throwable t) {
