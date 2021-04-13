@@ -137,7 +137,7 @@ public class FileTextReader {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             if (FileUtils.directoryContains(parentDirectory, file)) {
-                fis = FileUtils.openInputStream(file);
+                fis = FileUtils.openInputStream(file); // NOSONAR (parent directory already verified)
                 byte[] buf = new byte[1024];
                 for (int readNum; (readNum = fis.read(buf)) != -1;) {
                     bos.write(buf, 0, readNum);
