@@ -131,40 +131,24 @@ public class FileTextReader {
         }
         return new File(tempFilePath);
     }
-
-    public static byte[] fileToByteArray(File parentDirectory, File file) throws IOException {
-        return fileToByteArray(file, FileUtils.directoryContains(parentDirectory, file));
-    }
-
-    /**
-     * Return the byte array of the given file.
-     * @param file The file to analyze
-     * @return The byte array of the file
-     * @throws IOException in case of exception
-     * @deprecated use fileToByteArray(File parentDirectory, File file)
-     */
-    @Deprecated
-    public static byte[] fileToByteArray(File file) throws IOException {
-        return fileToByteArray(file, true);
-    }
     
-    private static byte[] fileToByteArray(File file, boolean checkParent) throws IOException {
+    public static byte[] fileToByteArray(File file, File parentDirectory) throws IOException {
         FileInputStream fis = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        if (checkParent) {
-            try {
-                fis = new FileInputStream(file);
+        try {
+            if (FileUtils.directoryContains(parentDirectory, file)) {
+                fis = FileUtils.openInputStream(file); // NOSONAR (parent directory already verified)
                 byte[] buf = new byte[1024];
                 for (int readNum; (readNum = fis.read(buf)) != -1;) {
                     bos.write(buf, 0, readNum);
                 }
-            } catch (IOException ex) {
-                logger.error("Error creating byte array", ex);
-                throw ex;
-            } finally {
-                if (null != fis) {
-                    fis.close();
-                }
+            }
+        } catch (IOException ex) {
+            logger.error("Error creating byte array", ex);
+            throw ex;
+        } finally {
+            if (null != fis) {
+                fis.close();
             }
         }
         return bos.toByteArray();
