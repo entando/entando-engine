@@ -19,8 +19,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.runtime.RuntimeServices;
-import org.apache.velocity.runtime.log.LogChute;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -31,18 +29,17 @@ import org.entando.entando.ent.exception.EntException;
  * Entities rendering service.
  * @author M.Diana - W.Ambu - E.Santoboni
  */
-public class DefaultVelocityRenderer extends AbstractService implements LogChute, IVelocityRenderer {
+public class DefaultVelocityRenderer extends AbstractService implements IVelocityRenderer {
 
 	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(DefaultVelocityRenderer.class);
 	
 	@Override
 	public void init() throws Exception {
 		try {
-			Velocity.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM, this);
+			//Velocity.setProperty(VelocityEngine.RUNTIME_LOG_INSTANCE, this);
 			Velocity.init();
 		} catch (Throwable t) {
 			_logger.error("Error initializing the VelocityEngine", t);
-			//ApsSystemUtils.logThrowable(t, this, "init");
 			throw new EntException("Error initializing the VelocityEngine", t);
 		}
 		_logger.debug("{} ready.", this.getName());
@@ -68,7 +65,7 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 		}
 		return renderedObject;
 	}
-	
+	/*
 	@Override
 	public void init(RuntimeServices rs) {
 		//non fa nulla
@@ -111,7 +108,7 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 			_logger.error(message, t);
 		}
 	}
-	
+	*/
 	protected String getWrapperContextName() {
 		if (null == this._wrapperContextName) {
 			return DEFAULT_WRAPPER_CTX_NAME;
