@@ -17,7 +17,6 @@ import java.io.StringWriter;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -35,13 +34,7 @@ public class DefaultVelocityRenderer extends AbstractService implements IVelocit
 	
 	@Override
 	public void init() throws Exception {
-		try {
-			//Velocity.setProperty(VelocityEngine.RUNTIME_LOG_INSTANCE, this);
-			Velocity.init();
-		} catch (Throwable t) {
-			_logger.error("Error initializing the VelocityEngine", t);
-			throw new EntException("Error initializing the VelocityEngine", t);
-		}
+        Velocity.init();
 		_logger.debug("{} ready.", this.getName());
 	}
 	
@@ -60,55 +53,11 @@ public class DefaultVelocityRenderer extends AbstractService implements IVelocit
 			renderedObject = stringWriter.toString();
 		} catch (Throwable t) {
 			_logger.error("Rendering error, class: {} - template: {}", object.getClass().getSimpleName(), velocityTemplate, t);
-			//ApsSystemUtils.logThrowable(t, this, "render", "Rendering error");
 			renderedObject = "";
 		}
 		return renderedObject;
 	}
-	/*
-	@Override
-	public void init(RuntimeServices rs) {
-		//non fa nulla
-	}
-	
-	@Override
-	public boolean isLevelEnabled(int level) {
-		return true;
-	}
-	
-	@Override
-	public void log(int level, String message) {
-		this.log(level, message, null);
-	}
-	
-	@Override
-	public void log(int level, String message, Throwable t) {
-		if (t == null) {
-			switch (level) {
-				case TRACE_ID:
-					_logger.trace(message);
-					break;
-				case DEBUG_ID:
-					_logger.debug(message);
-					break;
-				case INFO_ID:
-					_logger.info(message);
-					break;
-				case WARN_ID:
-					_logger.warn(message, t);
-					break;
-				case ERROR_ID:
-					_logger.error(message, t);
-					break;
-				default:
-					_logger.info(message);
-					break;
-			}
-		} else {
-			_logger.error(message, t);
-		}
-	}
-	*/
+    
 	protected String getWrapperContextName() {
 		if (null == this._wrapperContextName) {
 			return DEFAULT_WRAPPER_CTX_NAME;
