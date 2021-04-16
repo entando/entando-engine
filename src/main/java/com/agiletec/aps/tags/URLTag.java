@@ -58,6 +58,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 			if (_langCode != null) {
 				_pageUrl.setLangCode(_langCode);
 			}
+            this._pageUrl.setEscapeAmp(this.isEscape());
 			if (this.isParamRepeat()) {
 				List<String> exclusion = this.getParametersToExclude();
 				_pageUrl.setParamRepeat(exclusion);
@@ -95,9 +96,9 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	public void addParameter(String name, String value) {
 		this._pageUrl.addParam(name, value);
 	}
-
+    
 	protected List<String> getParametersToExclude() {
-		List<String> parameters = new ArrayList<String>();
+		List<String> parameters = new ArrayList<>();
 		String csv = this.getExcludeParameters();
 		if (null != csv && csv.trim().length() > 0) {
 			CollectionUtils.addAll(parameters, csv.split(","));
@@ -112,6 +113,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this._pageCode = null;
 		this._varName = null;
 		this._paramRepeat = false;
+		this.escape = true;
 		this._pageUrl = null;
 		this._excludeParameters = null;
 		this.baseUrlMode = null;
@@ -181,6 +183,14 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this._paramRepeat = paramRepeat;
 	}
 
+    public boolean isEscape() {
+        return escape;
+    }
+    
+    public void setEscape(boolean escape) {
+        this.escape = escape;
+    }
+    
 	/**
 	 * Gets list of parameter names (comma separated) to exclude from repeating.
 	 * By default, this attribute excludes only the password parameter of the login form.
@@ -211,6 +221,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	private String _pageCode;
 	private String _varName;
 	private boolean _paramRepeat;
+	private boolean escape = true;
 	private PageURL _pageUrl;
 	private String _excludeParameters;
 	private String baseUrlMode;
