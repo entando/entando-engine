@@ -184,7 +184,7 @@ public class RestListRequest {
         return null;
     }
     
-    private String escapeSql(String str) {
+    protected String escapeSql(String str) {
         if (str == null) {
             return null;
         }

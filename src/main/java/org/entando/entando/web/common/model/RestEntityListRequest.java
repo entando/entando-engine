@@ -18,7 +18,6 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import static org.entando.entando.web.common.model.RestListRequest.DIRECTION_VALUE_DEFAULT;
 
@@ -54,13 +53,6 @@ public class RestEntityListRequest extends RestListRequest {
             return sort;
         }
         return null;
-    }
-    
-    private String escapeSql(String str) {
-        if (str == null) {
-            return null;
-        }
-        return StringUtils.replace(str, "'", "''");
     }
 
 }
