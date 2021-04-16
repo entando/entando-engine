@@ -17,7 +17,7 @@ import static org.entando.entando.aps.system.services.userpreferences.UserPrefer
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.userpreferences.UserPreferences;
 
 public class UserPreferencesDto {

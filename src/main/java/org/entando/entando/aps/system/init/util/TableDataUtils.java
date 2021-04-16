@@ -30,8 +30,8 @@ import java.sql.Types;
 import java.util.Date;
 
 import javax.sql.DataSource;
-
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -156,13 +156,12 @@ public class TableDataUtils {
                         newRecord.append("NULL");
                     } else {
                         String outputValue = value.toString();
-                        outputValue = StringEscapeUtils.escapeSql(outputValue);
+                        outputValue = StringUtils.replace(outputValue, "'", "''");
                         if (isDataNeedsQuotes(types[i])) {
                             newRecord.append("'").append(outputValue).append("'");
                         } else {
                             newRecord.append(outputValue);
                         }
-
                     }
                     newRecord.append(",");
                 }
