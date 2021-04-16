@@ -34,6 +34,9 @@ public class DefaultVelocityRenderer extends AbstractService implements IVelocit
 	
 	@Override
 	public void init() throws Exception {
+        Velocity.setProperty("runtime.conversion.handler.class", "none");
+        Velocity.setProperty("space.gobbling", "bc");
+        Velocity.setProperty("directive.if.emptycheck", "false");
         Velocity.init();
 		_logger.debug("{} ready.", this.getName());
 	}
