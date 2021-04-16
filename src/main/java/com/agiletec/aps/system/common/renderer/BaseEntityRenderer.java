@@ -17,7 +17,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
@@ -33,6 +32,7 @@ import com.agiletec.aps.system.services.i18n.I18nManagerWrapper;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Entities rendering service.
@@ -95,7 +95,7 @@ public abstract class BaseEntityRenderer extends DefaultVelocityRenderer impleme
 					}
 					if (null != textToConvert && textToConvert.trim().length() > 0) {
 						conversions.add(new TextAttributeCharReplaceInfo(renderizable, textToConvert, attributeLangCode));
-						String convertedText = StringEscapeUtils.escapeHtml(textToConvert);
+						String convertedText = StringEscapeUtils.escapeHtml4(textToConvert);
 						renderizable.setText(convertedText, attributeLangCode);
 					}
 				}
