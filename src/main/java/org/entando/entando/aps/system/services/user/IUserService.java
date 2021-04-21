@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
+import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -30,31 +31,20 @@ import org.entando.entando.web.user.model.UserRequest;
  */
 public interface IUserService {
 
-    public final static String BEAN_NAME = "UserService";
+    String BEAN_NAME = "UserService";
+    String STATUS_ACTIVE = "active";
+    String STATUS_DISABLED = "inactive";
 
-    public final static String STATUS_ACTIVE = "active";
-
-    public final static String STATUS_DISABLED = "inactive";
-
-    public List<UserAuthorityDto> getUserAuthorities(String username);
-
-    public List<UserAuthorityDto> addUserAuthorities(String username, UserAuthoritiesRequest request);
-
-    public List<UserAuthorityDto> updateUserAuthorities(String username, UserAuthoritiesRequest request);
-
-    public void deleteUserAuthorities(String username);
-
-    public PagedMetadata<UserDto> getUsers(RestListRequest requestList, String withProfile);
-
-    public UserDto getUser(String username);
-
-    public UserDto updateUser(UserRequest userRequest);
-
-    public UserDto addUser(UserRequest userRequest);
-
-    public void removeUser(String username);
-
-    public UserDto updateUserPassword(UserPasswordRequest passwordRequest);
+    List<UserAuthorityDto> getUserAuthorities(String username);
+    List<UserAuthorityDto> addUserAuthorities(String username, UserAuthoritiesRequest request);
+    List<UserAuthorityDto> updateUserAuthorities(String username, UserAuthoritiesRequest request);
+    void deleteUserAuthorities(String username);
+    PagedMetadata<UserDto> getUsers(RestListRequest requestList, String withProfile);
+    UserDto getUser(String username);
+    UserDto updateUser(UserRequest userRequest);
+    UserDto addUser(UserRequest userRequest);
+    void removeUser(String username);
+    UserDto updateUserPassword(UserPasswordRequest passwordRequest);
 
     /**
      * gets and returns informations about received user group and received user permissions
@@ -63,4 +53,13 @@ public interface IUserService {
      * @return informations about received user group and received user permissions
      */
     List<UserGroupPermissions> getMyGroupPermissions(UserDetails user);
+
+    /**
+     * Method to get all the groups that the user has at least a permission on it, plus the free group.
+     *
+     * @param user the user that will be used to retrieve the groups
+     *
+     * @return all the groups that the user has at least a permission on it, plus the free group
+     */
+    List<GroupDto> getMyGroups(UserDetails user);
 }
