@@ -679,7 +679,7 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[Escape '&' in query string. Default value true]]></description>
-			<name>escape</name>
+			<name>escapeAmp</name>
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
