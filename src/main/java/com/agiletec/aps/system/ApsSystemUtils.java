@@ -20,7 +20,6 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
  * Utility class for system logger
  *
  * @author E.Santoboni
- * @deprecated 
  */
 public class ApsSystemUtils {
 
@@ -28,6 +27,10 @@ public class ApsSystemUtils {
 
     private static final boolean ENABLE_DIRECT_STDOUT_TRACE =
             ("" + System.getProperty("org.entando.enableDirectStdoutTrace")).equals("true");
+    
+    private ApsSystemUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static org.slf4j.Logger getLogger() {
         return logger;

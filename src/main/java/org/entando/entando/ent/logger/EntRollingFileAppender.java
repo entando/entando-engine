@@ -21,22 +21,22 @@ import java.util.List;
 /**
  * @author E.Santoboni
  */
-public class RollingFileAppender<E> extends ch.qos.logback.core.rolling.RollingFileAppender<E>{
+public class EntRollingFileAppender<E> extends ch.qos.logback.core.rolling.RollingFileAppender<E>{
 
     @Override
-    public void openFile(String file_name) throws IOException {
+    public void openFile(String fileName) throws IOException {
         List<Filter<E>> filters = super.getCopyOfAttachedFiltersList();
         for (int i = 0; i < filters.size(); i++) {
             Filter<E> filter = filters.get(i);
-            if (filter instanceof ThresholdFilter) {
-                String level = ((ThresholdFilter) filter).getLevel();
+            if (filter instanceof EntThresholdFilter) {
+                String level = ((EntThresholdFilter) filter).getLevel();
                 if (level.equalsIgnoreCase(Level.OFF.toString())) {
                     this.addInfo("Log Level OFF - disabled file creation");
                     return;
                 }
             }
         }
-        super.openFile(file_name);
+        super.openFile(fileName);
     }
     
 }

@@ -16,7 +16,7 @@ package org.entando.entando.ent.logger;
 /**
  * @author E.Santoboni
  */
-public class ThresholdFilter extends ch.qos.logback.classic.filter.ThresholdFilter {
+public class EntThresholdFilter extends ch.qos.logback.classic.filter.ThresholdFilter {
     
     private String levelString;
 
