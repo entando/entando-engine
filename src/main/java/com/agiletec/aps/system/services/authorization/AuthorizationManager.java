@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -290,6 +290,11 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 
     @Override
     public boolean isAuth(UserDetails user, IPage page) {
+        return isAuth(user, page, true);
+    }
+
+    @Override
+    public boolean isAuth(UserDetails user, IPage page, boolean allowFreeGroup) {
         if (null == user) {
             return false;
         }
@@ -297,7 +302,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             return true;
         }
         String pageGroup = page.getGroup();
-        if (Group.FREE_GROUP_NAME.equals(pageGroup)) {
+        if (allowFreeGroup && Group.FREE_GROUP_NAME.equals(pageGroup)) {
             return true;
         }
         boolean isAuthorized = this.isAuthOnGroup(user, pageGroup);

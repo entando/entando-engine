@@ -920,6 +920,27 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
         }
     }
 
+    @Test
+    void testGetMyGroups() throws Exception {
+        UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
+                .withAuthorization("coach", "editor", Permission.BACKOFFICE)
+                .build();
+        mockMvc
+                .perform(get("/users/myGroups", new Object[]{"editorCoach"})
+                        .header("Authorization", "Bearer " + mockOAuthInterceptor(loggedUser)))
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", Matchers.is(2)));
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        mockMvc
+                .perform(get("/users/myGroups", new Object[]{"editorCoach"})
+                        .header("Authorization", "Bearer " + mockOAuthInterceptor(user)))
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", Matchers.is(6)));
+    }
+
     private ResultActions executeUserPost(String body, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/users")

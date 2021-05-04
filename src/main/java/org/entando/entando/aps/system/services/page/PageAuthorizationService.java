@@ -60,27 +60,41 @@ public class PageAuthorizationService extends AbstractAuthorizationService<PageD
     
     @Override
     public boolean isAuth(UserDetails user, PageDto pageDto) {
-        return this.isAuth(user, pageDto.getCode());
+        return this.isAuth(user, pageDto, true);
+    }
+
+    @Override
+    public boolean isAuth(UserDetails user, PageDto pageDto, boolean allowFreeGroup) {
+        return this.isAuth(user, pageDto.getCode(), allowFreeGroup);
     }
     
     @Override
     public boolean isAuth(UserDetails user, String pageCode) {
+        return this.isAuth(user, pageCode, true);
+    }
+
+    @Override
+    public boolean isAuth(UserDetails user, String pageCode, boolean allowFreeGroup) {
         IPage page = this.getPageManager().getDraftPage(pageCode);
         if (page == null) {
             throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
         }
-        return this.isAuth(user, page);
+        return this.isAuth(user, page, allowFreeGroup);
     }
-    
+
     public boolean isAuth(UserDetails user, IPage page) {
-        return this.getAuthorizationManager().isAuth(user, page);
+        return isAuth(user, page, true);
+    }
+
+    public boolean isAuth(UserDetails user, IPage page, boolean allowFreeGroup) {
+        return this.getAuthorizationManager().isAuth(user, page, allowFreeGroup);
     }
     
     @Override
     public List<PageDto> filterList(UserDetails user, List<PageDto> toBeFiltered) {
         List<PageDto> res = new ArrayList<>();
         Optional.ofNullable(toBeFiltered).ifPresent(elements -> res.addAll(elements.stream()
-                .filter(elem -> this.isAuth(user, elem)).collect(Collectors.toList())));
+                .filter(elem -> this.isAuth(user, elem, false)).collect(Collectors.toList())));
         return res;
     }
     

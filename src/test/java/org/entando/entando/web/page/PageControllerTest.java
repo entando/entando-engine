@@ -186,7 +186,7 @@ class PageControllerTest extends AbstractControllerTest {
         doReturn(mockResult).when(pageService).getPages(any(String.class), isNull(), isNull());
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
         Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class), any(Boolean.class));
 
         ResultActions result = mockMvc.perform(
                 get("/pages").
@@ -220,7 +220,7 @@ class PageControllerTest extends AbstractControllerTest {
 
         doCallRealMethod().when(authorizationService).filterList(any(UserDetails.class), eq(mockResult));
         Mockito.lenient().doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(String.class));
-        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class));
+        doReturn(true).when(authorizationService).isAuth(any(UserDetails.class), any(PageDto.class), any(Boolean.class));
 
         ResultActions result = mockMvc.perform(
                 get("/pages").

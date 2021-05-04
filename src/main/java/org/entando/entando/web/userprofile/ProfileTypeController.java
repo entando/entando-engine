@@ -22,6 +22,9 @@ import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeFullDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
+import org.entando.entando.aps.system.services.user.IUserService;
+import org.entando.entando.aps.system.services.user.model.ProfileTypeDto;
+import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileTypeDto;
@@ -63,6 +66,9 @@ public class ProfileTypeController {
     @Autowired
     private ProfileTypeValidator profileTypeValidator;
 
+    @Autowired
+    private IUserService userService;
+
     protected IUserProfileTypeService getUserProfileTypeService() {
         return userProfileTypeService;
     }
@@ -93,21 +99,15 @@ public class ProfileTypeController {
     @GetMapping(value = "/myProfileType", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) {
         logger.debug("Requested profile type for the logged user-> {}", user.getUsername());
-        String profileTypeCode;
-        if (user.getProfile() != null) {
-            IUserProfile userProfile = (IUserProfile) user.getProfile();
-            profileTypeCode = userProfile.getTypeCode();
-            logger.debug("Requested profile profileTypeCode -> {}", profileTypeCode);
-            if (!this.getProfileTypeValidator().existType(profileTypeCode)) {
-                throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, OBJECT_NAME_PROFILE_TYPE, profileTypeCode);
-            }
-        }
-        else {
+        UserDto userDto = userService.getUser(user.getUsername());
+        if (userDto != null && userDto.getProfileType() != null && userDto.getProfileType().getTypeCode() != null) {
+            UserProfileTypeDto dto = this.getUserProfileTypeService()
+                    .getUserProfileType(userDto.getProfileType().getTypeCode());
+            logger.debug("Main Response -> {}", dto);
+            return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
+        } else {
             throw new ResourceNotFoundException(AbstractEntityTypeValidator.ERRCODE_ENTITY_TYPE_DOES_NOT_EXIST, OBJECT_NAME_PROFILE_TYPE, "");
         }
-        UserProfileTypeDto dto = this.getUserProfileTypeService().getUserProfileType(profileTypeCode);
-        logger.debug("Main Response -> {}", dto);
-        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = {Permission.MANAGE_USER_PROFILES})

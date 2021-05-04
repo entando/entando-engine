@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -94,27 +95,31 @@ public class FileTextReader {
         }
         return sb.toString();
     }
-
+    
+    public static String getTempDirectory() {
+        return System.getProperty("java.io.tmpdir");
+    }
+    
     public static File createTempFile(String filename, InputStream is) throws IOException {
-        String javaTempDirRoot = System.getProperty("java.io.tmpdir");
-        String tempFilePath = javaTempDirRoot + File.separator + filename;
+        String tempDirectory = getTempDirectory();
+        String tempFilePath = tempDirectory + File.separator + filename;
         FileOutputStream outStream = null;
         try {
             byte[] buffer = new byte[1024];
             int length = -1;
-            if (StorageManagerUtil.doesPathContainsPath(javaTempDirRoot, tempFilePath)) {
-                outStream = new FileOutputStream(tempFilePath);
+            if (StorageManagerUtil.doesPathContainsPath(tempDirectory, tempFilePath)) {
+                outStream = new FileOutputStream(tempFilePath); // NOSONAR (parent directory already verified)
                 while ((length = is.read(buffer)) != -1) {
                     outStream.write(buffer, 0, length);
                     outStream.flush();
                 }
             } else {
                 throw new EntRuntimeException(
-                        String.format("Path validation failed: \"%s\" not in \"%s\"", tempFilePath, javaTempDirRoot)
+                        String.format("Path validation failed: \"%s\" not in \"%s\"", tempFilePath, tempDirectory)
                 );
             }
         } catch (IOException t) {
-            logger.error("Error on saving temporary file", t);
+            logger.error("Error on saving file", t);
             throw t;
         } finally {
             if (null != outStream) {
@@ -126,15 +131,17 @@ public class FileTextReader {
         }
         return new File(tempFilePath);
     }
-
-    public static byte[] fileToByteArray(File file) throws IOException {
+    
+    public static byte[] fileToByteArray(File file, File parentDirectory) throws IOException {
         FileInputStream fis = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            fis = new FileInputStream(file);
-            byte[] buf = new byte[1024];
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
+            if (FileUtils.directoryContains(parentDirectory, file)) {
+                fis = FileUtils.openInputStream(file); // NOSONAR (parent directory already verified)
+                byte[] buf = new byte[1024];
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum);
+                }
             }
         } catch (IOException ex) {
             logger.error("Error creating byte array", ex);

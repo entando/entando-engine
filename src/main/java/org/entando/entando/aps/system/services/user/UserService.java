@@ -16,6 +16,9 @@ package org.entando.entando.aps.system.services.user;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import com.agiletec.aps.system.services.group.Group;
+import org.entando.entando.aps.system.services.group.IGroupService;
+import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -71,6 +74,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private IRoleService roleService;
+
+    @Autowired
+    private IGroupService groupService;
 
     public IUserManager getUserManager() {
         return userManager;
@@ -317,6 +323,37 @@ public class UserService implements IUserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<GroupDto> getMyGroups(UserDetails user) {
+        List<GroupDto> result = new ArrayList<>();
+        List<GroupDto> allGroups = groupService.getGroups(new RestListRequest()).getBody();
+
+        if (isAdmin(user)) {
+            result = allGroups;
+        } else {
+            for (String allowedGroupCode : getAllowedGroupCodes(user)) {
+                for (GroupDto group : allGroups) {
+                    if (allowedGroupCode.equals(group.getCode())) {
+                        result.add(group);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<String> getAllowedGroupCodes(UserDetails user) {
+        List<UserGroupPermissions> userPermissions = getMyGroupPermissions(user);
+        userPermissions.add(new UserGroupPermissions(Group.FREE_GROUP_NAME, null));
+        return userPermissions.stream().map(p -> p.getGroup()).filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private boolean isAdmin(UserDetails user) {
+        return authorizationManager.isAuthOnGroup(user, Group.ADMINS_GROUP_NAME);
+    }
 
 
     private UserDetails loadUser(String username) {

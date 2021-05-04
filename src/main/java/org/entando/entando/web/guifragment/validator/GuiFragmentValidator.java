@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.guifragment.validator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;

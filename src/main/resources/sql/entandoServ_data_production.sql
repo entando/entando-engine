@@ -12,12 +12,15 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('editContents', 'Con
 INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Management');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('manageReview', 'Review Management');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('enterECR', 'ECR Access Permission');
 
 
 
 INSERT INTO authroles (rolename, descr) VALUES ('admin', 'Administrator');
 INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Editor');
 INSERT INTO authroles (rolename, descr) VALUES ('approver', 'Approver');
+INSERT INTO authroles (rolename, descr) VALUES ('reviewer', 'Reviewer');
 
 
 
@@ -34,6 +37,9 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', '
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'manageResources');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'manageCategories');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('approver', 'validateContents');
+
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('reviewer', 'enterBackend');
+INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('reviewer', 'manageReview');
 
 
 
