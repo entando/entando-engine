@@ -1,4 +1,5 @@
 buildPack: entando-maven-lib
+buildPackGitURL: https://github.com/entando-k8s/jenkins-x-kubernetes.git
 pipelineConfig:
   env:
     - name: PIPELINE_CODE
