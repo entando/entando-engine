@@ -13,22 +13,6 @@
  */
 package org.entando.entando.web.filebrowser;
 
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
-import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
-import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
-import org.entando.entando.web.utils.OAuth2TestUtils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,7 +21,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
+import org.entando.entando.web.filebrowser.model.FileBrowserFileRequest;
+import org.entando.entando.web.utils.OAuth2TestUtils;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 class FileBrowserControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -409,82 +407,6 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
         }
     }
 
-    @Test
-    void testDeleteFileWithSpace() throws Exception {
-        String folderName = "test_folder_6";
-        boolean protectedFolder = true;
-        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
-        this.storageManager.createDirectory(folderName, protectedFolder);
-        try {
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-            String accessToken = mockOAuthInterceptor(user);
-
-            String body = this.createBody("test Delete.txt", folderName + File.separator + "test Delete.txt",
-                    protectedFolder, "test test");
-            this.executeFilePost(body, accessToken, status().isOk());
-            Assertions.assertTrue(
-                    this.storageManager.exists(folderName + File.separator + "test Delete.txt", protectedFolder));
-            String text = this.storageManager.readFile(folderName + File.separator + "test Delete.txt",
-                    protectedFolder);
-            Assertions.assertEquals("test test", text);
-
-            ResultActions result = mockMvc
-                    .perform(delete("/fileBrowser/file")
-                            .param("currentPath", folderName + File.separator + "test Delete.txt")
-                            .param("protectedFolder", "true")
-                            .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
-            result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
-            result.andExpect(jsonPath("$.payload.filename", Matchers.is("test Delete.txt")));
-            result.andExpect(jsonPath("$.payload.path", Matchers.is(folderName + File.separator + "test Delete.txt")));
-            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
-            result.andExpect(jsonPath("$.metaData.size()", is(1)));
-            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            this.storageManager.deleteDirectory(folderName, protectedFolder);
-        }
-    }
-
-    @Test
-    void testDeleteFileWithSpaceEncoded() throws Exception {
-        String folderName = "test_folder_7";
-        boolean protectedFolder = true;
-        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
-        this.storageManager.createDirectory(folderName, protectedFolder);
-        try {
-            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-            String accessToken = mockOAuthInterceptor(user);
-
-            String body = this.createBody("test%20Delete.txt", folderName + File.separator + "test%20Delete.txt",
-                    protectedFolder, "test test");
-            this.executeFilePost(body, accessToken, status().isOk());
-            Assertions.assertTrue(
-                    this.storageManager.exists(folderName + File.separator + "test%20Delete.txt", protectedFolder));
-            String text = this.storageManager.readFile(folderName + File.separator + "test%20Delete.txt",
-                    protectedFolder);
-            Assertions.assertEquals("test test", text);
-
-            ResultActions result = mockMvc
-                    .perform(delete("/fileBrowser/file")
-                            .param("currentPath", folderName + File.separator + "test%20Delete.txt")
-                            .param("protectedFolder", "true")
-                            .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isOk());
-            result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
-            result.andExpect(jsonPath("$.payload.filename", Matchers.is("test Delete.txt")));
-            result.andExpect(jsonPath("$.payload.path", Matchers.is(folderName + File.separator + "test Delete.txt")));
-            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
-            result.andExpect(jsonPath("$.metaData.size()", is(1)));
-            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            this.storageManager.deleteDirectory(folderName, protectedFolder);
-        }
-    }
-
     private String createBody(String filename, String path, boolean isProtected, String content) throws Exception {
         FileBrowserFileRequest request = new FileBrowserFileRequest();
         request.setFilename(filename);
@@ -576,6 +498,81 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
         );
     }
 
+    @Test
+    void testDeleteFileWithSpace() throws Exception {
+        String folderName = "test_folder_6";
+        boolean protectedFolder = true;
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        this.storageManager.createDirectory(folderName, protectedFolder);
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String body = this.createBody("test Delete.txt", folderName + "/test Delete.txt",
+                    protectedFolder, "test test");
+            this.executeFilePost(body, accessToken, status().isOk());
+            Assertions.assertTrue(
+                    this.storageManager.exists(folderName + "/test Delete.txt", protectedFolder));
+            String text = this.storageManager.readFile(folderName + "/test Delete.txt",
+                    protectedFolder);
+            Assertions.assertEquals("test test", text);
+
+            ResultActions result = mockMvc
+                    .perform(delete("/fileBrowser/file")
+                            .param("currentPath", folderName + "/test Delete.txt")
+                            .param("protectedFolder", "true")
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
+            result.andExpect(jsonPath("$.payload.filename", Matchers.is("test Delete.txt")));
+            result.andExpect(jsonPath("$.payload.path", Matchers.is(folderName + "/test Delete.txt")));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(1)));
+            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.storageManager.deleteDirectory(folderName, protectedFolder);
+        }
+    }
+
+    @Test
+    void testDeleteFileWithParentheses() throws Exception {
+        String folderName = "test_folder_7";
+        boolean protectedFolder = true;
+        Assertions.assertFalse(this.storageManager.exists(folderName, protectedFolder));
+        this.storageManager.createDirectory(folderName, protectedFolder);
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+
+            String body = this.createBody("test (Delete).txt", folderName + "/test (Delete).txt",
+                    protectedFolder, "test test");
+            this.executeFilePost(body, accessToken, status().isOk());
+            Assertions.assertTrue(
+                    this.storageManager.exists(folderName + "/test (Delete).txt", protectedFolder));
+            String text = this.storageManager.readFile(folderName + "/test (Delete).txt",
+                    protectedFolder);
+            Assertions.assertEquals("test test", text);
+
+            ResultActions result = mockMvc
+                    .perform(delete("/fileBrowser/file")
+                            .param("currentPath", folderName + "/test (Delete).txt")
+                            .param("protectedFolder", "true")
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
+            result.andExpect(jsonPath("$.payload.filename", Matchers.is("test (Delete).txt")));
+            result.andExpect(jsonPath("$.payload.path", Matchers.is(folderName + "/test (Delete).txt")));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(1)));
+            result.andExpect(jsonPath("$.metaData.prevPath", is(folderName)));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.storageManager.deleteDirectory(folderName, protectedFolder);
+        }
+    }
 
     private ResultActions executeDirectoryPost(String body, String accessToken, ResultMatcher expected)
             throws Exception {

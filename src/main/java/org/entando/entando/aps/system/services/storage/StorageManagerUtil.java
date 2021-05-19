@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.storage;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 
@@ -39,9 +38,7 @@ public final class StorageManagerUtil {
 
     private static final String REGEXP_FILE_EXTENSION = "([\\w|\\-]+?$)";
     private static final String REGEXP_FILE_BASENAME = "\\A(?!(?:COM[0-9]|CON|LPT[0-9]|NUL|PRN|AUX|com[0-9]|con|lpt[0-9]|nul|prn|aux)|[\\s\\.])[^\\\\/:*\"?<>|]{1,254}\\z";
-    private static final String REGEXP_DIR_WINDOWS = "(^[\\w\\.\\-\\_\\\\ ]+?)";
-    private static final String REGEXP_DIR_UNIX = "(^[\\w\\.\\-\\_/ ]+?)";
-    private static final String REGEXP_DIR = SystemUtils.IS_OS_WINDOWS ? REGEXP_DIR_WINDOWS : REGEXP_DIR_UNIX;
+    private static final String REGEXP_DIR = "(^[\\w|\\.\\-/ ()]+)";
 
     public static String mustBeValidFilename(String fullname) {
         if (isValidFilename(fullname)) {

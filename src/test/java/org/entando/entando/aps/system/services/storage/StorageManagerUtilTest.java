@@ -85,7 +85,7 @@ class StorageManagerUtilTest {
         Assertions.assertTrue(StorageManagerUtil.isValidDirName("dirn ame.xht"));
         Assertions.assertTrue(StorageManagerUtil.isValidDirName("dir_name.ney"));
         Assertions.assertTrue(StorageManagerUtil.isValidDirName("dir name"));
-        Assertions.assertFalse(StorageManagerUtil.isValidDirName("dir_name (1)"));
+        Assertions.assertTrue(StorageManagerUtil.isValidDirName("dir_name (1)"));
         Assertions.assertFalse(StorageManagerUtil.isValidDirName("dir_?name"));
         Assertions.assertFalse(StorageManagerUtil.isValidDirName("dir_../name"));
         Assertions.assertFalse(StorageManagerUtil.isValidDirName("dir../name.subname"));

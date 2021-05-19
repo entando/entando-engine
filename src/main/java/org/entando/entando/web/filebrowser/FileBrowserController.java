@@ -14,13 +14,7 @@
 package org.entando.entando.web.filebrowser;
 
 import com.agiletec.aps.system.services.role.Permission;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.storage.IFileBrowserService;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.aps.system.services.storage.model.BasicFileAttributeViewDto;
@@ -57,8 +51,6 @@ public class FileBrowserController {
     public static final String PREV_PATH = "prevPath";
     public static final String CURRENT_PATH = "currentPath";
 
-    private static final String SEPARATOR = SystemUtils.IS_OS_WINDOWS ? "\\\\" : "/";
-
     @Autowired
     private IFileBrowserService fileBrowserService;
 
@@ -94,10 +86,10 @@ public class FileBrowserController {
         if (StringUtils.isEmpty(currentPath)) {
             return null;
         }
-        if (!currentPath.contains(File.separator)) {
+        if (!currentPath.contains("/")) {
             return "";
         } else {
-            return currentPath.substring(0, currentPath.lastIndexOf(File.separator));
+            return currentPath.substring(0, currentPath.lastIndexOf("/"));
         }
     }
 
@@ -107,7 +99,6 @@ public class FileBrowserController {
             @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
             @RequestParam(value = PROTECTED_FOLDER, required = false, defaultValue = "false") Boolean protectedFolder) {
         logger.debug("required file {} - protected {}", currentPath, protectedFolder);
-        currentPath = sanitizeCurrentPath(currentPath);
         byte[] base64 = this.getFileBrowserService().getFileStream(currentPath, protectedFolder);
         Map<String, Object> result = new HashMap<>();
         result.put(PROTECTED_FOLDER, protectedFolder);
@@ -117,15 +108,6 @@ public class FileBrowserController {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put(PREV_PATH, this.getPrevFolderName(currentPath));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);
-    }
-
-    private String sanitizeCurrentPath(String currentPath) {
-        try {
-            currentPath = URLDecoder.decode(currentPath, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new RestServerError("Error decoding currentPath: " + currentPath, e);
-        }
-        return currentPath;
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
@@ -172,7 +154,6 @@ public class FileBrowserController {
     @RequestMapping(value = "/file", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> deleteFile(@RequestParam String currentPath, @RequestParam Boolean protectedFolder) {
         logger.debug("delete file {} - protected {}", currentPath, protectedFolder);
-        currentPath = sanitizeCurrentPath(currentPath);
         String safeCurrentPath =  StorageManagerUtil.mustBeValidDirName(currentPath);
         this.getFileBrowserService().deleteFile(safeCurrentPath, protectedFolder);
         Map<String, Object> result = new HashMap<>();
@@ -227,7 +208,7 @@ public class FileBrowserController {
     }
 
     private String getFilename(String currentPath) {
-        String[] sections = currentPath.split(SEPARATOR);
+        String[] sections = currentPath.split("/");
         return sections[sections.length - 1];
     }
 

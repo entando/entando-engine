@@ -115,7 +115,7 @@ public class FileBrowserService implements IFileBrowserService {
     @Override
     public void addFile(FileBrowserFileRequest request, BindingResult bindingResult) {
         String path = request.getPath();
-        String parentFolder = path.substring(0, path.lastIndexOf(File.separator));
+        String parentFolder = path.substring(0, path.lastIndexOf("/"));
 
         try {
             this.createFolderIfNotExists(parentFolder, request.isProtectedFolder());
