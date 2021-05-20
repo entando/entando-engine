@@ -38,7 +38,7 @@ public final class StorageManagerUtil {
 
     private static final String REGEXP_FILE_EXTENSION = "([\\w|\\-]+?$)";
     private static final String REGEXP_FILE_BASENAME = "\\A(?!(?:COM[0-9]|CON|LPT[0-9]|NUL|PRN|AUX|com[0-9]|con|lpt[0-9]|nul|prn|aux)|[\\s\\.])[^\\\\/:*\"?<>|]{1,254}\\z";
-    private static final String REGEXP_DIR = "(^[\\w|\\.|\\-|\\_|/| ]+?)";
+    private static final String REGEXP_DIR = "(^[\\w|\\.\\-/ ()]+)";
 
     public static String mustBeValidFilename(String fullname) {
         if (isValidFilename(fullname)) {

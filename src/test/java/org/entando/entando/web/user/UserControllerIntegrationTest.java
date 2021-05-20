@@ -941,6 +941,33 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.payload.size()", Matchers.is(6)));
     }
 
+    @Test
+    void testGetMyGroupsPermissions() throws Exception {
+        UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
+                .withAuthorization("coach", Permission.ENTER_BACKEND)
+                .withAuthorization(Group.FREE_GROUP_NAME, Permission.MANAGE_PAGES)
+                .build();
+        mockMvc
+                .perform(get("/users/myGroupPermissions", new Object[]{"editorCoach"})
+                        .header("Authorization", "Bearer " + mockOAuthInterceptor(loggedUser)))
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", Matchers.is(2)))
+                .andExpect(jsonPath("$.payload[0].group", Matchers.is("coach")))
+                .andExpect(jsonPath("$.payload[1].group", Matchers.is("free")));
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        mockMvc
+                .perform(get("/users/myGroupPermissions", new Object[]{"editorCoach"})
+                        .header("Authorization", "Bearer " + mockOAuthInterceptor(user)))
+                .andDo(resultPrint())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload.size()", Matchers.is(1)))
+                .andExpect(jsonPath("$.payload[0].group", Matchers.is("administrators")))
+                .andExpect(jsonPath("$.payload[0].permissions.size()", Matchers.is(1)))
+                .andExpect(jsonPath("$.payload[0].permissions[0]", Matchers.is("superuser")));
+    }
+
     private ResultActions executeUserPost(String body, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(post("/users")

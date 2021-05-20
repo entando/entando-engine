@@ -1,0 +1,72 @@
+<configuration>
+    <property name="LOG_LEVEL" value="${LOG_LEVEL:-WARN}" />
+    <property name="LOG_JSON_LEVEL" value="${LOG_JSON_LEVEL:-OFF}" />
+    <property name="LOG_FILE_LEVEL" value="${LOG_FILE_LEVEL:-OFF}" />
+    <property name="LOG_FILE_JSON_LEVEL" value="${LOG_FILE_JSON_LEVEL:-OFF}" />
+    <property name="LOG_FILE_DIR" value="${LOG_FILE_DIR:-target/log}" />
+    <property name="LOG_FILE_NAME" value="${LOG_FILE_NAME:-entando-engine}" />
+    <appender name="FILE" class="org.entando.entando.ent.logger.EntRollingFileAppender">
+        <file>${LOG_FILE_DIR}/${LOG_FILE_NAME}.log</file>
+        <filter class="org.entando.entando.ent.logger.EntThresholdFilter">
+            <level>${LOG_FILE_LEVEL}</level>
+        </filter>
+        <append>true</append>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_DIR}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 10 days worth of history, but at most 2GB -->
+            <maxFileSize>100MB</maxFileSize>    
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <appender name="JSONFILE" class="org.entando.entando.ent.logger.EntRollingFileAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>true</prettyPrint>
+            </jsonFormatter>
+            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+            <appendLineSeparator>true</appendLineSeparator>
+        </layout>
+        <file>${LOG_FILE_DIR}/${LOG_FILE_NAME}-json.log</file>
+        <filter class="org.entando.entando.ent.logger.EntThresholdFilter">
+            <level>${LOG_FILE_JSON_LEVEL}</level>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_DIR}/${LOG_FILE_NAME}-json.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 10 days worth of history, but at most 2GB -->
+            <maxFileSize>100MB</maxFileSize>    
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <appender name="JSONSTDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>true</prettyPrint>
+            </jsonFormatter>
+            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+            <appendLineSeparator>true</appendLineSeparator>
+        </layout>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${LOG_JSON_LEVEL}</level>
+        </filter>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${LOG_LEVEL}</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="JSONSTDOUT" />
+        <appender-ref ref="JSONFILE" />
+        <appender-ref ref="FILE" /> 
+    </root>
+</configuration>

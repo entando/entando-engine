@@ -14,28 +14,16 @@
 package org.entando.entando.aps.system.services.entity.model;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.*;
 import com.agiletec.aps.util.DateConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.validation.BindingResult;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author E.Santoboni
@@ -124,7 +112,11 @@ public class EntityAttributeDto {
             ((NumberAttribute) attribute).setValue(number);
         }
         if (attribute instanceof BooleanAttribute) {
-            ((BooleanAttribute) attribute).setBooleanValue((Boolean)this.getValue());
+            if (this.getValue() instanceof String) {
+                ((BooleanAttribute) attribute).setBooleanValue(Boolean.valueOf((String) this.getValue()));
+            } else {
+                ((BooleanAttribute) attribute).setBooleanValue((Boolean) this.getValue());
+            }
         }
         if (attribute instanceof DateAttribute && (null != this.getValue())) {
             Date date = null;
