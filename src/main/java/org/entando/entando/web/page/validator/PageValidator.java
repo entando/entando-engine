@@ -115,8 +115,6 @@ public class PageValidator extends AbstractPaginationValidator {
     public void validateGroups(String pageCode, PagePositionRequest pageRequest, Errors errors) {
         IPage parent = getDraftPage(pageRequest.getParentCode());
         IPage page = getDraftPage(pageCode);
-        logger.debug("Parent {} getGroup() {}", parent.getGroup());
-        logger.debug("Page {} getGroup {}", page.getGroup());
         validateGroups(pageCode, page.getGroup(), parent.getGroup(), errors);
     }
 
@@ -125,14 +123,10 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateGroups(String pageCode, String pageGroup, String parentGroup, Errors errors) {
-        logger.debug("ValidateGroups for page {}", pageCode);
-
         if (!parentGroup.equals(Group.FREE_GROUP_NAME) && !pageGroup.equals(parentGroup)) {
             if (pageGroup.equals(Group.FREE_GROUP_NAME)) {
-                logger.debug("Validation error for page with pageCode {} ERRCODE_GROUP_MISMATCH 1 - {}", pageCode, ERRCODE_GROUP_MISMATCH);
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.freeUnderReserved.notAllowed");
             } else {
-                logger.debug("Validation error for page with pageCode {} ERRCODE_GROUP_MISMATCH 2 - {}", pageCode, ERRCODE_GROUP_MISMATCH);
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.group.mismatch");
             }
         }
