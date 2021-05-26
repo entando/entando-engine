@@ -284,9 +284,8 @@ public class PageController {
     }
 
     private void validatePagePlacement(PageRequest pageRequest, BindingResult bindingResult) {
-        String pageCode = pageRequest.getCode();
         IPage parent = pageValidator.getDraftPage(pageRequest.getParentCode());
-        pageValidator.validateGroups(pageCode, pageRequest.getOwnerGroup(), parent.getGroup(), bindingResult);
+        pageValidator.validateGroups(pageRequest.getOwnerGroup(), parent.getGroup(), bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }

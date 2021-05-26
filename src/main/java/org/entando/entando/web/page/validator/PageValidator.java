@@ -19,11 +19,11 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.json.patch.PatchException;
 import org.springframework.stereotype.Component;
@@ -115,14 +115,14 @@ public class PageValidator extends AbstractPaginationValidator {
     public void validateGroups(String pageCode, PagePositionRequest pageRequest, Errors errors) {
         IPage parent = getDraftPage(pageRequest.getParentCode());
         IPage page = getDraftPage(pageCode);
-        validateGroups(pageCode, page.getGroup(), parent.getGroup(), errors);
+        validateGroups(page.getGroup(), parent.getGroup(), errors);
     }
 
     public IPage getDraftPage(String code) {
         return this.getPageManager().getDraftPage(code);
     }
 
-    public void validateGroups(String pageCode, String pageGroup, String parentGroup, Errors errors) {
+    public void validateGroups(String pageGroup, String parentGroup, Errors errors) {
         if (!parentGroup.equals(Group.FREE_GROUP_NAME) && !pageGroup.equals(parentGroup)) {
             if (pageGroup.equals(Group.FREE_GROUP_NAME)) {
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.freeUnderReserved.notAllowed");
