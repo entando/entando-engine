@@ -96,7 +96,7 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateChildren(String pageCode, Errors errors) {
-        IPage page = this.getPageManager().getDraftPage(pageCode);
+        IPage page = getDraftPage(pageCode);
         if (page != null && page.getChildrenCodes() != null && page.getChildrenCodes().length > 0) {
             errors.reject(ERRCODE_PAGE_HAS_CHILDREN, new String[]{pageCode}, "page.delete.children");
         }
@@ -113,14 +113,22 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateGroups(String pageCode, PagePositionRequest pageRequest, Errors errors) {
-        logger.debug("ValidateGroups for page {}", pageCode);
-        IPage parent = this.getPageManager().getDraftPage(pageRequest.getParentCode());
-        IPage page = this.getPageManager().getDraftPage(pageCode);
+        IPage parent = getDraftPage(pageRequest.getParentCode());
+        IPage page = getDraftPage(pageCode);
         logger.debug("Parent {} getGroup() {}", parent.getGroup());
         logger.debug("Page {} getGroup {}", page.getGroup());
+        validateGroups(pageCode, page.getGroup(), parent.getGroup(), errors);
+    }
 
-        if (!parent.getGroup().equals(Group.FREE_GROUP_NAME) && !page.getGroup().equals(parent.getGroup())) {
-            if (page.getGroup().equals(Group.FREE_GROUP_NAME)) {
+    public IPage getDraftPage(String code) {
+        return this.getPageManager().getDraftPage(code);
+    }
+
+    public void validateGroups(String pageCode, String pageGroup, String parentGroup, Errors errors) {
+        logger.debug("ValidateGroups for page {}", pageCode);
+
+        if (!parentGroup.equals(Group.FREE_GROUP_NAME) && !pageGroup.equals(parentGroup)) {
+            if (pageGroup.equals(Group.FREE_GROUP_NAME)) {
                 logger.debug("Validation error for page with pageCode {} ERRCODE_GROUP_MISMATCH 1 - {}", pageCode, ERRCODE_GROUP_MISMATCH);
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.freeUnderReserved.notAllowed");
             } else {

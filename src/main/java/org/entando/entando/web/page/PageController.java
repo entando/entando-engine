@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.page;
 
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -275,8 +276,20 @@ public class PageController {
         if (bindingResult.hasErrors()) {
             throw new ValidationConflictException(bindingResult);
         }
+
+        validatePagePlacement(pageRequest, bindingResult);
+
         PageDto dto = this.getPageService().addPage(pageRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
+    }
+
+    private void validatePagePlacement(PageRequest pageRequest, BindingResult bindingResult) {
+        String pageCode = pageRequest.getCode();
+        IPage parent = pageValidator.getDraftPage(pageRequest.getParentCode());
+        pageValidator.validateGroups(pageCode, pageRequest.getOwnerGroup(), parent.getGroup(), bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
     }
 
     @ActivityStreamAuditable
