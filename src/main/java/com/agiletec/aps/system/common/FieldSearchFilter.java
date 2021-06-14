@@ -50,6 +50,7 @@ public class FieldSearchFilter<T> implements Serializable {
     private LikeOptionType likeOptionType;
     private boolean nullOption;
     private boolean notOption;
+    private boolean sortOnly;
 
     private List<T> allowedValues;
 
@@ -289,7 +290,15 @@ public class FieldSearchFilter<T> implements Serializable {
         }
         this.notOption = notOption;
     }
-    
+
+    public boolean isSortOnly() {
+        return sortOnly;
+    }
+
+    public void setSortOnly(boolean sortOnly) {
+        this.sortOnly = sortOnly;
+    }
+
     public List<T> getAllowedValues() {
         return allowedValues;
     }

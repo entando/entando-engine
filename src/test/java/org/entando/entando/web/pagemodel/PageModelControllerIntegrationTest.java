@@ -679,6 +679,15 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
 
     }
 
+    @Test
+    void shouldSortWithoutApplyingFilterToTheSortingAttribute() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/pageModels?sort=pluginCode")
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.metaData.totalItems", is(3)));
+    }
+
     private String getJsonRequest(String filename) throws Exception {
         InputStream isJsonPostValid = this.getClass().getResourceAsStream(filename);
         String result = FileTextReader.getText(isJsonPostValid);

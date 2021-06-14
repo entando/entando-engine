@@ -293,6 +293,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
     }
 
     protected boolean addFilters(FieldSearchFilter filter, StringBuffer query, boolean hasAppendWhereClause) {
+        if (filter.isSortOnly()) {
+            return hasAppendWhereClause;
+        }
         hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
         String tableFieldName = this.getTableFieldName(filter.getKey());
         if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {
