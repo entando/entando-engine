@@ -173,6 +173,7 @@ public class RestListRequest {
     private FieldSearchFilter buildSortFilter() {
         if (StringUtils.isNotBlank(this.escapeSql(this.getSort()))) {
             FieldSearchFilter sort = new FieldSearchFilter(this.getSort());
+            sort.setSortOnly(true);
             if (StringUtils.isNotBlank(this.getDirection())) {
                 if (!this.getDirection().equalsIgnoreCase(FieldSearchFilter.ASC_ORDER) && !this.getDirection().equalsIgnoreCase(FieldSearchFilter.DESC_ORDER)) {
                     this.setDirection(DIRECTION_VALUE_DEFAULT);
