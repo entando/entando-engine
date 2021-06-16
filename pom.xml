@@ -381,6 +381,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
@@ -420,6 +421,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
