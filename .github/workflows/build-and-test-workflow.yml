@@ -23,20 +23,20 @@ jobs:
       URLT: ${{ github.event.repository.statuses_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
+      - name: "Dump GitHub context"
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - name: "Remove label prepared (WORKOROUND TO ENSURE NEXT ADD LABEL EVENT IS TRIGGERED)"
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITUB_TOKEN}}
+          token: ${{secrets.GITUB_TOKEN.token}}
           label: prepared
           type: remove
       # CHECKOUT
       - name: "Checkout"
         env:
-          TOKEN_SECRET: ${{ secrets.GITUB_TOKEN }}
+          TOKEN_SECRET: ${{ secrets.GITUB_TOKEN.token }}
         run: |
           authUrl=$(echo "$CLONE_URL" | sed "s|://|://$TOKEN_SECRET@|")
           git clone "$authUrl" "$REPO_FOLDER"
@@ -66,7 +66,7 @@ jobs:
             curl "$URL" \
               -X POST \
               -H "Accept: application/json" \
-              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN }}' \
+              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN.token }}' \
               -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
             || true
           }
@@ -97,7 +97,7 @@ jobs:
             curl "$URL" \
               -X POST \
               -H "Accept: application/json" \
-              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN }}' \
+              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN.token }}' \
               -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
             || true
           }
@@ -156,7 +156,7 @@ jobs:
       - name: "Add label prepared"
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITUB_TOKEN}}
+          token: ${{secrets.GITUB_TOKEN.token}}
           label: prepared
           type: add
   # SONAR
@@ -172,38 +172,39 @@ jobs:
           SKIP_LABEL=$(jq -r '.[] | select(.name=="no-sonar")' <<< $LABELS)
           if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
           echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
-      - uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v2
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
+      - name: "Set up JDK 11"
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Maven packages
+      - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Cache SonarCloud packages
+      - name: "Cache SonarCloud packages"
         uses: actions/cache@v2
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Build and analyze
+      - name: "Build and analyze"
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN.token }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       - name: "Remove NO-SONAR label"
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITUB_TOKEN}}
+          token: ${{secrets.GITUB_TOKEN.token}}
           label: no-sonar
           type: remove
   # BUILD AND TEST
@@ -236,25 +237,25 @@ jobs:
       - name: "Checkout"
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         uses: actions/checkout@v2
-      - name: Cache Maven packages
+      - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Set up JDK 1.1
+      - name: "Set up JDK 1.1"
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Run tests with Maven
+      - name: "Run tests with Maven"
         if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         run: mvn -B test -Dgroups=${{ matrix.mvn-test-group }}
       - name: "Remove NO-TEST label"
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true' && matrix.remove-label
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITUB_TOKEN}}
+          token: ${{secrets.GITUB_TOKEN.token}}
           label: no-test
           type: remove
   # OWASP
@@ -270,7 +271,7 @@ jobs:
           SKIP_LABEL=$(jq '.[] | select(.name=="no-owasp")' <<< $LABELS)
           if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
           echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
-      - name: Cache Maven packages
+      - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
           path: ~/.m2
@@ -285,6 +286,6 @@ jobs:
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITUB_TOKEN}}
+          token: ${{secrets.GITUB_TOKEN.token}}
           label: no-owasp
           type: remove
