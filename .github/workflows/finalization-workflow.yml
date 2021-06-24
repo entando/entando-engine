@@ -22,7 +22,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GITUB_TOKEN.token }}
+          token: ${{ secrets.GITHUB_TOKEN.token }}
       - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
