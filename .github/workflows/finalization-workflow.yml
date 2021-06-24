@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: "Derive and set version"
+      - name: "Create new tag"
         env:
           TMPDIR: "/home/runner/work/_temp"
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
