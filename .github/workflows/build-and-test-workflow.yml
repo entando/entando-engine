@@ -74,19 +74,42 @@ jobs:
           echo "TITLE: $PR_TITLE"
 
           # check name consistency
-          if [[ ! "$PR_TITLE" =~ ^[A-Z]{2,5}-[0-9]{1,5}([[:space:]]|:) ]]
-          then
+          # if [[ ! "$PR_TITLE" =~ ^[A-Z]{2,5}-[0-9]{1,5}([[:space:]]|:) ]]
+          # then
+          #   echo "NOT MATCHING"
+          #   upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
+          #   exit 1
+          # fi
+
+          ######## TAKE THIS FROM THE SECRETS / START ########
+          TICKET_ID_REGEX="[A-Z]{2,5}-[0-9]{1,5}"
+          REGEX="^${TICKET_ID_REGEX}([[:space:]]|:)"
+          REGEX_2="^${TICKET_ID_REGEX}\/${TICKET_ID_REGEX}([[:space:]]|:)"
+          PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
+          ######## TAKE THIS FROM THE SECRETS / END ########
+
+          IFS=';' read -r -a regex_array <<< "${PR_REGEX_ARRAY}"
+
+          prTitleIsValid=false
+
+          for i in "${!regex_array[@]}"
+          do
+            if [[ "$PR_TITLE" =~ ${regex_array[i]} ]]; then
+              prTitleIsValid=true
+              break
+            fi
+          done
+
+          if [[ "${prTitleIsValid}" = false ]]; then
             echo "NOT MATCHING"
             upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
             exit 1
           fi
 
-          echo '#### again'
-
           # get PR story id
-          PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
-          echo "PR_STORY_ID $PR_STORY_ID"
-          echo "::set-output name=PR_STORY_ID::$PR_STORY_ID"
+          # PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
+          # echo "PR_STORY_ID $PR_STORY_ID"
+          # echo "::set-output name=PR_STORY_ID::$PR_STORY_ID"
       # BOM
       - name: "entando-core-bom check"
         env:
