@@ -30,7 +30,7 @@ jobs:
       - name: "Remove label prepared (WORKOROUND TO ENSURE NEXT ADD LABEL EVENT IS TRIGGERED)"
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN.token}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: prepared
           type: remove
       # CHECKOUT
@@ -179,7 +179,7 @@ jobs:
       - name: "Add label prepared"
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN.token}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: prepared
           type: add
   # SONAR
@@ -227,7 +227,7 @@ jobs:
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN.token}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: no-sonar
           type: remove
   # BUILD AND TEST
@@ -278,7 +278,7 @@ jobs:
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true' && matrix.remove-label
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN.token}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: no-test
           type: remove
   # OWASP
@@ -309,6 +309,6 @@ jobs:
         if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN.token}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: no-owasp
           type: remove
