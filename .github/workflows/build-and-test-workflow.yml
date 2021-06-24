@@ -1,0 +1,290 @@
+# This workflow will prepare every thing required to proceed with a PR
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Build and Test
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - develop
+
+jobs:
+  # PREPARE
+  prepare:
+    env:
+      CLONE_URL: ${{ github.event.pull_request.base.repo.clone_url }}
+      BRANCH_NAME: ${{ github.head_ref }}
+      REPO_FOLDER: repo_folder
+      SHA: ${{ github.sha }}
+      URLT: ${{ github.event.repository.statuses_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: "Remove label prepared (WORKOROUND TO ENSURE NEXT ADD LABEL EVENT IS TRIGGERED)"
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{secrets.GITUB_TOKEN}}
+          label: prepared
+          type: remove
+      # CHECKOUT
+      - name: "Checkout"
+        env:
+          TOKEN_SECRET: ${{ secrets.GITUB_TOKEN }}
+        run: |
+          authUrl=$(echo "$CLONE_URL" | sed "s|://|://$TOKEN_SECRET@|")
+          git clone "$authUrl" "$REPO_FOLDER"
+          cd "$REPO_FOLDER"
+          git config --global user.email "cicd@entando.com"
+          git config --global user.name "firegloves"
+          git config pull.rebase false
+          git checkout "$BRANCH_NAME"
+          git pull
+      # PR FORMAT CHECK
+      - name: "PR format check"
+        id: pr-format-check
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          cd "$REPO_FOLDER"
+
+          # fn to update status check description
+          echo "$DBG"
+          SHA2="$(git rev-parse HEAD)"
+          echo "XXXXXXXXXXXXX-1: $SHA"
+          echo "XXXXXXXXXXXXX-2: $SHA2"
+          URL="${URLT//\{sha\}/$SHA}"
+          echo "XXXX $URL"
+
+          upd() {
+            curl "$URL" \
+              -X POST \
+              -H "Accept: application/json" \
+              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN }}' \
+              -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
+            || true
+          }
+
+          echo "TITLE: $PR_TITLE"
+
+          # check name consistency
+          if [[ ! "$PR_TITLE" =~ ^[A-Z]{2,5}-[0-9]{1,5}([[:space:]]|:) ]]
+          then
+            echo "NOT MATCHING"
+            upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
+            exit 1
+          fi
+
+          echo '#### again'
+
+          # get PR story id
+          PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
+          echo "PR_STORY_ID $PR_STORY_ID"
+          echo "::set-output name=PR_STORY_ID::$PR_STORY_ID"
+      # BOM
+      - name: "entando-core-bom check"
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels) }}
+        run: |
+
+          upd() {
+            curl "$URL" \
+              -X POST \
+              -H "Accept: application/json" \
+              -H 'authorization: Bearer ${{ secrets.GITUB_TOKEN }}' \
+              -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
+            || true
+          }
+
+          SKIP_BOM_CHECK_LABEL=$(jq -r '.[] | select(.name=="no-bom-check")' <<< $LABELS)
+          if [[ "" != "$SKIP_BOM_CHECK_LABEL" ]]; then
+            echo "Skipping BOM check"
+            exit 0
+          fi
+
+          # check for pom.xml existence
+          # TODO do we want to manage differently this check?
+          FILE="$REPO_FOLDER/pom.xml"
+          if [[ ! -f "$FILE" ]]; then
+              exit 0
+          fi
+
+          # fetch entando-core-bom tags
+          coreBomDir="entando-core-bom"
+          mkdir "$coreBomDir" && cd "$coreBomDir"
+          git init
+          git fetch --tag https://github.com/entando/entando-core-bom.git &> /dev/null
+          # set version
+          # lastVersion=$( git tag -l | tail -1 | sed 's/^v\(.*\)/\1/')
+          lastVersion=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v\(.*\)/\1/')
+          cd .. && rm -rf "$coreBomDir"
+
+          # install xmlstarlet
+          sudo apt-get install xmlstarlet
+
+          # get entando-core-bom version
+          # check if bom exist in the current project pom file
+          # TODO reorganize: at least the bom presence check should be done at the beginning, blocking the fetch too
+          cd "$REPO_FOLDER"
+
+          # set -x TODO test with and without this
+
+          # get BOM version from pom.xml
+          bomVersion=$(xmlstarlet sel -N pom="http://maven.apache.org/POM/4.0.0" -t \                                         # apply namespace and template
+            -m "/pom:project/pom:dependencyManagement/pom:dependencies/pom:dependency[pom:artifactId='entando-core-bom']" \   # on every node matching this xpath
+            -v "./pom:version" pom.xml) || true                                                                               # get the "version" node value OR skip the error
+
+          # if the current project does not depends on entando-core-bom => exit OK
+          [ -z "$bomVersion" ] && echo "BOM dependency not found" && exit 0
+
+          echo "BOM VERSION IN pom.xml: $bomVersion"
+          echo "LAST_VERSION entando-core-bom AVAILABLE: $lastVersion"
+
+          # if the pom.xml entando-core-bom version is not aligned with the last available one => exit FAIL
+          if [[ "$bomVersion" != "$lastVersion" ]]; then
+            echo "BOM VERSION OUT OF DATE"
+            upd "failure" "Failed" "The entando-core-bom version is not aligned with the last available version"
+            exit 1
+          fi
+      # ADD LABEL PREPARED
+      - name: "Add label prepared"
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{secrets.GITUB_TOKEN}}
+          label: prepared
+          type: add
+  # SONAR
+  sonar:
+    needs: [ 'prepare' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check NO-SONAR label"
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels) }}
+        id: skip-label-check
+        run: |
+          SKIP_LABEL=$(jq -r '.[] | select(.name=="no-sonar")' <<< $LABELS)
+          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
+          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+      - uses: actions/checkout@v2
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Build and analyze
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      - name: "Remove NO-SONAR label"
+        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{secrets.GITUB_TOKEN}}
+          label: no-sonar
+          type: remove
+  # BUILD AND TEST
+  tests:
+    needs: [ 'prepare' ]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1 # ensure the sequential running of the spawned jobs
+      matrix:
+        # order matters: spawned jobs are execute as received in the array
+        test-type: [ 'fast-test', 'slow-and-fast-test' ]
+        include:
+          # includes the value of the rebase variable depending on the test type of the matrix
+          # includes the dependency between the 2 generated jobs to ensure sequential runs
+          - test-type: 'fast-test'
+            mvn-test-group: 'fast-test'
+            remove-label: false
+          - test-type: 'slow-and-fast-test'
+            mvn-test-group: 'fast-test,slow-test'
+            remove-label: true
+    steps:
+      - name: "Check NO-TEST label"
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels) }}
+        id: skip-label-check
+        run: |
+          SKIP_LABEL=$(jq '.[] | select(.name=="no-test")' <<< $LABELS)
+          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
+          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+      - name: "Checkout"
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        uses: actions/checkout@v2
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Set up JDK 1.1
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Run tests with Maven
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        run: mvn -B test -Dgroups=${{ matrix.mvn-test-group }}
+      - name: "Remove NO-TEST label"
+        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true' && matrix.remove-label
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{secrets.GITUB_TOKEN}}
+          label: no-test
+          type: remove
+  # OWASP
+  owasp:
+    needs: [ 'prepare' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check NO-OWASP label"
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels) }}
+        id: skip-label-check
+        run: |
+          SKIP_LABEL=$(jq '.[] | select(.name=="no-owasp")' <<< $LABELS)
+          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
+          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "OWASP checks"
+        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        run: |
+          echo ${{ steps.skip-label-check.outputs.EXECUTE_STEP }}
+          echo 'OWASP CHECKS PASSED '
+      - name: "Remove NO-OWASP label"
+        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{secrets.GITUB_TOKEN}}
+          label: no-owasp
+          type: remove
