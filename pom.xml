@@ -27,8 +27,11 @@
     </organization>
     <repositories>
         <repository>
-            <id>nexus-jx</id>
-            <url>https://nexus-jx.apps.serv.run/repository/maven-releases/</url>
+            <id>ng-pipelines</id>
+            <name>Entando Nexus</name>
+            <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>
+<!--            <id>nexus-jx</id>-->
+<!--            <url>https://nexus-jx.apps.serv.run/repository/maven-releases/</url>-->
             <releases>
                 <enabled>true</enabled>
             </releases>
