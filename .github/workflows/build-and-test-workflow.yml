@@ -107,11 +107,13 @@ jobs:
               break
             fi
           done
+
           if [[ "${prTitleIsValid}" = false ]]; then
             echo "NOT MATCHING"
             upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
             exit 1
           fi
+
           # get PR story id
           # PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
           # echo "PR_STORY_ID $PR_STORY_ID"
