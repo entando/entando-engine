@@ -8,7 +8,7 @@
         <version>6.3.16</version>
     </parent>
     <groupId>org.entando.entando</groupId>
-    <artifactId>entando-engine-ngpl</artifactId>
+    <artifactId>entando-engine</artifactId>
     <packaging>jar</packaging>
     <version>6.3.0-SNAPSHOT</version>
     <name>Entando Core: Engine</name>
@@ -27,11 +27,8 @@
     </organization>
     <repositories>
         <repository>
-            <id>ng-pipelines</id>
-            <name>Entando Nexus</name>
-            <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>
-<!--            <id>nexus-jx</id>-->
-<!--            <url>https://nexus-jx.apps.serv.run/repository/maven-releases/</url>-->
+            <id>nexus-jx</id>
+            <url>https://nexus-jx.apps.serv.run/repository/maven-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
