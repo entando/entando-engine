@@ -21,6 +21,8 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: "Checkout"
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ENTANDO_BOT_TOKEN }}
       - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
