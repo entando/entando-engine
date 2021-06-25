@@ -77,6 +77,7 @@ jobs:
           #   upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
           #   exit 1
           # fi
+
           TICKET_ID_REGEX="[A-Z]{2,5}-[0-9]{1,5}"
           REGEX="^${TICKET_ID_REGEX}([[:space:]]|:)"
           REGEX_2="^${TICKET_ID_REGEX}\/${TICKET_ID_REGEX}([[:space:]]|:)"
