@@ -51,6 +51,7 @@ jobs:
         id: pr-format-check
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
+          ENTANDO_OPT_PR_SUMMARY_FORMAT: ${{ secrets.ENTANDO_OPT_PR_SUMMARY_FORMAT }}
         run: |
           cd "$REPO_FOLDER"
 
@@ -81,19 +82,39 @@ jobs:
           #   exit 1
           # fi
 
-          ######## TAKE THIS FROM THE SECRETS / START ########
           TICKET_ID_REGEX="[A-Z]{2,5}-[0-9]{1,5}"
           REGEX="^${TICKET_ID_REGEX}([[:space:]]|:)"
           REGEX_2="^${TICKET_ID_REGEX}\/${TICKET_ID_REGEX}([[:space:]]|:)"
-          PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
-          ######## TAKE THIS FROM THE SECRETS / END ########
+          # PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
+
+          echo "###### SINGLE HIER ${ENTANDO_OPT_PR_SUMMARY_FORMAT}"
+
+          case "${ENTANDO_OPT_PR_SUMMARY_FORMAT}" in
+            "SINGLE")       # e.g. "ENG-0001 PR title"
+              echo "SINGLE"
+              PR_REGEX_ARRAY="${REGEX}"
+              ;;
+
+            "HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
+              echo "HIER"
+              PR_REGEX_ARRAY="${REGEX_2}"
+              ;;
+
+            "SINGLE|HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
+              echo "MULTIPLE"
+              PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
+              ;;
+          esac
 
           IFS=';' read -r -a regex_array <<< "${PR_REGEX_ARRAY}"
 
           prTitleIsValid=false
 
+          echo "REGEX ${regex_array[0]}"
+
           for i in "${!regex_array[@]}"
           do
+            echo "VALIDATING WITH ${regex_array[i]}"
             if [[ "$PR_TITLE" =~ ${regex_array[i]} ]]; then
               prTitleIsValid=true
               break
