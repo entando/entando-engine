@@ -1,9 +1,9 @@
-name: Release
+name: Release on internal Nexus
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'XXXXv*'
 
 jobs:
   release:
