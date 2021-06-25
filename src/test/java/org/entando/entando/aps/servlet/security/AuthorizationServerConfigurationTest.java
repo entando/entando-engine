@@ -156,11 +156,11 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
                         .params(params)
                         .header("Authorization", "Basic " + hash)
                         .accept("application/json;charset=UTF-8"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
         Assertions.assertTrue(StringUtils.isNotBlank(resultString));
-        result.andExpect(jsonPath("$.error", is("unauthorized")));
+        result.andExpect(jsonPath("$.error", is("invalid_grant")));
         result.andExpect(jsonPath("$.error_description", anything()));
         if (!StringUtils.isEmpty(username)) {
             Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);

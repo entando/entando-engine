@@ -27,10 +27,13 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.IUserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.util.HttpSessionHelper;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -41,8 +44,6 @@ import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.web.user.validator.UserValidator;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -263,7 +264,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/userProfiles/myGroupPermissions")
+    @GetMapping("/myGroupPermissions")
     public ResponseEntity<SimpleRestResponse<List<UserGroupPermissions>>> getMyGroupPermissions(HttpServletRequest request) {
 
         UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);
@@ -271,6 +272,12 @@ public class UserController {
         List<UserGroupPermissions> currentUserPermissions = this.userService.getMyGroupPermissions(userDetails);
 
         return new ResponseEntity<>(new SimpleRestResponse<>(currentUserPermissions), HttpStatus.OK);
+    }
+
+    @GetMapping("/myGroups")
+    public ResponseEntity<SimpleRestResponse<List<GroupDto>>> getMyGroups(HttpServletRequest request) {
+        List<GroupDto> groups = this.userService.getMyGroups(HttpSessionHelper.extractCurrentUser(request));
+        return new ResponseEntity<>(new SimpleRestResponse<>(groups), HttpStatus.OK);
     }
 
 }

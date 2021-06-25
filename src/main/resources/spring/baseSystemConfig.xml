@@ -17,31 +17,6 @@
 
     <jee:jndi-lookup id="servDataSource" jndi-name="${servdb.jndi:java:comp/env/jdbc/servDataSource}"/>
 
-    <bean id="ApsSystemUtils" class="com.agiletec.aps.system.ApsSystemUtils" init-method="init" >
-        <property name="systemParams">
-            <map>
-                <entry key="logActiveFileOutput">
-                    <value>${logActiveFileOutput}</value>
-                </entry>
-                <entry key="logName">
-                    <value>${logName}</value>
-                </entry>
-                <entry key="logFileRotatePattern">
-                    <value>${logFileRotatePattern}</value>
-                </entry>
-                <entry key="logLevel">
-                    <value>${logLevel}</value>
-                </entry>
-                <entry key="logFileSize">
-                    <value>${logFileSize}</value>
-                </entry>
-                <entry key="logFilesCount">
-                    <value>${logFilesCount}</value>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
     <bean id="ComponentManager" class="org.entando.entando.aps.system.init.ComponentManager"
           init-method="init">
         <property name="postProcessClasses">

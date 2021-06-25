@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -215,6 +216,8 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
             stat.setBigDecimal(index, (BigDecimal) object);
         } else if (object instanceof Boolean) {
             stat.setString(index, ((Boolean) object).toString());
+        } else if (object instanceof LocalDateTime) {
+            stat.setObject(index, Timestamp.valueOf((LocalDateTime)object));
         } else {
             stat.setObject(index, object);
         }
@@ -293,6 +296,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
     }
 
     protected boolean addFilters(FieldSearchFilter filter, StringBuffer query, boolean hasAppendWhereClause) {
+        if (filter.isSortOnly()) {
+            return hasAppendWhereClause;
+        }
         hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
         String tableFieldName = this.getTableFieldName(filter.getKey());
         if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {

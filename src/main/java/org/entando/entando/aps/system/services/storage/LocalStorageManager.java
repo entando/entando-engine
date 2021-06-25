@@ -14,7 +14,7 @@
 package org.entando.entando.aps.system.services.storage;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang3.CharEncoding;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
