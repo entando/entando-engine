@@ -1,0 +1,24 @@
+{
+    "wizard": false,
+    "loadOnPageSelect": false,
+    "translationWarning": false,
+    "defaultPageOwnerGroup": "group1",
+    "defaultPageJoinGroups": [
+        "group2",
+        "group3",
+        "group4",
+        "group5"
+    ],
+    "defaultContentOwnerGroup": "group6",
+    "defaultContentJoinGroups": [
+        "group7",
+        "group8",
+        "group9",
+        "group10"
+    ],
+    "defaultWidgetOwnerGroup": "group2",
+    "defaultWidgetJoinGroups": [
+        "group5",
+        "group9"
+    ]
+}

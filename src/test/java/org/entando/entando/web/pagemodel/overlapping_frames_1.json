@@ -1,0 +1,38 @@
+{
+  "code": "test-template",
+  "descr": "Test",
+  "mainFrame": -1,
+  "pluginCode": null,
+  "template": "<#assign wp=JspTaglibs[\"/aps-core\"]>\n<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n<html>\n<head>\n\t<title><@wp.currentPage param=\"title\" /></title>\n</head>\n<body>\n<h1><@wp.currentPage param=\"title\" /></h1>\n<a href=\"<@wp.url page=\"homepage\" />\" >Home</a><br>\n<div><@wp.show frame=0 /></div>\n<div><@wp.show frame=1 /></div>\n</body>\n</html>",
+  "references": {
+    "PageManager": false
+  },
+  "configuration": {
+    "frames": [
+      {
+        "pos": 0,
+        "descr": "Frame 0",
+        "mainFrame": false,
+        "defaultWidget": {},
+        "sketch": {
+          "x1": 2,
+          "y1": 2,
+          "x2": 4,
+          "y2": 4
+        }
+      },
+      {
+        "pos": 1,
+        "descr": "Frame 1",
+        "mainFrame": false,
+        "defaultWidget": {},
+        "sketch": {
+          "x1": 3,
+          "y1": 3,
+          "x2": 5,
+          "y2": 5
+        }
+      }
+    ]
+  }
+}
