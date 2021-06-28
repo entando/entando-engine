@@ -3,7 +3,7 @@ name: Release on internal Nexus
 on:
   push:
     tags:
-      - 'XXXXv*'
+      - 'v*'
 
 jobs:
   release:
