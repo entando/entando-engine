@@ -54,7 +54,6 @@ jobs:
           ENTANDO_OPT_PR_SUMMARY_FORMAT: ${{ secrets.ENTANDO_OPT_PR_SUMMARY_FORMAT }}
         run: |
           cd "$REPO_FOLDER"
-
           # fn to update status check description
           echo "$DBG"
           SHA2="$(git rev-parse HEAD)"
@@ -62,7 +61,6 @@ jobs:
           echo "XXXXXXXXXXXXX-2: $SHA2"
           URL="${URLT//\{sha\}/$SHA}"
           echo "XXXX $URL"
-
           upd() {
             curl "$URL" \
               -X POST \
@@ -71,9 +69,7 @@ jobs:
               -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
             || true
           }
-
           echo "TITLE: $PR_TITLE"
-
           # check name consistency
           # if [[ ! "$PR_TITLE" =~ ^[A-Z]{2,5}-[0-9]{1,5}([[:space:]]|:) ]]
           # then
@@ -81,37 +77,28 @@ jobs:
           #   upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
           #   exit 1
           # fi
-
           TICKET_ID_REGEX="[A-Z]{2,5}-[0-9]{1,5}"
           REGEX="^${TICKET_ID_REGEX}([[:space:]]|:)"
           REGEX_2="^${TICKET_ID_REGEX}\/${TICKET_ID_REGEX}([[:space:]]|:)"
           # PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
-
           echo "###### SINGLE HIER ${ENTANDO_OPT_PR_SUMMARY_FORMAT}"
-
           case "${ENTANDO_OPT_PR_SUMMARY_FORMAT}" in
             "SINGLE")       # e.g. "ENG-0001 PR title"
               echo "SINGLE"
               PR_REGEX_ARRAY="${REGEX}"
               ;;
-
             "HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
               echo "HIER"
               PR_REGEX_ARRAY="${REGEX_2}"
               ;;
-
             "SINGLE|HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
               echo "MULTIPLE"
               PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
               ;;
           esac
-
           IFS=';' read -r -a regex_array <<< "${PR_REGEX_ARRAY}"
-
           prTitleIsValid=false
-
           echo "REGEX ${regex_array[0]}"
-
           for i in "${!regex_array[@]}"
           do
             echo "VALIDATING WITH ${regex_array[i]}"
@@ -120,13 +107,11 @@ jobs:
               break
             fi
           done
-
           if [[ "${prTitleIsValid}" = false ]]; then
             echo "NOT MATCHING"
             upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
             exit 1
           fi
-
           # get PR story id
           # PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
           # echo "PR_STORY_ID $PR_STORY_ID"
@@ -136,7 +121,6 @@ jobs:
         env:
           LABELS: ${{ toJson(github.event.pull_request.labels) }}
         run: |
-
           upd() {
             curl "$URL" \
               -X POST \
@@ -145,20 +129,17 @@ jobs:
               -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
             || true
           }
-
           SKIP_BOM_CHECK_LABEL=$(jq -r '.[] | select(.name=="no-bom-check")' <<< $LABELS)
           if [[ "" != "$SKIP_BOM_CHECK_LABEL" ]]; then
             echo "Skipping BOM check"
             exit 0
           fi
-
           # check for pom.xml existence
           # TODO do we want to manage differently this check?
           FILE="$REPO_FOLDER/pom.xml"
           if [[ ! -f "$FILE" ]]; then
               exit 0
           fi
-
           # fetch entando-core-bom tags
           coreBomDir="entando-core-bom"
           mkdir "$coreBomDir" && cd "$coreBomDir"
@@ -168,28 +149,21 @@ jobs:
           # lastVersion=$( git tag -l | tail -1 | sed 's/^v\(.*\)/\1/')
           lastVersion=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v\(.*\)/\1/')
           cd .. && rm -rf "$coreBomDir"
-
           # install xmlstarlet
           sudo apt-get install xmlstarlet
-
           # get entando-core-bom version
           # check if bom exist in the current project pom file
           # TODO reorganize: at least the bom presence check should be done at the beginning, blocking the fetch too
           cd "$REPO_FOLDER"
-
           # set -x TODO test with and without this
-
           # get BOM version from pom.xml
           bomVersion=$(xmlstarlet sel -N pom="http://maven.apache.org/POM/4.0.0" -t \                                         # apply namespace and template
             -m "/pom:project/pom:dependencyManagement/pom:dependencies/pom:dependency[pom:artifactId='entando-core-bom']" \   # on every node matching this xpath
             -v "./pom:version" pom.xml) || true                                                                               # get the "version" node value OR skip the error
-
           # if the current project does not depends on entando-core-bom => exit OK
           [ -z "$bomVersion" ] && echo "BOM dependency not found" && exit 0
-
           echo "BOM VERSION IN pom.xml: $bomVersion"
           echo "LAST_VERSION entando-core-bom AVAILABLE: $lastVersion"
-
           # if the pom.xml entando-core-bom version is not aligned with the last available one => exit FAIL
           if [[ "$bomVersion" != "$lastVersion" ]]; then
             echo "BOM VERSION OUT OF DATE"

@@ -10,7 +10,7 @@
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine-ngpl</artifactId>
     <packaging>jar</packaging>
-    <version>6.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <name>Entando Core: Engine</name>
     <description>Entando Engine: an agile, modern and user-centric open source Portal platform.</description>
     <url>http://www.entando.com/</url>
@@ -21,6 +21,12 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:entando/entando-engine.git</connection>
+        <developerConnection>scm:git:git@github.com:entando/entando-engine.git</developerConnection>
+        <url>https://github.com/entando/entando-engine</url>
+        <tag>v1.3.0</tag>
+    </scm>
     <organization>
         <name>Entando Inc.</name>
         <url>http://www.entando.com/</url>
@@ -496,10 +502,14 @@
     </dependencies>
 
     <distributionManagement>
+<!--        <repository>-->
+<!--            <id>ng-pipelines</id>-->
+<!--            <name>Entando Nexus</name>-->
+<!--            <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>-->
+<!--        </repository>-->
         <repository>
-            <id>ng-pipelines</id>
-            <name>Entando Nexus</name>
-            <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>
+            <id>oss.sonatype.org</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 </project>

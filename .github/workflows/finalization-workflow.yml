@@ -6,7 +6,7 @@ name: Finalization
 on:
   push:
     branches:
-      - develop
+      - XXXXdevelop
 
 jobs:
   finalize:
@@ -22,7 +22,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN.token }}
+          token: ${{ secrets.ENTANDO_BOT_TOKEN }}
       - name: "Cache Maven packages"
         uses: actions/cache@v2
         with:
@@ -40,10 +40,8 @@ jobs:
         run: |
           git config --global user.email "cicd@entando.com"
           git config --global user.name "firegloves"
-
           # fetch tags
           git fetch --tag &> /dev/null
-
           # set version
           # TODO switch next 2 lines and check that the new solution works. the first returns a text ordered list (not numeric)
           lastTag=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v\(.*\)/\1/')
@@ -51,34 +49,27 @@ jobs:
           if [[ -z "$lastTag" ]]; then
             lastTag="v0.0.0"
           fi
-
           IFS='.' read -r X Y Z <<< "$lastTag"
           X="${X//v/}"    # tag version to pom version
           Z=$((Z+1))
           mvn versions:set -DnewVersion="$X.$Y.$Z" > "$TMPDIR/mvn-version.log"
           echo "Version updated"
-
           # compile
           mvn compile > "$TMPDIR/mvn-compile.log" || {
             cat "$TMPDIR/mvn-compile.log"
             exit $FILENO
           }
-
           # checkout milestones branch
           BRANCH_NAME="rel_v$X.$Y.$Z"
           git checkout -b "$BRANCH_NAME"
-
           # commit
           git add .
           git commit -m "v$X.$Y.$Z"
-
           # tag
           git tag "v$X.$Y.$Z"
-
           # push
           git push --set-upstream origin "$BRANCH_NAME" --force
           git push --tags
-
           # delete branches
           git checkout "$DEFAULT_BRANCH"
           git push -d origin "$BRANCH_NAME"
