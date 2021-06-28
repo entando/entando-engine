@@ -495,17 +495,17 @@
         </dependency>
     </dependencies>
 
-<!--    <distributionManagement>-->
+    <distributionManagement>
 <!--                <repository>-->
 <!--                    <id>ng-pipelines</id>-->
 <!--                    <name>Entando Nexus</name>-->
 <!--                    <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>-->
 <!--                </repository>-->
-<!--        <repository>-->
-<!--            <id>oss.sonatype.org</id>-->
-<!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
+        <repository>
+            <id>oss.sonatype.org</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <scm>
         <connection>scm:git:git@github.com:entando/entando-engine.git</connection>
@@ -566,21 +566,21 @@
             </distributionManagement>
         </profile>
 
-        <profile>
-            <id>maven-central-repository</id>
-            <activation>
-                <property>
-                    <name>!useInternalRepo</name>
-                </property>
-            </activation>
-            <properties>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>oss.sonatype.org</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
-        </profile>
+<!--        <profile>-->
+<!--            <id>maven-central-repository</id>-->
+<!--            <activation>-->
+<!--                <property>-->
+<!--                    <name>!useInternalRepo</name>-->
+<!--                </property>-->
+<!--            </activation>-->
+<!--            <properties>-->
+<!--            </properties>-->
+<!--            <distributionManagement>-->
+<!--                <repository>-->
+<!--                    <id>oss.sonatype.org</id>-->
+<!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--                </repository>-->
+<!--            </distributionManagement>-->
+<!--        </profile>-->
     </profiles>
 </project>
