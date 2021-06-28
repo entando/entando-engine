@@ -3,7 +3,7 @@ name: Release on internal Nexus
 on:
   push:
     tags:
-      - 'XXXXv*'
+      - 'v*'
 
 jobs:
   release:
@@ -30,7 +30,7 @@ jobs:
           server-password: MAVEN_PASSWORD
       - name: "Publish package"
         run: |
-          mvn --batch-mode deploy -X
+          mvn --batch-mode deploy -DskipTests=true -DuseInternalRepo=true
         env:
           MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
