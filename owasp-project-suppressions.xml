@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <suppress>
+    <notes><![CDATA[
+    file name: cxf-core-3.3.10.jar
+    ]]></notes>
+    <cve>CVE-2021-30468</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+    file name: cxf-rt-wsdl-3.3.10.jar
+    ]]></notes>
+    <cve>CVE-2021-30468</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+    file name: jdom-1.1.3.jar
+    ]]></notes>
+    <cve>CVE-2017-5929</cve>
+    <cve>CVE-2021-33813</cve>
+  </suppress> 
+</suppressions>

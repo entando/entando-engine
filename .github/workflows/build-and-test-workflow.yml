@@ -13,224 +13,93 @@ on:
       - develop
 
 jobs:
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # PREPARE
   prepare:
     env:
-      CLONE_URL: ${{ github.event.pull_request.base.repo.clone_url }}
-      BRANCH_NAME: ${{ github.head_ref }}
-      REPO_FOLDER: repo_folder
-      SHA: ${{ github.sha }}
-      URLT: ${{ github.event.repository.statuses_url }}
+      PPL_CONTEXT: ${{ toJson(github) }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      REPO_FOLDER: "repo_folder"
+      ENTANDO_OPT_LOG_LEVEL: DEBUG
     runs-on: ubuntu-latest
     steps:
-      - name: "Dump GitHub context"
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: "Remove label prepared (WORKOROUND TO ENSURE NEXT ADD LABEL EVENT IS TRIGGERED)"
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          label: prepared
-          type: remove
-      # CHECKOUT
-      - name: "Checkout"
-        env:
-          TOKEN_SECRET: ${{ secrets.GITHUB_TOKEN.token }}
+      - name: "PR PIPELINE START"
         run: |
-          authUrl=$(echo "$CLONE_URL" | sed "s|://|://$TOKEN_SECRET@|")
-          git clone "$authUrl" "$REPO_FOLDER"
-          cd "$REPO_FOLDER"
-          git config --global user.email "cicd@entando.com"
-          git config --global user.name "firegloves"
-          git config pull.rebase false
-          git checkout "$BRANCH_NAME"
-          git pull
+          source <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/engine-exp/macro/install.sh")
+          ~/ppl-run \
+            pr-status-report --AND \
+            @pr-labels "REMOVE-LABEL-PREPARED" remove "prepared"  # in order to trigger the related label event
+      - name: "Checkout"
+        run: |
+          ~/ppl-run checkout-pr-branch "$REPO_FOLDER"
       # PR FORMAT CHECK
       - name: "PR format check"
         id: pr-format-check
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          ENTANDO_OPT_PR_SUMMARY_FORMAT: ${{ secrets.ENTANDO_OPT_PR_SUMMARY_FORMAT }}
         run: |
-          cd "$REPO_FOLDER"
-          # fn to update status check description
-          echo "$DBG"
-          SHA2="$(git rev-parse HEAD)"
-          echo "XXXXXXXXXXXXX-1: $SHA"
-          echo "XXXXXXXXXXXXX-2: $SHA2"
-          URL="${URLT//\{sha\}/$SHA}"
-          echo "XXXX $URL"
-          upd() {
-            curl "$URL" \
-              -X POST \
-              -H "Accept: application/json" \
-              -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN.token }}' \
-              -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
-            || true
-          }
-          echo "TITLE: $PR_TITLE"
-          # check name consistency
-          # if [[ ! "$PR_TITLE" =~ ^[A-Z]{2,5}-[0-9]{1,5}([[:space:]]|:) ]]
-          # then
-          #   echo "NOT MATCHING"
-          #   upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
-          #   exit 1
-          # fi
-
-          TICKET_ID_REGEX="[A-Z]{2,5}-[0-9]{1,5}"
-          REGEX="^${TICKET_ID_REGEX}([[:space:]]|:)"
-          REGEX_2="^${TICKET_ID_REGEX}\/${TICKET_ID_REGEX}([[:space:]]|:)"
-          # PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
-          echo "###### SINGLE HIER ${ENTANDO_OPT_PR_SUMMARY_FORMAT}"
-          case "${ENTANDO_OPT_PR_SUMMARY_FORMAT}" in
-            "SINGLE")       # e.g. "ENG-0001 PR title"
-              echo "SINGLE"
-              PR_REGEX_ARRAY="${REGEX}"
-              ;;
-            "HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
-              echo "HIER"
-              PR_REGEX_ARRAY="${REGEX_2}"
-              ;;
-            "SINGLE|HIERARCHICAL") # e.g. "ENG-0001 PR title" OR "ENG-0001/ENG-0002 PR title"
-              echo "MULTIPLE"
-              PR_REGEX_ARRAY="${REGEX};${REGEX_2}"
-              ;;
-          esac
-          IFS=';' read -r -a regex_array <<< "${PR_REGEX_ARRAY}"
-          prTitleIsValid=false
-          echo "REGEX ${regex_array[0]}"
-          for i in "${!regex_array[@]}"
-          do
-            echo "VALIDATING WITH ${regex_array[i]}"
-            if [[ "$PR_TITLE" =~ ${regex_array[i]} ]]; then
-              prTitleIsValid=true
-              break
-            fi
-          done
-
-          if [[ "${prTitleIsValid}" = false ]]; then
-            echo "NOT MATCHING"
-            upd "failure" "Failed" "The Pull Request title does not respect the expected format. E.g. ENG-1234 feature description"
-            exit 1
-          fi
-
-          # get PR story id
-          # PR_STORY_ID=$(echo "$PR_TITLE" | sed -E 's/([A-Z]{2,5}-[0-9]{1,5}).*/\1/')
-          # echo "PR_STORY_ID $PR_STORY_ID"
-          # echo "::set-output name=PR_STORY_ID::$PR_STORY_ID"
+          ~/ppl-run check-pr-format "$REPO_FOLDER"
       # BOM
       - name: "entando-core-bom check"
-        env:
-          LABELS: ${{ toJson(github.event.pull_request.labels) }}
+        id: pr-bom-check
         run: |
-          upd() {
-            curl "$URL" \
-              -X POST \
-              -H "Accept: application/json" \
-              -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN.token }}' \
-              -d "{\"state\":\"$1\", \"description\": \"$3\", \"context\":\"$2\"}" \
-            || true
-          }
-          SKIP_BOM_CHECK_LABEL=$(jq -r '.[] | select(.name=="no-bom-check")' <<< $LABELS)
-          if [[ "" != "$SKIP_BOM_CHECK_LABEL" ]]; then
-            echo "Skipping BOM check"
-            exit 0
-          fi
-          # check for pom.xml existence
-          # TODO do we want to manage differently this check?
-          FILE="$REPO_FOLDER/pom.xml"
-          if [[ ! -f "$FILE" ]]; then
-              exit 0
-          fi
-          # fetch entando-core-bom tags
-          coreBomDir="entando-core-bom"
-          mkdir "$coreBomDir" && cd "$coreBomDir"
-          git init
-          git fetch --tag https://github.com/entando/entando-core-bom.git &> /dev/null
-          # set version
-          # lastVersion=$( git tag -l | tail -1 | sed 's/^v\(.*\)/\1/')
-          lastVersion=$(git describe --tags $(git rev-list --tags --max-count=1) | sed 's/^v\(.*\)/\1/')
-          cd .. && rm -rf "$coreBomDir"
-          # install xmlstarlet
-          sudo apt-get install xmlstarlet
-          # get entando-core-bom version
-          # check if bom exist in the current project pom file
-          # TODO reorganize: at least the bom presence check should be done at the beginning, blocking the fetch too
-          cd "$REPO_FOLDER"
-          # set -x TODO test with and without this
-          # get BOM version from pom.xml
-          bomVersion=$(xmlstarlet sel -N pom="http://maven.apache.org/POM/4.0.0" -t \                                         # apply namespace and template
-            -m "/pom:project/pom:dependencyManagement/pom:dependencies/pom:dependency[pom:artifactId='entando-core-bom']" \   # on every node matching this xpath
-            -v "./pom:version" pom.xml) || true                                                                               # get the "version" node value OR skip the error
-          # if the current project does not depends on entando-core-bom => exit OK
-          [ -z "$bomVersion" ] && echo "BOM dependency not found" && exit 0
-          echo "BOM VERSION IN pom.xml: $bomVersion"
-          echo "LAST_VERSION entando-core-bom AVAILABLE: $lastVersion"
-          # if the pom.xml entando-core-bom version is not aligned with the last available one => exit FAIL
-          if [[ "$bomVersion" != "$lastVersion" ]]; then
-            echo "BOM VERSION OUT OF DATE"
-            upd "failure" "Failed" "The entando-core-bom version is not aligned with the last available version"
-            exit 1
-          fi
-      # ADD LABEL PREPARED
-      - name: "Add label prepared"
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          label: prepared
-          type: add
+          ~/ppl-run @pr-labels "ADD-LABEL-PREPARED" add "prepared"
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # SONAR
   sonar:
     needs: [ 'prepare' ]
+    env:
+      PPL_CONTEXT: ${{ toJson(github) }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Check NO-SONAR label"
-        env:
-          LABELS: ${{ toJson(github.event.pull_request.labels) }}
-        id: skip-label-check
+      - name: "SONAR GATE CHECK"
+        id: GATE
         run: |
-          SKIP_LABEL=$(jq -r '.[] | select(.name=="no-sonar")' <<< $LABELS)
-          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
-          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+          source <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/engine-exp/macro/install.sh")
+          ppl--gate-check SONAR
       - name: "Checkout"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/checkout@v2
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: "Set up JDK 11"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: "Cache SonarCloud packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/cache@v2
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: "Build and analyze"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN.token }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-      - name: "Remove NO-SONAR label"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          label: no-sonar
-          type: remove
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn SONAR
+      - name: "Clean SKIP-SONAR"
+        if: steps.GATE.outputs.ENABLED != 'true'
+        run: |
+          ~/ppl-run @pr-labels "CLEAN-SKIP-SONAR" remove "skip-sonar"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # BUILD AND TEST
   tests:
     needs: [ 'prepare' ]
+    env:
+      PPL_CONTEXT: ${{ toJson(github) }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1 # ensure the sequential running of the spawned jobs
@@ -247,66 +116,80 @@ jobs:
             mvn-test-group: 'fast-test,slow-test'
             remove-label: true
     steps:
-      - name: "Check NO-TEST label"
-        env:
-          LABELS: ${{ toJson(github.event.pull_request.labels) }}
-        id: skip-label-check
+      - name: "TESTS GATE CHECK"
+        id: GATE
         run: |
-          SKIP_LABEL=$(jq '.[] | select(.name=="no-test")' <<< $LABELS)
-          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
-          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+          source <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/engine-exp/macro/install.sh")
+          ppl--gate-check TESTS
       - name: "Checkout"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/checkout@v2
       - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: "Set up JDK 1.1"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: "Run tests with Maven"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
-        run: mvn -B test -Dgroups=${{ matrix.mvn-test-group }}
-      - name: "Remove NO-TEST label"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true' && matrix.remove-label
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          label: no-test
-          type: remove
+      - name: "Build and run tests"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn BUILD-AND-TEST "${{ matrix.mvn-test-group }}"
+      - name: "Clean SKIP-TESTS"
+        if: steps.GATE.outputs.ENABLED != 'true' && matrix.remove-label
+        run: |
+          ~/ppl-run @pr-labels "CLEAN-SKIP-TEST" remove "skip-tests"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # OWASP
   owasp:
     needs: [ 'prepare' ]
+    env:
+      PPL_CONTEXT: ${{ toJson(github) }}
+      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Check NO-OWASP label"
-        env:
-          LABELS: ${{ toJson(github.event.pull_request.labels) }}
-        id: skip-label-check
+      - name: "OWASP GATE CHECK"
+        id: GATE
         run: |
-          SKIP_LABEL=$(jq '.[] | select(.name=="no-owasp")' <<< $LABELS)
-          if [ -z "$SKIP_LABEL" ]; then EXECUTE_STEP=true; else EXECUTE_STEP=false; fi
-          echo "::set-output name=EXECUTE_STEP::$EXECUTE_STEP"
+          source <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/engine-exp/macro/install.sh")
+          ppl--gate-check OWASP
+      - name: "Checkout"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/checkout@v2
       - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: "Build and run tests"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn BUILD-AND-TEST "${{ matrix.mvn-test-group }}"
+      - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: "OWASP checks"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP == 'true'
+        if: steps.GATE.outputs.ENABLED == 'true'
         run: |
-          echo ${{ steps.skip-label-check.outputs.EXECUTE_STEP }}
-          echo 'OWASP CHECKS PASSED '
-      - name: "Remove NO-OWASP label"
-        if: steps.skip-label-check.outputs.EXECUTE_STEP != 'true'
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          label: no-owasp
-          type: remove
+          ~/ppl-run mvn OWASP
+      - name: "Clean SKIP-OWASP"
+        if: steps.GATE.outputs.ENABLED != 'true'
+        run: |
+          ~/ppl-run @pr-labels "CLEAN-SKIP-OWASP" remove "skip-owasp"

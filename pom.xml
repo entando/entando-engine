@@ -8,7 +8,7 @@
         <version>6.3.16</version>
     </parent>
     <groupId>org.entando.entando</groupId>
-    <artifactId>entando-engine-ngpl</artifactId>
+    <artifactId>entando-engine</artifactId>
     <packaging>jar</packaging>
     <version>1.3.0</version>
     <name>Entando Core: Engine</name>
@@ -502,4 +502,41 @@
             <url>https://nexus-jx.apps.serv.run/repository/ngpl-maven-releases/</url>
         </repository>
     </distributionManagement>
+    
+    <profiles>
+      <profile>
+        <id>owasp-dependency-check</id>
+        <build>
+          <plugins>
+            <!--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-->
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>6.2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <suppressionFiles>
+                        <suppressionFile>https://raw.githubusercontent.com/entando/${project.parent.artifactId}/v${project.parent.version}/owasp-dependency-check-suppression.xml</suppressionFile>
+                        <suppressionFile>owasp-project-suppressions.xml</suppressionFile>
+                    </suppressionFiles>
+                    <failOnError>true</failOnError>
+                    <failBuildOnAnyVulnerability>${verifyAllFailures}</failBuildOnAnyVulnerability>
+                    <name>National Vulnerability Database Report</name>
+                    <!--JUNIT/XML required to verify failures from the pipeline-->
+                    <formats>HTML,XML,JUNIT</formats>
+                    <outputDirectory>target/site</outputDirectory>
+                    <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                </configuration>
+            </plugin>
+            <!--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-->
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 </project>
