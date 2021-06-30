@@ -15,6 +15,7 @@ package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -171,7 +172,10 @@ public class URLManager extends AbstractURLManager {
             return;
         }
         if (this.isForceAddSchemeHost()) {
-            String reqScheme = request.getScheme();
+            String reqScheme = request.getHeader("X-Forwarded-Proto");
+            if (StringUtils.isBlank(reqScheme)) {
+                reqScheme = request.getScheme();
+            }
             link.append(reqScheme);
             link.append("://");
             String serverName = request.getServerName();
