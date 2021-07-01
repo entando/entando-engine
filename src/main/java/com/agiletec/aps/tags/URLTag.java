@@ -52,18 +52,18 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		try {
 			IURLManager urlManager = 
 					(IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.pageContext);
-			this.setPageUrl(urlManager.createURL(reqCtx));
+			this._pageUrl = urlManager.createURL(reqCtx);
 			if (_pageCode != null) {
-				this.getPageUrl().setPageCode(_pageCode);
+				_pageUrl.setPageCode(_pageCode);
 			}
 			if (_langCode != null) {
-				this.getPageUrl().setLangCode(_langCode);
+				_pageUrl.setLangCode(_langCode);
 			}
 			if (this.isParamRepeat()) {
 				List<String> exclusion = this.getParametersToExclude();
-				this.getPageUrl().setParamRepeat(exclusion);
+				_pageUrl.setParamRepeat(exclusion);
 			}
-			this.getPageUrl().setBaseUrlMode(this.getBaseUrlMode());
+			this._pageUrl.setBaseUrlMode(this.getBaseUrlMode());
 		} catch (Throwable t) {
 			_logger.error("Error during tag initialization", t);
 			throw new JspException("Error during tag initialization", t);
@@ -77,7 +77,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	 */
 	@Override
 	public int doEndTag() throws JspException {
-		String url = this.getPageUrl().getURL();
+		String url = _pageUrl.getURL();
 		if (this.getVar() != null) {
 			this.pageContext.setAttribute(this.getVar(), url);
 		} else {
@@ -94,13 +94,13 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 
 	@Override
 	public void addParameter(String name, String value) {
-		this.getPageUrl().addParam(name, value);
+		this._pageUrl.addParam(name, value);
 	}
 
 	protected List<String> getParametersToExclude() {
 		List<String> parameters = new ArrayList<String>();
 		String csv = this.getExcludeParameters();
-		if (!StringUtils.isBlank(csv)) {
+		if (null != csv && csv.trim().length() > 0) {
 			CollectionUtils.addAll(parameters, csv.split(","));
 		}
 		parameters.add(SystemConstants.LOGIN_PASSWORD_PARAM_NAME);
@@ -206,14 +206,6 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 
 	public void setBaseUrlMode(String baseUrlMode) {
 		this.baseUrlMode = baseUrlMode;
-	}
-
-	protected PageURL getPageUrl() {
-		return _pageUrl;
-	}
-
-	protected void setPageUrl(PageURL pageUrl) {
-		this._pageUrl = pageUrl;
 	}
 
 	private String _langCode;
