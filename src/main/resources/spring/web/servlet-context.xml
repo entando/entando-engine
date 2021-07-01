@@ -105,10 +105,15 @@
           class="org.entando.entando.web.common.interceptor.EntandoOauth2Interceptor" />
     <bean id="activityStreamInterceptor"
           class="org.entando.entando.web.common.interceptor.ActivityStreamInterceptor" />
-    
+   <bean id="fileBrowserSizeInterceptor"
+       class="org.entando.entando.web.common.interceptor.FileBrowserSizeInterceptor">
+       <constructor-arg name="maxSize" value="${file.upload.maxSize}" />
+   </bean>
+
     <mvc:interceptors>
         <ref bean="entandoInterceptor" />
         <ref bean="activityStreamInterceptor" />
+        <ref bean="fileBrowserSizeInterceptor" />
     </mvc:interceptors>
 
 </beans>
