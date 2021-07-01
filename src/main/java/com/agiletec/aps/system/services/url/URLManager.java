@@ -92,7 +92,7 @@ public class URLManager extends AbstractURLManager {
                 page = this.getPageManager().getOnlineRoot();
             }
             HttpServletRequest request = (null != reqCtx) ? reqCtx.getRequest() : null;
-            String url = this.createURL(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
+            String url = this.createURL(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), pageUrl.getBaseUrlMode(), request);
             if (null != reqCtx && this.useJsessionId()) {
                 HttpServletResponse resp = reqCtx.getResponse();
                 String encUrl = resp.encodeURL(url.toString());
@@ -134,10 +134,15 @@ public class URLManager extends AbstractURLManager {
 
     @Override
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
-                            HttpServletRequest request) throws EntException {
+            HttpServletRequest request) throws EntException {
+        return this.createURL(requiredPage, requiredLang, params, escapeAmp, null, request);
+    }
+
+    public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
+            String forcedBaseUrlMode, HttpServletRequest request) throws EntException {
         StringBuilder url = null;
         try {
-            url = new StringBuilder(this.getApplicationBaseURL(request));
+            url = new StringBuilder(this.getApplicationBaseURL(forcedBaseUrlMode, request));
             if (!this.isUrlStyleBreadcrumbs()) {
                 url.append(requiredLang.getCode()).append('/');
                 url.append(requiredPage.getCode()).append(".page");
@@ -158,8 +163,12 @@ public class URLManager extends AbstractURLManager {
 
     @Override
     public String getApplicationBaseURL(HttpServletRequest request) throws EntException {
+        return this.getApplicationBaseURL(null, request);
+    }
+
+    public String getApplicationBaseURL(String forcedBaseUrlMode, HttpServletRequest request) throws EntException {
         StringBuilder baseUrl = new StringBuilder();
-        this.addBaseURL(baseUrl, request);
+        this.addBaseURL(baseUrl, forcedBaseUrlMode, request);
         if (!baseUrl.toString().endsWith("/")) {
             baseUrl.append("/");
         }
@@ -167,11 +176,16 @@ public class URLManager extends AbstractURLManager {
     }
 
     protected void addBaseURL(StringBuilder link, HttpServletRequest request) {
+        this.addBaseURL(link, null, request);
+    }
+
+    protected void addBaseURL(StringBuilder link, String forcedBaseUrlMode, HttpServletRequest request) {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;
         }
-        if (this.isForceAddSchemeHost()) {
+        String baseUrlMode = this.calculateBaseUrlStrategy(forcedBaseUrlMode, request);
+        if (this.isForceAddSchemeHost(baseUrlMode)) {
             String reqScheme = request.getHeader("X-Forwarded-Proto");
             if (StringUtils.isBlank(reqScheme)) {
                 reqScheme = request.getScheme();
@@ -195,7 +209,7 @@ public class URLManager extends AbstractURLManager {
             if (this.addContextName()) {
                 link.append(request.getContextPath());
             }
-        } else if (this.isRelativeBaseUrl()) {
+        } else if (this.isRelativeBaseUrl(baseUrlMode)) {
             if (this.addContextName()) {
                 link.append(request.getContextPath());
             }
@@ -204,19 +218,49 @@ public class URLManager extends AbstractURLManager {
         }
     }
 
+    protected String calculateBaseUrlStrategy(String forcedBaseUrlMode, HttpServletRequest request) {
+        if (null == request) {
+            return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
+        }
+        String param = this.getBaseUrlStrategy();
+        if (StringUtils.isBlank(forcedBaseUrlMode)) {
+            return param;
+        }
+        boolean isDefaultRelative = this.isRelativeBaseUrl(param);
+        if (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equalsIgnoreCase(forcedBaseUrlMode)
+                || (isDefaultRelative && "requestIfRelative".equalsIgnoreCase(forcedBaseUrlMode))) {
+            return SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+        } else if (SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
+        } else if (SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE;
+        }
+        return param;
+    }
+
+    protected String getBaseUrlStrategy() {
+        return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
+    }
+
     protected boolean isForceAddSchemeHost() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
+        return this.isForceAddSchemeHost(this.getBaseUrlStrategy());
+    }
+
+    protected boolean isForceAddSchemeHost(String param) {
         return (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equals(param));
     }
 
     protected boolean isRelativeBaseUrl() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
+        return this.isRelativeBaseUrl(this.getBaseUrlStrategy());
+    }
+
+    protected boolean isRelativeBaseUrl(String param) {
         return (SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE.equals(param));
     }
 
     protected boolean isStaticBaseUrl() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
+        String param = this.getBaseUrlStrategy();
+        return (StringUtils.isBlank(param) || SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
     }
 
     protected boolean addContextName() {
