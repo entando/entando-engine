@@ -99,6 +99,8 @@ public interface SystemConstants {
     public static final String EXTRAPAR_EXECUTOR_BEAN_CONTAINER = "reqCtx_param_ExecutorBeanContainer";
 
     public static final String EXTRAPAR_CSP_NONCE_TOKEN = "reqCtx_param_nonce_token";
+    
+    public static final String EXTRAPAR_WEBUI_APPL_BASE_URL = "webui_applicationBaseURL";
 
     /**
      * Nome parametro di sessione: utente corrente
