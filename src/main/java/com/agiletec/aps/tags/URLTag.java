@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -51,18 +52,19 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		try {
 			IURLManager urlManager = 
 					(IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.pageContext);
-			this._pageUrl = urlManager.createURL(reqCtx);
+			this.setPageUrl(urlManager.createURL(reqCtx));
 			if (_pageCode != null) {
-				_pageUrl.setPageCode(_pageCode);
+				this.getPageUrl().setPageCode(_pageCode);
 			}
 			if (_langCode != null) {
-				_pageUrl.setLangCode(_langCode);
+				this.getPageUrl().setLangCode(_langCode);
 			}
-            this._pageUrl.setEscapeAmp(this.isEscapeAmp());
+            this.getPageUrl().setEscapeAmp(this.isEscapeAmp());
 			if (this.isParamRepeat()) {
 				List<String> exclusion = this.getParametersToExclude();
-				_pageUrl.setParamRepeat(exclusion);
+				this.getPageUrl().setParamRepeat(exclusion);
 			}
+			this.getPageUrl().setBaseUrlMode(this.getBaseUrlMode());
 		} catch (Throwable t) {
 			_logger.error("Error during tag initialization", t);
 			throw new JspException("Error during tag initialization", t);
@@ -76,7 +78,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	 */
 	@Override
 	public int doEndTag() throws JspException {
-		String url = _pageUrl.getURL();
+		String url = this.getPageUrl().getURL();
 		if (this.getVar() != null) {
 			this.pageContext.setAttribute(this.getVar(), url);
 		} else {
@@ -93,13 +95,13 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 
 	@Override
 	public void addParameter(String name, String value) {
-		this._pageUrl.addParam(name, value);
+		this.getPageUrl().addParam(name, value);
 	}
     
 	protected List<String> getParametersToExclude() {
 		List<String> parameters = new ArrayList<>();
 		String csv = this.getExcludeParameters();
-		if (null != csv && csv.trim().length() > 0) {
+		if (!StringUtils.isBlank(csv)) {
 			CollectionUtils.addAll(parameters, csv.split(","));
 		}
 		parameters.add(SystemConstants.LOGIN_PASSWORD_PARAM_NAME);
@@ -115,6 +117,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this.escapeAmp = true;
 		this._pageUrl = null;
 		this._excludeParameters = null;
+		this.baseUrlMode = null;
 	}
 
 	/**
@@ -207,6 +210,22 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this._excludeParameters = excludeParameters;
 	}
 
+	public String getBaseUrlMode() {
+		return baseUrlMode;
+	}
+
+	public void setBaseUrlMode(String baseUrlMode) {
+		this.baseUrlMode = baseUrlMode;
+	}
+
+	protected PageURL getPageUrl() {
+		return _pageUrl;
+	}
+
+	protected void setPageUrl(PageURL pageUrl) {
+		this._pageUrl = pageUrl;
+	}
+
 	private String _langCode;
 	private String _pageCode;
 	private String _varName;
@@ -214,5 +233,6 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	private boolean escapeAmp = true;
 	private PageURL _pageUrl;
 	private String _excludeParameters;
+	private String baseUrlMode;
 
 }
