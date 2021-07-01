@@ -63,6 +63,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 				List<String> exclusion = this.getParametersToExclude();
 				_pageUrl.setParamRepeat(exclusion);
 			}
+			this._pageUrl.setBaseUrlMode(this.getBaseUrlMode());
 		} catch (Throwable t) {
 			_logger.error("Error during tag initialization", t);
 			throw new JspException("Error during tag initialization", t);
@@ -115,6 +116,7 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this.escapeAmp = true;
 		this._pageUrl = null;
 		this._excludeParameters = null;
+		this.baseUrlMode = null;
 	}
 
 	/**
@@ -207,6 +209,14 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this._excludeParameters = excludeParameters;
 	}
 
+	public String getBaseUrlMode() {
+		return baseUrlMode;
+	}
+
+	public void setBaseUrlMode(String baseUrlMode) {
+		this.baseUrlMode = baseUrlMode;
+	}
+
 	private String _langCode;
 	private String _pageCode;
 	private String _varName;
@@ -214,5 +224,6 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	private boolean escapeAmp = true;
 	private PageURL _pageUrl;
 	private String _excludeParameters;
+	private String baseUrlMode;
 
 }
