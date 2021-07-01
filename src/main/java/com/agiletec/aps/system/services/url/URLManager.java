@@ -184,7 +184,7 @@ public class URLManager extends AbstractURLManager {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;
         }
-        String baseUrlMode = this.calculateBaseUrlStrategy(forcedBaseUrlMode, request);
+        String baseUrlMode = this.calculateBaseUrlMode(forcedBaseUrlMode, request);
         if (this.isForceAddSchemeHost(baseUrlMode)) {
             String reqScheme = request.getHeader("X-Forwarded-Proto");
             if (StringUtils.isBlank(reqScheme)) {
@@ -218,7 +218,7 @@ public class URLManager extends AbstractURLManager {
         }
     }
 
-    protected String calculateBaseUrlStrategy(String forcedBaseUrlMode, HttpServletRequest request) {
+    protected String calculateBaseUrlMode(String forcedBaseUrlMode, HttpServletRequest request) {
         if (null == request) {
             return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
         }
@@ -228,7 +228,7 @@ public class URLManager extends AbstractURLManager {
         }
         boolean isDefaultRelative = this.isRelativeBaseUrl(param);
         if (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equalsIgnoreCase(forcedBaseUrlMode)
-                || (isDefaultRelative && "requestIfRelative".equalsIgnoreCase(forcedBaseUrlMode))) {
+                || (isDefaultRelative && SystemConstants.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode))) {
             return SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
         } else if (SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equalsIgnoreCase(forcedBaseUrlMode)) {
             return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
