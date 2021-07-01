@@ -105,7 +105,7 @@ class URLManagerTest {
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
         
-        pageURL.setBaseUrlMode("requestIfRelative");
+        pageURL.setBaseUrlMode(SystemConstants.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE);
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://www.entando.org/en/homepage.page", url);
         
