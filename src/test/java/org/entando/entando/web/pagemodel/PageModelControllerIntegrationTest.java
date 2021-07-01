@@ -130,7 +130,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(25)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(23)));
     }
 
     @Test
@@ -163,7 +163,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.type", is(PageModelController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(25)))
+                .andExpect(jsonPath("$.payload.usage", is(23)))
                 .andReturn();
     }
 

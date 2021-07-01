@@ -54,7 +54,7 @@ class DashboardControllerIntegrationTest extends AbstractControllerIntegrationTe
                 .perform(get("/dashboard/pageStatus")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload.published", is(16)));
+        result.andExpect(jsonPath("$.payload.published", is(15)));
         result.andExpect(jsonPath("$.payload.unpublished", is(1)));
         result.andExpect(jsonPath("$.payload.draft", is(1)));
     }

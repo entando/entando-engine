@@ -47,9 +47,9 @@ public class CategoryService implements ICategoryService {
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
 
     private ICategoryManager categoryManager;
-    @Autowired
+    @Autowired(required = false)
     private List<CategoryUtilizer> categoryUtilizers;
-    @Autowired
+    @Autowired(required = false)
     private List<CategoryServiceUtilizer> categoryServiceUtilizers;
     @Autowired
     private CategoryValidator categoryValidator;
@@ -64,6 +64,9 @@ public class CategoryService implements ICategoryService {
     public Integer getComponentUsage(String componentCode) {
         int totalCount = 0;
         try {
+            if (null == this.getCategoryUtilizers()) {
+                return totalCount;
+            }
             for (CategoryUtilizer categoryUtilizer : this.getCategoryUtilizers()) {
                 totalCount += categoryUtilizer.getCategoryUtilizers(componentCode).size();
             }
@@ -115,6 +118,9 @@ public class CategoryService implements ICategoryService {
         CategoryDto dto = null;
         try {
             dto = this.getDtoBuilder().convert(category);
+            if (null == this.getCategoryUtilizers()) {
+                return dto;
+            }
             for (CategoryUtilizer categoryUtilizer : this.getCategoryUtilizers()) {
                 List references = categoryUtilizer.getCategoryUtilizers(categoryCode);
                 dto.getReferences().put(((IManager) categoryUtilizer).getName(), (null != references && !references.isEmpty()));
@@ -153,6 +159,9 @@ public class CategoryService implements ICategoryService {
 
     private CategoryServiceUtilizer<?> getCategoryServiceUtilizer(String managerName) {
         List<CategoryServiceUtilizer> beans = this.getCategoryServiceUtilizers();
+        if (null == beans) {
+            return null;
+        }
         Optional<CategoryServiceUtilizer> defName = beans.stream()
                 .filter(service -> service.getManagerName().equals(managerName)).findFirst();
         if (defName.isPresent()) {
@@ -167,7 +176,6 @@ public class CategoryService implements ICategoryService {
         if (null == parentCategory) {
             throw new ResourceNotFoundException(CategoryValidator.ERRCODE_PARENT_CATEGORY_NOT_FOUND, "parent category", categoryDto.getParentCode());
         }
-
         return this.checkForExistenceOrThrowValidationConflictException(categoryDto)
                 .map(this::saveNewCategory)
                 .orElse(categoryDto);
@@ -179,7 +187,6 @@ public class CategoryService implements ICategoryService {
      * @return
      */
     private CategoryDto saveNewCategory(CategoryDto categoryDto) {
-
         try {
             Category categoryToAdd = new Category();
             categoryToAdd.setCode(categoryDto.getCode());
@@ -223,26 +230,25 @@ public class CategoryService implements ICategoryService {
         if (null == category) {
             throw new ResourceNotFoundException("category", categoryCode);
         }
-
         if (categoryCode.equals(CategoryValidator.ROOT_CATEGORY)) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
             bindingResult.reject(CategoryValidator.ERRCODE_ROOT_CATEGORY_CANNOT_BE_DELETED, new String[]{categoryCode}, "category.cannot.delete.root");
             throw new ValidationGenericException(bindingResult);
         }
-
         if (category.getChildrenCodes().length > 0) {
             BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
             bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_HAS_CHILDREN, new String[]{categoryCode}, "category.cannot.delete.children");
             throw new ValidationGenericException(bindingResult);
         }
-
         try {
-            for (CategoryUtilizer categoryUtilizer : this.getCategoryUtilizers()) {
-                List references = categoryUtilizer.getCategoryUtilizers(categoryCode);
-                if (null != references && !references.isEmpty()) {
-                    BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
-                    bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_REFERENCES, new String[]{categoryCode}, "category.cannot.delete.references");
-                    throw new ValidationGenericException(bindingResult);
+            if (null != this.getCategoryUtilizers()) {
+                for (CategoryUtilizer categoryUtilizer : this.getCategoryUtilizers()) {
+                    List references = categoryUtilizer.getCategoryUtilizers(categoryCode);
+                    if (null != references && !references.isEmpty()) {
+                        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(category, "category");
+                        bindingResult.reject(CategoryValidator.ERRCODE_CATEGORY_REFERENCES, new String[]{categoryCode}, "category.cannot.delete.references");
+                        throw new ValidationGenericException(bindingResult);
+                    }
                 }
             }
             this.getCategoryManager().deleteCategory(categoryCode);
@@ -282,41 +288,35 @@ public class CategoryService implements ICategoryService {
         return categoryValidator;
     }
 
-    public CategoryService setCategoryValidator(
-            CategoryValidator categoryValidator) {
+    public CategoryService setCategoryValidator(CategoryValidator categoryValidator) {
         this.categoryValidator = categoryValidator;
         return this;
     }
 
     /**
-     * check if the received Category already exists
-     * if it exists with equal name but different description, it throws ValidationConflictException
-     * if it exists completely equal, it will return an empty optional that means that the group has NOT to be saved
+     * check if the received Category already exists if it exists with equal name but different description, it throws
+     * ValidationConflictException if it exists completely equal, it will return an empty optional that means that the
+     * group has NOT to be saved
      *
      * @param categoryDto the category to validate
      * @return the optional of the dto resulting from the validation, if empty the group has NOT to be saved
      */
     protected Optional<CategoryDto> checkForExistenceOrThrowValidationConflictException(CategoryDto categoryDto) {
-
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(categoryDto, "category");
         Category savedCategory = this.getCategoryManager().getCategory(categoryDto.getCode());
-
         // check for idempotemcy
         if (null != savedCategory && savedCategory.getCode().equals(categoryDto.getCode())) {
-
             CategoryDto savedCategoryDto = getDtoBuilder().convert(savedCategory);
-
             if (categoryValidator.areEquals(categoryDto, savedCategoryDto)) {
                 return Optional.empty();
             } else {
                 bindingResult
                         .reject(CategoryValidator.ERRCODE_CATEGORY_ALREADY_EXISTS_WITH_CONFLICTS, new String[]{categoryDto.getCode()},
                                 "category.exists.conflict");
-
                 throw new ValidationConflictException(bindingResult);
             }
         }
-
         return Optional.of(categoryDto);
     }
+    
 }

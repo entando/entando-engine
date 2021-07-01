@@ -3,13 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-
-
-
-
-
 			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
-
 
     <!--  async support -->
     <task:annotation-driven   />
@@ -53,8 +47,6 @@
         <property name="widgetTypeManager" ref="WidgetTypeManager" />
         <property name="langManager" ref="LangManager" />
     </bean>
-
-    <bean id="DataObjectModelBuilder" class="org.entando.entando.aps.system.services.dataobjectmodel.model.DataModelDtoBuilder" />
 
     <bean id="RoleDtoBuilder" class="org.entando.entando.aps.system.services.role.RoleDtoBuilder">
         <property name="roleManager" ref="RoleManager" />
@@ -116,19 +108,7 @@
         <constructor-arg name="dtoBuilder" ref="PageModelDtoBuilder"/>
     </bean>
 
-    <bean id="DataObjectModelService" class="org.entando.entando.aps.system.services.dataobjectmodel.DataObjectModelService" >
-        <property name="dtoBuilder" ref="DataObjectModelBuilder" />
-        <property name="dataObjectModelManager" ref="DataObjectModelManager" />
-        <property name="dataObjectManager" ref="DataObjectManager" />
-        <property name="dictionaryProvider" ref="DataModelDictionaryProvider" />
-    </bean>
-
     <bean id="EntityManagerService" class="org.entando.entando.aps.system.services.entity.EntityManagerService" />
-
-    <bean id="DataObjectService" class="org.entando.entando.aps.system.services.dataobject.DataObjectService" >
-        <property name="pageManager" ref="PageManager" />
-        <property name="dataObjectModelManager" ref="DataObjectModelManager" />
-    </bean>
 
     <bean id="LanguageService" class="org.entando.entando.aps.system.services.language.LanguageService" >
         <property name="langManager" ref="LangManager" />
@@ -146,7 +126,6 @@
     <bean id="UserSettingsService" class="org.entando.entando.aps.system.services.usersettings.UserSettingsService">
         <property name="configManager" ref="BaseConfigManager" />
     </bean>
-
 
     <bean id="CategoryService" class="org.entando.entando.aps.system.services.category.CategoryService" >
         <property name="categoryManager" ref="CategoryManager" />

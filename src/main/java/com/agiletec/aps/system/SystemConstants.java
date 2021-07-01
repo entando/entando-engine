@@ -111,11 +111,6 @@ public interface SystemConstants {
     public static final String K_CONTENT_ID_PARAM = "contentId";
 
     /**
-     * Nome del parametro di query string per l'identificatore di dataobject.
-     */
-    public static final String K_DATAOBJECT_ID_PARAM = "dataId";
-
-    /**
      * Nome del servizio che gestisce la configurazione del sistema.
      */
     public static final String BASE_CONFIG_MANAGER = "BaseConfigManager";
@@ -248,18 +243,6 @@ public interface SystemConstants {
     public static final String OAUTH_TOKEN_MANAGER = "OAuth2TokenManager";
 
     public static final String OAUTH_CONSUMER_MANAGER = "OAuthConsumerManager";
-
-    public static final String DATA_OBJECT_MANAGER = "DataObjectManager";
-
-    public static final String DATA_OBJECT_MODEL_MANAGER = "DataObjectModelManager";
-
-    public static final String DATA_OBJECT_RENDERER_MANAGER = "BaseDataObjectRenderer";
-
-    public static final String DATA_OBJECT_PAGE_MAPPER_MANAGER = "DataObjectPageMapperManager";
-
-    public static final String DATA_OBJECT_DISPENSER_MANAGER = "DataObjectDispenserManager";
-
-    public static final String DATA_OBJECT_ENGINE_MANAGER = "DataObjectSearchEngineManager";
 
     /**
      * Prefisso del nome del gruppo di oggetti in cache a servizio di una
@@ -414,15 +397,10 @@ public interface SystemConstants {
 
     public static final String ENTANDO_THREAD_NAME_PREFIX = "EntandoThread_";
 
+    @Deprecated
     public static final String DATA_TYPE_METADATA_DATE_FORMAT = "yyyyMMddHHmmss";
 
-    public static final String DATA_TYPE_ATTRIBUTE_ROLE_TITLE = "dataObject:title";
-
-    public static final String CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR = "dataobjectsubdir";
-
     public static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    public static final String PERMISSION_EDIT_DATAOBJECTS = "editDataObjects";
 
     public static final Integer OAUTH2_ACCESS_TOKEN_DEFAULT_VALIDITY_SECOND = 3600;
 
