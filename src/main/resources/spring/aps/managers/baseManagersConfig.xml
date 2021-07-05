@@ -43,43 +43,43 @@
     <bean name="initializerCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="apiCatalogCache" class="java.util.concurrent.ConcurrentHashMap"/>
     <bean name="keyGeneratorCache" class="java.util.concurrent.ConcurrentHashMap"/>
+
+    <util:set id="entandoDefaultCaches" >
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_Cache" p:store-ref="defaultCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_PageManager" p:store-ref="pageCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_PageModelManager" p:store-ref="pageModelCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_WidgetTypeManager" p:store-ref="widgetTypeCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_CategoryManager" p:store-ref="categoryCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_ConfigManager" p:store-ref="configCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_RoleManager" p:store-ref="roleCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_GroupManager" p:store-ref="groupCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_LangManager" p:store-ref="langCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_CacheInfoManager" p:store-ref="cacheInfoCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_I18nManager" p:store-ref="i18lnCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_UserProfileManager" p:store-ref="userProfileCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_InitializerManager" p:store-ref="initializerCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_ApiCatalogManager" p:store-ref="apiCatalogCache" />
+        <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
+                p:name="Entando_KeyGeneratorManager" p:store-ref="keyGeneratorCache" />
+    </util:set>
     
     <!-- SPRING OBJECT -->
     <bean id="springCacheManager" class="org.entando.entando.aps.system.services.cache.EntandoCacheManager">
-        <property name="caches">
-            <set>
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean" 
-                      p:name="Entando_Cache" p:store-ref="defaultCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_PageManager" p:store-ref="pageCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_PageModelManager" p:store-ref="pageModelCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_WidgetTypeManager" p:store-ref="widgetTypeCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_CategoryManager" p:store-ref="categoryCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_ConfigManager" p:store-ref="configCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_RoleManager" p:store-ref="roleCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_GroupManager" p:store-ref="groupCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_LangManager" p:store-ref="langCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_CacheInfoManager" p:store-ref="cacheInfoCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_I18nManager" p:store-ref="i18lnCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_UserProfileManager" p:store-ref="userProfileCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_InitializerManager" p:store-ref="initializerCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_ApiCatalogManager" p:store-ref="apiCatalogCache" />
-                <bean class="org.entando.entando.aps.system.services.cache.CustomConcurrentMapCacheFactoryBean"
-                      p:name="Entando_KeyGeneratorManager" p:store-ref="keyGeneratorCache" />
-            </set>
-        </property>
+        <property name="caches" ref="entandoDefaultCaches" />
     </bean>
 
     <bean id="CacheInfoManager" class="org.entando.entando.aps.system.services.cache.CacheInfoManager"
