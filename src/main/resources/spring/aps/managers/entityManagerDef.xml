@@ -38,7 +38,6 @@
               abstract="true" parent="abstractService" >
         <property name="entityClassName" value="com.agiletec.aps.system.common.entity.model.ApsEntity"/>
         <property name="entityTypeDom" ref="baseEntityTypeDom" />
-        <property name="categoryManager" ref="CategoryManager" />
         <property name="entityTypeFactory">
             <bean class="com.agiletec.aps.system.common.entity.parse.EntityTypeFactory">
                 <property name="configManager" ref="BaseConfigManager" />

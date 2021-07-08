@@ -149,11 +149,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
     }
 
     @Override
-    protected ICategoryManager getCategoryManager() {
-        return null;
-    }
-
-    @Override
     protected IEntityDAO getEntityDao() {
         return (IEntityDAO) this.getProfileDAO();
     }

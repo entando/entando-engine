@@ -141,17 +141,6 @@ public class ApsEntityDOM implements IApsEntityDOM, Serializable {
 	}
 	
 	/**
-	 * Add, setting its value, a new element to the categories tag.
-	 * @param categoryCode The value of the category tag.
-	 */
-	@Override
-	public void addCategory(String categoryCode) {
-		Element tag = new Element("category");
-		tag.setAttribute("id", categoryCode);
-		_root.getChild(TAG_CATEGORIES).addContent(tag);
-	}
-	
-	/**
 	 * Add a new attribute to a tag.
 	 * @param attributeElem The element, which corresponds to an attribute, 
 	 * to add to the entity XML structure.
@@ -199,9 +188,8 @@ public class ApsEntityDOM implements IApsEntityDOM, Serializable {
 
 	private final static String TAG_DESCR = "descr";
 	private final static String TAG_GROUPS = "groups";
-	private final static String TAG_CATEGORIES = "categories";
 	private final static String TAG_ATTRIBUTES = "attributes";
-	private final static String[] TAGS = {TAG_DESCR, TAG_GROUPS, TAG_CATEGORIES, TAG_ATTRIBUTES};
+	private final static String[] TAGS = {TAG_DESCR, TAG_GROUPS, TAG_ATTRIBUTES};
 
 	private String _rootElementName;
 

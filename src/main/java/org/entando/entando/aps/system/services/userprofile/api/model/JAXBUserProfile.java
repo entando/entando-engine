@@ -49,8 +49,8 @@ public class JAXBUserProfile extends JAXBEntity {
     }
 
     @Override
-    public IApsEntity buildEntity(IApsEntity prototype, ICategoryManager categoryManager, String langCode) {
-        IUserProfile profile = (IUserProfile) super.buildEntity(prototype, categoryManager, langCode);
+    public IApsEntity buildEntity(IApsEntity prototype, String langCode) {
+        IUserProfile profile = (IUserProfile) super.buildEntity(prototype, langCode);
         //this.valorizeTextAttribute(profile.getFirstNameAttributeName(), this.getFirstname(), profile);
         //this.valorizeTextAttribute(profile.getSurnameAttributeName(), this.getSurname(), profile);
         this.valorizeTextAttribute(profile.getMailAttributeName(), this.getMail(), profile);

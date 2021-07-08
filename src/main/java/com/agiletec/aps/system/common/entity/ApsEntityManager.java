@@ -49,7 +49,6 @@ import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -89,8 +88,6 @@ public abstract class ApsEntityManager extends AbstractService
     private String xmlAttributeRootElementName;
 
     private IApsEntityDOM entityDom;
-
-    private ICategoryManager categoryManager;
 
     private Map<String, AttributeRole> attributeRoles = null;
 
@@ -187,7 +184,7 @@ public abstract class ApsEntityManager extends AbstractService
             SAXParser parser = EntSafeXmlUtils.newSafeSAXParser();
             InputSource is = new InputSource(new StringReader(xml));
             EntityHandler handler = this.getEntityHandler();
-            handler.initHandler(entityPrototype, this.getXmlAttributeRootElementName(), this.getCategoryManager());
+            handler.initHandler(entityPrototype, this.getXmlAttributeRootElementName());
             parser.parse(is, handler);
             return entityPrototype;
         } catch (ParserConfigurationException | SAXException | IOException t) {
@@ -770,19 +767,6 @@ public abstract class ApsEntityManager extends AbstractService
             codes.add(smallType.getCode());
         }
         return codes;
-    }
-
-    /**
-     * Return the category manager used by the entities managed by the service.
-     *
-     * @return The category manager used by the entities.
-     */
-    protected ICategoryManager getCategoryManager() {
-        return categoryManager;
-    }
-
-    public void setCategoryManager(ICategoryManager categoryManager) {
-        this.categoryManager = categoryManager;
     }
 
     /**
