@@ -33,7 +33,6 @@ import com.agiletec.aps.system.common.entity.IEntityDAO;
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
