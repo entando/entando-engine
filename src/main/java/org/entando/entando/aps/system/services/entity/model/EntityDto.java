@@ -20,7 +20,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.CheckFormatUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;

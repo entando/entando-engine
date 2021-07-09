@@ -13,25 +13,8 @@
  */
 package com.agiletec.aps.system.common.entity.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
-
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBBooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBCompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBDateAttribute;
@@ -39,10 +22,20 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttrib
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBNumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.common.entity.model.attribute.JAXBEnumeratorMapAttribute;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * @author E.Santoboni

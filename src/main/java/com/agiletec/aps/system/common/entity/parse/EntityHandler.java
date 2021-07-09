@@ -13,18 +13,15 @@
  */
 package com.agiletec.aps.system.common.entity.parse;
 
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This class supports the parsing of the XML string that represents an Entity.
