@@ -73,7 +73,7 @@ public class EntityDto implements Serializable {
         }
     }
 
-    public void fillEntity(IApsEntity prototype, ICategoryManager categoryManager, BindingResult bindingResult) {
+    public void fillEntity(IApsEntity prototype, BindingResult bindingResult) {
         clearAttributeData(prototype.getAttributeList());
         prototype.setId(this.getId());
         prototype.setDescription(getDescription() == null ? prototype.getDescription() : getDescription());
