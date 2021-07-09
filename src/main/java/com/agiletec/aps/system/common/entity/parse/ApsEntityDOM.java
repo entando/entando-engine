@@ -186,11 +186,11 @@ public class ApsEntityDOM implements IApsEntityDOM, Serializable {
 	 */
 	protected Element _root;
 
-	private final static String TAG_DESCR = "descr";
-	private final static String TAG_GROUPS = "groups";
-	private final static String TAG_ATTRIBUTES = "attributes";
-	private final static String[] TAGS = {TAG_DESCR, TAG_GROUPS, TAG_ATTRIBUTES};
-
 	private String _rootElementName;
+
+	private static final String TAG_DESCR = "descr";
+	private static final String TAG_GROUPS = "groups";
+	private static final String TAG_ATTRIBUTES = "attributes";
+	private static final String[] TAGS = {TAG_DESCR, TAG_GROUPS, TAG_ATTRIBUTES};
 
 }
