@@ -28,7 +28,6 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
-import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 
@@ -49,7 +48,6 @@ public class ApsEntity implements IApsEntity {
     public ApsEntity() {
         this._attributeList = new ArrayList<>();
         this._attributeMap = new HashMap<>();
-        this._categories = new ArrayList<>();
         this._groups = new HashSet<>();
     }
 
@@ -206,36 +204,6 @@ public class ApsEntity implements IApsEntity {
     }
 
     /**
-     * Add a new category to the list of the entity categories.
-     *
-     * @param category The category to add.
-     */
-    @Override
-    public void addCategory(Category category) {
-        this._categories.add(category);
-    }
-
-    /**
-     * Return the list of the categories associated to the entity.
-     *
-     * @return A list of categories.
-     */
-    @Override
-    public List<Category> getCategories() {
-        return this._categories;
-    }
-
-    /**
-     * Remove a category from the list of the entity categories.
-     *
-     * @param category The category to remove from the list.
-     */
-    @Override
-    public void removeCategory(Category category) {
-        this._categories.remove(category);
-    }
-
-    /**
      * Return the Map of the Entity Attributes.
      *
      * @return A map containing the attributes.
@@ -373,11 +341,6 @@ public class ApsEntity implements IApsEntity {
             String groupName = iterGroups.next();
             entityDom.addGroup(groupName);
         }
-        Iterator<Category> iterCategory = this._categories.iterator();
-        while (iterCategory.hasNext()) {
-            Category category = iterCategory.next();
-            entityDom.addCategory(category.getCode());
-        }
         Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
         while (iterAttribute.hasNext()) {
             AttributeInterface currentAttribute = iterAttribute.next();
@@ -467,7 +430,6 @@ public class ApsEntity implements IApsEntity {
     private Set<String> _groups;
     private List<AttributeInterface> _attributeList;
     private Map<String, AttributeInterface> _attributeMap;
-    private List<Category> _categories;
     private String _renderingLang;
     private String _defaultLang;
     private IApsEntityDOM _entityDom;

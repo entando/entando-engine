@@ -104,7 +104,7 @@ public class ApiUserProfileInterface {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "User Profile type with code '" + jaxbUserProfile.getTypeCode() + "' does not exist", Response.Status.CONFLICT);
             }
-            IUserProfile userProfile = (IUserProfile) jaxbUserProfile.buildEntity(profilePrototype, null, null);
+            IUserProfile userProfile = (IUserProfile) jaxbUserProfile.buildEntity(profilePrototype, null);
             List<ApiError> errors = this.validate(userProfile);
             if (errors.size() > 0) {
                 response.addErrors(errors);
@@ -136,7 +136,7 @@ public class ApiUserProfileInterface {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "User Profile type with code '" + jaxbUserProfile.getTypeCode() + "' does not exist", Response.Status.CONFLICT);
             }
-            IUserProfile userProfile = (IUserProfile) jaxbUserProfile.buildEntity(profilePrototype, null, null);
+            IUserProfile userProfile = (IUserProfile) jaxbUserProfile.buildEntity(profilePrototype, null);
             List<ApiError> errors = this.validate(userProfile);
             if (errors.size() > 0) {
                 response.addErrors(errors);
