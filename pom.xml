@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.3.16</version>
+        <version>6.4.5</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine-ngpl</artifactId>
@@ -307,7 +307,6 @@
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-jackson</artifactId>
         </dependency>
-
         <!-- OWASP -->
         <dependency>
             <groupId>org.owasp.encoder</groupId>
@@ -420,6 +419,10 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spring-webmvc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
