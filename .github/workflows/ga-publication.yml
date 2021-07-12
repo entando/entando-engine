@@ -5,6 +5,9 @@ on:
     types:
       - created
 
+env:
+  ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
+
 jobs:
   ga-publish:
     env:
