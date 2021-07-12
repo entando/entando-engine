@@ -1,0 +1,226 @@
+# This workflow will prepare every thing required to proceed with a PR
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: PR-CYCLE
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - develop
+
+env:
+  #ENTANDO_OPT_FEATURES: "*,-SNYK"
+  GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+  GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+  ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
+  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
+  PPL_CONTEXT: ${{ toJson(github) }}
+  REPO_FOLDER: "local-checkout"
+  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+
+jobs:
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # PREPARE
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "PR PIPELINE START"
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run \
+            pr-status-report .. \
+            @pr-labels remove "prepared" --id "REMOVE-LABEL-PREPARED"
+      - name: "Checkout"
+        run: |
+          ~/ppl-run checkout-branch pr --id "CHECKOUT-PREPARE" --lcd "$REPO_FOLDER"
+      # PR FORMAT CHECK
+      - name: "PR format check"
+        id: pr-format-check
+        run: |
+          ~/ppl-run check-pr-format --lcd "$REPO_FOLDER"
+      # BOM
+      - name: "entando-core-bom check"
+        id: pr-bom-check
+        run: |
+          ~/ppl-run @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # BUILD AND TEST
+  tests:
+    needs: [ 'prepare' ]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        test-type: [ 'all-tests' ]
+        include:
+          - test-type: 'all-tests'
+            mvn-test-group: 'fast-tests,slow-tests'
+            remove-label: true
+    steps:
+      - name: "TESTS GATE CHECK"
+        id: GATE
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run gate-check --id TESTS
+      - name: "Checkout"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/checkout@v2
+      - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: "Build and run tests"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn BUILD-AND-TEST "${{ matrix.mvn-test-group }}" --id "BUILD-AND-TEST"
+      - name: "Clean SKIP-TESTS"
+        if: steps.GATE.outputs.ENABLED != 'true' && matrix.remove-label
+        run: |
+          ~/ppl-run @pr-labels remove "skip-tests" --id "CLEAN-SKIP-TEST"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # SONAR
+  sonar:
+    needs: [ 'prepare' ]
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "SONAR GATE CHECK"
+        id: GATE
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run gate-check --id SONAR
+      - name: "Checkout"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run checkout-branch pr --id "CHECKOUT-SONAR" --lcd "$REPO_FOLDER"
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Cache SonarCloud packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: "Build and analyze"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn SONAR --lcd "$REPO_FOLDER"
+      - name: "Clean SKIP-SONAR"
+        if: steps.GATE.outputs.ENABLED != 'true'
+        run: |
+          ~/ppl-run @pr-labels remove "skip-sonar" --id "CLEAN-SKIP-SONAR"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # OWASP
+  owasp:
+    needs: [ 'prepare' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "OWASP GATE CHECK"
+        id: GATE
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run gate-check --id OWASP
+      - name: "Checkout"
+        run: |
+          ~/ppl-run checkout-branch pr --id "CHECKOUT-OWASP" --lcd "$REPO_FOLDER"
+      - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: "OWASP checks"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run mvn OWASP --id "OWASP" --lcd "$REPO_FOLDER"
+      - name: "Clean SKIP-OWASP"
+        if: steps.GATE.outputs.ENABLED != 'true'
+        run: |
+          ~/ppl-run @pr-labels remove "skip-owasp" --id "CLEAN-SKIP-OWASP"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # SNYK
+  snyk:
+    needs: [ 'prepare' ]
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SNYK_ORG: entando-ixc
+    runs-on: ubuntu-latest
+    steps:
+      - name: "SNYK GATE CHECK"
+        id: GATE
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run gate-check --id SNYK
+      - name: "Checkout"
+        run: |
+          ~/ppl-run checkout-branch pr --id "CHECKOUT-SNYK" --lcd "$REPO_FOLDER"
+      - name: "Cache Maven packages"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Set up JDK 11"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: "SNYK checks"
+        if: steps.GATE.outputs.ENABLED == 'true'
+        run: |
+          ~/ppl-run scan snyk --org "$SNYK_ORG" --id "SNYK" --lcd "$REPO_FOLDER"
+      - name: "Clean SKIP-SNYK"
+        if: steps.GATE.outputs.ENABLED != 'true'
+        run: |
+          ~/ppl-run @pr-labels remove "skip-snyk" --id "CLEAN-SKIP-SNYK"
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # PREVIEW TAG
+  release-preview:
+    needs: [ 'tests', 'sonar' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "CONFIGURE ENTANDO-PIPELINES"
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+      - name: "Checkout"
+        run: |
+          ~/ppl-run checkout-branch pr \
+            --id "CHECKOUT-PREVIEW-TAG" \
+            --lcd "$REPO_FOLDER" \
+            --token "${{ secrets.ENTANDO_BOT_TOKEN }}"
+      - name: "Tag preview version"
+        run: |
+          ~/ppl-run release prepare-preview-release \
+            --id "PREVIEW VERSION TAG GENERATION" \
+            --lcd "$REPO_FOLDER"
