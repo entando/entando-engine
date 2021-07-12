@@ -13,7 +13,7 @@ on:
       - develop
 
 env:
-  #ENTANDO_OPT_FEATURES: "*,-SNYK"
+  ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
   GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
   GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
   ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
