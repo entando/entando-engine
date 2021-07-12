@@ -123,7 +123,7 @@ public class AuthenticationProviderManager extends AbstractService
             if (null == authentication
                     || null == authentication.getPrincipal()
                     || null == authentication.getCredentials()) {
-                throw new UsernameNotFoundException("Invalid principal and/or credentials");
+                throw new UsernameNotFoundException("Bad credentials");
             }
             UserDetails user = this.extractUser(authentication.getPrincipal().toString(),
                     authentication.getCredentials().toString(), false);
@@ -133,7 +133,7 @@ public class AuthenticationProviderManager extends AbstractService
                                 authentication.getCredentials(), user.getAuthorizations());
                 return newAuth;
             } else {
-                throw new UsernameNotFoundException("Invalid username/password");
+                throw new UsernameNotFoundException("Bad credentials");
             }
         } catch (AuthenticationException e) {
             throw e;

@@ -118,8 +118,6 @@ class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTes
             Assertions.assertNotNull(this.categoryManager.getCategory(categoryCode));
             this.executeDelete(categoryCode, accessToken, status().isOk());
             Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (categoryManager.getCategory(categoryCode) != null) {
                 this.categoryManager.deleteCategory(categoryCode);
@@ -185,8 +183,6 @@ class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTes
             result.andExpect(jsonPath("$.payload.code", is(categoryCode)));
             Assertions.assertNull(this.categoryManager.getCategory(categoryCode));
             result = this.executeDelete("invalid_category", accessToken, status().isNotFound());
-            result = this.executeDelete("cat1", accessToken, status().isBadRequest());
-            result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_REFERENCES)));
         } finally {
             if (categoryManager.getCategory(categoryCode) != null) {
                 this.categoryManager.deleteCategory(categoryCode);
@@ -259,14 +255,7 @@ class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTes
         Assertions.assertNull(this.categoryManager.getCategory("test_test"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = this.mockOAuthInterceptor(user);
-        ResultActions result = this
-                .executeReference("cat1", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isOk());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(1)));
-        result = this
-                .executeReference("test_test", accessToken, SystemConstants.DATA_OBJECT_MANAGER, status().isNotFound());
-        result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
-        result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_NOT_FOUND)));
-        result = this.executeReference("cat1", accessToken, SystemConstants.GROUP_MANAGER, status().isNotFound());
+        ResultActions result = this.executeReference("cat1", accessToken, SystemConstants.GROUP_MANAGER, status().isNotFound());
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors[0].code", is(CategoryValidator.ERRCODE_CATEGORY_NO_REFERENCES)));
     }
@@ -285,9 +274,8 @@ class CategoryControllerIntegrationTest extends AbstractControllerIntegrationTes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.type", is(CategoryController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(1)));
+                .andExpect(jsonPath("$.payload.usage", is(0)));
     }
-
 
     @Test
     void testGetCategoryWithAdminPermission() throws Exception {

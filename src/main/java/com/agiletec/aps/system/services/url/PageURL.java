@@ -157,11 +157,20 @@ public class PageURL {
 	public void setEscapeAmp(boolean escapeAmp) {
 		this._escapeAmp = escapeAmp;
 	}
-	
+
+	public String getBaseUrlMode() {
+		return baseUrlMode;
+	}
+
+	public void setBaseUrlMode(String baseUrlMode) {
+		this.baseUrlMode = baseUrlMode;
+	}
+
 	private IURLManager _urlManager;
 	private RequestContext _reqCtx;
 	private String _pageCode;
 	private String _langCode;
+	private String  baseUrlMode = null;
 	private Map _params;
 	
 	private boolean _escapeAmp = true;

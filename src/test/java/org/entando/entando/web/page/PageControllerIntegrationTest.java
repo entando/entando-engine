@@ -18,6 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -395,7 +396,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .param("pageSize", "50")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(12)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(11)));
     }
 
     @Test
@@ -579,6 +580,132 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    void testCreatePageIntoDifferentOwnerGroupPages() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        try {
+
+            pageManager.addPage(createPage("page_root", null, null));
+            pageManager.addPage(createPage("free_pg", null, "page_root", Group.FREE_GROUP_NAME));
+            pageManager.addPage(createPage("admin_pg", null, "page_root", Group.ADMINS_GROUP_NAME));
+            pageManager.addPage(createPage("group1_pg", null, "page_root", "coach"));
+            pageManager.addPage(createPage("group2_pg", null, "page_root", "customers"));
+
+            String pageCode = "free_pg_into_admin_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    Group.FREE_GROUP_NAME,
+                                    "admin_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Cannot move a free page under a reserved page")));
+
+            pageCode = "admin_pg_into_group1_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    Group.ADMINS_GROUP_NAME,
+                                    "group1_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group1_pg_into_admin_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "coach",
+                                    "admin_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group1_pg_into_group2_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "coach",
+                                    "group2_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group2_pg_into_group1_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "customers",
+                                    "group1_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+        } finally {
+            this.pageManager.deletePage("group2_pg_into_group1_pg");
+            this.pageManager.deletePage("group1_pg_into_group2_pg");
+            this.pageManager.deletePage("group1_pg_into_admin_pg");
+            this.pageManager.deletePage("admin_pg_into_group1_pg");
+            this.pageManager.deletePage("free_pg_into_admin_pg");
+            this.pageManager.deletePage("group2_pg");
+            this.pageManager.deletePage("group1_pg");
+            this.pageManager.deletePage("admin_pg");
+            this.pageManager.deletePage("free_pg");
+            this.pageManager.deletePage("page_root");
+        }
+    }
+
+    private PageRequest createPageRequest(String pageCode, String groupCode, String parentCode) {
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setCode(pageCode);
+        pageRequest.setPageModel("home");
+        pageRequest.setOwnerGroup(groupCode);
+        Map<String, String> titles = new HashMap<>();
+        titles.put("it", pageCode);
+        titles.put("en", pageCode);
+        pageRequest.setTitles(titles);
+        pageRequest.setParentCode(parentCode);
+        return pageRequest;
+    }
+
+    @Test
     void testAddPublishUnpublishDelete() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
@@ -586,15 +713,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String accessToken = mockOAuthInterceptor(user);
         String code = "testAddDelete";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(code);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", code);
-            titles.put("en", code);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("service");
+            PageRequest pageRequest = createPageRequest(code, Group.FREE_GROUP_NAME, "service");
             this.addPage(accessToken, pageRequest);
 
             IPage page = this.pageManager.getDraftPage(code);
@@ -706,15 +825,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String codeParent = "testToMoveParent";
         String codeChild = "testToMoveChild";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(codeParent);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup("customers");
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", codeParent);
-            titles.put("en", codeParent);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("customers_page");
+            PageRequest pageRequest = createPageRequest(codeParent, "customers", "customers_page");
+            Map<String, String> titles;
             this.addPage(accessToken, pageRequest);
 
             pageRequest.setCode(codeChild);
@@ -787,15 +899,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String codeParent = "testStatusParent";
         String codeChild = "testStatusChild";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(codeParent);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", codeParent);
-            titles.put("en", codeParent);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("homepage");
+            PageRequest pageRequest = createPageRequest(codeParent, Group.FREE_GROUP_NAME, "homepage");
+            Map<String, String> titles;
             this.addPage(accessToken, pageRequest);
 
             pageRequest.setCode(codeChild);
@@ -1064,15 +1169,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
         try {
             //Posting parent page
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(parentPageCode);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", parentPageCode);
-            titles.put("en", parentPageCode);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("homepage");
+            PageRequest pageRequest = createPageRequest(parentPageCode, Group.FREE_GROUP_NAME, "homepage");
             this.addPage(accessToken, pageRequest);
 
             IPage page = this.pageManager.getDraftPage(parentPageCode);
@@ -1118,15 +1215,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String pageCode = "page_update_test";
         String widgetCode = "login_form";
 
-        PageRequest pageRequest = new PageRequest();
-        pageRequest.setCode(pageCode);
-        pageRequest.setPageModel("home");
-        pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-        Map<String, String> titles = new HashMap<>();
-        titles.put("it", pageCode);
-        titles.put("en", pageCode);
-        pageRequest.setTitles(titles);
-        pageRequest.setParentCode("homepage");
+        PageRequest pageRequest = createPageRequest(pageCode, Group.FREE_GROUP_NAME, "homepage");
 
         WidgetConfigurationRequest widgetRequest = new WidgetConfigurationRequest();
         widgetRequest.setCode(widgetCode);

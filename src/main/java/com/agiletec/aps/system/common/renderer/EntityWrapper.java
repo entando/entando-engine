@@ -13,20 +13,15 @@
  */
 package com.agiletec.aps.system.common.renderer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.beans.factory.BeanFactory;
-
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.services.category.Category;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This class represents an entity suitable for the rendering process. This class extends
@@ -72,22 +67,6 @@ public class EntityWrapper implements Map {
 			AbstractComplexAttribute complexAttr = (AbstractComplexAttribute) attribute;
 			return complexAttr.getRenderingAttributes();
 		}
-	}
-	
-	/**
-	 * Return the categories list of the entity.
-	 * @return The list of categories.
-	 */
-	public List<Category> getCategories() {
-		List<Category> categories = new ArrayList<Category>();
-		List<Category> contentCategories = this._entity.getCategories();
-		for (int i=0; i<contentCategories.size(); i++) {
-			Category cat = contentCategories.get(i);
-			Category clone = cat.getCloneForWrapper();
-			clone.setRenderingLang(this._renderingLang);
-			categories.add(clone);
-		}
-		return categories;
 	}
 	
 	/**

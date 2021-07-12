@@ -125,7 +125,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 .andDo(resultPrint())
                 .andExpect(jsonPath("$.payload.type", is(WidgetController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(2)))
+                .andExpect(jsonPath("$.payload.usage", is(1)))
                 .andReturn();
     }
 
@@ -139,7 +139,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
-        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(2)));
+        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(1)));
     }
 
     @Test

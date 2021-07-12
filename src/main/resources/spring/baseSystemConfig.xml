@@ -17,31 +17,6 @@
 
     <jee:jndi-lookup id="servDataSource" jndi-name="${servdb.jndi:java:comp/env/jdbc/servDataSource}"/>
 
-    <bean id="ApsSystemUtils" class="com.agiletec.aps.system.ApsSystemUtils" init-method="init" >
-        <property name="systemParams">
-            <map>
-                <entry key="logActiveFileOutput">
-                    <value>${logActiveFileOutput}</value>
-                </entry>
-                <entry key="logName">
-                    <value>${logName}</value>
-                </entry>
-                <entry key="logFileRotatePattern">
-                    <value>${logFileRotatePattern}</value>
-                </entry>
-                <entry key="logLevel">
-                    <value>${logLevel}</value>
-                </entry>
-                <entry key="logFileSize">
-                    <value>${logFileSize}</value>
-                </entry>
-                <entry key="logFilesCount">
-                    <value>${logFilesCount}</value>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
     <bean id="ComponentManager" class="org.entando.entando.aps.system.init.ComponentManager"
           init-method="init">
         <property name="postProcessClasses">
@@ -87,11 +62,6 @@
         <value>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</value>
         <value>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</value>
         <value>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.DataObjectModel</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.DataObject</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.DataObjectRelation</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.DataObjectSearch</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.DataObjectAttributeRole</value>
     </util:list>
 
     <bean id="StorageManager" class="org.entando.entando.aps.system.services.storage.LocalStorageManager"

@@ -20,7 +20,6 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.List;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -45,9 +44,6 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
 
     @Autowired
     private List<IEntityManager> entityManagers;
-
-    @Autowired
-    private ICategoryManager categoryManager;
 
     @Autowired
     private ILangManager langManager;
@@ -81,7 +77,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
                 throw new ValidationConflictException(bindingResult);
             }
             I entity = this.getEntityPrototype(entityManager, request.getTypeCode());
-            request.fillEntity(entity, this.getCategoryManager(), bindingResult);
+            this.fillEntity(request, entity, bindingResult);
             this.scanEntity(entity, bindingResult);
             if (!bindingResult.hasErrors()) {
                 I newEntity = (I) this.addEntity(entityManager, entity);
@@ -102,9 +98,7 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
         IEntityManager entityManager = this.extractEntityManager(entityManagerCode);
         try {
             String id = request.getId();
-
             I entity = (I) entityManager.getEntity(id);
-
             if (null == entity) {
                 bindingResult.reject(EntityValidator.ERRCODE_ENTITY_DOES_NOT_EXIST,
                         new String[]{id}, "entity.notExists");
@@ -116,12 +110,10 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
                         new String[]{entity.getTypeCode(), typeCode}, "entity.type.invalid");
                 throw new ValidationConflictException(bindingResult);
             }
-
             if (!typeCode.equals(entity.getTypeCode())) {
                 entity = this.getEntityPrototype(entityManager, request.getTypeCode());
             }
-
-            request.fillEntity(entity, this.getCategoryManager(), bindingResult);
+            this.fillEntity(request, entity, bindingResult);
             this.scanEntity(entity, bindingResult);
             if (!bindingResult.hasErrors()) {
                 I updatedEntity = (I) this.updateEntity(entityManager, entity);
@@ -132,6 +124,10 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
             throw new RestServerError("error updating entity", e);
         }
         return null;
+    }
+
+    protected void fillEntity(EntityDto request, I entity, BindingResult bindingResult) {
+        request.fillEntity(entity, bindingResult);
     }
 
     protected abstract I updateEntity(IEntityManager entityManager, I entityToUpdate);
@@ -229,14 +225,6 @@ public abstract class AbstractEntityService<I extends IApsEntity, T extends Enti
 
     public void setEntityManagers(List<IEntityManager> entityManagers) {
         this.entityManagers = entityManagers;
-    }
-
-    public ICategoryManager getCategoryManager() {
-        return categoryManager;
-    }
-
-    public void setCategoryManager(ICategoryManager categoryManager) {
-        this.categoryManager = categoryManager;
     }
 
     public ILangManager getLangManager() {

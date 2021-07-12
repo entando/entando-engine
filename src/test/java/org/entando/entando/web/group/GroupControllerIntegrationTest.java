@@ -244,8 +244,8 @@ class GroupControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.payload.references.length()", is(4)));
-        String[] managers = "PageManager,DataObjectManager,WidgetTypeManager,AuthorizationManager".split(",");
+        result.andExpect(jsonPath("$.payload.references.length()", is(3)));
+        String[] managers = "PageManager,WidgetTypeManager,AuthorizationManager".split(",");
         for (String managerName : managers) {
             result = mockMvc.perform(
                     get("/groups/{code}/references/{manager}", Group.FREE_GROUP_NAME, managerName)
@@ -281,11 +281,9 @@ class GroupControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.type", is(GroupController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(12)))
+                .andExpect(jsonPath("$.payload.usage", is(6)))
                 .andReturn();
-        ;
     }
-
 
     @Test
     void testParamSize() throws EntException, Exception {

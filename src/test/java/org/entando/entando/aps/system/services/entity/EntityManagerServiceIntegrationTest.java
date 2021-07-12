@@ -50,10 +50,10 @@ class EntityManagerServiceIntegrationTest extends BaseTestCase {
         assertEquals(1, res.getPage());
         assertEquals(5, res.getPageSize());
         assertEquals(1, res.getLastPage());
-        assertEquals(2, res.getTotalItems());
+        assertEquals(1, res.getTotalItems());
         List<String> result = res.getBody();
         assertNotNull(result);
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test

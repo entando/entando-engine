@@ -19,11 +19,11 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.json.patch.PatchException;
 import org.springframework.stereotype.Component;
@@ -96,7 +96,7 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateChildren(String pageCode, Errors errors) {
-        IPage page = this.getPageManager().getDraftPage(pageCode);
+        IPage page = getDraftPage(pageCode);
         if (page != null && page.getChildrenCodes() != null && page.getChildrenCodes().length > 0) {
             errors.reject(ERRCODE_PAGE_HAS_CHILDREN, new String[]{pageCode}, "page.delete.children");
         }
@@ -113,18 +113,20 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateGroups(String pageCode, PagePositionRequest pageRequest, Errors errors) {
-        logger.debug("ValidateGroups for page {}", pageCode);
-        IPage parent = this.getPageManager().getDraftPage(pageRequest.getParentCode());
-        IPage page = this.getPageManager().getDraftPage(pageCode);
-        logger.debug("Parent {} getGroup() {}", parent.getGroup());
-        logger.debug("Page {} getGroup {}", page.getGroup());
+        IPage parent = getDraftPage(pageRequest.getParentCode());
+        IPage page = getDraftPage(pageCode);
+        validateGroups(page.getGroup(), parent.getGroup(), errors);
+    }
 
-        if (!parent.getGroup().equals(Group.FREE_GROUP_NAME) && !page.getGroup().equals(parent.getGroup())) {
-            if (page.getGroup().equals(Group.FREE_GROUP_NAME)) {
-                logger.debug("Validation error for page with pageCode {} ERRCODE_GROUP_MISMATCH 1 - {}", pageCode, ERRCODE_GROUP_MISMATCH);
+    public IPage getDraftPage(String code) {
+        return this.getPageManager().getDraftPage(code);
+    }
+
+    public void validateGroups(String pageGroup, String parentGroup, Errors errors) {
+        if (!parentGroup.equals(Group.FREE_GROUP_NAME) && !pageGroup.equals(parentGroup)) {
+            if (pageGroup.equals(Group.FREE_GROUP_NAME)) {
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.freeUnderReserved.notAllowed");
             } else {
-                logger.debug("Validation error for page with pageCode {} ERRCODE_GROUP_MISMATCH 2 - {}", pageCode, ERRCODE_GROUP_MISMATCH);
                 errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.group.mismatch");
             }
         }

@@ -44,7 +44,7 @@ public class ReloadConfigurationController {
         try {
             ApsWebApplicationUtils.executeSystemRefresh(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error reloading configuration", e);
             throw e;
         }
         ApsWebApplicationUtils.executeSystemRefresh(request);
