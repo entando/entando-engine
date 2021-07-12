@@ -30,7 +30,7 @@ class TestGroupUtilizer extends BaseTestCase {
     @Test
 	public void testGetGroupsUtilizers_1() throws Throwable {
 		String[] names = this.getApplicationContext().getBeanNamesForType(GroupUtilizer.class);
-		assertTrue(names.length >= 4);
+		assertTrue(names.length >= 3);
 		for (int i = 0; i < names.length; i++) {
 			GroupUtilizer service = (GroupUtilizer) this.getApplicationContext().getBean(names[i]);
 			List utilizers = service.getGroupUtilizers(Group.FREE_GROUP_NAME);
@@ -45,7 +45,7 @@ class TestGroupUtilizer extends BaseTestCase {
     @Test
 	public void testGetGroupsUtilizers_2() throws Throwable {
 		String[] names = this.getApplicationContext().getBeanNamesForType(GroupUtilizer.class);
-		assertTrue(names.length >= 4);
+		assertTrue(names.length >= 3);
 		for (int i = 0; i < names.length; i++) {
 			GroupUtilizer service = (GroupUtilizer) this.getApplicationContext().getBean(names[i]);
 			List utilizers = service.getGroupUtilizers("coach");

@@ -49,7 +49,7 @@ class ApiCatalogManagerTest {
     void testResources() throws EntException {
         when(resourceCacheWrapper.getMasterResources()).thenReturn(createResources());
         Map<String, ApiResource> resources = this.apiCatalogManager.getResources();
-        assertThat(resources.size(), is(22));
+        assertThat(resources.size(), is(16));
     }
 
     @Test

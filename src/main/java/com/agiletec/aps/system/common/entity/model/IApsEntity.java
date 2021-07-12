@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
-import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 
@@ -93,27 +92,6 @@ public interface IApsEntity extends Serializable {
      * @return The requested attribute.
      */
     public AttributeInterface getAttributeByRole(String roleName);
-
-    /**
-     * Add a category to the list of the entity categories.
-     *
-     * @param category The category to add.
-     */
-    public void addCategory(Category category);
-
-    /**
-     * Return the list of categories associated to the entity.
-     *
-     * @return A list of categories.
-     */
-    public List<Category> getCategories();
-
-    /**
-     * Remove a category from the list of the entity categories.
-     *
-     * @param category The category to remove.
-     */
-    public void removeCategory(Category category);
 
     /**
      * Return a Map of the attributes defined in this entity.

@@ -691,6 +691,13 @@
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description><![CDATA[Override of the configuration of baseUrl mode.
+				Possible entries: "current" (default value), "request", "static" , "relative", "requestIfRelative").]]></description>
+			<name>baseUrlMode</name>
+			<required>no</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	<tag>
 		<description><![CDATA[This is the sub-tag of the "url" tag.<br/>

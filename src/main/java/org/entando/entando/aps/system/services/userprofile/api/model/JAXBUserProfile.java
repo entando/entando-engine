@@ -23,7 +23,6 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.JAXBEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 
 /**
  * @author E.Santoboni
@@ -38,21 +37,15 @@ public class JAXBUserProfile extends JAXBEntity {
     public JAXBUserProfile(IApsEntity mainEntity, String langCode) {
         super(mainEntity, langCode);
         IUserProfile profile = (IUserProfile) mainEntity;
-        //String fnan = profile.getFirstNameAttributeName();
-        //String snan = profile.getSurnameAttributeName();
         String fn = profile.getFullNameAttributeName();
         String man = profile.getMailAttributeName();
         this.setFullname((String) profile.getValue(fn));
-        //this.setFirstname((String) profile.getValue(fnan));
-        //this.setSurname((String) profile.getValue(snan));
         this.setMail((String) profile.getValue(man));
     }
 
     @Override
-    public IApsEntity buildEntity(IApsEntity prototype, ICategoryManager categoryManager, String langCode) {
-        IUserProfile profile = (IUserProfile) super.buildEntity(prototype, categoryManager, langCode);
-        //this.valorizeTextAttribute(profile.getFirstNameAttributeName(), this.getFirstname(), profile);
-        //this.valorizeTextAttribute(profile.getSurnameAttributeName(), this.getSurname(), profile);
+    public IApsEntity buildEntity(IApsEntity prototype, String langCode) {
+        IUserProfile profile = (IUserProfile) super.buildEntity(prototype, langCode);
         this.valorizeTextAttribute(profile.getMailAttributeName(), this.getMail(), profile);
         return profile;
     }
@@ -78,23 +71,6 @@ public class JAXBUserProfile extends JAXBEntity {
         this._fullname = fullname;
     }
 
-    /*
-	@XmlElement(name = "firstname", required = false)
-	public String getFirstname() {
-		return _firstname;
-	}
-	public void setFirstname(String firstname) {
-		this._firstname = firstname;
-	}
-
-	@XmlElement(name = "surname", required = false)
-	public String getSurname() {
-		return _surname;
-	}
-	public void setSurname(String surname) {
-		this._surname = surname;
-	}
-     */
     @XmlElement(name = "mail", required = false)
     public String getMail() {
         return _mail;
@@ -103,8 +79,7 @@ public class JAXBUserProfile extends JAXBEntity {
     public void setMail(String mail) {
         this._mail = mail;
     }
-    //private String _firstname;
-    //private String _surname;
+
     private String _fullname;
     private String _mail;
 

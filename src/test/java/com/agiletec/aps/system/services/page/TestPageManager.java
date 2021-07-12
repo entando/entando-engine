@@ -643,10 +643,10 @@ class TestPageManager extends BaseTestCase {
             }
             pagesFound = this._pageManager.searchPages("", null, allowedGroupCodes);
             assertNotNull(pagesFound);
-            assertEquals(18, pagesFound.size());
+            assertEquals(17, pagesFound.size());
             pagesFound = this._pageManager.searchPages(null, null, allowedGroupCodes);
             assertNotNull(pagesFound);
-            assertEquals(18, pagesFound.size());
+            assertEquals(17, pagesFound.size());
         } catch (Throwable t) {
             throw t;
         }
@@ -660,7 +660,7 @@ class TestPageManager extends BaseTestCase {
 
         List<IPage> pageUtilizers2 = this._pageManager.getDraftWidgetUtilizers("login_form");
         assertNotNull(pageUtilizers2);
-        assertEquals(2, pageUtilizers2.size());
+        assertEquals(1, pageUtilizers2.size());
 
         List<IPage> pageUtilizers3 = this._pageManager.getDraftWidgetUtilizers("leftmenu");
         assertNotNull(pageUtilizers3);

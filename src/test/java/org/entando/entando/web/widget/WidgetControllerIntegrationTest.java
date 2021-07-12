@@ -19,8 +19,12 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.page.model.PageRequest;
@@ -55,6 +59,9 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
+
+    @Autowired
+    private IGuiFragmentManager guiFragmentManager;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -125,7 +132,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 .andDo(resultPrint())
                 .andExpect(jsonPath("$.payload.type", is(WidgetController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(2)))
+                .andExpect(jsonPath("$.payload.usage", is(1)))
                 .andReturn();
     }
 
@@ -139,7 +146,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
-        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(2)));
+        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(1)));
     }
 
     @Test
@@ -445,6 +452,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
                     oldParent.getIcon());
             this.widgetTypeManager.deleteWidgetType(childCode);
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("parent_widget");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 
@@ -645,7 +656,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
 
     @Test
-    void testEditLockedConfigWidget() throws Exception {
+    void testEditLockedConfigWidget() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -705,6 +716,11 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
         } catch (Exception e) {
             throw e;
+        } finally {
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("entando_apis");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 

@@ -13,25 +13,8 @@
  */
 package com.agiletec.aps.system.common.entity.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
-
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBBooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBCompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBDateAttribute;
@@ -39,16 +22,26 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttrib
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBNumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBTextAttribute;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.common.entity.model.attribute.JAXBEnumeratorMapAttribute;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "entity")
-@XmlType(propOrder = {"id", "description", "typeCode", "typeDescription", "mainGroup", "categories", "groups", "attributes"})
+@XmlType(propOrder = {"id", "description", "typeCode", "typeDescription", "mainGroup", "groups", "attributes"})
 @XmlSeeAlso({ArrayList.class, HashMap.class, JAXBBooleanAttribute.class, JAXBEnumeratorMapAttribute.class, JAXBCompositeAttribute.class, JAXBDateAttribute.class, JAXBHypertextAttribute.class, JAXBListAttribute.class, JAXBNumberAttribute.class, JAXBTextAttribute.class})
 public class JAXBEntity implements Serializable {
 
@@ -65,7 +58,6 @@ public class JAXBEntity implements Serializable {
             this.setTypeCode(mainEntity.getTypeCode());
             this.setTypeDescription(mainEntity.getTypeDescription());
             this.setGroups(mainEntity.getGroups());
-            this.setCategories(mainEntity.getCategories());
             List<AttributeInterface> attributes = mainEntity.getAttributeList();
             if (null == attributes || attributes.isEmpty()) {
                 return;
@@ -83,7 +75,7 @@ public class JAXBEntity implements Serializable {
         }
     }
 
-    public IApsEntity buildEntity(IApsEntity prototype, ICategoryManager categoryManager, String langCode) {
+    public IApsEntity buildEntity(IApsEntity prototype, String langCode) {
         try {
             prototype.setDescription(this.getDescription());
             prototype.setId(this.getId());
@@ -94,16 +86,6 @@ public class JAXBEntity implements Serializable {
                 Iterator<String> iter = this.getGroups().iterator();
                 while (iter.hasNext()) {
                     prototype.addGroup(iter.next());
-                }
-            }
-            if (null != this.getCategories() && !this.getCategories().isEmpty()) {
-                Iterator<String> iter = this.getCategories().iterator();
-                while (iter.hasNext()) {
-                    String categoryCode = iter.next();
-                    Category category = categoryManager.getCategory(categoryCode);
-                    if (null != category) {
-                        prototype.addCategory(category);
-                    }
                 }
             }
             if (null == this.getAttributes()) {
@@ -233,33 +215,6 @@ public class JAXBEntity implements Serializable {
         this._groups = groups;
     }
 
-    /**
-     * Return the set of codes of the additional categories.
-     *
-     * @return The set of codes belonging to the additional categories.
-     */
-    @XmlElement(name = "category", required = true)
-    @XmlElementWrapper(name = "categories")
-    public Set<String> getCategories() {
-        return _categories;
-    }
-
-    protected void setCategories(Set<String> categories) {
-        this._categories = categories;
-    }
-
-    protected void setCategories(List<Category> categories) {
-        if (null != categories && categories.size() > 0) {
-            this.setCategories(new HashSet<String>());
-            for (int i = 0; i < categories.size(); i++) {
-                Category category = categories.get(i);
-                if (null != category) {
-                    this.getCategories().add(category.getCode());
-                }
-            }
-        }
-    }
-
     @XmlElement(name = "attribute", required = true)
     @XmlElementWrapper(name = "attributes")
     public List<AbstractJAXBAttribute> getAttributes() {
@@ -276,7 +231,6 @@ public class JAXBEntity implements Serializable {
     private String _description;
     private String _mainGroup;
     private Set<String> _groups;
-    private Set<String> _categories;
     private List<AbstractJAXBAttribute> _attributes = new ArrayList<>();
 
 }

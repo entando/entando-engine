@@ -13,18 +13,15 @@
  */
 package com.agiletec.aps.system.common.entity.parse;
 
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This class supports the parsing of the XML string that represents an Entity.
@@ -43,14 +40,11 @@ public class EntityHandler extends DefaultHandler {
      * Handler initialization.
      * @param entity The Entity Prototype to fill with data. 
      * @param xmlAttributeRootElementName The name of the root XML attribute.
-     * @param categoryManager The category manager suitable for the Entity Type. 
      */
-    public void initHandler(IApsEntity entity, String xmlAttributeRootElementName,
-            ICategoryManager categoryManager) {
+    public void initHandler(IApsEntity entity, String xmlAttributeRootElementName) {
         this.reset();
         this._currentEntity = entity;
         this._xmlAttributeRootElementName = xmlAttributeRootElementName;
-        this._categoryManager = categoryManager;
     }
     
     public EntityHandler getHandlerPrototype() {
@@ -89,10 +83,6 @@ public class EntityHandler extends DefaultHandler {
                     this.startGroups(attributes, qName);
                 } else if (qName.equals("group")) {
                     this.startGroup(attributes, qName);
-                } else if (qName.equals("categories")) {
-                    this.startCategories(attributes, qName);
-                } else if (qName.equals("category")) {
-                    this.startCategory(attributes, qName);
                 } else if (qName.equals("attributes")) {
                     startAttributes(attributes, qName);
                 } else {
@@ -157,10 +147,6 @@ public class EntityHandler extends DefaultHandler {
                     this.endGroups();
                 } else if (qName.equals("group")) {
                     this.endGroup();
-                } else if (qName.equals("categories")) {
-                    this.endCategories();
-                } else if (qName.equals("category")) {
-                    this.endCategory();
                 } else {
                     this.endEntityElement(uri, localName, qName);
                 }
@@ -232,28 +218,6 @@ public class EntityHandler extends DefaultHandler {
     }
 
     private void endGroup() {
-        // nothing to do
-    }
-    
-    private void startCategories(Attributes attributes, String qName) throws SAXException {
-        // nothing to do
-    }
-    
-    private void endCategories() {
-        // nothing to do
-    }
-    
-    private void startCategory(Attributes attributes, String qName) throws SAXException {
-        if (this._categoryManager != null) {
-            String categoryCode = extractXmlAttribute(attributes, "id", qName, true);
-            Category category = this._categoryManager.getCategory(categoryCode);
-            if (null != category) {
-                this._currentEntity.addCategory(category);
-            }
-        }
-    }
-    
-    private void endCategory() {
         // nothing to do
     }
     
@@ -350,7 +314,6 @@ public class EntityHandler extends DefaultHandler {
      * elementi dell'handler, prima di effettuare la scanzìsione del documento.
      */
     protected void reset() {
-        this._categoryManager = null;
         this._currentEntity = null;
         this._intoAttributes = false;
         this._parserModule = null;
@@ -364,7 +327,6 @@ public class EntityHandler extends DefaultHandler {
     private AttributeHandlerInterface _parserModule;
     private StringBuffer _textBuffer;
     private AttributeInterface _currentAttr;
-    private ICategoryManager _categoryManager;
     private String _xmlAttributeRootElementName;
     
 }
