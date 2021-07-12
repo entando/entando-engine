@@ -40,6 +40,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
+        <!-- SONAR -->
+        <sonar.projectKey>entando_entando-engine</sonar.projectKey>
+        <sonar.organization>entando</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
