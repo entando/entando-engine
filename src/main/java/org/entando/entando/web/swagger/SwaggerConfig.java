@@ -1,8 +1,6 @@
 package org.entando.entando.web.swagger;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.fasterxml.classmate.TypeResolver;
 import java.lang.reflect.WildcardType;
 import java.util.Collections;
