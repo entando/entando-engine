@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity.model;
 
+import io.swagger.annotations.ApiParam;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -220,20 +221,23 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 	 * @return true if the filter is to be applied to an attribute entity or a 
 	 * to a metadata of the an entity.
 	 */
+	@ApiParam(hidden = true)
 	public boolean isAttributeFilter() {
 		return _attributeFilter;
 	}
 	protected void setAttributeFilter(boolean attributeFilter) {
 		this._attributeFilter = attributeFilter;
 	}
-	
+
+	@ApiParam(hidden = true)
 	public String getRoleName() {
 		return _roleName;
 	}
 	protected void setRoleName(String roleName) {
 		this._roleName = roleName;
 	}
-	
+
+	@ApiParam(hidden = true)
 	public String getLangCode() {
 		return this._langCode;
 	}
