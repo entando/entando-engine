@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,13 @@ class UserProfileManagerIntegrationTest extends BaseTestCase {
     @Test
     void testInitialize() {
         assertNotNull(this.profileManager);
+    }
+
+    @Test
+    void testGetConfig() throws Exception {
+        ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
+        String config = configManager.getConfigItem("userProfileTypes");
+        assertEquals(config, this.profileManager.getConfigItem());
     }
 
     @Test

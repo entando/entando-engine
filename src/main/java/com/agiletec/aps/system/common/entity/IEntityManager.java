@@ -39,6 +39,8 @@ public interface IEntityManager extends IManager {
      */
     public Class getEntityClass();
 
+    public String getConfigItem() throws EntException;
+
     /**
      * Search entities.
      *

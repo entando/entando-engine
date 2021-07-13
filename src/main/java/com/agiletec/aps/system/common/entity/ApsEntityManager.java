@@ -193,6 +193,11 @@ public abstract class ApsEntityManager extends AbstractService
         }
     }
 
+    @Override
+    public String getConfigItem() throws EntException {
+        return this.getEntityTypeFactory().extractConfigItem(this.getConfigItemName());
+    }
+
     /**
      * Indicates whether the service makes use of the search engine. Default
      * value: false.
