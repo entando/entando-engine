@@ -26,6 +26,8 @@ import java.util.List;
  * @author E.Santoboni
  */
 public interface IEntityTypeFactory {
+
+	public String extractConfigItem(String configItemName) throws EntException;
 	
 	public List<SmallEntityType> extractSmallEntityTypes(String configItemName, IEntityTypeDOM entityTypeDom) throws EntException;
 	
