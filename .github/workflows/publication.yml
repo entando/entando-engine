@@ -1,4 +1,4 @@
-name: Internal Publication
+name: Release to internal Nexus
 
 on:
   push:
@@ -8,17 +8,18 @@ on:
 
 env:
   ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
+  ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
+  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
+  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+  PPL_CONTEXT: ${{ toJson(github) }}
+  GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+  GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+  REPO_FOLDER: "local-checkout"
 
 jobs:
   internal-publication:
     env:
-      ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
-      ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
-      PPL_CONTEXT: ${{ toJson(github) }}
-      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-      REPO_FOLDER: "repo_folder"
-      ENTANDO_OPT_LOG_LEVEL: DEBUG
+
       ENTANDO_OPT_MAVEN_REPO_DEVL: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_DEVL }}
       ENTANDO_OPT_MAVEN_REPO_PROD: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_PROD }}
       ENTANDO_BOT_TOKEN: ${{ secrets.ENTANDO_BOT_TOKEN }}
@@ -26,7 +27,7 @@ jobs:
     steps:
       - name: "PR PIPELINE START"
         run: |
-          bash <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/${ENTANDO_OPT_USE_PPL_TAG}/macro/install.sh")
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
           ~/ppl-run status-report
       - name: "Checkout"
         run: |
@@ -44,16 +45,16 @@ jobs:
         with:
           java-version: 11
           server-id: internal-nexus
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
       - name: "Publish package"
         run: |
           ~/ppl-run mvn PUBLISH \
             --id "PUBLICATION" \
             --lcd "$REPO_FOLDER"
         env:
-          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       - name: "BOM Update"
         run: |
           ~/ppl-run bom update-bom \

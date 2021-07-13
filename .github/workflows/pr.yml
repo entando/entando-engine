@@ -1,5 +1,3 @@
-# This workflow will prepare every thing required to proceed with a PR
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: PR-CYCLE
 
@@ -21,8 +19,8 @@ env:
   ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
-  #ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
-  ENTANDO_OPT_LOG_LEVEL: "###TRACE"
+  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -129,10 +127,8 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
       - name: "Build and analyze"
         if: steps.GATE.outputs.ENABLED == 'true'
-        run: |
+      run: |
           ~/ppl-run mvn SONAR --lcd "$REPO_FOLDER"
-      - name: "Clean SKIP-SONAR"
-        if: steps.GATE.outputs.ENABLED != 'true'
         run: |
           ~/ppl-run @pr-labels remove "skip-sonar" --id "CLEAN-SKIP-SONAR"
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,6 +165,7 @@ jobs:
         if: steps.GATE.outputs.ENABLED != 'true'
         run: |
           ~/ppl-run @pr-labels remove "skip-owasp" --id "CLEAN-SKIP-OWASP"
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # SNYK
   snyk:

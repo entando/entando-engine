@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: "ADD RELEASE TAG"
         run: |
-          bash <(curl -qsL "https://raw.githubusercontent.com/entando/entando-pipelines/${ENTANDO_OPT_USE_PPL_TAG}/macro/install.sh")
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
 
           ~/ppl-run pr-status-report \
           .. checkout-branch base \
