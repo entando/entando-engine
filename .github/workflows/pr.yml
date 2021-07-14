@@ -11,15 +11,15 @@ on:
       - develop
 
 env:
+  ENTANDO_OPT_USE_PPL_TAG: "v1.0.1"
   ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
   GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
   GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-  #ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
-  ENTANDO_OPT_USE_PPL_TAG: "engine-exp"
   ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
-  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+  #ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+  ENTANDO_OPT_LOG_LEVEL: "###TRACE"
 
 
 jobs:
@@ -126,9 +126,16 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: "Build and analyze"
+        id: SCAN
         if: steps.GATE.outputs.ENABLED == 'true'
-      run: |
-          ~/ppl-run mvn SONAR --lcd "$REPO_FOLDER"
+        run: |
+          ~/ppl-run mvn SONAR --id "SONAR" --lcd "$REPO_FOLDER" --out "$HOME/maven-result.log"
+      - name: "Full output"
+        if: ${{ always() }}
+        run: |
+          cat "$HOME/maven-result.log"
+      - name: "Clean SKIP-SONAR"
+        if: steps.GATE.outputs.ENABLED != 'true'
         run: |
           ~/ppl-run @pr-labels remove "skip-sonar" --id "CLEAN-SKIP-SONAR"
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
