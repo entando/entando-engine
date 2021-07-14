@@ -22,12 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class CryptoBeansConfig {
 
     @Bean
-    @DependsOn("BaseConfigManager")
-    public Argon2PasswordEncoder getArgon2PasswordEncoder() {
-        return new Argon2PasswordEncoder();
-    }
-
-    @Bean
     public BCryptPasswordEncoder getBCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
