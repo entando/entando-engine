@@ -50,9 +50,6 @@ class CompatiblePasswordEncoderTest {
     private BCryptPasswordEncoder bcryptEncoder;
 
     @Autowired
-    private Argon2PasswordEncoder argon2Encoder;
-
-    @Autowired
     private CompatiblePasswordEncoder passwordEncoder;
 
     @Test
@@ -77,11 +74,6 @@ class CompatiblePasswordEncoderTest {
         testMatches("{bcrypt}$2a$10$6mbu1yVQ/jdgPnuqFMvbYOQklHY6VmIBUZTeYaY3OhxiGx0Yjbx3K", "editorCustomers");
         testMatches("{bcrypt}$2a$10$8KYc6sUA7fiC2Pia20J4ouMk3Meb.zW3qk0QBD8EZ0vQiI0jqysMa", "editorCoach");
         testMatches("{bcrypt}$2a$10$E9R2sHNZ/YXlDn188lpdyeoBl2iSF4E5LE8FNvxbdZbqnqlNP2mL2", "admin");
-    }
-
-    @Test
-    void testArgon2() throws Exception {
-        testMatches(argon2Encoder.encode(SECRET), SECRET);
     }
 
     private void testMatches(String encodedPwd, String plainPwd) {

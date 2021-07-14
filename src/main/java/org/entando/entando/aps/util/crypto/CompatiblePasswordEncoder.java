@@ -23,16 +23,12 @@ import org.springframework.stereotype.Component;
 public class CompatiblePasswordEncoder implements PasswordEncoder {
 
     private static final String BCRYPT_PREFIX = "{bcrypt}";
-    private static final String ARGON2_PREFIX = "$argon2";
 
     private final BCryptPasswordEncoder bcryptEncoder;
-    private final Argon2PasswordEncoder argon2Encoder;
 
     @Autowired
-    public CompatiblePasswordEncoder(BCryptPasswordEncoder bcryptEncoder,
-            Argon2PasswordEncoder argon2Encoder) {
+    public CompatiblePasswordEncoder(BCryptPasswordEncoder bcryptEncoder) {
         this.bcryptEncoder = bcryptEncoder;
-        this.argon2Encoder = argon2Encoder;
     }
 
     @Override
@@ -45,8 +41,6 @@ public class CompatiblePasswordEncoder implements PasswordEncoder {
         if (isBCrypt(encodedPassword)) {
             String encodedWithoutPrefix = encodedPassword.substring(BCRYPT_PREFIX.length());
             return bcryptEncoder.matches(password, encodedWithoutPrefix);
-        } else if (isArgon2(encodedPassword)) {
-            return argon2Encoder.matches(password, encodedPassword);
         } else {
             throw new EntRuntimeException("Legacy password encryption is no more supported");
         }
@@ -56,7 +50,4 @@ public class CompatiblePasswordEncoder implements PasswordEncoder {
         return encodedPassword.startsWith(BCRYPT_PREFIX);
     }
 
-    public static boolean isArgon2(String encodedPassword) {
-        return encodedPassword.startsWith(ARGON2_PREFIX);
-    }
 }
