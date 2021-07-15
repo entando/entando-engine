@@ -39,12 +39,8 @@ jobs:
       - name: "PR format check"
         id: pr-format-check
         run: |
-          ~/ppl-run check-pr-format --lcd "$REPO_FOLDER"
-      # BOM
-      - name: "entando-core-bom check"
-        id: pr-bom-check
-        run: |
-          ~/ppl-run @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
+          ~/ppl-run check-pr-state --lcd "$REPO_FOLDER" \
+                 .. @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # BUILD AND TEST
   tests:
