@@ -1,4 +1,3 @@
-
 name: PR-CYCLE
 
 on:
@@ -13,14 +12,14 @@ on:
 env:
   ENTANDO_OPT_USE_PPL_TAG: "v1.0.1"
   ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
+  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
   GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
   GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
   #ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
   ENTANDO_OPT_LOG_LEVEL: "###TRACE"
-
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,12 +40,8 @@ jobs:
       - name: "PR format check"
         id: pr-format-check
         run: |
-          ~/ppl-run check-pr-format --lcd "$REPO_FOLDER"
-      # BOM
-      - name: "entando-core-bom check"
-        id: pr-bom-check
-        run: |
-          ~/ppl-run @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
+          ~/ppl-run check-pr-state --lcd "$REPO_FOLDER" \
+                 .. @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # BUILD AND TEST
   tests:

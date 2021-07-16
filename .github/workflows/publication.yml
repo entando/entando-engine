@@ -7,6 +7,7 @@ on:
       - 'v*'
 
 env:
+  ENTANDO_OPT_USE_PPL_TAG: "v1.0.1"
   ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
   ENTANDO_OPT_USE_PPL_TAG: ${{ secrets.ENTANDO_OPT_USE_PPL_TAG }}
   ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
@@ -19,7 +20,6 @@ env:
 jobs:
   internal-publication:
     env:
-
       ENTANDO_OPT_MAVEN_REPO_DEVL: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_DEVL }}
       ENTANDO_OPT_MAVEN_REPO_PROD: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_PROD }}
       ENTANDO_BOT_TOKEN: ${{ secrets.ENTANDO_BOT_TOKEN }}

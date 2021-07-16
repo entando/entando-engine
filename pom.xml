@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.4.5</version>
+        <version>6.4.6</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-engine</artifactId>
@@ -401,11 +401,6 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.mkammerer</groupId>
-            <artifactId>argon2-jvm</artifactId>
         </dependency>
 
         <dependency>

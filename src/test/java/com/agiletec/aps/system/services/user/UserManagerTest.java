@@ -16,7 +16,6 @@ package com.agiletec.aps.system.services.user;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
 import java.util.List;
-import org.entando.entando.aps.util.crypto.Argon2PasswordEncoder;
 import org.entando.entando.aps.util.crypto.CompatiblePasswordEncoder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -234,7 +233,7 @@ class UserManagerTest {
     }
 
     private CompatiblePasswordEncoder getCompatiblePasswordEncoder() {
-        return new CompatiblePasswordEncoder(new BCryptPasswordEncoder(), new Argon2PasswordEncoder());
+        return new CompatiblePasswordEncoder(new BCryptPasswordEncoder());
     }
     
 }

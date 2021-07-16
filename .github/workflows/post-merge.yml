@@ -5,7 +5,15 @@ on:
     branches:
       - develop
 env:
+  ENTANDO_OPT_USE_PPL_TAG: "v1.0.1"
   ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
+  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
+  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
+  GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+  GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+  PPL_CONTEXT: ${{ toJson(github) }}
+  REPO_FOLDER: "local-checkout"
+
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
