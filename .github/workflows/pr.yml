@@ -18,8 +18,6 @@ env:
   GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
-  #ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
-  ENTANDO_OPT_LOG_LEVEL: "###TRACE"
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
