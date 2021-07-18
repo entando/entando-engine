@@ -16,7 +16,6 @@ env:
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
 
-
 jobs:
   internal-publication:
     env:

@@ -19,7 +19,6 @@ env:
   PPL_CONTEXT: ${{ toJson(github) }}
   REPO_FOLDER: "local-checkout"
 
-
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # PREPARE
@@ -166,6 +165,7 @@ jobs:
         if: steps.GATE.outputs.ENABLED != 'true'
         run: |
           ~/ppl-run @pr-labels remove "skip-owasp" --id "CLEAN-SKIP-OWASP"
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # SNYK
   snyk:
