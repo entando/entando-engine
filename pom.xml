@@ -16,8 +16,8 @@
     <url>http://www.entando.com/</url>
     <licenses>
         <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE,  Version 2.1, February 1999</name>
-            <url>https://www.gnu.org/licenses/lgpl-2.1.txt</url>
+            <name>LGPL-3.0</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
