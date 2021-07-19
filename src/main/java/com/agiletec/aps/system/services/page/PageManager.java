@@ -183,14 +183,18 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framesPos, Integer destFramePos, String eventType) {
         PageChangedEvent event = buildEvent(page, operationCode, framesPos);
-        event.setDestFrame(destFramePos);
-        event.setEventType(eventType);
         Map<String, String> properties = new HashMap<>();
-        properties.put("pageCode", page.getCode());
+        Optional.ofNullable(page).ifPresent(p -> properties.put("pageCode", p.getCode()));
         properties.put("operationCode", String.valueOf(operationCode));
         Optional.ofNullable(framesPos).ifPresent(p -> properties.put("framesPos", String.valueOf(p)));
-        Optional.ofNullable(destFramePos).ifPresent(p -> properties.put("destFramePos", String.valueOf(p)));
-        Optional.ofNullable(eventType).ifPresent(p -> properties.put("eventType", p));
+        Optional.ofNullable(destFramePos).ifPresent(p -> {
+            properties.put("destFramePos", String.valueOf(p));
+            event.setDestFrame(p);
+        });
+        Optional.ofNullable(eventType).ifPresent(p -> {
+            properties.put("eventType", p);
+            event.setEventType(p);
+        });
         event.setMessage(properties);
         event.setChannel("page");
         this.notifyEvent(event);
