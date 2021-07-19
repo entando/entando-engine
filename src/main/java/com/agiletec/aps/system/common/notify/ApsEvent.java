@@ -64,8 +64,10 @@ public abstract class ApsEvent extends ApplicationEvent {
 			return null;
 		}
 		try {
-			return new ObjectMapper().readValue(message, HashMap.class);
-		} catch (JsonProcessingException e) {
+			JSONObject obj = new JSONObject(message);
+			JSONObject includes = obj.getJSONObject("event");
+			return new ObjectMapper().readValue(includes.toString(), HashMap.class);
+		} catch (JsonProcessingException | JSONException e) {
 			throw new EntException("Error parsing message", e);
 		}
 	}
