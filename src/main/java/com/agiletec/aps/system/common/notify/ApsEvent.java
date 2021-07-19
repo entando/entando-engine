@@ -41,7 +41,6 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 */
 	public static final String LOCAL_EVENT = "localhost";
 
-	private String source;
 	private String channel;
 	private String message;
 	
@@ -49,8 +48,7 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 * Event constructor
 	 */
 	public ApsEvent() {
-		super("Entando Event");
-		this.setSource(LOCAL_EVENT);
+		super(LOCAL_EVENT);
 	}
 
 	protected ApsEvent(String channel, Map<String, String> properties) {
@@ -86,24 +84,6 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 */
 	public abstract Class getObserverInterface();
 
-	/**
-	 * Return the source of the event.
-	 * The property can be a IP address, an host name, or else.
-	 * @return The source of the event.
-	 */
-	@Override
-	public String getSource() {
-		return source;
-	}
-
-	/**
-	 * Set the source of the event.
-	 * @param source The source of the event to set.
-	 */
-	public void setSource(String source) {
-		this.source = source;
-	}
-	
 	public String getChannel() {
 		return channel;
 	}
