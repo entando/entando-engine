@@ -53,7 +53,7 @@ public abstract class ApsEvent extends ApplicationEvent {
 		this.setSource(LOCAL_EVENT);
 	}
 
-	public ApsEvent(String channel, Map<String, String> properties) throws EntException {
+	protected ApsEvent(String channel, Map<String, String> properties) {
 		this();
 		this.setChannel(channel);
 		this.setMessage(properties);
@@ -83,9 +83,9 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 * @return The interface class which the observer must implement 
 	 */
 	public abstract Class getObserverInterface();
-	
+
 	/**
-	 * Return the source of the event. 
+	 * Return the source of the event.
 	 * The property can be a IP address, an host name, or else.
 	 * @return The source of the event.
 	 */
@@ -93,7 +93,7 @@ public abstract class ApsEvent extends ApplicationEvent {
 	public String getSource() {
 		return source;
 	}
-	
+
 	/**
 	 * Set the source of the event.
 	 * @param source The source of the event to set.
@@ -101,7 +101,7 @@ public abstract class ApsEvent extends ApplicationEvent {
 	public void setSource(String source) {
 		this.source = source;
 	}
-
+	
 	public String getChannel() {
 		return channel;
 	}
@@ -109,22 +109,22 @@ public abstract class ApsEvent extends ApplicationEvent {
 		this.channel = channel;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(Map<String, String> properties) {
-		try {
-			JSONObject request = new JSONObject();
+    public String getMessage() {
+        return message;
+    }
+    public void setMessage(Map<String, String> properties) {
+        try {
+            JSONObject request = new JSONObject();
             if (null != properties) {
                 request.put("event", properties);
             }
-			this.message = request.toString();
-		} catch (JSONException e) {
-			throw new EntRuntimeException("Error creating message", e);
-		}
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
+            this.message = request.toString();
+        } catch (JSONException e) {
+            throw new EntRuntimeException("Error creating message", e);
+        }
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 	
 }
