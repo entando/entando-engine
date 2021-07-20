@@ -16,6 +16,7 @@ package com.agiletec.aps.system.services.page.events;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.ApsEvent;
 import com.agiletec.aps.system.services.page.IPage;
+import java.util.Map;
 
 /**
  * Evento specifico da rilanciare in corispondenza di modifica di una pagina del
@@ -24,6 +25,14 @@ import com.agiletec.aps.system.services.page.IPage;
  * @author E.Santoboni - M.Diana
  */
 public class PageChangedEvent extends ApsEvent {
+
+	public PageChangedEvent() {
+		super();
+	}
+
+	public PageChangedEvent(String channel, Map<String, String> properties) {
+		super(channel, properties);
+	}
 
 	@Override
 	public void notify(IManager srv) {

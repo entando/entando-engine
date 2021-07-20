@@ -29,8 +29,11 @@ import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserve
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -171,25 +174,34 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error updating a page as offline", t);
             throw new EntException("Error updating a page as offline", t);
         }
-        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
+        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos) {
-        PageChangedEvent event = buildEvent(page, operationCode, framePos);
-        this.notifyEvent(event);
+        this.notifyPageChangedEvent(page, operationCode, framePos, null, null);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framesPos, Integer destFramePos, String eventType) {
         PageChangedEvent event = buildEvent(page, operationCode, framesPos);
-        event.setDestFrame(destFramePos);
-        event.setEventType(eventType);
+        Map<String, String> properties = new HashMap<>();
+        Optional.ofNullable(page).ifPresent(p -> properties.put("pageCode", p.getCode()));
+        properties.put("operationCode", String.valueOf(operationCode));
+        Optional.ofNullable(framesPos).ifPresent(p -> properties.put("framesPos", String.valueOf(p)));
+        Optional.ofNullable(destFramePos).ifPresent(p -> {
+            properties.put("destFramePos", String.valueOf(p));
+            event.setDestFrame(p);
+        });
+        Optional.ofNullable(eventType).ifPresent(p -> {
+            properties.put("eventType", p);
+            event.setEventType(p);
+        });
+        event.setMessage(properties);
+        event.setChannel("page");
         this.notifyEvent(event);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos, String eventType) {
-        PageChangedEvent event = buildEvent(page, operationCode, framePos);
-        event.setEventType(eventType);
-        this.notifyEvent(event);
+        this.notifyPageChangedEvent(page, operationCode, framePos, null, eventType);
     }
 
     private PageChangedEvent buildEvent(IPage page, int operationCode, Integer framePos) {
