@@ -133,7 +133,7 @@ public class OgnlValidationRule implements Serializable {
     }
     
     protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
-        OgnlContext context = new OgnlContext();
+        OgnlContext context = new OgnlContext(null, null, null);
         Map<String, Lang> langs = new HashMap<>();
         List<Lang> langList = langManager.getLangs();
         for (int i = 0; i < langList.size(); i++) {

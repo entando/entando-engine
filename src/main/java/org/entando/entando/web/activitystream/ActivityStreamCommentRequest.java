@@ -13,9 +13,8 @@
  */
 package org.entando.entando.web.activitystream;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class ActivityStreamCommentRequest {
 

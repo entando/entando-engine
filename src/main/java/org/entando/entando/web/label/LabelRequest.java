@@ -14,10 +14,10 @@
 package org.entando.entando.web.label;
 
 import java.util.Map;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.entando.entando.aps.system.services.label.model.LabelDto;
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class LabelRequest extends LabelDto {
     

@@ -13,10 +13,10 @@
  */
 package org.entando.entando.web.permission.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.entando.entando.aps.system.services.role.model.PermissionDto;
-import org.hibernate.validator.constraints.NotBlank;
 
 public class PermissionRequest extends PermissionDto {
 

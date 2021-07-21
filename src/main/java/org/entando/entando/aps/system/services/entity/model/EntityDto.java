@@ -31,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.entity.validator.EntityValidator;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.validation.BindingResult;
 
 public class EntityDto implements Serializable {

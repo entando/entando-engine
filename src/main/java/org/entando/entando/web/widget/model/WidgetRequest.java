@@ -13,10 +13,9 @@
  */
 package org.entando.entando.web.widget.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import java.util.Map;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 public class WidgetRequest {
 

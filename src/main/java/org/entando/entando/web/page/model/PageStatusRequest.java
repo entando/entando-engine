@@ -13,8 +13,8 @@
  */
 package org.entando.entando.web.page.model;
 
+import javax.validation.constraints.NotEmpty;
 import org.entando.entando.web.common.annotation.ValidateString;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *

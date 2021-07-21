@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.user.model;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 /**
  *

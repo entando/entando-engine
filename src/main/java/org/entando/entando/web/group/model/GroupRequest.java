@@ -13,9 +13,8 @@
  */
 package org.entando.entando.web.group.model;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 public class GroupRequest {
 
