@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system;
 
+import com.agiletec.aps.system.services.page.IPageManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -205,13 +206,6 @@ public interface SystemConstants {
      */
     public static final String STORAGE_MANAGER = "StorageManager";
 
-    /**
-     * Nome del servizio gestore cache.
-     *
-     * @deprecated
-     */
-    public static final String CACHE_MANAGER = "CacheManager";
-
     public static final String CACHE_INFO_MANAGER = "CacheInfoManager";
 
     public static final String ACTION_LOGGER_MANAGER = "ActionLogManager";
@@ -259,8 +253,6 @@ public interface SystemConstants {
 
     public static final String CONFIG_ITEM_LANGS = "langs";
 
-    public static final String CONFIG_ITEM_LICENSE = "license";
-
     public static final String CONFIG_ITEM_PARAMS = "params";
 
     /**
@@ -288,66 +280,50 @@ public interface SystemConstants {
      */
     public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = "maxMonthsSinceLastPasswordChange";
 
-    /**
-     * Parametro di sistema per la definizione dello stile della url dei link
-     * generati. Se settato a 'standard', la url generata avrà la forma
-     * "applicationBaseUrl/langCode/pageCode.page". Se settato a 'breadcrumbs',
-     * la url generata avrà la forma
-     * "applicationBaseUrl/pages/langCode/pagePath/" dove pagePath è la
-     * concatenazione dei codici pagina dalla pagina radice alla pagina oggetto
-     * del link.
-     */
-    public static final String CONFIG_PARAM_URL_STYLE = "urlStyle";
-
-    public static final String CONFIG_PARAM_TREE_STYLE_PAGE = "treeStyle_page";
     public static final String CONFIG_PARAM_TREE_STYLE_CATEGORY = "treeStyle_category";
-
-    public static final String CONFIG_PARAM_USE_JSESSIONID = "useJsessionId";
-
-    public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
-
-    public static final String CONFIG_PARAM_BASE_URL_RELATIVE = "relative";
-    public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
-    public static final String CONFIG_PARAM_BASE_URL_STATIC = "static";
-
-    public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = "requestIfRelative";
-
-    public static final String CONFIG_PARAM_BASE_URL_CONTEXT = "baseUrlContext";
 
     public static final String TREE_STYLE_CLASSIC = "classic";
     public static final String TREE_STYLE_REQUEST = "request";
     public static final String TREE_STYLE_LEVEL = "level";
 
-    public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = "classic";
-    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = "breadcrumbs";
-
-    public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = "startLangFromBrowser";
-
-    public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = "homePageCode";
-
     public static final String CONFIG_PARAM_HYPERTEXT_EDITOR_CODE = "hypertextEditor";
 
-    public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = "notFoundPageCode";
-
-    public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
-
-    public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE = IPageManager.CONFIG_PARAM_URL_STYLE;
+    @Deprecated
+    public static final String CONFIG_PARAM_TREE_STYLE_PAGE = IPageManager.CONFIG_PARAM_TREE_STYLE_PAGE;
+    @Deprecated
+    public static final String CONFIG_PARAM_USE_JSESSIONID = IPageManager.CONFIG_PARAM_USE_JSESSIONID;
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL = IPageManager.CONFIG_PARAM_BASE_URL;
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_RELATIVE = IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE;
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_STATIC = IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+    @Deprecated
+    public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE;
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_CONTEXT = IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT;
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC;
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS;
+    @Deprecated
+    public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = IPageManager.CONFIG_PARAM_START_LANG_FROM_BROWSER;
+    @Deprecated
+    public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = IPageManager.CONFIG_PARAM_HOMEPAGE_PAGE_CODE;
+    @Deprecated
+    public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
+    @Deprecated
+    public static final String CONFIG_PARAM_ERROR_PAGE_CODE = IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE;
+    @Deprecated
+    public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = IPageManager.CONFIG_PARAM_LOGIN_PAGE_CODE;
 
     public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
 
     public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = "editEmptyFragmentEnabled";
-
-    public static final String CONFIG_PARAM_GROUPS_ON_DEMAND = "groupsOnDemand";
-
-    public static final String CONFIG_PARAM_CATEGORIES_ON_DEMAND = "categoriesOnDemand";
-
-    public static final String CONFIG_PARAM_CONTENT_TYPES_ON_DEMAND = "contentTypesOnDemand";
-
-    public static final String CONFIG_PARAM_CONTENT_MODELS_ON_DEMAND = "contentModelsOnDemand";
-
-    public static final String CONFIG_PARAM_APIS_ON_DEMAND = "apisOnDemand";
-
-    public static final String CONFIG_PARAM_RESOURCE_ARCHIVES_ON_DEMAND = "resourceArchivesOnDemand";
 
     /**
      * Lo username dell'utente amministratore, utente di default con diritti

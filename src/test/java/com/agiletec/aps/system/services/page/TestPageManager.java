@@ -20,11 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Map;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -797,6 +800,32 @@ class TestPageManager extends BaseTestCase {
             found = code.equals(onlyDraftPageCode);
         }
         assertTrue(found);
+    }
+
+    @Test
+    public void testUpdateParams() throws Throwable {
+        ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
+        String value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("notfound", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        Map<String, String> map = new HashMap<>();
+        map.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "newValue");
+        this._pageManager.updateParams(map);
+        value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("newValue", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        map.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "notfound");
+        this._pageManager.updateParams(map);
+        value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("notfound", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        map.put("invalidKey", "value");
+        this._pageManager.updateParams(map);
+        assertNull(this._pageManager.getConfig("invalidKey"));
+        assertNull(configManager.getParam("invalidKey"));
     }
 
     @BeforeEach

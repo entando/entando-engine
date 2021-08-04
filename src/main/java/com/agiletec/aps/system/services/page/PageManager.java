@@ -16,6 +16,7 @@ package com.agiletec.aps.system.services.page;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -38,6 +39,8 @@ import java.util.stream.Collectors;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -52,7 +55,12 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
     public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
 
+    @Autowired
+    @Qualifier(value = "PageManagerParameterNames")
+    public List<String> parameterNames;
+
     private IPageManagerCacheWrapper _cacheWrapper;
+    private ConfigInterface configManager;
     private IPageDAO _pageDao;
 
     @Override
@@ -760,18 +768,48 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         return clone;
     }
 
+    @Override
+    public String getConfig(String param) {
+        return this.getConfigManager().getParam(param);
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return this.getParameterNames().stream().collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
+    }
+
+    @Override
+    public void updateParams(Map<String, String> params) throws EntException {
+        if (null == params) {
+            return;
+        }
+        Map<String, String> paramsToUpdate = params.entrySet().stream()
+                .filter(e -> this.getParameterNames().contains(e.getKey()))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        this.getConfigManager().updateParams(paramsToUpdate);
+    }
+
+    protected List<String> getParameterNames() {
+        return parameterNames;
+    }
+
     protected IPageManagerCacheWrapper getCacheWrapper() {
         return _cacheWrapper;
     }
-
     public void setCacheWrapper(IPageManagerCacheWrapper cacheWrapper) {
         this._cacheWrapper = cacheWrapper;
+    }
+
+    protected ConfigInterface getConfigManager() {
+        return configManager;
+    }
+    public void setConfigManager(ConfigInterface configManager) {
+        this.configManager = configManager;
     }
 
     protected IPageDAO getPageDAO() {
         return _pageDao;
     }
-
     public void setPageDAO(IPageDAO pageDao) {
         this._pageDao = pageDao;
     }

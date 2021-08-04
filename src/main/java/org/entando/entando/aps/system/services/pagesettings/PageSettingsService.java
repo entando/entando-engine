@@ -13,9 +13,8 @@
  */
 package org.entando.entando.aps.system.services.pagesettings;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import com.agiletec.aps.system.services.page.IPageManager;
+import java.util.HashMap;
 import java.util.Map;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
@@ -34,17 +33,17 @@ public class PageSettingsService implements IPageSettingsService {
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
-    private ConfigInterface configManager;
+    private IPageManager pageManager;
 
     @Autowired
     private IDtoBuilder<Map<String, String>, PageSettingsDto> dtoBuilder;
 
-    public ConfigInterface getConfigManager() {
-        return configManager;
+    public IPageManager getPageManager() {
+        return pageManager;
     }
 
-    public void setConfigManager(ConfigInterface configManager) {
-        this.configManager = configManager;
+    public void setPageManager(IPageManager pageManager) {
+        this.pageManager = pageManager;
     }
 
     public IDtoBuilder<Map<String, String>, PageSettingsDto> getDtoBuilder() {
@@ -69,24 +68,20 @@ public class PageSettingsService implements IPageSettingsService {
     @Override
     public PageSettingsDto updatePageSettings(PageSettingsRequest request) {
         try {
-            Map<String, String> systemParams = this.getSystemParams();
+            Map<String, String> systemParams = new HashMap<>();
             request.keySet().forEach((param) -> {
                 systemParams.put(param, request.get(param));
             });
-            String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams);
-            this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
-            return this.getDtoBuilder().convert(systemParams);
+            this.getPageManager().updateParams(systemParams);
+            return this.getDtoBuilder().convert(this.getSystemParams());
         } catch (Throwable e) {
             logger.error("Error updating page settings", e);
             throw new RestServerError("Error updating page settings", e);
         }
-
     }
 
     private Map<String, String> getSystemParams() throws Throwable {
-        String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-        return SystemParamsUtils.getParams(xmlParams);
+        return this.getPageManager().getParams();
     }
 
 }
