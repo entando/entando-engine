@@ -22,6 +22,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
+import com.agiletec.aps.system.services.page.IPageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,13 +40,13 @@ class URLManagerIntegrationTest extends BaseTestCase {
         try {
             String url = this.urlManager.getURLString(pageURL, reqCtx);
             assertEquals("http://www.entando.com/Entando/it/homepage.page", url);
-            this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
             url = this.urlManager.getURLString(pageURL, reqCtx);
             assertEquals("http://www.entando.com/Entando/pages/it/homepage/", url);
         } catch (Throwable t) {
             throw t;
         } finally {
-            this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_CLASSIC);
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC);
         }
     }
 
@@ -58,13 +59,13 @@ class URLManagerIntegrationTest extends BaseTestCase {
         try {
             String url = this.urlManager.getURLString(pageURL, reqCtx);
             assertEquals("http://www.entando.com/Entando/en/pagina_11.page", url);
-            this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
             url = this.urlManager.getURLString(pageURL, reqCtx);
             assertEquals("http://www.entando.com/Entando/pages/en/homepage/pagina_1/pagina_11/", url);
         } catch (Throwable t) {
             throw t;
         } finally {
-            this.changeUrlStyle(SystemConstants.CONFIG_PARAM_URL_STYLE_CLASSIC);
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC);
         }
     }
 
@@ -72,7 +73,7 @@ class URLManagerIntegrationTest extends BaseTestCase {
         try {
             String xmlParams = this.configManager.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
             Map<String, String> systemParams = SystemParamsUtils.getParams(xmlParams);
-            systemParams.put(SystemConstants.CONFIG_PARAM_URL_STYLE, styleType);
+            systemParams.put(IPageManager.CONFIG_PARAM_URL_STYLE, styleType);
             String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams);
             this.configManager.updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
         } catch (Throwable t) {

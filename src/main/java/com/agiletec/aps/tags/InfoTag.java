@@ -25,6 +25,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import org.entando.entando.aps.tags.ExtendedTagSupport;
@@ -79,10 +80,10 @@ public class InfoTag extends ExtendedTagSupport {
 	
 	private Lang extractStartLang() {
 		Lang startLang = null;
-		ConfigInterface baseConfigManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, this.pageContext);
+        IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
 		ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
 		try {
-			String startLangFromBrowser = baseConfigManager.getParam(SystemConstants.CONFIG_PARAM_START_LANG_FROM_BROWSER);
+			String startLangFromBrowser = pageManager.getConfig(IPageManager.CONFIG_PARAM_START_LANG_FROM_BROWSER);
 			if (null != startLangFromBrowser && startLangFromBrowser.equalsIgnoreCase("true")) {
 				ServletRequest request = this.pageContext.getRequest();
 				if (request instanceof HttpServletRequest) {
