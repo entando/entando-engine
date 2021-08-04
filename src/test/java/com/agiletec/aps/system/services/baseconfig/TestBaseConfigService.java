@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.IPageManager;
 import org.entando.entando.ent.exception.EntException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ class TestBaseConfigService extends BaseTestCase {
 
     @Test
     void testGetParam() throws EntException {
-        String param = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        String param = this.configInterface.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", param);
         param = this.configInterface.getParam(SystemConstants.PAR_CSP_ENABLED);
         assertEquals("true", param);
@@ -46,13 +47,13 @@ class TestBaseConfigService extends BaseTestCase {
 
     @Test
     void testUpdateParam_1() throws EntException {
-        String value = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        String value = this.configInterface.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", value);
-        this.configInterface.updateParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "newValue");
-        value = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        this.configInterface.updateParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "newValue");
+        value = this.configInterface.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("newValue", value);
-        this.configInterface.updateParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "notfound");
-        value = this.configInterface.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        this.configInterface.updateParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "notfound");
+        value = this.configInterface.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", value);
     }
 
@@ -68,7 +69,7 @@ class TestBaseConfigService extends BaseTestCase {
 
     @Test
     void testUpdateParams() throws EntException {
-        String paramName1 = SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
+        String paramName1 = IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
         String paramName2 = "wrongParamName";
         try {
             String value1 = this.configInterface.getParam(paramName1);

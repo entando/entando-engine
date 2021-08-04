@@ -310,6 +310,7 @@
     </bean>
     
     <bean id="URLManager" class="com.agiletec.aps.system.services.url.URLManager" parent="abstractService" >
+        <property name="configManager" ref="BaseConfigManager"/>
         <property name="pageManager" ref="PageManager"/>
         <property name="langManager" ref="LangManager"/>
     </bean>

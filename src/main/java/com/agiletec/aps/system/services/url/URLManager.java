@@ -15,6 +15,7 @@ package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -180,7 +181,7 @@ public class URLManager extends AbstractURLManager {
 
     protected void addBaseURL(StringBuilder link, String forcedBaseUrlMode, HttpServletRequest request) {
         if (null == request) {
-            link.append(this.getPageManager().getConfig(SystemConstants.PAR_APPL_BASE_URL));
+            link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;
         }
         String baseUrlMode = this.calculateBaseUrlMode(forcedBaseUrlMode, request);
@@ -213,7 +214,7 @@ public class URLManager extends AbstractURLManager {
                 link.append(request.getContextPath());
             }
         } else {
-            link.append(this.getPageManager().getConfig(SystemConstants.PAR_APPL_BASE_URL));
+            link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
         }
     }
 
@@ -277,6 +278,14 @@ public class URLManager extends AbstractURLManager {
         return (param != null && Boolean.parseBoolean(param));
     }
 
+    protected ConfigInterface getConfigManager() {
+        return _configManager;
+    }
+
+    public void setConfigManager(ConfigInterface configManager) {
+        this._configManager = configManager;
+    }
+
     protected ILangManager getLangManager() {
         return _langManager;
     }
@@ -293,6 +302,7 @@ public class URLManager extends AbstractURLManager {
         this._pageManager = pageManager;
     }
 
+    private ConfigInterface _configManager;
     private IPageManager _pageManager;
     private ILangManager _langManager;
 
