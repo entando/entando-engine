@@ -803,7 +803,7 @@ class TestPageManager extends BaseTestCase {
     }
 
     @Test
-    public void testUpdateParams() throws Throwable {
+    void testUpdateParams() throws Throwable {
         ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
         String value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
         assertEquals("notfound", value);

@@ -57,11 +57,11 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
     @Autowired
     @Qualifier(value = "PageManagerParameterNames")
-    public List<String> parameterNames;
+    public transient List<String> parameterNames;
 
-    private IPageManagerCacheWrapper _cacheWrapper;
-    private ConfigInterface configManager;
-    private IPageDAO _pageDao;
+    private transient IPageManagerCacheWrapper _cacheWrapper;
+    private transient ConfigInterface configManager;
+    private transient IPageDAO _pageDao;
 
     @Override
     public void init() throws Exception {
@@ -785,7 +785,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         }
         Map<String, String> paramsToUpdate = params.entrySet().stream()
                 .filter(e -> this.getParameterNames().contains(e.getKey()))
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                .collect(Collectors.toMap(Entry<String, String>::getKey, Entry<String, String>::getValue));
         this.getConfigManager().updateParams(paramsToUpdate);
     }
 
