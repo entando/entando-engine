@@ -786,7 +786,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         Map<String, String> paramsToUpdate = params.entrySet().stream()
                 .filter(e -> this.getParameterNames().contains(e.getKey()))
                 .collect(Collectors.toMap(Entry<String, String>::getKey, Entry<String, String>::getValue));
-        this.getConfigManager().updateParams(paramsToUpdate);
+        this.getConfigManager().updateParams(paramsToUpdate, true);
     }
 
     protected List<String> getParameterNames() {

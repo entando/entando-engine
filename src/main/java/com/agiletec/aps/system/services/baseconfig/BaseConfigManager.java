@@ -117,25 +117,35 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
             return this.getCacheWrapper().getParam(name);
         }
     }
-
+    
     @Override
     public void updateParam(String name, String value) throws EntException {
+        this.updateParam(name, value, false);
+    }
+
+    @Override
+    public void updateParam(String name, String value, boolean addIfNew) throws EntException {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(value)) {
             return;
         }
         Map<String, String> params = new HashMap<>();
         params.put(name, value);
-        this.updateParams(params);
+        this.updateParams(params, addIfNew);
+    }
+    
+    @Override
+    public void updateParams(Map<String, String> params) throws EntException {
+        this.updateParams(params, false);
     }
 
     @Override
-    public void updateParams(Map<String, String> params) throws EntException {
+    public void updateParams(Map<String, String> params, boolean addNewOnes) throws EntException {
         if (null == params) {
             return;
         }
         try {
             String xmlParams = this.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, params, false);
+            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, params, addNewOnes);
             this.updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
         } catch (Exception e) {
             logger.error("Error while updating parameters {}", params, e);
