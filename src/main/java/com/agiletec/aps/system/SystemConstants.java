@@ -75,6 +75,7 @@ public interface SystemConstants {
      *
      * @deprecated Use {@link #EXTRAPAR_CURRENT_WIDGET} instead
      */
+    @Deprecated
     public static final String EXTRAPAR_CURRENT_SHOWLET = EXTRAPAR_CURRENT_WIDGET;
 
     /**
@@ -288,36 +289,99 @@ public interface SystemConstants {
 
     public static final String CONFIG_PARAM_HYPERTEXT_EDITOR_CODE = "hypertextEditor";
 
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_URL_STYLE = IPageManager.CONFIG_PARAM_URL_STYLE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_TREE_STYLE_PAGE = IPageManager.CONFIG_PARAM_TREE_STYLE_PAGE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_USE_JSESSIONID = IPageManager.CONFIG_PARAM_USE_JSESSIONID;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_BASE_URL = IPageManager.CONFIG_PARAM_BASE_URL;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_BASE_URL_RELATIVE = IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_BASE_URL_STATIC = IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_BASE_URL_CONTEXT = IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = IPageManager.CONFIG_PARAM_START_LANG_FROM_BROWSER;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = IPageManager.CONFIG_PARAM_HOMEPAGE_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_ERROR_PAGE_CODE = IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
     @Deprecated
     public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = IPageManager.CONFIG_PARAM_LOGIN_PAGE_CODE;
 

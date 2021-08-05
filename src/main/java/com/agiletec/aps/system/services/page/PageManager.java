@@ -59,9 +59,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     @Qualifier(value = "PageManagerParameterNames")
     public transient List<String> parameterNames;
 
-    private transient IPageManagerCacheWrapper _cacheWrapper;
+    private transient IPageManagerCacheWrapper cacheWrapper;
     private transient ConfigInterface configManager;
-    private transient IPageDAO _pageDao;
+    private transient IPageDAO pageDao;
 
     @Override
     public void init() throws Exception {
@@ -796,10 +796,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     protected IPageManagerCacheWrapper getCacheWrapper() {
-        return _cacheWrapper;
+        return cacheWrapper;
     }
     public void setCacheWrapper(IPageManagerCacheWrapper cacheWrapper) {
-        this._cacheWrapper = cacheWrapper;
+        this.cacheWrapper = cacheWrapper;
     }
 
     protected ConfigInterface getConfigManager() {
@@ -810,10 +810,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     protected IPageDAO getPageDAO() {
-        return _pageDao;
+        return pageDao;
     }
     public void setPageDAO(IPageDAO pageDao) {
-        this._pageDao = pageDao;
+        this.pageDao = pageDao;
     }
 
 }
