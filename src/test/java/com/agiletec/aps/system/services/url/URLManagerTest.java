@@ -83,8 +83,8 @@ class URLManagerTest {
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL)).thenReturn(SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
-        pageURL.setBaseUrlMode(SystemConstants.CONFIG_PARAM_BASE_URL_STATIC);
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL)).thenReturn(IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
+        pageURL.setBaseUrlMode(IPageManager.CONFIG_PARAM_BASE_URL_STATIC);
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
     }
@@ -96,7 +96,7 @@ class URLManagerTest {
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");
         pageURL.setPageCode("homepage");
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL)).thenReturn(SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE);
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL)).thenReturn(IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE);
         
         String url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
@@ -105,11 +105,11 @@ class URLManagerTest {
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
         
-        pageURL.setBaseUrlMode(SystemConstants.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE);
+        pageURL.setBaseUrlMode(IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE);
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://www.entando.org/en/homepage.page", url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("true");
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("true");
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://www.entando.org/entando/en/homepage.page", url);
         
@@ -121,12 +121,12 @@ class URLManagerTest {
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("/entando" + expectedUrl, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL)).thenReturn(SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
-        pageURL.setBaseUrlMode(SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE);
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL)).thenReturn(IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
+        pageURL.setBaseUrlMode(IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE);
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("/entando" + expectedUrl, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("false");
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("false");
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals(expectedUrl, url);
     }
@@ -139,22 +139,22 @@ class URLManagerTest {
         PageURL pageURL = urlManager.createURL(reqCtx);
         pageURL.setLangCode("en");
         pageURL.setPageCode("homepage");
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL)).thenReturn(SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL)).thenReturn(IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
         
         String url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://"+expectedUrl, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("true");
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("true");
         
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://"+expectedUrlWithContext, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL)).thenReturn(SystemConstants.CONFIG_PARAM_BASE_URL_STATIC);
-        pageURL.setBaseUrlMode(SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL)).thenReturn(IPageManager.CONFIG_PARAM_BASE_URL_STATIC);
+        pageURL.setBaseUrlMode(IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST);
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://"+expectedUrlWithContext, url);
         
-        Mockito.lenient().when(configManager.getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("false");
+        Mockito.lenient().when(pageManager.getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT)).thenReturn("false");
         url = this.urlManager.getURLString(pageURL, reqCtx);
         assertEquals("http://"+expectedUrl, url);
         
