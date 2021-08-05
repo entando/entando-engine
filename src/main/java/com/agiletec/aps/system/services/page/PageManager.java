@@ -775,7 +775,9 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
     @Override
     public Map<String, String> getParams() {
-        return this.getParameterNames().stream().collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
+        return this.getParameterNames().stream()
+                .filter(p -> null != this.getConfig(p))
+                .collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
     }
 
     @Override
