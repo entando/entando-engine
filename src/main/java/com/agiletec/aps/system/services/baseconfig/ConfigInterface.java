@@ -57,4 +57,9 @@ public interface ConfigInterface {
     public void updateParam(String name, String value) throws EntException;
 
     public void updateParams(Map<String, String> params) throws EntException;
+
+    public void updateParam(String name, String value, boolean addIfNew) throws EntException;
+
+    public void updateParams(Map<String, String> params, boolean addNewOnes) throws EntException;
+    
 }

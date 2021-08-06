@@ -15,9 +15,9 @@ package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
@@ -220,26 +220,26 @@ public class URLManager extends AbstractURLManager {
 
     protected String calculateBaseUrlMode(String forcedBaseUrlMode, HttpServletRequest request) {
         if (null == request) {
-            return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
+            return IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
         }
         String param = this.getBaseUrlStrategy();
         if (StringUtils.isBlank(forcedBaseUrlMode)) {
             return param;
         }
         boolean isDefaultRelative = this.isRelativeBaseUrl(param);
-        if (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equalsIgnoreCase(forcedBaseUrlMode)
-                || (isDefaultRelative && SystemConstants.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode))) {
-            return SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
-        } else if (SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equalsIgnoreCase(forcedBaseUrlMode)) {
-            return SystemConstants.CONFIG_PARAM_BASE_URL_STATIC;
-        } else if (SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode)) {
-            return SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE;
+        if (IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equalsIgnoreCase(forcedBaseUrlMode)
+                || (isDefaultRelative && IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode))) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+        } else if (IPageManager.CONFIG_PARAM_BASE_URL_STATIC.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+        } else if (IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE;
         }
         return param;
     }
 
     protected String getBaseUrlStrategy() {
-        return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
+        return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_BASE_URL);
     }
 
     protected boolean isForceAddSchemeHost() {
@@ -247,7 +247,7 @@ public class URLManager extends AbstractURLManager {
     }
 
     protected boolean isForceAddSchemeHost(String param) {
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equals(param));
+        return (IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equals(param));
     }
 
     protected boolean isRelativeBaseUrl() {
@@ -255,26 +255,26 @@ public class URLManager extends AbstractURLManager {
     }
 
     protected boolean isRelativeBaseUrl(String param) {
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE.equals(param));
+        return (IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE.equals(param));
     }
 
     protected boolean isStaticBaseUrl() {
         String param = this.getBaseUrlStrategy();
-        return (StringUtils.isBlank(param) || SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
+        return (StringUtils.isBlank(param) || IPageManager.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
     }
 
     protected boolean addContextName() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT);
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT);
         return (null != param && Boolean.parseBoolean(param));
     }
 
     protected boolean isUrlStyleBreadcrumbs() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_URL_STYLE);
-        return (param != null && param.trim().equals(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS));
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_URL_STYLE);
+        return (param != null && param.trim().equals(IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS));
     }
 
     protected boolean useJsessionId() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_USE_JSESSIONID);
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_USE_JSESSIONID);
         return (param != null && Boolean.parseBoolean(param));
     }
 
