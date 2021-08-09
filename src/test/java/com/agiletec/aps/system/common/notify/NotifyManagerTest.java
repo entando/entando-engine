@@ -21,11 +21,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 class NotifyManagerTest {
+    
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private NotifyManager notifyManager;
@@ -45,6 +50,8 @@ class NotifyManagerTest {
         Assertions.assertEquals(2, extracted.size());
         Assertions.assertEquals(String.valueOf(PageChangedEvent.INSERT_OPERATION_CODE), extracted.get("operationCode"));
         Assertions.assertEquals(mockPage.getCode(), extracted.get("pageCode"));
+        notifyManager.publishEvent(event);
+        Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(event);
     }
 
 }

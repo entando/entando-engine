@@ -447,8 +447,11 @@ public interface SystemConstants {
     public static final Integer OAUTH2_ACCESS_TOKEN_DEFAULT_VALIDITY_SECOND = 3600;
 
     public static final Integer OAUTH2_REFRESH_TOKEN_DEFAULT_VALIDITY_SECOND = 86400;
-
     
+    public static final String PAGE_EVENT_CHANNEL = "core-page";
+    
+    public static final String ENTITY_EVENT_CHANNEL = "core-entity";
+
     public static final String CSP_HEADER_ENABLED = "CSP_HEADER_ENABLED";
     public static final String CSP_HEADER_EXTRACONFIG = "CSP_HEADER_EXTRACONFIG";
     public static final String ENTANDO_CSRF_PROTECTION = "ENTANDO_CSRF_PROTECTION";
@@ -460,10 +463,9 @@ public interface SystemConstants {
     public static final String REFERER = "Referer";
     public static final String CSRF_BASIC_PROTECTION = "basic";
 
-
     // keycloak
     public static final String SYSTEM_PROP_KEYCLOAK_AUTH_URL = "keycloak.auth.url";
     public static final String SYSTEM_PROP_KEYCLOAK_ENABLED = "keycloak.enabled";
     public static final String SYSTEM_PROP_KEYCLOAK_REALM = "keycloak.realm";
-
+    
 }
