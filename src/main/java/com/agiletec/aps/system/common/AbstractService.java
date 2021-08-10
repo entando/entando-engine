@@ -20,6 +20,7 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.agiletec.aps.system.common.notify.ApsEvent;
 import com.agiletec.aps.system.common.notify.INotifyManager;
+import org.springframework.context.ApplicationEvent;
 
 /**
  * Base class for implementation of the System Services.
@@ -101,7 +102,7 @@ public abstract class AbstractService
 	 * Notification of an internal event to the service of notification.
 	 * @param event The event to notify.
 	 */
-	protected void notifyEvent(ApsEvent event) {
+	protected void notifyEvent(ApplicationEvent event) {
 		this.getNotifyManager().publishEvent(event);
 	}
 	
