@@ -14,6 +14,7 @@
 package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -204,7 +205,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             event.setEventType(p);
         });
         event.setMessage(properties);
-        event.setChannel("page");
+        event.setChannel(SystemConstants.PAGE_EVENT_CHANNEL);
         this.notifyEvent(event);
     }
 

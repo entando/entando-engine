@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity;
 
+import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.IOException;
 import java.io.StringReader;
@@ -50,6 +51,7 @@ import com.agiletec.aps.system.common.entity.parse.IEntityTypeDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.DateConverter;
+import java.util.Optional;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -348,9 +350,20 @@ public abstract class ApsEntityManager extends AbstractService
 
     private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) {
         EntityTypesChangingEvent event = new EntityTypesChangingEvent();
+        Map<String, String> properties = new HashMap<>();
+        properties.put("operationCode", String.valueOf(operationCode));
+        properties.put("entityManagerName", this.getName());
+        Optional.ofNullable(newEntityType).ifPresent(e -> {
+            properties.put("newEntityType", e.getTypeCode());
+            event.setNewEntityType(e);
+        });
+        Optional.ofNullable(oldEntityType).ifPresent(e -> {
+            properties.put("oldEntityType", e.getTypeCode());
+            event.setOldEntityType(e);
+        });
+        event.setMessage(properties);
+        event.setChannel(SystemConstants.ENTITY_EVENT_CHANNEL);
         event.setOperationCode(operationCode);
-        event.setNewEntityType(newEntityType);
-        event.setOldEntityType(oldEntityType);
         event.setEntityManagerName(this.getName());
         this.notifyEvent(event);
     }
