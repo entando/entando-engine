@@ -297,8 +297,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
 
     /**
      * check if the received Group already exists
-     * if it exists with equal name but different description, it throws ValidationConflictException
-     * if it exists completely equal, it will return an empty optional that means that the group has NOT to be saved
+     * if it exists with equal name it throws ValidationConflictException
      *
      * @param group the group to validate
      * @return the optional of the dto resulting from the validation, if empty the group has NOT to be saved
