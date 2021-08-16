@@ -297,8 +297,7 @@ public class GroupService implements IGroupService, ApplicationContextAware {
 
     /**
      * check if the received Group already exists
-     * if it exists with equal name but different description, it throws ValidationConflictException
-     * if it exists completely equal, it will return an empty optional that means that the group has NOT to be saved
+     * if it exists with equal name it throws ValidationConflictException
      *
      * @param group the group to validate
      * @return the optional of the dto resulting from the validation, if empty the group has NOT to be saved
@@ -310,16 +309,16 @@ public class GroupService implements IGroupService, ApplicationContextAware {
 
         // check for idempotemcy
         if (null != savedGroup && savedGroup.getName().equals(group.getName())) {
-
             if (savedGroup.getDescription().equals(group.getDescription())) {
-                return Optional.empty();
+                bindingResult
+                        .reject(GroupValidator.ERRCODE_GROUP_ALREADY_EXISTS, new String[]{group.getName()},
+                                "group.exists");
             } else {
                 bindingResult
                         .reject(GroupValidator.ERRCODE_ADDING_GROUP_WITH_CONFLICTS, new String[]{group.getName()},
                                 "group.exists.conflict");
-
-                throw new ValidationConflictException(bindingResult);
             }
+            throw new ValidationConflictException(bindingResult);
         }
 
         return Optional.of(dtoBuilder.convert(group));

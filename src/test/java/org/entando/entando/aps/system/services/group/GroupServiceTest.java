@@ -50,19 +50,15 @@ class GroupServiceTest {
     }
 
     @Test
-    void addExistingGroupShouldReturnTheReceivedGroup() throws EntException {
+    void addExistingGroupShouldThrowValidationConflictException() {
 
         Group existingGroup = GroupTestHelper.stubTestGroup();
-        GroupDto expectedDto = GroupTestHelper.stubGroupDto();
         GroupRequest groupReq = GroupTestHelper.stubTestGroupRequest();
 
         when(groupManager.getGroup(anyString())).thenReturn(existingGroup);
-        when(dtoBuilder.convert(existingGroup)).thenReturn(expectedDto);
-
-        GroupDto actualGroupDto = this.groupService.addGroup(groupReq);
-
-        verify(groupManager, times(0)).addGroup(any());
-        GroupTestHelper.assertGroupDtoEquals(expectedDto, actualGroupDto);
+        Assertions.assertThrows(ValidationConflictException.class, () -> {
+            this.groupService.addGroup(groupReq);
+        });
     }
 
     @Test
