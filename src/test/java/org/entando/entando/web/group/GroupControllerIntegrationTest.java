@@ -321,16 +321,13 @@ class GroupControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
 
     @Test
-    void addExistingGroupShouldReturnTheReceivedCategory() throws Exception {
+    void addExistingGroupShouldReturn409() throws Exception {
 
         GroupRequest groupRequest = GroupTestHelper.stubTestGroupRequest();
 
         try {
             mockMvcHelper.postMockMvc("/groups", groupRequest).andExpect(status().is2xxSuccessful());
-
-            ResultActions resultActions = mockMvcHelper.postMockMvc("/groups", groupRequest).andExpect(status().is2xxSuccessful());
-
-            GroupTestHelper.assertGroups(GroupTestHelper.stubGroupDto(), resultActions);
+            mockMvcHelper.postMockMvc("/groups", groupRequest).andExpect(status().isConflict());
         } finally {
             mockMvcHelper.deleteMockMvc("/groups/" + groupRequest.getCode(), groupRequest).andExpect(status().is2xxSuccessful());
         }
