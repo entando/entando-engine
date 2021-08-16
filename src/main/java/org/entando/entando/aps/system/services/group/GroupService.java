@@ -310,16 +310,16 @@ public class GroupService implements IGroupService, ApplicationContextAware {
 
         // check for idempotemcy
         if (null != savedGroup && savedGroup.getName().equals(group.getName())) {
-
             if (savedGroup.getDescription().equals(group.getDescription())) {
-                return Optional.empty();
+                bindingResult
+                        .reject(GroupValidator.ERRCODE_GROUP_ALREADY_EXISTS, new String[]{group.getName()},
+                                "group.exists");
             } else {
                 bindingResult
                         .reject(GroupValidator.ERRCODE_ADDING_GROUP_WITH_CONFLICTS, new String[]{group.getName()},
                                 "group.exists.conflict");
-
-                throw new ValidationConflictException(bindingResult);
             }
+            throw new ValidationConflictException(bindingResult);
         }
 
         return Optional.of(dtoBuilder.convert(group));
