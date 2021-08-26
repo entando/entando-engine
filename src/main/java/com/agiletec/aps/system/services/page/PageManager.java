@@ -438,15 +438,19 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             throw new EntException("Invalid null value found in either the Widget or the widgetType");
         }
         try {
-            IPage currentPage = this.getDraftPage(pageCode);
-            this.getPageDAO().joinWidget(currentPage, widget, pos);
-            currentPage.getWidgets()[pos] = widget;
-            if (currentPage.isOnline()) {
-                boolean widgetEquals = Arrays.deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
-                ((Page) currentPage).setChanged(!widgetEquals);
+            synchronized (this.getPageDAO()) {
+                IPage currentPage = this.getDraftPage(pageCode);
+                this.getPageDAO().joinWidget(currentPage, widget, pos);
+                currentPage.getWidgets()[pos] = widget;
+                if (currentPage.isOnline()) {
+                    boolean widgetEquals = Arrays
+                            .deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
+                    ((Page) currentPage).setChanged(!widgetEquals);
+                }
+                this.getCacheWrapper().updateDraftPage(currentPage);
+                this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
+                        PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
             }
-            this.getCacheWrapper().updateDraftPage(currentPage);
-            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos, PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
         } catch (Throwable t) {
             String message = "Error during the assignation of a widget to the frame " + pos + " in the page code " + pageCode;
             _logger.error("Error during the assignation of a widget to the frame {} in the page code {}", pos, pageCode, t);
