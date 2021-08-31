@@ -96,7 +96,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void deletePage(String pageCode) throws EntException {
+    public synchronized void deletePage(String pageCode) throws EntException {
         IPage page = this.getDraftPage(pageCode);
         if (null != page && page.getChildrenCodes().length <= 0) {
             try {
@@ -117,7 +117,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void addPage(IPage page) throws EntException {
+    public synchronized void addPage(IPage page) throws EntException {
         try {
             IPage parent = this.getDraftPage(page.getParentCode());
             if (null == parent) {
@@ -151,7 +151,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void updatePage(IPage page) throws EntException {
+    public synchronized void updatePage(IPage page) throws EntException {
         try {
             this.getPageDAO().updatePage(page);
             this.getCacheWrapper().updateDraftPage(page);
@@ -163,7 +163,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void setPageOnline(String pageCode) throws EntException {
+    public synchronized void setPageOnline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOnline(pageCode);
             this.getCacheWrapper().setPageOnline(pageCode);
@@ -175,7 +175,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void setPageOffline(String pageCode) throws EntException {
+    public synchronized void setPageOffline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOffline(pageCode);
             this.getCacheWrapper().setPageOffline(pageCode);
@@ -234,7 +234,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public boolean movePage(String pageCode, boolean moveUp) throws EntException {
+    public synchronized boolean movePage(String pageCode, boolean moveUp) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -293,7 +293,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException {
+    public synchronized boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -377,7 +377,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     @Deprecated
-    public void removeShowlet(String pageCode, int pos) throws EntException {
+    public synchronized void removeShowlet(String pageCode, int pos) throws EntException {
         this.removeWidget(pageCode, pos);
     }
 
@@ -389,7 +389,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of error
      */
     @Override
-    public void removeWidget(String pageCode, int pos) throws EntException {
+    public synchronized void removeWidget(String pageCode, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -417,7 +417,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     @Deprecated
-    public void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
+    public synchronized void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
         this.joinWidget(pageCode, widget, pos);
     }
 
@@ -432,25 +432,23 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of error.
      */
     @Override
-    public void joinWidget(String pageCode, Widget widget, int pos) throws EntException {
+    public synchronized void joinWidget(String pageCode, Widget widget, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         if (null == widget || null == widget.getType()) {
             throw new EntException("Invalid null value found in either the Widget or the widgetType");
         }
         try {
-            synchronized (this.getPageDAO()) {
-                IPage currentPage = this.getDraftPage(pageCode);
-                this.getPageDAO().joinWidget(currentPage, widget, pos);
-                currentPage.getWidgets()[pos] = widget;
-                if (currentPage.isOnline()) {
-                    boolean widgetEquals = Arrays
-                            .deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
-                    ((Page) currentPage).setChanged(!widgetEquals);
-                }
-                this.getCacheWrapper().updateDraftPage(currentPage);
-                this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
-                        PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
+            IPage currentPage = this.getDraftPage(pageCode);
+            this.getPageDAO().joinWidget(currentPage, widget, pos);
+            currentPage.getWidgets()[pos] = widget;
+            if (currentPage.isOnline()) {
+                boolean widgetEquals = Arrays
+                        .deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
+                ((Page) currentPage).setChanged(!widgetEquals);
             }
+            this.getCacheWrapper().updateDraftPage(currentPage);
+            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
+                    PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
         } catch (Throwable t) {
             String message = "Error during the assignation of a widget to the frame " + pos + " in the page code " + pageCode;
             _logger.error("Error during the assignation of a widget to the frame {} in the page code {}", pos, pageCode, t);
@@ -690,7 +688,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void updateFromPageModelChanged(PageModelChangedEvent event) {
+    public synchronized void updateFromPageModelChanged(PageModelChangedEvent event) {
         try {
             if (event.getOperationCode() != PageModelChangedEvent.UPDATE_OPERATION_CODE) {
                 return;
@@ -709,12 +707,12 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
     
     @Override
-	public boolean movePage(IPage currentPage, IPage newParent) throws EntException {
+	public synchronized boolean movePage(IPage currentPage, IPage newParent) throws EntException {
         return this.movePage(currentPage.getCode(), newParent.getCode());
     }
 
 	@Override
-	public boolean movePage(String pageCode, String newParentCode) throws EntException {
+	public synchronized boolean movePage(String pageCode, String newParentCode) throws EntException {
         IPage pageToMove = this.getDraftPage(pageCode);
         IPage newParent = this.getDraftPage(newParentCode);
 		boolean resultOperation = false;
@@ -786,7 +784,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void updateParams(Map<String, String> params) throws EntException {
+    public synchronized void updateParams(Map<String, String> params) throws EntException {
         if (null == params) {
             return;
         }
