@@ -48,9 +48,13 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
@@ -64,7 +68,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
     private IGuiFragmentManager guiFragmentManager;
 
     private ObjectMapper mapper = new ObjectMapper();
-
+    
     @Test
     void testGetWidgets() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -258,6 +262,54 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             throw e;
         } finally {
             this.widgetTypeManager.deleteWidgetType(newCode);
+        }
+    }
+    
+    @Test
+    void testParallelAddDeleteWidgetType() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String newCode_prefix = "test_widgetType";
+        try {
+            List<WidgetRequest> types = IntStream.range(1, 20).boxed().map(i -> {
+                String code = newCode_prefix + "_" + i;
+                WidgetRequest request = new WidgetRequest();
+                request.setCode(code);
+                request.setGroup(Group.FREE_GROUP_NAME);
+                Map<String, String> titles = new HashMap<>();
+                titles.put("it", "Titolo ITA " + i);
+                titles.put("en", "Title EN " + i);
+                request.setTitles(titles);
+                request.setCustomUi("<h1>Custom UI " + i + "</h1>");
+                request.setGroup(Group.FREE_GROUP_NAME);
+                request.setReadonlyPageWidgetConfig(true);
+                return request;
+            }).collect(Collectors.toList());
+            types.parallelStream().forEach(request -> {
+                try {
+                    ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", is(request.getCode())));
+                } catch (Exception e) {
+                    Assertions.fail("Error adding widgetType " + request.getCode());
+                }
+            });
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = newCode_prefix + "_" + i;
+                assertNotNull(this.widgetTypeManager.getWidgetType(code));
+            });
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = newCode_prefix + "_" + i;
+                try {
+                ResultActions result = this.executeWidgetDelete(code, accessToken, status().isOk());
+                result.andExpect(jsonPath("$.payload.code", is(code)));
+                                } catch (Exception e) {
+                    Assertions.fail("Error deleting widgetType " + code);
+                }
+                assertNull(this.widgetTypeManager.getWidgetType(code));
+            });
         }
     }
     
@@ -560,7 +612,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
-
+    
     private PageRequest getPageRequest(String pageCode) {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setCode(pageCode);
@@ -596,7 +648,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
-    
+    /*
     @Test
     void testUpdateStockLocked() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -742,7 +794,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 new ContextOfControllerTests(mockMvc, mapper)
         );
     }
-
+*/
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/widgets/{code}", new Object[]{widgetTypeCode})

@@ -33,14 +33,18 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.junit.jupiter.api.Assertions;
+
 /**
  * @author M.Diana - E.Santoboni
  */
 class TestWidgetTypeManager extends BaseTestCase {
-
+    
     @Test
     void testGetWidgetTypes() throws EntException {
-        List<WidgetType> list = _widgetTypeManager.getWidgetTypes();
+        List<WidgetType> list = this._widgetTypeManager.getWidgetTypes();
         Iterator<WidgetType> iter = list.iterator();
         Map<String, String> widgetTypes = new HashMap<>();
         while (iter.hasNext()) {
@@ -150,7 +154,42 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
-
+    
+    @Test
+    void testParallelAddDeleteWidgetType() throws Throwable {
+        String widgetTypeCode = "test_widgetType";
+        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        try {
+            List<WidgetType> types = IntStream.range(1, 20).boxed().map(i -> {
+                String code = widgetTypeCode + "_" + i;
+                return this.createNewWidgetType(code);
+            }).collect(Collectors.toList());
+            types.parallelStream().forEach(wt -> {
+                try {
+                    this._widgetTypeManager.addWidgetType(wt);
+                } catch (Exception e) {
+                    Assertions.fail("Error adding widgetType " + wt.getCode());
+                }
+            });
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = widgetTypeCode + "_" + i;
+                assertNotNull(this._widgetTypeManager.getWidgetType(code));
+            });
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = widgetTypeCode + "_" + i;
+                try {
+                    this._widgetTypeManager.deleteWidgetType(code);
+                } catch (Exception e) {
+                    Assertions.fail("Error deleting widgetType " + code);
+                }
+                assertNull(this._widgetTypeManager.getWidgetType(code));
+            });
+        }
+    }
+    
     @Test
     void testUpdateTitles() throws Throwable {
         String widgetTypeCode = "test_widgetType";
@@ -311,7 +350,7 @@ class TestWidgetTypeManager extends BaseTestCase {
             throw t;
         }
     }
-
+    
     private WidgetType createNewWidgetType(String code) {
         WidgetType type = new WidgetType();
         type.setCode(code);
