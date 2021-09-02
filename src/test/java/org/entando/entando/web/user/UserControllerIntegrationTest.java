@@ -930,7 +930,7 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .header("Authorization", "Bearer " + mockOAuthInterceptor(loggedUser)))
                 .andDo(resultPrint())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.payload.size()", Matchers.is(2)));
+                .andExpect(jsonPath("$.payload.size()", Matchers.is(1)));
 
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         mockMvc

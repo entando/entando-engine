@@ -345,7 +345,6 @@ public class UserService implements IUserService {
 
     private List<String> getAllowedGroupCodes(UserDetails user) {
         List<UserGroupPermissions> userPermissions = getMyGroupPermissions(user);
-        userPermissions.add(new UserGroupPermissions(Group.FREE_GROUP_NAME, null));
         return userPermissions.stream().map(p -> p.getGroup()).filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
