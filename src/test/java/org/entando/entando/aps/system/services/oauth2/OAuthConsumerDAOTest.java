@@ -18,10 +18,10 @@ import com.agiletec.aps.util.DateConverter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
-import org.apache.derby.client.am.SqlException;
 import org.entando.entando.aps.system.services.oauth2.model.ConsumerRecordVO;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -74,7 +74,7 @@ class OAuthConsumerDAOTest {
     @Test
     void failGetConsumerKeys() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
-            when(this.stat.executeQuery()).thenThrow(SqlException.class);
+            when(this.stat.executeQuery()).thenThrow(SQLException.class);
             try {
                 List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
             } catch (RuntimeException e) {
@@ -103,7 +103,7 @@ class OAuthConsumerDAOTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.lenient().when(this.stat.executeQuery()).thenReturn(res);
             Mockito.lenient().when(res.next()).thenReturn(true).thenReturn(false);
-            Mockito.when(res.getString("consumerkey")).thenThrow(SqlException.class);
+            Mockito.when(res.getString("consumerkey")).thenThrow(SQLException.class);
             try {
                 List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
             } catch (RuntimeException e) {
@@ -128,7 +128,7 @@ class OAuthConsumerDAOTest {
     @Test
     void failAddConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
-            Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+            Mockito.doThrow(SQLException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_2", "secret");
             try {
                 this.consumerDAO.addConsumer(record);
@@ -154,7 +154,7 @@ class OAuthConsumerDAOTest {
     @Test
     void failUpdateConsumer() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
-            Mockito.doThrow(SqlException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+            Mockito.doThrow(SQLException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_4", null);
             try {
                 this.consumerDAO.updateConsumer(record);
