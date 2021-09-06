@@ -84,7 +84,7 @@
           parent="abstractService" depends-on="springCacheManager" />
 
     <bean id="BaseConfigManager" class="com.agiletec.aps.system.services.baseconfig.BaseConfigManager"
-          parent="abstractService" depends-on="liquibaseEnginePort,liquibaseEngineServ,springCacheManager" >
+          parent="abstractService" depends-on="springCacheManager" >
         <property name="systemParams">
             <map>
                 <entry key="version">

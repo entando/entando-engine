@@ -20,6 +20,7 @@ import org.jdom.Element;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
+@Deprecated
 public class ComponentEnvironmentImpl extends AbstractComponentModule implements ComponentEnvironment, Serializable {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ComponentEnvironment.class);

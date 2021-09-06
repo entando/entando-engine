@@ -25,14 +25,14 @@ public abstract class AbstractReport implements Serializable {
 
     private Map<String, SystemInstallationReport.Status> databaseStatus = new HashMap<>();
 
-    public SystemInstallationReport.Status getStatus() {
-        if (null == this.getDatabaseStatus() || this.getDatabaseStatus().isEmpty()) {
+    protected SystemInstallationReport.Status getStatus(Map<String, SystemInstallationReport.Status> status) {
+        if (null == status || status.isEmpty()) {
             return SystemInstallationReport.Status.INIT;
         }
-        if (this.getDatabaseStatus().containsValue(SystemInstallationReport.Status.INCOMPLETE)) {
+        if (status.containsValue(SystemInstallationReport.Status.INCOMPLETE)) {
             return SystemInstallationReport.Status.INCOMPLETE;
         }
-        if (this.getDatabaseStatus().containsValue(SystemInstallationReport.Status.UNINSTALLED)) {
+        if (status.containsValue(SystemInstallationReport.Status.UNINSTALLED)) {
             return SystemInstallationReport.Status.UNINSTALLED;
         }
         return SystemInstallationReport.Status.OK;

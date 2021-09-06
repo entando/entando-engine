@@ -91,13 +91,6 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 		this._beanFactory = beanFactory;
 	}
 	
-	protected Map<String, List<String>> getEntandoTableMapping() {
-		return _entandoTableMapping;
-	}
-	public void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
-		this._entandoTableMapping = entandoTableMapping;
-	}
-	
 	protected Properties getDatabaseTypeDrivers() {
 		return _databaseTypeDrivers;
 	}
@@ -120,7 +113,6 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 	}
 	
 	private BeanFactory _beanFactory;
-	private Map<String, List<String>> _entandoTableMapping;
 	
 	private Properties _databaseTypeDrivers;
 	

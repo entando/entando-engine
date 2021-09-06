@@ -22,6 +22,7 @@ import java.util.Date;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = ApiOAuthToken.TABLE_NAME)
 public class ApiOAuthToken {
 

@@ -77,7 +77,6 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 				Component componentConfiguration = components.get(size - i - 1);
 				this.dropTables(componentConfiguration.getTableMapping());
 			}
-			this.dropTables(this.getEntandoTableMapping());
 			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
 			_logger.error("Error while restoring backup: {}", backupSubFolder, t);
@@ -115,7 +114,6 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 
 	protected void restoreBackup(String backupSubFolder) throws EntException {
 		try {
-			this.restoreLocalDump(this.getEntandoTableMapping(), backupSubFolder);
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);

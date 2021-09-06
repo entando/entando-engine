@@ -23,6 +23,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = Sysconfig.TABLE_NAME)
 public class Sysconfig implements ExtendedColumnDefinition {
 	

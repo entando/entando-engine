@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.core.io.Resource;
 
+@Deprecated
 public interface ComponentModule {
     
     List<IPostProcess> getPostProcesses();

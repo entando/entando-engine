@@ -18,6 +18,7 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 public interface ExtendedColumnDefinition {
 	
 	public String[] extensions(IDatabaseManager.DatabaseType type);

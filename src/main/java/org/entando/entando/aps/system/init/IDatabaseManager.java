@@ -41,7 +41,7 @@ public interface IDatabaseManager {
 	
 	public List<DataSourceDumpReport> getBackupReports() throws EntException;
 	
-	public Map<String, List<String>> getEntandoTableMapping();
+	//public Map<String, List<String>> getEntandoTableMapping();
 	
 	public DatabaseType getDatabaseType(DataSource dataSource) throws EntException;
 	

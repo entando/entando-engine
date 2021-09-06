@@ -25,6 +25,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = ActionLogLikeRecord.TABLE_NAME)
 public class ActionLogLikeRecord implements ExtendedColumnDefinition {
 

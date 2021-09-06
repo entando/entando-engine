@@ -8,7 +8,6 @@
 				<xs:element ref="artifact" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="dependencies" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="installation" minOccurs="0" maxOccurs="1" />
-				<xs:element ref="uninstallation" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -34,6 +33,7 @@
 			<xs:sequence>
 				<xs:element ref="tableMapping" minOccurs="0" maxOccurs="1" />
 				<xs:element ref="environment" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="liquibase" minOccurs="0" maxOccurs="1" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -53,23 +53,20 @@
 			<xs:attribute name="code" use="required" type="xs:NCName"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="uninstallation">
+	<xs:element name="liquibase">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="sqlResources" minOccurs="0" maxOccurs="1" />
-				<xs:element ref="resources" minOccurs="0" maxOccurs="1" />
-				<xs:element ref="postProcesses" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="changeSet" minOccurs="1" maxOccurs="unbounded" />
 			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="changeSet">
+		<xs:complexType>
+			<xs:attribute name="datasource" use="required" type="xs:string" />
+			<xs:attribute name="changeLogFile" use="required" type="xs:string" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="defaultSqlResources">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element maxOccurs="unbounded" ref="datasource"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="sqlResources">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element maxOccurs="unbounded" ref="datasource"/>
@@ -125,17 +122,11 @@
 		<xs:complexType mixed="true">
 			<xs:sequence>
 				<xs:element minOccurs="0" maxOccurs="unbounded" ref="class"/>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="table"/>
 			</xs:sequence>
 			<xs:attribute name="name" use="required" type="xs:NCName"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="class" type="xs:string"/>
-	<xs:element name="resources">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element minOccurs="0" maxOccurs="unbounded" ref="resource" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="resource" type="xs:string"/>
+	<xs:element name="table" type="xs:string"/>
 </xs:schema>

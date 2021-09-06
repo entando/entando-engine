@@ -23,6 +23,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = UserProfileAttributeRole.TABLE_NAME)
 public class UserProfileAttributeRole implements ExtendedColumnDefinition {
 

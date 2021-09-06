@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <code>entando-engine</code>
+    <description>Entando Engine</description>
+    <artifact>
+        <artifactId>${project.artifactId}</artifactId>
+        <groupId>${project.groupId}</groupId>
+        <version>${project.version}</version>
+    </artifact>
+    <installation>
+        <tableMapping>
+            <datasource name="portDataSource">
+                <class>org.entando.entando.aps.system.init.model.portdb.Sysconfig</class>
+                <!-- <class>org.entando.entando.aps.system.init.model.portdb.Category</class> -->
+                <class>org.entando.entando.aps.system.init.model.portdb.LocalString</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.PageModel</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.Page</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.PageMetadataOnline</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.PageMetadataDraft</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.WidgetCatalog</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.GuiFragment</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.WidgetConfig</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.Uniquekeys</class>
+                <class>org.entando.entando.aps.system.init.model.portdb.UserPreferences</class>
+                <table>sysconfig</table>
+                <table>categories</table>
+                <table>localstrings</table>
+                <table>pagemodels</table>
+                <table>pages</table>
+                <table>pages_metadata_draft</table>
+                <table>pages_metadata_online</table>
+                <table>widgetcatalog</table>
+                <table>guifragment</table>
+                <table>widgetconfig</table>
+                <table>widgetconfig_draft</table>
+                <table>uniquekeys</table>
+                <table>userpreferences</table>
+            </datasource>
+            <datasource name="servDataSource">
+                <class>org.entando.entando.aps.system.init.model.servdb.Group</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.Permission</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.Role</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.RolePermissionReference</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.User</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.UserGroupRoleReference</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthConsumer</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.UserProfile</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecord</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</class>
+                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</class>
+                <table>authgroups</table>
+                <table>authpermissions</table>
+                <table>authroles</table>
+                <table>authrolepermissions</table>
+                <table>authusers</table>
+                <table>authusergrouprole</table>
+                <table>api_oauth_consumers</table>
+                <table>api_oauth_tokens</table>
+                <table>apicatalog_methods</table>
+                <table>apicatalog_services</table>
+                <table>authuserprofiles</table>
+                <table>authuserprofilesearch</table>
+                <table>authuserprofileattrroles</table>
+                <table>actionlogrecords</table>
+                <table>actionlogrelations</table>
+                <table>actionloglikerecords</table>
+                <table>actionlogcommentrecords</table>
+            </datasource>
+        </tableMapping>
+        <environment code="production">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                    classpath:sql/entandoPort_data_production.sql
+                </datasource>
+                <datasource name="servDataSource">
+                    classpath:sql/entandoServ_data_production.sql
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+        <environment code="test">
+            <defaultSqlResources>
+                <datasource name="portDataSource">
+                    classpath:sql/entandoPort_data_test.sql
+                </datasource>
+                <datasource name="servDataSource">
+                    classpath:sql/entandoServ_data_test.sql
+                </datasource>
+            </defaultSqlResources>
+        </environment>
+        <liquibase>
+            <changeSet datasource="portDataSource" changeLogFile="classpath:liquibase/changeSetPort.xml" />
+            <changeSet datasource="servDataSource" changeLogFile="classpath:liquibase/changeSetServ.xml" />
+        </liquibase>
+    </installation>
+</component>

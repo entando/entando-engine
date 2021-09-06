@@ -20,6 +20,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = UserShortcut.TABLE_NAME)
 public class UserShortcut {
 	

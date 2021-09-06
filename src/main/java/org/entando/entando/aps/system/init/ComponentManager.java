@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import liquibase.pro.packaged.c;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.ComponentLoader;
 
@@ -63,20 +64,24 @@ public class ComponentManager implements IComponentManager {
     }
 
     private List<Component> getOrderedComponents(List<Component> components) {
-        List<Component> ordered = new ArrayList<Component>();
+        List<Component> ordered = new ArrayList<>();
         for (int i = 0; i < components.size(); i++) {
             Component component = components.get(i);
-            boolean added = false;
-            for (int j = 0; j < ordered.size(); j++) {
-                Component current = ordered.get(j);
-                if (null != current.getDependencies() && current.getDependencies().contains(component.getCode())) {
-                    ordered.add(j, component);
-                    added = true;
-                    break;
+            if (component.getCode().equals(IComponentManager.MAIN_COMPONENT)) {
+                ordered.add(0, component);
+            } else {
+                boolean added = false;
+                for (int j = 0; j < ordered.size(); j++) {
+                    Component current = ordered.get(j);
+                    if (null != current.getDependencies() && current.getDependencies().contains(component.getCode())) {
+                        ordered.add(j, component);
+                        added = true;
+                        break;
+                    }
                 }
-            }
-            if (!added) {
-                ordered.add(component);
+                if (!added) {
+                    ordered.add(component);
+                }
             }
         }
         return ordered;

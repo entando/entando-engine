@@ -20,6 +20,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 
+@Deprecated
 @DatabaseTable(tableName = GuiFragment.TABLE_NAME)
 public class GuiFragment implements ExtendedColumnDefinition {
 	

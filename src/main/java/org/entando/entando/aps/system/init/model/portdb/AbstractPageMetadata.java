@@ -24,6 +24,7 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * @author E.Santoboni, E.Mezzano
  */
+@Deprecated
 public abstract class AbstractPageMetadata implements ExtendedColumnDefinition {
 
     public AbstractPageMetadata() {

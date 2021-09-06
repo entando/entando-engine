@@ -16,6 +16,7 @@ package org.entando.entando.aps.system.init.model.portdb;
 import com.j256.ormlite.field.*;
 import com.j256.ormlite.table.DatabaseTable;
 
+@Deprecated
 @DatabaseTable(tableName = PageModel.TABLE_NAME)
 public class PageModel {
 

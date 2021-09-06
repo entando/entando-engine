@@ -20,6 +20,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Mezzano
  */
+@Deprecated
 @DatabaseTable(tableName = PageMetadataOnline.TABLE_NAME)
 public class PageMetadataOnline extends AbstractPageMetadata implements ExtendedColumnDefinition {
 	

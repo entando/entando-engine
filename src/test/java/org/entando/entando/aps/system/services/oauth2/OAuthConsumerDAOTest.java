@@ -56,7 +56,6 @@ class OAuthConsumerDAOTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
         Mockito.lenient().when(this.dataSource.getConnection()).thenReturn(conn);
         Mockito.lenient().when(this.conn.prepareStatement(Mockito.anyString())).thenReturn(stat);
     }
@@ -75,14 +74,9 @@ class OAuthConsumerDAOTest {
     void failGetConsumerKeys() throws Exception {
         Assertions.assertThrows(RuntimeException.class, () -> {
             when(this.stat.executeQuery()).thenThrow(SQLException.class);
-            try {
-                List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
-            } catch (RuntimeException e) {
-                throw e;
-            } finally {
-                this.executeFinalCheck(true);
-            }
+            List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
         });
+        this.executeFinalCheck(false);
     }
 
     @Test
@@ -104,16 +98,11 @@ class OAuthConsumerDAOTest {
             Mockito.lenient().when(this.stat.executeQuery()).thenReturn(res);
             Mockito.lenient().when(res.next()).thenReturn(true).thenReturn(false);
             Mockito.when(res.getString("consumerkey")).thenThrow(SQLException.class);
-            try {
-                List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
-            } catch (RuntimeException e) {
-                throw e;
-            } finally {
-                Mockito.verify(stat, Mockito.times(1)).setString(Mockito.anyInt(), Mockito.anyString());
-                Mockito.verify(res, Mockito.times(1)).next();
-                this.executeFinalCheck(true);
-            }
+            List<String> keys = this.consumerDAO.getConsumerKeys(new FieldSearchFilter[]{});
         });
+        Mockito.verify(stat, Mockito.times(0)).setString(Mockito.anyInt(), Mockito.anyString());
+        Mockito.verify(res, Mockito.times(1)).next();
+        this.executeFinalCheck(true);
     }
 
     @Test
@@ -130,16 +119,11 @@ class OAuthConsumerDAOTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.doThrow(SQLException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_2", "secret");
-            try {
-                this.consumerDAO.addConsumer(record);
-            } catch (RuntimeException e) {
-                throw e;
-            } finally {
-                Mockito.verify(stat, Mockito.times(7)).setString(Mockito.anyInt(), Mockito.anyString());
-                Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-                this.executeFinalCheck(false);
-            }
+            this.consumerDAO.addConsumer(record);
         });
+        Mockito.verify(stat, Mockito.times(7)).setString(Mockito.anyInt(), Mockito.anyString());
+        Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+        this.executeFinalCheck(false);
     }
 
     @Test
@@ -156,16 +140,11 @@ class OAuthConsumerDAOTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             Mockito.doThrow(SQLException.class).when(stat).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
             ConsumerRecordVO record = this.createMockConsumer("key_4", null);
-            try {
-                this.consumerDAO.updateConsumer(record);
-            } catch (RuntimeException e) {
-                throw e;
-            } finally {
-                Mockito.verify(stat, Mockito.times(6)).setString(Mockito.anyInt(), Mockito.anyString());
-                Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
-                this.executeFinalCheck(false);
-            }
+            this.consumerDAO.updateConsumer(record);
         });
+        Mockito.verify(stat, Mockito.times(5)).setString(Mockito.anyInt(), Mockito.anyString());
+        Mockito.verify(stat, Mockito.times(1)).setTimestamp(Mockito.anyInt(), Mockito.any(Timestamp.class));
+        this.executeFinalCheck(false);
     }
 
     @Test

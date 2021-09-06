@@ -25,6 +25,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author spuddu
  *
  */
+@Deprecated
 @DatabaseTable(tableName = WidgetConfigDraft.TABLE_NAME)
 public class WidgetConfigDraft implements ExtendedColumnDefinition {
 	

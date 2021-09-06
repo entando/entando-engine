@@ -25,6 +25,7 @@ import java.util.Date;
 /**
  * @author E.Santoboni
  */
+@Deprecated
 @DatabaseTable(tableName = ActionLogCommentRecord.TABLE_NAME)
 public class ActionLogCommentRecord implements ExtendedColumnDefinition {
 	
