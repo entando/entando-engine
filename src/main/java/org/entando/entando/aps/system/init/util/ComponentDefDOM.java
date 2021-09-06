@@ -64,7 +64,6 @@ public class ComponentDefDOM {
             validator.validate(source);
             _logger.debug("Valid Component definition : {}", configPath);
         } catch (Throwable t) {
-            t.printStackTrace();
             _logger.error("Error validating Component definition : {}", configPath, t);
         	String message = "Error validating Component definition : " + configPath;
             throw new EntException(message, t);

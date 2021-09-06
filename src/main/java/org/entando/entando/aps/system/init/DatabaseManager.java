@@ -144,10 +144,6 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             return;
-        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-            logger.debug(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            return;
         }
         try {
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
@@ -223,10 +219,6 @@ public class DatabaseManager extends AbstractInitializerManager
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
             logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            return;
-        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-            logger.debug(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
             return;
         }
         DataInstallationReport dataReport = componentReport.getDataReport();
@@ -309,20 +301,7 @@ public class DatabaseManager extends AbstractInitializerManager
                 if (null != changeLogFile) {
                     if (checkOnStatup) {
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        Connection connection = null;
-                        try {
-                            DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                            connection = dataSource.getConnection();
-                            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-                            Liquibase liquibase = new liquibase.Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database);
-                            String context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
-                            Contexts contexts = new Contexts(context);
-                            liquibase.update(contexts, new LabelExpression());
-                        } finally {
-                            if (null != connection) {
-                                connection.close();
-                            }
-                        }
+                        this.executeLiquibaseUpdate(changeLogFile, dataSourceName);
                         ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
                     } else {
@@ -335,6 +314,30 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Throwable t) {
             logger.error("Error executing liquibase inizialization for component {}", componentConfiguration.getCode(), t);
             throw new EntException("Error executing liquibase inizialization for component " + componentConfiguration.getCode(), t);
+        }
+    }
+
+    private void executeLiquibaseUpdate(String changeLogFile, String dataSourceName) throws Exception {
+        Connection connection = null;
+        Liquibase liquibase = null;
+        try {
+            DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+            connection = dataSource.getConnection();
+            Database database = DatabaseFactory.getInstance()
+                    .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
+            String context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
+            Contexts contexts = new Contexts(context);
+            liquibase.update(contexts, new LabelExpression());
+        } catch (Exception e) {
+            logger.error("Error executing liquibase update - " + changeLogFile);
+        } finally {
+            if (null != connection) {
+                connection.close();
+            }
+            if (null != liquibase) {
+                liquibase.close();
+            }
         }
     }
 
