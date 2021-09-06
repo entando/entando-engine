@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import liquibase.pro.packaged.c;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.ComponentLoader;
 

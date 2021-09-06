@@ -73,6 +73,8 @@ public class DatabaseManager extends AbstractInitializerManager
     public static final String INIT_MSG_P = "+ [ Component: {} ] :: DATA\n{}";
     public static final String INIT_MSG_L = "+ [ Component: {} ] :: Liquibase\n{}";
 
+    public static final String MSG_ALREADY_INSTALLED = "( ok )  Already installed\n";
+
     private Map<String, Resource> defaultSqlDump;
     private int status;
 
@@ -139,8 +141,8 @@ public class DatabaseManager extends AbstractInitializerManager
         logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+            logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
             return;
         }
         try {
@@ -215,8 +217,8 @@ public class DatabaseManager extends AbstractInitializerManager
         logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+            logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
             return;
         }
         DataInstallationReport dataReport = componentReport.getDataReport();
@@ -234,8 +236,8 @@ public class DatabaseManager extends AbstractInitializerManager
                 DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
                 SystemInstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
                 if (SystemInstallationReport.isSafeStatus(dataStatus)) {
-                    logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+                    logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
+                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
                     continue;
                 }
                 Map<String, ComponentEnvironment> environments = componentConfiguration.getEnvironments();
@@ -273,8 +275,8 @@ public class DatabaseManager extends AbstractInitializerManager
         logger.info(INIT_MSG_L, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+            logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
             return;
         }
         LiquibaseInstallationReport liquibaseReport = componentReport.getLiquibaseReport();
@@ -292,8 +294,8 @@ public class DatabaseManager extends AbstractInitializerManager
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 SystemInstallationReport.Status liquibaseStatus = liquibaseReport.getLiquibaseStatus().get(dataSourceName);
                 if (SystemInstallationReport.isSafeStatus(liquibaseStatus)) {
-                    logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+                    logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
+                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
                     continue;
                 }
                 if (null != changeLogFile) {

@@ -75,7 +75,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			int size = components.size();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(size - i - 1);
-				this.dropTables(componentConfiguration.getTableMapping());
+				this.dropTables(componentConfiguration.getTableNames());
 			}
 			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
@@ -92,16 +92,14 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) {
+				List<String> tableNames = tableMapping.get(dataSourceName);
+				if (null == tableNames || tableNames.isEmpty()) {
 					continue;
 				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-				int size = tableClasses.size();
-				for (int j = 0; j < tableClasses.size(); j++) {
-					String tableClassName = tableClasses.get(size - j - 1);
-					Class tableClass = Class.forName(tableClassName);
-					String tableName = TableFactory.getTableName(tableClass);
+				int size = tableNames.size();
+				for (int j = 0; j < tableNames.size(); j++) {
+					String tableName = tableNames.get(size - j - 1);
 					String[] queries = {"DELETE FROM " + tableName};
 					TableDataUtils.executeQueries(dataSource, queries, true);
 				}

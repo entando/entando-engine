@@ -36,7 +36,7 @@ public class Component {
     @Deprecated
     private Map<String, List<String>> tableMapping;
 
-    private Map<String, List<String>> tables;
+    private Map<String, List<String>> tableNames;
 
     private Map<String, ComponentEnvironment> environments;
 
@@ -95,7 +95,7 @@ public class Component {
     private void extractTableMapping(Element tableMappingElement) {
         if (null != tableMappingElement) {
             this.setTableMapping(new HashMap<>());
-            this.setTables(new HashMap<>());
+            this.setTableNames(new HashMap<>());
             List<Element> datasourceElements = tableMappingElement.getChildren("datasource");
             for (int i = 0; i < datasourceElements.size(); i++) {
                 Element datasourceElement = datasourceElements.get(i);
@@ -114,7 +114,7 @@ public class Component {
                     tableNames.add(tableElements.get(j).getText());
                 }
                 if (tableNames.size() > 0) {
-                    this.getTables().put(datasourceName, tableNames);
+                    this.getTableNames().put(datasourceName, tableNames);
                 }
             }
         }
@@ -189,19 +189,18 @@ public class Component {
         this.tableMapping = tableMapping;
     }
 
-    public Map<String, List<String>> getTables() {
-        return tables;
+    public Map<String, List<String>> getTableNames() {
+        return tableNames;
     }
 
-    protected void setTables(Map<String, List<String>> tables) {
-        this.tables = tables;
+    protected void setTableNames(Map<String, List<String>> tableNames) {
+        this.tableNames = tableNames;
     }
 
-    @Deprecated
     public Map<String, ComponentEnvironment> getEnvironments() {
         return environments;
     }
-    @Deprecated
+
     protected void setEnvironments(Map<String, ComponentEnvironment> environments) {
         this.environments = environments;
     }

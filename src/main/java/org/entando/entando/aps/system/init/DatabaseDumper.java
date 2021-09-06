@@ -49,7 +49,7 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
             List<Component> components = this.getComponents();
             for (int i = 0; i < components.size(); i++) {
                 Component componentConfiguration = components.get(i);
-                this.createBackup(componentConfiguration.getTables(), report, backupSubFolder);
+                this.createBackup(componentConfiguration.getTableNames(), report, backupSubFolder);
             }
             long time = System.currentTimeMillis() - start;
             report.setRequiredTime(time);
