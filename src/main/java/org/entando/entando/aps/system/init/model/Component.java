@@ -38,7 +38,6 @@ public class Component {
 
     private Map<String, List<String>> tables;
 
-    @Deprecated
     private Map<String, ComponentEnvironment> environments;
 
     private Map<String, String> liquibaseChangeSets;
@@ -101,7 +100,6 @@ public class Component {
             for (int i = 0; i < datasourceElements.size(); i++) {
                 Element datasourceElement = datasourceElements.get(i);
                 String datasourceName = datasourceElement.getAttributeValue("name");
-
                 List<String> tableMapping = new ArrayList<>();
                 List<Element> tableClasses = datasourceElement.getChildren("class");
                 for (int j = 0; j < tableClasses.size(); j++) {
@@ -110,16 +108,14 @@ public class Component {
                 if (tableMapping.size() > 0) {
                     this.getTableMapping().put(datasourceName, tableMapping);
                 }
-
-                List<String> tables = new ArrayList<>();
+                List<String> tableNames = new ArrayList<>();
                 List<Element> tableElements = datasourceElement.getChildren("table");
                 for (int j = 0; j < tableElements.size(); j++) {
-                    tables.add(tableElements.get(j).getText());
+                    tableNames.add(tableElements.get(j).getText());
                 }
-                if (tables.size() > 0) {
-                    this.getTables().put(datasourceName, tables);
+                if (tableNames.size() > 0) {
+                    this.getTables().put(datasourceName, tableNames);
                 }
-
             }
         }
     }

@@ -41,8 +41,6 @@ public interface IDatabaseManager {
 	
 	public List<DataSourceDumpReport> getBackupReports() throws EntException;
 	
-	//public Map<String, List<String>> getEntandoTableMapping();
-	
 	public DatabaseType getDatabaseType(DataSource dataSource) throws EntException;
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}

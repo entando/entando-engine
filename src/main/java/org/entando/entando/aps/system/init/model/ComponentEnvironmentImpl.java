@@ -20,7 +20,6 @@ import org.jdom.Element;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
-@Deprecated
 public class ComponentEnvironmentImpl extends AbstractComponentModule implements ComponentEnvironment, Serializable {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ComponentEnvironment.class);
@@ -49,10 +48,12 @@ public class ComponentEnvironmentImpl extends AbstractComponentModule implements
         this.code = code;
     }
 
+    @Deprecated
     public Map<String, String> getDefaultSqlResourcesPaths() {
         return super.getSqlResourcesPaths();
     }
 
+    @Deprecated
     protected void setDefaultSqlResourcesPaths(Map<String, String> defaultSqlResourcesPaths) {
         super.setSqlResourcesPaths(defaultSqlResourcesPaths);
     }

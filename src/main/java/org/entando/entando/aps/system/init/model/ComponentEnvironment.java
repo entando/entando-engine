@@ -13,7 +13,6 @@
  */
 package org.entando.entando.aps.system.init.model;
 
-@Deprecated
 public interface ComponentEnvironment extends ComponentModule {
     
     String getCode();

@@ -137,19 +137,6 @@ public class ComponentManager implements IComponentManager {
     public void setPostProcessClasses(Map<String, String> postProcessClasses) {
         this._postProcessClasses = postProcessClasses;
     }
-
-    /**
-     * @return The class loader of the installer which contains all the new
-     * loaded classes and resources plus the old ones loaded by the parent
-     * application class loader
-     */
-    public static ClassLoader getComponentInstallerClassLoader() {
-        return _componentInstallerClassLoader;
-    }
-
-    public static void setComponentInstallerClassLoader(ClassLoader _classLoader) {
-        _componentInstallerClassLoader = _classLoader;
-    }
     
     private String _locationPatterns;
 
@@ -157,13 +144,5 @@ public class ComponentManager implements IComponentManager {
     private Map<String, String> _postProcessClasses;
 
     public static final String DEFAULT_LOCATION_PATTERN = "classpath*:component/**/**component.xml";
-
-
-    /**
-     * The class loader of the installer which contains all the new loaded
-     * classes and resources plus the old ones loaded by the parent application
-     * class loader
-     */
-    private static ClassLoader _componentInstallerClassLoader;
 
 }

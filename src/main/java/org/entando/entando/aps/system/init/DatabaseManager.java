@@ -106,12 +106,10 @@ public class DatabaseManager extends AbstractInitializerManager
             }
         }
         try {
-            //this.initMasterDatabases(report, checkOnStatup);
             List<Component> components = this.getComponentManager().getCurrentComponents();
             for (Component entandoComponentConfiguration : components) {
                 this.initComponentDatabases(entandoComponentConfiguration, report, checkOnStatup);
             }
-            //this.initMasterDefaultResource(report, checkOnStatup);
             for (Component entandoComponentConfiguration : components) {
                 this.initComponentDefaultResources(entandoComponentConfiguration, report, checkOnStatup);
             }
@@ -312,8 +310,8 @@ public class DatabaseManager extends AbstractInitializerManager
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
-            logger.error("Error executing liquibase inizialization for component {}", componentConfiguration.getCode(), t);
-            throw new EntException("Error executing liquibase inizialization for component " + componentConfiguration.getCode(), t);
+            logger.error("Error executing liquibase initialization for component {}", componentConfiguration.getCode(), t);
+            throw new EntException("Error executing liquibase initialization for component " + componentConfiguration.getCode(), t);
         }
     }
 
@@ -332,11 +330,11 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Exception e) {
             logger.error("Error executing liquibase update - " + changeLogFile);
         } finally {
-            if (null != connection) {
-                connection.close();
-            }
             if (null != liquibase) {
                 liquibase.close();
+            }
+            if (null != connection) {
+                connection.close();
             }
         }
     }

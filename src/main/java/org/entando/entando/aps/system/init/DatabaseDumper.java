@@ -20,7 +20,6 @@ import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -68,7 +67,6 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
     }
 
     private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder) throws EntException {
-        ClassLoader cl = ComponentManager.getComponentInstallerClassLoader();
         if (null == tableMapping || tableMapping.isEmpty()) {
             return;
         }

@@ -30,10 +30,12 @@ public class AbstractComponentModule implements ComponentModule {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AbstractComponentModule.class);
 
+    @Deprecated
     private Map<String, String> sqlResourcesPaths = new HashMap<>();
 
     private List<IPostProcess> postProcesses;
 
+    @Deprecated
     protected void extractSqlResources(Element sqlResourcesElement) {
         if (null != sqlResourcesElement) {
             List<Element> datasourceElements = sqlResourcesElement.getChildren("datasource");
@@ -79,6 +81,7 @@ public class AbstractComponentModule implements ComponentModule {
         }
     }
 
+    @Deprecated
     @Override
     public Resource getSqlResources(String datasourceName) {
         String path = this.getSqlResourcesPaths().get(datasourceName);
@@ -89,11 +92,13 @@ public class AbstractComponentModule implements ComponentModule {
         return resolver.getResource(path);
     }
 
+    @Deprecated
     @Override
     public Map<String, String> getSqlResourcesPaths() {
         return sqlResourcesPaths;
     }
 
+    @Deprecated
     protected void setSqlResourcesPaths(Map<String, String> sqlResourcesPaths) {
         this.sqlResourcesPaths = sqlResourcesPaths;
     }
