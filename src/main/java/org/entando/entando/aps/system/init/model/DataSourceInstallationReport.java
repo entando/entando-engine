@@ -71,10 +71,6 @@ public class DataSourceInstallationReport extends AbstractReport {
 		return element;
 	}
 
-	protected SystemInstallationReport.Status getStatus() {
-		return super.getStatus(this.getDatabaseStatus());
-	}
-
 	public Map<String, List<String>> getDataSourceTables() {
 		return _dataSourceTables;
 	}

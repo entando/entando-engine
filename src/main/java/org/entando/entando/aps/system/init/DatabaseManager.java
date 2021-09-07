@@ -292,7 +292,7 @@ public class DatabaseManager extends AbstractInitializerManager
                     continue;
                 }
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
-                SystemInstallationReport.Status liquibaseStatus = liquibaseReport.getLiquibaseStatus().get(dataSourceName);
+                SystemInstallationReport.Status liquibaseStatus = liquibaseReport.getDatabaseStatus().get(dataSourceName);
                 if (SystemInstallationReport.isSafeStatus(liquibaseStatus)) {
                     logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
                     ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);

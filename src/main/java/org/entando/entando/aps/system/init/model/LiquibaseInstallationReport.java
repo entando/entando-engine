@@ -22,8 +22,6 @@ import org.jdom.Element;
 
 public class LiquibaseInstallationReport extends AbstractReport {
 
-    private Map<String, Status> liquibaseStatus = new HashMap<>();
-
     protected LiquibaseInstallationReport() {}
 
     protected LiquibaseInstallationReport(Element element) {
@@ -33,30 +31,22 @@ public class LiquibaseInstallationReport extends AbstractReport {
             String dbName = liquibaseElement.getAttributeValue(SystemInstallationReport.NAME_ATTRIBUTE);
             String liquibaseStatusString = liquibaseElement.getAttributeValue(SystemInstallationReport.STATUS_ATTRIBUTE);
             SystemInstallationReport.Status dbStatus = Enum.valueOf(SystemInstallationReport.Status.class, liquibaseStatusString.toUpperCase());
-            this.getLiquibaseStatus().put(dbName, dbStatus);
+            this.getDatabaseStatus().put(dbName, dbStatus);
         }
     }
 
     protected Element toJdomElement() {
         Element element = new Element(SystemInstallationReport.LIQUIBASE_ELEMENT);
         element.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getStatus().toString());
-        Iterator<String> nameIter = this.getLiquibaseStatus().keySet().iterator();
+        Iterator<String> nameIter = this.getDatabaseStatus().keySet().iterator();
         while (nameIter.hasNext()) {
             String dbName = nameIter.next();
             Element dbElement = new Element(SystemInstallationReport.DATASOURCE_ELEMENT);
             dbElement.setAttribute(SystemInstallationReport.NAME_ATTRIBUTE, dbName);
-            dbElement.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getLiquibaseStatus().get(dbName).toString());
+            dbElement.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getDatabaseStatus().get(dbName).toString());
             element.addContent(dbElement);
         }
         return element;
-    }
-
-    protected SystemInstallationReport.Status getStatus() {
-        return super.getStatus(this.getLiquibaseStatus());
-    }
-
-    public Map<String, Status> getLiquibaseStatus() {
-        return this.liquibaseStatus;
     }
 
 }

@@ -25,7 +25,8 @@ public abstract class AbstractReport implements Serializable {
 
     private Map<String, SystemInstallationReport.Status> databaseStatus = new HashMap<>();
 
-    protected SystemInstallationReport.Status getStatus(Map<String, SystemInstallationReport.Status> status) {
+    protected SystemInstallationReport.Status getStatus() {
+        Map<String, SystemInstallationReport.Status> status = this.getDatabaseStatus();
         if (null == status || status.isEmpty()) {
             return SystemInstallationReport.Status.INIT;
         }

@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
+import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +61,14 @@ public class DatabaseManagerIntegrationTest extends BaseTestCase {
             Assertions.assertNotNull(reports);
             Assertions.assertEquals(1, reports.size());
             DataSourceDumpReport report = reports.get(0);
+
+            List<ComponentInstallationReport> compReports = report.getComponentsHistory();
+            Assertions.assertEquals(1, compReports.size());
+            ComponentInstallationReport engineReport = compReports.get(0);
+            LiquibaseInstallationReport liquibaseReport = engineReport.getLiquibaseReport();
+            Assertions.assertNotNull(liquibaseReport);
+            Assertions.assertEquals(2, liquibaseReport.getDatabaseStatus().size());
+
             String reportFolder = report.getSubFolderName();
             String[] datasourceNames = this.getApplicationContext().getBeanNamesForType(DataSource.class);
             Assertions.assertEquals(2, datasourceNames.length);

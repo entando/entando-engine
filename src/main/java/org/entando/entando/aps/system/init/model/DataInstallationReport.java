@@ -52,10 +52,6 @@ public class DataInstallationReport extends AbstractReport {
 		return element;
 	}
 
-	protected SystemInstallationReport.Status getStatus() {
-		return super.getStatus(this.getDatabaseStatus());
-	}
-	
 	/**
 	 * Check if the data is already present before the process of the component.
 	 * The typical cases are data restore from dump and porting.
