@@ -136,9 +136,6 @@ public class ComponentInstallationReport implements Serializable {
 	}
 
 	public Status getPostProcessStatus() {
-		if ("entandoCore".equals(this.getComponentCode())) {
-			return Status.NOT_AVAILABLE;
-		}
 		return _postProcessStatus;
 	}
 	public void setPostProcessStatus(Status postProcessStatus) {

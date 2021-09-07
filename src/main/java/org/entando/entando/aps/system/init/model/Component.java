@@ -108,13 +108,13 @@ public class Component {
                 if (tableMapping.size() > 0) {
                     this.getTableMapping().put(datasourceName, tableMapping);
                 }
-                List<String> tableNames = new ArrayList<>();
+                List<String> datasourceTableNames = new ArrayList<>();
                 List<Element> tableElements = datasourceElement.getChildren("table");
                 for (int j = 0; j < tableElements.size(); j++) {
-                    tableNames.add(tableElements.get(j).getText());
+                    datasourceTableNames.add(tableElements.get(j).getText());
                 }
-                if (tableNames.size() > 0) {
-                    this.getTableNames().put(datasourceName, tableNames);
+                if (!datasourceTableNames.isEmpty()) {
+                    this.getTableNames().put(datasourceName, datasourceTableNames);
                 }
             }
         }

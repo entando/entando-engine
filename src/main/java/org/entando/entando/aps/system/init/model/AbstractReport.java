@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.init.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -25,26 +24,14 @@ public abstract class AbstractReport implements Serializable {
 
     private Map<String, SystemInstallationReport.Status> databaseStatus = new HashMap<>();
 
-    protected SystemInstallationReport.Status getStatus() {
-        Map<String, SystemInstallationReport.Status> status = this.getDatabaseStatus();
-        if (null == status || status.isEmpty()) {
+    public SystemInstallationReport.Status getStatus() {
+        if (null == this.getDatabaseStatus() || this.getDatabaseStatus().isEmpty()) {
             return SystemInstallationReport.Status.INIT;
         }
-        if (status.containsValue(SystemInstallationReport.Status.INCOMPLETE)) {
+        if (this.getDatabaseStatus().containsValue(SystemInstallationReport.Status.INCOMPLETE)) {
             return SystemInstallationReport.Status.INCOMPLETE;
         }
-        if (status.containsValue(SystemInstallationReport.Status.UNINSTALLED)) {
-            return SystemInstallationReport.Status.UNINSTALLED;
-        }
         return SystemInstallationReport.Status.OK;
-    }
-
-    public void upgradeDatabaseStatus(SystemInstallationReport.Status status) {
-        Iterator<String> iter = this.getDatabaseStatus().keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            this.getDatabaseStatus().put(key, status);
-        }
     }
 
     public Map<String, SystemInstallationReport.Status> getDatabaseStatus() {
@@ -52,3 +39,4 @@ public abstract class AbstractReport implements Serializable {
     }
 
 }
+

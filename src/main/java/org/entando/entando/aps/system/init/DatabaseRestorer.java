@@ -133,16 +133,14 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) {
+				List<String> tableNames = tableMapping.get(dataSourceName);
+				if (null == tableNames || tableNames.isEmpty()) {
 					continue;
 				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 				this.initOracleSchema(dataSource);
-				for (int j = 0; j < tableClasses.size(); j++) {
-					String tableClassName = tableClasses.get(j);
-					Class tableClass = Class.forName(tableClassName);
-					String tableName = TableFactory.getTableName(tableClass);
+				for (int j = 0; j < tableNames.size(); j++) {
+					String tableName = tableNames.get(j);
 					String fileName = folder.toString() + dataSourceName + File.separator + tableName + ".sql";
 					InputStream is = this.getStorageManager().getStream(fileName, true);
 					if (null != is) {
