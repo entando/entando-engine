@@ -81,6 +81,8 @@ public class DatabaseManagerIntegrationTest extends BaseTestCase {
                     Assertions.assertTrue(this.storageManager.exists(filepath, true));
                 }
             }
+            boolean result = this.databaseManager.dropAndRestoreBackup(reportFolder);
+            Assertions.assertTrue(result);
             this.databaseManager.deleteBackup(reportFolder);
             reports = this.databaseManager.getBackupReports();
             Assertions.assertNull(reports);

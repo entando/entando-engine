@@ -26,7 +26,6 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.QueryExtractor;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -115,7 +114,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);
-				this.restoreLocalDump(componentConfiguration.getTableMapping(), backupSubFolder);
+				this.restoreLocalDump(componentConfiguration.getTableNames(), backupSubFolder);
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while restoring local backup", t);
