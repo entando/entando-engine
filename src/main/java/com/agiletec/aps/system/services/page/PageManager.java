@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.agiletec.aps.system.common.AbstractConfigurableService;
+import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -50,7 +50,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractConfigurableService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
+public class PageManager extends AbstractParameterizableService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
     public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
@@ -750,7 +750,6 @@ public class PageManager extends AbstractConfigurableService implements IPageMan
                 IPage page = this.getDraftPage(pageCode);
                 pages.add(page);
             }
-
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadLastUpdatedPages");
             throw new EntException("Error loading loadLastUpdatedPages", t);
@@ -767,21 +766,6 @@ public class PageManager extends AbstractConfigurableService implements IPageMan
         clone.setOnlineWithChanges(status.getOnlineWithChanges());
         clone.setUnpublished(status.getUnpublished());
         return clone;
-    }
-
-    @Override
-    public String getConfig(String param) {
-        return super.getConfig(param);
-    }
-
-    @Override
-    public Map<String, String> getParams() {
-        return super.getParams();
-    }
-
-    @Override
-    public void updateParams(Map<String, String> params) throws EntException {
-        super.updateParams(params);
     }
 
     @Override

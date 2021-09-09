@@ -13,9 +13,9 @@
  */
 package com.agiletec.aps.system.services.user;
 
+import com.agiletec.aps.system.common.IParameterizableManager;
 import java.util.List;
 
-import java.util.Map;
 import org.entando.entando.ent.exception.EntException;
 
 /**
@@ -23,7 +23,7 @@ import org.entando.entando.ent.exception.EntException;
  *
  * @author M.Diana - E.Santoboni
  */
-public interface IUserManager {
+public interface IUserManager extends IParameterizableManager {
 
     /**
      * Parametro di sistema: abilitazione del modulo Privacy. Possibili
@@ -157,11 +157,5 @@ public interface IUserManager {
      * @return L'utente di default di sistema.
      */
     public UserDetails getGuestUser();
-
-    public String getConfig(String param);
-
-    public Map<String, String> getParams();
-
-    public void updateParams(Map<String, String> params) throws EntException;
 
 }

@@ -13,7 +13,6 @@
  */
 package com.agiletec.aps.system.common;
 
-import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.List;
 import java.util.Map;
@@ -21,21 +20,24 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.entando.entando.ent.exception.EntException;
 
-public abstract class AbstractConfigurableService extends AbstractService {
+public abstract class AbstractParameterizableService extends AbstractService implements IParameterizableManager {
 
     private transient ConfigInterface configManager;
 
-    protected String getConfig(String param) {
+    @Override
+    public String getConfig(String param) {
         return this.getConfigManager().getParam(param);
     }
 
-    protected Map<String, String> getParams() {
+    @Override
+    public Map<String, String> getParams() {
         return this.getParameterNames().stream()
                 .filter(p -> null != this.getConfig(p))
                 .collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
     }
 
-    protected synchronized void updateParams(Map<String, String> params) throws EntException {
+    @Override
+    public synchronized void updateParams(Map<String, String> params) throws EntException {
         if (null == params) {
             return;
         }

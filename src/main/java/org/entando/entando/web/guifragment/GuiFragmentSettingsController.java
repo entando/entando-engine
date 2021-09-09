@@ -13,9 +13,8 @@
  */
 package org.entando.entando.web.guifragment;
 
-import com.agiletec.aps.system.SystemConstants;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.role.Permission;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,20 +44,16 @@ public class GuiFragmentSettingsController {
     public static final String RESULT_PARAM_NAME = "enableEditingWhenEmptyDefaultGui";
 
     @Autowired
-    private ConfigInterface configManager;
+    private IGuiFragmentManager guiFragmentManager;
 
-    public ConfigInterface getConfigManager() {
-        return configManager;
-    }
-
-    public void setConfigManager(ConfigInterface configManager) {
-        this.configManager = configManager;
+    protected IGuiFragmentManager getGuiFragmentManager() {
+        return guiFragmentManager;
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map>> getSettings() {
-        String paramValue = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        String paramValue = this.getGuiFragmentManager().getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
         Boolean value = null;
         try {
             value = Boolean.parseBoolean(paramValue);
@@ -81,8 +76,9 @@ public class GuiFragmentSettingsController {
             throw new ValidationGenericException(bindingResult);
         }
         Boolean value = bodyRequest.getEnableEditingWhenEmptyDefaultGui();
-        this.getConfigManager()
-                .updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
+        Map<String, String> map = new HashMap<>();
+        map.put(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, String.valueOf(value));
+        this.getGuiFragmentManager().updateParams(map);
         Map<String, Boolean> result = new HashMap<>();
         result.put(RESULT_PARAM_NAME, value);
         logger.debug("Updated fragment setting -> {}", result);

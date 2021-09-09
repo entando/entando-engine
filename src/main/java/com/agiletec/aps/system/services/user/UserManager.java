@@ -16,7 +16,7 @@ package com.agiletec.aps.system.services.user;
 import java.util.List;
 
 import java.util.Map;
-import com.agiletec.aps.system.common.AbstractConfigurableService;
+import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author M.Diana - E.Santoboni
  */
-public class UserManager extends AbstractConfigurableService implements IUserManager {
+public class UserManager extends AbstractParameterizableService implements IUserManager {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserManager.class);
 
@@ -282,20 +282,6 @@ public class UserManager extends AbstractConfigurableService implements IUserMan
     }
 
     @Override
-    public String getConfig(String param) {
-        return super.getConfig(param);
-    }
-
-    @Override
-    public Map<String, String> getParams() {
-        return super.getParams();
-    }
-
-    @Override
-    public void updateParams(Map<String, String> params) throws EntException {
-        super.updateParams(params);
-    }
-
     protected List<String> getParameterNames() {
         return parameterNames;
     }

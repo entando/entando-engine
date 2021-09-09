@@ -247,6 +247,10 @@
         </property>
     </bean>
 
+    <util:list id="GuiFragmentManagerParameterNames">
+        <value>editEmptyFragmentEnabled</value>
+    </util:list>
+
     <bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager"
           parent="abstractService">
         <property name="guiFragmentDAO">
