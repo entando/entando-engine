@@ -3,9 +3,6 @@ package org.entando.entando.aps.system.services.usersettings;
 import com.agiletec.aps.system.services.user.IUserManager;
 import java.util.Map;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.baseconfig.SystemParamsUtils;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
 import org.entando.entando.aps.system.services.usersettings.model.UserSettingsDto;

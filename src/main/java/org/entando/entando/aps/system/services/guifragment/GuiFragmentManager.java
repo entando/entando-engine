@@ -14,7 +14,6 @@
 package org.entando.entando.aps.system.services.guifragment;
 
 import com.agiletec.aps.system.common.AbstractParameterizableService;
-import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import org.entando.entando.ent.exception.EntException;

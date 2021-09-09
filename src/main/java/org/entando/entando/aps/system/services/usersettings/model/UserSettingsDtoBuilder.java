@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.usersettings.model;
 
 import java.util.Map;
 
-import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.services.DtoBuilder;
 
 public class UserSettingsDtoBuilder extends DtoBuilder<Map<String, String>, UserSettingsDto> {

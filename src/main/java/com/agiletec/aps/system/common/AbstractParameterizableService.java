@@ -33,7 +33,7 @@ public abstract class AbstractParameterizableService extends AbstractService imp
     public Map<String, String> getParams() {
         return this.getParameterNames().stream()
                 .filter(p -> null != this.getConfig(p))
-                .collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
+                .collect(Collectors.toMap(p -> p, this::getConfig));
     }
 
     @Override

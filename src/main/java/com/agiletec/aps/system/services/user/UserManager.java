@@ -15,7 +15,6 @@ package com.agiletec.aps.system.services.user;
 
 import java.util.List;
 
-import java.util.Map;
 import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
