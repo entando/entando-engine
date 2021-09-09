@@ -15,26 +15,30 @@ package com.agiletec.aps.system.services.user;
 
 import java.util.List;
 
+import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Servizio di gestione degli utenti.
  *
  * @author M.Diana - E.Santoboni
  */
-public class UserManager extends AbstractService implements IUserManager {
+public class UserManager extends AbstractParameterizableService implements IUserManager {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserManager.class);
 
+    @Autowired
+    @Qualifier(value = "UserManagerParameterNames")
+    public transient List<String> parameterNames;
+
     private IUserDAO userDao;
-    private ConfigInterface configManager;
     
     @Override
     public void init() throws Exception {
@@ -224,20 +228,20 @@ public class UserManager extends AbstractService implements IUserManager {
     protected void setUserCredentialCheckParams(UserDetails user) {
         if (null != user && user.isEntandoUser()) {
             User japsUser = (User) user;
-            String enabledPrivacyModuleParValue = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_PM_ENABLED);
+            String enabledPrivacyModuleParValue = this.getConfig(IUserManager.CONFIG_PARAM_PM_ENABLED);
             boolean enabledPrivacyModule = Boolean.parseBoolean(enabledPrivacyModuleParValue);
             japsUser.setCheckCredentials(enabledPrivacyModule);
             if (enabledPrivacyModule) {
-                int maxMonthsSinceLastAccess = this.extractNumberParamValue(SystemConstants.CONFIG_PARAM_PM_MM_LAST_ACCESS, 6);
+                int maxMonthsSinceLastAccess = this.extractNumberParamValue(IUserManager.CONFIG_PARAM_PM_MM_LAST_ACCESS, 6);
                 japsUser.setMaxMonthsSinceLastAccess(maxMonthsSinceLastAccess);
-                int maxMonthsSinceLastPasswordChange = this.extractNumberParamValue(SystemConstants.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE, 3);
+                int maxMonthsSinceLastPasswordChange = this.extractNumberParamValue(IUserManager.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE, 3);
                 japsUser.setMaxMonthsSinceLastPasswordChange(maxMonthsSinceLastPasswordChange);
             }
         }
     }
 
     private int extractNumberParamValue(String paramName, int defaultValue) {
-        String parValue = this.getConfigManager().getParam(paramName);
+        String parValue = this.getConfig(paramName);
         int value = 0;
         try {
             value = Integer.parseInt(parValue);
@@ -276,12 +280,9 @@ public class UserManager extends AbstractService implements IUserManager {
         return user;
     }
 
-    protected ConfigInterface getConfigManager() {
-        return configManager;
-    }
-
-    public void setConfigManager(ConfigInterface configManager) {
-        this.configManager = configManager;
+    @Override
+    protected List<String> getParameterNames() {
+        return parameterNames;
     }
 
     protected IUserDAO getUserDAO() {
