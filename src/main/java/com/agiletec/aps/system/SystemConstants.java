@@ -14,9 +14,11 @@
 package com.agiletec.aps.system;
 
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.user.IUserManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 /**
  * Interfaccia con le principali costanti di sistema.
@@ -259,8 +261,10 @@ public interface SystemConstants {
     /**
      * Parametro di sistema: abilitazione del modulo Privacy. Possibili
      * immissioni "true" o "false" (default).
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_ENABLED = "extendedPrivacyModuleEnabled";
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_ENABLED = IUserManager.CONFIG_PARAM_PM_ENABLED;
 
     /**
      * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
@@ -269,8 +273,10 @@ public interface SystemConstants {
      * dell'utenza definita da questo parametro, l'utenza sarà dichiarata
      * scaduta e in occasione del login tutte le autorizzazioni verranno
      * disabilitate.
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_MM_LAST_ACCESS = "maxMonthsSinceLastAccess";
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_MM_LAST_ACCESS = IUserManager.CONFIG_PARAM_PM_MM_LAST_ACCESS;
 
     /**
      * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
@@ -278,8 +284,15 @@ public interface SystemConstants {
      * attivo e che una utenza presenti la password invariata per un tempo oltre
      * la soglia massima definita da questo parametro, in occasione del login
      * tutte le autorizzazioni verranno disabilitate.
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = "maxMonthsSinceLastPasswordChange";
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = IUserManager.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE;
+    /**
+     * @deprecated moved into IUserManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = IUserManager.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED;
 
     public static final String CONFIG_PARAM_TREE_STYLE_CATEGORY = "treeStyle_category";
 
@@ -385,9 +398,11 @@ public interface SystemConstants {
     @Deprecated
     public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = IPageManager.CONFIG_PARAM_LOGIN_PAGE_CODE;
 
-    public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
-
-    public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = "editEmptyFragmentEnabled";
+    /**
+     * @deprecated moved into IGuiFragmentManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED;
 
     /**
      * Lo username dell'utente amministratore, utente di default con diritti

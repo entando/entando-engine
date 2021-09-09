@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.guifragment;
 
+import com.agiletec.aps.system.common.IParameterizableManager;
 import java.util.List;
 
 import org.entando.entando.ent.exception.EntException;
@@ -23,7 +24,9 @@ import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 /**
  * @author E.Santoboni
  */
-public interface IGuiFragmentManager {
+public interface IGuiFragmentManager extends IParameterizableManager {
+
+	public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = "editEmptyFragmentEnabled";
 
 	public GuiFragment getGuiFragment(String code) throws EntException;
 

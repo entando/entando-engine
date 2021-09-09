@@ -16,6 +16,8 @@ package org.entando.entando.web.guifragment;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Map;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 
@@ -52,14 +54,13 @@ class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private ConfigInterface configManager;
+    private IGuiFragmentManager guiFragmentManager;
 
     @InjectMocks
     private GuiFragmentSettingsController controller;
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .addInterceptors(entandoOauth2Interceptor)
                 .setHandlerExceptionResolvers(createHandlerExceptionResolver())
@@ -70,7 +71,7 @@ class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     void getSetting_1() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        when(this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("true");
+        when(this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("true");
         ResultActions result = mockMvc.perform(
                 get("/fragmentsSettings")
                 .header("Authorization", "Bearer " + accessToken));
@@ -83,7 +84,7 @@ class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
     void getSetting_2() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        when(this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("invalid");
+        when(this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED)).thenReturn("invalid");
         ResultActions result = mockMvc.perform(
                 get("/fragmentsSettings").header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
@@ -99,7 +100,7 @@ class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
         ResultActions result = this.executePut(payload, accessToken, status().isOk());
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.payload." + GuiFragmentSettingsController.RESULT_PARAM_NAME, is(true)));
-        Mockito.verify(configManager, Mockito.times(1)).updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "true");
+        Mockito.verify(this.guiFragmentManager, Mockito.times(1)).updateParams(Mockito.any(Map.class));
     }
 
     @Test
@@ -109,7 +110,7 @@ class GuiFragmentSettingsControllerTest extends AbstractControllerTest {
         String payload = "{}";
         ResultActions result = this.executePut(payload, accessToken, status().isBadRequest());
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
-        Mockito.verify(configManager, Mockito.times(0)).updateParam(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+        Mockito.verify(this.guiFragmentManager, Mockito.times(0)).updateParams(Mockito.any(Map.class));
     }
 
     private ResultActions executePut(String body, String accessToken, ResultMatcher rm) throws Exception {

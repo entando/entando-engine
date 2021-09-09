@@ -13,7 +13,7 @@
  */
 package org.entando.entando.aps.system.services.guifragment;
 
-import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.AbstractParameterizableService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
 import org.entando.entando.ent.exception.EntException;
@@ -33,17 +33,23 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author E.Santoboni
  */
-public class GuiFragmentManager extends AbstractService implements IGuiFragmentManager, GuiFragmentUtilizer {
+public class GuiFragmentManager extends AbstractParameterizableService implements IGuiFragmentManager, GuiFragmentUtilizer {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(GuiFragmentManager.class);
 
     private IGuiFragmentDAO guiFragmentDAO;
+
+    @Autowired
+    @Qualifier(value = "GuiFragmentManagerParameterNames")
+    public transient List<String> parameterNames;
 
     @Override
     public void init() throws Exception {
@@ -259,6 +265,11 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
             throw new EntException("Error loading guiFragment plugin codes", t);
         }
         return codes;
+    }
+
+    @Override
+    protected List<String> getParameterNames() {
+        return parameterNames;
     }
 
     public void setGuiFragmentDAO(IGuiFragmentDAO guiFragmentDAO) {

@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.services.usersettings.model;
 
 import java.util.Map;
 
-import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.services.DtoBuilder;
 
 public class UserSettingsDtoBuilder extends DtoBuilder<Map<String, String>, UserSettingsDto> {
@@ -24,7 +23,7 @@ public class UserSettingsDtoBuilder extends DtoBuilder<Map<String, String>, User
     protected UserSettingsDto toDto(Map<String, String> sysParams) {
         UserSettingsDto dest = new UserSettingsDto();
         dest.setExtendedPrivacyModuleEnabled(this.extractBooleanValue(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED, sysParams));
-        dest.setGravatarIntegrationEnabled(this.extractBooleanValue(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED, sysParams));
+        dest.setGravatarIntegrationEnabled(this.extractBooleanValue(UserSettingsDto.GRAVATAR_INTEGRATION_ENABLED, sysParams));
         
         dest.setMaxMonthsSinceLastAccess(this.extractIntValue(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS, sysParams));
         dest.setMaxMonthsSinceLastPasswordChange(this.extractIntValue(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE, sysParams));
