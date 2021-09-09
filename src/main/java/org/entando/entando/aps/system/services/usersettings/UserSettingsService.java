@@ -1,5 +1,6 @@
 package org.entando.entando.aps.system.services.usersettings;
 
+import com.agiletec.aps.system.services.user.IUserManager;
 import java.util.Map;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -19,16 +20,15 @@ public class UserSettingsService implements IUserSettingsService {
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     @Autowired
-    private ConfigInterface configManager;
+    private IUserManager userManager;
 
     private IDtoBuilder<Map<String, String>, UserSettingsDto> dtoBuilder = new UserSettingsDtoBuilder();
 
-    protected ConfigInterface getConfigManager() {
-        return configManager;
+    public IUserManager getUserManager() {
+        return userManager;
     }
-
-    public void setConfigManager(ConfigInterface configManager) {
-        this.configManager = configManager;
+    public void setUserManager(IUserManager userManager) {
+        this.userManager = userManager;
     }
 
     public IDtoBuilder<Map<String, String>, UserSettingsDto> getDtoBuilder() {
@@ -39,11 +39,10 @@ public class UserSettingsService implements IUserSettingsService {
         this.dtoBuilder = dtoBuilder;
     }
 
-
     @Override
     public UserSettingsDto getUserSettings() {
         try {
-            Map<String, String> systemParams = this.getSystemParams();
+            Map<String, String> systemParams = this.getUserManager().getParams();
             return this.getDtoBuilder().convert(systemParams);
         } catch (Throwable e) {
             logger.error("Error getting user settings", e);
@@ -54,23 +53,13 @@ public class UserSettingsService implements IUserSettingsService {
     @Override
     public UserSettingsDto updateUserSettings(UserSettingsRequest request) {
         try {
-
             Map<String, String> params = request.toMap();
-            Map<String, String> systemParams = this.getSystemParams();
-            systemParams.putAll(params);
-            String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, systemParams);
-            this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
-            return this.getDtoBuilder().convert(systemParams);
+            this.getUserManager().updateParams(params);
+            return this.getUserSettings();
         } catch (Throwable e) {
             logger.error("Error updating user settings", e);
             throw new RestServerError("Error updating user settings", e);
         }
-    }
-
-    private Map<String, String> getSystemParams() throws Throwable {
-        String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-        return SystemParamsUtils.getParams(xmlParams);
     }
 
 }

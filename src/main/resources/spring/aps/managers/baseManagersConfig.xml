@@ -169,6 +169,13 @@
         <property name="passwordEncoder" ref="compatiblePasswordEncoder" />
     </bean>
 
+    <util:list id="UserManagerParameterNames">
+        <value>extendedPrivacyModuleEnabled</value>
+        <value>maxMonthsSinceLastAccess</value>
+        <value>maxMonthsSinceLastPasswordChange</value>
+        <value>gravatarIntegrationEnabled</value>
+    </util:list>
+
     <bean id="UserManager" class="com.agiletec.aps.system.services.user.UserManager"
           parent="abstractService" >
         <property name="userDAO" ref="UserDAO" />

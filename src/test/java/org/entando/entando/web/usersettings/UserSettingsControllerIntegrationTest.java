@@ -61,7 +61,7 @@ class UserSettingsControllerIntegrationTest extends AbstractControllerIntegratio
         Map<String, String> params = this.getSystemParams();
 
         assertEquals("false", params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED));
-        assertEquals("false", params.getOrDefault(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED, "false"));
+        assertEquals("false", params.getOrDefault(UserSettingsDto.GRAVATAR_INTEGRATION_ENABLED, "false"));
         assertEquals("6", params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS));
         assertEquals("3", params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE));
 
@@ -75,7 +75,7 @@ class UserSettingsControllerIntegrationTest extends AbstractControllerIntegratio
         result.andExpect(status().isOk());
 
         result.andExpect(jsonPath("$.payload.restrictionsActive", is(Boolean.parseBoolean(params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED)))));
-        result.andExpect(jsonPath("$.payload.enableGravatarIntegration", is(Boolean.parseBoolean(params.get(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED)))));
+        result.andExpect(jsonPath("$.payload.enableGravatarIntegration", is(Boolean.parseBoolean(params.get(UserSettingsDto.GRAVATAR_INTEGRATION_ENABLED)))));
         result.andExpect(jsonPath("$.payload.lastAccessPasswordExpirationMonths", is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS)))));
         result.andExpect(jsonPath("$.payload.maxMonthsPasswordValid", is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE)))));
 
@@ -89,7 +89,7 @@ class UserSettingsControllerIntegrationTest extends AbstractControllerIntegratio
             Map<String, String> params = this.getSystemParams();
 
             assertEquals("false", params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED));
-            assertEquals("false", params.getOrDefault(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED, "false"));
+            assertEquals("false", params.getOrDefault(UserSettingsDto.GRAVATAR_INTEGRATION_ENABLED, "false"));
             assertEquals("6", params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS));
             assertEquals("3", params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTPASSWORDCHANGE));
 
@@ -107,7 +107,7 @@ class UserSettingsControllerIntegrationTest extends AbstractControllerIntegratio
                     is(Boolean.parseBoolean(params.get(UserSettingsDto.EXTENDED_PRIVACY_MODULE_ENABLED)))));
 
             result.andExpect(jsonPath("$.payload.enableGravatarIntegration",
-                    is(Boolean.parseBoolean(params.get(SystemConstants.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED)))));
+                    is(Boolean.parseBoolean(params.get(UserSettingsDto.GRAVATAR_INTEGRATION_ENABLED)))));
 
             result.andExpect(jsonPath("$.payload.lastAccessPasswordExpirationMonths",
                     is(Integer.valueOf(params.get(UserSettingsDto.MAX_MONTHS_SINCE_LASTACCESS)))));

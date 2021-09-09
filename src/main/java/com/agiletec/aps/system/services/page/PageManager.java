@@ -15,9 +15,7 @@ package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
@@ -37,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.agiletec.aps.system.common.AbstractConfigurableService;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -51,7 +50,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
+public class PageManager extends AbstractConfigurableService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
     public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
@@ -61,7 +60,6 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     public transient List<String> parameterNames;
 
     private transient IPageManagerCacheWrapper cacheWrapper;
-    private transient ConfigInterface configManager;
     private transient IPageDAO pageDao;
 
     @Override
@@ -773,27 +771,20 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 
     @Override
     public String getConfig(String param) {
-        return this.getConfigManager().getParam(param);
+        return super.getConfig(param);
     }
 
     @Override
     public Map<String, String> getParams() {
-        return this.getParameterNames().stream()
-                .filter(p -> null != this.getConfig(p))
-                .collect(Collectors.toMap(p -> p, p -> this.getConfig(p)));
+        return super.getParams();
     }
 
     @Override
-    public synchronized void updateParams(Map<String, String> params) throws EntException {
-        if (null == params) {
-            return;
-        }
-        Map<String, String> paramsToUpdate = params.entrySet().stream()
-                .filter(e -> this.getParameterNames().contains(e.getKey()))
-                .collect(Collectors.toMap(Entry<String, String>::getKey, Entry<String, String>::getValue));
-        this.getConfigManager().updateParams(paramsToUpdate, true);
+    public void updateParams(Map<String, String> params) throws EntException {
+        super.updateParams(params);
     }
 
+    @Override
     protected List<String> getParameterNames() {
         return parameterNames;
     }
@@ -803,13 +794,6 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
     public void setCacheWrapper(IPageManagerCacheWrapper cacheWrapper) {
         this.cacheWrapper = cacheWrapper;
-    }
-
-    protected ConfigInterface getConfigManager() {
-        return configManager;
-    }
-    public void setConfigManager(ConfigInterface configManager) {
-        this.configManager = configManager;
     }
 
     protected IPageDAO getPageDAO() {
