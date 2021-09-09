@@ -253,6 +253,7 @@
 
     <bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager"
           parent="abstractService">
+        <property name="configManager" ref="BaseConfigManager"/>
         <property name="guiFragmentDAO">
             <bean class="org.entando.entando.aps.system.services.guifragment.GuiFragmentDAO">
                 <property name="dataSource" ref="portDataSource" />
