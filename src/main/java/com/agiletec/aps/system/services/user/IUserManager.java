@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.user;
 
+import com.agiletec.aps.system.common.IParameterizableManager;
 import java.util.List;
 
 import org.entando.entando.ent.exception.EntException;
@@ -22,7 +23,34 @@ import org.entando.entando.ent.exception.EntException;
  *
  * @author M.Diana - E.Santoboni
  */
-public interface IUserManager {
+public interface IUserManager extends IParameterizableManager {
+
+    /**
+     * Parametro di sistema: abilitazione del modulo Privacy. Possibili
+     * immissioni "true" o "false" (default).
+     */
+    public static final String CONFIG_PARAM_PM_ENABLED = "extendedPrivacyModuleEnabled";
+
+    /**
+     * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
+     * consentiti dal ultimo accesso. Nel caso che il modulo privacy sia attivo
+     * e che una utenza abbia oltrepassato la soglia massima di inattività
+     * dell'utenza definita da questo parametro, l'utenza sarà dichiarata
+     * scaduta e in occasione del login tutte le autorizzazioni verranno
+     * disabilitate.
+     */
+    public static final String CONFIG_PARAM_PM_MM_LAST_ACCESS = "maxMonthsSinceLastAccess";
+
+    /**
+     * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
+     * consentiti dal ultimo cambio password. Nel caso che il modulo privacy sia
+     * attivo e che una utenza presenti la password invariata per un tempo oltre
+     * la soglia massima definita da questo parametro, in occasione del login
+     * tutte le autorizzazioni verranno disabilitate.
+     */
+    public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = "maxMonthsSinceLastPasswordChange";
+
+    public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
 
     public List<String> getUsernames() throws EntException;
 

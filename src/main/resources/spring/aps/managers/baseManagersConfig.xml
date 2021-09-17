@@ -169,6 +169,13 @@
         <property name="passwordEncoder" ref="compatiblePasswordEncoder" />
     </bean>
 
+    <util:list id="UserManagerParameterNames">
+        <value>extendedPrivacyModuleEnabled</value>
+        <value>maxMonthsSinceLastAccess</value>
+        <value>maxMonthsSinceLastPasswordChange</value>
+        <value>gravatarIntegrationEnabled</value>
+    </util:list>
+
     <bean id="UserManager" class="com.agiletec.aps.system.services.user.UserManager"
           parent="abstractService" >
         <property name="userDAO" ref="UserDAO" />
@@ -240,8 +247,13 @@
         </property>
     </bean>
 
+    <util:list id="GuiFragmentManagerParameterNames">
+        <value>editEmptyFragmentEnabled</value>
+    </util:list>
+
     <bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager"
           parent="abstractService">
+        <property name="configManager" ref="BaseConfigManager"/>
         <property name="guiFragmentDAO">
             <bean class="org.entando.entando.aps.system.services.guifragment.GuiFragmentDAO">
                 <property name="dataSource" ref="portDataSource" />

@@ -45,7 +45,7 @@ class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerInt
 
     @Test
     void testGetConfiguration() throws Exception {
-        String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        String value = this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
         Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -59,7 +59,7 @@ class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerInt
 
     @Test
     void testUpdateConfiguration() throws Exception {
-        String value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        String value = this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
         Assertions.assertTrue(null == value || value.equalsIgnoreCase("false"));
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
@@ -68,21 +68,25 @@ class GuiFragmentSettingsControllerIntegrationTest extends AbstractControllerInt
             ResultActions result = this.executePut(payload, accessToken, status().isOk());
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload." + GuiFragmentSettingsController.RESULT_PARAM_NAME, is(true)));
-            value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+            value = this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+            Assertions.assertEquals("true", value);
+            value = this.configManager.getParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
             Assertions.assertEquals("true", value);
 
             payload = "{\"enableEditingWhenEmptyDefaultGui\":false}";
             result = this.executePut(payload, accessToken, status().isOk());
             result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
             result.andExpect(jsonPath("$.payload." + GuiFragmentSettingsController.RESULT_PARAM_NAME, is(false)));
-            value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+            value = this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
             Assertions.assertEquals("false", value);
 
         } catch (Exception e) {
             throw e;
         } finally {
-            this.configManager.updateParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "false");
-            value = this.configManager.getParam(SystemConstants.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+            this.configManager.updateParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "false");
+            value = this.configManager.getParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+            Assertions.assertEquals("false", value);
+            value = this.guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
             Assertions.assertEquals("false", value);
         }
     }

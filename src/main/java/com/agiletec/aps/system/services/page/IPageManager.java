@@ -13,11 +13,11 @@
  */
 package com.agiletec.aps.system.services.page;
 
+import com.agiletec.aps.system.common.IParameterizableManager;
 import java.util.List;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.common.tree.ITreeNodeManager;
-import java.util.Map;
 import org.entando.entando.ent.exception.EntException;
 
 /**
@@ -25,7 +25,7 @@ import org.entando.entando.ent.exception.EntException;
  *
  * @author M.Diana
  */
-public interface IPageManager extends ITreeNodeManager {
+public interface IPageManager extends ITreeNodeManager, IParameterizableManager {
 
     public static final String CONFIG_PARAM_URL_STYLE = "urlStyle";
 
@@ -199,11 +199,5 @@ public interface IPageManager extends ITreeNodeManager {
     public PagesStatus getPagesStatus();
 
     public List<IPage> loadLastUpdatedPages(int size) throws EntException;
-
-    public String getConfig(String param);
-
-    public Map<String, String> getParams();
-
-    public void updateParams(Map<String, String> params) throws EntException;
 
 }
