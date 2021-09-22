@@ -274,16 +274,19 @@ public class DatabaseManager extends AbstractInitializerManager
     public void initLiquiBaseResources(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         logger.info(INIT_MSG_L, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
+        /*
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
             logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
             return;
         }
+        */
         LiquibaseInstallationReport liquibaseReport = componentReport.getLiquibaseReport();
         try {
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (String dataSourceName : dataSourceNames) {
+                /*
                 if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
                         || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
                     liquibaseReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
@@ -291,17 +294,13 @@ public class DatabaseManager extends AbstractInitializerManager
                     report.setUpdated();
                     continue;
                 }
+                */
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 SystemInstallationReport.Status liquibaseStatus = liquibaseReport.getDatabaseStatus().get(dataSourceName);
-                if (SystemInstallationReport.isSafeStatus(liquibaseStatus)) {
-                    logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
-                    continue;
-                }
                 if (null != changeLogFile) {
                     if (checkOnStatup) {
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        this.executeLiquibaseUpdate(changeLogFile, dataSourceName);
+                        this.executeLiquibaseUpdate(changeLogFile, dataSourceName, report.getStatus());
                         ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
                     } else {
@@ -317,16 +316,21 @@ public class DatabaseManager extends AbstractInitializerManager
         }
     }
 
-    private void executeLiquibaseUpdate(String changeLogFile, String dataSourceName) throws Exception {
+    private void executeLiquibaseUpdate(String changeLogFile, String dataSourceName, SystemInstallationReport.Status status) throws Exception {
         Connection connection = null;
         Liquibase liquibase = null;
         try {
             DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
             connection = dataSource.getConnection();
-            Database database = DatabaseFactory.getInstance()
-                    .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            JdbcConnection liquibaseConnection = new JdbcConnection(connection);
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
             liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
-            String context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
+            String context = null;
+            if (status.equals(SystemInstallationReport.Status.RESTORE)) {
+                context = "restore";
+            } else {
+                context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
+            }
             Contexts contexts = new Contexts(context);
             liquibase.update(contexts, new LabelExpression());
         } catch (Exception e) {

@@ -5,6 +5,159 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
+    <changeSet id="schemaServ_v6.4.0" author="entando" dbms="derby">
 
+        <createTable tableName="authuserprofiles" >
+            <column name="username" type="varchar(80)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="profiletype" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="profilexml" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="publicprofile" type="smallint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex tableName="authuserprofiles" indexName="authuserprofiles_profiletype_idx">
+            <column name="profiletype" />
+        </createIndex>
+
+        <createTable tableName="authuserprofilesearch" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(80)">
+                <constraints nullable="false" />
+            </column>
+            <column name="attrname" type="varchar(30)" />
+            <column name="textvalue" type="varchar(255)" />
+            <column name="datevalue" type="timestamp" />
+            <column name="numvalue" type="int" />
+            <column name="langcode" type="varchar(3)" />
+        </createTable>
+        <createIndex tableName="authuserprofilesearch" indexName="authuserprofilesearch_username_idx">
+            <column name="username" />
+        </createIndex>
+        <createIndex tableName="authuserprofilesearch" indexName="authuserprofilesearch_attrname_idx">
+            <column name="attrname" />
+        </createIndex>
+        <addForeignKeyConstraint constraintName="authuserprofilesearch_fkey"
+                baseColumnNames="username"
+                baseTableName="authuserprofilesearch"
+                referencedColumnNames="username"
+                referencedTableName="authuserprofiles" />
+
+        <createTable tableName="authuserprofileattrroles" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(80)">
+                <constraints nullable="false" />
+            </column>
+            <column name="attrname" type="varchar(30)" />
+            <column name="rolename" type="varchar(50)" />
+        </createTable>
+        <createIndex tableName="authuserprofileattrroles" indexName="authuserprofileattrroles_username_idx">
+            <column name="username" />
+        </createIndex>
+        <createIndex tableName="authuserprofileattrroles" indexName="authuserprofileattrroles_attrname_idx">
+            <column name="attrname" />
+        </createIndex>
+        <createIndex tableName="authuserprofileattrroles" indexName="authuserprofileattrroles_rolename_idx">
+            <column name="rolename" />
+        </createIndex>
+        <addForeignKeyConstraint constraintName="authuserprofileattrroles_fkey"
+                baseColumnNames="username"
+                baseTableName="authuserprofileattrroles"
+                referencedColumnNames="username"
+                referencedTableName="authuserprofiles" />
+
+        <createTable tableName="actionlogrecords" >
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(40)" />
+            <column name="actiondate" type="timestamp" />
+            <column name="namespace" type="clob" />
+            <column name="actionname" type="varchar(40)" />
+            <column name="parameters" type="clob" />
+            <column name="activitystreaminfo" type="clob" />
+            <column name="updatedate" type="timestamp" />
+        </createTable>
+        <createIndex tableName="actionlogrecords" indexName="actionlogrecords_actiondate_idx">
+            <column name="actiondate" />
+        </createIndex>
+        <createIndex tableName="actionlogrecords" indexName="actionlogrecords_updatedate_idx">
+            <column name="updatedate" />
+        </createIndex>
+
+        <createTable tableName="actionlogrelations" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="recordid" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="refgroup" type="varchar(20)" />
+        </createTable>
+        <createIndex tableName="actionlogrelations" indexName="actionlogrelations_recordid_idx">
+            <column name="recordid" />
+        </createIndex>
+        <createIndex tableName="actionlogrelations" indexName="actionlogrelations_refgroup_idx">
+            <column name="refgroup" />
+        </createIndex>
+        <addForeignKeyConstraint constraintName="actionlogrelations_recid_fkey"
+                baseColumnNames="recordid"
+                baseTableName="actionlogrelations"
+                referencedColumnNames="id"
+                referencedTableName="actionlogrecords" />
+
+        <createTable tableName="actionloglikerecords" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="recordid" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="username" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="likedate" type="timestamp" >
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="actionloglikerec_recid_fkey"
+                baseColumnNames="recordid"
+                baseTableName="actionloglikerecords"
+                referencedColumnNames="id"
+                referencedTableName="actionlogrecords" />
+
+        <createTable tableName="actionlogcommentrecords" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="recordid" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="username" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="commenttext" type="blob">
+                <constraints nullable="false" />
+            </column>
+            <column name="commentdate" type="timestamp" >
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="actionlogcommentrec_recid_fkey"
+                baseColumnNames="recordid"
+                baseTableName="actionlogcommentrecords"
+                referencedColumnNames="id"
+                referencedTableName="actionlogrecords" />
+
+    </changeSet>
 
 </databaseChangeLog>

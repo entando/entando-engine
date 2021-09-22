@@ -48,13 +48,13 @@
                 <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</class>
                 <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</class>
                 <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.UserProfile</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecord</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</class>
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfile</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecord</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</class> -->
                 <table>authgroups</table>
                 <table>authpermissions</table>
                 <table>authroles</table>
