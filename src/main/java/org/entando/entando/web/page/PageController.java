@@ -53,6 +53,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -371,6 +372,27 @@ public class PageController {
         PageRequest pageRequest = this.pageDtoToRequestConverter.convert(updatedPageDto);
 
         return this.updatePage(user, pageCode, pageRequest, bindingResult);
+    }
+
+    @ActivityStreamAuditable
+    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @PostMapping(value = "/pages/{pageCode}/clone", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<PageDto>> clonePage(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String pageCode,
+            BindingResult bindingResult) {
+        logger.debug("clone page {}", pageCode);
+
+        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+        }
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationGenericException(bindingResult);
+        }
+
+        PageDto dto = this.getPageService().clonePage(pageCode, bindingResult);
+        return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 
 

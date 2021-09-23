@@ -449,4 +449,37 @@ class PageServiceTest {
         }
         return p;
     }
+
+    @Test
+    void applyCodePageMaxLength() {
+        String pageCode = "pagecode";
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 1));
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 2));
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 10));
+
+        pageCode = "pagecodepagecodepagecodepagecodepagecodepag_with_exactly_70_characters";
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 1));
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 2));
+        assertEquals(pageCode, pageService.applyCodePageMaxLength(pageCode, 10));
+
+        pageCode = "pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_characters";
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_ch_clone",
+                pageService.applyCodePageMaxLength(pageCode, 1));
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70__clone_2",
+                pageService.applyCodePageMaxLength(pageCode, 2));
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_clone_10",
+                pageService.applyCodePageMaxLength(pageCode, 10));
+
+        pageCode = "pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_characters_clone";
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_ch_clone",
+                pageService.applyCodePageMaxLength(pageCode, 1));
+
+        pageCode = "pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_characters_clone_2";
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70__clone_2",
+                pageService.applyCodePageMaxLength(pageCode, 2));
+
+        pageCode = "pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_characters_clone_10";
+        assertEquals("pagecodepagecodepagecodepagecodepagecodepag_with_more_than_70_clone_10",
+                pageService.applyCodePageMaxLength(pageCode, 10));
+    }
 }
