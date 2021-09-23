@@ -38,16 +38,19 @@
                 <table>userpreferences</table>
             </datasource>
             <datasource name="servDataSource">
+                <!--
                 <class>org.entando.entando.aps.system.init.model.servdb.Group</class>
                 <class>org.entando.entando.aps.system.init.model.servdb.Permission</class>
                 <class>org.entando.entando.aps.system.init.model.servdb.Role</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.RolePermissionReference</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.User</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.UserGroupRoleReference</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthConsumer</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</class>
-                <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</class>
+                -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.RolePermissionReference</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.User</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserGroupRoleReference</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthConsumer</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</class> -->
+                <!-- <class>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</class> -->
+
                 <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfile</class> -->
                 <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</class> -->
                 <!-- <class>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</class> -->

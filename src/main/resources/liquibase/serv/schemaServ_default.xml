@@ -5,7 +5,189 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="schemaServ_v6.4.0" author="entando" dbms="derby">
+    <changeSet id="schemaServ_v6.4.0" author="entando" >
+
+        <createTable tableName="authgroups" >
+            <column name="groupname" type="varchar(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="descr" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="authpermissions" >
+            <column name="permissionname" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="descr" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="authroles" >
+            <column name="rolename" type="varchar(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="descr" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="authrolepermissions" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rolename" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="permissionname" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="authrolepermissions_role_fkey"
+                baseColumnNames="rolename"
+                baseTableName="authrolepermissions"
+                referencedColumnNames="rolename"
+                referencedTableName="authroles" />
+        <addForeignKeyConstraint constraintName="authrolepermissions_perm_fkey"
+                baseColumnNames="permissionname"
+                baseTableName="authrolepermissions"
+                referencedColumnNames="permissionname"
+                referencedTableName="authpermissions" />
+
+
+        <createTable tableName="authusers" >
+            <column name="username" type="varchar(80)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="passwd" type="varchar(512)" />
+            <column name="registrationdate" type="timestamp" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastaccess" type="timestamp" />
+            <column name="lastpasswordchange" type="timestamp" />
+            <column name="active" type="smallint" />
+        </createTable>
+
+        <createTable tableName="authusergrouprole" >
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(80)">
+                <constraints nullable="false" />
+            </column>
+            <column name="groupname" type="varchar(20)" />
+            <column name="rolename" type="varchar(20)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="authusergrouprole_grn_fkey"
+                baseColumnNames="groupname"
+                baseTableName="authusergrouprole"
+                referencedColumnNames="groupname"
+                referencedTableName="authgroups" />
+        <addForeignKeyConstraint constraintName="authusergrouprole_rln_fkey"
+                baseColumnNames="rolename"
+                baseTableName="authusergrouprole"
+                referencedColumnNames="rolename"
+                referencedTableName="authroles" />
+
+
+        <createTable tableName="api_oauth_consumers" >
+            <column name="consumerkey" type="varchar(100)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="consumersecret" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="description" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="callbackurl" type="clob" />
+            <column name="scopes" type="varchar(255)" />
+            <column name="authorizedgranttypes" type="varchar(255)" />
+            <column name="expirationdate" type="timestamp" />
+            <column name="issueddate" type="timestamp" />
+        </createTable>
+
+        <createTable tableName="api_oauth_tokens" >
+            <column name="accesstoken" type="varchar(100)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="clientid" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="expiresin" type="timestamp" >
+                <constraints nullable="false" />
+            </column>
+            <column name="refreshtoken" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="granttype" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="localuser" type="varchar(255)" />
+        </createTable>
+
+        <createTable tableName="apicatalog_methods" >
+            <column name="resourcecode" type="varchar(100)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="httpmethod" type="varchar(6)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="isactive" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="ishidden" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="authenticationrequired" type="smallint" />
+            <column name="authorizationrequired" type="varchar(30)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="apicatalog_methods_auth_fkey"
+                baseColumnNames="authorizationrequired"
+                baseTableName="apicatalog_methods"
+                referencedColumnNames="permissionname"
+                referencedTableName="authpermissions" />
+
+        <createTable tableName="apicatalog_services" >
+            <column name="servicekey" type="varchar(100)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="resourcecode" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="parameters" type="clob" />
+            <column name="tag" type="varchar(100)" />
+            <column name="freeparameters" type="clob" />
+
+            <column name="isactive" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="ishidden" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="myentando" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="authenticationrequired" type="smallint" />
+            <column name="requiredpermission" type="varchar(30)" />
+            <column name="requiredgroup" type="varchar(20)" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="apicatalog_services_gr_fkey"
+                baseColumnNames="requiredgroup"
+                baseTableName="apicatalog_services"
+                referencedColumnNames="groupname"
+                referencedTableName="authgroups" />
+        <addForeignKeyConstraint constraintName="apicatalog_services_perm_fkey"
+                baseColumnNames="requiredpermission"
+                baseTableName="apicatalog_services"
+                referencedColumnNames="permissionname"
+                referencedTableName="authpermissions" />
 
         <createTable tableName="authuserprofiles" >
             <column name="username" type="varchar(80)">
@@ -145,7 +327,7 @@
             <column name="username" type="varchar(20)">
                 <constraints nullable="false" />
             </column>
-            <column name="commenttext" type="blob">
+            <column name="commenttext" type="clob">
                 <constraints nullable="false" />
             </column>
             <column name="commentdate" type="timestamp" >

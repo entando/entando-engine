@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="schemaPort_v6.4.0" author="entando" dbms="derby">
+    <changeSet id="schemaPort_v6.4.0" author="entando" >
         <createTable tableName="categories" >
             <column name="catcode" type="varchar(30)">
                 <constraints primaryKey="true"/>

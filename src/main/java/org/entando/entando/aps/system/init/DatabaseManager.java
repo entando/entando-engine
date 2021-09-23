@@ -334,7 +334,7 @@ public class DatabaseManager extends AbstractInitializerManager
             Contexts contexts = new Contexts(context);
             liquibase.update(contexts, new LabelExpression());
         } catch (Exception e) {
-            logger.error("Error executing liquibase update - " + changeLogFile);
+            logger.error("Error executing liquibase update - " + changeLogFile, e);
         } finally {
             if (null != liquibase) {
                 liquibase.close();
