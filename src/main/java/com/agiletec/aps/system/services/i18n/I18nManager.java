@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -123,7 +123,7 @@ public class I18nManager extends AbstractService implements II18nManager {
     }
 
     protected String parseText(String defaultText, Map<String, String> params) {
-        StrSubstitutor strSub = new StrSubstitutor(params);
+        StringSubstitutor strSub = new StringSubstitutor(params);
         return strSub.replace(defaultText);
     }
 
