@@ -38,6 +38,7 @@ import org.entando.entando.web.common.model.RestResponse;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -285,8 +286,18 @@ public class PageController {
     }
 
     private void validatePagePlacement(PageRequest pageRequest, BindingResult bindingResult) {
-        IPage parent = pageValidator.getDraftPage(pageRequest.getParentCode());
-        pageValidator.validateGroups(pageRequest.getOwnerGroup(), parent.getGroup(), bindingResult);
+        IPage parent = pageValidator.getPage(pageRequest.getParentCode());
+        validatePagePlacement(pageRequest.getOwnerGroup(), parent.getGroup(), bindingResult);
+    }
+
+    private void validateClonePagePlacement(String pageToClone, String parentCode, BindingResult bindingResult) {
+        IPage parent = pageValidator.getPage(parentCode);
+        IPage page = pageValidator.getPage(pageToClone);
+        validatePagePlacement(page.getGroup(), parent.getGroup(), bindingResult);
+    }
+
+    private void validatePagePlacement(String pageGroup, String parentGroup, BindingResult bindingResult) {
+        pageValidator.validateGroups(pageGroup, parentGroup, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
@@ -380,6 +391,7 @@ public class PageController {
     public ResponseEntity<SimpleRestResponse<PageDto>> clonePage(
             @ModelAttribute("user") UserDetails user,
             @PathVariable String pageCode,
+            @Valid @RequestBody PageCloneRequest pageCloneRequest,
             BindingResult bindingResult) {
         logger.debug("clone page {}", pageCode);
 
@@ -391,7 +403,9 @@ public class PageController {
             throw new ValidationGenericException(bindingResult);
         }
 
-        PageDto dto = this.getPageService().clonePage(pageCode, bindingResult);
+        validateClonePagePlacement(pageCode, pageCloneRequest.getParentCode(), bindingResult);
+
+        PageDto dto = this.getPageService().clonePage(pageCode, pageCloneRequest, bindingResult);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
 

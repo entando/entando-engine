@@ -60,6 +60,7 @@ import org.entando.entando.web.assertionhelper.PageAssertionHelper;
 import org.entando.entando.web.assertionhelper.PageRestResponseAssertionHelper;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.mockhelper.PageRequestMockHelper;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageStatusRequest;
@@ -1345,13 +1346,19 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andDo(resultPrint())
                     .andExpect(status().isNotFound());
 
+            PageCloneRequest pageCloneRequest = new PageCloneRequest();
+            pageCloneRequest.setParentCode("service");
+            pageCloneRequest.setNewPageCode(clonedCode);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "testAddClone en", "it", "testAddClone it"));
+
             mockMvc
                     .perform(post("/pages/{code}/clone", code)
                             .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
                             .header("Authorization", "Bearer " + accessToken))
                     .andDo(resultPrint())
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.payload.code", is("testAddClone_clone")))
+                    .andExpect(jsonPath("$.payload.code", is(clonedCode)))
                     .andExpect(jsonPath("$.payload.status", is("unpublished")))
                     .andExpect(jsonPath("$.payload.onlineInstance", is(false)))
                     .andExpect(jsonPath("$.payload.displayedInMenu", is(false)))
@@ -1360,11 +1367,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.payload.contentType", is("text/html")))
                     .andExpect(jsonPath("$.payload.parentCode", is("service")))
                     .andExpect(jsonPath("$.payload.seo", is(false)))
-                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone")))
-                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone")))
-                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / service / testAddClone")))
+                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone en")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone it")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / service / testAddClone en")))
                     .andExpect(jsonPath("$.payload.fullTitles.it",
-                            is("Pagina iniziale / Nodo pagine di servizio / testAddClone")))
+                            is("Pagina iniziale / Nodo pagine di servizio / testAddClone it")))
                     .andExpect(jsonPath("$.payload.ownerGroup", is("free")))
                     .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
                     .andExpect(jsonPath("$.payload.children.size()", is(0)))
@@ -1421,24 +1428,29 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.payload.numWidget", is(2)))
                     .andExpect(jsonPath("$.payload.fullPath", is("homepage/testAddClone2")));
 
+            pageCloneRequest.setParentCode("homepage");
+            pageCloneRequest.setNewPageCode(clonedCode2);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "en title", "it", "it title"));
+
             mockMvc
                     .perform(post("/pages/{code}/clone", code2)
                             .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
                             .header("Authorization", "Bearer " + accessToken))
                     .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is("testAddClone2_clone")))
-                    .andExpect(jsonPath("$.payload.status", is("published")))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
                     .andExpect(jsonPath("$.payload.displayedInMenu", is(true)))
                     .andExpect(jsonPath("$.payload.pageModel", is("service")))
                     .andExpect(jsonPath("$.payload.charset", is("utf9")))
                     .andExpect(jsonPath("$.payload.contentType", is("application/json")))
                     .andExpect(jsonPath("$.payload.parentCode", is("homepage")))
                     .andExpect(jsonPath("$.payload.seo", is(true)))
-                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone2")))
-                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone2")))
-                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / testAddClone2")))
-                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / testAddClone2")))
+                    .andExpect(jsonPath("$.payload.titles.en", is("en title")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("it title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / en title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / it title")))
                     .andExpect(jsonPath("$.payload.ownerGroup", is("coach")))
                     .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
                     .andExpect(jsonPath("$.payload.children.size()", is(0)))
@@ -1446,24 +1458,29 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.payload.numWidget", is(2)))
                     .andExpect(jsonPath("$.payload.fullPath", is("homepage/testAddClone2_clone")));
 
+            pageCloneRequest.setParentCode("homepage");
+            pageCloneRequest.setNewPageCode(clonedCode3);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "en cloned title", "it", "it cloned title"));
+
             mockMvc
                     .perform(post("/pages/{code}/clone", code2)
                             .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
                             .header("Authorization", "Bearer " + accessToken))
                     .andDo(resultPrint())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", is("testAddClone2_clone_2")))
-                    .andExpect(jsonPath("$.payload.status", is("published")))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
                     .andExpect(jsonPath("$.payload.displayedInMenu", is(true)))
                     .andExpect(jsonPath("$.payload.pageModel", is("service")))
                     .andExpect(jsonPath("$.payload.charset", is("utf9")))
                     .andExpect(jsonPath("$.payload.contentType", is("application/json")))
                     .andExpect(jsonPath("$.payload.parentCode", is("homepage")))
                     .andExpect(jsonPath("$.payload.seo", is(true)))
-                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone2")))
-                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone2")))
-                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / testAddClone2")))
-                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / testAddClone2")))
+                    .andExpect(jsonPath("$.payload.titles.en", is("en cloned title")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("it cloned title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / en cloned title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / it cloned title")))
                     .andExpect(jsonPath("$.payload.ownerGroup", is("coach")))
                     .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
                     .andExpect(jsonPath("$.payload.children.size()", is(0)))

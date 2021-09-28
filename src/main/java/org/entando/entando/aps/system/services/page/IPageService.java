@@ -25,6 +25,7 @@ import org.entando.entando.aps.system.services.page.model.PagesStatusDto;
 import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -92,6 +93,6 @@ public interface IPageService extends IComponentExistsService, IComponentUsageSe
 
     List<PageDto> listViewPages();
 
-    PageDto clonePage(String pageCode, BindingResult bindingResult);
+    PageDto clonePage(String pageCode, PageCloneRequest pageCloneRequest, BindingResult bindingResult);
 
 }

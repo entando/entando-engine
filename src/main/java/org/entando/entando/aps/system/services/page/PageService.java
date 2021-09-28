@@ -72,6 +72,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -902,14 +903,17 @@ public class PageService implements IComponentExistsService, IPageService,
     }
 
     @Override
-    public PageDto clonePage(String pageCode, BindingResult bindingResult) {
+    public PageDto clonePage(String pageCode, PageCloneRequest pageCloneRequest, BindingResult bindingResult) {
         try {
             Page page = loadPage(pageCode);
             if (page == null) {
                 bindingResult.reject(ERRCODE_PAGE_NOT_FOUND, new String[]{pageCode}, "page.notFound.anyStatus");
                 throw new ResourceNotFoundException(bindingResult);
             }
-            page.setCode(getValidClonedPageCode(pageCode));
+            page.setCode(pageCloneRequest.getNewPageCode());
+            page.setTitles(ApsProperties.fromMap(pageCloneRequest.getTitles()));
+            page.setParentCode(pageCloneRequest.getParentCode());
+            page.setOnline(false);
             pageManager.addPage(page);
             IPage addedPage = pageManager.getDraftPage(page.getCode());
             return dtoBuilder.convert(addedPage);
@@ -919,52 +923,6 @@ public class PageService implements IComponentExistsService, IPageService,
         }
     }
 
-    /**
-     * This will create the new cloned page code limited by PAGE_CODE_MAX_LENGTH. First we try to simply add "_clone"
-     * to the end of the current page code. If the page code already ends with "clone" we will try "_clone_2",
-     * "_clone_3" and so on until we find a valid page code.
-     *
-     * @param pageCode base page code that will be used to create the cloned page code
-     * @return cloned paged code limited by PAGE_CODE_MAX_LENGTH
-     */
-    String getValidClonedPageCode(String pageCode) {
-        int attempt = 1;
-        String baseClonedPageCode = pageCode;
-        String clonedPageCodeCandidate;
-        if (pageCode.endsWith(CLONE_KEYWORD)) {
-            attempt++;
-            clonedPageCodeCandidate = applyCodePageMaxLength(StringUtils.join(baseClonedPageCode, "_", attempt),
-                    attempt);
-        } else {
-            baseClonedPageCode = StringUtils.join(pageCode, CLONE_KEYWORD);
-            clonedPageCodeCandidate = applyCodePageMaxLength(baseClonedPageCode, attempt);
-        }
-        while (loadPage(clonedPageCodeCandidate) != null) {
-            attempt++;
-            clonedPageCodeCandidate = applyCodePageMaxLength(StringUtils.join(baseClonedPageCode, "_", attempt),
-                    attempt);
-        }
-        return clonedPageCodeCandidate;
-    }
-
-    /**
-     * If clonedPageCodeCandidate length is greater than PAGE_CODE_MAX_LENGTH, it will keep the "clone", "clone 2"
-     * and so on part, and remove characters before the "clone" String.
-     *
-     * @param clonedPageCodeCandidate String that will be checked
-     * @param attempt current attempt
-     * @return clonedPageCodeCandidate respecting PAGE_CODE_MAX_LENGTH
-     */
-    String applyCodePageMaxLength(String clonedPageCodeCandidate, int attempt) {
-        if (clonedPageCodeCandidate.length() <= PAGE_CODE_MAX_LENGTH) {
-            return clonedPageCodeCandidate;
-        }
-        String clonedText = CLONE_KEYWORD;
-        if (attempt > 1) {
-            clonedText = StringUtils.join(clonedText, "_", attempt);
-        }
-        return clonedPageCodeCandidate.substring(0, PAGE_CODE_MAX_LENGTH - clonedText.length()) + clonedText;
-    }
 
     /**
      * Load the page in online or not.
