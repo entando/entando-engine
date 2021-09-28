@@ -106,9 +106,6 @@ public class PageService implements IComponentExistsService, IPageService,
     public static final String ERRCODE_STATUS_INVALID = "3";
     public static final String ERRCODE_PAGE_REFERENCES = "5";
 
-    public static final int PAGE_CODE_MAX_LENGTH = 70;
-    public static final String CLONE_KEYWORD = "_clone";
-
     @Autowired
     private IPageManager pageManager;
 
