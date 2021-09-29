@@ -25,10 +25,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.init.model.portdb.PageMetadataDraft;
-import org.entando.entando.aps.system.init.model.portdb.PageMetadataOnline;
-import org.entando.entando.aps.system.init.model.portdb.WidgetConfig;
-import org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
@@ -49,6 +45,11 @@ import com.agiletec.aps.util.ApsProperties;
 public class PageDAO extends AbstractDAO implements IPageDAO {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageDAO.class);
+
+    private static final String DRAFT_METADATA_TABLE_NAME = "pages_metadata_draft";
+    private static final String ONLINE_METADATA_TABLE_NAME = "pages_metadata_online";
+    private static final String DRAFT_WIDGET_CONFIG_TABLE_NAME = "widgetconfig_draft";
+    private static final String ONLINE_WIDGET_CONFIG_TABLE_NAME = "widgetconfig";
 
     protected enum WidgetConfigDest {
         ON_LINE, DRAFT;
@@ -524,11 +525,11 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     }
 
     protected void addOnlinePageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) {
-        this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataOnline.TABLE_NAME, conn);
+        this.savePageMetadata(pageCode, pageMetadata, true, ONLINE_METADATA_TABLE_NAME, conn);
     }
 
     protected void addDraftPageMetadata(String pageCode, PageMetadata pageMetadata, Connection conn) {
-        this.savePageMetadata(pageCode, pageMetadata, true, PageMetadataDraft.TABLE_NAME, conn);
+        this.savePageMetadata(pageCode, pageMetadata, true, DRAFT_METADATA_TABLE_NAME, conn);
     }
 
     protected void deleteOnlinePageMetadata(String pageCode, Connection conn) {
@@ -764,11 +765,11 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     }
 
     private void updatePageMetadataDraftLastUpdate(String pageCode, Date date, Connection conn) throws SQLException {
-        this.updatePageMetatataUpdate(pageCode, date, PageMetadataDraft.TABLE_NAME, conn);
+        this.updatePageMetatataUpdate(pageCode, date, DRAFT_METADATA_TABLE_NAME, conn);
     }
 
     private void updatePageMetadataOnlineLastUpdate(String pageCode, Date date, Connection conn) throws SQLException {
-        this.updatePageMetatataUpdate(pageCode, date, PageMetadataOnline.TABLE_NAME, conn);
+        this.updatePageMetatataUpdate(pageCode, date, ONLINE_METADATA_TABLE_NAME, conn);
     }
 
     private void updatePageMetatataUpdate(String pageCode, Date date, String tablename, Connection conn) throws SQLException {
@@ -791,8 +792,8 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 
     public static String mustBeValidMetadataTableName(String tablename) throws EntException {
         switch (tablename) {
-            case PageMetadataOnline.TABLE_NAME:
-            case PageMetadataDraft.TABLE_NAME:
+            case ONLINE_METADATA_TABLE_NAME:
+            case DRAFT_METADATA_TABLE_NAME:
                 return tablename;
             default:
                 throw new EntException("Invalid metadata table name" + tablename);
@@ -847,22 +848,22 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     private static final String ALL_PAGES = "SELECT p.parentcode, p.pos, p.code, "
             + "onl.groupcode, onl.titles, onl.modelcode, onl.showinmenu, onl.extraconfig, onl.updatedat, "
             + "drf.groupcode, drf.titles, drf.modelcode, drf.showinmenu, drf.extraconfig, drf.updatedat FROM pages p LEFT JOIN "
-            + PageMetadataOnline.TABLE_NAME + " onl ON p.code = onl.code LEFT JOIN " + PageMetadataDraft.TABLE_NAME
+            + ONLINE_METADATA_TABLE_NAME + " onl ON p.code = onl.code LEFT JOIN " + DRAFT_METADATA_TABLE_NAME
             + " drf ON p.code = drf.code ORDER BY p.parentcode, p.pos, p.code ";
 
     private static final String ALL_WIDGETS_START = "SELECT w.pagecode, w.framepos, w.widgetcode, w.config " + "FROM pages p JOIN ";
-    private static final String ALL_WIDGETS_END = " w ON p.code = w.pagecode " + "ORDER BY p.parentcode, p.pos, p.code, w.framepos ";
+    private static final String ALL_WIDGETS_END = " w ON p.code = w.pagecode ORDER BY p.parentcode, p.pos, p.code, w.framepos ";
 
-    private static final String ALL_WIDGETS_ONLINE = ALL_WIDGETS_START + WidgetConfig.TABLE_NAME + ALL_WIDGETS_END;
-    private static final String ALL_WIDGETS_DRAFT = ALL_WIDGETS_START + WidgetConfigDraft.TABLE_NAME + ALL_WIDGETS_END;
+    private static final String ALL_WIDGETS_ONLINE = ALL_WIDGETS_START + ONLINE_WIDGET_CONFIG_TABLE_NAME + ALL_WIDGETS_END;
+    private static final String ALL_WIDGETS_DRAFT = ALL_WIDGETS_START + DRAFT_WIDGET_CONFIG_TABLE_NAME + ALL_WIDGETS_END;
 
     private static final String ADD_PAGE = "INSERT INTO pages(code, parentcode, pos) VALUES ( ? , ? , ? )";
 
     private static final String DELETE_PAGE = "DELETE FROM pages WHERE code = ? ";
 
-    private static final String DELETE_WIDGETS_FOR_PAGE_ONLINE = "DELETE FROM " + WidgetConfig.TABLE_NAME + " WHERE pagecode = ? ";
+    private static final String DELETE_WIDGETS_FOR_PAGE_ONLINE = "DELETE FROM " + ONLINE_WIDGET_CONFIG_TABLE_NAME + " WHERE pagecode = ? ";
 
-    private static final String DELETE_WIDGETS_FOR_PAGE_DRAFT = "DELETE FROM " + WidgetConfigDraft.TABLE_NAME + " WHERE pagecode = ? ";
+    private static final String DELETE_WIDGETS_FOR_PAGE_DRAFT = "DELETE FROM " + DRAFT_WIDGET_CONFIG_TABLE_NAME + " WHERE pagecode = ? ";
 
     private static final String DELETE_WIDGET_FOR_PAGE_DRAFT = DELETE_WIDGETS_FOR_PAGE_DRAFT + " AND framepos = ? ";
 
@@ -874,13 +875,13 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 
     private static final String SHIFT_PAGE = "UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
 
-    private static final String ADD_WIDGET_FOR_PAGE = "INSERT INTO " + WidgetConfig.TABLE_NAME
+    private static final String ADD_WIDGET_FOR_PAGE = "INSERT INTO " + ONLINE_WIDGET_CONFIG_TABLE_NAME
             + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
 
-    private static final String ADD_WIDGET_FOR_PAGE_DRAFT = "INSERT INTO " + WidgetConfigDraft.TABLE_NAME
+    private static final String ADD_WIDGET_FOR_PAGE_DRAFT = "INSERT INTO " + DRAFT_WIDGET_CONFIG_TABLE_NAME
             + " (pagecode, framepos, widgetcode, config) VALUES ( ? , ? , ? , ? )";
 
-    private static final String MOVE_WIDGET = "UPDATE " + WidgetConfigDraft.TABLE_NAME
+    private static final String MOVE_WIDGET = "UPDATE " + DRAFT_WIDGET_CONFIG_TABLE_NAME
             + " SET framepos = ? WHERE pagecode = ? and framepos = ? ";
 
     private static final String UPDATE_PAGE_TREE_POSITION = "UPDATE pages SET parentcode = ? , pos =?  WHERE code = ? ";
@@ -896,15 +897,15 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 
     private static final String UPDATE_PAGE_METADATA_START = "UPDATE ";
 
-    private static final String DELETE_ONLINE_PAGE_METADATA = "DELETE FROM " + PageMetadataOnline.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
-    private static final String DELETE_DRAFT_PAGE_METADATA = "DELETE FROM " + PageMetadataDraft.TABLE_NAME + PAGE_METADATA_WHERE_CODE;
+    private static final String DELETE_ONLINE_PAGE_METADATA = "DELETE FROM " + ONLINE_METADATA_TABLE_NAME + PAGE_METADATA_WHERE_CODE;
+    private static final String DELETE_DRAFT_PAGE_METADATA = "DELETE FROM " + DRAFT_METADATA_TABLE_NAME + PAGE_METADATA_WHERE_CODE;
 
-    private static final String SET_ONLINE_METADATA = "INSERT INTO " + PageMetadataOnline.TABLE_NAME
+    private static final String SET_ONLINE_METADATA = "INSERT INTO " + ONLINE_METADATA_TABLE_NAME
             + " (code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat) SELECT code, groupcode, titles, modelcode, showinmenu, extraconfig, updatedat FROM "
-            + PageMetadataDraft.TABLE_NAME + " WHERE code = ?";
+            + DRAFT_METADATA_TABLE_NAME + " WHERE code = ?";
 
-    private static final String SET_ONLINE_WIDGETS = "INSERT INTO " + WidgetConfig.TABLE_NAME
-            + " (pagecode, framepos, widgetcode, config) SELECT pagecode, framepos, widgetcode, config FROM " + WidgetConfigDraft.TABLE_NAME
+    private static final String SET_ONLINE_WIDGETS = "INSERT INTO " + ONLINE_WIDGET_CONFIG_TABLE_NAME
+            + " (pagecode, framepos, widgetcode, config) SELECT pagecode, framepos, widgetcode, config FROM " + DRAFT_WIDGET_CONFIG_TABLE_NAME
             + " WHERE pagecode = ?";
 
     private static final String LOAD_LAST_UPDATED_PAGES = "SELECT code FROM pages_metadata_draft ORDER BY updatedat DESC";
