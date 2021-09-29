@@ -25,11 +25,13 @@ import org.entando.entando.aps.system.services.page.model.PagesStatusDto;
 import org.entando.entando.aps.system.services.page.model.WidgetConfigurationDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
 
 /**
  *
@@ -38,29 +40,28 @@ import org.springframework.lang.Nullable;
 public interface IPageService extends IComponentExistsService, IComponentUsageService {
 
     String BEAN_NAME = "PageService";
+    String STATUS_ONLINE = "published";
+    String STATUS_DRAFT = "draft";
+    String STATUS_UNPUBLISHED = "unpublished";
 
-    public static final String STATUS_ONLINE = "published";
-    public static final String STATUS_DRAFT = "draft";
-    public static final String STATUS_UNPUBLISHED = "unpublished";
+    PageDto getPage(String pageCode, String status);
 
-    public PageDto getPage(String pageCode, String status);
+    PageDto addPage(PageRequest pageRequest);
 
-    public PageDto addPage(PageRequest pageRequest);
+    void removePage(String pageName);
 
-    public void removePage(String pageName);
+    PageDto updatePage(String pageCode, PageRequest pageRequest);
 
-    public PageDto updatePage(String pageCode, PageRequest pageRequest);
-
-    public PageDto getPatchedPage(String pageCode, JsonNode patch);
+    PageDto getPatchedPage(String pageCode, JsonNode patch);
 
     default List<PageDto> getPages(String parentCode) {
         return getPages(parentCode, null, null);
     }
 
-    public List<PageDto> getPages(String parentCode,
+    List<PageDto> getPages(String parentCode,
             @Nullable String forLinkingToOwnerGroup, @Nullable Collection<String> forLinkingToExtraGroups);
 
-    public PagedMetadata<PageDto> searchPages(PageSearchRequest request, List<String> allowedGroups);
+    PagedMetadata<PageDto> searchPages(PageSearchRequest request, List<String> allowedGroups);
 
     /**
      * Search against online pages
@@ -68,28 +69,30 @@ public interface IPageService extends IComponentExistsService, IComponentUsageSe
      * @param request
      * @return
      */
-    public PagedMetadata<PageDto> searchOnlineFreePages(RestListRequest request);
+    PagedMetadata<PageDto> searchOnlineFreePages(RestListRequest request);
 
-    public PageDto movePage(String pageCode, PagePositionRequest pageRequest);
+    PageDto movePage(String pageCode, PagePositionRequest pageRequest);
 
-    public PageConfigurationDto getPageConfiguration(String pageCode, String status);
+    PageConfigurationDto getPageConfiguration(String pageCode, String status);
 
-    public PageConfigurationDto restorePageConfiguration(String pageCode);
+    PageConfigurationDto restorePageConfiguration(String pageCode);
 
-    public WidgetConfigurationDto getWidgetConfiguration(String pageCode, int frameId, String status);
+    WidgetConfigurationDto getWidgetConfiguration(String pageCode, int frameId, String status);
 
-    public WidgetConfigurationDto updateWidgetConfiguration(String pageCode, int frameId, WidgetConfigurationRequest widget);
+    WidgetConfigurationDto updateWidgetConfiguration(String pageCode, int frameId, WidgetConfigurationRequest widget);
 
-    public void deleteWidgetConfiguration(String pageCode, int frameId);
+    void deleteWidgetConfiguration(String pageCode, int frameId);
 
-    public PageDto updatePageStatus(String pageCode, String status);
+    PageDto updatePageStatus(String pageCode, String status);
 
-    public PageConfigurationDto applyDefaultWidgets(String pageCode);
+    PageConfigurationDto applyDefaultWidgets(String pageCode);
 
-    public PagedMetadata<?> getPageReferences(String pageCode, String manager, RestListRequest requestList);
+    PagedMetadata<?> getPageReferences(String pageCode, String manager, RestListRequest requestList);
 
-    public PagesStatusDto getPagesStatus();
+    PagesStatusDto getPagesStatus();
 
-    public List<PageDto> listViewPages();
+    List<PageDto> listViewPages();
+
+    PageDto clonePage(String pageCode, PageCloneRequest pageCloneRequest, BindingResult bindingResult);
 
 }

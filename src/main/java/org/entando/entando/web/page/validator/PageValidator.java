@@ -113,13 +113,21 @@ public class PageValidator extends AbstractPaginationValidator {
     }
 
     public void validateGroups(String pageCode, PagePositionRequest pageRequest, Errors errors) {
-        IPage parent = getDraftPage(pageRequest.getParentCode());
-        IPage page = getDraftPage(pageCode);
+        IPage parent = getPage(pageRequest.getParentCode());
+        IPage page = getPage(pageCode);
         validateGroups(page.getGroup(), parent.getGroup(), errors);
     }
 
     public IPage getDraftPage(String code) {
         return this.getPageManager().getDraftPage(code);
+    }
+
+    public IPage getPage(String code) {
+        IPage result = getDraftPage(code);
+        if (result == null) {
+            result = getPageManager().getOnlinePage(code);
+        }
+        return result;
     }
 
     public void validateGroups(String pageGroup, String parentGroup, Errors errors) {

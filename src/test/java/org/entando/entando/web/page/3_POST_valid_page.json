@@ -1,0 +1,18 @@
+{
+    "code":"testAddClone2",
+    "status":"published",
+    "onlineInstance":true,
+    "displayedInMenu":true,
+    "pageModel":"service",
+    "charset":"utf9",
+    "contentType":"application/json",
+    "parentCode":"homepage",
+    "seo":true,
+    "titles":{
+        "en":"testAddClone2",
+        "it":"testAddClone2"
+    },
+    "ownerGroup":"coach",
+    "joinGroups":[
+    ]
+}
