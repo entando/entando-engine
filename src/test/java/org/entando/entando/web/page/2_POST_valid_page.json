@@ -1,0 +1,18 @@
+{
+    "code":"testAddClone",
+    "status":"unpublished",
+    "onlineInstance":false,
+    "displayedInMenu":false,
+    "pageModel":"home",
+    "charset":"utf8",
+    "contentType":"text/html",
+    "parentCode":"service",
+    "seo":false,
+    "titles":{
+        "en":"testAddClone",
+        "it":"testAddClone"
+    },
+    "ownerGroup":"free",
+    "joinGroups":[
+    ]
+}

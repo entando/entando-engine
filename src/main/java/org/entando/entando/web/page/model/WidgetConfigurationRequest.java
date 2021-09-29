@@ -30,6 +30,13 @@ public class WidgetConfigurationRequest {
     @NotNull(message = "widgetConfigurationRequest.code.notBlank")
     private String code;
 
+    public WidgetConfigurationRequest() {}
+
+    public WidgetConfigurationRequest(
+            @NotNull(message = "widgetConfigurationRequest.code.notBlank") String code) {
+        this.code = code;
+    }
+
     /*
      * Related to EN6-183, Frontend needs all config objects to be completely valid JSON objects.
      * This Deserializer converts known widget config formats, but may need to be improved case by case.
