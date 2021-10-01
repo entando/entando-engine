@@ -15,22 +15,15 @@ package org.entando.entando.aps.system.init.util;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import org.entando.entando.ent.exception.EntException;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.db.MysqlDatabaseType;
 import com.j256.ormlite.db.PostgresDatabaseType;
 import com.j256.ormlite.db.SqlServerDatabaseType;
@@ -50,23 +43,6 @@ public class TableFactory {
 		this.setDataSource(dataSource);
 		this.setDatabaseName(databaseName);
 		this.setType(type);
-	}
-	
-	public void createTables(List<String> tableClassNames, DataSourceInstallationReport schemaReport) throws EntException {
-		ConnectionSource connectionSource = null;
-		try {
-			connectionSource = this.createConnectionSource();
-			this.createTables(tableClassNames, connectionSource, schemaReport);
-		} catch (Throwable t) {
-			_logger.error("Error creating tables to db {}", this.getDatabaseName(), t);
-			throw new EntException("Error creating tables to db " + this.getDatabaseName(), t);
-		} finally {
-			if (connectionSource != null) {
-				try {
-					connectionSource.close();
-				} catch (SQLException ex) {}
-			}
-		}
 	}
 	
 	public void dropTables(List<String> tableClassNames) throws EntException {
@@ -121,69 +97,6 @@ public class TableFactory {
 	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
 		Method method = dataSource.getClass().getDeclaredMethod(methodName);
 		return (String) method.invoke(dataSource);
-	}
-	
-	private void createTables(List<String> tableClassNames,
-			ConnectionSource connectionSource, DataSourceInstallationReport schemaReport) throws EntException {
-		try {
-			List<String> tables = schemaReport.getDataSourceTables().get(this.getDatabaseName());
-			if (null == tables) {
-				tables = new ArrayList<String>();
-				schemaReport.getDataSourceTables().put(this.getDatabaseName(), tables);
-			}
-			for (int i = 0; i < tableClassNames.size(); i++) {
-				String tableClassName = tableClassNames.get(i);
-				Class tableClass = Class.forName(tableClassName, true, Thread.currentThread().getContextClassLoader());
-				String tableName = getTableName(tableClass);
-				if (tables.contains(tableName)) {
-					continue;
-				}
-				try {
-					ApsSystemUtils.directStdoutTrace("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
-					this.createTable(tableClass, connectionSource);
-					tables.add(tableName);
-				} catch (Throwable t) {
-					schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
-					String message = "Error creating table " + this.getDatabaseName() + "/" + tableClassName + " - " + t.getMessage();
-					_logger.error("Error creating table {}/{}",this.getDatabaseName(), tableClassName, t);
-					throw new EntException(message, t);
-				}
-			}
-		} catch (Throwable t) {
-			schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
-			_logger.error("Error on setup Database - {}", this.getDatabaseName(), t);
-			throw new EntException("Error on setup Database", t);
-		}
-	}
-
-	private void createTable(Class tableClass, ConnectionSource connectionSource) throws Throwable {
-		int result = 0;
-		String logTableName = this.getDatabaseName() + "/" + getTableName(tableClass);
-		try {
-			result = ApsTableUtils.createTable(connectionSource, tableClass);
-			if (result > 0) {
-				_logger.info("Created table - {}", logTableName);
-				Object tableModel = tableClass.newInstance();
-				if (tableModel instanceof ExtendedColumnDefinition) {
-					String[] extensions = ((ExtendedColumnDefinition) tableModel).extensions(this.getType());
-					if (null != extensions && extensions.length > 0) {
-						Dao dao = DaoManager.createDao(connectionSource, tableClass);
-						for (int i = 0; i < extensions.length; i++) {
-							String query = extensions[i];
-							dao.executeRaw(query);
-						}
-					}
-				}
-			} else {
-				throw new RuntimeException("Error creating table from class " + logTableName);
-			}
-		} catch (Throwable t) {
-			_logger.error("Error creating table {}", logTableName, t);
-			if (result > 0) {
-				TableUtils.dropTable(connectionSource, tableClass, true);
-			}
-			throw new EntException("Error creating table " + logTableName, t);
-		}
 	}
 	
 	private void dropTables(List<String> tableClassNames,

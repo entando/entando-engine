@@ -14,15 +14,12 @@
 package org.entando.entando.aps.system.init.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import org.entando.entando.ent.exception.EntException;
 
@@ -30,23 +27,7 @@ public class AbstractComponentModule implements ComponentModule {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(AbstractComponentModule.class);
 
-    @Deprecated
-    private Map<String, String> sqlResourcesPaths = new HashMap<>();
-
     private List<IPostProcess> postProcesses;
-
-    @Deprecated
-    protected void extractSqlResources(Element sqlResourcesElement) {
-        if (null != sqlResourcesElement) {
-            List<Element> datasourceElements = sqlResourcesElement.getChildren("datasource");
-            for (int j = 0; j < datasourceElements.size(); j++) {
-                Element datasourceElement = datasourceElements.get(j);
-                String datasourceName = datasourceElement.getAttributeValue("name");
-                String sqlResourcePath = datasourceElement.getText().trim();
-                this.getSqlResourcesPaths().put(datasourceName, sqlResourcePath);
-            }
-        }
-    }
 
     protected void createPostProcesses(Element postProcessesElement, Map<String, String> postProcessClasses) throws EntException {
         if (null != postProcessesElement) {
@@ -81,28 +62,6 @@ public class AbstractComponentModule implements ComponentModule {
         }
     }
 
-    @Deprecated
-    @Override
-    public Resource getSqlResources(String datasourceName) {
-        String path = this.getSqlResourcesPaths().get(datasourceName);
-        if (null == path || path.isEmpty()) {
-            return null;
-        }
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        return resolver.getResource(path);
-    }
-
-    @Deprecated
-    @Override
-    public Map<String, String> getSqlResourcesPaths() {
-        return sqlResourcesPaths;
-    }
-
-    @Deprecated
-    protected void setSqlResourcesPaths(Map<String, String> sqlResourcesPaths) {
-        this.sqlResourcesPaths = sqlResourcesPaths;
-    }
-
     @Override
     public List<IPostProcess> getPostProcesses() {
         return postProcesses;
@@ -111,4 +70,5 @@ public class AbstractComponentModule implements ComponentModule {
     protected void setPostProcesses(List<IPostProcess> postProcesses) {
         this.postProcesses = postProcesses;
     }
+    
 }

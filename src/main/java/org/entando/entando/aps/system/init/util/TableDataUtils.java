@@ -31,9 +31,8 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
-
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
+
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpReport;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
