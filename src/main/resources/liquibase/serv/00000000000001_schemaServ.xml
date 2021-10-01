@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="schemaServ_v6.4.0" author="entando" >
+    <changeSet id="00000000000001_schemaServ" author="entando" >
 
         <createTable tableName="authgroups" >
             <column name="groupname" type="varchar(20)">

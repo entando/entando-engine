@@ -5,14 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="port/schemaPort_default.xml" relativeToChangelogFile="true" />
+    <include file="port/00000000000001_schemaPort.xml" relativeToChangelogFile="true" />
 
-    <changeSet id="dataPort_test" author="entando" context="test">
-        <sqlFile path="classpath:liquibase/port/dataPort_test.sql" />
+    <changeSet id="00000000000001_dataPort_test" author="entando" context="test">
+        <sqlFile path="classpath:liquibase/port/00000000000001_dataPort_test.sql" />
     </changeSet>
 
-    <changeSet id="dataPort_production" author="entando" context="production">
-        <sqlFile path="classpath:liquibase/port/dataPort_production.sql" />
+    <changeSet id="00000000000001_dataPort_production" author="entando" context="production">
+        <sqlFile path="classpath:liquibase/port/00000000000001_dataPort_production.sql" />
     </changeSet>
 
 </databaseChangeLog>
