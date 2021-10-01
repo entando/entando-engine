@@ -48,7 +48,7 @@ INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('admin', '
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', '{bcrypt}$2a$10$TMRaAmZE4w5LEeELdmpJguuSuJc2D9hUelMGmsJyK35K3PBiePqXu', '2008-10-10 00:00:00', '2011-02-05 00:00:00', NULL, 1);
 
 
-INSERT INTO api_oauth_consumers (consumerkey, consumersecret, 'name', description, callbackurl, 'scope', authorizedgranttypes, expirationdate, issueddate) VALUES ('appbuilder', '{bcrypt}$2a$10$axXuJXKHzgdmwQzBR3wvh.oSiiJp6On1pHxJgaBmwkRXnXqYqjhkK', 'Entando AppBuilder', 'Default Entando AppBuilder Consumer', NULL, 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
+INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scopes, authorizedgranttypes, expirationdate, issueddate) VALUES ('appbuilder', '{bcrypt}$2a$10$axXuJXKHzgdmwQzBR3wvh.oSiiJp6On1pHxJgaBmwkRXnXqYqjhkK', 'Entando AppBuilder', 'Default Entando AppBuilder Consumer', NULL, 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
 
 
 
