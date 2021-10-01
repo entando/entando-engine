@@ -43,6 +43,7 @@ import com.agiletec.aps.util.FileTextReader;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
@@ -115,6 +116,10 @@ public class DatabaseManager extends AbstractInitializerManager
                 } else {
                     this.restoreDefaultDump();
                 }
+            } else {
+                for (Component entandoComponentConfiguration : components) {
+                    this.initComponentDefaultResources(entandoComponentConfiguration, report, checkOnStatup);
+                }
             }
         } catch (Throwable t) {
             if (null != report && report.isUpdated()) {
@@ -129,32 +134,44 @@ public class DatabaseManager extends AbstractInitializerManager
 
     //---------------- DATA ------------------- START
 
+    public void initComponentDefaultResources(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws EntException {
+        logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
+        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
+        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
+            logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
+            return;
+        }
+        DataInstallationReport dataReport = componentReport.getDataReport();
+        try {
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
+            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+            for (String dataSourceName : dataSourceNames) {
+                ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
+                if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
+                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
+                    dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
+                } else {
+                    dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
+                }
+            }
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
+            logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
+        } catch (Throwable t) {
+            logger.error("Error restoring resources of component {}", componentConfiguration.getCode(), t);
+            throw new EntException("Error restoring resources of component " + componentConfiguration.getCode(), t);
+        }
+    }
+
     public void initLiquiBaseResources(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws EntException {
         logger.info(INIT_MSG_L, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
-        /*
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + MSG_ALREADY_INSTALLED + LOG_PREFIX);
-            return;
-        }
-        */
         LiquibaseInstallationReport liquibaseReport = componentReport.getLiquibaseReport();
         try {
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (String dataSourceName : dataSourceNames) {
-                /*
-                if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
-                    liquibaseReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
-                    ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                    report.setUpdated();
-                    continue;
-                }
-                */
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
-                SystemInstallationReport.Status liquibaseStatus = liquibaseReport.getDatabaseStatus().get(dataSourceName);
                 if (null != changeLogFile) {
                     if (checkOnStatup) {
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
