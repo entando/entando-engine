@@ -16,8 +16,6 @@ package org.entando.entando.aps.system.init.model;
 import java.util.Iterator;
 import java.util.List;
 
-import java.util.Map;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 import org.jdom.Element;
 
 /**

@@ -33,9 +33,6 @@ public class Component {
     private String artifactVersion;
     private List<String> dependencies;
 
-    @Deprecated
-    private Map<String, List<String>> tableMapping;
-
     private Map<String, List<String>> tableNames;
 
     private Map<String, ComponentEnvironment> environments;
@@ -94,7 +91,6 @@ public class Component {
 
     private void extractTableMapping(Element tableMappingElement) {
         if (null != tableMappingElement) {
-            this.setTableMapping(new HashMap<>());
             this.setTableNames(new HashMap<>());
             List<Element> datasourceElements = tableMappingElement.getChildren("datasource");
             for (int i = 0; i < datasourceElements.size(); i++) {
@@ -104,9 +100,6 @@ public class Component {
                 List<Element> tableClasses = datasourceElement.getChildren("class");
                 for (int j = 0; j < tableClasses.size(); j++) {
                     tableMapping.add(tableClasses.get(j).getText());
-                }
-                if (tableMapping.size() > 0) {
-                    this.getTableMapping().put(datasourceName, tableMapping);
                 }
                 List<String> datasourceTableNames = new ArrayList<>();
                 List<Element> tableElements = datasourceElement.getChildren("table");
@@ -178,15 +171,6 @@ public class Component {
         if (!this.getDependencies().contains(dependency)) {
             this.getDependencies().add(dependency);
         }
-    }
-
-    @Deprecated
-    public Map<String, List<String>> getTableMapping() {
-        return tableMapping;
-    }
-    @Deprecated
-    protected void setTableMapping(Map<String, List<String>> tableMapping) {
-        this.tableMapping = tableMapping;
     }
 
     public Map<String, List<String>> getTableNames() {

@@ -13,14 +13,10 @@
  */
 package org.entando.entando.aps.system.services.database.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.init.model.Component;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -49,31 +45,7 @@ public class ComponentDto {
         this.setArtifactVersion(component.getArtifactVersion());
         this.setCode(component.getCode());
         this.setDescription(component.getDescription());
-        Map<String, List<String>> mapping = component.getTableMapping();
-        this.buildTableMapping(mapping);
-    }
-
-    public void buildTableMapping(Map<String, List<String>> mapping) {
-        if (null == mapping) {
-            return;
-        }
-        try {
-            Iterator<String> iter = mapping.keySet().iterator();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                List<String> tableNames = new ArrayList<>();
-                List<String> tableClasses = mapping.get(key);
-                for (String className : tableClasses) {
-                    Class tableClass = Class.forName(className);
-                    String tableName = TableFactory.getTableName(tableClass);
-                    tableNames.add(tableName);
-                }
-                this.getTableMapping().put(key, tableNames);
-            }
-        } catch (Throwable t) {
-            logger.error("error building table mapping", t);
-            throw new RestServerError("error building table mapping", t);
-        }
+        this.setTableMapping(component.getTableNames());
     }
 
     public String getCode() {
