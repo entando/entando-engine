@@ -72,6 +72,7 @@ import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageSearchRequest;
@@ -896,5 +897,41 @@ public class PageService implements IComponentExistsService, IPageService,
             IPage child = pageManager.getOnlinePage(children[i]);
             this.addViewPages(child, pages);
         }
+    }
+
+    @Override
+    public PageDto clonePage(String pageCode, PageCloneRequest pageCloneRequest, BindingResult bindingResult) {
+        try {
+            Page page = loadPage(pageCode);
+            if (page == null) {
+                bindingResult.reject(ERRCODE_PAGE_NOT_FOUND, new String[]{pageCode}, "page.notFound.anyStatus");
+                throw new ResourceNotFoundException(bindingResult);
+            }
+            page.setCode(pageCloneRequest.getNewPageCode());
+            page.setTitles(ApsProperties.fromMap(pageCloneRequest.getTitles()));
+            page.setParentCode(pageCloneRequest.getParentCode());
+            page.setOnline(false);
+            pageManager.addPage(page);
+            IPage addedPage = pageManager.getDraftPage(page.getCode());
+            return dtoBuilder.convert(addedPage);
+        } catch (EntException e) {
+            logger.error("Error adding page", e);
+            throw new RestServerError("error add page", e);
+        }
+    }
+
+
+    /**
+     * Load the page in online or not.
+     *
+     * @param pageCode pageCode to be loaded
+     * @return page loaded or null if not found.
+     */
+    private Page loadPage(String pageCode) {
+        IPage result = getPageManager().getDraftPage(pageCode);
+        if (result == null) {
+            result = getPageManager().getOnlinePage(pageCode);
+        }
+        return (Page)result;
     }
 }
