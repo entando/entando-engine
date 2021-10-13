@@ -3,16 +3,16 @@
         xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
-           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
 
     <include file="serv/00000000000001_schemaServ.xml" relativeToChangelogFile="true" />
 
     <changeSet id="00000000000001_dataServ_test" author="entando" context="test">
-        <sqlFile path="classpath:liquibase/serv/00000000000001_dataServ_test.sql" />
+        <sqlFile path="serv/00000000000001_dataServ_test.sql" relativeToChangelogFile="true" />
     </changeSet>
 
     <changeSet id="00000000000001_dataServ_production" author="entando" context="production">
-        <sqlFile path="classpath:liquibase/serv/00000000000001_dataServ_production.sql" />
+        <sqlFile path="serv/00000000000001_dataServ_production.sql" relativeToChangelogFile="true" />
     </changeSet>
 
 </databaseChangeLog>
