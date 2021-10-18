@@ -16,6 +16,7 @@ package org.entando.entando.aps.system.init;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,12 +35,15 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
@@ -52,6 +56,7 @@ import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
 
@@ -79,6 +84,9 @@ public class DatabaseManager extends AbstractInitializerManager
     private DatabaseRestorer databaseRestorer;
 
     private ServletContext servletContext;
+    
+    @Value("${LIQUIBASE_DATABASE_SCRIPTS:false}")
+    private boolean liquibaseScripts;
 
     public void init() throws Exception {
         logger.debug("{} ready", this.getClass().getName());
@@ -173,10 +181,10 @@ public class DatabaseManager extends AbstractInitializerManager
             for (String dataSourceName : dataSourceNames) {
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 if (null != changeLogFile) {
+                    liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
+                    this.executeLiquibaseUpdate(report.getCreation(), componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), checkOnStatup);
+                    ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                     if (checkOnStatup) {
-                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        this.executeLiquibaseUpdate(changeLogFile, dataSourceName, report.getStatus());
-                        ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
                     } else {
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
@@ -191,7 +199,8 @@ public class DatabaseManager extends AbstractInitializerManager
         }
     }
 
-    private void executeLiquibaseUpdate(String changeLogFile, String dataSourceName, SystemInstallationReport.Status status) throws Exception {
+    private void executeLiquibaseUpdate(Date timestamp, String componentCode,
+            String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, boolean checkOnStatup) throws Exception {
         Connection connection = null;
         Liquibase liquibase = null;
         try {
@@ -207,7 +216,16 @@ public class DatabaseManager extends AbstractInitializerManager
                 context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
             }
             Contexts contexts = new Contexts(context);
-            liquibase.update(contexts, new LabelExpression());
+            if (checkOnStatup) {
+                liquibase.update(contexts, new LabelExpression());
+            } else if (this.liquibaseScripts) {
+                Writer writer = new StringBuilderWriter();
+                liquibase.update(contexts, new LabelExpression(), writer);
+                ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
+                String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
+                this.getStorageManager().saveFile(path, true, stream);
+                logger.info("Component {}, database {}, Update Script in file \"" + path + "\"", componentCode, dataSourceName);
+            }
         } catch (Exception e) {
             logger.error("Error executing liquibase update - " + changeLogFile, e);
         } finally {
