@@ -4,8 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
-
-    <changeSet id="00000000000001_schemaServ" author="entando" >
+    
+    <changeSet id="00000000000001_schemaServ" author="entando">
 
         <createTable tableName="authgroups" >
             <column name="groupname" type="varchar(20)">
@@ -62,11 +62,11 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="passwd" type="varchar(512)" />
-            <column name="registrationdate" type="timestamp" >
+            <column name="registrationdate" type="datetime" >
                 <constraints nullable="false"/>
             </column>
-            <column name="lastaccess" type="timestamp" />
-            <column name="lastpasswordchange" type="timestamp" />
+            <column name="lastaccess" type="datetime" />
+            <column name="lastpasswordchange" type="datetime" />
             <column name="active" type="smallint" />
         </createTable>
 
@@ -90,26 +90,7 @@
                 baseTableName="authusergrouprole"
                 referencedColumnNames="rolename"
                 referencedTableName="authroles" />
-
-
-        <createTable tableName="api_oauth_consumers" >
-            <column name="consumerkey" type="varchar(100)">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="consumersecret" type="varchar(100)">
-                <constraints nullable="false" />
-            </column>
-            <column name="name" type="varchar(255)" />
-            <column name="description" type="clob">
-                <constraints nullable="false" />
-            </column>
-            <column name="callbackurl" type="clob" />
-            <column name="scopes" type="varchar(255)" />
-            <column name="authorizedgranttypes" type="varchar(255)" />
-            <column name="expirationdate" type="timestamp" />
-            <column name="issueddate" type="timestamp" />
-        </createTable>
-
+        
         <createTable tableName="api_oauth_tokens" >
             <column name="accesstoken" type="varchar(100)">
                 <constraints primaryKey="true" nullable="false"/>
@@ -117,7 +98,7 @@
             <column name="clientid" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            <column name="expiresin" type="timestamp" >
+            <column name="expiresin" type="datetime" >
                 <constraints nullable="false" />
             </column>
             <column name="refreshtoken" type="varchar(255)">
@@ -216,7 +197,7 @@
             </column>
             <column name="attrname" type="varchar(30)" />
             <column name="textvalue" type="varchar(255)" />
-            <column name="datevalue" type="timestamp" />
+            <column name="datevalue" type="datetime" />
             <column name="numvalue" type="int" />
             <column name="langcode" type="varchar(3)" />
         </createTable>
@@ -262,12 +243,12 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="varchar(40)" />
-            <column name="actiondate" type="timestamp" />
+            <column name="actiondate" type="datetime" />
             <column name="namespace" type="clob" />
             <column name="actionname" type="varchar(40)" />
             <column name="parameters" type="clob" />
             <column name="activitystreaminfo" type="clob" />
-            <column name="updatedate" type="timestamp" />
+            <column name="updatedate" type="datetime" />
         </createTable>
         <createIndex tableName="actionlogrecords" indexName="actionlogrecords_actiondate_idx">
             <column name="actiondate" />
@@ -307,7 +288,7 @@
             <column name="username" type="varchar(20)">
                 <constraints nullable="false" />
             </column>
-            <column name="likedate" type="timestamp" >
+            <column name="likedate" type="datetime" >
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -330,7 +311,7 @@
             <column name="commenttext" type="clob">
                 <constraints nullable="false" />
             </column>
-            <column name="commentdate" type="timestamp" >
+            <column name="commentdate" type="datetime" >
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -340,6 +321,30 @@
                 referencedColumnNames="id"
                 referencedTableName="actionlogrecords" />
 
+    </changeSet>
+    
+    <changeSet id="00000000000001_schemaServ_consumers_derby" author="entando" dbms="derby">
+        <sql>CREATE TABLE api_oauth_consumers (consumerkey VARCHAR(100) NOT NULL, consumersecret VARCHAR(100) NOT NULL, name VARCHAR(255), description CLOB NOT NULL, callbackurl CLOB, scope VARCHAR(255), authorizedgranttypes VARCHAR(255), expirationdate TIMESTAMP, issueddate TIMESTAMP, CONSTRAINT PK_API_OAUTH_CONSUMERS PRIMARY KEY (consumerkey))</sql>
+    </changeSet>
+    
+    <changeSet id="00000000000001_schemaServ_consumers" author="entando" dbms="!derby">
+        <createTable tableName="api_oauth_consumers" >
+            <column name="consumerkey" type="varchar(100)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="consumersecret" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="description" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="callbackurl" type="clob" />
+            <column name="scope" type="varchar(255)" />
+            <column name="authorizedgranttypes" type="varchar(255)" />
+            <column name="expirationdate" type="datetime" />
+            <column name="issueddate" type="datetime" />
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

@@ -83,7 +83,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="extraconfig" type="clob" />
-            <column name="updatedat" type="timestamp" />
+            <column name="updatedat" type="datetime" />
         </createTable>
         <addForeignKeyConstraint constraintName="pages_metadata_online_code_fk"
                 baseColumnNames="code" baseTableName="pages_metadata_online"
@@ -109,7 +109,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="extraconfig" type="clob" />
-            <column name="updatedat" type="timestamp" />
+            <column name="updatedat" type="datetime" />
         </createTable>
         <addForeignKeyConstraint constraintName="pages_metadata_draft_code_fk"
                 baseColumnNames="code" baseTableName="pages_metadata_draft"
