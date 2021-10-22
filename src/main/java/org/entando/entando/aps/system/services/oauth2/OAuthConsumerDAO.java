@@ -84,7 +84,6 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
                 consumer = consumerFromResultSet(res);
             }
         } catch (SQLException | EntException t) {
-            t.printStackTrace();
             logger.error("Error while loading consumer by clientid {}", clientId, t);
             throw new RuntimeException("Error while loading consumer by key " + clientId, t);
         } finally {

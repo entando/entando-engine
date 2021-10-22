@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DatabaseManagerIntegrationTest extends BaseTestCase {
+class DatabaseManagerIntegrationTest extends BaseTestCase {
 
     private IDatabaseManager databaseManager = null;
     private IStorageManager storageManager = null;

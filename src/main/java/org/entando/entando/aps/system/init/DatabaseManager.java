@@ -203,6 +203,7 @@ public class DatabaseManager extends AbstractInitializerManager
             String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, boolean checkOnStatup) throws Exception {
         Connection connection = null;
         Liquibase liquibase = null;
+        Writer writer = null;
         try {
             DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
             connection = dataSource.getConnection();
@@ -219,7 +220,7 @@ public class DatabaseManager extends AbstractInitializerManager
             if (checkOnStatup) {
                 liquibase.update(contexts, new LabelExpression());
             } else if (this.liquibaseScripts) {
-                Writer writer = new StringBuilderWriter();
+                writer = new StringBuilderWriter();
                 liquibase.update(contexts, new LabelExpression(), writer);
                 ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
                 String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
@@ -229,6 +230,9 @@ public class DatabaseManager extends AbstractInitializerManager
         } catch (Exception e) {
             logger.error("Error executing liquibase update - " + changeLogFile, e);
         } finally {
+            if (null != writer) {
+                writer.close();
+            }
             if (null != liquibase) {
                 liquibase.close();
             }
