@@ -13,6 +13,8 @@
  */
 package com.agiletec.aps.util;
 
+import java.io.Serializable;
+
 /**
  * A single item for a select form element.
  * @author E.Santoboni
