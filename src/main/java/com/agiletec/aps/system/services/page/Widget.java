@@ -47,7 +47,7 @@ public class Widget implements Serializable {
 		return _config;
 	}
 	/**
-	 * Return the configuration of the widget as it is without null checks,
+	 * Return the configuration of the widget as it is without null values checks,
 	 * this method can return null configurations
 	 * @return The configuration properties
 	 */
