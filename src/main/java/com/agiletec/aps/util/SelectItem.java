@@ -17,7 +17,7 @@ package com.agiletec.aps.util;
  * A single item for a select form element.
  * @author E.Santoboni
  */
-public class SelectItem {
+public class SelectItem implements Serializable {
 	
 	public SelectItem(String key, String value) {
 		this._key = key;
