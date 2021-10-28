@@ -1,19 +1,32 @@
 package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.pagemodel.*;
+import com.agiletec.aps.system.services.pagemodel.Frame;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import org.entando.entando.aps.system.services.assertionhelper.PageModelAssertionHelper;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
-import org.entando.entando.aps.system.services.pagemodel.model.*;
+import org.entando.entando.aps.system.services.pagemodel.model.PageModelDto;
+import org.entando.entando.aps.system.services.pagemodel.model.PageModelDtoBuilder;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
-import org.entando.entando.web.pagemodel.model.*;
+import org.entando.entando.web.pagemodel.model.PageModelConfigurationRequest;
+import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
+import org.entando.entando.web.pagemodel.model.PageModelRequest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ReflectionUtils;
 
@@ -22,22 +35,11 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.createDefaultWidgetType;
-import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModel;
-import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.validPageModelRequest;
+import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PageModelServiceTest {
@@ -166,6 +168,28 @@ class PageModelServiceTest {
         assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
         assertThat(pageModel.getMainFrame()).isZero();
         assertThat(pageModel.getTemplate()).isEqualTo(expectedTemplate);
+        assertThat(pageModel.getConfiguration().getFrames()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
+    }
+
+    @Test
+    void shouldUpdatePageModelWithNullDefaultWidgetConfig() throws Exception {
+        String expectedTemplate = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
+                + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
+
+        when(widgetTypeManager.getWidgetType(any())).thenReturn(createDefaultWidgetType());
+        when(pageModelManager.getPageModel(any())).thenReturn(validPageModelDefaultWidgetConfigNull());
+
+        PageModelRequest pageModelRequest = validPageModelRequestDefaultWidgetConfigNull();
+        pageModelRequest.getConfiguration().getFrames().get(0).setMainFrame(true);
+        PageModelDto pageModel = pageModelService.updatePageModel(pageModelRequest);
+        assertNull(pageModel.getConfiguration().getFrames().get(0).getDefaultWidget().getProperties());
+        assertThat(pageModel).isNotNull();
+        assertThat(pageModel.getCode()).isEqualTo(pageModelRequest.getCode());
+        assertThat(pageModel.getDescr()).isEqualTo(pageModelRequest.getDescr());
+        assertThat(pageModel.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
+        assertThat(pageModel.getMainFrame()).isZero();
+        assertThat(pageModel.getTemplate()).isEqualTo(expectedTemplate);
+        assertThat(pageModel.getConfiguration().getFrames()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
         assertThat(pageModel.getConfiguration().getFrames()).hasSize(pageModelRequest.getConfiguration().getFrames().size());
     }
 

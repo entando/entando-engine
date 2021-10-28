@@ -13,11 +13,10 @@
  */
 package com.agiletec.aps.system.services.page;
 
-import java.io.Serializable;
-
+import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.util.ApsProperties;
+import java.io.Serializable;
 
 /**
  * This class represent an instance of a widget configured in a page frame. 
@@ -45,6 +44,14 @@ public class Widget implements Serializable {
 		if (null == this._config && null != this.getType()) {
 			return this.getType().getConfig();
 		}
+		return _config;
+	}
+	/**
+	 * Return the configuration of the widget as it is without null values checks,
+	 * this method can return null configurations
+	 * @return The configuration properties
+	 */
+	public ApsProperties getConfigRawValue() {
 		return _config;
 	}
 
@@ -112,5 +119,6 @@ public class Widget implements Serializable {
 	 * The configuration properties; the configuration may be null
 	 */
 	private ApsProperties _config;
-	
+
+
 }
