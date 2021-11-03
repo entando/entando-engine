@@ -41,7 +41,7 @@ jobs:
       - name: "Checkout"
         id: CHECKOUT
         run: |
-          ~/ppl-run 
+          ~/ppl-run \
             .. checkout-branch base --id "CHECKOUT FOR NEXUS PUBLICATION" --lcd "$LOCAL_CLONE_DIR" \
             .. pr-preflight-checks --only flags --lcd "$LOCAL_CLONE_DIR" \
           ;
