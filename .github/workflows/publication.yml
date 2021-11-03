@@ -39,7 +39,7 @@ jobs:
           ;
       #~ CHECKOUT
       - name: "Checkout"
-      id: CHECKOUT
+        id: CHECKOUT
         run: |
           ~/ppl-run 
             .. checkout-branch base --id "CHECKOUT FOR NEXUS PUBLICATION" --lcd "$LOCAL_CLONE_DIR" \
