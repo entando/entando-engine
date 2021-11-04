@@ -41,7 +41,7 @@ jobs:
           ~/ppl-run \
             .. status-report \
             .. @checkout-branch pr --lcd "$LOCAL_CLONE_DIR" \
-            .. @setup-feature-flags "PR_FORMAT_CHECK" "BOM_CHECK" "BOM" \
+            .. @setup-feature-flags "PR_PREFLIGHT_CHECKS" "BOM_CHECK" "BOM" \
             .. @setup-features-list "SCAN_MATRIX" --prefix "SCAN-MVN-" \
           ;
       - name: "PR preflight checks"
