@@ -181,7 +181,9 @@ public class EntLogging {
         @Override
         public void trace(String format, Object arg) {
             if (delegate.isTraceEnabled()) {
-                delegate.trace(fms.sanitize(format), ovs.sanitize(arg));
+                String sanitizedFormat = fms.sanitize(format);
+                String sanitizedArg = ovs.sanitize(arg);
+                delegate.trace(sanitizedFormat, sanitizedArg);
             }
         }
 
