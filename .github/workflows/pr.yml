@@ -1,3 +1,4 @@
+
 name: PR-CYCLE
 
 on:
@@ -10,216 +11,155 @@ on:
       - develop
 
 env:
-  ENTANDO_OPT_USE_PPL_TAG: "v1.0.1"
-  ENTANDO_OPT_FEATURES: ${{ secrets.ENTANDO_OPT_FEATURES }}
-  ENTANDO_OPT_LOG_LEVEL: ${{ secrets.ENTANDO_OPT_LOG_LEVEL }}
-  ENTANDO_OPT_REPO_BOM_URL: ${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}
-  GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-  GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+  ENTANDO_OPT_USE_PPL_TAG: "v1.1.0"
+  ENTANDO_OPT_FEATURES: "${{ secrets.ENTANDO_OPT_FEATURES }}"
+  ENTANDO_OPT_GLOBAL_FEATURES: "${{ secrets.ENTANDO_OPT_GLOBAL_FEATURES }}"
+  ENTANDO_OPT_LOG_LEVEL: "${{ secrets.ENTANDO_OPT_LOG_LEVEL }}"
+  ENTANDO_OPT_REPO_BOM_URL: "${{ secrets.ENTANDO_OPT_REPO_BOM_URL }}"
   PPL_CONTEXT: ${{ toJson(github) }}
-  REPO_FOLDER: "local-checkout"
+  GIT_USER_NAME: "${{ secrets.GIT_USER_NAME }}"
+  GIT_USER_EMAIL: "${{ secrets.GIT_USER_EMAIL }}"
+  LOCAL_CLONE_DIR: "local-checkout"
+  SNYK_ORG: "entando-ixc"
 
 
 jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # PREPARE
+  
   prepare:
     runs-on: ubuntu-latest
+    outputs:
+      SCAN_MATRIX: ${{ steps.START.outputs.SCAN_MATRIX }}
     steps:
+      #~
       - name: "PR PIPELINE START"
+        id: START
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
           ~/ppl-run \
-            pr-status-report .. \
-            @pr-labels remove "prepared" --id "REMOVE-LABEL-PREPARED"
-      - name: "Checkout"
+            .. status-report \
+            .. @checkout-branch pr --lcd "$LOCAL_CLONE_DIR" \
+            .. @setup-feature-flags "PR_PREFLIGHT_CHECKS" "BOM_CHECK" "BOM" \
+            .. @setup-features-list "SCAN_MATRIX" --prefix "SCAN-MVN-" \
+          ;
+      - name: "PR preflight checks"
+        if: steps.START.outputs.PR_PREFLIGHT_CHECKS != 'false'
+        id: pr-preflight-checks
         run: |
-          ~/ppl-run checkout-branch pr --id "CHECKOUT-PREPARE" --lcd "$REPO_FOLDER"
-      # PR FORMAT CHECK
-      - name: "PR format check"
-        id: pr-format-check
-        run: |
-          ~/ppl-run check-pr-state --lcd "$REPO_FOLDER" \
-                 .. @pr-labels add "prepared" --id "ADD-LABEL-PREPARED"
+          ~/ppl-run pr-preflight-checks --lcd "$LOCAL_CLONE_DIR"
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # BUILD AND TEST
-  tests:
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # FULL-BUILD
+  
+  full-build:
     needs: [ 'prepare' ]
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        test-type: [ 'all-tests' ]
-        include:
-          - test-type: 'all-tests'
-            mvn-test-group: 'fast-tests,slow-tests'
-            remove-label: true
     steps:
-      - name: "TESTS GATE CHECK"
-        id: GATE
+      #~ CHECKOUT
+      - name: "CHECKOUT"
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-          ~/ppl-run gate-check --id TESTS
-      - name: "Checkout"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        uses: actions/checkout@v2
-      - name: "Cache Maven packages"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          ~/ppl-run checkout-branch pr \
+            --lcd "$LOCAL_CLONE_DIR" \
+            --token "${{ secrets.ENTANDO_BOT_TOKEN }}" \
+          ;
+          
+          # Refines the cache key
+          echo "BUILD_CACHE_KEY=$( sha256sum "$LOCAL_CLONE_DIR/pom.xml" --zero | cut -d' ' -f1 )" >> $GITHUB_ENV
+      #~ JDK
       - name: "Set up JDK 11"
-        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: "Build and run tests"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        run: |
-          ~/ppl-run mvn BUILD-AND-TEST "${{ matrix.mvn-test-group }}" --id "BUILD-AND-TEST"
-      - name: "Clean SKIP-TESTS"
-        if: steps.GATE.outputs.ENABLED != 'true' && matrix.remove-label
-        run: |
-          ~/ppl-run @pr-labels remove "skip-tests" --id "CLEAN-SKIP-TEST"
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # SONAR
-  sonar:
-    needs: [ 'prepare' ]
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: "SONAR GATE CHECK"
-        id: GATE
-        run: |
-          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-          ~/ppl-run gate-check --id SONAR
-      - name: "Checkout"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        run: |
-          ~/ppl-run checkout-branch pr --id "CHECKOUT-SONAR" --lcd "$REPO_FOLDER"
-      - name: "Set up JDK 11"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
+      #~ MAVEN CACHE
       - name: "Cache Maven packages"
-        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/cache@v2
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-m2
           restore-keys: ${{ runner.os }}-m2
-      - name: "Cache SonarCloud packages"
-        if: steps.GATE.outputs.ENABLED == 'true'
+      #~ BUILD CACHE
+      - name: "Cache Build Dir"
+        id: build-cache
         uses: actions/cache@v2
+        with:
+          path: "${{ env.LOCAL_CLONE_DIR }}/target/"
+          key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
+      #~ SONAR CACHE
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: "Build and analyze"
-        id: SCAN
-        if: steps.GATE.outputs.ENABLED == 'true'
+      #~ BUILD
+      - name: "FULL BUILD"
+        env:
+          ENTANDO_OPT_SONAR_PROJECT_KEY: "${{ secrets.ENTANDO_OPT_SONAR_PROJECT_KEY }}"
+          SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          ~/ppl-run mvn SONAR --id "SONAR" --lcd "$REPO_FOLDER" --out "$HOME/maven-result.log"
-      - name: "Full output"
-        if: ${{ always() }}
-        run: |
-          cat "$HOME/maven-result.log"
-      - name: "Clean SKIP-SONAR"
-        if: steps.GATE.outputs.ENABLED != 'true'
-        run: |
-          ~/ppl-run @pr-labels remove "skip-sonar" --id "CLEAN-SKIP-SONAR"
+          ~/ppl-run \
+            .. generic FULL-BUILD --lcd "$LOCAL_CLONE_DIR" \
+            .. release tag-snapshot-version --lcd "$LOCAL_CLONE_DIR" \
+          ;
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # OWASP
-  owasp:
-    needs: [ 'prepare' ]
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # SCANS
+  scans:
+    needs: [ 'prepare', 'full-build' ]
     runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.SCAN_MATRIX != '' }}
+    strategy:
+      max-parallel: 5
+      fail-fast: false
+      matrix:
+        scan-type: ${{fromJson(needs.prepare.outputs.SCAN_MATRIX)}}
+      
     steps:
-      - name: "OWASP GATE CHECK"
-        id: GATE
+      #~ CHECKOUT
+      - name: "CHECKOUT"
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-          ~/ppl-run gate-check --id OWASP
-      - name: "Checkout"
-        run: |
-          ~/ppl-run checkout-branch pr --id "CHECKOUT-OWASP" --lcd "$REPO_FOLDER"
-      - name: "Cache Maven packages"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          ~/ppl-run checkout-branch pr --lcd "$LOCAL_CLONE_DIR"
+          
+          echo "BUILD_CACHE_KEY=$( sha256sum "$LOCAL_CLONE_DIR/pom.xml" --zero | cut -d' ' -f1 )" >> $GITHUB_ENV
+      #~ JDK
       - name: "Set up JDK 11"
-        if: steps.GATE.outputs.ENABLED == 'true'
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: "OWASP checks"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        run: |
-          ~/ppl-run mvn OWASP --id "OWASP" --lcd "$REPO_FOLDER"
-      - name: "Clean SKIP-OWASP"
-        if: steps.GATE.outputs.ENABLED != 'true'
-        run: |
-          ~/ppl-run @pr-labels remove "skip-owasp" --id "CLEAN-SKIP-OWASP"
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # SNYK
-  snyk:
-    needs: [ 'prepare' ]
-    env:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      SNYK_ORG: entando-ixc
-    runs-on: ubuntu-latest
-    steps:
-      - name: "SNYK GATE CHECK"
-        id: GATE
-        run: |
-          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-          ~/ppl-run gate-check --id SNYK
-      - name: "Checkout"
-        run: |
-          ~/ppl-run checkout-branch pr --id "CHECKOUT-SNYK" --lcd "$REPO_FOLDER"
+      #~ MAVEN CACHE
       - name: "Cache Maven packages"
-        if: steps.GATE.outputs.ENABLED == 'true'
+        id: maven-cache
         uses: actions/cache@v2
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-m2
           restore-keys: ${{ runner.os }}-m2
-      - name: "Set up JDK 11"
-        if: steps.GATE.outputs.ENABLED == 'true'
-        uses: actions/setup-java@v1
+      #~ BUILD CACHE
+      - name: "Cache Build Dir"
+        id: build-cache
+        uses: actions/cache@v2
         with:
-          java-version: 11
-      - name: "SNYK checks"
-        if: steps.GATE.outputs.ENABLED == 'true'
+          path: "${{ env.LOCAL_CLONE_DIR}}/target/"
+          key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
+      #~ SCAN
+      - name: "Run the Scan"
         run: |
-          ~/ppl-run scan snyk --org "$SNYK_ORG" --id "SNYK" --lcd "$REPO_FOLDER"
-      - name: "Clean SKIP-SNYK"
-        if: steps.GATE.outputs.ENABLED != 'true'
-        run: |
-          ~/ppl-run @pr-labels remove "skip-snyk" --id "CLEAN-SKIP-SNYK"
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # PREVIEW TAG
-  release-preview:
-    needs: [ 'tests', 'sonar' ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "CONFIGURE ENTANDO-PIPELINES"
-        run: |
-          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-      - name: "Checkout"
-        run: |
-          ~/ppl-run checkout-branch pr \
-            --id "CHECKOUT-PREVIEW-TAG" \
-            --lcd "$REPO_FOLDER" \
-            --token "${{ secrets.ENTANDO_BOT_TOKEN }}"
-      - name: "Tag preview version"
-        run: |
-          ~/ppl-run release prepare-preview-release \
-            --id "PREVIEW VERSION TAG GENERATION" \
-            --lcd "$REPO_FOLDER"
+          SCAN_TYPE="${{ matrix.scan-type }}"
+          case "$SCAN_TYPE" in
+            SCAN-MVN-SONAR)
+              export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+              export SONAR_TOKEN="${{ secrets.SONAR_TOKEN }}"
+              export ENTANDO_OPT_SONAR_PROJECT_KEY="${{ secrets.ENTANDO_OPT_SONAR_PROJECT_KEY }}"
+              ;;
+            SCAN-MVN-SNYK)
+              export SNYK_TOKEN="${{ secrets.SNYK_TOKEN }}"
+            ;;
+          esac
+          ~/ppl-run generic "$SCAN_TYPE" mvn --id "$SCAN_TYPE" --lcd "$LOCAL_CLONE_DIR"
