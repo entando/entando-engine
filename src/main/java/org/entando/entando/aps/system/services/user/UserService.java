@@ -16,24 +16,23 @@ package org.entando.entando.aps.system.services.user;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.services.group.Group;
-import org.entando.entando.aps.system.services.group.IGroupService;
-import org.entando.entando.aps.system.services.group.model.GroupDto;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.Authorization;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.aps.system.services.IDtoBuilder;
+import org.entando.entando.aps.system.services.group.IGroupService;
+import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.role.IRoleService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
@@ -41,11 +40,12 @@ import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.web.user.validator.UserValidator;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -326,8 +326,9 @@ public class UserService implements IUserService {
     @Override
     public List<GroupDto> getMyGroups(UserDetails user) {
         List<GroupDto> result = new ArrayList<>();
-        List<GroupDto> allGroups = groupService.getGroups(new RestListRequest()).getBody();
-
+        RestListRequest restListRequest = new RestListRequest();
+        restListRequest.setPageSize(0); // set page size to 0 to return all the groups without pagination and limits
+        List<GroupDto> allGroups = groupService.getGroups(restListRequest).getBody();
         if (isAdmin(user)) {
             result = allGroups;
         } else {
@@ -339,7 +340,6 @@ public class UserService implements IUserService {
                 }
             }
         }
-
         return result;
     }
 
