@@ -345,10 +345,6 @@ public class UserService implements IUserService {
 
     private List<String> getAllowedGroupCodes(UserDetails user) {
         List<UserGroupPermissions> userPermissions = getMyGroupPermissions(user);
-
-
-        logger.error("getMyGroupPermissions("+user+") size: "+ getMyGroupPermissions(user).size());
-
         return userPermissions.stream().map(p -> p.getGroup()).filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
