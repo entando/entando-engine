@@ -32,6 +32,8 @@ public class UserRequest {
     //@Size(min = 6, message = "user.password.size")
     private String password;
 
+    private String passwordConfirm;
+
     private boolean reset;
 
     private String profileType;
@@ -58,6 +60,14 @@ public class UserRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     public boolean isReset() {
