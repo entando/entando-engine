@@ -346,7 +346,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String invalidBody1 = "{\"username\": \"$invalid%%\",\"status\": \"active\",\"password\": \"password\"}";
+            String invalidBody1 = "{\"username\": \"$invalid%%\",\"status\": \"active\",\"password\": \"password\"," +
+                    "\"passwordConfirm\": \"password\"}";
             ResultActions resultInvalid1 = this.executeUserPost(invalidBody1, accessToken, status().isBadRequest());
             resultInvalid1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             resultInvalid1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
@@ -357,11 +358,13 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             ResultActions resultInvalid2 = this.executeUserPost(invalidBody2, accessToken, status().isBadRequest());
             resultInvalid2.andExpect(jsonPath("$.errors[0].code", is("2")));
 
-            String invalidBody3 = "{\"username\": \"username with space\",\"status\": \"active\",\"password\": \"password\"}";
+            String invalidBody3 = "{\"username\": \"username with space\",\"status\": \"active\",\"password\": \"password\"," +
+                    "\"passwordConfirm\": \"password\"}";
             ResultActions resultInvalid3 = this.executeUserPost(invalidBody3, accessToken, status().isBadRequest());
             resultInvalid3.andExpect(jsonPath("$.errors[0].code", is("2")));
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"password\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"password\"," +
+                    "\"passwordConfirm\": \"password\"}";
             ResultActions result = this.executeUserPost(mockJson, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.username", is(validUsername)));
 
@@ -395,18 +398,21 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String invalidBody1 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"$invalid%%\"}";
+            String invalidBody1 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"$invalid%%\","
+                    + "\"passwordConfirm\": \"$invalid%%\"}";
             ResultActions resultInvalid1 = this.executeUserPost(invalidBody1, accessToken, status().isBadRequest());
             resultInvalid1.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
             resultInvalid1.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
             resultInvalid1.andExpect(jsonPath("$.errors[0].code", is("3")));
             resultInvalid1.andExpect(jsonPath("$.metaData.size()", is(0)));
 
-            String invalidBody2 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"upasswordvelylong_.veryverylong\"}";
+            String invalidBody2 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"upasswordvelylong_.veryverylong\","
+                + "\"passwordConfirm\": \"upasswordvelylong_.veryverylong\"}";
             ResultActions resultInvalid2 = this.executeUserPost(invalidBody2, accessToken, status().isBadRequest());
             resultInvalid2.andExpect(jsonPath("$.errors[0].code", is("3")));
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\","
+                    + "\"passwordConfirm\": \"" + validPassword + "\"}";
             ResultActions result = this.executeUserPost(mockJson, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.username", is(validUsername)));
 
@@ -433,7 +439,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"password\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"password\","
+                + "\"passwordConfirm\": \"password\"}";
             ResultActions result = this.executeUserPost(mockJson, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.username", is(validUsername)));
 
@@ -506,7 +513,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\","
+                    + "\"passwordConfirm\": \"" + validPassword + "\"}";
             this.executeUserPost(mockJson, accessToken, status().isOk());
 
             String invalidBody1 = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"$invalid%%\"}";
@@ -558,7 +566,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\","
+                    + "\"passwordConfirm\": \"" + validPassword + "\"}";
             this.executeUserPost(mockJson, accessToken, status().isOk());
 
             String invalidBody1 = "{\"username\": \"" + validUsername + "\",\"oldPassword\": \"" + validPassword + "\",\"newPassword\": \"$invalid%%\"}";
@@ -611,7 +620,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"active\",\"password\": \"" + validPassword + "\","
+                    + "\"passwordConfirm\": \"" + validPassword + "\"}";
             this.executeUserPost(mockJson, accessToken, status().isOk());
 
             String invalidBody1 = "{\"username\": \"" + validUsername + "\",\"oldPassword\": \"" + validPassword + "\",\"newPassword\": \"" + newValidPassword + "\"}";
@@ -651,7 +661,8 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
             UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
             String accessToken = mockOAuthInterceptor(user);
 
-            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"inactive\",\"password\": \"" + validPassword + "\"}";
+            String mockJson = "{\"username\": \"" + validUsername + "\",\"status\": \"inactive\",\"password\": \"" + validPassword + "\","
+                    + "\"passwordConfirm\": \"" + validPassword + "\"}";
             this.executeUserPost(mockJson, accessToken, status().isOk());
 
             String body = "{\"username\": \"" + validUsername + "\",\"oldPassword\": \"" + validPassword + "\",\"newPassword\": \"" + newValidPassword + "\"}";
