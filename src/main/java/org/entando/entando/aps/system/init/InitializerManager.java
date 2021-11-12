@@ -85,12 +85,12 @@ public class InitializerManager extends AbstractInitializerManager implements II
         this.databaseManager = databaseManager;
     }
 
-    private MigrationStrategy getMigrationStrategyEnum() throws Exception {
+    private MigrationStrategy getMigrationStrategyEnum() throws EntException {
         try {
             return Enum.valueOf(MigrationStrategy.class, this.getMigrationStrategy().toUpperCase());
         } catch (IllegalArgumentException e) {
             String message = "Migration Strategy - Invalid value '" + this.getMigrationStrategy() + "' - Allowed values disabled|auto|generate_sql";
-            throw new Exception(message, e);
+            throw new EntException(message, e);
         }
     }
 
@@ -142,7 +142,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
         List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
         if (null == postProcesses || postProcesses.isEmpty()) {
             postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
-        } else if (null == this.getMigrationStrategy() || MigrationStrategy.DISABLED.equals(this.getMigrationStrategy())) {
+        } else if (MigrationStrategy.DISABLED.equals(this.getMigrationStrategyEnum())) {
             postProcessStatus = SystemInstallationReport.Status.SKIPPED;
         } else if (!componentReport.isPostProcessExecutionRequired()) {
             //Porting or restore
