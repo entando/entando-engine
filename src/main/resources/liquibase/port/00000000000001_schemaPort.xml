@@ -1,0 +1,226 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000001_schemaPort" author="entando" >
+
+        <createTable tableName="sysconfig" >
+            <column name="version" type="varchar(10)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="item" type="varchar(40)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="descr" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="config" type="clob">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="categories" >
+            <column name="catcode" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="parentcode" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="titles" type="clob">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="localstrings" >
+            <column name="keycode" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="langcode" type="varchar(2)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="stringvalue" type="clob" />
+        </createTable>
+
+        <createTable tableName="pagemodels" >
+            <column name="code" type="varchar(40)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="descr" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="frames" type="clob" />
+            <column name="plugincode" type="varchar(30)" />
+            <column name="templategui" type="clob" />
+        </createTable>
+
+        <createTable tableName="pages" >
+            <column name="code" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="parentcode" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="pos" type="int" />
+        </createTable>
+
+        <createTable tableName="pages_metadata_online" >
+            <column name="code" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="groupcode" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="titles" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="modelcode" type="varchar(40)">
+                <constraints nullable="false" />
+            </column>
+            <column name="showinmenu" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extraconfig" type="clob" />
+            <column name="updatedat" type="datetime" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="pages_metadata_online_code_fk"
+                baseColumnNames="code" baseTableName="pages_metadata_online"
+                referencedColumnNames="code" referencedTableName="pages" />
+        <addForeignKeyConstraint constraintName="pages_metadata_online_modelcode_fk"
+                baseColumnNames="modelcode" baseTableName="pages_metadata_online"
+                referencedColumnNames="code" referencedTableName="pagemodels" />
+
+        <createTable tableName="pages_metadata_draft" >
+            <column name="code" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="groupcode" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="titles" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="modelcode" type="varchar(40)">
+                <constraints nullable="false" />
+            </column>
+            <column name="showinmenu" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extraconfig" type="clob" />
+            <column name="updatedat" type="datetime" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="pages_metadata_draft_code_fk"
+                baseColumnNames="code" baseTableName="pages_metadata_draft"
+                referencedColumnNames="code" referencedTableName="pages" />
+        <addForeignKeyConstraint constraintName="pages_metadata_draft_modelcode_fk"
+                baseColumnNames="modelcode" baseTableName="pages_metadata_draft"
+                referencedColumnNames="code" referencedTableName="pagemodels" />
+
+        <createTable tableName="widgetcatalog" >
+            <column name="code" type="varchar(40)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="titles" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="parameters" type="clob" />
+            <column name="plugincode" type="varchar(30)" />
+            <column name="parenttypecode" type="varchar(40)" />
+            <column name="defaultconfig" type="clob" />
+            <column name="locked" type="smallint" />
+            <column name="maingroup" type="varchar(20)" />
+            <column name="configui" type="clob" />
+            <column name="bundleid" type="varchar(150)" />
+            <column name="readonlypagewidgetconfig" type="smallint" />
+            <column name="widgetcategory" type="varchar(80)" />
+            <column name="icon" type="varchar(80)" />
+        </createTable>
+
+        <createTable tableName="guifragment" >
+            <column name="code" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="widgettypecode" type="varchar(40)" />
+            <column name="plugincode" type="varchar(30)" />
+            <column name="gui" type="clob" />
+            <column name="defaultgui" type="clob" />
+            <column name="locked" type="smallint" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="guifragment_wdgtypecode_fkey"
+                baseColumnNames="widgettypecode" baseTableName="guifragment"
+                referencedColumnNames="code" referencedTableName="widgetcatalog" />
+
+        <createTable tableName="widgetconfig" >
+            <column name="pagecode" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="framepos" type="smallint" >
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="widgetcode" type="varchar(40)">
+                <constraints nullable="false" />
+            </column>
+            <column name="config" type="clob" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="widgetconfig_pagecode_fkey"
+                baseColumnNames="pagecode" baseTableName="widgetconfig"
+                referencedColumnNames="code" referencedTableName="pages" />
+        <addForeignKeyConstraint constraintName="widgetconfig_widgetcode_fkey"
+                baseColumnNames="widgetcode" baseTableName="widgetconfig"
+                referencedColumnNames="code" referencedTableName="widgetcatalog" />
+
+        <createTable tableName="widgetconfig_draft" >
+            <column name="pagecode" type="varchar(30)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="framepos" type="smallint" >
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="widgetcode" type="varchar(40)">
+                <constraints nullable="false" />
+            </column>
+            <column name="config" type="clob" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="widgetconfig_draft_pagecode_fkey"
+                baseColumnNames="pagecode" baseTableName="widgetconfig_draft"
+                referencedColumnNames="code" referencedTableName="pages" />
+        <addForeignKeyConstraint constraintName="widgetconfig_draft_widgetcode_fkey"
+                baseColumnNames="widgetcode" baseTableName="widgetconfig_draft"
+                referencedColumnNames="code" referencedTableName="widgetcatalog" />
+
+        <createTable tableName="uniquekeys" >
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="keyvalue" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="userpreferences" >
+            <column name="username" type="varchar(80)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="wizard" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="loadonpageselect" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="translationwarning" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="defaultpageownergroup" type="varchar(64)" />
+            <column name="defaultpagejoingroups" type="varchar(256)" />
+            <column name="defaultcontentownergroup" type="varchar(64)" />
+            <column name="defaultcontentjoingroups" type="varchar(256)" />
+            <column name="defaultwidgetownergroup" type="varchar(64)" />
+            <column name="defaultwidgetjoingroups" type="varchar(256)" />
+        </createTable>
+
+
+    </changeSet>
+
+</databaseChangeLog>

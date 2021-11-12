@@ -29,8 +29,6 @@ public class ComponentEnvironmentImpl extends AbstractComponentModule implements
     public ComponentEnvironmentImpl(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
         try {
             code = environmentElement.getAttributeValue("code");
-            Element defaultSqlResourcesElement = environmentElement.getChild("defaultSqlResources");
-            super.extractSqlResources(defaultSqlResourcesElement);
             Element postProcessesElement = environmentElement.getChild("postProcesses");
             super.createPostProcesses(postProcessesElement, postProcessClasses);
         } catch (Throwable t) {
@@ -47,12 +45,5 @@ public class ComponentEnvironmentImpl extends AbstractComponentModule implements
     protected void setCode(String code) {
         this.code = code;
     }
-
-    public Map<String, String> getDefaultSqlResourcesPaths() {
-        return super.getSqlResourcesPaths();
-    }
-
-    protected void setDefaultSqlResourcesPaths(Map<String, String> defaultSqlResourcesPaths) {
-        super.setSqlResourcesPaths(defaultSqlResourcesPaths);
-    }
+    
 }

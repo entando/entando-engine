@@ -19,9 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import java.util.stream.Collectors;
 import org.entando.entando.aps.system.common.command.constants.ApsCommandStatus;
 import org.entando.entando.aps.system.common.command.context.BaseBulkCommandContext;
 import org.entando.entando.aps.system.common.command.report.BulkCommandReport;
@@ -36,6 +38,7 @@ import org.junit.jupiter.api.Test;
 @Disabled
 class TestBulkCommandManager extends BaseTestCase {
 
+	@Disabled
     @Test
 	public void testAddGetCommandWOThread() {
 		String owner = "test";
@@ -59,6 +62,7 @@ class TestBulkCommandManager extends BaseTestCase {
 		assertNotNull(this._bulkCommandManager.getCommand(owner, command.getId()));
 	}
 
+	@Disabled
     @Test
 	public void testAddGetCommandByThread() throws InterruptedException {
 		String owner = "test";
@@ -127,6 +131,8 @@ class TestBulkCommandManager extends BaseTestCase {
 
 	private int countThreads() {
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		List<String> names = threadSet.stream().map(t -> t.getName()).collect(Collectors.toList());
+		System.out.println("---->>>>> " + names);
 		return threadSet.size();
 	}
 

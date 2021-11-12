@@ -55,7 +55,7 @@ public class ComponentDefDOM {
         InputStream xmlIs = null;
         try {
             SchemaFactory factory = EntSafeXmlUtils.newSafeSchemaFactory(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            schemaIs = this.getClass().getResourceAsStream("componentDef-4.2.xsd");
+            schemaIs = this.getClass().getResourceAsStream("componentDef-6.4.xsd");
             Source schemaSource = new StreamSource(schemaIs);
             Schema schema = factory.newSchema(schemaSource);
             Validator validator = schema.newValidator();

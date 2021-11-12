@@ -6,13 +6,12 @@ INSERT INTO authgroups (groupname, descr) VALUES ('helpdesk', 'Helpdesk');
 INSERT INTO authgroups (groupname, descr) VALUES ('management', 'Management');
 
 
-
-
 INSERT INTO authroles (rolename, descr) VALUES ('admin', 'Tutte le funzioni');
 INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Gestore di Contenuti e Risorse');
 INSERT INTO authroles (rolename, descr) VALUES ('supervisor', 'Supervisore di Contenuti');
 INSERT INTO authroles (rolename, descr) VALUES ('pageManager', 'Gestore di Pagine');
 INSERT INTO authroles (rolename, descr) VALUES ('reviewer', 'Recensore');
+
 
 INSERT INTO authpermissions (permissionname, descr) VALUES ('superuser', 'All functions');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('validateContents', 'Content Supervision');
@@ -28,8 +27,6 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('manageReview', 'Rev
 INSERT INTO authpermissions (permissionname, descr) VALUES ('enterECR', 'ECR Access Permission');
 
 
-
-
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('admin', 'superuser');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('pageManager', 'enterBackend');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'enterBackend');
@@ -41,8 +38,6 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('supervisor',
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'manageResources');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('reviewer', 'enterBackend');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('reviewer', 'manageReview');
-
-
 
 
 INSERT INTO authusergrouprole (username, groupname, rolename) VALUES ('pageManagerCoach', 'coach', 'pageManager');
@@ -66,6 +61,10 @@ INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpassw
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCustomers', '{bcrypt}$2a$10$6mbu1yVQ/jdgPnuqFMvbYOQklHY6VmIBUZTeYaY3OhxiGx0Yjbx3K', '2008-09-25 00:00:00', '2009-07-02 00:00:00', NULL, 1);
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCoach', '{bcrypt}$2a$10$8KYc6sUA7fiC2Pia20J4ouMk3Meb.zW3qk0QBD8EZ0vQiI0jqysMa', '2008-09-25 00:00:00', '2009-07-02 00:00:00', NULL, 1);
 INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', '{bcrypt}$2a$10$E9R2sHNZ/YXlDn188lpdyeoBl2iSF4E5LE8FNvxbdZbqnqlNP2mL2', '2008-09-25 00:00:00', '2009-12-16 00:00:00', NULL, 1);
+
+
+INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test1_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 1 Consumer', 'Test 1 Consumer Description', 'http://localhost/login', 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
+INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test2_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 2 Consumer', 'Test 2 Consumer Description', 'http://localhost/login', 'read,write,trust', 'authorization_code,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
 
 
 INSERT INTO authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('editorCustomers', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
@@ -182,11 +181,3 @@ INSERT INTO authuserprofileattrroles (username, attrname, rolename) VALUES ('edi
 INSERT INTO authuserprofileattrroles (username, attrname, rolename) VALUES ('editorCustomers', 'email', 'userprofile:email');
 INSERT INTO authuserprofileattrroles (username, attrname, rolename) VALUES ('mainEditor', 'email', 'userprofile:email');
 INSERT INTO authuserprofileattrroles (username, attrname, rolename) VALUES ('pageManagerCoach', 'email', 'userprofile:email');
-
-
-
-
-INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test1_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 1 Consumer', 'Test 1 Consumer Description', 'http://localhost/login', 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
-INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test2_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 2 Consumer', 'Test 2 Consumer Description', 'http://localhost/login', 'read,write,trust', 'authorization_code,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
-
-

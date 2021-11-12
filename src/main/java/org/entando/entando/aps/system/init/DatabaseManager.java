@@ -16,6 +16,8 @@ package org.entando.entando.aps.system.init;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,22 +28,30 @@ import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import org.apache.commons.io.output.StringBuilderWriter;
+import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
+import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.init.model.Component;
-import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
-import org.entando.entando.aps.system.init.model.ComponentUninstallerInfo;
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
-import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.exception.EntRuntimeException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -63,10 +73,10 @@ public class DatabaseManager extends AbstractInitializerManager
     public static final int STATUS_READY = 0;
     public static final int STATUS_DUMPING_IN_PROGRESS = 1;
     public static final String INIT_MSG_P = "+ [ Component: {} ] :: DATA\n{}";
+    public static final String INIT_MSG_L = "+ [ Component: {} ] :: Liquibase\n{}";
 
-    private Map<String, List<String>> entandoTableMapping;
-    private Map<String, Resource> entandoDefaultSqlResources;
-    private Map<String, Resource> testSqlResources;
+    public static final String MSG_ALREADY_INSTALLED = "( ok )  Already installed\n";
+
     private Map<String, Resource> defaultSqlDump;
     private int status;
 
@@ -80,11 +90,12 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     @Override
-    public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStatup) throws Exception {
+    public SystemInstallationReport installDatabase(SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws Exception {
         String lastLocalBackupFolder = null;
+        migrationStrategy = (null == migrationStrategy) ? DatabaseMigrationStrategy.DISABLED : migrationStrategy;
         if (null == report) {
             report = SystemInstallationReport.getInstance();
-            if (checkOnStatup && !Environment.test.equals(this.getEnvironment())) {
+            if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy) && !Environment.test.equals(this.getEnvironment())) {
                 //non c'è db locale installato, cerca nei backup locali
                 DataSourceDumpReport lastDumpReport = this.getLastDumpReport();
                 if (null != lastDumpReport) {
@@ -100,21 +111,20 @@ public class DatabaseManager extends AbstractInitializerManager
             }
         }
         try {
-            this.initMasterDatabases(report, checkOnStatup);
             List<Component> components = this.getComponentManager().getCurrentComponents();
             for (Component entandoComponentConfiguration : components) {
-                this.initComponentDatabases(entandoComponentConfiguration, report, checkOnStatup);
+                this.initLiquiBaseResources(entandoComponentConfiguration, report, migrationStrategy);
             }
-            this.initMasterDefaultResource(report, checkOnStatup);
-            for (Component entandoComponentConfiguration : components) {
-                this.initComponentDefaultResources(entandoComponentConfiguration, report, checkOnStatup);
-            }
-            if (checkOnStatup && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
+            if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
                 //ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
                 if (null != lastLocalBackupFolder) {
                     this.restoreBackup(lastLocalBackupFolder);
                 } else {
                     this.restoreDefaultDump();
+                }
+            } else {
+                for (Component entandoComponentConfiguration : components) {
+                    this.initComponentDefaultResources(entandoComponentConfiguration, report, migrationStrategy);
                 }
             }
         } catch (Throwable t) {
@@ -128,218 +138,14 @@ public class DatabaseManager extends AbstractInitializerManager
         return report;
     }
 
-    private void initMasterDatabases(SystemInstallationReport report, boolean checkOnStatup) throws EntException {
-        logger.info(INIT_MSG_P, "Core", LOG_PREFIX);
-        ComponentInstallationReport componentReport = report.getComponentReport("entandoCore", true);
-        DataSourceInstallationReport dataSourceReport = componentReport.getDataSourceReport();
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug("{}( ok )  Already installed\n{}", LOG_PREFIX, LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            return;
-        }
-        try {
-            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-            Map<String, SystemInstallationReport.Status> databasesStatus = dataSourceReport.getDatabaseStatus();
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation");
-            for (String dataSourceName : dataSourceNames) {
-                if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + " - Already present! db " + dataSourceName);
-                    SystemInstallationReport.Status status = (checkOnStatup)
-                            ? report.getStatus()
-                            : SystemInstallationReport.Status.SKIPPED;
-                    databasesStatus.put(dataSourceName, status);
-                    report.setUpdated();
-                    continue;
-                }
-                SystemInstallationReport.Status dbStatus = databasesStatus.get(dataSourceName);
-                if (dbStatus != null && (SystemInstallationReport.isSafeStatus(dbStatus))) {
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "( ok )  " + dataSourceName + " already installed");
-                } else if (dbStatus == null || !dbStatus.equals(SystemInstallationReport.Status.OK)) {
-                    DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                    if (checkOnStatup) {
-                        databasesStatus.put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "");
-                        this.initMasterDatabase(dataSourceName, dataSource, dataSourceReport);
-                        databasesStatus.put(dataSourceName, SystemInstallationReport.Status.OK);
-                    } else {
-                        databasesStatus.put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
-                    }
-                    report.setUpdated();
-                }
-            }
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-            logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-        } catch (Throwable t) {
-            logger.error("Error initializating master databases", t);
-            throw new EntException("Error initializating master databases", t);
-        }
-    }
-
-    private void initMasterDatabase(String databaseName, DataSource dataSource, DataSourceInstallationReport schemaReport) throws EntException {
-        try {
-            DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
-            if (type.equals(DatabaseType.DERBY)) {
-                this.getDatabaseRestorer().initDerbySchema(dataSource);
-            }
-            List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
-            if (null == tableClassNames || tableClassNames.isEmpty()) {
-                logger.debug("No Master Tables defined for db {}", databaseName);
-                schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.NOT_AVAILABLE);
-            } else {
-                this.createTables(databaseName, tableClassNames, dataSource, schemaReport);
-            }
-        } catch (Throwable t) {
-            schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
-            logger.error("Error creating master tables to db {}", databaseName, t);
-            throw new EntException("Error creating master tables to db " + databaseName, t);
-        }
-    }
-
-    public void initComponentDatabases(Component componentConfiguration, SystemInstallationReport report, boolean checkOnStatup) throws EntException {
-        logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
-        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            return;
-        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-            logger.debug(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            return;
-        }
-        try {
-            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-            Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
-            DataSourceInstallationReport dataSourceReport = componentReport.getDataSourceReport();
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
-            for (String dataSourceName : dataSourceNames) {
-                List<String> tableClassNames = (null != tableMapping) ? tableMapping.get(dataSourceName) : null;
-                if (null == tableClassNames || tableClassNames.isEmpty()) {
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( !! )  skipping " + dataSourceName + ": not available");
-                    dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
-                    report.setUpdated();
-                    continue;
-                }
-                if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
-                    SystemInstallationReport.Status status = (checkOnStatup)
-                            ? report.getStatus()
-                            : SystemInstallationReport.Status.SKIPPED;
-                    dataSourceReport.getDatabaseStatus().put(dataSourceName, status);
-                    logger.debug(LOG_PREFIX + "( ok )  {} already installed {}", dataSourceName, SystemInstallationReport.Status.PORTING);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
-                    continue;
-                }
-                SystemInstallationReport.Status schemaStatus = dataSourceReport.getDatabaseStatus().get(dataSourceName);
-                if (SystemInstallationReport.isSafeStatus(schemaStatus)) {
-                    //Already Done!
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
-                    continue;
-                }
-                if (null == dataSourceReport.getDataSourceTables().get(dataSourceName)) {
-                    dataSourceReport.getDataSourceTables().put(dataSourceName, new ArrayList<String>());
-                }
-                if (checkOnStatup) {
-                    dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                    DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                    this.createTables(dataSourceName, tableClassNames, dataSource, dataSourceReport);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX);
-                    dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
-                } else {
-                    dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
-                }
-                report.setUpdated();
-            }
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-            logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-        } catch (Throwable t) {
-            logger.error("Error initializating component {}", componentConfiguration.getCode(), t);
-            throw new EntException("Error initializating component " + componentConfiguration.getCode(), t);
-        }
-    }
-
-    private void createTables(String databaseName, List<String> tableClassNames,
-            DataSource dataSource, DataSourceInstallationReport schemaReport) throws EntException {
-        try {
-            DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
-            TableFactory tableFactory = new TableFactory(databaseName, dataSource, type);
-            tableFactory.createTables(tableClassNames, schemaReport);
-        } catch (Throwable t) {
-            logger.error("Error creating tables to db {}", databaseName, t);
-            throw new EntException("Error creating tables to db " + databaseName, t);
-        }
-    }
-
     //---------------- DATA ------------------- START
-    private void initMasterDefaultResource(SystemInstallationReport report, boolean checkOnStatup) throws EntException {
-        logger.info(INIT_MSG_P, "Core", LOG_PREFIX);
-        ComponentInstallationReport coreComponentReport = report.getComponentReport("entandoCore", false);
-        if (coreComponentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-            String message = LOG_PREFIX + "( ok )  Already installed. " + coreComponentReport.getStatus() + "\n" + LOG_PREFIX;
-            logger.debug(message);
-            ApsSystemUtils.directStdoutTrace(message);
-            return;
-        }
-        DataInstallationReport dataReport = coreComponentReport.getDataReport();
-        try {
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
-            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-            for (String dataSourceName : dataSourceNames) {
-                if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
-                    dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
-                    report.setUpdated();
-                    String message = LOG_PREFIX + "( ok )  " + dataSourceName + " already installed. " + report.getStatus() + "\n" + LOG_PREFIX;
-                    logger.debug(message);
-                    ApsSystemUtils.directStdoutTrace(message);
-                    continue;
-                }
-                SystemInstallationReport.Status schemaStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-                if (SystemInstallationReport.isSafeStatus(schemaStatus)) {
-                    String message = LOG_PREFIX + "( ok )  " + dataSourceName + " already installed. " + report.getStatus() + "\n" + LOG_PREFIX;
-                    ApsSystemUtils.directStdoutTrace(message);
-                    continue;
-                }
-                Resource resource = (Environment.test.equals(this.getEnvironment()))
-                        ? this.getTestSqlResources().get(dataSourceName)
-                        : this.getEntandoDefaultSqlResources().get(dataSourceName);
-                String script = this.readFile(resource);
-                if (null != script && script.trim().length() != 0) {
-                    if (checkOnStatup) {
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                        this.getDatabaseRestorer().initOracleSchema(dataSource);
-                        TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
-                        ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                    } else {
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
-                    }
-                    report.setUpdated();
-                } else {
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( !! )  skipping " + dataSourceName + ": not available");
-                    dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
-                    report.setUpdated();
-                }
-            }
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-            logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
-        } catch (Throwable t) {
-            logger.error("Error initializating master DefaultResource", t);
-            throw new EntException("Error initializating master DefaultResource", t);
-        }
-    }
 
-    public void initComponentDefaultResources(Component componentConfiguration,
-            SystemInstallationReport report, boolean checkOnStatup) throws EntException {
+    public void initComponentDefaultResources(Component componentConfiguration, SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws EntException {
         logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
         if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
             logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-            return;
-        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-            logger.debug(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Uninstalled\n" + LOG_PREFIX);
             return;
         }
         DataInstallationReport dataReport = componentReport.getDataReport();
@@ -347,98 +153,93 @@ public class DatabaseManager extends AbstractInitializerManager
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (String dataSourceName : dataSourceNames) {
+                ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                 if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
+                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
                     dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
-                    ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                    report.setUpdated();
-                    continue;
-                }
-                DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                SystemInstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-                if (SystemInstallationReport.isSafeStatus(dataStatus)) {
-                    logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
-                    continue;
-                }
-                Map<String, ComponentEnvironment> environments = componentConfiguration.getEnvironments();
-                String compEnvKey = (Environment.test.equals(this.getEnvironment()))
-                        ? Environment.test.toString() : Environment.production.toString();
-                ComponentEnvironment componentEnvironment = (null != environments) ? environments.get(compEnvKey) : null;
-                Resource resource = (null != componentEnvironment) ? componentEnvironment.getSqlResources(dataSourceName) : null;
-                String script = (null != resource) ? this.readFile(resource) : null;
-                if (null != script && script.trim().length() > 0) {
-                    if (checkOnStatup) {
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                        this.getDatabaseRestorer().initOracleSchema(dataSource);
-                        TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
-                        ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
-                    } else {
-                        dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
-                    }
-                    report.setUpdated();
                 } else {
-                    ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( !! )  skipping " + dataSourceName + ": not available");
                     dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
-                    report.setUpdated();
                 }
             }
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
             logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
         } catch (Throwable t) {
-            logger.error("Error restoring default resources of component {}", componentConfiguration.getCode(), t);
-            throw new EntException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
+            logger.error("Error restoring resources of component {}", componentConfiguration.getCode(), t);
+            throw new EntException("Error restoring resources of component " + componentConfiguration.getCode(), t);
         }
     }
 
-    public void uninstallComponentResources(Component componentConfiguration,
-                                            SystemInstallationReport report) throws EntException {
-        logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
-        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.UNINSTALLED)) {
-
-            logger.debug(LOG_PREFIX + "( ok ) Already uninstalled\n" + LOG_PREFIX);
-            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok ) Already uninstalled\n" + LOG_PREFIX);
-
-        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-
-            DataInstallationReport dataReport = componentReport.getDataReport();
-            try {
-                ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting uninstall\n" + LOG_PREFIX);
-                ComponentUninstallerInfo uninstallInfo = componentConfiguration.getUninstallerInfo();
-
-                // Remove sqlResources
-                String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-                for (String dataSourceName : dataSourceNames) {
-
-                    DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                    SystemInstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-                    if (SystemInstallationReport.isSafeStatus(dataStatus)) {
-                        // We can proceed with removing the stuff
-                        Resource sqlResource = uninstallInfo.getSqlResources(dataSourceName);
-                        String script = (null != sqlResource) ? this.readFile(sqlResource) : null;
-                        if (null != script && script.trim().length() > 0) {
-                            dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                            TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
-                            ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                            dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.UNINSTALLED);
-                            report.setUpdated();
-                        } else {
-                            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( !! )  skipping " + dataSourceName + ": not available");
-                            dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
-                            report.setUpdated();
-                        }
+    public void initLiquiBaseResources(Component componentConfiguration, SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws EntException {
+        logger.info(INIT_MSG_L, componentConfiguration.getCode(), LOG_PREFIX);
+        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
+        LiquibaseInstallationReport liquibaseReport = componentReport.getLiquibaseReport();
+        try {
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "Starting installation\n" + LOG_PREFIX);
+            String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+            for (String dataSourceName : dataSourceNames) {
+                String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
+                if (null != changeLogFile) {
+                    liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
+                    this.executeLiquibaseUpdate(report.getCreation(), componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), migrationStrategy);
+                    ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
+                    if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy)) {
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
+                    } else {
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
                     }
                 }
+            }
+            ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
+            logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
+        } catch (Throwable t) {
+            logger.error("Error executing liquibase initialization for component {}", componentConfiguration.getCode(), t);
+            throw new EntException("Error executing liquibase initialization for component " + componentConfiguration.getCode(), t);
+        }
+    }
 
-                report.removeComponentReport(componentConfiguration.getCode());
-                report.setUpdated();
-                ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Uninstall complete\n" + LOG_PREFIX);
-                logger.debug(LOG_PREFIX + "\n" + LOG_PREFIX + "Uninstall complete\n" + LOG_PREFIX);
-            } catch (Throwable t) {
-                logger.error("Error removing component {}", componentConfiguration.getCode(), t);
-                throw new EntException("Error removing component " + componentConfiguration.getCode(), t);
+    private void executeLiquibaseUpdate(Date timestamp, String componentCode,
+            String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, DatabaseMigrationStrategy migrationStrategy) throws Exception {
+        Connection connection = null;
+        Liquibase liquibase = null;
+        Writer writer = null;
+        try {
+            DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+            connection = dataSource.getConnection();
+            JdbcConnection liquibaseConnection = new JdbcConnection(connection);
+            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
+            liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
+            String context = null;
+            if (status.equals(SystemInstallationReport.Status.RESTORE)) {
+                context = "restore";
+            } else {
+                context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
+            }
+            Contexts contexts = new Contexts(context);
+            if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
+                liquibase.update(contexts, new LabelExpression());
+            } else {
+                writer = new StringBuilderWriter();
+                liquibase.update(contexts, new LabelExpression(), writer);
+                if (DatabaseMigrationStrategy.GENERATE_SQL.equals(migrationStrategy)) {
+                    ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
+                    String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
+                    this.getStorageManager().saveFile(path, true, stream);
+                    logger.warn("Component {}, database {}, Please find the update SQL script under  \"<PROTECTED_ENTANDO_DATA>" + File.separator + path + "\"", componentCode, dataSourceName);
+                } else {
+                    logger.warn("Component {}, database {}, Please update the DB manually", componentCode, dataSourceName);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error executing liquibase update - " + changeLogFile, e);
+        } finally {
+            if (null != writer) {
+                writer.close();
+            }
+            if (null != liquibase) {
+                liquibase.close();
+            }
+            if (null != connection) {
+                connection.close();
             }
         }
     }
@@ -509,7 +310,6 @@ public class DatabaseManager extends AbstractInitializerManager
 
     protected void executeBackup() throws EntException {
         try {
-
             this.getDatabaseDumper().createBackup(this.getEnvironment(), this.extractReport());
         } catch (Throwable t) {
             logger.error("Error while creating backup", t);
@@ -683,31 +483,6 @@ public class DatabaseManager extends AbstractInitializerManager
 
     protected String getLocalBackupsFolder() {
         return this.getDatabaseDumper().getLocalBackupsFolder();
-    }
-
-    @Override
-    public Map<String, List<String>> getEntandoTableMapping() {
-        return entandoTableMapping;
-    }
-
-    public void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
-        this.entandoTableMapping = entandoTableMapping;
-    }
-
-    protected Map<String, Resource> getEntandoDefaultSqlResources() {
-        return entandoDefaultSqlResources;
-    }
-
-    public void setEntandoDefaultSqlResources(Map<String, Resource> entandoDefaultSqlResources) {
-        this.entandoDefaultSqlResources = entandoDefaultSqlResources;
-    }
-
-    protected Map<String, Resource> getTestSqlResources() {
-        return testSqlResources;
-    }
-
-    public void setTestSqlResources(Map<String, Resource> testSqlResources) {
-        this.testSqlResources = testSqlResources;
     }
 
     protected Map<String, Resource> getDefaultSqlDump() {

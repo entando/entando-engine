@@ -21,6 +21,8 @@ import org.entando.entando.aps.system.init.model.Component;
  * @author E.Santoboni
  */
 public interface IComponentManager {
+
+	public static final String MAIN_COMPONENT = "entando-engine";
 	
 	public List<Component> getCurrentComponents();
 	

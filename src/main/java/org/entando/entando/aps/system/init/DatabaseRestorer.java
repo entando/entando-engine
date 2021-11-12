@@ -26,7 +26,6 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.QueryExtractor;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
@@ -75,9 +74,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			int size = components.size();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(size - i - 1);
-				this.dropTables(componentConfiguration.getTableMapping());
+				this.dropTables(componentConfiguration.getTableNames());
 			}
-			this.dropTables(this.getEntandoTableMapping());
 			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
 			_logger.error("Error while restoring backup: {}", backupSubFolder, t);
@@ -93,16 +91,14 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) {
+				List<String> tableNames = tableMapping.get(dataSourceName);
+				if (null == tableNames || tableNames.isEmpty()) {
 					continue;
 				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-				int size = tableClasses.size();
-				for (int j = 0; j < tableClasses.size(); j++) {
-					String tableClassName = tableClasses.get(size - j - 1);
-					Class tableClass = Class.forName(tableClassName);
-					String tableName = TableFactory.getTableName(tableClass);
+				int size = tableNames.size();
+				for (int j = 0; j < tableNames.size(); j++) {
+					String tableName = tableNames.get(size - j - 1);
 					String[] queries = {"DELETE FROM " + tableName};
 					TableDataUtils.executeQueries(dataSource, queries, true);
 				}
@@ -115,11 +111,10 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 
 	protected void restoreBackup(String backupSubFolder) throws EntException {
 		try {
-			this.restoreLocalDump(this.getEntandoTableMapping(), backupSubFolder);
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);
-				this.restoreLocalDump(componentConfiguration.getTableMapping(), backupSubFolder);
+				this.restoreLocalDump(componentConfiguration.getTableNames(), backupSubFolder);
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while restoring local backup", t);
@@ -137,16 +132,14 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) {
+				List<String> tableNames = tableMapping.get(dataSourceName);
+				if (null == tableNames || tableNames.isEmpty()) {
 					continue;
 				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 				this.initOracleSchema(dataSource);
-				for (int j = 0; j < tableClasses.size(); j++) {
-					String tableClassName = tableClasses.get(j);
-					Class tableClass = Class.forName(tableClassName);
-					String tableName = TableFactory.getTableName(tableClass);
+				for (int j = 0; j < tableNames.size(); j++) {
+					String tableName = tableNames.get(j);
 					String fileName = folder.toString() + dataSourceName + File.separator + tableName + ".sql";
 					InputStream is = this.getStorageManager().getStream(fileName, true);
 					if (null != is) {

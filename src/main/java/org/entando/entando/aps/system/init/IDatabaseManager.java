@@ -15,7 +15,6 @@ package org.entando.entando.aps.system.init;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
@@ -40,8 +39,6 @@ public interface IDatabaseManager {
 	public DataSourceDumpReport getBackupReport(String subFolderName) throws EntException;
 	
 	public List<DataSourceDumpReport> getBackupReports() throws EntException;
-	
-	public Map<String, List<String>> getEntandoTableMapping();
 	
 	public DatabaseType getDatabaseType(DataSource dataSource) throws EntException;
 	

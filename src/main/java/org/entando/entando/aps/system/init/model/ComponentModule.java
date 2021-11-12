@@ -14,14 +14,9 @@
 package org.entando.entando.aps.system.init.model;
 
 import java.util.List;
-import java.util.Map;
-import org.springframework.core.io.Resource;
 
 public interface ComponentModule {
     
     List<IPostProcess> getPostProcesses();
     
-    Resource getSqlResources(String datasourceName);
-    
-    Map<String, String> getSqlResourcesPaths();
 }

@@ -28,42 +28,6 @@
         </property>
     </bean>
 
-    <util:list id="entandoPortTableClasses">
-        <value>org.entando.entando.aps.system.init.model.portdb.Sysconfig</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.Category</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.LocalString</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.PageModel</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.Page</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.PageMetadataOnline</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.PageMetadataDraft</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.WidgetCatalog</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.GuiFragment</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.WidgetConfig</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.WidgetConfigDraft</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.Uniquekeys</value>
-        <value>org.entando.entando.aps.system.init.model.portdb.UserPreferences</value>
-    </util:list>
-
-    <util:list id="entandoServTableClasses">
-        <value>org.entando.entando.aps.system.init.model.servdb.Group</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.Permission</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.Role</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.RolePermissionReference</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.User</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.UserGroupRoleReference</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ApiOAuthConsumer</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.UserProfile</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogRecord</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogRecordRelation</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogLikeRecord</value>
-        <value>org.entando.entando.aps.system.init.model.servdb.ActionLogCommentRecord</value>
-    </util:list>
-
     <bean id="StorageManager" class="org.entando.entando.aps.system.services.storage.LocalStorageManager"
           init-method="init" >
         <property name="baseURL" >
@@ -134,16 +98,6 @@
     <bean id="abstractDatabaseUtils" class="org.entando.entando.aps.system.init.AbstractDatabaseUtils"
           abstract="true">
         <property name="componentManager" ref="ComponentManager" />
-        <property name="entandoTableMapping">
-            <map>
-                <entry key="portDataSource">
-                    <ref bean="entandoPortTableClasses" />
-                </entry>
-                <entry key="servDataSource">
-                    <ref bean="entandoServTableClasses" />
-                </entry>
-            </map>
-        </property>
         <property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
         <property name="storageManager" ref="StorageManager" />
     </bean>
@@ -165,36 +119,6 @@
 
     <bean id="DatabaseManager" class="org.entando.entando.aps.system.init.DatabaseManager"
           parent="abstractInitializerManager">
-        <property name="entandoTableMapping">
-            <map>
-                <entry key="portDataSource">
-                    <ref bean="entandoPortTableClasses" />
-                </entry>
-                <entry key="servDataSource">
-                    <ref bean="entandoServTableClasses" />
-                </entry>
-            </map>
-        </property>
-        <property name="entandoDefaultSqlResources">
-            <map>
-                <entry key="portDataSource">
-                    <value>classpath:sql/entandoPort_data_production.sql</value>
-                </entry>
-                <entry key="servDataSource">
-                    <value>classpath:sql/entandoServ_data_production.sql</value>
-                </entry>
-            </map>
-        </property>
-        <property name="testSqlResources">
-            <map>
-                <entry key="portDataSource">
-                    <value>classpath:sql/entandoPort_data_test.sql</value>
-                </entry>
-                <entry key="servDataSource">
-                    <value>classpath:sql/entandoServ_data_test.sql</value>
-                </entry>
-            </map>
-        </property>
         <property name="defaultSqlDump" ref="DefaultSqlDump" />
         <property name="databaseDumper" ref="DatabaseDumper" />
         <property name="databaseRestorer" ref="DatabaseRestorer" />
@@ -204,8 +128,8 @@
 
     <bean id="InitializerManager" class="org.entando.entando.aps.system.init.InitializerManager"
           parent="abstractInitializerManager">
-        <property name="checkOnStartup">
-            <value>${db.startup.check}</value>
+        <property name="migrationStrategy">
+            <value>${db.migration.strategy}</value>
         </property>
         <property name="databaseManager" ref="DatabaseManager" />
         <property name="postProcessors">
