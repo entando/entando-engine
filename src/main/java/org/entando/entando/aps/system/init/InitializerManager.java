@@ -42,7 +42,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
 
     private IInitializerManagerCacheWrapper cacheWrapper;
 
-    private String migrationStrategy = MigrationStrategy.DISABLED.toString();
+    private String migrationStrategy = DatabaseMigrationStrategy.DISABLED.toString();
 
     private Map<String, IPostProcessor> postProcessors;
 
@@ -85,9 +85,9 @@ public class InitializerManager extends AbstractInitializerManager implements II
         this.databaseManager = databaseManager;
     }
 
-    private MigrationStrategy getMigrationStrategyEnum() throws EntException {
+    private DatabaseMigrationStrategy getMigrationStrategyEnum() throws EntException {
         try {
-            return Enum.valueOf(MigrationStrategy.class, this.getMigrationStrategy().toUpperCase());
+            return Enum.valueOf(DatabaseMigrationStrategy.class, this.getMigrationStrategy().toUpperCase());
         } catch (IllegalArgumentException e) {
             String message = "Migration Strategy - Invalid value '" + this.getMigrationStrategy() + "' - Allowed values disabled|auto|generate_sql";
             throw new EntException(message, e);
@@ -97,7 +97,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
     public void init() throws Exception {
         SystemInstallationReport report = null;
         try {
-            MigrationStrategy migrationStrategyEnum = this.getMigrationStrategyEnum();
+            DatabaseMigrationStrategy migrationStrategyEnum = this.getMigrationStrategyEnum();
             report = this.extractReport();
             report = ((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report, migrationStrategyEnum);
             this.getCacheWrapper().initCache(report);
@@ -109,7 +109,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
                 this.saveReport(report);
             }
         }
-        logger.debug("{}: initializated - migration strategy {}", this.getClass().getName(), this.getMigrationStrategy());
+        logger.debug("{}: initialized - migration strategy {}", this.getClass().getName(), this.getMigrationStrategy());
     }
 
     public void executePostInitProcesses() throws BeansException {
@@ -142,7 +142,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
         List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
         if (null == postProcesses || postProcesses.isEmpty()) {
             postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
-        } else if (MigrationStrategy.DISABLED.equals(this.getMigrationStrategyEnum())) {
+        } else if (DatabaseMigrationStrategy.DISABLED.equals(this.getMigrationStrategyEnum())) {
             postProcessStatus = SystemInstallationReport.Status.SKIPPED;
         } else if (!componentReport.isPostProcessExecutionRequired()) {
             //Porting or restore

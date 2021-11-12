@@ -20,7 +20,7 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
  */
 public interface IInitializerManager {
 
-	public static enum MigrationStrategy {DISABLED, AUTO, GENERATE_SQL};
+	public static enum DatabaseMigrationStrategy {DISABLED, AUTO, GENERATE_SQL};
 	
 	public SystemInstallationReport getCurrentReport();
 	

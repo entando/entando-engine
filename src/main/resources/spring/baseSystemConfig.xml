@@ -17,8 +17,6 @@
 
     <jee:jndi-lookup id="servDataSource" jndi-name="${servdb.jndi:java:comp/env/jdbc/servDataSource}"/>
 
-    <!-- <context:component-scan base-package="org.entando.entando.ent.liquibase" /> -->
-
     <bean id="ComponentManager" class="org.entando.entando.aps.system.init.ComponentManager"
           init-method="init">
         <property name="postProcessClasses">
