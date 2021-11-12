@@ -130,8 +130,8 @@
 
     <bean id="InitializerManager" class="org.entando.entando.aps.system.init.InitializerManager"
           parent="abstractInitializerManager">
-        <property name="checkOnStartup">
-            <value>${db.startup.check}</value>
+        <property name="migrationStrategy">
+            <value>${db.migration.strategy}</value>
         </property>
         <property name="databaseManager" ref="DatabaseManager" />
         <property name="postProcessors">

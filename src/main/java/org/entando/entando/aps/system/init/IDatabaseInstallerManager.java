@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.init;
 
+import org.entando.entando.aps.system.init.IInitializerManager.MigrationStrategy;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 
 /**
@@ -20,6 +21,6 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
  */
 public interface IDatabaseInstallerManager {
 	
-	public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStartup) throws Exception;
+	public SystemInstallationReport installDatabase(SystemInstallationReport report, MigrationStrategy migrationStrategy) throws Exception;
 	
 }
