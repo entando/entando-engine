@@ -45,7 +45,11 @@ import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+import liquibase.changelog.ChangeSetStatus;
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.init.exception.DatabaseMigrationException;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
@@ -112,8 +116,15 @@ public class DatabaseManager extends AbstractInitializerManager
         }
         try {
             List<Component> components = this.getComponentManager().getCurrentComponents();
+            Map<String, List<ChangeSetStatus>> pendingChangeSetMap = new HashMap<>();
             for (Component entandoComponentConfiguration : components) {
-                this.initLiquiBaseResources(entandoComponentConfiguration, report, migrationStrategy);
+                List<ChangeSetStatus> pendingChangeSet = this.initLiquiBaseResources(entandoComponentConfiguration, report, migrationStrategy);
+                if (!pendingChangeSet.isEmpty()) {
+                    pendingChangeSetMap.put(entandoComponentConfiguration.getCode(), pendingChangeSet);
+                }
+            }
+            if (!pendingChangeSetMap.isEmpty()) {
+                throw new DatabaseMigrationException(pendingChangeSetMap);
             }
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
                 //ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
@@ -127,13 +138,16 @@ public class DatabaseManager extends AbstractInitializerManager
                     this.initComponentDefaultResources(entandoComponentConfiguration, report, migrationStrategy);
                 }
             }
+        } catch (DatabaseMigrationException de) {
+            throw de;
         } catch (Throwable t) {
+            logger.error("Error while initializating Db Installer", t);
+            throw new Exception("Error while initializating Db Installer", t);
+        } finally {
             if (null != report && report.isUpdated()) {
                 report.setUpdated();
                 report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
             }
-            logger.error("Error while initializating Db Installer", t);
-            throw new Exception("Error while initializating Db Installer", t);
         }
         return report;
     }
@@ -169,7 +183,8 @@ public class DatabaseManager extends AbstractInitializerManager
         }
     }
 
-    public void initLiquiBaseResources(Component componentConfiguration, SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws EntException {
+    public List<ChangeSetStatus> initLiquiBaseResources(Component componentConfiguration, SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws EntException {
+        List<ChangeSetStatus> pendingChangeSet = new ArrayList<>();
         logger.info(INIT_MSG_L, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
         LiquibaseInstallationReport liquibaseReport = componentReport.getLiquibaseReport();
@@ -180,7 +195,9 @@ public class DatabaseManager extends AbstractInitializerManager
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 if (null != changeLogFile) {
                     liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-                    this.executeLiquibaseUpdate(report.getCreation(), componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), migrationStrategy);
+                    List<ChangeSetStatus> changeSetToExecute = this.executeLiquibaseUpdate(report.getCreation(), 
+                            componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), migrationStrategy);
+                    pendingChangeSet.addAll(changeSetToExecute);
                     ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                     if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy)) {
                         liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
@@ -195,10 +212,12 @@ public class DatabaseManager extends AbstractInitializerManager
             logger.error("Error executing liquibase initialization for component {}", componentConfiguration.getCode(), t);
             throw new EntException("Error executing liquibase initialization for component " + componentConfiguration.getCode(), t);
         }
+        return pendingChangeSet;
     }
 
-    private void executeLiquibaseUpdate(Date timestamp, String componentCode,
+    private List<ChangeSetStatus> executeLiquibaseUpdate(Date timestamp, String componentCode,
             String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, DatabaseMigrationStrategy migrationStrategy) throws Exception {
+        List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         Connection connection = null;
         Liquibase liquibase = null;
         Writer writer = null;
@@ -218,15 +237,21 @@ public class DatabaseManager extends AbstractInitializerManager
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
                 liquibase.update(contexts, new LabelExpression());
             } else {
-                writer = new StringBuilderWriter();
-                liquibase.update(contexts, new LabelExpression(), writer);
-                if (DatabaseMigrationStrategy.GENERATE_SQL.equals(migrationStrategy)) {
-                    ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
-                    String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
-                    this.getStorageManager().saveFile(path, true, stream);
-                    logger.warn("Component {}, database {}, Please find the update SQL script under  \"<PROTECTED_ENTANDO_DATA>" + File.separator + path + "\"", componentCode, dataSourceName);
-                } else {
-                    logger.warn("Component {}, database {}, Please update the DB manually", componentCode, dataSourceName);
+                List<ChangeSetStatus> statusList = liquibase.getChangeSetStatuses(contexts, new LabelExpression());
+                changeSetToExecute = statusList.stream().filter(cs -> cs.getWillRun()).collect(Collectors.toList());
+                if (!changeSetToExecute.isEmpty()) {
+                    String messagePrexix = "Component '" + componentCode + "', database '" + dataSourceName + "'";
+                    changeSetToExecute.stream().forEach(cs -> logger.warn(messagePrexix + ", changeSet '{}' has to be executed manually", cs.getChangeSet().getId()));
+                    writer = new StringBuilderWriter();
+                    liquibase.update(contexts, new LabelExpression(), writer);
+                    if (DatabaseMigrationStrategy.GENERATE_SQL.equals(migrationStrategy)) {
+                        ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
+                        String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
+                        this.getStorageManager().saveFile(path, true, stream);
+                        logger.warn(messagePrexix + ", Please find the update SQL script under \"<PROTECTED_ENTANDO_DATA>" + File.separator + path + "\"");
+                    } else {
+                        logger.warn(messagePrexix + ", Please update the DB manually");
+                    }
                 }
             }
         } catch (Exception e) {
@@ -242,6 +267,7 @@ public class DatabaseManager extends AbstractInitializerManager
                 connection.close();
             }
         }
+        return changeSetToExecute;
     }
 
     private void restoreDefaultDump() throws EntException {
