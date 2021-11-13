@@ -23,7 +23,7 @@ import liquibase.changelog.ChangeSetStatus;
 public class DatabaseMigrationException extends Exception {
     
 	public DatabaseMigrationException(Map<String, List<ChangeSetStatus>> pendingChangeSetMap) {
-		super("Error on database migration - Some components " + pendingChangeSetMap.keySet().toString() + " need to be upgraded manually ");
+		super("Error on database migration - Components " + pendingChangeSetMap.keySet().toString() + " need to be upgraded manually ");
 	}
     
 }
