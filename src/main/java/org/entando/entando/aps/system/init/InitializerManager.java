@@ -42,7 +42,7 @@ public class InitializerManager extends AbstractInitializerManager implements II
 
     private IInitializerManagerCacheWrapper cacheWrapper;
 
-    private String migrationStrategy = DatabaseMigrationStrategy.DISABLED.toString();
+    private String migrationStrategy = DatabaseMigrationStrategy.AUTO.toString();
 
     private Map<String, IPostProcessor> postProcessors;
 

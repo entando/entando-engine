@@ -96,7 +96,7 @@ public class DatabaseManager extends AbstractInitializerManager
     @Override
     public SystemInstallationReport installDatabase(SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws Exception {
         String lastLocalBackupFolder = null;
-        migrationStrategy = (null == migrationStrategy) ? DatabaseMigrationStrategy.DISABLED : migrationStrategy;
+        migrationStrategy = (null == migrationStrategy) ? DatabaseMigrationStrategy.AUTO : migrationStrategy;
         if (null == report) {
             report = SystemInstallationReport.getInstance();
             if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy) && !Environment.test.equals(this.getEnvironment())) {
