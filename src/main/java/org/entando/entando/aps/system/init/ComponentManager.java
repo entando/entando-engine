@@ -63,20 +63,24 @@ public class ComponentManager implements IComponentManager {
     }
 
     private List<Component> getOrderedComponents(List<Component> components) {
-        List<Component> ordered = new ArrayList<Component>();
+        List<Component> ordered = new ArrayList<>();
         for (int i = 0; i < components.size(); i++) {
             Component component = components.get(i);
-            boolean added = false;
-            for (int j = 0; j < ordered.size(); j++) {
-                Component current = ordered.get(j);
-                if (null != current.getDependencies() && current.getDependencies().contains(component.getCode())) {
-                    ordered.add(j, component);
-                    added = true;
-                    break;
+            if (component.getCode().equals(IComponentManager.MAIN_COMPONENT)) {
+                ordered.add(0, component);
+            } else {
+                boolean added = false;
+                for (int j = 0; j < ordered.size(); j++) {
+                    Component current = ordered.get(j);
+                    if (null != current.getDependencies() && current.getDependencies().contains(component.getCode())) {
+                        ordered.add(j, component);
+                        added = true;
+                        break;
+                    }
                 }
-            }
-            if (!added) {
-                ordered.add(component);
+                if (!added) {
+                    ordered.add(component);
+                }
             }
         }
         return ordered;
@@ -132,19 +136,6 @@ public class ComponentManager implements IComponentManager {
     public void setPostProcessClasses(Map<String, String> postProcessClasses) {
         this._postProcessClasses = postProcessClasses;
     }
-
-    /**
-     * @return The class loader of the installer which contains all the new
-     * loaded classes and resources plus the old ones loaded by the parent
-     * application class loader
-     */
-    public static ClassLoader getComponentInstallerClassLoader() {
-        return _componentInstallerClassLoader;
-    }
-
-    public static void setComponentInstallerClassLoader(ClassLoader _classLoader) {
-        _componentInstallerClassLoader = _classLoader;
-    }
     
     private String _locationPatterns;
 
@@ -152,13 +143,5 @@ public class ComponentManager implements IComponentManager {
     private Map<String, String> _postProcessClasses;
 
     public static final String DEFAULT_LOCATION_PATTERN = "classpath*:component/**/**component.xml";
-
-
-    /**
-     * The class loader of the installer which contains all the new loaded
-     * classes and resources plus the old ones loaded by the parent application
-     * class loader
-     */
-    private static ClassLoader _componentInstallerClassLoader;
 
 }

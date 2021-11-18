@@ -34,8 +34,8 @@ import com.agiletec.aps.util.DateConverter;
  * Servizio notificatore eventi.
  * @author M.Diana - E.Santoboni
  */
-public class NotifyManager implements INotifyManager, ApplicationListener, 
-BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
+public class NotifyManager implements INotifyManager, ApplicationListener,
+		BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 
 	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(NotifyManager.class);
 	
@@ -55,9 +55,13 @@ BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 	 * @param event L'evento da notificare.
 	 */
 	protected void notify(ApsEvent event) {
+		if (null == event.getObserverInterface()) {
+			_logger.debug("No observer interface defined foe event {}", event.getClass().getName());
+			return;
+		}
 		ListableBeanFactory factory = (ListableBeanFactory) this._beanFactory;
 		String[] defNames = factory.getBeanNamesForType(event.getObserverInterface());
-		for (int i=0; i<defNames.length; i++) {
+		for (int i = 0; i < defNames.length; i++) {
 			Object observer = null;
 			try {
 				observer = this._beanFactory.getBean(defNames[i]);

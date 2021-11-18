@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common;
 
+import io.swagger.annotations.ApiParam;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,26 +39,43 @@ public class FieldSearchFilter<T> implements Serializable {
         LEFT
     }
 
+    @ApiParam(hidden = true)
     private String key;
 
+    @ApiParam(hidden = true)
     private T value;
 
+    @ApiParam(hidden = true)
     private Order order;
+    @ApiParam(hidden = true)
     private T start;
+    @ApiParam(hidden = true)
     private T end;
 
+    @ApiParam(hidden = true)
     private boolean likeOption;
+    @ApiParam(hidden = true)
     private LikeOptionType likeOptionType;
+    @ApiParam(hidden = true)
     private boolean nullOption;
+    @ApiParam(hidden = true)
     private boolean notOption;
+    @ApiParam(hidden = true)
+    private boolean sortOnly;
 
+    @ApiParam(hidden = true)
     private List<T> allowedValues;
 
+    @ApiParam(hidden = true)
     private Integer startDateDelay;
+    @ApiParam(hidden = true)
     private Integer endDateDelay;
+    @ApiParam(hidden = true)
     private Integer valueDateDelay;
 
+    @ApiParam(hidden = true)
     private Integer limit;
+    @ApiParam(hidden = true)
     private Integer offset;
 
     protected FieldSearchFilter() {}
@@ -289,7 +307,15 @@ public class FieldSearchFilter<T> implements Serializable {
         }
         this.notOption = notOption;
     }
-    
+
+    public boolean isSortOnly() {
+        return sortOnly;
+    }
+
+    public void setSortOnly(boolean sortOnly) {
+        this.sortOnly = sortOnly;
+    }
+
     public List<T> getAllowedValues() {
         return allowedValues;
     }

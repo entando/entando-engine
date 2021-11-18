@@ -20,7 +20,6 @@ import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
-import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -50,9 +49,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
             List<Component> components = this.getComponents();
             for (int i = 0; i < components.size(); i++) {
                 Component componentConfiguration = components.get(i);
-                this.createBackup(componentConfiguration.getTableMapping(), report, backupSubFolder);
+                this.createBackup(componentConfiguration.getTableNames(), report, backupSubFolder);
             }
-            this.createBackup(this.getEntandoTableMapping(), report, backupSubFolder);
             long time = System.currentTimeMillis() - start;
             report.setRequiredTime(time);
             report.setDate(new Date());
@@ -69,7 +67,6 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
     }
 
     private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder) throws EntException {
-        ClassLoader cl = ComponentManager.getComponentInstallerClassLoader();
         if (null == tableMapping || tableMapping.isEmpty()) {
             return;
         }
@@ -77,24 +74,17 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (int j = 0; j < dataSourceNames.length; j++) {
                 String dataSourceName = dataSourceNames[j];
-                List<String> tableClassNames = tableMapping.get(dataSourceName);
-                if (null == tableClassNames || tableClassNames.isEmpty()) {
+                List<String> tableNames = tableMapping.get(dataSourceName);
+                if (null == tableNames || tableNames.isEmpty()) {
                     continue;
                 }
                 DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-                for (int k = 0; k < tableClassNames.size(); k++) {
-                    String tableClassName = tableClassNames.get(k);
-                    Class tableClass = null;
-                    if (cl != null) {
-                        tableClass = Class.forName(tableClassName, true, cl);
-                    } else {
-                        tableClass = Class.forName(tableClassName);
-                    }
-                    String tableName = TableFactory.getTableName(tableClass);
+                for (int k = 0; k < tableNames.size(); k++) {
+                    String tableName = tableNames.get(k);
                     this.dumpTableData(tableName, dataSourceName, dataSource, report, backupSubFolder);
                 }
             }
-        } catch (BeansException | ClassNotFoundException | EntException t) {
+        } catch (BeansException | EntException t) {
             _logger.error("Error while creating backup", t);
             throw new EntException("Error while creating backup", t);
         }

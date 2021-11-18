@@ -15,8 +15,9 @@ package com.agiletec.aps.system.services.url;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
@@ -92,7 +93,7 @@ public class URLManager extends AbstractURLManager {
                 page = this.getPageManager().getOnlineRoot();
             }
             HttpServletRequest request = (null != reqCtx) ? reqCtx.getRequest() : null;
-            String url = this.createURL(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
+            String url = this.createURL(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), pageUrl.getBaseUrlMode(), request);
             if (null != reqCtx && this.useJsessionId()) {
                 HttpServletResponse resp = reqCtx.getResponse();
                 String encUrl = resp.encodeURL(url.toString());
@@ -134,10 +135,15 @@ public class URLManager extends AbstractURLManager {
 
     @Override
     public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
-                            HttpServletRequest request) throws EntException {
+            HttpServletRequest request) throws EntException {
+        return this.createURL(requiredPage, requiredLang, params, escapeAmp, null, request);
+    }
+
+    public String createURL(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp,
+            String forcedBaseUrlMode, HttpServletRequest request) throws EntException {
         StringBuilder url = null;
         try {
-            url = new StringBuilder(this.getApplicationBaseURL(request));
+            url = new StringBuilder(this.getApplicationBaseURL(forcedBaseUrlMode, request));
             if (!this.isUrlStyleBreadcrumbs()) {
                 url.append(requiredLang.getCode()).append('/');
                 url.append(requiredPage.getCode()).append(".page");
@@ -158,8 +164,12 @@ public class URLManager extends AbstractURLManager {
 
     @Override
     public String getApplicationBaseURL(HttpServletRequest request) throws EntException {
+        return this.getApplicationBaseURL(null, request);
+    }
+
+    public String getApplicationBaseURL(String forcedBaseUrlMode, HttpServletRequest request) throws EntException {
         StringBuilder baseUrl = new StringBuilder();
-        this.addBaseURL(baseUrl, request);
+        this.addBaseURL(baseUrl, forcedBaseUrlMode, request);
         if (!baseUrl.toString().endsWith("/")) {
             baseUrl.append("/");
         }
@@ -167,6 +177,10 @@ public class URLManager extends AbstractURLManager {
     }
 
     protected void addBaseURL(StringBuilder link, HttpServletRequest request) {
+        this.addBaseURL(link, null, request);
+    }
+
+    protected void addBaseURL(StringBuilder link, String forcedBaseUrlMode, HttpServletRequest request) {
         if (null == request) {
             link.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
             return;
@@ -177,8 +191,12 @@ public class URLManager extends AbstractURLManager {
             link.append(webUiApplicationBaseUrl);
             return;
         }
-        if (this.isForceAddSchemeHost()) {
-            String reqScheme = request.getScheme();
+        String baseUrlMode = this.calculateBaseUrlMode(forcedBaseUrlMode, request);
+        if (this.isForceAddSchemeHost(baseUrlMode)) {
+            String reqScheme = request.getHeader("X-Forwarded-Proto");
+            if (StringUtils.isBlank(reqScheme)) {
+                reqScheme = request.getScheme();
+            }
             link.append(reqScheme);
             link.append("://");
             String serverName = request.getServerName();
@@ -198,7 +216,7 @@ public class URLManager extends AbstractURLManager {
             if (this.addContextName()) {
                 link.append(request.getContextPath());
             }
-        } else if (this.isRelativeBaseUrl()) {
+        } else if (this.isRelativeBaseUrl(baseUrlMode)) {
             if (this.addContextName()) {
                 link.append(request.getContextPath());
             }
@@ -207,33 +225,63 @@ public class URLManager extends AbstractURLManager {
         }
     }
 
+    protected String calculateBaseUrlMode(String forcedBaseUrlMode, HttpServletRequest request) {
+        if (null == request) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+        }
+        String param = this.getBaseUrlStrategy();
+        if (StringUtils.isBlank(forcedBaseUrlMode)) {
+            return param;
+        }
+        boolean isDefaultRelative = this.isRelativeBaseUrl(param);
+        if (IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equalsIgnoreCase(forcedBaseUrlMode)
+                || (isDefaultRelative && IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode))) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+        } else if (IPageManager.CONFIG_PARAM_BASE_URL_STATIC.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+        } else if (IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE.equalsIgnoreCase(forcedBaseUrlMode)) {
+            return IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE;
+        }
+        return param;
+    }
+
+    protected String getBaseUrlStrategy() {
+        return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_BASE_URL);
+    }
+
     protected boolean isForceAddSchemeHost() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equals(param));
+        return this.isForceAddSchemeHost(this.getBaseUrlStrategy());
+    }
+
+    protected boolean isForceAddSchemeHost(String param) {
+        return (IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST.equals(param));
     }
 
     protected boolean isRelativeBaseUrl() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_RELATIVE.equals(param));
+        return this.isRelativeBaseUrl(this.getBaseUrlStrategy());
+    }
+
+    protected boolean isRelativeBaseUrl(String param) {
+        return (IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE.equals(param));
     }
 
     protected boolean isStaticBaseUrl() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL);
-        return (SystemConstants.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
+        String param = this.getBaseUrlStrategy();
+        return (StringUtils.isBlank(param) || IPageManager.CONFIG_PARAM_BASE_URL_STATIC.equals(param));
     }
 
     protected boolean addContextName() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_BASE_URL_CONTEXT);
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT);
         return (null != param && Boolean.parseBoolean(param));
     }
 
     protected boolean isUrlStyleBreadcrumbs() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_URL_STYLE);
-        return (param != null && param.trim().equals(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS));
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_URL_STYLE);
+        return (param != null && param.trim().equals(IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS));
     }
 
     protected boolean useJsessionId() {
-        String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_USE_JSESSIONID);
+        String param = this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_USE_JSESSIONID);
         return (param != null && Boolean.parseBoolean(param));
     }
 

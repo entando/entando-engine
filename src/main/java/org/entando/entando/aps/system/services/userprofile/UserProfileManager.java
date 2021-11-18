@@ -33,7 +33,6 @@ import com.agiletec.aps.system.common.entity.IEntityDAO;
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -146,11 +145,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
     @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'UserProfileTypes_cacheGroup'")
     public void updateEntityPrototype(IApsEntity entityType) throws EntException {
         super.updateEntityPrototype(entityType);
-    }
-
-    @Override
-    protected ICategoryManager getCategoryManager() {
-        return null;
     }
 
     @Override

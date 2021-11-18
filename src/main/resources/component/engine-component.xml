@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+    <code>entando-engine</code>
+    <description>Entando Engine</description>
+    <artifact>
+        <artifactId>${project.artifactId}</artifactId>
+        <groupId>${project.groupId}</groupId>
+        <version>${project.version}</version>
+    </artifact>
+    <installation>
+        <tableMapping>
+            <datasource name="portDataSource">
+                <table>sysconfig</table>
+                <table>categories</table>
+                <table>localstrings</table>
+                <table>pagemodels</table>
+                <table>pages</table>
+                <table>pages_metadata_draft</table>
+                <table>pages_metadata_online</table>
+                <table>widgetcatalog</table>
+                <table>guifragment</table>
+                <table>widgetconfig</table>
+                <table>widgetconfig_draft</table>
+                <table>uniquekeys</table>
+                <table>userpreferences</table>
+            </datasource>
+            <datasource name="servDataSource">
+                <table>authgroups</table>
+                <table>authpermissions</table>
+                <table>authroles</table>
+                <table>authrolepermissions</table>
+                <table>authusers</table>
+                <table>authusergrouprole</table>
+                <table>api_oauth_consumers</table>
+                <table>api_oauth_tokens</table>
+                <table>apicatalog_methods</table>
+                <table>apicatalog_services</table>
+                <table>authuserprofiles</table>
+                <table>authuserprofilesearch</table>
+                <table>authuserprofileattrroles</table>
+                <table>actionlogrecords</table>
+                <table>actionlogrelations</table>
+                <table>actionloglikerecords</table>
+                <table>actionlogcommentrecords</table>
+            </datasource>
+        </tableMapping>
+        <liquibase>
+            <changeSet datasource="portDataSource" changeLogFile="classpath:liquibase/changeSetPort.xml" />
+            <changeSet datasource="servDataSource" changeLogFile="classpath:liquibase/changeSetServ.xml" />
+        </liquibase>
+    </installation>
+</component>

@@ -1,13 +1,14 @@
 package org.entando.entando.aps.system.services.usersettings.model;
 
+import com.agiletec.aps.system.services.user.IUserManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserSettingsDto {
 
-    public static final String EXTENDED_PRIVACY_MODULE_ENABLED = "extendedPrivacyModuleEnabled";
-    public static final String GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
-    public static final String MAX_MONTHS_SINCE_LASTACCESS = "maxMonthsSinceLastAccess";
-    public static final String MAX_MONTHS_SINCE_LASTPASSWORDCHANGE = "maxMonthsSinceLastPasswordChange";
+    public static final String EXTENDED_PRIVACY_MODULE_ENABLED = IUserManager.CONFIG_PARAM_PM_ENABLED;
+    public static final String GRAVATAR_INTEGRATION_ENABLED = IUserManager.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED;
+    public static final String MAX_MONTHS_SINCE_LASTACCESS = IUserManager.CONFIG_PARAM_PM_MM_LAST_ACCESS;
+    public static final String MAX_MONTHS_SINCE_LASTPASSWORDCHANGE = IUserManager.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE;
 
     @JsonProperty("restrictionsActive")
     private boolean extendedPrivacyModuleEnabled;

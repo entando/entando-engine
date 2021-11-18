@@ -264,7 +264,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/userProfiles/myGroupPermissions")
+    @GetMapping("/myGroupPermissions")
     public ResponseEntity<SimpleRestResponse<List<UserGroupPermissions>>> getMyGroupPermissions(HttpServletRequest request) {
 
         UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);

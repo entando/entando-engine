@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.common.entity;
 
+import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.ent.util.EntSafeXmlUtils;
 import java.io.IOException;
 import java.io.StringReader;
@@ -49,8 +50,8 @@ import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeDOM;
 import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import org.entando.entando.ent.exception.EntException;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
+import java.util.Optional;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -89,8 +90,6 @@ public abstract class ApsEntityManager extends AbstractService
     private String xmlAttributeRootElementName;
 
     private IApsEntityDOM entityDom;
-
-    private ICategoryManager categoryManager;
 
     private Map<String, AttributeRole> attributeRoles = null;
 
@@ -187,13 +186,18 @@ public abstract class ApsEntityManager extends AbstractService
             SAXParser parser = EntSafeXmlUtils.newSafeSAXParser();
             InputSource is = new InputSource(new StringReader(xml));
             EntityHandler handler = this.getEntityHandler();
-            handler.initHandler(entityPrototype, this.getXmlAttributeRootElementName(), this.getCategoryManager());
+            handler.initHandler(entityPrototype, this.getXmlAttributeRootElementName());
             parser.parse(is, handler);
             return entityPrototype;
         } catch (ParserConfigurationException | SAXException | IOException t) {
             logger.error("Error detected while creating the entity. typecode: {} - xml: {}", entityTypeCode, xml, t);
             throw new EntException("Error detected while creating the entity", t);
         }
+    }
+
+    @Override
+    public String getConfigItem() throws EntException {
+        return this.getEntityTypeFactory().extractConfigItem(this.getConfigItemName());
     }
 
     /**
@@ -346,9 +350,20 @@ public abstract class ApsEntityManager extends AbstractService
 
     private void notifyEntityTypesChanging(IApsEntity oldEntityType, IApsEntity newEntityType, int operationCode) {
         EntityTypesChangingEvent event = new EntityTypesChangingEvent();
+        Map<String, String> properties = new HashMap<>();
+        properties.put("operationCode", String.valueOf(operationCode));
+        properties.put("entityManagerName", this.getName());
+        Optional.ofNullable(newEntityType).ifPresent(e -> {
+            properties.put("newEntityType", e.getTypeCode());
+            event.setNewEntityType(e);
+        });
+        Optional.ofNullable(oldEntityType).ifPresent(e -> {
+            properties.put("oldEntityType", e.getTypeCode());
+            event.setOldEntityType(e);
+        });
+        event.setMessage(properties);
+        event.setChannel(SystemConstants.ENTITY_EVENT_CHANNEL);
         event.setOperationCode(operationCode);
-        event.setNewEntityType(newEntityType);
-        event.setOldEntityType(oldEntityType);
         event.setEntityManagerName(this.getName());
         this.notifyEvent(event);
     }
@@ -770,19 +785,6 @@ public abstract class ApsEntityManager extends AbstractService
             codes.add(smallType.getCode());
         }
         return codes;
-    }
-
-    /**
-     * Return the category manager used by the entities managed by the service.
-     *
-     * @return The category manager used by the entities.
-     */
-    protected ICategoryManager getCategoryManager() {
-        return categoryManager;
-    }
-
-    public void setCategoryManager(ICategoryManager categoryManager) {
-        this.categoryManager = categoryManager;
     }
 
     /**

@@ -20,21 +20,17 @@ import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.CheckFormatUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
@@ -59,8 +55,6 @@ public class EntityDto implements Serializable {
     private String mainGroup;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<String> groups;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> categories;
     private List<EntityAttributeDto> attributes = new ArrayList<>();
 
     public EntityDto() {
@@ -73,15 +67,12 @@ public class EntityDto implements Serializable {
         this.setDescription(src.getDescription());
         this.setMainGroup(src.getMainGroup());
         this.setGroups(src.getGroups());
-        if (null != src.getCategories()) {
-            this.setCategories(src.getCategories().stream().map(i -> i.getCode()).collect(Collectors.toList()));
-        }
         if (null != src.getAttributeList()) {
             src.getAttributeList().stream().forEach(j -> this.getAttributes().add(new EntityAttributeDto(j)));
         }
     }
 
-    public void fillEntity(IApsEntity prototype, ICategoryManager categoryManager, BindingResult bindingResult) {
+    public void fillEntity(IApsEntity prototype, BindingResult bindingResult) {
         clearAttributeData(prototype.getAttributeList());
         prototype.setId(this.getId());
         prototype.setDescription(getDescription() == null ? prototype.getDescription() : getDescription());
@@ -89,15 +80,6 @@ public class EntityDto implements Serializable {
         prototype.setTypeDescription(getTypeDescription() == null ? prototype.getTypeDescription() : getTypeDescription());
         if (null != this.getGroups()) {
             prototype.setGroups(this.getGroups());
-        }
-        if (null != this.getCategories()) {
-            prototype.getCategories().clear();
-            this.getCategories().stream().forEach(i -> {
-                Category category = categoryManager.getCategory(i);
-                if (null != category) {
-                    prototype.addCategory(category);
-                }
-            });
         }
         fillAttributeData(bindingResult, prototype.getAttributeMap());
     }
@@ -300,14 +282,6 @@ public class EntityDto implements Serializable {
 
     public void setAttributes(List<EntityAttributeDto> attributes) {
         this.attributes = attributes;
-    }
-
-    public List<String> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
     }
 
 }

@@ -34,10 +34,12 @@ import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import org.entando.entando.aps.system.services.user.UserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
@@ -69,7 +71,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.MapBindingResult;
 
 /**
- *
  * @author paddeo
  */
 @ExtendWith(MockitoExtension.class)
@@ -92,7 +93,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
     @InjectMocks
     private UserController controller;
-    
+
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
@@ -221,6 +222,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
         String mockJson = "{\"username\": \"user\",\n"
                 + "    \"password\": \"new_password\",\n"
+                + "    \"passwordConfirm\": \"new_password\",\n"
                 + "    \"status\": \"active\"\n"
                 + "}";
 
@@ -297,6 +299,29 @@ class UserControllerUnitTest extends AbstractControllerTest {
         result.andExpect(status().isOk());
         String response = result.andReturn().getResponse().getContentAsString();
         System.out.println(response);
+    }
+
+    @Test
+    void shouldValidatePasswordConfirmMismatch() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String mockJson = "{\"username\": \"test_user\",\n"
+                + "    \"password\": \"new_password\",\n"
+                + "    \"passwordConfirm\": \"different\",\n"
+                + "    \"status\": \"active\"\n"
+                + "}";
+
+        Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
+        ResultActions result = mockMvc.perform(
+                post("/users")
+                        .sessionAttr("user", user)
+                        .content(mockJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken));
+
+        result.andExpect(status().isBadRequest());
+        result.andExpect(jsonPath("$.errors[0].code", is(UserValidator.ERRCODE_PASSWORD_CONFIRM_MISMATCH)));
     }
 
     private Group mockedGroup() {
@@ -442,5 +467,4 @@ class UserControllerUnitTest extends AbstractControllerTest {
             new UserController().deleteUser(user, "test", bindingResult);
         });
     }
-    
 }

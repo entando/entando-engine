@@ -13,9 +13,12 @@
  */
 package com.agiletec.aps.system;
 
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.user.IUserManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 /**
  * Interfaccia con le principali costanti di sistema.
@@ -74,6 +77,7 @@ public interface SystemConstants {
      *
      * @deprecated Use {@link #EXTRAPAR_CURRENT_WIDGET} instead
      */
+    @Deprecated
     public static final String EXTRAPAR_CURRENT_SHOWLET = EXTRAPAR_CURRENT_WIDGET;
 
     /**
@@ -111,11 +115,6 @@ public interface SystemConstants {
      * Nome del parametro di query string per l'identificatore di contenuto.
      */
     public static final String K_CONTENT_ID_PARAM = "contentId";
-
-    /**
-     * Nome del parametro di query string per l'identificatore di dataobject.
-     */
-    public static final String K_DATAOBJECT_ID_PARAM = "dataId";
 
     /**
      * Nome del servizio che gestisce la configurazione del sistema.
@@ -212,13 +211,6 @@ public interface SystemConstants {
      */
     public static final String STORAGE_MANAGER = "StorageManager";
 
-    /**
-     * Nome del servizio gestore cache.
-     *
-     * @deprecated
-     */
-    public static final String CACHE_MANAGER = "CacheManager";
-
     public static final String CACHE_INFO_MANAGER = "CacheInfoManager";
 
     public static final String ACTION_LOGGER_MANAGER = "ActionLogManager";
@@ -251,18 +243,6 @@ public interface SystemConstants {
 
     public static final String OAUTH_CONSUMER_MANAGER = "OAuthConsumerManager";
 
-    public static final String DATA_OBJECT_MANAGER = "DataObjectManager";
-
-    public static final String DATA_OBJECT_MODEL_MANAGER = "DataObjectModelManager";
-
-    public static final String DATA_OBJECT_RENDERER_MANAGER = "BaseDataObjectRenderer";
-
-    public static final String DATA_OBJECT_PAGE_MAPPER_MANAGER = "DataObjectPageMapperManager";
-
-    public static final String DATA_OBJECT_DISPENSER_MANAGER = "DataObjectDispenserManager";
-
-    public static final String DATA_OBJECT_ENGINE_MANAGER = "DataObjectSearchEngineManager";
-
     /**
      * Prefisso del nome del gruppo di oggetti in cache a servizio di una
      * pagina. Il nome và completato con il codice della pagina specifica.
@@ -278,15 +258,15 @@ public interface SystemConstants {
 
     public static final String CONFIG_ITEM_LANGS = "langs";
 
-    public static final String CONFIG_ITEM_LICENSE = "license";
-
     public static final String CONFIG_ITEM_PARAMS = "params";
 
     /**
      * Parametro di sistema: abilitazione del modulo Privacy. Possibili
      * immissioni "true" o "false" (default).
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_ENABLED = "extendedPrivacyModuleEnabled";
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_ENABLED = IUserManager.CONFIG_PARAM_PM_ENABLED;
 
     /**
      * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
@@ -295,8 +275,10 @@ public interface SystemConstants {
      * dell'utenza definita da questo parametro, l'utenza sarà dichiarata
      * scaduta e in occasione del login tutte le autorizzazioni verranno
      * disabilitate.
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_MM_LAST_ACCESS = "maxMonthsSinceLastAccess";
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_MM_LAST_ACCESS = IUserManager.CONFIG_PARAM_PM_MM_LAST_ACCESS;
 
     /**
      * Parametro di sistema a uso del modulo Privacy. Numero massimo di mesi
@@ -304,67 +286,125 @@ public interface SystemConstants {
      * attivo e che una utenza presenti la password invariata per un tempo oltre
      * la soglia massima definita da questo parametro, in occasione del login
      * tutte le autorizzazioni verranno disabilitate.
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = "maxMonthsSinceLastPasswordChange";
-
+    @Deprecated
+    public static final String CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE = IUserManager.CONFIG_PARAM_PM_MM_LAST_PASSWORD_CHANGE;
     /**
-     * Parametro di sistema per la definizione dello stile della url dei link
-     * generati. Se settato a 'standard', la url generata avrà la forma
-     * "applicationBaseUrl/langCode/pageCode.page". Se settato a 'breadcrumbs',
-     * la url generata avrà la forma
-     * "applicationBaseUrl/pages/langCode/pagePath/" dove pagePath è la
-     * concatenazione dei codici pagina dalla pagina radice alla pagina oggetto
-     * del link.
+     * @deprecated moved into IUserManager interface
      */
-    public static final String CONFIG_PARAM_URL_STYLE = "urlStyle";
+    @Deprecated
+    public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = IUserManager.CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED;
 
-    public static final String CONFIG_PARAM_TREE_STYLE_PAGE = "treeStyle_page";
     public static final String CONFIG_PARAM_TREE_STYLE_CATEGORY = "treeStyle_category";
-
-    public static final String CONFIG_PARAM_USE_JSESSIONID = "useJsessionId";
-
-    public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
-
-    public static final String CONFIG_PARAM_BASE_URL_RELATIVE = "relative";
-    public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
-    public static final String CONFIG_PARAM_BASE_URL_STATIC = "static";
-
-    public static final String CONFIG_PARAM_BASE_URL_CONTEXT = "baseUrlContext";
 
     public static final String TREE_STYLE_CLASSIC = "classic";
     public static final String TREE_STYLE_REQUEST = "request";
     public static final String TREE_STYLE_LEVEL = "level";
 
-    public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = "classic";
-    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = "breadcrumbs";
-
-    public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = "startLangFromBrowser";
-
-    public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = "homePageCode";
-
     public static final String CONFIG_PARAM_HYPERTEXT_EDITOR_CODE = "hypertextEditor";
 
-    public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = "notFoundPageCode";
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE = IPageManager.CONFIG_PARAM_URL_STYLE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_TREE_STYLE_PAGE = IPageManager.CONFIG_PARAM_TREE_STYLE_PAGE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_USE_JSESSIONID = IPageManager.CONFIG_PARAM_USE_JSESSIONID;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL = IPageManager.CONFIG_PARAM_BASE_URL;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_RELATIVE = IPageManager.CONFIG_PARAM_BASE_URL_RELATIVE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = IPageManager.CONFIG_PARAM_BASE_URL_FROM_REQUEST;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_STATIC = IPageManager.CONFIG_PARAM_BASE_URL_STATIC;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = IPageManager.SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_BASE_URL_CONTEXT = IPageManager.CONFIG_PARAM_BASE_URL_CONTEXT;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = IPageManager.CONFIG_PARAM_START_LANG_FROM_BROWSER;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = IPageManager.CONFIG_PARAM_HOMEPAGE_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_ERROR_PAGE_CODE = IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE;
+    
+    /**
+     * @deprecated moved into IPageManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = IPageManager.CONFIG_PARAM_LOGIN_PAGE_CODE;
 
-    public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
-
-    public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
-
-    public static final String CONFIG_PARAM_GRAVATAR_INTEGRATION_ENABLED = "gravatarIntegrationEnabled";
-
-    public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = "editEmptyFragmentEnabled";
-
-    public static final String CONFIG_PARAM_GROUPS_ON_DEMAND = "groupsOnDemand";
-
-    public static final String CONFIG_PARAM_CATEGORIES_ON_DEMAND = "categoriesOnDemand";
-
-    public static final String CONFIG_PARAM_CONTENT_TYPES_ON_DEMAND = "contentTypesOnDemand";
-
-    public static final String CONFIG_PARAM_CONTENT_MODELS_ON_DEMAND = "contentModelsOnDemand";
-
-    public static final String CONFIG_PARAM_APIS_ON_DEMAND = "apisOnDemand";
-
-    public static final String CONFIG_PARAM_RESOURCE_ARCHIVES_ON_DEMAND = "resourceArchivesOnDemand";
+    /**
+     * @deprecated moved into IGuiFragmentManager interface
+     */
+    @Deprecated
+    public static final String CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED = IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED;
 
     /**
      * Lo username dell'utente amministratore, utente di default con diritti
@@ -416,21 +456,19 @@ public interface SystemConstants {
 
     public static final String ENTANDO_THREAD_NAME_PREFIX = "EntandoThread_";
 
+    @Deprecated
     public static final String DATA_TYPE_METADATA_DATE_FORMAT = "yyyyMMddHHmmss";
 
-    public static final String DATA_TYPE_ATTRIBUTE_ROLE_TITLE = "dataObject:title";
-
-    public static final String CONFIG_ITEM_DATA_OBJECT_INDEX_SUB_DIR = "dataobjectsubdir";
-
     public static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    public static final String PERMISSION_EDIT_DATAOBJECTS = "editDataObjects";
 
     public static final Integer OAUTH2_ACCESS_TOKEN_DEFAULT_VALIDITY_SECOND = 3600;
 
     public static final Integer OAUTH2_REFRESH_TOKEN_DEFAULT_VALIDITY_SECOND = 86400;
-
     
+    public static final String PAGE_EVENT_CHANNEL = "core-page";
+    
+    public static final String ENTITY_EVENT_CHANNEL = "core-entity";
+
     public static final String CSP_HEADER_ENABLED = "CSP_HEADER_ENABLED";
     public static final String CSP_HEADER_EXTRACONFIG = "CSP_HEADER_EXTRACONFIG";
     public static final String ENTANDO_CSRF_PROTECTION = "ENTANDO_CSRF_PROTECTION";
@@ -442,10 +480,9 @@ public interface SystemConstants {
     public static final String REFERER = "Referer";
     public static final String CSRF_BASIC_PROTECTION = "basic";
 
-
     // keycloak
     public static final String SYSTEM_PROP_KEYCLOAK_AUTH_URL = "keycloak.auth.url";
     public static final String SYSTEM_PROP_KEYCLOAK_ENABLED = "keycloak.enabled";
     public static final String SYSTEM_PROP_KEYCLOAK_REALM = "keycloak.realm";
-
+    
 }

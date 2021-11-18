@@ -21,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -108,6 +111,32 @@ class GuiFragmentManagerIntegrationTest extends BaseTestCase {
         fragment.setGui(gui);
         fragment.setWidgetTypeCode(widgetTypeCode);
         return fragment;
+    }
+
+    @Test
+    void testUpdateParams() throws Throwable {
+        ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
+        String value = this._guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        assertEquals("false", value);
+        assertEquals(value, configManager.getParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED));
+
+        Map<String, String> map = new HashMap<>();
+        map.put(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "true");
+        this._guiFragmentManager.updateParams(map);
+        value = this._guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        assertEquals("true", value);
+        assertEquals(value, configManager.getParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED));
+
+        map.put(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED, "false");
+        this._guiFragmentManager.updateParams(map);
+        value = this._guiFragmentManager.getConfig(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED);
+        assertEquals("false", value);
+        assertEquals(value, configManager.getParam(IGuiFragmentManager.CONFIG_PARAM_EDIT_EMPTY_FRAGMENT_ENABLED));
+
+        map.put("invalidKey", "value");
+        this._guiFragmentManager.updateParams(map);
+        assertNull(this._guiFragmentManager.getConfig("invalidKey"));
+        assertNull(configManager.getParam("invalidKey"));
     }
 
     @BeforeEach

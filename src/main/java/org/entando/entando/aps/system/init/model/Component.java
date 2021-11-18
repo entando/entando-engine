@@ -32,11 +32,12 @@ public class Component {
     private String artifactGroupId;
     private String artifactVersion;
     private List<String> dependencies;
-    private Map<String, List<String>> tableMapping;
+
+    private Map<String, List<String>> tableNames;
 
     private Map<String, ComponentEnvironment> environments;
 
-    private ComponentUninstallerInfo uninstallerInfo;
+    private Map<String, String> liquibaseChangeSets;
 
     public Component(Element rootElement, Map<String, String> postProcessClasses) throws Throwable {
         try {
@@ -70,10 +71,18 @@ public class Component {
                             = new ComponentEnvironmentImpl(environmentElement, postProcessClasses);
                     environments.put(environment.getCode(), environment);
                 }
-            }
-            Element uninstallationElement = rootElement.getChild("uninstallation");
-            if (null != uninstallationElement) {
-                uninstallerInfo = new ComponentUninstallerInfo(uninstallationElement, postProcessClasses);
+                Element liquibaseElement = installationElement.getChild("liquibase");
+                if (null != liquibaseElement) {
+                    this.setLiquibaseChangeSets(new HashMap<>());
+                    List<Element> changeSetElements = liquibaseElement.getChildren("changeSet");
+                    for (int i = 0; i < changeSetElements.size(); i++) {
+                        Element changeSetElement = changeSetElements.get(i);
+                        String dataSource = changeSetElement.getAttributeValue("datasource");
+                        String changeSet = changeSetElement.getAttributeValue("changeLogFile");
+                        this.getLiquibaseChangeSets().put(dataSource, changeSet);
+                    }
+
+                }
             }
         } catch (Throwable t) {
             logger.error("Error loading component", t);
@@ -82,7 +91,7 @@ public class Component {
 
     private void extractTableMapping(Element tableMappingElement) {
         if (null != tableMappingElement) {
-            this.setTableMapping(new HashMap<>());
+            this.setTableNames(new HashMap<>());
             List<Element> datasourceElements = tableMappingElement.getChildren("datasource");
             for (int i = 0; i < datasourceElements.size(); i++) {
                 Element datasourceElement = datasourceElements.get(i);
@@ -92,8 +101,13 @@ public class Component {
                 for (int j = 0; j < tableClasses.size(); j++) {
                     tableMapping.add(tableClasses.get(j).getText());
                 }
-                if (tableMapping.size() > 0) {
-                    this.getTableMapping().put(datasourceName, tableMapping);
+                List<String> datasourceTableNames = new ArrayList<>();
+                List<Element> tableElements = datasourceElement.getChildren("table");
+                for (int j = 0; j < tableElements.size(); j++) {
+                    datasourceTableNames.add(tableElements.get(j).getText());
+                }
+                if (!datasourceTableNames.isEmpty()) {
+                    this.getTableNames().put(datasourceName, datasourceTableNames);
                 }
             }
         }
@@ -159,12 +173,12 @@ public class Component {
         }
     }
 
-    public Map<String, List<String>> getTableMapping() {
-        return tableMapping;
+    public Map<String, List<String>> getTableNames() {
+        return tableNames;
     }
 
-    protected void setTableMapping(Map<String, List<String>> tableMapping) {
-        this.tableMapping = tableMapping;
+    protected void setTableNames(Map<String, List<String>> tableNames) {
+        this.tableNames = tableNames;
     }
 
     public Map<String, ComponentEnvironment> getEnvironments() {
@@ -175,11 +189,11 @@ public class Component {
         this.environments = environments;
     }
 
-    public ComponentUninstallerInfo getUninstallerInfo() {
-        return uninstallerInfo;
+    public Map<String, String> getLiquibaseChangeSets() {
+        return liquibaseChangeSets;
+    }
+    protected void setLiquibaseChangeSets(Map<String, String> liquibaseChangeSets) {
+        this.liquibaseChangeSets = liquibaseChangeSets;
     }
 
-    protected void setUninstallerInfo(ComponentUninstallerInfo uninstallerInfo) {
-        this.uninstallerInfo = uninstallerInfo;
-    }
 }

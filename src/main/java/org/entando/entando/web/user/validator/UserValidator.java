@@ -76,6 +76,8 @@ public class UserValidator extends AbstractPaginationValidator {
 
     public static final String ERRCODE_UPDATE_OTHER = "9";
 
+    public static final String ERRCODE_PASSWORD_CONFIRM_MISMATCH = "10";
+
     @Autowired
     @Qualifier("compatiblePasswordEncoder")
     private PasswordEncoder passwordEncoder;
@@ -148,6 +150,9 @@ public class UserValidator extends AbstractPaginationValidator {
         int usLength = username.length();
         if (usLength < 4 || usLength > 80 || !matcherUsername.matches()) {
             bindingResult.reject(UserValidator.ERRCODE_USERNAME_FORMAT_INVALID, new String[]{username}, "user.username.format.invalid");
+        }
+        if (!request.getPassword().equals(request.getPasswordConfirm())) {
+            bindingResult.reject(UserValidator.ERRCODE_PASSWORD_CONFIRM_MISMATCH, new String[]{}, "user.password-confirm.mismatch");
         }
         this.checkNewPassword(username, request.getPassword(), bindingResult);
         String profileTypeCode = request.getProfileType();

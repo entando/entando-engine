@@ -20,11 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Map;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -643,10 +646,10 @@ class TestPageManager extends BaseTestCase {
             }
             pagesFound = this._pageManager.searchPages("", null, allowedGroupCodes);
             assertNotNull(pagesFound);
-            assertEquals(18, pagesFound.size());
+            assertEquals(17, pagesFound.size());
             pagesFound = this._pageManager.searchPages(null, null, allowedGroupCodes);
             assertNotNull(pagesFound);
-            assertEquals(18, pagesFound.size());
+            assertEquals(17, pagesFound.size());
         } catch (Throwable t) {
             throw t;
         }
@@ -660,7 +663,7 @@ class TestPageManager extends BaseTestCase {
 
         List<IPage> pageUtilizers2 = this._pageManager.getDraftWidgetUtilizers("login_form");
         assertNotNull(pageUtilizers2);
-        assertEquals(2, pageUtilizers2.size());
+        assertEquals(1, pageUtilizers2.size());
 
         List<IPage> pageUtilizers3 = this._pageManager.getDraftWidgetUtilizers("leftmenu");
         assertNotNull(pageUtilizers3);
@@ -797,6 +800,32 @@ class TestPageManager extends BaseTestCase {
             found = code.equals(onlyDraftPageCode);
         }
         assertTrue(found);
+    }
+
+    @Test
+    void testUpdateParams() throws Throwable {
+        ConfigInterface configManager = getApplicationContext().getBean(ConfigInterface.class);
+        String value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("notfound", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        Map<String, String> map = new HashMap<>();
+        map.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "newValue");
+        this._pageManager.updateParams(map);
+        value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("newValue", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        map.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "notfound");
+        this._pageManager.updateParams(map);
+        value = this._pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        assertEquals("notfound", value);
+        assertEquals(value, configManager.getParam(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE));
+
+        map.put("invalidKey", "value");
+        this._pageManager.updateParams(map);
+        assertNull(this._pageManager.getConfig("invalidKey"));
+        assertNull(configManager.getParam("invalidKey"));
     }
 
     @BeforeEach

@@ -13,10 +13,7 @@
  */
 package com.agiletec.aps.system.services.baseconfig;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -24,7 +21,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.cache.IConfigManagerCacheWrapper;
-import de.mkammerer.argon2.Argon2Factory;
 import java.util.HashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -49,8 +45,6 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 
     private Map<String, String> systemParams;
 
-    private String securityConfigPath = null;
-
     private IConfigManagerCacheWrapper cacheWrapper;
 
     private IConfigItemDAO configDao;
@@ -63,12 +57,9 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
         this.getCacheWrapper().initCache(this.getConfigDAO(), version);
         boolean legacyPasswordsUpdated = (this.getParam(LEGACY_PASSWORDS_UPDATED) != null
                 && this.getParam(LEGACY_PASSWORDS_UPDATED).equalsIgnoreCase("true"));
-
         if (legacyPasswordsUpdated) {
             logger.warn("legacyPasswordsUpdated system parameter ignored as legacy password update is no more supported");
         }
-        Properties props = this.extractSecurityConfiguration();
-        this.checkSecurityConfiguration(props);
         logger.debug("{} ready. Initialized", this.getClass().getName());
     }
     
@@ -126,83 +117,35 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
             return this.getCacheWrapper().getParam(name);
         }
     }
-
-    protected Properties extractSecurityConfiguration() throws IOException {
-        Properties props = new Properties();
-        try (InputStream is = this.getServletContext().getResourceAsStream(this.getSecurityConfigPath())) {
-            if (null == is) {
-                throw new RuntimeException("Null security configuration inside " + this.getSecurityConfigPath());
-            }
-            props.load(is);
-        }
-        return props;
-    }
-
-    protected void checkSecurityConfiguration(Properties mainProps) {
-        String algoType = null;
-        try {
-            algoType = Argon2Factory.Argon2Types.valueOf(mainProps.getProperty(ALGO_TYPE_PARAM_NAME)).name();
-        } catch (Exception e) {
-            String defaultAlgoType = Argon2Factory.Argon2Types.ARGON2i.name();
-            logger.error("Invalid value for Argon2 hashType '{}'; the default value is '{}'", algoType, defaultAlgoType, e);
-            throw new RuntimeException("Invalid value for Argon2 hashType '" + algoType + "'; the default value is '" + defaultAlgoType + "'", e);
-        }
-        System.getProperties().setProperty(ALGO_TYPE_PARAM_NAME, algoType);
-
-        Integer hashLength = Integer.valueOf(mainProps.getProperty(ALGO_HASH_LENGTH_PARAM_NAME));
-        if (hashLength < 4) {
-            throw new RuntimeException("Hash length must be greater than 4 - value '" + hashLength + "'");
-        }
-        System.getProperties().setProperty(ALGO_HASH_LENGTH_PARAM_NAME, String.valueOf(hashLength));
-
-        Integer saltLength = Integer.valueOf(mainProps.getProperty(ALGO_SALT_LENGTH_PARAM_NAME));
-        if (saltLength < 8) {
-            throw new RuntimeException("Salt length must be greater than 8 - value '" + saltLength + "'");
-        }
-        System.getProperties().setProperty(ALGO_SALT_LENGTH_PARAM_NAME, String.valueOf(saltLength));
-
-        Integer iterations = Integer.valueOf(mainProps.getProperty(ALGO_ITERATIONS_PARAM_NAME));
-        if (iterations < 1) {
-            throw new RuntimeException("Iterations number must be greater than 1 - value '" + iterations + "'");
-        }
-        System.getProperties().setProperty(ALGO_ITERATIONS_PARAM_NAME, String.valueOf(iterations));
-
-        Integer parallelism = Integer.valueOf(mainProps.getProperty(ALGO_PARALLELISM_PARAM_NAME));
-        if (parallelism < 1) {
-            throw new RuntimeException("Parallelism number must be greater than 1 - value '" + parallelism + "'");
-        }
-        System.getProperties().setProperty(ALGO_PARALLELISM_PARAM_NAME, String.valueOf(parallelism));
-
-        Integer memory = Integer.valueOf(mainProps.getProperty(ALGO_MEMORY_PARAM_NAME));
-        if (memory < (8 * parallelism)) {
-            throw new RuntimeException("Memory size must be greater than 8xparallelism - value '" + memory + "'");
-        }
-        System.getProperties().setProperty(ALGO_MEMORY_PARAM_NAME, String.valueOf(memory));
-
-        String defaultEncryptionKey = mainProps.getProperty(ALGO_DEFAULT_KEY);
-        if (StringUtils.isNotEmpty(defaultEncryptionKey)) {
-            System.getProperties().setProperty(ALGO_DEFAULT_KEY, defaultEncryptionKey);
-        }
+    
+    @Override
+    public void updateParam(String name, String value) throws EntException {
+        this.updateParam(name, value, false);
     }
 
     @Override
-    public void updateParam(String name, String value) throws EntException {
+    public void updateParam(String name, String value, boolean addIfNew) throws EntException {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(value)) {
             return;
         }
         Map<String, String> params = new HashMap<>();
         params.put(name, value);
-        this.updateParams(params);
+        this.updateParams(params, addIfNew);
+    }
+    
+    @Override
+    public void updateParams(Map<String, String> params) throws EntException {
+        this.updateParams(params, false);
     }
 
     @Override
-    public void updateParams(Map<String, String> params) throws EntException {
+    public void updateParams(Map<String, String> params, boolean addNewOnes) throws EntException {
         if (null == params) {
             return;
         }
         try {
             String xmlParams = this.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
-            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, params, false);
+            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, params, addNewOnes);
             this.updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
         } catch (Exception e) {
             logger.error("Error while updating parameters {}", params, e);
@@ -234,14 +177,6 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 
     public void setSystemParams(Map<String, String> systemParams) {
         this.systemParams = systemParams;
-    }
-
-    protected String getSecurityConfigPath() {
-        return securityConfigPath;
-    }
-
-    public void setSecurityConfigPath(String securityConfigPath) {
-        this.securityConfigPath = securityConfigPath;
     }
 
     protected IConfigManagerCacheWrapper getCacheWrapper() {

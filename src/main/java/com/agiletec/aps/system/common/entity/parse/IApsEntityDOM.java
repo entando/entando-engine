@@ -72,12 +72,6 @@ public interface IApsEntityDOM {
 	public void addGroup(String groupName);
 
 	/**
-	 * Add, setting its value, a new element to the categories tag.
-	 * @param categoryCode The value of the category tag.
-	 */
-	public void addCategory(String categoryCode);
-
-	/**
 	 * Add a new attribute to a tag.
 	 * @param attributeElem The element, which corresponds to an attribute, to add
 	 * to the entity XML structure.

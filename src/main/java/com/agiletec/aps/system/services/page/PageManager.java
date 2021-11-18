@@ -14,7 +14,7 @@
 package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
@@ -29,12 +29,18 @@ import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserve
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -44,13 +50,17 @@ import org.entando.entando.ent.util.EntLogging.EntLogger;
  *
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
+public class PageManager extends AbstractParameterizableService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
     public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
 
-    private IPageManagerCacheWrapper _cacheWrapper;
-    private IPageDAO _pageDao;
+    @Autowired
+    @Qualifier(value = "PageManagerParameterNames")
+    public transient List<String> parameterNames;
+
+    private transient IPageManagerCacheWrapper cacheWrapper;
+    private transient IPageDAO pageDao;
 
     @Override
     public void init() throws Exception {
@@ -84,7 +94,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void deletePage(String pageCode) throws EntException {
+    public synchronized void deletePage(String pageCode) throws EntException {
         IPage page = this.getDraftPage(pageCode);
         if (null != page && page.getChildrenCodes().length <= 0) {
             try {
@@ -105,7 +115,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void addPage(IPage page) throws EntException {
+    public synchronized void addPage(IPage page) throws EntException {
         try {
             IPage parent = this.getDraftPage(page.getParentCode());
             if (null == parent) {
@@ -139,7 +149,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public void updatePage(IPage page) throws EntException {
+    public synchronized void updatePage(IPage page) throws EntException {
         try {
             this.getPageDAO().updatePage(page);
             this.getCacheWrapper().updateDraftPage(page);
@@ -151,7 +161,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void setPageOnline(String pageCode) throws EntException {
+    public synchronized void setPageOnline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOnline(pageCode);
             this.getCacheWrapper().setPageOnline(pageCode);
@@ -163,7 +173,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void setPageOffline(String pageCode) throws EntException {
+    public synchronized void setPageOffline(String pageCode) throws EntException {
         try {
             this.getPageDAO().setPageOffline(pageCode);
             this.getCacheWrapper().setPageOffline(pageCode);
@@ -171,25 +181,34 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error updating a page as offline", t);
             throw new EntException("Error updating a page as offline", t);
         }
-        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
+        this.notifyPageChangedEvent(this.getDraftPage(pageCode), PageChangedEvent.UPDATE_OPERATION_CODE, null, null, PageChangedEvent.EVENT_TYPE_SET_PAGE_OFFLINE);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos) {
-        PageChangedEvent event = buildEvent(page, operationCode, framePos);
-        this.notifyEvent(event);
+        this.notifyPageChangedEvent(page, operationCode, framePos, null, null);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framesPos, Integer destFramePos, String eventType) {
         PageChangedEvent event = buildEvent(page, operationCode, framesPos);
-        event.setDestFrame(destFramePos);
-        event.setEventType(eventType);
+        Map<String, String> properties = new HashMap<>();
+        Optional.ofNullable(page).ifPresent(p -> properties.put("pageCode", p.getCode()));
+        properties.put("operationCode", String.valueOf(operationCode));
+        Optional.ofNullable(framesPos).ifPresent(p -> properties.put("framesPos", String.valueOf(p)));
+        Optional.ofNullable(destFramePos).ifPresent(p -> {
+            properties.put("destFramePos", String.valueOf(p));
+            event.setDestFrame(p);
+        });
+        Optional.ofNullable(eventType).ifPresent(p -> {
+            properties.put("eventType", p);
+            event.setEventType(p);
+        });
+        event.setMessage(properties);
+        event.setChannel(SystemConstants.PAGE_EVENT_CHANNEL);
         this.notifyEvent(event);
     }
 
     private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos, String eventType) {
-        PageChangedEvent event = buildEvent(page, operationCode, framePos);
-        event.setEventType(eventType);
-        this.notifyEvent(event);
+        this.notifyPageChangedEvent(page, operationCode, framePos, null, eventType);
     }
 
     private PageChangedEvent buildEvent(IPage page, int operationCode, Integer framePos) {
@@ -213,7 +232,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of database access error.
      */
     @Override
-    public boolean movePage(String pageCode, boolean moveUp) throws EntException {
+    public synchronized boolean movePage(String pageCode, boolean moveUp) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -272,7 +291,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException {
+    public synchronized boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws EntException {
         boolean resultOperation = true;
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -356,7 +375,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     @Deprecated
-    public void removeShowlet(String pageCode, int pos) throws EntException {
+    public synchronized void removeShowlet(String pageCode, int pos) throws EntException {
         this.removeWidget(pageCode, pos);
     }
 
@@ -368,7 +387,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of error
      */
     @Override
-    public void removeWidget(String pageCode, int pos) throws EntException {
+    public synchronized void removeWidget(String pageCode, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         try {
             IPage currentPage = this.getDraftPage(pageCode);
@@ -396,7 +415,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     @Deprecated
-    public void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
+    public synchronized void joinShowlet(String pageCode, Widget widget, int pos) throws EntException {
         this.joinWidget(pageCode, widget, pos);
     }
 
@@ -411,7 +430,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      * @throws EntException In case of error.
      */
     @Override
-    public void joinWidget(String pageCode, Widget widget, int pos) throws EntException {
+    public synchronized void joinWidget(String pageCode, Widget widget, int pos) throws EntException {
         this.checkPagePos(pageCode, pos);
         if (null == widget || null == widget.getType()) {
             throw new EntException("Invalid null value found in either the Widget or the widgetType");
@@ -421,11 +440,13 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             this.getPageDAO().joinWidget(currentPage, widget, pos);
             currentPage.getWidgets()[pos] = widget;
             if (currentPage.isOnline()) {
-                boolean widgetEquals = Arrays.deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
+                boolean widgetEquals = Arrays
+                        .deepEquals(currentPage.getWidgets(), this.getOnlinePage(pageCode).getWidgets());
                 ((Page) currentPage).setChanged(!widgetEquals);
             }
             this.getCacheWrapper().updateDraftPage(currentPage);
-            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos, PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
+            this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos,
+                    PageChangedEvent.EVENT_TYPE_JOIN_WIDGET);
         } catch (Throwable t) {
             String message = "Error during the assignation of a widget to the frame " + pos + " in the page code " + pageCode;
             _logger.error("Error during the assignation of a widget to the frame {} in the page code {}", pos, pageCode, t);
@@ -665,7 +686,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
 
     @Override
-    public void updateFromPageModelChanged(PageModelChangedEvent event) {
+    public synchronized void updateFromPageModelChanged(PageModelChangedEvent event) {
         try {
             if (event.getOperationCode() != PageModelChangedEvent.UPDATE_OPERATION_CODE) {
                 return;
@@ -684,12 +705,12 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
     }
     
     @Override
-	public boolean movePage(IPage currentPage, IPage newParent) throws EntException {
+	public synchronized boolean movePage(IPage currentPage, IPage newParent) throws EntException {
         return this.movePage(currentPage.getCode(), newParent.getCode());
     }
 
 	@Override
-	public boolean movePage(String pageCode, String newParentCode) throws EntException {
+	public synchronized boolean movePage(String pageCode, String newParentCode) throws EntException {
         IPage pageToMove = this.getDraftPage(pageCode);
         IPage newParent = this.getDraftPage(newParentCode);
 		boolean resultOperation = false;
@@ -729,7 +750,6 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
                 IPage page = this.getDraftPage(pageCode);
                 pages.add(page);
             }
-
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadLastUpdatedPages");
             throw new EntException("Error loading loadLastUpdatedPages", t);
@@ -748,20 +768,23 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
         return clone;
     }
 
-    protected IPageManagerCacheWrapper getCacheWrapper() {
-        return _cacheWrapper;
+    @Override
+    protected List<String> getParameterNames() {
+        return parameterNames;
     }
 
+    protected IPageManagerCacheWrapper getCacheWrapper() {
+        return cacheWrapper;
+    }
     public void setCacheWrapper(IPageManagerCacheWrapper cacheWrapper) {
-        this._cacheWrapper = cacheWrapper;
+        this.cacheWrapper = cacheWrapper;
     }
 
     protected IPageDAO getPageDAO() {
-        return _pageDao;
+        return pageDao;
     }
-
     public void setPageDAO(IPageDAO pageDao) {
-        this._pageDao = pageDao;
+        this.pageDao = pageDao;
     }
 
 }

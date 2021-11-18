@@ -19,8 +19,12 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.page.model.PageRequest;
@@ -44,9 +48,13 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
@@ -56,8 +64,11 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private IGuiFragmentManager guiFragmentManager;
 
+    private ObjectMapper mapper = new ObjectMapper();
+    
     @Test
     void testGetWidgets() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -125,7 +136,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 .andDo(resultPrint())
                 .andExpect(jsonPath("$.payload.type", is(WidgetController.COMPONENT_ID)))
                 .andExpect(jsonPath("$.payload.code", is(code)))
-                .andExpect(jsonPath("$.payload.usage", is(2)))
+                .andExpect(jsonPath("$.payload.usage", is(1)))
                 .andReturn();
     }
 
@@ -139,7 +150,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
-        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(2)));
+        result.andExpect(jsonPath("$.payload.publishedUtilizers", Matchers.hasSize(1)));
     }
 
     @Test
@@ -251,6 +262,54 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             throw e;
         } finally {
             this.widgetTypeManager.deleteWidgetType(newCode);
+        }
+    }
+    
+    @Test
+    void testParallelAddDeleteWidgetType() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String newCode_prefix = "test_widgetType";
+        try {
+            List<WidgetRequest> types = IntStream.range(1, 20).boxed().map(i -> {
+                String code = newCode_prefix + "_" + i;
+                WidgetRequest request = new WidgetRequest();
+                request.setCode(code);
+                request.setGroup(Group.FREE_GROUP_NAME);
+                Map<String, String> titles = new HashMap<>();
+                titles.put("it", "Titolo ITA " + i);
+                titles.put("en", "Title EN " + i);
+                request.setTitles(titles);
+                request.setCustomUi("<h1>Custom UI " + i + "</h1>");
+                request.setGroup(Group.FREE_GROUP_NAME);
+                request.setReadonlyPageWidgetConfig(true);
+                return request;
+            }).collect(Collectors.toList());
+            types.parallelStream().forEach(request -> {
+                try {
+                    ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", is(request.getCode())));
+                } catch (Exception e) {
+                    Assertions.fail("Error adding widgetType " + request.getCode());
+                }
+            });
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = newCode_prefix + "_" + i;
+                assertNotNull(this.widgetTypeManager.getWidgetType(code));
+            });
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String code = newCode_prefix + "_" + i;
+                try {
+                ResultActions result = this.executeWidgetDelete(code, accessToken, status().isOk());
+                result.andExpect(jsonPath("$.payload.code", is(code)));
+                                } catch (Exception e) {
+                    Assertions.fail("Error deleting widgetType " + code);
+                }
+                assertNull(this.widgetTypeManager.getWidgetType(code));
+            });
         }
     }
     
@@ -445,6 +504,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
                     oldParent.getIcon());
             this.widgetTypeManager.deleteWidgetType(childCode);
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("parent_widget");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 
@@ -549,7 +612,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
-
+    
     private PageRequest getPageRequest(String pageCode) {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setCode(pageCode);
@@ -585,7 +648,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
     }
-    
+    /*
     @Test
     void testUpdateStockLocked() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
@@ -645,7 +708,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
 
     @Test
-    void testEditLockedConfigWidget() throws Exception {
+    void testEditLockedConfigWidget() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
@@ -705,6 +768,11 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
         } catch (Exception e) {
             throw e;
+        } finally {
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("entando_apis");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 
@@ -726,7 +794,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 new ContextOfControllerTests(mockMvc, mapper)
         );
     }
-
+*/
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/widgets/{code}", new Object[]{widgetTypeCode})

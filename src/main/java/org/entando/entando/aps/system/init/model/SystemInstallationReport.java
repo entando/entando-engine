@@ -50,7 +50,7 @@ public class SystemInstallationReport implements Serializable {
     protected static final String NAME_ATTRIBUTE = "name";
     protected static final String DATE_ATTRIBUTE = "date";
     protected static final String DATA_ELEMENT = "data";
-    protected static final String SCHEMA_ELEMENT = "schema";
+    protected static final String LIQUIBASE_ELEMENT = "liquibase";
     protected static final String STATUS_ATTRIBUTE = "status";
     protected static final String DATASOURCE_ELEMENT = "datasource";
     protected static final String TABLE_ELEMENT = "table";

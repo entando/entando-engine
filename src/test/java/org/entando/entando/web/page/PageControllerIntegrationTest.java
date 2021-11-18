@@ -18,6 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -59,6 +60,7 @@ import org.entando.entando.web.assertionhelper.PageAssertionHelper;
 import org.entando.entando.web.assertionhelper.PageRestResponseAssertionHelper;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.mockhelper.PageRequestMockHelper;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.PageStatusRequest;
@@ -69,6 +71,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -395,7 +398,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .param("pageSize", "50")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(12)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(11)));
     }
 
     @Test
@@ -579,6 +582,132 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     }
 
     @Test
+    void testCreatePageIntoDifferentOwnerGroupPages() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        try {
+
+            pageManager.addPage(createPage("page_root", null, null));
+            pageManager.addPage(createPage("free_pg", null, "page_root", Group.FREE_GROUP_NAME));
+            pageManager.addPage(createPage("admin_pg", null, "page_root", Group.ADMINS_GROUP_NAME));
+            pageManager.addPage(createPage("group1_pg", null, "page_root", "coach"));
+            pageManager.addPage(createPage("group2_pg", null, "page_root", "customers"));
+
+            String pageCode = "free_pg_into_admin_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    Group.FREE_GROUP_NAME,
+                                    "admin_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Cannot move a free page under a reserved page")));
+
+            pageCode = "admin_pg_into_group1_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    Group.ADMINS_GROUP_NAME,
+                                    "group1_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group1_pg_into_admin_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "coach",
+                                    "admin_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group1_pg_into_group2_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "coach",
+                                    "group2_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+            pageCode = "group2_pg_into_group1_pg";
+
+            mockMvc.perform(post("/pages", pageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    pageCode,
+                                    "customers",
+                                    "group1_pg"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.payload.size()", is(0)))
+                    .andExpect(jsonPath("$.errors.size()", is(1)))
+                    .andExpect(jsonPath("$.errors[0].code", is("2")))
+                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+
+        } finally {
+            this.pageManager.deletePage("group2_pg_into_group1_pg");
+            this.pageManager.deletePage("group1_pg_into_group2_pg");
+            this.pageManager.deletePage("group1_pg_into_admin_pg");
+            this.pageManager.deletePage("admin_pg_into_group1_pg");
+            this.pageManager.deletePage("free_pg_into_admin_pg");
+            this.pageManager.deletePage("group2_pg");
+            this.pageManager.deletePage("group1_pg");
+            this.pageManager.deletePage("admin_pg");
+            this.pageManager.deletePage("free_pg");
+            this.pageManager.deletePage("page_root");
+        }
+    }
+
+    private PageRequest createPageRequest(String pageCode, String groupCode, String parentCode) {
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setCode(pageCode);
+        pageRequest.setPageModel("home");
+        pageRequest.setOwnerGroup(groupCode);
+        Map<String, String> titles = new HashMap<>();
+        titles.put("it", pageCode);
+        titles.put("en", pageCode);
+        pageRequest.setTitles(titles);
+        pageRequest.setParentCode(parentCode);
+        return pageRequest;
+    }
+
+    @Test
     void testAddPublishUnpublishDelete() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
@@ -586,15 +715,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String accessToken = mockOAuthInterceptor(user);
         String code = "testAddDelete";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(code);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", code);
-            titles.put("en", code);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("service");
+            PageRequest pageRequest = createPageRequest(code, Group.FREE_GROUP_NAME, "service");
             this.addPage(accessToken, pageRequest);
 
             IPage page = this.pageManager.getDraftPage(code);
@@ -706,15 +827,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String codeParent = "testToMoveParent";
         String codeChild = "testToMoveChild";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(codeParent);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup("customers");
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", codeParent);
-            titles.put("en", codeParent);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("customers_page");
+            PageRequest pageRequest = createPageRequest(codeParent, "customers", "customers_page");
+            Map<String, String> titles;
             this.addPage(accessToken, pageRequest);
 
             pageRequest.setCode(codeChild);
@@ -787,15 +901,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String codeParent = "testStatusParent";
         String codeChild = "testStatusChild";
         try {
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(codeParent);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", codeParent);
-            titles.put("en", codeParent);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("homepage");
+            PageRequest pageRequest = createPageRequest(codeParent, Group.FREE_GROUP_NAME, "homepage");
+            Map<String, String> titles;
             this.addPage(accessToken, pageRequest);
 
             pageRequest.setCode(codeChild);
@@ -1064,15 +1171,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
         try {
             //Posting parent page
-            PageRequest pageRequest = new PageRequest();
-            pageRequest.setCode(parentPageCode);
-            pageRequest.setPageModel("home");
-            pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-            Map<String, String> titles = new HashMap<>();
-            titles.put("it", parentPageCode);
-            titles.put("en", parentPageCode);
-            pageRequest.setTitles(titles);
-            pageRequest.setParentCode("homepage");
+            PageRequest pageRequest = createPageRequest(parentPageCode, Group.FREE_GROUP_NAME, "homepage");
             this.addPage(accessToken, pageRequest);
 
             IPage page = this.pageManager.getDraftPage(parentPageCode);
@@ -1118,15 +1217,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         String pageCode = "page_update_test";
         String widgetCode = "login_form";
 
-        PageRequest pageRequest = new PageRequest();
-        pageRequest.setCode(pageCode);
-        pageRequest.setPageModel("home");
-        pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
-        Map<String, String> titles = new HashMap<>();
-        titles.put("it", pageCode);
-        titles.put("en", pageCode);
-        pageRequest.setTitles(titles);
-        pageRequest.setParentCode("homepage");
+        PageRequest pageRequest = createPageRequest(pageCode, Group.FREE_GROUP_NAME, "homepage");
 
         WidgetConfigurationRequest widgetRequest = new WidgetConfigurationRequest();
         widgetRequest.setCode(widgetCode);
@@ -1206,6 +1297,204 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$.payload[0].code", is("coach_page")))
                 .andExpect(jsonPath("$.payload[0].ownerGroup", is("coach")))
                 .andExpect(jsonPath("$.metaData.parentCode", is("homepage")));
+    }
+
+    @Test
+    void testAddClone() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .withAuthorization("coach", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        String code = "testAddClone";
+        String code2 = "testAddClone2";
+        String clonedCode = "testAddClone_clone";
+        String clonedCode2 = "testAddClone2_clone";
+        String clonedCode3 = "testAddClone2_clone_2";
+        try {
+            mockMvc
+                    .perform(post("/pages")
+                            .content(getPageJson("2_POST_valid_page.json", code))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is("testAddClone")))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
+                    .andExpect(jsonPath("$.payload.onlineInstance", is(false)))
+                    .andExpect(jsonPath("$.payload.displayedInMenu", is(false)))
+                    .andExpect(jsonPath("$.payload.pageModel", is("home")))
+                    .andExpect(jsonPath("$.payload.charset", is("utf8")))
+                    .andExpect(jsonPath("$.payload.contentType", is("text/html")))
+                    .andExpect(jsonPath("$.payload.parentCode", is("service")))
+                    .andExpect(jsonPath("$.payload.seo", is(false)))
+                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / service / testAddClone")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it",
+                            is("Pagina iniziale / Nodo pagine di servizio / testAddClone")))
+                    .andExpect(jsonPath("$.payload.ownerGroup", is("free")))
+                    .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.children.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.position", is(6)))
+                    .andExpect(jsonPath("$.payload.numWidget", is(0)))
+                    .andExpect(jsonPath("$.payload.fullPath", is("homepage/service/testAddClone")));
+
+            mockMvc
+                    .perform(get("/pages/{code}", clonedCode)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isNotFound());
+
+            PageCloneRequest pageCloneRequest = new PageCloneRequest();
+            pageCloneRequest.setParentCode("service");
+            pageCloneRequest.setNewPageCode(clonedCode);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "testAddClone en", "it", "testAddClone it"));
+
+            mockMvc
+                    .perform(post("/pages/{code}/clone", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is(clonedCode)))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
+                    .andExpect(jsonPath("$.payload.onlineInstance", is(false)))
+                    .andExpect(jsonPath("$.payload.displayedInMenu", is(false)))
+                    .andExpect(jsonPath("$.payload.pageModel", is("home")))
+                    .andExpect(jsonPath("$.payload.charset", is("utf8")))
+                    .andExpect(jsonPath("$.payload.contentType", is("text/html")))
+                    .andExpect(jsonPath("$.payload.parentCode", is("service")))
+                    .andExpect(jsonPath("$.payload.seo", is(false)))
+                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone en")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone it")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / service / testAddClone en")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it",
+                            is("Pagina iniziale / Nodo pagine di servizio / testAddClone it")))
+                    .andExpect(jsonPath("$.payload.ownerGroup", is("free")))
+                    .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.children.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.position", is(7)))
+                    .andExpect(jsonPath("$.payload.numWidget", is(0)))
+                    .andExpect(jsonPath("$.payload.fullPath", is("homepage/service/testAddClone_clone")));
+
+            mockMvc
+                    .perform(post("/pages")
+                            .content(getPageJson("3_POST_valid_page.json", code2))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(status().isOk());
+
+
+            mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frameId}", code2, 0)
+                            .content(mapper.writeValueAsString(new WidgetConfigurationRequest("login_form")))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            mockMvc
+                    .perform(put("/pages/{pageCode}/widgets/{frameId}", code2, 1)
+                            .content(mapper.writeValueAsString(new WidgetConfigurationRequest("login_form")))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+
+            PageStatusRequest pageStatusRequest = new PageStatusRequest();
+            pageStatusRequest.setStatus("published");
+
+            mockMvc
+                    .perform(put("/pages/{code}/status", code2)
+                            .content(mapper.writeValueAsString(pageStatusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is("testAddClone2")))
+                    .andExpect(jsonPath("$.payload.status", is("published")))
+                    .andExpect(jsonPath("$.payload.onlineInstance", is(true)))
+                    .andExpect(jsonPath("$.payload.displayedInMenu", is(true)))
+                    .andExpect(jsonPath("$.payload.pageModel", is("service")))
+                    .andExpect(jsonPath("$.payload.charset", is("utf9")))
+                    .andExpect(jsonPath("$.payload.contentType", is("application/json")))
+                    .andExpect(jsonPath("$.payload.parentCode", is("homepage")))
+                    .andExpect(jsonPath("$.payload.seo", is(true)))
+                    .andExpect(jsonPath("$.payload.titles.en", is("testAddClone2")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("testAddClone2")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / testAddClone2")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / testAddClone2")))
+                    .andExpect(jsonPath("$.payload.ownerGroup", is("coach")))
+                    .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.children.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.position", is(8)))
+                    .andExpect(jsonPath("$.payload.numWidget", is(2)))
+                    .andExpect(jsonPath("$.payload.fullPath", is("homepage/testAddClone2")));
+
+            pageCloneRequest.setParentCode("homepage");
+            pageCloneRequest.setNewPageCode(clonedCode2);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "en title", "it", "it title"));
+
+            mockMvc
+                    .perform(post("/pages/{code}/clone", code2)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is("testAddClone2_clone")))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
+                    .andExpect(jsonPath("$.payload.displayedInMenu", is(true)))
+                    .andExpect(jsonPath("$.payload.pageModel", is("service")))
+                    .andExpect(jsonPath("$.payload.charset", is("utf9")))
+                    .andExpect(jsonPath("$.payload.contentType", is("application/json")))
+                    .andExpect(jsonPath("$.payload.parentCode", is("homepage")))
+                    .andExpect(jsonPath("$.payload.seo", is(true)))
+                    .andExpect(jsonPath("$.payload.titles.en", is("en title")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("it title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / en title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / it title")))
+                    .andExpect(jsonPath("$.payload.ownerGroup", is("coach")))
+                    .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.children.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.position", is(9)))
+                    .andExpect(jsonPath("$.payload.numWidget", is(2)))
+                    .andExpect(jsonPath("$.payload.fullPath", is("homepage/testAddClone2_clone")));
+
+            pageCloneRequest.setParentCode("homepage");
+            pageCloneRequest.setNewPageCode(clonedCode3);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "en cloned title", "it", "it cloned title"));
+
+            mockMvc
+                    .perform(post("/pages/{code}/clone", code2)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is("testAddClone2_clone_2")))
+                    .andExpect(jsonPath("$.payload.status", is("unpublished")))
+                    .andExpect(jsonPath("$.payload.displayedInMenu", is(true)))
+                    .andExpect(jsonPath("$.payload.pageModel", is("service")))
+                    .andExpect(jsonPath("$.payload.charset", is("utf9")))
+                    .andExpect(jsonPath("$.payload.contentType", is("application/json")))
+                    .andExpect(jsonPath("$.payload.parentCode", is("homepage")))
+                    .andExpect(jsonPath("$.payload.seo", is(true)))
+                    .andExpect(jsonPath("$.payload.titles.en", is("en cloned title")))
+                    .andExpect(jsonPath("$.payload.titles.it", is("it cloned title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.en", is("Start Page / en cloned title")))
+                    .andExpect(jsonPath("$.payload.fullTitles.it", is("Pagina iniziale / it cloned title")))
+                    .andExpect(jsonPath("$.payload.ownerGroup", is("coach")))
+                    .andExpect(jsonPath("$.payload.joinGroups.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.children.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.position", is(10)))
+                    .andExpect(jsonPath("$.payload.numWidget", is(2)))
+                    .andExpect(jsonPath("$.payload.fullPath", is("homepage/testAddClone2_clone_2")));
+
+        } finally {
+            this.pageManager.deletePage(code);
+            this.pageManager.deletePage(clonedCode);
+            this.pageManager.deletePage(code2);
+            this.pageManager.deletePage(clonedCode2);
+            this.pageManager.deletePage(clonedCode3);
+        }
     }
 
     private ResultActions performListViewPages(String accessToken) throws Exception {

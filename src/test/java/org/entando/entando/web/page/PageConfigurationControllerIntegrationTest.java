@@ -40,6 +40,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Assertions;
 
 class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
@@ -153,12 +159,11 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
 
             //Create the page
             PageRequest pageRequest = getPageRequest(pageCode);
-            executePostPage(pageRequest,  accessToken, status().isOk());
+            executePostPage(pageRequest, accessToken, status().isOk());
 
             //Get the widget type and count widget usages
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.used", is(0)));
-
 
             // Update the Widget at frame 0 with a new configuration
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
@@ -173,14 +178,10 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             result.andExpect(jsonPath("$.payload.used", is(1)));
 
             //Get widget at position 0
-
             result = this.executeGetPageFrameWidget(pageCode, accessToken, status().isOk());
-
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", Matchers.is(newWidgetCode)))
                     .andExpect(jsonPath("$.payload.config.key", Matchers.is("value_edited")));
-
-
         } catch (Exception e) {
             throw e;
         } finally {
@@ -191,6 +192,123 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         }
     }
 
+    @Test
+    void testAddWidgetParallel_1() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String pageCode = "test_page_parallel_1";
+        String widgetCode = "login_form";
+        try {
+            Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(widgetCode));
+            PageRequest pageRequest = getPageRequest(pageCode);
+            this.executePostPage(pageRequest, accessToken, status().isOk());
+            IPage addedPage = this.pageManager.getDraftPage(pageCode);
+            Assertions.assertNotNull(addedPage);
+            WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
+            wcr.setCode(widgetCode);
+            Assertions.assertEquals(6, addedPage.getWidgets().length);
+            IntStream.range(0, addedPage.getWidgets().length).parallel().forEach(i -> {
+                try {
+                    ResultActions result = executePutPageFrameWidget(pageCode, i, wcr, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", Matchers.is(widgetCode)));
+                } catch (Exception e) {
+                    Assertions.fail("Error configuring widget into frame " + i);
+                }
+            });
+            addedPage = this.pageManager.getDraftPage(pageCode);
+            Assertions.assertNotNull(addedPage);
+            Widget[] widgets = addedPage.getWidgets();
+            Assertions.assertEquals(6, widgets.length);
+            for (int i = 0; i < widgets.length; i++) {
+                Widget widget = widgets[i];
+                Assertions.assertNotNull(widget);
+                Assertions.assertEquals(widgetCode, widget.getType().getCode());
+            }
+            
+            IntStream.range(0, addedPage.getWidgets().length).parallel().forEach(i -> {
+                try {
+                    ResultActions result = executeDeletePageFrameWidget(pageCode, i, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", Matchers.is(String.valueOf(i))));
+                } catch (Exception e) {
+                    Assertions.fail("Error removing widget from frame " + i);
+                }
+            });
+            addedPage = this.pageManager.getDraftPage(pageCode);
+            Assertions.assertNotNull(addedPage);
+            widgets = addedPage.getWidgets();
+            Assertions.assertEquals(6, widgets.length);
+            for (int i = 0; i < widgets.length; i++) {
+                Widget widget = widgets[i];
+                Assertions.assertNull(widget);
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.pageManager.deletePage(pageCode);
+            Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
+        }
+    }
+    
+    @Test
+    void testAddWidgetParallel_2() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String pageCode_prefix = "test_page_parallel";
+        String widgetCode = "login_form";
+        try {
+            Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(widgetCode));
+            List<PageRequest> pageRequests = IntStream.range(1, 20).boxed().map(i -> this.getPageRequest(pageCode_prefix + i)).collect(Collectors.toList());
+            pageRequests.parallelStream().forEach(pr -> {
+                try {
+                    this.executePostPage(pr, accessToken, status().isOk());
+                    IPage addedPage = this.pageManager.getDraftPage(pr.getCode());
+                    Assertions.assertNotNull(addedPage);
+                } catch (Exception e) {
+                    Assertions.fail("Error adding page " + pr.getCode());
+                }
+            });
+            WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
+            wcr.setCode(widgetCode);
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String pageCode = pageCode_prefix + i;
+                try {
+                    ResultActions result = executePutPageFrameWidget(pageCode, 0, wcr, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", Matchers.is(widgetCode)));
+                } catch (Exception e) {
+                    Assertions.fail("Error configuring widget into frame " + i);
+                }
+            });
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String pageCode = pageCode_prefix + i;
+                IPage addedPage = this.pageManager.getDraftPage(pageCode);
+                Assertions.assertNotNull(addedPage);
+                Widget[] widgets = addedPage.getWidgets();
+                Assertions.assertEquals(6, widgets.length);
+                for (int j = 0; j < widgets.length; j++) {
+                    Widget widget = widgets[j];
+                    if (j == 0) {
+                        Assertions.assertNotNull(widget);
+                        Assertions.assertEquals(widgetCode, widget.getType().getCode());
+                    } else {
+                        Assertions.assertNull(widget);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IntStream.range(1, 20).parallel().forEach(i -> {
+                String pageCode = pageCode_prefix + i;
+                try {
+                    this.pageManager.deletePage(pageCode);
+                    Assertions.assertNull(this.pageManager.getDraftPage(pageCode));
+                } catch (Exception e) {
+                    Assertions.fail("Error removing page " + pageCode);
+                }
+            });
+        }
+    }
+    
     private PageRequest getPageRequest(String pageCode) {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setCode(pageCode);
@@ -240,22 +358,35 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         return result;
     }
 
-   private ResultActions executePutPageFrameWidget(String pageCode,
-           WidgetConfigurationRequest widgetConfigurationRequest, String accessToken, ResultMatcher expected)
+    private ResultActions executePutPageFrameWidget(String pageCode,
+            WidgetConfigurationRequest widgetConfigurationRequest, String accessToken, ResultMatcher expected)
+            throws Exception {
+        return this.executePutPageFrameWidget(pageCode, 0, widgetConfigurationRequest, accessToken, expected);
+    }
+
+    private ResultActions executePutPageFrameWidget(String pageCode, int frame,
+            WidgetConfigurationRequest widgetConfigurationRequest, String accessToken, ResultMatcher expected)
             throws Exception {
         ResultActions result = mockMvc
-                .perform(put("/pages/{pageCode}/widgets/{frameId}", pageCode, 0)
-                                .content(mapper.writeValueAsString(widgetConfigurationRequest))
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
+                .perform(put("/pages/{pageCode}/widgets/{frameId}", pageCode, frame)
+                        .content(mapper.writeValueAsString(widgetConfigurationRequest))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
+        result.andExpect(expected);
+        return result;
+    }
+    
+    private ResultActions executeDeletePageFrameWidget(String pageCode, int frame, 
+            String accessToken, ResultMatcher expected) throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/pages/{pageCode}/widgets/{frameId}", pageCode, frame)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
         result.andExpect(expected);
         return result;
     }
 
     private ResultActions executeGetPageFrameWidget(String pageCode, String accessToken,
-            ResultMatcher expected)
-            throws Exception {
-
+            ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/pages/{pageCode}/widgets/{frameId}", pageCode, 0)
                         .contentType(MediaType.APPLICATION_JSON)

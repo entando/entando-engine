@@ -18,6 +18,7 @@ import com.agiletec.aps.system.common.FieldSearchFilter.LikeOptionType;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiParam;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +97,7 @@ public class Filter {
     }
 
     @JsonIgnore
+    @ApiParam(hidden = true)
     public String getAttributeName() {
         return this.getAttribute();
     }

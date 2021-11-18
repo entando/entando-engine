@@ -41,17 +41,17 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(OAuthConsumerDAO.class);
 
     private static final String SELECT_CONSUMER
-            = "SELECT consumerkey, consumersecret, name, description, callbackurl,scope, authorizedgranttypes, expirationdate, issueddate "
+            = "SELECT consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate "
             + "FROM api_oauth_consumers WHERE consumerkey = ? ";
 
     private static final String ADD_CONSUMER
-            = "INSERT INTO api_oauth_consumers (consumerkey, consumersecret,name, description, callbackurl,scope, authorizedgranttypes, expirationdate, issueddate) VALUES (?,?,?,?,?,?,?,?,?) ";
+            = "INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES (?,?,?,?,?,?,?,?,?) ";
 
     private static final String UPDATE_CONSUMER_PREFIX = "UPDATE api_oauth_consumers SET ";
 
     private static final String UPDATE_CONSUMER_SECRET = "consumersecret = ? , ";
 
-    private static final String UPDATE_CONSUMER_SUFFIX = "name = ? , description = ? , callbackurl = ?, scope=?, authorizedgranttypes = ?, expirationdate = ? WHERE consumerkey = ? ";
+    private static final String UPDATE_CONSUMER_SUFFIX = "name = ? , description = ? , callbackurl = ?, scope = ?, authorizedgranttypes = ?, expirationdate = ? WHERE consumerkey = ? ";
 
     private static final String UPDATE_CONSUMER = UPDATE_CONSUMER_PREFIX + UPDATE_CONSUMER_SUFFIX;
 

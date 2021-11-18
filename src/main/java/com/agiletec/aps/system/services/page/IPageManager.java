@@ -13,6 +13,7 @@
  */
 package com.agiletec.aps.system.services.page;
 
+import com.agiletec.aps.system.common.IParameterizableManager;
 import java.util.List;
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
@@ -24,7 +25,36 @@ import org.entando.entando.ent.exception.EntException;
  *
  * @author M.Diana
  */
-public interface IPageManager extends ITreeNodeManager {
+public interface IPageManager extends ITreeNodeManager, IParameterizableManager {
+
+    public static final String CONFIG_PARAM_URL_STYLE = "urlStyle";
+
+    public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = "classic";
+    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = "breadcrumbs";
+
+    public static final String CONFIG_PARAM_TREE_STYLE_PAGE = "treeStyle_page";
+
+    public static final String CONFIG_PARAM_USE_JSESSIONID = "useJsessionId";
+
+    public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
+
+    public static final String CONFIG_PARAM_BASE_URL_RELATIVE = "relative";
+    public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
+    public static final String CONFIG_PARAM_BASE_URL_STATIC = "static";
+
+    public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = "requestIfRelative";
+
+    public static final String CONFIG_PARAM_BASE_URL_CONTEXT = "baseUrlContext";
+
+    public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = "startLangFromBrowser";
+
+    public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = "homePageCode";
+
+    public static final String CONFIG_PARAM_NOT_FOUND_PAGE_CODE = "notFoundPageCode";
+
+    public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
+
+    public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
 
     @Deprecated
     public ITreeNode getRoot();

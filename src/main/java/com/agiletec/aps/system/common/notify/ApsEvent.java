@@ -13,6 +13,15 @@
  */
 package com.agiletec.aps.system.common.notify;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.exception.EntRuntimeException;
 import org.springframework.context.ApplicationEvent;
 
 import com.agiletec.aps.system.common.IManager;
@@ -26,15 +35,41 @@ import com.agiletec.aps.system.common.IManager;
  * @author M.Diana - E.Santoboni
  */
 public abstract class ApsEvent extends ApplicationEvent {
+
+	/**
+	 * The default source event.
+	 */
+	public static final String LOCAL_EVENT = "localhost";
+
+	private String channel;
+	private String message;
 	
 	/**
 	 * Event constructor
 	 */
 	public ApsEvent() {
-		super("Entando Event");
-		this.setSource(LOCAL_EVENT);
+		super(LOCAL_EVENT);
 	}
-	
+
+	protected ApsEvent(String channel, Map<String, String> properties) {
+		this();
+		this.setChannel(channel);
+		this.setMessage(properties);
+	}
+
+	public static Map<String, String> getProperties(String message) throws EntException {
+		if (StringUtils.isBlank(message)) {
+			return null;
+		}
+		try {
+			JSONObject obj = new JSONObject(message);
+			JSONObject includes = obj.getJSONObject("event");
+			return new ObjectMapper().readValue(includes.toString(), HashMap.class);
+		} catch (JsonProcessingException | JSONException e) {
+			throw new EntException("Error parsing message", e);
+		}
+	}
+
 	/**
 	 * Notify the event to the observer service. This method must be invoked 
 	 * inside the update() method of the observer service. 
@@ -48,30 +83,30 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 * @return The interface class which the observer must implement 
 	 */
 	public abstract Class getObserverInterface();
-	
-	/**
-	 * Return the source of the event. 
-	 * The property can be a IP address, an host name, or else.
-	 * @return The source of the event.
-	 */
-	@Override
-	public String getSource() {
-		return _source;
+
+	public String getChannel() {
+		return channel;
 	}
-	
-	/**
-	 * Set the source of the event.
-	 * @param source The source of the event to set.
-	 */
-	public void setSource(String source) {
-		this._source = source;
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
-	
-	private String _source;
-	
-	/**
-	 * The default source event.
-	 */
-	public static final String LOCAL_EVENT = "localhost";
+
+    public String getMessage() {
+        return message;
+    }
+    public void setMessage(Map<String, String> properties) {
+        try {
+            JSONObject request = new JSONObject();
+            if (null != properties) {
+                request.put("event", properties);
+            }
+            this.message = request.toString();
+        } catch (JSONException e) {
+            throw new EntRuntimeException("Error creating message", e);
+        }
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 	
 }
