@@ -40,6 +40,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
+import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -257,8 +258,8 @@ class WidgetServiceTest {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
-        WidgetRequest widgetRequest = getWidgetRequest1();
-        when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
+        WidgetUpdateRequest widgetRequest = getWidgetUpdateRequest1();
+        when(widgetManager.getWidgetType(eq(WIDGET_1_CODE))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
         GuiFragment mockedFragment = mock(GuiFragment.class);
         when(mockedFragment.getGui()).thenReturn(expectedCustomUi);
@@ -285,9 +286,9 @@ class WidgetServiceTest {
     void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
-        WidgetRequest widgetRequest = getWidgetRequest1();
+        WidgetUpdateRequest widgetRequest = getWidgetUpdateRequest1();
         widgetRequest.setCustomUi(expectedCustomUi);
-        when(widgetManager.getWidgetType(eq(widgetRequest.getCode()))).thenReturn(getWidget1());
+        when(widgetManager.getWidgetType(eq(WIDGET_1_CODE))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
         GuiFragment mockedFragment = mock(GuiFragment.class);
         when(mockedFragment.getGui()).thenReturn(expectedCustomUi);
@@ -348,6 +349,18 @@ class WidgetServiceTest {
         return widgetRequest;
     }
 
+    private WidgetUpdateRequest getWidgetUpdateRequest1() {
+        WidgetUpdateRequest widgetRequest = new WidgetUpdateRequest();
+        widgetRequest.setTitles(ImmutableMap.of("it", "Mio Titolo", "en", "My Title"));
+        widgetRequest.setCustomUi("<script>my_js_script</script>");
+        widgetRequest.setGroup("group");
+        widgetRequest.setReadonlyPageWidgetConfig(true);
+        widgetRequest.setConfigUi(ImmutableMap.of(CUSTOM_ELEMENT_KEY, CUSTOM_ELEMENT_1, RESOURCES_KEY, RESOURCES_1));
+        widgetRequest.setBundleId(BUNDLE_1);
+        widgetRequest.setWidgetCategory("test");
+        widgetRequest.setIcon("test");
+        return widgetRequest;
+    }
 
     @Test
     void getWidgetUsageForNonExistingCodeShouldReturnZero() {

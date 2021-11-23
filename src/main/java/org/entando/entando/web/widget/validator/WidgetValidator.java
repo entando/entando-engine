@@ -21,6 +21,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.widget.model.WidgetRequest;
+import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -35,7 +36,6 @@ public class WidgetValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_WIDGET_GROUP_INVALID = "2";
 
     public static final String ERRCODE_WIDGET_DOES_NOT_EXISTS = "1";
-    public static final String ERRCODE_URINAME_MISMATCH = "3";
     public static final String ERRCODE_MISSING_TITLE = "4";
     
     public static final String ERRCODE_OPERATION_FORBIDDEN_LOCKED = "1";
@@ -57,14 +57,10 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (StringUtils.isEmpty(widgetRequest.getCustomUi()) && StringUtils.isEmpty(widgetRequest.getParentType())) {
             errors.rejectValue("customUi", ERRCODE_NOT_BLANK, new String[]{}, "widgettype.customUi.notBlank");
         }
-        this.validateTitles(widgetRequest, errors);
+        this.validateTitles(widgetRequest.getTitles(), errors);
     }
     
-    public void validateEditWidget(String widgetCode, WidgetRequest widgetRequest, Errors errors) {
-        if (!StringUtils.equals(widgetCode, widgetRequest.getCode())) {
-            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.code.mismatch");
-        }
-
+    public void validateEditWidget(String widgetCode, WidgetUpdateRequest widgetRequest, Errors errors) {
         WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
 
         if (type == null) {
@@ -82,15 +78,13 @@ public class WidgetValidator extends AbstractPaginationValidator {
            (widgetTypeConfig!=null && newWidgetConfig==null && type.isLocked()) ||
            (widgetTypeConfig!=null && newWidgetConfig!=null  && !widgetTypeConfig.equals(newWidgetConfig) && type.isLocked()))
         {
-            errors.rejectValue("code", ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.edit.locked");
+            errors.rejectValue("code", ERRCODE_OPERATION_FORBIDDEN_LOCKED, new String[]{widgetCode}, "widgettype.edit.locked");
         }
 
-        this.validateTitles(widgetRequest, errors);
-
+        this.validateTitles(widgetRequest.getTitles(), errors);
     }
 
-    protected void validateTitles(WidgetRequest widgetRequest, Errors errors) {
-        Map<String, String> titles = widgetRequest.getTitles();
+    protected void validateTitles(Map<String, String> titles, Errors errors) {
         if (null == titles) {
             errors.rejectValue("titles", ERRCODE_NOT_BLANK, "widgettype.titles.notBlank");
         } else {
@@ -102,5 +96,4 @@ public class WidgetValidator extends AbstractPaginationValidator {
             }
         }
     }
-
 }

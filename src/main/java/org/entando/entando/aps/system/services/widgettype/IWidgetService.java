@@ -19,26 +19,23 @@ import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.component.ComponentUsageEntity;
-import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
-
-import java.util.Map;
+import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 
 public interface IWidgetService extends IComponentExistsService, IComponentUsageService {
 
-    public String BEAN_NAME = "WidgetService";
+    String BEAN_NAME = "WidgetService";
 
-    public WidgetDto getWidget(String widgetCode);
+    WidgetDto getWidget(String widgetCode);
 
-    public WidgetDto addWidget(WidgetRequest widgetRequest);
+    WidgetDto addWidget(WidgetRequest widgetRequest);
 
-    public void removeWidget(String widgetCode);
+    void removeWidget(String widgetCode);
 
-    public PagedMetadata<WidgetDto> getWidgets(RestListRequest restRequest);
+    PagedMetadata<WidgetDto> getWidgets(RestListRequest restRequest);
 
-    public WidgetDto updateWidget(String widgetCode, WidgetRequest widgetRequest);
+    WidgetDto updateWidget(String widgetCode, WidgetUpdateRequest widgetUpdateRequest);
 
-    public WidgetInfoDto getWidgetInfo(String widgetCode);
+    WidgetInfoDto getWidgetInfo(String widgetCode);
 
 }

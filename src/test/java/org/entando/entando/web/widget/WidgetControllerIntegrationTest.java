@@ -612,7 +612,38 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             Assertions.assertNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
         }
     }
-    
+
+    @Test
+    void shouldUpdateWidgetWithoutCodeInBody() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        String newCode = "test_new_type_1";
+        Assertions.assertNull(this.widgetTypeManager.getWidgetType(newCode));
+        try {
+            WidgetRequest request = new WidgetRequest();
+            request.setCode(newCode);
+            request.setGroup(Group.FREE_GROUP_NAME);
+            Map<String, String> titles = new HashMap<>();
+            titles.put("it", "Titolo ITA");
+            titles.put("en", "Title EN");
+            request.setTitles(titles);
+            request.setCustomUi("<h1>Custom UI</h1>");
+            request.setGroup(Group.FREE_GROUP_NAME);
+            request.setReadonlyPageWidgetConfig(true);
+            ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
+            result.andExpect(jsonPath("$.payload.code", is(newCode)));
+            WidgetType widgetType = this.widgetTypeManager.getWidgetType(newCode);
+            Assertions.assertNotNull(widgetType);
+            Assertions.assertEquals("Title EN", widgetType.getTitles().getProperty("en"));
+
+            titles.put("en", "Title EN modified");
+            request.setCode(null);
+            this.executeWidgetPut(request, newCode, accessToken, status().isOk());
+        } finally {
+            this.widgetTypeManager.deleteWidgetType(newCode);
+        }
+    }
+
     private PageRequest getPageRequest(String pageCode) {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setCode(pageCode);
