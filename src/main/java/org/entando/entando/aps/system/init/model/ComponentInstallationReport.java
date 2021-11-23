@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-Present Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2021-Present Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -36,11 +36,15 @@ public class ComponentInstallationReport implements Serializable {
 		Element dataElement = element.getChild(SystemInstallationReport.DATA_ELEMENT);
 		if (null != dataElement) {
 			this.setDataReport(new DataInstallationReport(dataElement));
-		}
+		} else {
+            this.setDataReport(new DataInstallationReport());
+        }
 		Element liquibaseElement = element.getChild(SystemInstallationReport.LIQUIBASE_ELEMENT);
 		if (null != liquibaseElement) {
 			this.setLiquibaseReport(new LiquibaseInstallationReport(liquibaseElement));
-		}
+		} else {
+            this.setLiquibaseReport(new LiquibaseInstallationReport());
+        }
 		Element postProcessElement = element.getChild(SystemInstallationReport.COMPONENT_POST_PROCESS_ELEMENT);
 		if (null != postProcessElement) {
 			String postProcessStatusString = postProcessElement.getAttributeValue(SystemInstallationReport.STATUS_ATTRIBUTE);
@@ -71,8 +75,10 @@ public class ComponentInstallationReport implements Serializable {
 		}
 		Element dataElement = this.getDataReport().toJdomElement();
 		element.addContent(dataElement);
-		Element liquibaseElement = this.getLiquibaseReport().toJdomElement();
-		element.addContent(liquibaseElement);
+        if (null != this.getLiquibaseReport()) {
+            Element liquibaseElement = this.getLiquibaseReport().toJdomElement();
+            element.addContent(liquibaseElement);
+        }
 		if (null != this.getPostProcessStatus()) {
 			Element postProcessElement = new Element(SystemInstallationReport.COMPONENT_POST_PROCESS_ELEMENT);
 			postProcessElement.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getPostProcessStatus().toString());
