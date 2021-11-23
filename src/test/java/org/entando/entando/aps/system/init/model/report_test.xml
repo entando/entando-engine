@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reports status="OK">
+    <creation>2018-09-10 11:39:08</creation>
+    <lastupdate>2021-06-21 10:06:39</lastupdate>
+    <components>
+        <component code="entandoCore" date="2018-09-10 11:39:08" status="OK">
+            <schema status="OK">
+                <datasource name="portDataSource" status="OK">
+                    <table name="sysconfig" />
+                    <table name="categories" />
+                    <table name="localstrings" />
+                    <table name="pagemodels" />
+                    <table name="pages" />
+                    <table name="pages_metadata_online" />
+                    <table name="pages_metadata_draft" />
+                    <table name="widgetcatalog" />
+                    <table name="guifragment" />
+                    <table name="widgetconfig" />
+                    <table name="widgetconfig_draft" />
+                    <table name="uniquekeys" />
+                </datasource>
+                <datasource name="servDataSource" status="OK">
+                    <table name="authgroups" />
+                    <table name="authpermissions" />
+                    <table name="authroles" />
+                    <table name="authrolepermissions" />
+                    <table name="authusers" />
+                    <table name="authusergrouprole" />
+                    <table name="api_oauth_consumers" />
+                    <table name="api_oauth_tokens" />
+                    <table name="apicatalog_methods" />
+                    <table name="apicatalog_services" />
+                    <table name="authuserprofiles" />
+                    <table name="authuserprofilesearch" />
+                    <table name="authuserprofileattrroles" />
+                    <table name="actionlogrecords" />
+                    <table name="actionlogrelations" />
+                    <table name="actionloglikerecords" />
+                    <table name="actionlogcommentrecords" />
+                </datasource>
+            </schema>
+            <data status="OK">
+                <datasource name="portDataSource" status="OK" />
+                <datasource name="servDataSource" status="OK" />
+            </data>
+            <postProcess status="NOT_AVAILABLE" />
+        </component>
+        <component code="entando-admin-console" date="2018-09-10 11:39:10" status="OK">
+            <schema status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="OK">
+                    <table name="authusershortcuts" />
+                </datasource>
+            </schema>
+            <data status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="OK" />
+            </data>
+            <postProcess status="NOT_AVAILABLE" />
+        </component>
+        <component code="entando-portal-ui" date="2018-09-10 11:39:10" status="OK">
+            <schema status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="NOT_AVAILABLE" />
+            </schema>
+            <data status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="NOT_AVAILABLE" />
+            </data>
+            <postProcess status="NOT_AVAILABLE" />
+        </component>
+        <component code="comp_test_1" date="2018-09-10 11:39:10" status="OK">
+            <schema status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="NOT_AVAILABLE" />
+            </schema>
+            <postProcess status="NOT_AVAILABLE" />
+        </component>
+        <component code="comp_test_2" date="2018-09-10 11:39:10" status="OK">
+            <data status="OK">
+                <datasource name="portDataSource" status="NOT_AVAILABLE" />
+                <datasource name="servDataSource" status="NOT_AVAILABLE" />
+            </data>
+            <postProcess status="NOT_AVAILABLE" />
+        </component>
+    </components>
+</reports>
+
