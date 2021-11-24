@@ -13,16 +13,13 @@
  */
 package org.entando.entando.web.guifragment;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentService;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
-import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.junit.jupiter.api.Test;
@@ -30,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -38,7 +34,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -114,26 +109,7 @@ class GuiFragmentControllerTest extends AbstractControllerTest {
         ResultActions result = mockMvc.perform(get("/fragments")
                 .header("Authorization", "Bearer " + accessToken)
         );
-        String response = result.andReturn().getResponse().getContentAsString();
+        result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isForbidden());
     }
-
-    @Test
-    void should_validate_put_path_mismatch() throws EntException, Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
-        ObjectMapper mapper = new ObjectMapper();
-        GuiFragmentRequestBody requestBody = new GuiFragmentRequestBody();
-        requestBody.setCode("__new_fragment_");
-        requestBody.setGuiCode("<h1>This is the fragment</h1>");
-        String payload = mapper.writeValueAsString(requestBody);
-        this.controller.setGuiFragmentValidator(new GuiFragmentValidator());
-        ResultActions result = mockMvc.perform(put("/fragments/{fragmentCode}", "new_fragment")
-                .content(payload)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken));
-        result.andExpect(status().isBadRequest());
-        String response = result.andReturn().getResponse().getContentAsString();
-    }
-
 }
