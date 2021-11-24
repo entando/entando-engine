@@ -49,7 +49,6 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
 
     @BeforeEach
     public void init() throws EntException {
-        // remove all
         guiFragmentManager.deleteGuiFragment(CODE);
         guiFragmentManager.deleteGuiFragment(TEST_CODE);
     }
