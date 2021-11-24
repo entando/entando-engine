@@ -15,10 +15,12 @@ package org.entando.entando.web.guifragment;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
+
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentService;
 import org.entando.entando.aps.system.services.guifragment.model.GuiFragmentDto;
@@ -29,6 +31,7 @@ import org.entando.entando.web.common.model.*;
 import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
+import org.entando.entando.web.guifragment.model.GuiFragmentUpdateRequest;
 import org.entando.entando.web.guifragment.validator.GuiFragmentValidator;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -139,12 +142,13 @@ public class GuiFragmentController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{fragmentCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> updateGuiFragment(@PathVariable String fragmentCode, @Valid @RequestBody GuiFragmentRequestBody guiFragmentRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<GuiFragmentDto>> updateGuiFragment(@PathVariable String fragmentCode,
+                                                                                @Valid @RequestBody GuiFragmentUpdateRequest guiFragmentUpdateRequest, BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
         }
-        int result = this.getGuiFragmentValidator().validateBody(fragmentCode, guiFragmentRequest, bindingResult);
+        int result = this.getGuiFragmentValidator().validateGuiCode(guiFragmentUpdateRequest.getGuiCode(), bindingResult);
         if (bindingResult.hasErrors()) {
             if (404 == result) {
                 throw new ResourceNotFoundException(GuiFragmentValidator.ERRCODE_FRAGMENT_DOES_NOT_EXISTS, "fragment", fragmentCode);
@@ -152,6 +156,7 @@ public class GuiFragmentController {
                 throw new ValidationGenericException(bindingResult);
             }
         }
+        GuiFragmentRequestBody guiFragmentRequest = new GuiFragmentRequestBody(fragmentCode, guiFragmentUpdateRequest.getGuiCode());
         GuiFragmentDto fragment = this.getGuiFragmentService().updateGuiFragment(guiFragmentRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(fragment), HttpStatus.OK);
     }

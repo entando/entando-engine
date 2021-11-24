@@ -15,27 +15,47 @@ package org.entando.entando.web.guifragment;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
 import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.guifragment.model.GuiFragmentRequestBody;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private static final String CODE = "code";
+    private static final String TEST_CODE = "test-code";
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    private IGuiFragmentManager guiFragmentManager;
+
+    @BeforeEach
+    public void init() throws EntException {
+        guiFragmentManager.deleteGuiFragment(CODE);
+        guiFragmentManager.deleteGuiFragment(TEST_CODE);
+    }
 
     @Test
     void testGetFragments_1() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
+        String accessToken = getAccessToken();
         ResultActions result = mockMvc
                 .perform(get("/fragments")
                         .header("Authorization", "Bearer " + accessToken));
@@ -58,12 +78,11 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
 
     @Test
     void testGetFragments_2() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
+        String accessToken = getAccessToken();
         ResultActions result = mockMvc.perform(
                 get("/fragments").param("page", "1")
                         .param("pageSize", "4")
-                        .param("filter[0].attribute", "code")
+                        .param("filter[0].attribute", CODE)
                         .param("filter[0].value", "gin")
                         .header("Authorization", "Bearer " + accessToken)
         );
@@ -80,7 +99,7 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
         result = mockMvc.perform(
                 get("/fragments").param("page", "1")
                         .param("pageSize", "10")
-                        .param("filter[0].attribute", "code")
+                        .param("filter[0].attribute", CODE)
                         .param("filter[0].value", "test")
                         .header("Authorization", "Bearer " + accessToken)
         );
@@ -94,8 +113,7 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
 
     @Test
     void testGetFragments_3() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
+        String accessToken = getAccessToken();
         ResultActions result = mockMvc.perform(
                 get("/fragments").param("page", "1")
                         .param("pageSize", "4")
@@ -130,12 +148,11 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
 
     @Test
     void testGetFragmentUsage() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
+        String accessToken = getAccessToken();
         String code = "login_form";
 
         mockMvc.perform(get("/fragments/{code}/usage".replace("{code}", code))
-                .header("Authorization", "Bearer " + accessToken))
+                        .header("Authorization", "Bearer " + accessToken))
                 .andDo(resultPrint())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.errors", Matchers.hasSize(0)))
@@ -162,5 +179,54 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
                 AnalysisControllerDiffAnalysisEngineTestsStubs.STATUS_NEW,
                 new ContextOfControllerTests(mockMvc, mapper)
         );
+    }
+
+    @Test
+    void shouldUpdateFragmentWithoutCodeInBody() throws Exception {
+        String accessToken = getAccessToken();
+        GuiFragmentRequestBody requestBody = new GuiFragmentRequestBody();
+        requestBody.setCode(CODE);
+        requestBody.setGuiCode("<div>code</div>");
+
+        mockMvc.perform(post("/fragments")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        requestBody.setCode(null);
+        requestBody.setGuiCode("<div>change</div>");
+        mockMvc.perform(put("/fragments/" + CODE)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotValidateCodeFormatForUpdate() throws Exception {
+        String accessToken = getAccessToken();
+        GuiFragment guiFragment = new GuiFragment();
+        guiFragment.setCode(TEST_CODE);
+        guiFragment.setGui("<div>test</div>");
+        guiFragmentManager.addGuiFragment(guiFragment);
+
+        GuiFragmentRequestBody requestBody = new GuiFragmentRequestBody();
+        requestBody.setCode(TEST_CODE);
+        requestBody.setGuiCode("<div>code</div>");
+        mockMvc.perform(put("/fragments/" + TEST_CODE)
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(requestBody)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+    private String getAccessToken() {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .grantedToRoleAdmin().build();
+        return mockOAuthInterceptor(user);
     }
 }
