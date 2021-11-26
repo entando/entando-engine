@@ -188,10 +188,14 @@ public class DatabaseManager extends AbstractInitializerManager
                 }
             } finally {
                 try {
-                    rs.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
                 } catch (Exception e) { /* Ignored */ }
                 try {
-                    connection.close();
+                    if (connection != null) {
+                        connection.close();
+                    }
                 } catch (Exception e) { /* Ignored */ }
             }
         }
