@@ -164,26 +164,38 @@ public class DatabaseManager extends AbstractInitializerManager
         String[] dataSourceNames = this.extractBeanNames(DataSource.class);
         for (String dataSourceName : dataSourceNames) {
             DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-            Connection connection = dataSource.getConnection();
-            final DatabaseMetaData databaseMetaData = connection.getMetaData();
-            final ResultSet rs = databaseMetaData.getTables(null, null, null,
-                    new String[]{"TABLE"});
 
-            boolean liquibaseChangelogTableFound = false;
-            int tablesCount = 0;
-            while (rs.next()) {
-                String tableName = rs.getString("Table_NAME");
-                if (tableName.equalsIgnoreCase(LIQUIBASE_CHANGELOG_TABLE)) {
-                    liquibaseChangelogTableFound = true;
+            Connection connection = null;
+            ResultSet rs = null;
+            try {
+                connection = dataSource.getConnection();
+                final DatabaseMetaData databaseMetaData = connection.getMetaData();
+                rs = databaseMetaData.getTables(null, null, null,
+                        new String[]{"TABLE"});
+
+                boolean liquibaseChangelogTableFound = false;
+                int tablesCount = 0;
+                while (rs.next()) {
+                    String tableName = rs.getString("Table_NAME");
+                    if (tableName.equalsIgnoreCase(LIQUIBASE_CHANGELOG_TABLE)) {
+                        liquibaseChangelogTableFound = true;
+                    }
+                    tablesCount++;
                 }
-                tablesCount++;
-            }
 
-            // If we have some tables in the DB but Liquibase changelog table is not found we are running on a legacy DB
-            if (!liquibaseChangelogTableFound && tablesCount > 0) {
-                throw new DatabaseMigrationException(
-                        "Detected an Entando 6.x database on datasource " + dataSourceName
-                                + ". Please refer to dev.entando.org on how to prepare the database for Entando 7");
+                // If we have some tables in the DB but Liquibase changelog table is not found we are running on a legacy DB
+                if (!liquibaseChangelogTableFound && tablesCount > 0) {
+                    throw new DatabaseMigrationException(
+                            "Detected an Entando 6.x database on datasource " + dataSourceName
+                                    + ". Please refer to dev.entando.org on how to prepare the database for Entando 7");
+                }
+            } finally {
+                try {
+                    rs.close();
+                } catch (Exception e) { /* Ignored */ }
+                try {
+                    connection.close();
+                } catch (Exception e) { /* Ignored */ }
             }
         }
     }
