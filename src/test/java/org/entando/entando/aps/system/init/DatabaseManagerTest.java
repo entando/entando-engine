@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.init;
 
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.util.FileTextReader;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 import liquibase.changelog.ChangeSetStatus;
 import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
 import org.entando.entando.aps.system.init.exception.DatabaseMigrationException;
@@ -38,6 +41,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -53,6 +59,11 @@ class DatabaseManagerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+
+        final ListableBeanFactory beanFactory = Mockito.mock(ListableBeanFactory.class);
+        when(beanFactory.getBeanNamesForType(DataSource.class)).thenReturn(new String[]{});
+        when(databaseManager.getBeanFactory()).thenReturn(beanFactory);
+
         List<Component> components = new ArrayList<>();
         components.add(this.loadComponent());
         Mockito.lenient().when(componentManager.getCurrentComponents()).thenReturn(components);
@@ -85,7 +96,8 @@ class DatabaseManagerTest {
     void testDisabledDatabaseMigrationStrategy() throws Throwable {
         List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         changeSetToExecute.add(Mockito.mock(ChangeSetStatus.class));
-        Mockito.lenient().doReturn(changeSetToExecute).when(databaseManager).initLiquiBaseResources(Mockito.any(), Mockito.any(), Mockito.any());
+        Mockito.lenient().doReturn(changeSetToExecute).when(databaseManager)
+                .initLiquiBaseResources(Mockito.any(), Mockito.any(), Mockito.any());
 
         DatabaseMigrationStrategy migrationStrategyEnum = DatabaseMigrationStrategy.DISABLED;
         Assertions.assertThrows(DatabaseMigrationException.class, () -> {

@@ -74,13 +74,10 @@ public class DatabaseManager extends AbstractInitializerManager
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DatabaseManager.class);
 
     private static final String LOG_PREFIX = "|   ";
-
     public static final int STATUS_READY = 0;
     public static final int STATUS_DUMPING_IN_PROGRESS = 1;
     public static final String INIT_MSG_P = "+ [ Component: {} ] :: DATA\n{}";
     public static final String INIT_MSG_L = "+ [ Component: {} ] :: Liquibase\n{}";
-
-    public static final String MSG_ALREADY_INSTALLED = "( ok )  Already installed\n";
     private static final String LIQUIBASE_CHANGELOG_TABLE = "DATABASECHANGELOG";
 
     private Map<String, Resource> defaultSqlDump;
