@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.init;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.util.FileTextReader;
@@ -60,9 +62,7 @@ class DatabaseManagerTest {
     @BeforeEach
     public void setUp() throws Exception {
 
-        final ListableBeanFactory beanFactory = Mockito.mock(ListableBeanFactory.class);
-        when(beanFactory.getBeanNamesForType(DataSource.class)).thenReturn(new String[]{});
-        when(databaseManager.getBeanFactory()).thenReturn(beanFactory);
+        databaseManager.setDefaultDataSources(new ArrayList<>());
 
         List<Component> components = new ArrayList<>();
         components.add(this.loadComponent());

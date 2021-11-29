@@ -54,6 +54,7 @@ import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
@@ -85,6 +86,7 @@ public class DatabaseManager extends AbstractInitializerManager
 
     private DatabaseDumper databaseDumper;
     private DatabaseRestorer databaseRestorer;
+    private List<DataSource> defaultDataSources;
 
     private ServletContext servletContext;
 
@@ -103,12 +105,12 @@ public class DatabaseManager extends AbstractInitializerManager
                 DataSourceDumpReport lastDumpReport = this.getLastDumpReport();
                 if (null != lastDumpReport) {
                     lastLocalBackupFolder = lastDumpReport.getSubFolderName();
-                    report.setStatus(SystemInstallationReport.Status.RESTORE);
+                    report.setStatus(Status.RESTORE);
                 } else {
                     // Try with the default db dump
                     Map<String, Resource> sqlDump = this.getDefaultSqlDump();
                     if (null != sqlDump && sqlDump.size() > 0) {
-                        report.setStatus(SystemInstallationReport.Status.RESTORE);
+                        report.setStatus(Status.RESTORE);
                     }
                 }
             }
@@ -131,7 +133,7 @@ public class DatabaseManager extends AbstractInitializerManager
                 throw new DatabaseMigrationException(pendingChangeSetMap);
             }
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus()
-                    .equals(SystemInstallationReport.Status.RESTORE)) {
+                    .equals(Status.RESTORE)) {
                 //ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
                 if (null != lastLocalBackupFolder) {
                     this.restoreBackup(lastLocalBackupFolder);
@@ -151,16 +153,15 @@ public class DatabaseManager extends AbstractInitializerManager
         } finally {
             if (null != report && report.isUpdated()) {
                 report.setUpdated();
-                report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
+                report.setStatus(Status.INCOMPLETE);
             }
         }
         return report;
     }
 
     private void legacyDatabaseCheck() throws DatabaseMigrationException, SQLException {
-        String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-        for (String dataSourceName : dataSourceNames) {
-            DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+
+        for (DataSource dataSource : defaultDataSources) {
 
             Connection connection = null;
             ResultSet rs = null;
@@ -183,7 +184,7 @@ public class DatabaseManager extends AbstractInitializerManager
                 // If we have some tables in the DB but Liquibase changelog table is not found we are running on a legacy DB
                 if (!liquibaseChangelogTableFound && tablesCount > 0) {
                     throw new DatabaseMigrationException(
-                            "Detected an Entando 6.x database on datasource " + dataSourceName
+                            "Detected an Entando 6.x database on datasource " + databaseMetaData.getURL()
                                     + ". Please refer to dev.entando.org on how to prepare the database for Entando 7");
                 }
             } finally {
@@ -208,7 +209,7 @@ public class DatabaseManager extends AbstractInitializerManager
         logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
         ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(),
                 false);
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
+        if (componentReport.getStatus().equals(Status.OK)) {
             logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             return;
@@ -219,11 +220,12 @@ public class DatabaseManager extends AbstractInitializerManager
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (String dataSourceName : dataSourceNames) {
                 ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
+                if ((report.getStatus().equals(Status.PORTING)
+                        || report.getStatus().equals(Status.RESTORE)) && DatabaseMigrationStrategy.AUTO.equals(
+                        migrationStrategy)) {
                     dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
                 } else {
-                    dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
+                    dataReport.getDatabaseStatus().put(dataSourceName, Status.NOT_AVAILABLE);
                 }
             }
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
@@ -245,15 +247,15 @@ public class DatabaseManager extends AbstractInitializerManager
             for (String dataSourceName : dataSourceNames) {
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 if (null != changeLogFile) {
-                    liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
+                    liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.INCOMPLETE);
                     List<ChangeSetStatus> changeSetToExecute = this.executeLiquibaseUpdate(report.getCreation(), 
                             componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), migrationStrategy);
                     pendingChangeSet.addAll(changeSetToExecute);
                     ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                     if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy)) {
-                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.OK);
                     } else {
-                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.SKIPPED);
                     }
                 }
             }
@@ -267,7 +269,8 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     private List<ChangeSetStatus> executeLiquibaseUpdate(Date timestamp, String componentCode,
-            String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, DatabaseMigrationStrategy migrationStrategy) throws Exception {
+            String changeLogFile, String dataSourceName, Status status, DatabaseMigrationStrategy migrationStrategy)
+            throws Exception {
         List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         Connection connection = null;
         Liquibase liquibase = null;
@@ -279,7 +282,7 @@ public class DatabaseManager extends AbstractInitializerManager
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
             liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
             String context = null;
-            if (status.equals(SystemInstallationReport.Status.RESTORE)) {
+            if (status.equals(Status.RESTORE)) {
                 context = "restore";
             } else {
                 context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
@@ -602,5 +605,9 @@ public class DatabaseManager extends AbstractInitializerManager
     @Override
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+
+    public void setDefaultDataSources(List<DataSource> defaultDataSources) {
+        this.defaultDataSources = defaultDataSources;
     }
 }
