@@ -13,53 +13,55 @@
  */
 package org.entando.entando.aps.system.init;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.sql.DataSource;
-
 import com.agiletec.aps.system.ApsSystemUtils;
-import liquibase.Contexts;
-import liquibase.LabelExpression;
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import org.apache.commons.io.output.StringBuilderWriter;
-import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
-import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
-import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
 import liquibase.changelog.ChangeSetStatus;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.io.output.StringBuilderWriter;
+import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
 import org.entando.entando.aps.system.init.exception.DatabaseMigrationException;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
+import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.entando.entando.aps.system.services.storage.StorageManagerUtil;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
@@ -73,19 +75,18 @@ public class DatabaseManager extends AbstractInitializerManager
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(DatabaseManager.class);
 
     private static final String LOG_PREFIX = "|   ";
-
     public static final int STATUS_READY = 0;
     public static final int STATUS_DUMPING_IN_PROGRESS = 1;
     public static final String INIT_MSG_P = "+ [ Component: {} ] :: DATA\n{}";
     public static final String INIT_MSG_L = "+ [ Component: {} ] :: Liquibase\n{}";
-
-    public static final String MSG_ALREADY_INSTALLED = "( ok )  Already installed\n";
+    private static final String LIQUIBASE_CHANGELOG_TABLE = "DATABASECHANGELOG";
 
     private Map<String, Resource> defaultSqlDump;
     private int status;
 
     private DatabaseDumper databaseDumper;
     private DatabaseRestorer databaseRestorer;
+    private List<DataSource> defaultDataSources;
 
     private ServletContext servletContext;
 
@@ -100,25 +101,30 @@ public class DatabaseManager extends AbstractInitializerManager
         if (null == report) {
             report = SystemInstallationReport.getInstance();
             if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy) && !Environment.test.equals(this.getEnvironment())) {
-                //non c'è db locale installato, cerca nei backup locali
+                // There's no local database installed, lookup in the local databases
                 DataSourceDumpReport lastDumpReport = this.getLastDumpReport();
                 if (null != lastDumpReport) {
                     lastLocalBackupFolder = lastDumpReport.getSubFolderName();
-                    report.setStatus(SystemInstallationReport.Status.RESTORE);
+                    report.setStatus(Status.RESTORE);
                 } else {
-                    //SE NON c'è cerca il default dump
+                    // Try with the default db dump
                     Map<String, Resource> sqlDump = this.getDefaultSqlDump();
                     if (null != sqlDump && sqlDump.size() > 0) {
-                        report.setStatus(SystemInstallationReport.Status.RESTORE);
+                        report.setStatus(Status.RESTORE);
                     }
                 }
             }
         }
+
+        // Check if we are dealing with an old database version (not Liquibase compliant - Entando <= 6.3.2)
+        legacyDatabaseCheck();
+
         try {
             List<Component> components = this.getComponentManager().getCurrentComponents();
             Map<String, List<ChangeSetStatus>> pendingChangeSetMap = new HashMap<>();
             for (Component entandoComponentConfiguration : components) {
-                List<ChangeSetStatus> pendingChangeSet = this.initLiquiBaseResources(entandoComponentConfiguration, report, migrationStrategy);
+                List<ChangeSetStatus> pendingChangeSet = this.initLiquiBaseResources(entandoComponentConfiguration,
+                        report, migrationStrategy);
                 if (!pendingChangeSet.isEmpty()) {
                     pendingChangeSetMap.put(entandoComponentConfiguration.getCode(), pendingChangeSet);
                 }
@@ -126,7 +132,8 @@ public class DatabaseManager extends AbstractInitializerManager
             if (!pendingChangeSetMap.isEmpty()) {
                 throw new DatabaseMigrationException(pendingChangeSetMap);
             }
-            if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
+            if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus()
+                    .equals(Status.RESTORE)) {
                 //ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
                 if (null != lastLocalBackupFolder) {
                     this.restoreBackup(lastLocalBackupFolder);
@@ -146,18 +153,63 @@ public class DatabaseManager extends AbstractInitializerManager
         } finally {
             if (null != report && report.isUpdated()) {
                 report.setUpdated();
-                report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
+                report.setStatus(Status.INCOMPLETE);
             }
         }
         return report;
     }
 
+    private void legacyDatabaseCheck() throws DatabaseMigrationException, SQLException {
+
+        for (DataSource dataSource : defaultDataSources) {
+
+            Connection connection = null;
+            ResultSet rs = null;
+            try {
+                connection = dataSource.getConnection();
+                final DatabaseMetaData databaseMetaData = connection.getMetaData();
+                rs = databaseMetaData.getTables(null, null, null,
+                        new String[]{"TABLE"});
+
+                boolean liquibaseChangelogTableFound = false;
+                int tablesCount = 0;
+                while (rs.next()) {
+                    String tableName = rs.getString("Table_NAME");
+                    if (tableName.equalsIgnoreCase(LIQUIBASE_CHANGELOG_TABLE)) {
+                        liquibaseChangelogTableFound = true;
+                    }
+                    tablesCount++;
+                }
+
+                // If we have some tables in the DB but Liquibase changelog table is not found we are running on a legacy DB
+                if (!liquibaseChangelogTableFound && tablesCount > 0) {
+                    throw new DatabaseMigrationException(
+                            "Detected an Entando 6.x database on datasource " + databaseMetaData.getURL()
+                                    + ". Please refer to dev.entando.org on how to prepare the database for Entando 7");
+                }
+            } finally {
+                try {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                } catch (Exception e) { /* Ignored */ }
+                try {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (Exception e) { /* Ignored */ }
+            }
+        }
+    }
+
     //---------------- DATA ------------------- START
 
-    public void initComponentDefaultResources(Component componentConfiguration, SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws EntException {
+    public void initComponentDefaultResources(Component componentConfiguration, SystemInstallationReport report,
+            DatabaseMigrationStrategy migrationStrategy) throws EntException {
         logger.info(INIT_MSG_P, componentConfiguration.getCode(), LOG_PREFIX);
-        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
-        if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
+        ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(),
+                false);
+        if (componentReport.getStatus().equals(Status.OK)) {
             logger.debug(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "( ok )  Already installed\n" + LOG_PREFIX);
             return;
@@ -168,11 +220,12 @@ public class DatabaseManager extends AbstractInitializerManager
             String[] dataSourceNames = this.extractBeanNames(DataSource.class);
             for (String dataSourceName : dataSourceNames) {
                 ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
-                if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-                        || report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
+                if ((report.getStatus().equals(Status.PORTING)
+                        || report.getStatus().equals(Status.RESTORE)) && DatabaseMigrationStrategy.AUTO.equals(
+                        migrationStrategy)) {
                     dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
                 } else {
-                    dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
+                    dataReport.getDatabaseStatus().put(dataSourceName, Status.NOT_AVAILABLE);
                 }
             }
             ApsSystemUtils.directStdoutTrace(LOG_PREFIX + "\n" + LOG_PREFIX + "Installation complete\n" + LOG_PREFIX);
@@ -194,15 +247,15 @@ public class DatabaseManager extends AbstractInitializerManager
             for (String dataSourceName : dataSourceNames) {
                 String changeLogFile = (null != componentConfiguration.getLiquibaseChangeSets()) ? componentConfiguration.getLiquibaseChangeSets().get(dataSourceName) : null;
                 if (null != changeLogFile) {
-                    liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
+                    liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.INCOMPLETE);
                     List<ChangeSetStatus> changeSetToExecute = this.executeLiquibaseUpdate(report.getCreation(), 
                             componentConfiguration.getCode(), changeLogFile, dataSourceName, report.getStatus(), migrationStrategy);
                     pendingChangeSet.addAll(changeSetToExecute);
                     ApsSystemUtils.directStdoutTrace("|   ( ok )  " + dataSourceName);
                     if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy)) {
-                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.OK);
                     } else {
-                        liquibaseReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
+                        liquibaseReport.getDatabaseStatus().put(dataSourceName, Status.SKIPPED);
                     }
                 }
             }
@@ -216,7 +269,8 @@ public class DatabaseManager extends AbstractInitializerManager
     }
 
     private List<ChangeSetStatus> executeLiquibaseUpdate(Date timestamp, String componentCode,
-            String changeLogFile, String dataSourceName, SystemInstallationReport.Status status, DatabaseMigrationStrategy migrationStrategy) throws Exception {
+            String changeLogFile, String dataSourceName, Status status, DatabaseMigrationStrategy migrationStrategy)
+            throws Exception {
         List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         Connection connection = null;
         Liquibase liquibase = null;
@@ -228,7 +282,7 @@ public class DatabaseManager extends AbstractInitializerManager
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
             liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
             String context = null;
-            if (status.equals(SystemInstallationReport.Status.RESTORE)) {
+            if (status.equals(Status.RESTORE)) {
                 context = "restore";
             } else {
                 context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
@@ -551,5 +605,9 @@ public class DatabaseManager extends AbstractInitializerManager
     @Override
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
+    }
+
+    public void setDefaultDataSources(List<DataSource> defaultDataSources) {
+        this.defaultDataSources = defaultDataSources;
     }
 }
