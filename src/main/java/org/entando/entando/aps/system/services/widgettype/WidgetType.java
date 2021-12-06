@@ -37,35 +37,35 @@ public class WidgetType implements Serializable {
     /**
      * Il codice del tipo di widget.
      */
-    private String _code;
+    private String code;
 
-    private ApsProperties _titles;
+    private ApsProperties titles;
 
     /**
      * La lista dei parametri previsti per il tipo di widget.
      */
-    private List<WidgetTypeParameter> _parameters;
+    private List<WidgetTypeParameter> parameters;
 
     /**
      * Il nome della action specifica che gestisce questo tipo di widget. null
      * se non vi è nessun action specifica.
      */
-    private String _action;
+    private String action;
 
     /**
      * The code of the plugin owner of widget type.
      */
-    private String _pluginCode;
+    private String pluginCode;
 
-    private String _parentTypeCode;
+    private String parentTypeCode;
 
-    private WidgetType _parentType;
+    private WidgetType parentType;
 
-    private ApsProperties _config;
+    private ApsProperties config;
 
-    private boolean _locked;
+    private boolean locked;
 
-    private String _mainGroup;
+    private String mainGroup;
 
     private String configUi;
 
@@ -131,7 +131,7 @@ public class WidgetType implements Serializable {
      * @return Il codice del tipo di widget
      */
     public String getCode() {
-        return _code;
+        return code;
     }
 
     /**
@@ -140,15 +140,15 @@ public class WidgetType implements Serializable {
      * @param code Il codice del tipo di widget
      */
     public void setCode(String code) {
-        this._code = code;
+        this.code = code;
     }
 
     public ApsProperties getTitles() {
-        return _titles;
+        return titles;
     }
 
     public void setTitles(ApsProperties titles) {
-        this._titles = titles;
+        this.titles = titles;
     }
 
     /**
@@ -157,7 +157,7 @@ public class WidgetType implements Serializable {
      * @return La lista di parametri in oggetti del tipo WidgetTypeParameter.
      */
     public List<WidgetTypeParameter> getTypeParameters() {
-        return _parameters;
+        return parameters;
     }
 
     public boolean hasTypeParameter(WidgetTypeParameter param) {
@@ -177,7 +177,7 @@ public class WidgetType implements Serializable {
      * @param typeParameters The parameters to set.
      */
     public void setTypeParameters(List<WidgetTypeParameter> typeParameters) {
-        this._parameters = typeParameters;
+        this.parameters = typeParameters;
     }
 
     public boolean hasParameter(String paramName) {
@@ -221,7 +221,7 @@ public class WidgetType implements Serializable {
      * specifica.
      */
     public String getAction() {
-        return _action;
+        return action;
     }
 
     /**
@@ -230,7 +230,7 @@ public class WidgetType implements Serializable {
      * @param action Il nome della action specifica.
      */
     public void setAction(String action) {
-        this._action = action;
+        this.action = action;
     }
 
     /**
@@ -240,7 +240,7 @@ public class WidgetType implements Serializable {
      * @return The plugin code.
      */
     public String getPluginCode() {
-        return _pluginCode;
+        return pluginCode;
     }
 
     /**
@@ -249,34 +249,34 @@ public class WidgetType implements Serializable {
      * @param pluginCode The plugin code.
      */
     public void setPluginCode(String pluginCode) {
-        this._pluginCode = pluginCode;
+        this.pluginCode = pluginCode;
     }
 
     public String getParentTypeCode() {
-        return _parentTypeCode;
+        return parentTypeCode;
     }
 
     protected void setParentTypeCode(String parentTypeCode) {
-        this._parentTypeCode = parentTypeCode;
+        this.parentTypeCode = parentTypeCode;
     }
 
     public WidgetType getParentType() {
-        return _parentType;
+        return parentType;
     }
 
     public void setParentType(WidgetType parentType) {
-        this._parentType = parentType;
+        this.parentType = parentType;
         if (null != parentType) {
             this.setParentTypeCode(parentType.getCode());
         }
     }
 
     public ApsProperties getConfig() {
-        return _config;
+        return config;
     }
 
     public void setConfig(ApsProperties config) {
-        this._config = config;
+        this.config = config;
     }
 
     public boolean isLogic() {
@@ -288,11 +288,11 @@ public class WidgetType implements Serializable {
     }
 
     public boolean isLocked() {
-        return _locked;
+        return locked;
     }
 
     public void setLocked(boolean locked) {
-        this._locked = locked;
+        this.locked = locked;
     }
 
     public boolean isReadonlyPageWidgetConfig() {
@@ -312,11 +312,11 @@ public class WidgetType implements Serializable {
     }
 
     public String getMainGroup() {
-        return _mainGroup;
+        return mainGroup;
     }
 
     public void setMainGroup(String mainGroup) {
-        this._mainGroup = mainGroup;
+        this.mainGroup = mainGroup;
     }
 
     public String getConfigUi() {
@@ -380,16 +380,16 @@ public class WidgetType implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((_action == null) ? 0 : _action.hashCode());
-        result = prime * result + ((_code == null) ? 0 : _code.hashCode());
-        result = prime * result + ((_config == null) ? 0 : _config.hashCode());
-        result = prime * result + (_locked ? 1231 : 1237);
-        result = prime * result + ((_mainGroup == null) ? 0 : _mainGroup.hashCode());
-        result = prime * result + ((_parameters == null) ? 0 : _parameters.hashCode());
-        result = prime * result + ((_parentType == null) ? 0 : _parentType.hashCode());
-        result = prime * result + ((_parentTypeCode == null) ? 0 : _parentTypeCode.hashCode());
-        result = prime * result + ((_pluginCode == null) ? 0 : _pluginCode.hashCode());
-        result = prime * result + ((_titles == null) ? 0 : _titles.hashCode());
+        result = prime * result + ((action == null) ? 0 : action.hashCode());
+        result = prime * result + ((code == null) ? 0 : code.hashCode());
+        result = prime * result + ((config == null) ? 0 : config.hashCode());
+        result = prime * result + (locked ? 1231 : 1237);
+        result = prime * result + ((mainGroup == null) ? 0 : mainGroup.hashCode());
+        result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
+        result = prime * result + ((parentType == null) ? 0 : parentType.hashCode());
+        result = prime * result + ((parentTypeCode == null) ? 0 : parentTypeCode.hashCode());
+        result = prime * result + ((pluginCode == null) ? 0 : pluginCode.hashCode());
+        result = prime * result + ((titles == null) ? 0 : titles.hashCode());
         result = prime * result + (readonlyPageWidgetConfig ? 1231 : 1237);
         result = prime * result + ((widgetCategory == null) ? 0 : widgetCategory.hashCode());
         result = prime * result + ((icon == null) ? 0 : icon.hashCode());
@@ -408,70 +408,70 @@ public class WidgetType implements Serializable {
             return false;
         }
         WidgetType other = (WidgetType) obj;
-        if (_action == null) {
-            if (other._action != null) {
+        if (action == null) {
+            if (other.action != null) {
                 return false;
             }
-        } else if (!_action.equals(other._action)) {
+        } else if (!action.equals(other.action)) {
             return false;
         }
-        if (_code == null) {
-            if (other._code != null) {
+        if (code == null) {
+            if (other.code != null) {
                 return false;
             }
-        } else if (!_code.equals(other._code)) {
+        } else if (!code.equals(other.code)) {
             return false;
         }
-        if (_config == null) {
-            if (other._config != null) {
+        if (config == null) {
+            if (other.config != null) {
                 return false;
             }
-        } else if (!_config.equals(other._config)) {
+        } else if (!config.equals(other.config)) {
             return false;
         }
-        if (_locked != other._locked) {
+        if (locked != other.locked) {
             return false;
         }
-        if (_mainGroup == null) {
-            if (other._mainGroup != null) {
+        if (mainGroup == null) {
+            if (other.mainGroup != null) {
                 return false;
             }
-        } else if (!_mainGroup.equals(other._mainGroup)) {
+        } else if (!mainGroup.equals(other.mainGroup)) {
             return false;
         }
-        if (_parameters == null) {
-            if (other._parameters != null) {
+        if (parameters == null) {
+            if (other.parameters != null) {
                 return false;
             }
-        } else if (!_parameters.equals(other._parameters)) {
+        } else if (!parameters.equals(other.parameters)) {
             return false;
         }
-        if (_parentType == null) {
-            if (other._parentType != null) {
+        if (parentType == null) {
+            if (other.parentType != null) {
                 return false;
             }
-        } else if (!_parentType.equals(other._parentType)) {
+        } else if (!parentType.equals(other.parentType)) {
             return false;
         }
-        if (_parentTypeCode == null) {
-            if (other._parentTypeCode != null) {
+        if (parentTypeCode == null) {
+            if (other.parentTypeCode != null) {
                 return false;
             }
-        } else if (!_parentTypeCode.equals(other._parentTypeCode)) {
+        } else if (!parentTypeCode.equals(other.parentTypeCode)) {
             return false;
         }
-        if (_pluginCode == null) {
-            if (other._pluginCode != null) {
+        if (pluginCode == null) {
+            if (other.pluginCode != null) {
                 return false;
             }
-        } else if (!_pluginCode.equals(other._pluginCode)) {
+        } else if (!pluginCode.equals(other.pluginCode)) {
             return false;
         }
-        if (_titles == null) {
-            if (other._titles != null) {
+        if (titles == null) {
+            if (other.titles != null) {
                 return false;
             }
-        } else if (!_titles.equals(other._titles)) {
+        } else if (!titles.equals(other.titles)) {
             return false;
         }
         if (readonlyPageWidgetConfig != other.readonlyPageWidgetConfig) {
@@ -484,7 +484,6 @@ public class WidgetType implements Serializable {
         } else if (!widgetCategory.equals(other.widgetCategory)) {
             return false;
         }
-
         if (icon == null) {
             if (other.icon != null) {
                 return false;
