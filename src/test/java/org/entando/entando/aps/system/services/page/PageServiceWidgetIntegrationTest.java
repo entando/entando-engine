@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,12 +28,14 @@ class PageServiceWidgetIntegrationTest extends BaseTestCase {
 
     private IPageService pageService;
     private IPageManager pageManager;
+    private IPageModelManager pageModelManager;
     
     @BeforeEach
     private void init() throws Exception {
         try {
             pageService = (IPageService) this.getApplicationContext().getBean(IPageService.BEAN_NAME);
             pageManager = (IPageManager) this.getApplicationContext().getBean(SystemConstants.PAGE_MANAGER);
+            pageModelManager = (IPageModelManager) this.getApplicationContext().getBean(SystemConstants.PAGE_MODEL_MANAGER);
         } catch (Exception e) {
             throw e;
         }
@@ -51,10 +54,10 @@ class PageServiceWidgetIntegrationTest extends BaseTestCase {
     void testUpdatePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
-        PageModel pageModel = parentPage.getMetadata().getModel();
+        PageModel pageModel = this.pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                                                                 true, pageCode, null, null, false, null, null);
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, null);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", pageModel, metadata, null);
         try {
             pageManager.addPage(pageToAdd);
             WidgetConfigurationDto widgetConfigurationDto = this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);
@@ -77,10 +80,10 @@ class PageServiceWidgetIntegrationTest extends BaseTestCase {
     void testRemovePageWidget() throws JsonProcessingException, EntException {
         String pageCode = "temp001";
         IPage parentPage = pageManager.getDraftRoot();
-        PageModel pageModel = parentPage.getMetadata().getModel();
+        PageModel pageModel = this.pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                                                                 true, pageCode, null, null, false, null, null);
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, null);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", pageModel, metadata, null);
         try {
             pageManager.addPage(pageToAdd);
             WidgetConfigurationDto widgetConfigurationDto = this.pageService.getWidgetConfiguration(pageToAdd.getCode(), 0, IPageService.STATUS_DRAFT);

@@ -36,20 +36,20 @@ public class PageUtils {
      * configuration of the page.
      *
      * @param page The page to check.
+     * @param model
      * @param viewerWidgetCode The code of the viewer widget (optional)
      * @param widgetTypeManager
      * @return True if the page can publish free content, false else.
      */
-    public static boolean isDraftFreeViewerPage(IPage page, String viewerWidgetCode, IWidgetTypeManager widgetTypeManager) {
+    public static boolean isDraftFreeViewerPage(IPage page, PageModel model, String viewerWidgetCode, IWidgetTypeManager widgetTypeManager) {
         if (page.isOnlineInstance()) {
             logger.warn("this check expects a draft instance of the page");
             return false;
         }
         boolean found = false;
-        PageMetadata metadata = page.getMetadata();
         Widget[] widgets = page.getWidgets();
-        if (metadata != null) {
-            found = isFreeViewerPage(metadata.getModel(), widgets, viewerWidgetCode, widgetTypeManager);
+        if (model != null) {
+            found = isFreeViewerPage(model, widgets, viewerWidgetCode, widgetTypeManager);
         }
         return found;
     }
@@ -59,19 +59,20 @@ public class PageUtils {
      * configuration of the page.
      *
      * @param page The page to check.
+     * @param model 
      * @param viewerWidgetCode The code of the viewer widget (optional)
+     * @param widgetTypeManager
      * @return True if the page can publish free content, false else.
      */
-    public static boolean isOnlineFreeViewerPage(IPage page, String viewerWidgetCode, IWidgetTypeManager widgetTypeManager) {
+    public static boolean isOnlineFreeViewerPage(IPage page, PageModel model, String viewerWidgetCode, IWidgetTypeManager widgetTypeManager) {
         if (!page.isOnlineInstance()) {
             logger.warn("this check expects an online instance of the page");
             return false;
         }
         boolean found = false;
-        PageMetadata metadata = page.getMetadata();
         Widget[] widgets = page.getWidgets();
-        if (metadata != null) {
-            found = isFreeViewerPage(metadata.getModel(), widgets, viewerWidgetCode, widgetTypeManager);
+        if (model != null) {
+            found = isFreeViewerPage(model, widgets, viewerWidgetCode, widgetTypeManager);
         }
         return found;
     }

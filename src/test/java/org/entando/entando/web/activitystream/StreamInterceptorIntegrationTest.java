@@ -40,6 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +51,9 @@ class StreamInterceptorIntegrationTest extends AbstractControllerIntegrationTest
 
     @Autowired
     private IPageManager pageManager;
+    
+    @Autowired
+    private IPageModelManager pageModelManager;
 
     @Autowired
     private IActionLogManager actionLogManager;
@@ -109,11 +113,11 @@ class StreamInterceptorIntegrationTest extends AbstractControllerIntegrationTest
         }
         IPage parentPage = pageManager.getDraftPage(parent);
         if (null == pageModel) {
-            pageModel = parentPage.getMetadata().getModel();
+            pageModel = this.pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         }
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         Widget[] widgets = {};
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", pageModel, metadata, widgets);
         return pageToAdd;
     }
 

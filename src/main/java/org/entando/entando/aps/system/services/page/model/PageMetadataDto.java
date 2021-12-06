@@ -25,7 +25,7 @@ public class PageMetadataDto {
 
     public PageMetadataDto(PageMetadata src) {
         BeanUtils.copyProperties(src, this);
-        this.setModel(src.getModel().getCode());
+        this.setModel(src.getModelCode());
     }
 
     public ApsProperties getTitles() {

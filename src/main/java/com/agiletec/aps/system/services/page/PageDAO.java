@@ -132,7 +132,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
     protected int getWidgetArrayLength(PageMetadata metadata) {
         int numFrames = -1;
         if (metadata != null) {
-            PageModel model = metadata.getModel();
+            PageModel model = this.getPageModelManager().getPageModel(metadata.getModelCode());
             if (model != null) {
                 numFrames = model.getFrames().length;
             }
@@ -557,7 +557,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
                 }
                 stat.setString(index++, pageMetadata.getGroup());
                 stat.setString(index++, pageMetadata.getTitles().toXml());
-                stat.setString(index++, pageMetadata.getModel().getCode());
+                stat.setString(index++, pageMetadata.getModelCode());
                 if (pageMetadata.isShowable()) {
                     stat.setInt(index++, 1);
                 } else {
@@ -594,7 +594,8 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
             throw new EntException(msg, t);
         }
         pageMetadata.setTitles(titles);
-        pageMetadata.setModel(this.getPageModelManager().getPageModel(res.getString(index++)));
+        String pageModelCode = res.getString(index++);
+        pageMetadata.setModelCode(pageModelCode);
         Integer showable = res.getInt(index++);
         pageMetadata.setShowable(showable == 1);
         String extraConfig = res.getString(index++);

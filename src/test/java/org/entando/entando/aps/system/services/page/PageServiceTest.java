@@ -103,13 +103,11 @@ class PageServiceTest {
         dto.addJoinGroup("free");
         dto.addJoinGroup("admin");
         when(dtoBuilder.convert(any(IPage.class))).thenReturn(dto);
-
-//        PageModel pageModel = PageMockHelper.mockServicePageModel();
-
+        PageModel pageModel = PageMockHelper.mockServicePageModel();
         Page page = PageMockHelper.mockTestPage(PageMockHelper.PAGE_CODE);
         page.setExtraGroups(new HashSet<>(Arrays.asList(PageMockHelper.GROUP)));
         when(pageManager.getDraftPage(page.getCode())).thenReturn(page);
-        when(pageModelManager.getPageModel(page.getModel().getCode())).thenReturn(page.getModel());
+        when(pageModelManager.getPageModel(Mockito.anyString())).thenReturn(pageModel);
 
         PageRequest request = PageMockHelper.mockPageRequest(page);
         request.setJoinGroups(Arrays.asList(PageMockHelper.GROUP, "admin"));

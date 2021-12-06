@@ -528,7 +528,7 @@ public class PageService implements IComponentExistsService, IPageService,
             if (frameId >= page.getWidgets().length) {
                 logger.info("the frame to delete with index {} in page {} with model {} does not exists",
                         frameId, pageCode,
-                        page.getModel().getCode());
+                        page.getModelCode());
                 return;
             }
             this.pageManager.removeWidget(pageCode, frameId);
@@ -545,7 +545,7 @@ public class PageService implements IComponentExistsService, IPageService,
             if (null == page) {
                 throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
             }
-            PageModel pageModel = page.getModel();
+            PageModel pageModel = this.getPageModelManager().getPageModel(page.getModelCode());
             Widget[] defaultWidgets = pageModel.getDefaultWidget();
             if (null == defaultWidgets) {
                 logger.info("no default widget configuration for model {}", pageModel.getCode());
@@ -577,7 +577,7 @@ public class PageService implements IComponentExistsService, IPageService,
             Widget defaultWidget = newWidgetConfiguration[i];
             if (null != defaultWidget) {
                 if (null == defaultWidget.getTypeCode()) {
-                    logger.info("Widget Type null when adding defaulWidget (of pagemodel '{}') on frame '{}' of page '{}'", page.getModel().getCode(), i, page.getCode());
+                    logger.info("Widget Type null when adding defaulWidget (of pagemodel '{}') on frame '{}' of page '{}'", page.getModelCode(), i, page.getCode());
                     continue;
                 }
                 widgets[i] = defaultWidget;
@@ -595,7 +595,7 @@ public class PageService implements IComponentExistsService, IPageService,
         page.setCode(pageRequest.getCode());
         page.setShowable(pageRequest.isDisplayedInMenu());
         PageModel model = this.getPageModelManager().getPageModel(pageRequest.getPageModel());
-        page.setModel(model);
+        page.setModelCode(model.getCode());
         page.setWidgets(new Widget[model.getFrames().length]);
         page.setCharset(pageRequest.getCharset());
         page.setMimeType(pageRequest.getContentType());
@@ -633,10 +633,10 @@ public class PageService implements IComponentExistsService, IPageService,
         page.setMetadata(metadata);
         page.setCode(pageRequest.getCode());
         page.setShowable(pageRequest.isDisplayedInMenu());
-        if (!oldPage.getModel().getCode().equals(pageRequest.getPageModel())) {
+        if (!oldPage.getModelCode().equals(pageRequest.getPageModel())) {
             PageModel model = this.getPageModelManager().getPageModel(pageRequest.getPageModel());
             model.setCode(pageRequest.getPageModel());
-            page.setModel(model);
+            page.setModelCode(pageRequest.getPageModel());
             page.setWidgets(new Widget[model.getFrames().length]);
         } else {
             page.setWidgets(oldPage.getWidgets());
@@ -910,7 +910,8 @@ public class PageService implements IComponentExistsService, IPageService,
         if (null == page) {
             return;
         }
-        if (page.getGroup().equals(Group.FREE_GROUP_NAME) && PageUtils.isOnlineFreeViewerPage(page, null, this.getWidgetTypeManager())) {
+        PageModel pageModel = this.getPageModelManager().getPageModel(page.getModelCode());
+        if (page.getGroup().equals(Group.FREE_GROUP_NAME) && PageUtils.isOnlineFreeViewerPage(page, pageModel, null, this.getWidgetTypeManager())) {
             pages.add(page);
         }
         String[] children = page.getChildrenCodes();

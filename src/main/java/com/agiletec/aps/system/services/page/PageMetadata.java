@@ -40,7 +40,7 @@ public class PageMetadata implements Cloneable, Serializable {
 
     private Set<String> extraGroups;
 
-    private PageModel model;
+    private String modelCode;
 
     private boolean showable = false;
 
@@ -65,7 +65,7 @@ public class PageMetadata implements Cloneable, Serializable {
             if (extraGroups != null) {
                 copy.setExtraGroups(new TreeSet<>(extraGroups));
             }
-            copy.setModel(this.getModel());
+            copy.setModelCode(this.getModelCode());
             copy.setShowable(this.isShowable());
             copy.setUseExtraTitles(this.isUseExtraTitles());
             copy.setMimeType(this.getMimeType());
@@ -108,23 +108,12 @@ public class PageMetadata implements Cloneable, Serializable {
         return this.getTitles().getProperty(langCode);
     }
 
-    /**
-     * Return the related template of page
-     *
-     * @return the page template
-     */
-    public PageModel getModel() {
-        return model;
+    public String getModelCode() {
+        return modelCode;
     }
 
-    /**
-     * WARNING: This method is for the page manager service only exclusive use
-     * Assign the given page template to the current object
-     *
-     * @param pageModel the template of the page to assign
-     */
-    public void setModel(PageModel pageModel) {
-        this.model = pageModel;
+    public void setModelCode(String modelCode) {
+        this.modelCode = modelCode;
     }
 
     public void addExtraGroup(String groupName) {
@@ -217,7 +206,7 @@ public class PageMetadata implements Cloneable, Serializable {
         result = prime * result + ((charset == null) ? 0 : charset.hashCode());
         result = prime * result + ((extraGroups == null) ? 0 : extraGroups.hashCode());
         result = prime * result + ((mimeType == null) ? 0 : mimeType.hashCode());
-        result = prime * result + ((model == null) ? 0 : model.hashCode());
+        result = prime * result + ((modelCode == null) ? 0 : modelCode.hashCode());
         result = prime * result + (showable ? 1231 : 1237);
         result = prime * result + ((titles == null) ? 0 : titles.hashCode());
         result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
@@ -283,11 +272,11 @@ public class PageMetadata implements Cloneable, Serializable {
         } else if (!group.equals(other.group)) {
             return false;
         }
-        if (model == null) {
-            if (other.model != null) {
+        if (modelCode == null) {
+            if (other.modelCode != null) {
                 return false;
             }
-        } else if (!model.getCode().equals(other.model.getCode())) {
+        } else if (!modelCode.equals(other.modelCode)) {
             return false;
         }
         if (showable != other.showable) {

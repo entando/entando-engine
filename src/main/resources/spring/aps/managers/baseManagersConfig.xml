@@ -304,6 +304,7 @@
     <bean id="PageManager" class="com.agiletec.aps.system.services.page.PageManager"
           parent="abstractService" depends-on="PageModelManager,WidgetTypeManager" >
         <property name="configManager" ref="BaseConfigManager"/>
+        <property name="pageModelManager" ref="PageModelManager"/>
         <property name="pageDAO" >
             <bean class="com.agiletec.aps.system.services.page.PageDAO">
                 <property name="dataSource" ref="portDataSource" />

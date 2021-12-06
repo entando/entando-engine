@@ -88,6 +88,7 @@
         <property name="dtoBuilder" ref="WidgetDtoBuilder" />
         <property name="widgetManager" ref="WidgetTypeManager" />
         <property name="pageManager" ref="PageManager" />
+        <property name="pageModelManager" ref="PageModelManager" />
         <property name="guiFragmentManager" ref="GuiFragmentManager" />
         <property name="groupManager" ref="GroupManager" />
         <property name="pagedMetadataMapper" ref="PagedMetadataMapper" />

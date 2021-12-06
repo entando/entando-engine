@@ -39,6 +39,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import org.junit.jupiter.api.Assertions;
@@ -117,13 +118,13 @@ class PageManagerIntegrationTest extends BaseTestCase {
     private void checkAddPage() throws Throwable {
         IPage parentPage = _pageManager.getDraftPage("service");
         String parentForNewPage = parentPage.getParentCode();
-        PageModel pageModel = parentPage.getMetadata().getModel();
+        PageModel pageModel = this._pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                 true, "pagina temporanea", null, null, false, null, null);
         ApsProperties config = PageTestUtil.createProperties("actionPath", "/myJsp.jsp", "param1", "value1");
         Widget widgetToAdd = PageTestUtil.createWidget("formAction", config, this._widgetTypeManager);
         Widget[] widgets = {widgetToAdd};
-        Page pageToAdd = PageTestUtil.createPage("temp", parentForNewPage, "free", metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage("temp", parentForNewPage, "free", pageModel, metadata, widgets);
         _pageManager.addPage(pageToAdd);
 
         IPage addedPage = _pageManager.getDraftPage("temp");
@@ -156,7 +157,8 @@ class PageManagerIntegrationTest extends BaseTestCase {
 
     private void checkUpdatePage() throws Exception {
         Page dbPage = (Page) _pageManager.getDraftPage("temp");
-        Page pageToUpdate = PageTestUtil.createPage("temp", dbPage.getParentCode(), "free", dbPage.getMetadata().clone(), PageTestUtil
+        PageModel pageModel = this._pageModelManager.getPageModel(dbPage.getMetadata().getModelCode());
+        Page pageToUpdate = PageTestUtil.createPage("temp", dbPage.getParentCode(), "free", pageModel, dbPage.getMetadata().clone(), PageTestUtil
                 .copyArray(dbPage.getWidgets()));
         pageToUpdate.setPosition(dbPage.getPosition());
         PageMetadata onlineMetadata = pageToUpdate.getMetadata();
@@ -487,11 +489,11 @@ class PageManagerIntegrationTest extends BaseTestCase {
 
     private IPage createPageForTest(String code, String parentCode) throws Throwable {
         IPage prototype = _pageManager.getDraftPage("service");
-        PageModel pageModel = prototype.getMetadata().getModel();
+        PageModel pageModel = this._pageModelManager.getPageModel(prototype.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                 true, "pagina temporanea", null, null, false, null, null);
         Widget[] widgets = new Widget[pageModel.getFrames().length];
-        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
+        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, pageModel, metadata, widgets);
     }
 
     @Test
@@ -682,9 +684,9 @@ class PageManagerIntegrationTest extends BaseTestCase {
         PagesStatus status = this._pageManager.getPagesStatus();
         try {
             IPage parentPage = _pageManager.getDraftRoot();
-            PageModel pageModel = parentPage.getMetadata().getModel();
+            PageModel pageModel = this._pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
             PageMetadata draftMeta = PageTestUtil.createPageMetadata(pageModel, true, "pagina temporanea", null, null, false, null, null);
-            Page pageToAdd = PageTestUtil.createPage(testCode, parentPage.getCode(), "free", draftMeta, new Widget[pageModel.getFrames().length]);
+            Page pageToAdd = PageTestUtil.createPage(testCode, parentPage.getCode(), "free", pageModel, draftMeta, new Widget[pageModel.getFrames().length]);
             _pageManager.addPage(pageToAdd);
             PagesStatus newStatus = this._pageManager.getPagesStatus();
             assertEquals(status.getOnline(), newStatus.getOnline());
@@ -830,10 +832,12 @@ class PageManagerIntegrationTest extends BaseTestCase {
     @BeforeEach
     private void init() {
         this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+        this._pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
         this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     }
 
     private IPageManager _pageManager = null;
+    private IPageModelManager _pageModelManager = null;
     private IWidgetTypeManager _widgetTypeManager;
 
 }

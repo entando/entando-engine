@@ -65,25 +65,25 @@ public class Page extends TreeNode implements IPage, Serializable {
     
 
     /**
-     * Return the related model of page
+     * Return the related model code of page
      *
-     * @return the page template
+     * @return the page code template
      */
     @Override
-    public PageModel getModel() {
+    public String getModelCode() {
         PageMetadata metadata = this.getMetadata();
-        return metadata == null ? null : metadata.getModel();
+        return metadata == null ? null : metadata.getModelCode();
     }
 
     /**
      * WARNING: This method is for the page manager service only exclusive use
      * Assign the given page template to the current object
      *
-     * @param pageModel the model of the page to assign
+     * @param pageModelCode the model of the page to assign
      */
-    public void setModel(PageModel pageModel) {
+    public void setModelCode(String pageModelCode) {
         PageMetadata metadata = this.getMetadata();
-        metadata.setModel(pageModel);
+        metadata.setModelCode(pageModelCode);
     }
     
     @Override

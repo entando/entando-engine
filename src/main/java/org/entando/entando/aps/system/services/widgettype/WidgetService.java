@@ -20,6 +20,8 @@ import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,6 +64,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     private IWidgetTypeManager widgetManager;
 
     private IPageManager pageManager;
+    
+    private IPageModelManager pageModelManager;
 
     private IGuiFragmentManager guiFragmentManager;
 
@@ -89,6 +93,13 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     public void setPageManager(IPageManager pageManager) {
         this.pageManager = pageManager;
+    }
+    
+    protected IPageModelManager getPageModelManager() {
+        return pageModelManager;
+    }
+    public void setPageModelManager(IPageModelManager pageModelManager) {
+        this.pageModelManager = pageModelManager;
     }
 
     protected IGroupManager getGroupManager() {
@@ -184,7 +195,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         int index = list.indexOf(list.stream().filter(widget -> widget != null && widget.getTypeCode().equals(widgetCode)).findFirst().get());
         WidgetDetails details = new WidgetDetails();
         details.setFrameIndex(index);
-        details.setFrame(page.getModel().getFrames()[index]);
+        PageModel model = this.getPageModelManager().getPageModel(page.getMetadata().getModelCode());
+        details.setFrame(model.getFrames()[index]);
         details.setPageCode(page.getCode());
         details.setPageFullPath(page.getPath(this.getPageManager()));
         return details;

@@ -1821,7 +1821,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         }
         IPage parentPage = pageManager.getDraftPage(parent);
         if (null == pageModel) {
-            pageModel = parentPage.getMetadata().getModel();
+            pageModel = this.pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         }
         PageMetadata metadata = PageTestUtil
                 .createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
@@ -1838,7 +1838,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         } else {
             widgets[0] = widgetToAdd;
         }
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), group, metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), group, pageModel, metadata, widgets);
         return pageToAdd;
     }
 

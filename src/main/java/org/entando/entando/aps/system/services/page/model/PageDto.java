@@ -69,7 +69,7 @@ public class PageDto {
         this.setStatus(getPageStatus(page));
         this.setOnlineInstance(page.isOnlineInstance());
         this.setDisplayedInMenu(page.isShowable());
-        this.setPageModel(page.getModel().getCode());
+        this.setPageModel(page.getModelCode());
         if (page.getCharset() != null) {
             this.setCharset(page.getCharset());
         } else {

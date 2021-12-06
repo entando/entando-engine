@@ -339,14 +339,14 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
     protected Page createPage(String pageCode, PageModel pageModel) {
         IPage parentPage = pageManager.getDraftPage("service");
         if (null == pageModel) {
-            pageModel = parentPage.getMetadata().getModel();
+            pageModel = this.pageModelManager.getPageModel(parentPage.getMetadata().getModelCode());
         }
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = new ApsProperties();
 		config.setProperty("actionPath", "/myJsp.jsp");
         Widget widgetToAdd = PageTestUtil.createWidget("formAction", config, widgetTypeManager);
         Widget[] widgets = {widgetToAdd};
-        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
+        Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", pageModel, metadata, widgets);
         return pageToAdd;
     }
 

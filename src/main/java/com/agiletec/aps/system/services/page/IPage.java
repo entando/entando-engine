@@ -52,7 +52,7 @@ public interface IPage extends ITreeNode, Serializable {
      *
      * @return The page template
      */
-    public PageModel getModel();
+    public String getModelCode();
 
     /**
      * Return the set of codes of the additional groups authorized to view the

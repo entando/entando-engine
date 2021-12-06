@@ -34,7 +34,7 @@ public class PageMockHelper {
         page.setCode(code);
         page.setParentCode(PARENT_CODE);
         page.setGroup(GROUP);
-        page.setModel(mockServicePageModel());
+        page.setModelCode(mockServicePageModel().getCode());
 
         setWidgets(page, widgetCodes);
 
@@ -66,7 +66,7 @@ public class PageMockHelper {
 
     public static PageRequest mockPageRequest(Page page) {
         PageRequest request = new PageRequest();
-        request.setPageModel(page.getModel().getCode());
+        request.setPageModel(page.getModelCode());
         request.setParentCode(page.getParentCode());
         request.setOwnerGroup(page.getGroup());
         return request;

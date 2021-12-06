@@ -38,6 +38,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import com.agiletec.aps.system.common.AbstractParameterizableService;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
 import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedObserver;
 import org.entando.entando.ent.exception.EntException;
@@ -65,6 +66,7 @@ public class PageManager extends AbstractParameterizableService implements IPage
     public transient List<String> parameterNames;
 
     private transient IPageManagerCacheWrapper cacheWrapper;
+    private transient IPageModelManager pageModelManager;
     private transient IPageDAO pageDao;
 
     @Override
@@ -468,7 +470,11 @@ public class PageManager extends AbstractParameterizableService implements IPage
         if (null == currentPage) {
             throw new EntException("The page '" + pageCode + "' does not exist!");
         }
-        PageModel model = currentPage.getMetadata().getModel();
+        PageMetadata metadata = currentPage.getMetadata();
+        if (null == metadata) {
+            throw new EntException("Null metadata for page '" + pageCode + "'!");
+        }
+        PageModel model = this.getPageModelManager().getPageModel(metadata.getModelCode());
         if (pos < 0 || pos >= model.getFrames().length) {
             throw new EntException("The Position '" + pos + "' is not defined in the model '" + model.getDescription() + "' of the page '" + pageCode + "'!");
         }
@@ -665,10 +671,10 @@ public class PageManager extends AbstractParameterizableService implements IPage
 
     private void getPageModelUtilizers(IPage page, String pageModelCode, List<IPage> pageModelUtilizers, boolean draft) {
         PageMetadata pageMetadata = page.getMetadata();
-        boolean usingModel = pageMetadata != null && pageMetadata.getModel() != null && pageModelCode.equals(pageMetadata.getModel().getCode());
+        boolean usingModel = pageMetadata != null && pageMetadata.getModelCode() != null && pageModelCode.equals(pageMetadata.getModelCode());
         if (!usingModel) {
             pageMetadata = page.getMetadata();
-            usingModel = pageMetadata != null && pageMetadata.getModel() != null && pageModelCode.equals(pageMetadata.getModel().getCode());
+            usingModel = pageMetadata != null && pageMetadata.getModelCode() != null && pageModelCode.equals(pageMetadata.getModelCode());
         }
         if (usingModel) {
             pageModelUtilizers.add(page);
@@ -790,6 +796,13 @@ public class PageManager extends AbstractParameterizableService implements IPage
     }
     public void setCacheWrapper(IPageManagerCacheWrapper cacheWrapper) {
         this.cacheWrapper = cacheWrapper;
+    }
+    
+    protected IPageModelManager getPageModelManager() {
+        return pageModelManager;
+    }
+    public void setPageModelManager(IPageModelManager pageModelManager) {
+        this.pageModelManager = pageModelManager;
     }
 
     protected IPageDAO getPageDAO() {

@@ -77,6 +77,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.FileSystemUtils;
 
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
+
 @ExtendWith(MockitoExtension.class)
 class WidgetServiceTest {
 
@@ -105,6 +108,9 @@ class WidgetServiceTest {
 
     @Mock
     private IGuiFragmentManager guiFragmentManager;
+    
+    @Mock
+    private IPageModelManager pageModelManager;
 
     @Mock
     private PagedMetadataMapper pagedMetadataMapper;
@@ -130,6 +136,9 @@ class WidgetServiceTest {
         widgetService.setDtoBuilder(dtoBuilder);
 
         Mockito.lenient().when(widgetManager.getWidgetTypes()).thenReturn(ImmutableList.of(getWidget1(), getWidget2()));
+        PageModel pageModel = Mockito.mock(PageModel.class);
+        Mockito.lenient().when(pageModel.getFrames()).thenReturn(new String[10]);
+        Mockito.lenient().when(pageModelManager.getPageModel(Mockito.anyString())).thenReturn(pageModel);
     }
 
     @Test
