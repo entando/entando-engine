@@ -63,10 +63,10 @@ class TestPageModelDAO extends BaseTestCase {
             assertNull(defWidg0);
             Widget defWidg1 = defaultWidgets[1];
             assertNotNull(defWidg1);
-            assertEquals("formAction", defWidg1.getType().getCode());
+            assertEquals("formAction", defWidg1.getTypeCode());
             Widget defWidg2 = defaultWidgets[2];
             assertNotNull(defWidg2);
-            assertEquals("login_form", defWidg2.getType().getCode());
+            assertEquals("login_form", defWidg2.getTypeCode());
             assertNull(defWidg2.getConfig());
             assertEquals("<strong>Freemarker template content</strong>", extractedMockModel.getTemplate());
         } catch (Exception e) {
@@ -98,7 +98,7 @@ class TestPageModelDAO extends BaseTestCase {
             frame3.setPos(3);
             frame3.setDescription("Freme 3");
             Widget defWidg3ToSet = new Widget();
-            defWidg3ToSet.setType(this._widgetTypeManager.getWidgetType("formAction"));
+            defWidg3ToSet.setTypeCode("formAction");
             ApsProperties props3 = new ApsProperties();
             props3.setProperty("actionPath", "/myPath");
             defWidg3ToSet.setConfig(props3);
@@ -122,16 +122,16 @@ class TestPageModelDAO extends BaseTestCase {
 
             Widget defWidg1 = defaultWidgets[1];
             assertNotNull(defWidg1);
-            assertEquals("formAction", defWidg1.getType().getCode());
+            assertEquals("formAction", defWidg1.getTypeCode());
 
             Widget defWidg2 = defaultWidgets[2];
             assertNotNull(defWidg2);
-            assertEquals("login_form", defWidg2.getType().getCode());
+            assertEquals("login_form", defWidg2.getTypeCode());
             assertNull(defWidg2.getConfig());
 
             Widget defWidg3 = defaultWidgets[3];
             assertNotNull(defWidg3);
-            assertEquals("formAction", defWidg3.getType().getCode());
+            assertEquals("formAction", defWidg3.getTypeCode());
             assertEquals(1, defWidg3.getConfig().size());
             assertEquals("/myPath", defWidg3.getConfig().get("actionPath"));
 
@@ -158,13 +158,13 @@ class TestPageModelDAO extends BaseTestCase {
         frame1.setPos(1);
         frame1.setDescription("Frame 1");
         Widget defWidg1 = new Widget();
-        defWidg1.setType(this._widgetTypeManager.getWidgetType("formAction"));
+        defWidg1.setTypeCode("formAction");
         frame1.setDefaultWidget(defWidg1);
         Frame frame2 = new Frame();
         frame2.setPos(1);
         frame2.setDescription("Freme 2");
         Widget defWidg2 = new Widget();
-        defWidg2.setType(this._widgetTypeManager.getWidgetType("login_form"));
+        defWidg2.setTypeCode("login_form");
         frame2.setDefaultWidget(defWidg2);
         Frame[] configuration = {frame0, frame1, frame2};
         model.setConfiguration(configuration);

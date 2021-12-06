@@ -272,11 +272,11 @@ class TestApiWidgetTypeInterface extends BaseTestCase {
             WidgetType addedWidgetType = this._widgetTypeManager.getWidgetType(code);
             assertNotNull(addedWidgetType);
             Widget widget = new Widget();
-            widget.setType(addedWidgetType);
+            widget.setTypeCode(addedWidgetType.getCode());
             this.setPageWidgets(pageCode, frame, widget);
             homepage = this._pageManager.getDraftPage(pageCode);
             assertNotNull(homepage.getWidgets()[frame]);
-            assertEquals(code, homepage.getWidgets()[frame].getType().getCode());
+            assertEquals(code, homepage.getWidgets()[frame].getTypeCode());
             
             this.testInvokeDeleteJaxbNoLogicWidgetType(code, false);
             this.setPageWidgets(pageCode, frame, null);

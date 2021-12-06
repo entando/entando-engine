@@ -181,7 +181,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     private WidgetDetails getWidgetDetails(IPage page, String widgetCode) {
         List<Widget> list = Arrays.asList(page.getWidgets());
-        int index = list.indexOf(list.stream().filter(widget -> widget != null && widget.getType().getCode().equals(widgetCode)).findFirst().get());
+        int index = list.indexOf(list.stream().filter(widget -> widget != null && widget.getTypeCode().equals(widgetCode)).findFirst().get());
         WidgetDetails details = new WidgetDetails();
         details.setFrameIndex(index);
         details.setFrame(page.getModel().getFrames()[index]);

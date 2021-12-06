@@ -79,7 +79,7 @@ public class PageModelDOM {
 			Widget defaultWidget = frame.getDefaultWidget();
 			if (null != defaultWidget) {
 				Element defaultWidgetElement = new Element(TAB_DEFAULT_WIDGET);
-				defaultWidgetElement.setAttribute(ATTRIBUTE_CODE, defaultWidget.getType().getCode());
+				defaultWidgetElement.setAttribute(ATTRIBUTE_CODE, defaultWidget.getTypeCode());
 				ApsProperties properties = defaultWidget.getConfig();
 				if (null != properties && !properties.isEmpty()) {
 					ApsPropertiesDOM propertiesDom = new ApsPropertiesDOM();
@@ -221,7 +221,7 @@ public class PageModelDOM {
 			_logger.warn("Unknown code of the default widget - '{}'", widgetCode);
 			return;
 		}
-		widget.setType(type);
+		widget.setTypeCode(widgetCode);
 		Element propertiesElement = defaultWidgetElement.getChild(TAB_PROPERTIES);
 		if (null != propertiesElement) {
 			ApsProperties prop = this.buildProperties(propertiesElement);

@@ -126,7 +126,7 @@ public class PageConfigurationDto {
             if (null == widget) {
                 widgetDtoList.add(null);
             } else {
-                widgetDtoList.add(new WidgetConfigurationDto(widget.getType().getCode(), widget.getConfig()));
+                widgetDtoList.add(new WidgetConfigurationDto(widget.getTypeCode(), widget.getConfig()));
             }
         }
         this.setWidgets(widgetDtoList.toArray(new WidgetConfigurationDto[widgetDtoList.size()]));

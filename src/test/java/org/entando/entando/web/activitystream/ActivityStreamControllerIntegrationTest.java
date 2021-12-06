@@ -342,8 +342,9 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
             pageModel = parentPage.getMetadata().getModel();
         }
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
-        ApsProperties config = PageTestUtil.createProperties("modelId", "default", "contentId", "EVN24");
-        Widget widgetToAdd = PageTestUtil.createWidget("content_viewer", config, this.widgetTypeManager);
+        ApsProperties config = new ApsProperties();
+		config.setProperty("actionPath", "/myJsp.jsp");
+        Widget widgetToAdd = PageTestUtil.createWidget("formAction", config, widgetTypeManager);
         Widget[] widgets = {widgetToAdd};
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", metadata, widgets);
         return pageToAdd;

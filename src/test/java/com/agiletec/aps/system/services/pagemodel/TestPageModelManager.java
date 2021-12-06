@@ -124,7 +124,7 @@ class TestPageModelManager extends BaseTestCase {
             Widget widget = defaultWidgets[i];
             if (i == 3) {
                 assertNotNull(widget);
-                WidgetType type = widget.getType();
+                WidgetType type = this._widgetTypeManager.getWidgetType(widget.getTypeCode());
                 assertEquals("leftmenu", type.getCode());
                 assertEquals(1, type.getTypeParameters().size());
                 assertNull(type.getConfig());
@@ -155,10 +155,10 @@ class TestPageModelManager extends BaseTestCase {
             assertNull(defWidg0);
             Widget defWidg1 = defaultWidgets[1];
             assertNotNull(defWidg1);
-            assertEquals("formAction", defWidg1.getType().getCode());
+            assertEquals("formAction", defWidg1.getTypeCode());
             Widget defWidg2 = defaultWidgets[2];
             assertNotNull(defWidg2);
-            assertEquals("login_form", defWidg2.getType().getCode());
+            assertEquals("login_form", defWidg2.getTypeCode());
             assertNull(defWidg2.getConfig());
             assertEquals("<strong>Freemarker template content</strong>", extractedMockModel.getTemplate());
         } catch (Exception e) {
@@ -187,7 +187,7 @@ class TestPageModelManager extends BaseTestCase {
             frame3.setPos(3);
             frame3.setDescription("Freme 3");
             Widget defWidg3ToSet = new Widget();
-            defWidg3ToSet.setType(this._widgetTypeManager.getWidgetType("entando_apis"));
+            defWidg3ToSet.setTypeCode("entando_apis");
             frame3.setDefaultWidget(defWidg3ToSet);
             newConfiguration[3] = frame3;
             extractedMockModel.setConfiguration(newConfiguration);
@@ -206,16 +206,16 @@ class TestPageModelManager extends BaseTestCase {
 
             Widget defWidg1 = defaultWidgets[1];
             assertNotNull(defWidg1);
-            assertEquals("formAction", defWidg1.getType().getCode());
+            assertEquals("formAction", defWidg1.getTypeCode());
 
             Widget defWidg2 = defaultWidgets[2];
             assertNotNull(defWidg2);
-            assertEquals("login_form", defWidg2.getType().getCode());
+            assertEquals("login_form", defWidg2.getTypeCode());
             assertNull(defWidg2.getConfig());
 
             Widget defWidg3 = defaultWidgets[3];
             assertNotNull(defWidg3);
-            assertEquals("entando_apis", defWidg3.getType().getCode());
+            assertEquals("entando_apis", defWidg3.getTypeCode());
 
             assertEquals("<strong>Modified Freemarker template content</strong>", extractedMockModel.getTemplate());
 
@@ -239,13 +239,13 @@ class TestPageModelManager extends BaseTestCase {
         frame1.setPos(1);
         frame1.setDescription("Frame 1");
         Widget defWidg1 = new Widget();
-        defWidg1.setType(this._widgetTypeManager.getWidgetType("formAction"));
+        defWidg1.setTypeCode("formAction");
         frame1.setDefaultWidget(defWidg1);
         Frame frame2 = new Frame();
         frame2.setPos(1);
         frame2.setDescription("Freme 2");
         Widget defWidg2 = new Widget();
-        defWidg2.setType(this._widgetTypeManager.getWidgetType("login_form"));
+        defWidg2.setTypeCode("login_form");
         frame2.setDefaultWidget(defWidg2);
         Frame[] configuration = {frame0, frame1, frame2};
         model.setConfiguration(configuration);

@@ -388,7 +388,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
             Assertions.assertEquals(3, pageModel.getFrames().length);
             Assertions.assertEquals(3, pageModel.getFramesConfig().length);
             Assertions.assertNotNull(pageModel.getFramesConfig()[0].getDefaultWidget());
-            Assertions.assertEquals("leftmenu", pageModel.getFramesConfig()[0].getDefaultWidget().getType().getCode());
+            Assertions.assertEquals("leftmenu", pageModel.getFramesConfig()[0].getDefaultWidget().getTypeCode());
             Assertions.assertEquals(1, pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().size());
             Assertions.assertEquals("code(homepage).subtree(5)", pageModel.getFramesConfig()[0].getDefaultWidget().getConfig().getProperty("navSpec"));
             pageModelRequest.setDescr("description2");

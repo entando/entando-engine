@@ -40,7 +40,7 @@ public class WidgetMockHelper {
      */
     public static Widget mockWidget(String widgetCode) {
         Widget widget = new Widget();
-        widget.setType(mockWidgetType(widgetCode));
+        widget.setTypeCode(widgetCode);
         return widget;
     }
 

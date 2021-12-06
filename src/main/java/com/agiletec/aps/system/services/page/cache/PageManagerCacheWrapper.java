@@ -372,7 +372,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
                         widgetEquals = false;
                         break;
                     }
-                    if (!widgetOnline.getType().getCode().equals(widgetDraft.getType().getCode())) {
+                    if (!widgetOnline.getTypeCode().equals(widgetDraft.getTypeCode())) {
                         widgetEquals = false;
                     }
                     if (null == widgetOnline.getConfig() && null == widgetDraft.getConfig()) {
@@ -585,8 +585,8 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         Widget[] widgets = page.getWidgets();
         if (widgets != null) {
             for (Widget widget : widgets) {
-                if (null != widget && null != widget.getType()) {
-                    String cacheCode = this.getWidgetUtilizerCacheName(widget.getType().getCode(), draft);
+                if (null != widget && null != widget.getTypeCode()) {
+                    String cacheCode = this.getWidgetUtilizerCacheName(widget.getTypeCode(), draft);
                     List<String> widgetUtilizers = utilizersMap.get(cacheCode);
                     if (null == widgetUtilizers) {
                         widgetUtilizers = new ArrayList<>();

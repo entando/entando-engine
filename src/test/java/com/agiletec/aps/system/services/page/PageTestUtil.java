@@ -101,7 +101,7 @@ public class PageTestUtil {
 			assertEquals(expected.length, actual.length);
 			for (int i = 0; i < expected.length; i++) {
 				assertEquals(expected[i].getConfig(), actual[i].getConfig());
-				assertEquals(expected[i].getType().getCode(), actual[i].getType().getCode());
+				assertEquals(expected[i].getTypeCode(), actual[i].getTypeCode());
 			}
 		}
 	}
@@ -175,7 +175,7 @@ public class PageTestUtil {
 		Widget widget = new Widget();
 		widget.setConfig(config);
 		WidgetType widgetType = widgetTypeManager.getWidgetType(widgetCode);
-		widget.setType(widgetType);
+		widget.setTypeCode(widgetType.getCode());
 		return widget;
 	}
 

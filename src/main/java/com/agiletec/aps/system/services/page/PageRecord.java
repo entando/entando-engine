@@ -67,7 +67,7 @@ public class PageRecord {
                         widgetEquals = false;
                         break;
                     }
-                    if (!widgetOnline.getType().getCode().equals(widgetDraft.getType().getCode())) {
+                    if (!widgetOnline.getTypeCode().equals(widgetDraft.getTypeCode())) {
                         widgetEquals = false;
                     }
                     if (null == widgetOnline.getConfig() && null == widgetDraft.getConfig()) {

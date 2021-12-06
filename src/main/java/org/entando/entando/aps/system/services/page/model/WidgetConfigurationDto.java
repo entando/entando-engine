@@ -39,7 +39,7 @@ public class WidgetConfigurationDto {
     }
 
     public WidgetConfigurationDto(Widget widget) {
-        this.code = widget.getType().getCode();
+        this.code = widget.getTypeCode();
         this.config = widget.getConfig();
     }
 

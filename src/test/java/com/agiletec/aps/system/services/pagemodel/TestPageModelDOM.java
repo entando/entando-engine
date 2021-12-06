@@ -33,7 +33,7 @@ class TestPageModelDOM extends BaseTestCase {
         PageModelDOM pageModelDOM = new PageModelDOM(FRAMES_XML, widgetTypeManager);
         Frame[] configuration = pageModelDOM.getConfiguration();
         assertTrue(configuration[0].getDescription().equals("Box sinistra alto"));
-        assertEquals("login_form", configuration[1].getDefaultWidget().getType().getCode());
+        assertEquals("login_form", configuration[1].getDefaultWidget().getTypeCode());
     }
 
     public final static String FRAMES_XML = "<frames>"

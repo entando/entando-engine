@@ -258,7 +258,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
             return null;
         }
         Widget defaultWidget = new Widget();
-        defaultWidget.setType(this.widgetTypeManager.getWidgetType(defaultWidgetReq.getCode()));
+        defaultWidget.setTypeCode(defaultWidgetReq.getCode());
         if (null != defaultWidgetReq.getProperties()) {
             ApsProperties properties = new ApsProperties();
             properties.putAll(defaultWidgetReq.getProperties());

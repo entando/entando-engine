@@ -67,7 +67,7 @@ public class PageWithWidgetTag extends TagSupport {
 			Widget[] widgets = currentPage.getWidgets();
 			if (widgets != null) {
 				for (Widget currentWidget : widgets) {
-					if (null != currentWidget && currentWidget.getType().getCode().equals(this.getWidgetTypeCode())) {
+					if (null != currentWidget && currentWidget.getTypeCode().equals(this.getWidgetTypeCode())) {
 						ApsProperties config = currentWidget.getConfig();
 						if (null != config) {
 							String value = config.getProperty(this.getFilterParamName());

@@ -176,13 +176,13 @@ public final class PageModelTestUtil {
 
     private static Widget createDefaultWidget() throws JsonProcessingException {
         Widget defaultWidget = new Widget();
-        defaultWidget.setType(createDefaultWidgetType());
+        defaultWidget.setTypeCode(createDefaultWidgetType().getCode());
         return defaultWidget;
     }
 
     private static Widget createDefaultWidgetWithConfigNull() throws JsonProcessingException {
         Widget defaultWidget = new Widget();
-        defaultWidget.setType(createDefaultWidgetType());
+        defaultWidget.setTypeCode(createDefaultWidgetType().getCode());
         defaultWidget.setConfig(null);
         return defaultWidget;
     }

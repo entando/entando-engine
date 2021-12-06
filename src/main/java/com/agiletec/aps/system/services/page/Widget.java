@@ -30,9 +30,7 @@ public class Widget implements Serializable {
         if (null != this.getConfig()) {
             clone.setConfig(this.getConfig().clone());
         }
-        if (null != this.getType()) {
-            clone.setType(this.getType().clone());
-        }
+        clone.setTypeCode(this.getTypeCode());
         return clone;
     }
 
@@ -41,17 +39,6 @@ public class Widget implements Serializable {
 	 * @return The configuration properties
 	 */
 	public ApsProperties getConfig() {
-		if (null == this._config && null != this.getType()) {
-			return this.getType().getConfig();
-		}
-		return _config;
-	}
-	/**
-	 * Return the configuration of the widget as it is without null values checks,
-	 * this method can return null configurations
-	 * @return The configuration properties
-	 */
-	public ApsProperties getConfigRawValue() {
 		return _config;
 	}
 
@@ -63,57 +50,55 @@ public class Widget implements Serializable {
 		this._config = config;
 	}
 	
-	/**
-	 * Return the type of the widget
-	 * @return The type of the widget
-	 */
-	public WidgetType getType() {
-		return _type;
-	}
-
-	/**
-	 * Set the widget type
-	 * @param type The of the widget 
-	 */
-	public void setType(WidgetType type) {
-		this._type = type;
-	}
+    public String getTypeCode() {
+        return typeCode;
+    }
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((_config == null) ? 0 : _config.hashCode());
-		result = prime * result + ((_type == null) ? 0 : _type.hashCode());
+		result = prime * result + ((typeCode == null) ? 0 : typeCode.hashCode());
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Widget other = (Widget) obj;
-		if (_config == null) {
-			if (other._config != null)
-				return false;
-		} else if (!_config.equals(other._config))
-			return false;
-		if (_type == null) {
-			if (other._type != null)
-				return false;
-		} else if (!_type.equals(other._type))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Widget other = (Widget) obj;
+        if (_config == null) {
+            if (other._config != null) {
+                return false;
+            }
+        } else if (!_config.equals(other._config)) {
+            return false;
+        }
+        if (typeCode == null) {
+            if (other.typeCode != null) {
+                return false;
+            }
+        } else if (!typeCode.equals(other.typeCode)) {
+            return false;
+        }
+        return true;
+    }
 
 	/**
 	 * The type of the widget
 	 */
-	private WidgetType _type;
+	private String typeCode;
 	
 	/**
 	 * The configuration properties; the configuration may be null
