@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import org.apache.commons.lang3.time.DateUtils;
-import org.entando.entando.aps.system.services.widgettype.*;
 
 import java.util.*;
 
@@ -172,11 +171,10 @@ public class PageTestUtil {
 		return properties;
 	}
 
-	public static Widget createWidget(String widgetCode, ApsProperties config, IWidgetTypeManager widgetTypeManager) {
+	public static Widget createWidget(String widgetCode, ApsProperties config) {
 		Widget widget = new Widget();
 		widget.setConfig(config);
-		WidgetType widgetType = widgetTypeManager.getWidgetType(widgetCode);
-		widget.setTypeCode(widgetType.getCode());
+		widget.setTypeCode(widgetCode);
 		return widget;
 	}
 

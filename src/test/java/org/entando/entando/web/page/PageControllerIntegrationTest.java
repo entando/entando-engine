@@ -96,9 +96,6 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     private IPageManager pageManager;
 
     @Autowired
-    private IWidgetTypeManager widgetTypeManager;
-
-    @Autowired
     private IPageModelManager pageModelManager;
 
     @Autowired
@@ -1827,7 +1824,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = new ApsProperties();
         config.put("actionPath", "/mypage.jsp");
-        Widget widgetToAdd = PageTestUtil.createWidget("formAction", config, this.widgetTypeManager);
+        Widget widgetToAdd = PageTestUtil.createWidget("formAction", config);
         if (viewPage) {
             pageModel.setMainFrame(0);
             widgetToAdd.setConfig(null);

@@ -41,8 +41,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.activitystream.ISocialActivityStreamManager;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
@@ -59,9 +57,6 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
 
     @Autowired
     private IPageModelManager pageModelManager;
-
-    @Autowired
-    private IWidgetTypeManager widgetTypeManager;
 
     @Autowired
     private IActionLogManager actionLogManager;
@@ -344,7 +339,7 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel, true, pageCode + "_title", null, null, false, null, null);
         ApsProperties config = new ApsProperties();
 		config.setProperty("actionPath", "/myJsp.jsp");
-        Widget widgetToAdd = PageTestUtil.createWidget("formAction", config, widgetTypeManager);
+        Widget widgetToAdd = PageTestUtil.createWidget("formAction", config);
         Widget[] widgets = {widgetToAdd};
         Page pageToAdd = PageTestUtil.createPage(pageCode, parentPage.getCode(), "free", pageModel, metadata, widgets);
         return pageToAdd;
