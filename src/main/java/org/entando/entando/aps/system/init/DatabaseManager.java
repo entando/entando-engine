@@ -168,13 +168,16 @@ public class DatabaseManager extends AbstractInitializerManager
             try {
                 connection = dataSource.getConnection();
                 final DatabaseMetaData databaseMetaData = connection.getMetaData();
-                rs = databaseMetaData.getTables(null, null, null,
+
+                // Liquibase tables are relevant only if related to portdb/servdb schema/catalog, we are not interested in others.
+                // Each DB vendor has a different objects hierarchy so we can't check only for schema or catalog
+                rs = databaseMetaData.getTables(connection.getCatalog(), connection.getSchema(), null,
                         new String[]{"TABLE"});
 
                 boolean liquibaseChangelogTableFound = false;
                 int tablesCount = 0;
                 while (rs.next()) {
-                    String tableName = rs.getString("Table_NAME");
+                    String tableName = rs.getString("TABLE_NAME");
                     if (tableName.equalsIgnoreCase(LIQUIBASE_CHANGELOG_TABLE)) {
                         liquibaseChangelogTableFound = true;
                     }
