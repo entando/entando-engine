@@ -38,9 +38,6 @@ public class GuiFragmentValidator extends AbstractPaginationValidator {
     //POST PUT
     public static final String ERRCODE_FRAGMENT_INVALID_GUI_CODE = "2";
 
-    //PUT
-    public static final String ERRCODE_URINAME_MISMATCH = "2";
-
     //DELETE
     public static final String ERRCODE_FRAGMENT_REFERENCES = "1";
     public static final String ERRCODE_FRAGMENT_LOCKED = "2";
@@ -65,23 +62,15 @@ public class GuiFragmentValidator extends AbstractPaginationValidator {
             } else if (!code.matches("^[a-zA-Z0-9_]*$")) {
                 errors.rejectValue("code", ERRCODE_FRAGMENT_INVALID_CODE, new String[]{}, "guifragment.code.invalid");
             }
-            this.validateGuiCode(request, errors);
+            this.validateGuiCode(request.getGuiCode(), errors);
         } catch (Exception e) {
             logger.error("Error extracting fragment {}", code, e);
             throw new RestServerError("error extracting fragment", e);
         }
     }
 
-    public int validateBody(String fragmentCode, GuiFragmentRequestBody request, Errors errors) {
-        if (!StringUtils.equals(fragmentCode, request.getCode())) {
-            errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{fragmentCode, request.getCode()}, "guifragment.code.mismatch");
-            return 400;
-        }
-        return this.validateGuiCode(request, errors);
-    }
-
-    private int validateGuiCode(GuiFragmentRequestBody request, Errors errors) {
-        if (StringUtils.isEmpty(request.getGuiCode())) {
+    public int validateGuiCode(String guiCode, Errors errors) {
+        if (StringUtils.isEmpty(guiCode)) {
             errors.rejectValue("guiCode", ERRCODE_FRAGMENT_INVALID_GUI_CODE, new String[]{}, "guifragment.gui.notBlank");
             return 400;
         }

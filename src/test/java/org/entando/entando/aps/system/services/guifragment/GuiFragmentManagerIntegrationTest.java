@@ -143,6 +143,8 @@ class GuiFragmentManagerIntegrationTest extends BaseTestCase {
     private void init() throws Exception {
         try {
             this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);
+            this._guiFragmentManager.deleteGuiFragment("code");
+            this._guiFragmentManager.deleteGuiFragment("test-code");
         } catch (Throwable t) {
             throw new Exception(t);
         }

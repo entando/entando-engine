@@ -26,6 +26,7 @@ import org.entando.entando.web.component.ComponentUsage;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
+import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -99,7 +100,9 @@ public class WidgetController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @PutMapping(value = "/widgets/{widgetCode}", produces = MediaType.APPLICATION_JSON_VALUE, name = "widget")
-    public ResponseEntity<SimpleRestResponse<WidgetDto>> updateWidget(@PathVariable String widgetCode, @Valid @RequestBody WidgetRequest widgetRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<WidgetDto>> updateWidget(@PathVariable String widgetCode,
+                                                                      @Valid @RequestBody WidgetUpdateRequest widgetRequest,
+                                                                      BindingResult bindingResult) {
         logger.trace("update widget. Code: {} and body {}: ", widgetCode, widgetRequest);
         //field validations
         if (bindingResult.hasErrors()) {
