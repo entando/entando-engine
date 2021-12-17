@@ -10,7 +10,7 @@
             <column name="type" type="varchar(20)" defaultValue="LEGACY">
                 <constraints nullable="false"/>
             </column>
-            <column name="locked" type="smallint" defaultValue="0">
+            <column name="locked" type="smallint" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
