@@ -297,7 +297,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         if (references.size() > 0) {
             bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_REFERENCES, new Object[]{pageModel.getCode(), references}, "pageModel.cannot.delete.references");
         }
-        if (BooleanUtils.toBooleanDefaultIfNull(pageModel.isLocked(), false)) {
+        if (pageModel.isLocked()) {
             bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_LOCKED, new Object[]{pageModel.getCode()}, "pageModel.cannot.delete.locked");
         }
         return bindingResult;

@@ -93,7 +93,7 @@ class PageModelServiceTest {
         assertThat(result.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
         assertThat(result.getMainFrame()).isEqualTo(DEFAULT_MAIN_FRAME);
         assertThat(result.getType()).isEqualTo(pageModelRequest.getType());
-        assertThat(BooleanUtils.toBooleanDefaultIfNull(result.isLocked(), false)).isFalse();
+        assertThat(result.isLocked()).isFalse();
     }
 
     @Test

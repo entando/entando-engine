@@ -33,7 +33,7 @@ public class PageModelDto {
     private String pluginCode;
     private String template;
     private PageModelType type;
-    private Boolean locked;
+    private boolean locked;
     
     /**
      * The references grouped by service name.
@@ -113,11 +113,11 @@ public class PageModelDto {
         this.type = type;
     }
 
-    public Boolean isLocked() {
+    public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(Boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 

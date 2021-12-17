@@ -137,7 +137,7 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 			String template = (StringUtils.isBlank(model.getTemplate())) ? null : model.getTemplate();
 			stat.setString(5, template);
 			stat.setString(6, model.getType() == null ? null : model.getType().toString());
-			stat.setBoolean(7, BooleanUtils.toBooleanDefaultIfNull(model.isLocked(), false));
+			stat.setBoolean(7, model.isLocked());
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {

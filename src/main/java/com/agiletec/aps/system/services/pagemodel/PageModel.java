@@ -40,7 +40,7 @@ public class PageModel implements Serializable {
 	private String pluginCode;
 	private String template;
 	private PageModelType type;
-	private Boolean locked;
+	private boolean locked;
 
 	/**
 	 * Return the code of page template.
@@ -255,11 +255,11 @@ public class PageModel implements Serializable {
     }
 
     @XmlElement(name = "locked")
-    public Boolean isLocked() {
+    public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(Boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 
@@ -272,8 +272,8 @@ public class PageModel implements Serializable {
 				.append("mainFrame", mainFrame)
 				.append("pluginCode", pluginCode)
 				.append("template", template)
-                .append("type", type)
-                .append("locked", locked)
+				.append("type", type)
+				.append("locked", locked)
 				.toString();
 	}
 
@@ -288,8 +288,8 @@ public class PageModel implements Serializable {
 			   Arrays.equals(configuration, pageModel.configuration) &&
 			   Objects.equals(pluginCode, pageModel.pluginCode) &&
 			   Objects.equals(template, pageModel.template) &&
-               Objects.equals(type, pageModel.type) &&
-               Objects.equals(locked, pageModel.locked);
+			   Objects.equals(type, pageModel.type) &&
+			   Objects.equals(locked, pageModel.locked);
 	}
 
 	@Override
