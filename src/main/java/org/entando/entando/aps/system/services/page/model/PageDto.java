@@ -16,6 +16,7 @@ package org.entando.entando.aps.system.services.page.model;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.pagemodel.PageModelType;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -51,6 +52,7 @@ public class PageDto {
     private String lastModified;
     private String fullPath;
     private String token;
+    private PageModelType type;
 
     /**
      * The references grouped by service name.
@@ -70,6 +72,7 @@ public class PageDto {
         this.setOnlineInstance(page.isOnlineInstance());
         this.setDisplayedInMenu(page.isShowable());
         this.setPageModel(page.getModel().getCode());
+        this.setType(page.getModel().getType());
         if (page.getCharset() != null) {
             this.setCharset(page.getCharset());
         } else {
@@ -264,6 +267,14 @@ public class PageDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public PageModelType getType() {
+        return type;
+    }
+
+    public void setType(PageModelType type) {
+        this.type = type;
     }
 
     public static String getEntityFieldName(String dtoFieldName) {
