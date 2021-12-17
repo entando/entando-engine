@@ -15,6 +15,7 @@ package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
+import org.apache.commons.lang3.BooleanUtils;
 import org.entando.entando.aps.system.services.security.NonceInjector;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.Widget;
@@ -222,6 +223,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         descPageModel.setTemplate(NonceInjector.process(srcPpageModelRequest.getTemplate()));
         descPageModel.setPluginCode(srcPpageModelRequest.getPluginCode());
         descPageModel.setConfiguration(this.createPageModelConfiguration(srcPpageModelRequest));
+        descPageModel.setType(srcPpageModelRequest.getType());
 
         if (null != srcPpageModelRequest.getConfiguration()
                 && ! CollectionUtils.isEmpty(srcPpageModelRequest.getConfiguration().getFrames())
@@ -294,6 +296,9 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         if (references.size() > 0) {
             bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_REFERENCES, new Object[]{pageModel.getCode(), references}, "pageModel.cannot.delete.references");
         }
+        if (BooleanUtils.toBooleanDefaultIfNull(pageModel.isLocked(), false)) {
+            bindingResult.reject(PageModelValidator.ERRCODE_PAGEMODEL_LOCKED, new Object[]{pageModel.getCode()}, "pageModel.cannot.delete.locked");
+        }
         return bindingResult;
     }
 
@@ -329,7 +334,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         try {
             String[] defNames = applicationContext.getBeanNamesForType(PageModelUtilizer.class);
             for (String beanName : defNames) {
-                Object service = null;
+                Object service;
                 try {
                     service = applicationContext.getBean(beanName);
                 } catch (Throwable t) {

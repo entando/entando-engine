@@ -13,6 +13,8 @@
  */
 package org.entando.entando.web.pagemodel.model;
 
+import com.agiletec.aps.system.services.pagemodel.PageModelType;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -30,6 +32,7 @@ public class PageModelRequest {
 
     private String template;
     private String pluginCode;
+    private PageModelType type;
 
     public String getCode() {
         return code;
@@ -71,4 +74,11 @@ public class PageModelRequest {
         this.pluginCode = pluginCode;
     }
 
+    public PageModelType getType() {
+        return type;
+    }
+
+    public void setType(PageModelType type) {
+        this.type = type;
+    }
 }

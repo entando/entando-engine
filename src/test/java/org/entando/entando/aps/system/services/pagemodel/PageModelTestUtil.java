@@ -17,6 +17,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.Frame;
 import com.agiletec.aps.system.services.pagemodel.FrameSketch;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
@@ -45,6 +46,7 @@ public final class PageModelTestUtil {
         request.setDescr(DESCRIPTION);
         request.setTemplate(PAGE_MODEL_TEMPLATE);
         request.setConfiguration(createValidPageModelConfigurationRequest());
+        request.setType(PageModelType.LEGACY);
         return request;
     }
     public static PageModelRequest validPageModelRequestDefaultWidgetConfigNull() {

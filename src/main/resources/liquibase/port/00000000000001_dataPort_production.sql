@@ -230,7 +230,7 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ENTANDO_API_S
 
 
 
-INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('single_frame_page', 'Single Frame Page', '<frames>
+INSERT INTO pagemodels (code, descr, frames, plugincode, templategui, type, locked) VALUES ('single_frame_page', 'Single Frame Page', '<frames>
 	<frame pos="0">
 		<descr>Sample Frame</descr>
 		<sketch x1="0" y1="0" x2="11" y2="1" />
@@ -246,8 +246,8 @@ INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('s
 <a href="<@wp.url page="homepage" />" >Home</a><br>
 <div><@wp.show frame=0 /></div>
 </body>
-</html>');
-INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ('home', 'Home Page', NULL, NULL, NULL);
+</html>', 'LEGACY', 0);
+INSERT INTO pagemodels (code, descr, frames, plugincode, templategui, type, locked) VALUES ('home', 'Home Page', NULL, NULL, NULL, NULL, NULL);
 
 
 
