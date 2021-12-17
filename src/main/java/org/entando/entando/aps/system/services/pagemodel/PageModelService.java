@@ -224,6 +224,7 @@ public class PageModelService implements IPageModelService, ApplicationContextAw
         descPageModel.setPluginCode(srcPpageModelRequest.getPluginCode());
         descPageModel.setConfiguration(this.createPageModelConfiguration(srcPpageModelRequest));
         descPageModel.setType(srcPpageModelRequest.getType());
+        descPageModel.setLocked(srcPpageModelRequest.getLocked() != null && srcPpageModelRequest.getLocked());
 
         if (null != srcPpageModelRequest.getConfiguration()
                 && ! CollectionUtils.isEmpty(srcPpageModelRequest.getConfiguration().getFrames())

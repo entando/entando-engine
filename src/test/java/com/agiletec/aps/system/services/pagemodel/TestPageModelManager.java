@@ -48,13 +48,13 @@ class TestPageModelManager extends BaseTestCase {
     void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
-        assertThat(result.getList().size(), is(3));
+        assertThat(result.getCount(), is(4));
+        assertThat(result.getList().size(), is(4));
 
         filters = new ArrayList<>();
         result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
-        assertThat(result.getList().size(), is(3));
+        assertThat(result.getCount(), is(4));
+        assertThat(result.getList().size(), is(4));
     }
 
     @Test
@@ -65,7 +65,7 @@ class TestPageModelManager extends BaseTestCase {
 
         List<FieldSearchFilter> filters = restListRequest.buildFieldSearchFilters();
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
+        assertThat(result.getCount(), is(4));
         assertThat(result.getList().size(), is(2));
 
         restListRequest.addFilter(new Filter("descr", "modello"));
@@ -100,7 +100,7 @@ class TestPageModelManager extends BaseTestCase {
     @Test
     void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
-        assertEquals(3, pageModels.size());
+        assertEquals(4, pageModels.size());
         for (int i = 0; i < pageModels.size(); i++) {
             PageModel pageModel = pageModels.get(i);
             String code = pageModel.getCode();

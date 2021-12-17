@@ -33,6 +33,7 @@ public class PageModelRequest {
     private String template;
     private String pluginCode;
     private PageModelType type;
+    private Boolean locked;
 
     public String getCode() {
         return code;
@@ -80,5 +81,13 @@ public class PageModelRequest {
 
     public void setType(PageModelType type) {
         this.type = type;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 }
