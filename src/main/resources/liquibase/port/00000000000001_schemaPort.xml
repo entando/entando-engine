@@ -222,12 +222,5 @@
 
 
     </changeSet>
-    
-    <changeSet id="00000000000001_schemaPort_pagemodels" author="entando">
-        <addColumn tableName="pagemodels">
-            <column name="type" type="varchar(20)" />
-            <column name="locked" type="smallint" />
-        </addColumn>
-    </changeSet>
 
 </databaseChangeLog>
