@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.pagemodel.model;
 
+import com.agiletec.aps.system.services.pagemodel.PageModelType;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,6 +32,8 @@ public class PageModelDto {
     private int mainFrame = NO_MAIN_FRAME;
     private String pluginCode;
     private String template;
+    private PageModelType type;
+    private boolean locked;
     
     /**
      * The references grouped by service name.
@@ -102,6 +105,22 @@ public class PageModelDto {
         this.references = references;
     }
 
+    public PageModelType getType() {
+        return type;
+    }
+
+    public void setType(PageModelType type) {
+        this.type = type;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
     public static String getEntityFieldName(String dtoFieldName) {
         switch (dtoFieldName) {
             case "description":
@@ -134,12 +153,14 @@ public class PageModelDto {
                Objects.equals(configuration, that.configuration) &&
                Objects.equals(pluginCode, that.pluginCode) &&
                Objects.equals(template, that.template) &&
-               Objects.equals(references, that.references);
+               Objects.equals(references, that.references) &&
+               Objects.equals(type, that.type) &&
+               Objects.equals(locked, that.locked);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, descr, configuration, mainFrame, pluginCode, template, references);
+        return Objects.hash(code, descr, configuration, mainFrame, pluginCode, template, references, type, locked);
     }
 
     @Override
@@ -152,6 +173,8 @@ public class PageModelDto {
                 .append("pluginCode", pluginCode)
                 .append("template", template)
                 .append("references", references)
+                .append("type", type)
+                .append("locked", locked)
                 .toString();
     }
 }

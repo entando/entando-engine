@@ -1,0 +1,20 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000002_schemaPort_nx_pagemodels" author="entando">
+        <addColumn tableName="pagemodels">
+            <column name="type" type="varchar(20)" defaultValue="LEGACY">
+                <constraints nullable="false"/>
+            </column>
+            <column name="locked" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <sqlFile path="00000000000002_nx_pagemodels.sql" relativeToChangelogFile="true" />
+    </changeSet>
+
+</databaseChangeLog>

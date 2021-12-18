@@ -1,9 +1,10 @@
 package org.entando.entando.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import com.agiletec.aps.system.services.pagemodel.Frame;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
+import org.apache.commons.lang3.BooleanUtils;
 import org.entando.entando.aps.system.services.assertionhelper.PageModelAssertionHelper;
 import org.entando.entando.aps.system.services.mockhelper.PageMockHelper;
 import org.entando.entando.aps.system.services.page.IPageService;
@@ -14,12 +15,11 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
-import org.entando.entando.web.pagemodel.model.PageModelConfigurationRequest;
-import org.entando.entando.web.pagemodel.model.PageModelFrameReq;
 import org.entando.entando.web.pagemodel.model.PageModelRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,11 +33,11 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.entando.entando.aps.system.services.pagemodel.PageModelTestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -60,7 +60,7 @@ class PageModelServiceTest {
 
     @Mock
     private PageModelServiceUtilizer pageModelServiceUtilizer;
-    
+
     @Mock
     private PagedMetadataMapper pagedMetadataMapper;
 
@@ -76,9 +76,10 @@ class PageModelServiceTest {
         Field pagedMetadataMapper = ReflectionUtils.findField(pageModelService.getClass(), "pagedMetadataMapper");
         pagedMetadataMapper.setAccessible(true);
         pagedMetadataMapper.set(pageModelService, this.pagedMetadataMapper);
+        lenient().when(applicationContext.getBeanNamesForType(PageModelUtilizer.class)).thenReturn(new String[]{});
     }
 
-    @Test 
+    @Test
     void addPageModelCallsPageModelManager() throws Exception {
         WidgetType mockType = Mockito.mock(WidgetType.class);
         when(mockType.hasParameter(Mockito.anyString())).thenReturn(true);
@@ -91,9 +92,11 @@ class PageModelServiceTest {
         assertThat(result.getDescr()).isEqualTo(pageModelRequest.getDescr());
         assertThat(result.getPluginCode()).isEqualTo(pageModelRequest.getPluginCode());
         assertThat(result.getMainFrame()).isEqualTo(DEFAULT_MAIN_FRAME);
+        assertThat(result.getType()).isEqualTo(pageModelRequest.getType());
+        assertThat(result.isLocked()).isFalse();
     }
 
-    @Test 
+    @Test
     void get_page_models_returns_page_models() throws EntException {
         when(pageModelManager.searchPageModels(any())).thenReturn(pageModels());
         PagedMetadata<PageModelDto> result = pageModelService.getPageModels(EMPTY_REQUEST, null);
@@ -217,14 +220,24 @@ class PageModelServiceTest {
         verify(pageModelManager, times(1)).updatePageModel(any());
     }
 
+    @Test
+    void shouldThrowAnErrorWhenDeletingLockedPage() throws Exception {
+        PageModel pageModel = validPageModel();
+        pageModel.setLocked(true);
+        when(pageModelManager.getPageModel(pageModel.getCode())).thenReturn(pageModel);
+
+        ValidationGenericException exception = assertThrows(ValidationGenericException.class,
+                () -> pageModelService.removePageModel(pageModel.getCode()));
+        assertThat(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage()).contains("locked");
+    }
 
     private PagedMetadata<PageModelDto> resultPagedMetadata() {
         RestListRequest request = new RestListRequest();
-        return new PagedMetadata<>(request, asList(dtoBuilder.convert(pageModel())), 1);
+        return new PagedMetadata<>(request, Collections.singletonList(dtoBuilder.convert(pageModel())), 1);
     }
 
     private static SearcherDaoPaginatedResult<PageModel> pageModels() {
-        return new SearcherDaoPaginatedResult<>(asList(pageModel()));
+        return new SearcherDaoPaginatedResult<>(Collections.singletonList(pageModel()));
     }
 
     private static PageModel pageModel() {
@@ -232,32 +245,4 @@ class PageModelServiceTest {
         localPageModel.setCode(PAGE_MODEL_CODE);
         return localPageModel;
     }
-
-    private static PageModel pageModelFrom(PageModelRequest pageModelRequest) {
-        Frame[] frames = framesFrom(pageModelRequest.getConfiguration());
-        PageModel pageModel = new PageModel();
-        pageModel.setCode(pageModelRequest.getCode());
-        pageModel.setDescription(pageModelRequest.getDescr());
-        pageModel.setConfiguration(frames);
-        return pageModel;
-    }
-
-    private static Frame[] framesFrom(PageModelConfigurationRequest configuration) {
-        List<PageModelFrameReq> requestFrames = configuration.getFrames();
-        if (requestFrames == null) {
-            return new Frame[]{};
-        }
-        Frame[] frames = new Frame[requestFrames.size()];
-        for (int i = 0; i < requestFrames.size(); i++) {
-            frames[i] = frameFrom(requestFrames.get(i));
-        }
-        return frames;
-    }
-
-    private static Frame frameFrom(PageModelFrameReq request) {
-        Frame frame = new Frame();
-        frame.setDescription(request.getDescr());
-        return frame;
-    }
-    
 }

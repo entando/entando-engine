@@ -30,6 +30,7 @@ import org.entando.entando.web.common.model.RestListRequest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,13 +48,13 @@ class TestPageModelManager extends BaseTestCase {
     void testSearch_with_null_empty_filters() throws EntException {
         List<FieldSearchFilter> filters = null;
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
-        assertThat(result.getList().size(), is(3));
+        assertThat(result.getCount(), is(4));
+        assertThat(result.getList().size(), is(4));
 
         filters = new ArrayList<>();
         result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
-        assertThat(result.getList().size(), is(3));
+        assertThat(result.getCount(), is(4));
+        assertThat(result.getList().size(), is(4));
     }
 
     @Test
@@ -64,7 +65,7 @@ class TestPageModelManager extends BaseTestCase {
 
         List<FieldSearchFilter> filters = restListRequest.buildFieldSearchFilters();
         SearcherDaoPaginatedResult<PageModel> result = this._pageModelManager.searchPageModels(filters);
-        assertThat(result.getCount(), is(3));
+        assertThat(result.getCount(), is(4));
         assertThat(result.getList().size(), is(2));
 
         restListRequest.addFilter(new Filter("descr", "modello"));
@@ -99,7 +100,7 @@ class TestPageModelManager extends BaseTestCase {
     @Test
     void testGetPageModels() throws EntException {
         List<PageModel> pageModels = new ArrayList<>(this._pageModelManager.getPageModels());
-        assertEquals(3, pageModels.size());
+        assertEquals(4, pageModels.size());
         for (int i = 0; i < pageModels.size(); i++) {
             PageModel pageModel = pageModels.get(i);
             String code = pageModel.getCode();
@@ -148,6 +149,8 @@ class TestPageModelManager extends BaseTestCase {
             assertNotNull(extractedMockModel);
             assertEquals(testPageModelCode, extractedMockModel.getCode());
             assertTrue(extractedMockModel.getDescription().contains(testPageModelCode));
+            assertEquals(mockModel.getType(), extractedMockModel.getType());
+            assertFalse(extractedMockModel.isLocked());
             assertEquals(3, extractedMockModel.getFrames().length);
             Widget[] defaultWidgets = extractedMockModel.getDefaultWidget();
             assertEquals(3, defaultWidgets.length);
@@ -250,6 +253,8 @@ class TestPageModelManager extends BaseTestCase {
         Frame[] configuration = {frame0, frame1, frame2};
         model.setConfiguration(configuration);
         model.setTemplate("<strong>Freemarker template content</strong>");
+        model.setType(PageModelType.LEGACY);
+        model.setLocked(Boolean.FALSE);
         return model;
     }
 

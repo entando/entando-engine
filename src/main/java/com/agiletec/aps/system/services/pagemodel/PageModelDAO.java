@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import org.apache.commons.lang3.BooleanUtils;
 import org.entando.entando.ent.exception.EntException;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -109,6 +110,9 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 			}
 			pageModel.setPluginCode(res.getString(4));
 			pageModel.setTemplate(res.getString(5));
+			String type = res.getString(6);
+			pageModel.setType(type == null ? PageModelType.LEGACY : PageModelType.valueOf(type));
+			pageModel.setLocked(res.getBoolean(7));
 		} catch (Throwable t) {
             logger.error("Error building the page template code '{}'", code, t);
 			throw new RuntimeException("Error building the page template code '" + code + "'", t);
@@ -132,6 +136,8 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 			stat.setString(4, pluginCode);
 			String template = (StringUtils.isBlank(model.getTemplate())) ? null : model.getTemplate();
 			stat.setString(5, template);
+			stat.setString(6, model.getType() == null ? null : model.getType().toString());
+			stat.setBoolean(7, model.isLocked());
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -216,10 +222,10 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 	
 
 	private final String ALL_PAGEMODEL = 
-			"SELECT code, descr, frames, plugincode, templategui FROM pagemodels";
+			"SELECT code, descr, frames, plugincode, templategui, type, locked FROM pagemodels";
 	
 	private static final String ADD_PAGEMODEL =
-			"INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ( ? , ? , ? , ? , ? )";
+			"INSERT INTO pagemodels (code, descr, frames, plugincode, templategui, type, locked) VALUES ( ? , ? , ? , ? , ?, ?, ? )";
 	
 	private static final String UPDATE_PAGEMODEL =
 			"UPDATE pagemodels SET descr = ? , frames = ? , plugincode = ? , templategui = ? WHERE code = ?";
