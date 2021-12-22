@@ -226,7 +226,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
         PageModel pageModel = new PageModel();
         pageModel.setCode(PAGE_MODEL_CODE);
         pageModel.setDescription(PAGE_MODEL_CODE);
-        pageModel.setType(PageModelType.LEGACY);
+        pageModel.setType(PageModelType.NT);
         this.pageModelManager.addPageModel(pageModel);
         ResultActions result = mockMvc.perform(
                 delete("/pageModels/{code}", PAGE_MODEL_CODE)

@@ -7,7 +7,7 @@
 
     <changeSet id="00000000000002_schemaPort_nx_pagemodels" author="entando">
         <addColumn tableName="pagemodels">
-            <column name="type" type="varchar(20)" defaultValue="LEGACY">
+            <column name="type" type="varchar(20)" defaultValue="NT">
                 <constraints nullable="false"/>
             </column>
             <column name="locked" type="smallint" defaultValueNumeric="0">
