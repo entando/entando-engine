@@ -42,7 +42,7 @@ jobs:
             .. status-report \
             .. @checkout-branch pr --lcd "$LOCAL_CLONE_DIR" \
             .. @setup-feature-flags "PR_PREFLIGHT_CHECKS" "BOM_CHECK" "BOM" \
-            .. @setup-features-list "SCAN_MATRIX" --prefix "SCAN-MVN-" \
+            .. @setup-features-list "SCAN_MATRIX" --prefix "MTX-MVN-SCAN-" \
           ;
       - name: "PR preflight checks"
         if: steps.START.outputs.PR_PREFLIGHT_CHECKS != 'false'

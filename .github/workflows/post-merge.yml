@@ -25,7 +25,7 @@ jobs:
   add-snapshot-tag:
     runs-on: ubuntu-latest
     steps:
-      - name: "ADD SNAPSOT TAG"
+      - name: "ADD SNAPSHOT TAG"
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
           
