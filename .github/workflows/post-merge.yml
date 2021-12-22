@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop*
+      - release/*
 
 env:
   ENTANDO_OPT_USE_PPL_TAG: "v1.1.2"
@@ -28,7 +29,7 @@ jobs:
       - name: "ADD SNAPSHOT TAG"
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
-          
+
           ~/ppl-run pr-status-report \
           .. checkout-branch base \
                 --id "CHECKOUT-BASE" \
