@@ -111,7 +111,7 @@ public class PageModelDAO extends AbstractSearcherDAO implements IPageModelDAO {
 			pageModel.setPluginCode(res.getString(4));
 			pageModel.setTemplate(res.getString(5));
 			String type = res.getString(6);
-			pageModel.setType(type == null ? PageModelType.LEGACY : PageModelType.valueOf(type));
+			pageModel.setType(type == null ? PageModelType.NT : PageModelType.valueOf(type));
 			pageModel.setLocked(res.getBoolean(7));
 		} catch (Throwable t) {
             logger.error("Error building the page template code '{}'", code, t);
