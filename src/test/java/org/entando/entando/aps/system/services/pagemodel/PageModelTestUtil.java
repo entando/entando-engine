@@ -46,7 +46,7 @@ public final class PageModelTestUtil {
         request.setDescr(DESCRIPTION);
         request.setTemplate(PAGE_MODEL_TEMPLATE);
         request.setConfiguration(createValidPageModelConfigurationRequest());
-        request.setType(PageModelType.LEGACY);
+        request.setType(PageModelType.NT);
         return request;
     }
     public static PageModelRequest validPageModelRequestDefaultWidgetConfigNull() {

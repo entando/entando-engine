@@ -170,7 +170,7 @@ class TestPageModelDAO extends BaseTestCase {
         Frame[] configuration = {frame0, frame1, frame2};
         model.setConfiguration(configuration);
         model.setTemplate("<strong>Freemarker template content</strong>");
-        model.setType(PageModelType.LEGACY);
+        model.setType(PageModelType.NT);
         return model;
     }
 
