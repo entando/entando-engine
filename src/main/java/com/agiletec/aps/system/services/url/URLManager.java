@@ -186,7 +186,7 @@ public class URLManager extends AbstractURLManager {
             return;
         }
         RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
-        String webUiApplicationBaseUrl = (null != reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_WEBUI_APPL_BASE_URL) : null;
+        String webUiApplicationBaseUrl = (null != reqCtx) ? (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_WEB_UI_APPL_BASE_URL) : null;
         if (!StringUtils.isBlank(webUiApplicationBaseUrl)) {
             link.append(webUiApplicationBaseUrl);
             return;
