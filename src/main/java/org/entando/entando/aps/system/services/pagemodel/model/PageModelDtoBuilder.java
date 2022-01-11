@@ -38,6 +38,8 @@ public class PageModelDtoBuilder extends DtoBuilder<PageModel, PageModelDto> {
         dest.setMainFrame(src.getMainFrame());
         dest.setPluginCode(src.getPluginCode());
         dest.setTemplate(src.getTemplate());
+        dest.setType(src.getType());
+        dest.setLocked(src.isLocked());
 
         return dest;
     }
