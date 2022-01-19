@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiletypes>
+	<profiletype typecode="PFL" typedescr="Default user profile">
+		<attributes>
+			<attribute name="fullname" attributetype="Monotext" description="Full Name" searchable="true">
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:fullname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Email" description="Email" searchable="true">
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:email</role>
+				</roles>
+			</attribute>
+			<attribute name="profilepicture" attributetype="Monotext" description="Profile Picture" >
+                <roles>
+                    <role>userprofile:profilepicture</role>
+                </roles>
+            </attribute>
+		</attributes>
+	</profiletype>
+</profiletypes>
