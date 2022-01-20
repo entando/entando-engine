@@ -7,9 +7,7 @@
 
     <include file="serv/00000000000001_schemaServ.xml" relativeToChangelogFile="true" />
 
-    <changeSet id="00000000000001_dataServ_test" author="entando" context="test">
-        <sqlFile path="serv/00000000000001_dataServ_test.sql" relativeToChangelogFile="true" />
-    </changeSet>
+    <include file="serv/00000000000001_dataServ_test.xml" relativeToChangelogFile="true" />
 
     <include file="serv/00000000000001_dataServ_production.xml" relativeToChangelogFile="true" />
 

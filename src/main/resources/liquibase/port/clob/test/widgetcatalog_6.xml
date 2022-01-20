@@ -1,0 +1,4 @@
+<config>
+	<parameter name="navSpec">Rules for the Page List auto-generation</parameter>
+	<action name="navigatorConfig" />
+</config>

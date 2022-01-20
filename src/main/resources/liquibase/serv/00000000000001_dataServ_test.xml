@@ -1,0 +1,453 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000001_dataServ_test" author="entando" context="test">
+
+        <insert tableName="authgroups">
+            <column name="groupname" value="administrators" />
+            <column name="descr" value="Amministratori" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="coach" />
+            <column name="descr" value="Coach" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="customers" />
+            <column name="descr" value="Customers" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="free" />
+            <column name="descr" value="Accesso Libero" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="helpdesk" />
+            <column name="descr" value="Helpdesk" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="management" />
+            <column name="descr" value="Management" />
+        </insert>
+
+
+        <insert tableName="authroles">
+            <column name="rolename" value="admin" />
+            <column name="descr" value="Tutte le funzioni" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="editor" />
+            <column name="descr" value="Gestore di Contenuti e Risorse" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="supervisor" />
+            <column name="descr" value="Supervisore di Contenuti" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="pageManager" />
+            <column name="descr" value="Gestore di Pagine" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="reviewer" />
+            <column name="descr" value="Recensore" />
+        </insert>
+
+
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="superuser" />
+            <column name="descr" value="All functions" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="validateContents" />
+            <column name="descr" value="Content Supervision" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageResources" />
+            <column name="descr" value="Asset Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="managePages" />
+            <column name="descr" value="Operations on Pages" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="enterBackend" />
+            <column name="descr" value="Access to Administration Area" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageCategories" />
+            <column name="descr" value="Operations on Categories" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editContents" />
+            <column name="descr" value="Content Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="viewUsers" />
+            <column name="descr" value="View Users and Profiles" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editUsers" />
+            <column name="descr" value="User Management" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editUserProfile" />
+            <column name="descr" value="User Profile Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageReview" />
+            <column name="descr" value="Review Management" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="enterECR" />
+            <column name="descr" value="ECR Access Permission" />
+        </insert>
+
+
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="admin" />
+            <column name="permissionname" value="superuser" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="pageManager" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="supervisor" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="pageManager" />
+            <column name="permissionname" value="managePages" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="supervisor" />
+            <column name="permissionname" value="editContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="editContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="supervisor" />
+            <column name="permissionname" value="validateContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="manageResources" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="reviewer" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="reviewer" />
+            <column name="permissionname" value="manageReview" />
+        </insert>
+
+
+        <insert tableName="authusergrouprole">
+            <column name="username" value="pageManagerCoach" />
+            <column name="groupname" value="coach" />
+            <column name="rolename" value="pageManager" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="pageManagerCustomers" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="pageManager" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="supervisorCoach" />
+            <column name="groupname" value="coach" />
+            <column name="rolename" value="supervisor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="supervisorCustomers" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="supervisor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="editorCoach" />
+            <column name="groupname" value="coach" />
+            <column name="rolename" value="editor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="editorCustomers" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="editor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="supervisorCoach" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="supervisor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="editorCoach" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="editor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="mainEditor" />
+            <column name="groupname" value="administrators" />
+            <column name="rolename" value="editor" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="pageManagerCoach" />
+            <column name="groupname" value="customers" />
+            <column name="rolename" value="pageManager" />
+        </insert>
+        <insert tableName="authusergrouprole">
+            <column name="username" value="admin" />
+            <column name="groupname" value="administrators" />
+            <column name="rolename" value="admin" />
+        </insert>
+
+
+        <insert tableName="authusers">
+            <column name="username" value="supervisorCoach" />
+            <column name="passwd" value="{bcrypt}$2a$10$zy1zkH5mP09rGv.iSYQiPunsc7F9Rd/TpZXm03YtSfZVeHK9Nddw2" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-01-30T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="mainEditor" />
+            <column name="passwd" value="{bcrypt}$2a$10$WUtgtTwdhJdD0hTBu0aIlOgjdgv5wZ7W1BD9Nh.woEzmEfq3m1CT." />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-01-30T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="pageManagerCoach" />
+            <column name="passwd" value="{bcrypt}$2a$10$NIhSwtsre0H9tVDVpcs86eN/vR816tJxEPJwbtU4XeJOoFfvOYX6m" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-01-30T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="supervisorCustomers" />
+            <column name="passwd" value="{bcrypt}$2a$10$pAmySl8JN1jYKRO9A88sEeesmrWiTOPndbgvifWjKW0BMD7zFk0JK" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-01-30T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="pageManagerCustomers" />
+            <column name="passwd" value="{bcrypt}$2a$10$eAFQsWoQG9k9.D6mo0aQJu/aAXGJE/dwuOBj8sbXPL7CH3YiWRVyG" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-01-30T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="editorCustomers" />
+            <column name="passwd" value="{bcrypt}$2a$10$6mbu1yVQ/jdgPnuqFMvbYOQklHY6VmIBUZTeYaY3OhxiGx0Yjbx3K" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-07-02T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="editorCoach" />
+            <column name="passwd" value="{bcrypt}$2a$10$8KYc6sUA7fiC2Pia20J4ouMk3Meb.zW3qk0QBD8EZ0vQiI0jqysMa" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-07-02T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+        <insert tableName="authusers">
+            <column name="username" value="admin" />
+            <column name="passwd" value="{bcrypt}$2a$10$E9R2sHNZ/YXlDn188lpdyeoBl2iSF4E5LE8FNvxbdZbqnqlNP2mL2" />
+            <column name="registrationdate" valueDate="2008-09-25T00:00:00" />
+            <column name="lastaccess" valueDate="2009-12-16T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+
+        <!-- api_oauth_consumers has to be filled using SQL due to an issue with the "scope" column -->
+        <sql>
+            INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test1_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 1 Consumer', 'Test 1 Consumer Description', 'http://localhost/login', 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
+        </sql>
+        <sql>
+            INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('test2_consumer', '{bcrypt}$2a$10$PYqyHKEZIrI19ADxqzmlfO8Za3X5oADPoL7nhbtxLeVe8TJyO//Zu', 'Test 2 Consumer', 'Test 2 Consumer Description', 'http://localhost/login', 'read,write,trust', 'authorization_code,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
+        </sql>
+
+
+        <insert tableName="authuserprofiles">
+            <column name="username" value="editorCustomers" />
+            <column name="profiletype" value="PFL" />
+            <column name="profilexml" valueClobFile="clob/test/authuserprofiles_1.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+        <insert tableName="authuserprofiles">
+            <column name="username" value="mainEditor" />
+            <column name="profiletype" value="PFL" />
+            <column name="profilexml" valueClobFile="clob/test/authuserprofiles_2.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+        <insert tableName="authuserprofiles">
+            <column name="username" value="pageManagerCoach" />
+            <column name="profiletype" value="PFL" />
+            <column name="profilexml" valueClobFile="clob/test/authuserprofiles_3.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+        <insert tableName="authuserprofiles">
+            <column name="username" value="editorCoach" />
+            <column name="profiletype" value="PFL" />
+            <column name="profilexml" valueClobFile="clob/test/authuserprofiles_4.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+        <insert tableName="authuserprofiles">
+            <column name="username" value="supervisorCoach" />
+            <column name="profiletype" value="ALL" />
+            <column name="profilexml" valueClobFile="clob/test/authuserprofiles_5.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+
+
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="fullname" />
+            <column name="textvalue" value="Rick Bobonsky" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="email" />
+            <column name="textvalue" value="rick.bobonsky@mailinator.com" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="birthdate" />
+            <column name="datevalue" valueDate="1945-03-01T00:00:00" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="boolean1" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="boolean2" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="fullname" />
+            <column name="textvalue" value="Sean Red" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="email" />
+            <column name="textvalue" value="sean.red@mailinator.com" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="birthdate" />
+            <column name="datevalue" valueDate="1952-05-21T00:00:00" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="boolean1" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="boolean2" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="fullname" />
+            <column name="textvalue" value="Amanda Chedwase" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="email" />
+            <column name="textvalue" value="amanda.chedwase@mailinator.com" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="birthdate" />
+            <column name="datevalue" valueDate="1947-11-24T00:00:00" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="boolean1" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="boolean2" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="fullname" />
+            <column name="textvalue" value="Raimond Stevenson" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="email" />
+            <column name="textvalue" value="raimond.stevenson@mailinator.com" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="birthdate" />
+            <column name="datevalue" valueDate="2000-09-04T00:00:00" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="boolean1" />
+            <column name="textvalue" value="false" />
+        </insert>
+        <insert tableName="authuserprofilesearch">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="boolean2" />
+            <column name="textvalue" value="false" />
+        </insert>
+
+
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="fullname" />
+            <column name="rolename" value="userprofile:fullname" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="fullname" />
+            <column name="rolename" value="userprofile:fullname" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="fullname" />
+            <column name="rolename" value="userprofile:fullname" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="fullname" />
+            <column name="rolename" value="userprofile:fullname" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="editorCoach" />
+            <column name="attrname" value="email" />
+            <column name="rolename" value="userprofile:email" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="editorCustomers" />
+            <column name="attrname" value="email" />
+            <column name="rolename" value="userprofile:email" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="mainEditor" />
+            <column name="attrname" value="email" />
+            <column name="rolename" value="userprofile:email" />
+        </insert>
+        <insert tableName="authuserprofileattrroles">
+            <column name="username" value="pageManagerCoach" />
+            <column name="attrname" value="email" />
+            <column name="rolename" value="userprofile:email" />
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>
