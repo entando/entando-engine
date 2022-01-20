@@ -7,7 +7,11 @@
 
     <changeSet id="00000000000001_dataPort_production" author="entando" context="production">
         <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM databasechangelog WHERE id = '00000000000001_dataPort_restore'</sqlCheck>
+            <!-- Use uppercase table name to avoid MySQL issue -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataPort_restore'</sqlCheck>
+            <!-- This changeSet contains the same logic (in XML) of the old 00000000000001_dataPort_production.sql file, that was included by changeSetPort.xml
+                 Execution of this changeSet must be skipped if tables had already been filled using that file -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataPort_production' AND filename = 'liquibase/changeSetPort.xml'</sqlCheck>
         </preConditions>
 
         <insert tableName="categories">
