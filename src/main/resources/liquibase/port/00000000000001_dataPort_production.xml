@@ -1127,7 +1127,7 @@
             <column name="code" value="single_frame_page" />
             <column name="descr" value="Single Frame Page" />
             <column name="frames" valueClobFile="clob/production/pagemodels_1.xml" />
-            <column name="templategui" valueClobFile="clob/production/pagemodels_2.xml" />
+            <column name="templategui" valueClobFile="clob/production/pagemodels_2.ftl" />
         </insert>
         <insert tableName="pagemodels">
             <column name="code" value="home" />
@@ -1317,185 +1317,185 @@
         <insert tableName="guifragment">
             <column name="code" value="userprofile_editCurrentUser_profile" />
             <column name="widgettypecode" value="userprofile_editCurrentUser_profile" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_1.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_1.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-DateAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_2.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_2.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front_attributeInfo-help-block" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_3.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_3.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_passwordChanged" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_4.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_4.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-HypertextAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_5.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_5.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-NumberAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_6.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_6.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-BooleanAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_7.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_7.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-ThreeStateAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_8.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_8.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front_AttributeInfo" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_9.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_9.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front_AllList_operationModule" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_10.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_10.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-AllList-addElementButton" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_11.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_11.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_IteratorAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_12.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_12.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_editCurrentUser_password" />
             <column name="widgettypecode" value="userprofile_editCurrentUser_password" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_13.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_13.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-MonolistAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_14.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_14.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_profileChangeConfirmation" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_15.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_15.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_entryCurrentProfile" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_16.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_16.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_currentWithoutProfile" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_17.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_17.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-CheckboxAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_18.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_18.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-MonotextAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_19.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_19.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-LongtextAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_20.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_20.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-CompositeAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_21.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_21.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-EnumeratorAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_22.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_22.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="userprofile_is_front-EnumeratorMapAttribute" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_23.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_23.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="entandoapi_is_resource_list" />
             <column name="widgettypecode" value="entando_apis" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_24.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_24.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="entandoapi_is_resource_detail" />
             <column name="widgettypecode" value="entando_apis" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_25.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_25.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="entandoapi_is_resource_detail_include" />
             <column name="gui" value="" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_26.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_26.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="entandoapi_is_service_list" />
             <column name="widgettypecode" value="entando_apis" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_27.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_27.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="entandoapi_is_service_detail" />
             <column name="widgettypecode" value="entando_apis" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_28.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_28.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="login_form" />
             <column name="widgettypecode" value="login_form" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_29.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_29.ftl" />
             <column name="locked" valueNumeric="0" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="internal_servlet_generic_error" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_30.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_30.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="internal_servlet_user_not_allowed" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_31.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_31.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="messages_system" />
             <column name="widgettypecode" value="messages_system" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_32.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_32.ftl" />
             <column name="locked" valueNumeric="0" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="default_pagerBlock" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_33.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_33.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="default_pagerInfo_is" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_34.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_34.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
         <insert tableName="guifragment">
             <column name="code" value="default_pagerFormBlock_is" />
-            <column name="defaultgui" valueClobFile="clob/production/guifragment_35.xml" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_35.ftl" />
             <column name="locked" valueNumeric="1" />
         </insert>
 
