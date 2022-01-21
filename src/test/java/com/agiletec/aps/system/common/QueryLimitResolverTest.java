@@ -10,37 +10,37 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class QueryLimitResolverTest {
+class QueryLimitResolverTest {
 
     @Mock
     private BasicDataSource dataSource;
 
     @Test
-    public void testDerbyDriver() throws Exception {
+    void testDerbyDriver() throws Exception {
         testCreateLimitBlock("org.apache.derby.jdbc.EmbeddedDriver",
                 " OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY ");
     }
 
     @Test
-    public void testPostgresDriver() throws Exception {
+    void testPostgresDriver() throws Exception {
         testCreateLimitBlock("org.postgresql.Driver",
                 " OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY ");
     }
 
     @Test
-    public void testMySQLDriver() throws Exception {
+    void testMySQLDriver() throws Exception {
         testCreateLimitBlock("com.mysql.jdbc.Driver",
                 " LIMIT 1 OFFSET 0 ");
     }
 
     @Test
-    public void testDeprecatedOracleDriver() throws Exception {
+    void testDeprecatedOracleDriver() throws Exception {
         testCreateLimitBlock("oracle.jdbc.driver.OracleDriver",
                 " OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY ");
     }
 
     @Test
-    public void testOracleDriver() throws Exception {
+    void testOracleDriver() throws Exception {
         testCreateLimitBlock("oracle.jdbc.OracleDriver",
                 " OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY ");
     }
