@@ -1,0 +1,235 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000001_dataServ_production" author="entando" context="production">
+        <preConditions onFail="MARK_RAN">
+            <!-- Use uppercase table name to avoid MySQL issue -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataServ_restore'</sqlCheck>
+            <!-- This changeSet contains the same logic (in XML) of the old 00000000000001_dataServ_production.sql file, that was included by changeSetServ.xml
+                 Execution of this changeSet must be skipped if tables had already been filled using that file -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataServ_production' AND filename = 'liquibase/changeSetServ.xml'</sqlCheck>
+        </preConditions>
+
+        <insert tableName="authgroups">
+            <column name="groupname" value="administrators" />
+            <column name="descr" value="Administrators" />
+        </insert>
+        <insert tableName="authgroups">
+            <column name="groupname" value="free" />
+            <column name="descr" value="Free Access" />
+        </insert>
+
+
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="superuser" />
+            <column name="descr" value="All functions" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="validateContents" />
+            <column name="descr" value="Content Supervision" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageResources" />
+            <column name="descr" value="Asset Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="managePages" />
+            <column name="descr" value="Operations on Pages" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="enterBackend" />
+            <column name="descr" value="Access to Administration Area" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageCategories" />
+            <column name="descr" value="Operations on Categories" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editContents" />
+            <column name="descr" value="Content Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="viewUsers" />
+            <column name="descr" value="View Users and Profiles" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editUsers" />
+            <column name="descr" value="User Management" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="editUserProfile" />
+            <column name="descr" value="User Profile Editing" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="manageReview" />
+            <column name="descr" value="Review Management" />
+        </insert>
+        <insert tableName="authpermissions">
+            <column name="permissionname" value="enterECR" />
+            <column name="descr" value="ECR Access Permission" />
+        </insert>
+
+
+        <insert tableName="authroles">
+            <column name="rolename" value="admin" />
+            <column name="descr" value="Administrator" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="editor" />
+            <column name="descr" value="Editor" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="approver" />
+            <column name="descr" value="Approver" />
+        </insert>
+        <insert tableName="authroles">
+            <column name="rolename" value="reviewer" />
+            <column name="descr" value="Reviewer" />
+        </insert>
+
+
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="admin" />
+            <column name="permissionname" value="superuser" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="editContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="manageResources" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="editor" />
+            <column name="permissionname" value="manageCategories" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="editContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="managePages" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="manageResources" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="manageCategories" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="approver" />
+            <column name="permissionname" value="validateContents" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="reviewer" />
+            <column name="permissionname" value="enterBackend" />
+        </insert>
+        <insert tableName="authrolepermissions">
+            <column name="rolename" value="reviewer" />
+            <column name="permissionname" value="manageReview" />
+        </insert>
+
+
+        <insert tableName="authusergrouprole">
+            <column name="username" value="admin" />
+            <column name="groupname" value="administrators" />
+            <column name="rolename" value="admin" />
+        </insert>
+
+
+        <insert tableName="authusers">
+            <column name="username" value="admin" />
+            <column name="passwd" value="{bcrypt}$2a$10$TMRaAmZE4w5LEeELdmpJguuSuJc2D9hUelMGmsJyK35K3PBiePqXu" />
+            <column name="registrationdate" valueDate="2008-10-10T00:00:00" />
+            <column name="lastaccess" valueDate="2011-02-05T00:00:00" />
+            <column name="active" valueNumeric="1" />
+        </insert>
+
+
+        <sql dbms="derby">
+            INSERT INTO api_oauth_consumers (consumerkey, consumersecret, name, description, callbackurl, scope, authorizedgranttypes, expirationdate, issueddate) VALUES ('appbuilder', '{bcrypt}$2a$10$axXuJXKHzgdmwQzBR3wvh.oSiiJp6On1pHxJgaBmwkRXnXqYqjhkK', 'Entando AppBuilder', 'Default Entando AppBuilder Consumer', NULL, 'read,write,trust', 'password,authorization_code,refresh_token,implicit', '2028-10-10 00:00:00', '2008-01-01 00:00:00');
+        </sql>
+        <insert tableName="api_oauth_consumers" dbms="!derby">
+            <column name="consumerkey" value="appbuilder" />
+            <column name="consumersecret" value="{bcrypt}$2a$10$axXuJXKHzgdmwQzBR3wvh.oSiiJp6On1pHxJgaBmwkRXnXqYqjhkK" />
+            <column name="name" value="Entando AppBuilder" />
+            <column name="description" value="Default Entando AppBuilder Consumer" />
+            <column name="scope" value="read,write,trust" />
+            <column name="authorizedgranttypes" value="password,authorization_code,refresh_token,implicit" />
+            <column name="expirationdate" valueDate="2028-10-10T00:00:00" />
+            <column name="issueddate" valueDate="2008-01-01T00:00:00" />
+        </insert>
+
+
+        <insert tableName="authuserprofiles">
+            <column name="username" value="admin" />
+            <column name="profiletype" value="PFL" />
+            <column name="profilexml" valueClobFile="clob/production/authuserprofiles_1.xml" />
+            <column name="publicprofile" valueNumeric="0" />
+        </insert>
+
+
+        <insert tableName="actionlogrecords">
+            <column name="id" valueNumeric="1" />
+            <column name="username" value="admin" />
+            <column name="actiondate" valueDate="2013-09-27T10:58:38" />
+            <column name="updatedate" valueDate="2013-09-27T10:58:38" />
+            <column name="namespace" value="/do/Page" />
+            <column name="actionname" value="save" />
+            <column name="parameters" valueClobFile="clob/production/actionlogrecords_1.properties" />
+            <column name="activitystreaminfo" valueClobFile="clob/production/actionlogrecords_1.xml" />
+        </insert>
+        <insert tableName="actionlogrecords">
+            <column name="id" valueNumeric="2" />
+            <column name="username" value="admin" />
+            <column name="actiondate" valueDate="2013-09-27T11:00:12" />
+            <column name="updatedate" valueDate="2013-09-27T11:00:12" />
+            <column name="namespace" value="/do/Page" />
+            <column name="actionname" value="save" />
+            <column name="parameters" valueClobFile="clob/production/actionlogrecords_2.properties" />
+            <column name="activitystreaminfo" valueClobFile="clob/production/actionlogrecords_2.xml" />
+        </insert>
+        <insert tableName="actionlogrecords">
+            <column name="id" valueNumeric="3" />
+            <column name="username" value="admin" />
+            <column name="actiondate" valueDate="2013-09-27T11:00:12" />
+            <column name="updatedate" valueDate="2013-09-27T11:00:12" />
+            <column name="namespace" value="/do/Page" />
+            <column name="actionname" value="save" />
+            <column name="parameters" valueClobFile="clob/production/actionlogrecords_3.properties" />
+            <column name="activitystreaminfo" valueClobFile="clob/production/actionlogrecords_3.xml" />
+        </insert>
+
+
+        <insert tableName="actionlogrelations">
+            <column name="recordid" valueNumeric="1" />
+            <column name="refgroup" value="free" />
+        </insert>
+        <insert tableName="actionlogrelations">
+            <column name="recordid" valueNumeric="2" />
+            <column name="refgroup" value="free" />
+        </insert>
+        <insert tableName="actionlogrelations">
+            <column name="recordid" valueNumeric="3" />
+            <column name="refgroup" value="free" />
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

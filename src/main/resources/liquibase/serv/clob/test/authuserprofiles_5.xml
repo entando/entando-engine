@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile id="supervisorCoach" typecode="ALL" typedescr="Content type with all attribute types"><descr /><groups /><categories />
+<attributes>
+<attribute name="Boolean" attributetype="Boolean"><boolean>true</boolean></attribute>
+<attribute name="CheckBox" attributetype="CheckBox" />
+<attribute name="Date" attributetype="Date"><date>20100321</date></attribute>
+<attribute name="Date2" attributetype="Date"><date>20120321</date></attribute>
+<attribute name="Enumerator" attributetype="Enumerator"><monotext>a</monotext></attribute>
+<attribute name="EnumeratorMap" attributetype="EnumeratorMap"><key>02</key><value>Value 2 Old</value></attribute>
+<attribute name="Hypertext" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>text Hypertext</p>]]></hypertext></attribute>
+<attribute name="Longtext" attributetype="Longtext"><text lang="it">text Longtext</text></attribute>
+<attribute name="Email" attributetype="Email"><monotext>test.test@entando.com</monotext></attribute>
+<attribute name="Monotext" attributetype="Monotext"><monotext>text Monotext</monotext></attribute>
+<attribute name="Mail" attributetype="Mail"><monotext>test.test@entando.com</monotext></attribute>
+<attribute name="Monotext2" attributetype="Monotext"><monotext>aaaa@entando.com</monotext></attribute>
+<attribute name="Number" attributetype="Number"><number>25</number></attribute>
+<attribute name="Number2" attributetype="Number"><number>85</number></attribute>
+<attribute name="Text" attributetype="Text"><text lang="it">text Text</text></attribute>
+<attribute name="Text2" attributetype="Text"><text lang="it">bbbb@entando.com</text></attribute>
+<attribute name="ThreeState" attributetype="ThreeState"><boolean>false</boolean></attribute>
+<attribute name="Timestamp" attributetype="Timestamp"><timestamp>2020-09-25 17:46:20:123</timestamp></attribute>
+<composite name="Composite" attributetype="Composite">
+<attribute name="Boolean" attributetype="Boolean"><boolean>true</boolean></attribute>
+<attribute name="CheckBox" attributetype="CheckBox" />
+<attribute name="Date" attributetype="Date"><date>20100328</date></attribute>
+<attribute name="Timestamp" attributetype="Timestamp"><date>20100328</date></attribute>
+<attribute name="Enumerator" attributetype="Enumerator" />
+<attribute name="Hypertext" attributetype="Hypertext"><hypertext lang="it"><![CDATA[text Hypertext of Composite]]></hypertext></attribute>
+<attribute name="Longtext" attributetype="Longtext"><text lang="it">text Longtext of Composite</text></attribute>
+<attribute name="Monotext" attributetype="Monotext"><monotext>text Monotext of Composite</monotext></attribute>
+<attribute name="Number" attributetype="Number"><number>89</number></attribute>
+<attribute name="Text" attributetype="Text"><text lang="it">text Text of Composite</text></attribute>
+<attribute name="ThreeState" attributetype="ThreeState"><boolean>true</boolean></attribute>
+<attribute name="Timestamp" attributetype="Timestamp"><timestamp>1972-09-25 17:46:20:123</timestamp></attribute>
+</composite><attribute name="MARKER" attributetype="Monotext"><monotext>MARKER</monotext></attribute>
+</attributes></profile>

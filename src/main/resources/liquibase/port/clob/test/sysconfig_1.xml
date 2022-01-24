@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Langs>
+  <Lang>
+    <code>it</code>
+    <descr>Italiano</descr>
+    <default>true</default>
+  </Lang>
+  <Lang>
+    <code>en</code>
+    <descr>English</descr>
+  </Lang>
+</Langs>
+

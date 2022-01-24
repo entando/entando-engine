@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Params>
+	<Param name="urlStyle">classic</Param>
+	<Param name="hypertextEditor">fckeditor</Param>
+	<Param name="treeStyle_page">classic</Param>
+	<Param name="treeStyle_category">classic</Param>
+	<Param name="startLangFromBrowser">false</Param>
+	<Param name="firstTimeMessages">true</Param>
+	<Param name="baseUrl">request</Param>
+	<Param name="baseUrlContext">true</Param>
+	<Param name="useJsessionId">true</Param>
+	<Param name="editEmptyFragmentEnabled">false</Param>
+	<SpecialPages>
+		<Param name="notFoundPageCode">notfound</Param>
+		<Param name="homePageCode">homepage</Param>
+		<Param name="errorPageCode">errorpage</Param>
+		<Param name="loginPageCode">login</Param>
+	</SpecialPages>
+	<ExtendendPrivacyModule>
+		<Param name="extendedPrivacyModuleEnabled">false</Param>
+		<Param name="maxMonthsSinceLastAccess">6</Param>
+		<Param name="maxMonthsSinceLastPasswordChange">3</Param>
+	</ExtendendPrivacyModule>
+</Params>

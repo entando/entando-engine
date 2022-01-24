@@ -1,0 +1,6 @@
+<config>
+	<parameter name="actionPath">
+		Path to an action or to a JSP. You must prepend '/ExtStr2' to any Struts2 action path
+	</parameter>
+	<action name="configSimpleParameter"/>
+</config>

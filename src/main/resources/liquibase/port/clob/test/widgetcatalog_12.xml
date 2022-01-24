@@ -1,0 +1,6 @@
+<config>
+	<parameter name="parentCode">
+		Description of the Widget Parameter
+	</parameter>
+	<action name="configSimpleParameter"/>
+</config>
