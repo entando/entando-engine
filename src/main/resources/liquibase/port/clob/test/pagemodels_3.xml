@@ -1,0 +1,34 @@
+<frames>
+	<frame pos="0">
+		<descr>Choose Language</descr>
+	</frame>
+	<frame pos="1">
+		<descr>Search Form</descr>
+	</frame>
+	<frame pos="2">
+		<descr>Breadcrumbs</descr>
+	</frame>
+	<frame pos="3">
+		<descr>First Column: Box 1</descr>
+		<defaultWidget code="leftmenu">
+			<properties>
+				<property key="navSpec">code(homepage).subtree(1)</property>
+			</properties>
+		</defaultWidget>
+	</frame>
+	<frame pos="4">
+		<descr>First Column: Box 2</descr>
+	</frame>
+	<frame pos="5" main="true">
+		<descr>Main Column: Box 1</descr>
+	</frame>
+	<frame pos="6">
+		<descr>Main Column: Box 2</descr>
+	</frame>
+	<frame pos="7">
+		<descr>Third Column: Box 1</descr>
+	</frame>
+	<frame pos="8">
+		<descr>Third Column: Box 2</descr>
+	</frame>
+</frames>

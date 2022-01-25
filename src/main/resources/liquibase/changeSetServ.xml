@@ -7,17 +7,10 @@
 
     <include file="serv/00000000000001_schemaServ.xml" relativeToChangelogFile="true" />
 
-    <changeSet id="00000000000001_dataServ_test" author="entando" context="test">
-        <sqlFile path="serv/00000000000001_dataServ_test.sql" relativeToChangelogFile="true" />
-    </changeSet>
+    <include file="serv/00000000000001_dataServ_test.xml" relativeToChangelogFile="true" />
 
-    <changeSet id="00000000000001_dataServ_production" author="entando" context="production">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM databasechangelog WHERE id = '00000000000001_dataServ_restore'</sqlCheck>
-        </preConditions>
-        <sqlFile path="serv/00000000000001_dataServ_production.sql" relativeToChangelogFile="true" />
-    </changeSet>
-    
+    <include file="serv/00000000000001_dataServ_production.xml" relativeToChangelogFile="true" />
+
     <changeSet id="00000000000001_dataServ_restore" author="entando" context="restore" />
 
 </databaseChangeLog>

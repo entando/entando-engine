@@ -80,6 +80,7 @@
             </key>
             <list>
                 <value>oracle.jdbc.driver.OracleDriver</value>
+                <value>oracle.jdbc.OracleDriver</value>
             </list>
         </entry>
         <entry>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile id="editorCoach" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories />
+	<attributes>
+		<attribute name="fullname" attributetype="Monotext"><monotext>Rick Bobonsky</monotext></attribute>
+		<attribute name="email" attributetype="Monotext"><monotext>rick.bobonsky@mailinator.com</monotext></attribute>
+		<attribute name="birthdate" attributetype="Date"><date>19450301</date></attribute>
+		<attribute name="language" attributetype="Monotext"><monotext>it</monotext></attribute>
+		<attribute name="boolean1" attributetype="Boolean"><boolean>false</boolean></attribute>
+		<attribute name="boolean2" attributetype="Boolean"><boolean>false</boolean></attribute>
+	</attributes>
+</profile>

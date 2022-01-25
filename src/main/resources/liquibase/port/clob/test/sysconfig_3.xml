@@ -1,0 +1,171 @@
+<profiletypes>
+	<profiletype typecode="PFL" typedescr="Default user profile type" >
+		<attributes>
+			<attribute name="fullname" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:fullname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+				<roles>
+					<role>userprofile:email</role>
+				</roles>
+			</attribute>
+			<attribute name="birthdate" attributetype="Date" required="true" searchable="true"/>
+			<attribute name="language" attributetype="Monotext" required="true"/>
+			<attribute name="boolean1" attributetype="Boolean" searchable="true"/>
+			<attribute name="boolean2" attributetype="Boolean" searchable="true"/>
+		</attributes>
+	</profiletype>
+	<profiletype typecode="OTH" typedescr="Other user profile" >
+		<attributes>
+			<attribute name="firstname" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:firstname</role>
+				</roles>
+			</attribute>
+			<attribute name="surname" attributetype="Monotext" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:surname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Email" searchable="true" >
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:email</role>
+				</roles>
+			</attribute>
+			<attribute name="profilepicture" attributetype="Monotext" >
+                <roles>
+                    <role>userprofile:profilepicture</role>
+                </roles>
+            </attribute>
+		</attributes>
+	</profiletype>
+	<profiletype typecode="ALL" typedescr="Profile type with all attribute types">
+		<attributes>
+			<attribute name="Boolean" attributetype="Boolean" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="CheckBox" attributetype="CheckBox" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Date" attributetype="Date" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Date2" attributetype="Date">
+				<validations>
+					<rangestart attribute="Date" />
+					<rangeend>25/11/2026</rangeend>
+				</validations>
+			</attribute>
+			<attribute name="Enumerator" attributetype="Enumerator" separator=",">
+				<validations><required>true</required></validations>
+                                <![CDATA[a,b,c]]>
+                        </attribute>
+			<attribute name="EnumeratorMap" attributetype="EnumeratorMap" separator=";">
+                            <validations><required>true</required></validations>
+                            <![CDATA[01=Value 1;02=Value 2;03=Value 3]]>
+                        </attribute>
+			<attribute name="Hypertext" attributetype="Hypertext" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Longtext" attributetype="Longtext" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Email" attributetype="Email" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Monotext" attributetype="Monotext" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Monotext2" attributetype="Monotext">
+				<validations>
+                                        <required>true</required>
+					<minlength>15</minlength>
+					<maxlength>30</maxlength>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+			</attribute>
+			<attribute name="Number" attributetype="Number" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Number2" attributetype="Number">
+				<validations>
+                                        <required>true</required>
+					<rangestart>50</rangestart>
+					<rangeend>300</rangeend>
+				</validations>
+			</attribute>
+			<attribute name="Text" attributetype="Text">
+                                <validations><required>true</required></validations>
+				<roles>
+					<role>jacms:title</role>
+				</roles>
+			</attribute>
+			<attribute name="Text2" attributetype="Text">
+				<validations>
+                                        <required>true</required>
+					<minlength>15</minlength>
+					<maxlength>30</maxlength>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+			</attribute>
+			<attribute name="ThreeState" attributetype="ThreeState" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Timestamp" attributetype="Timestamp" >
+				<validations><required>true</required></validations>
+			</attribute>
+			<attribute name="Composite" attributetype="Composite">
+                                <validations><required>true</required></validations>
+				<attributes>
+					<attribute name="Boolean" attributetype="Boolean" />
+					<attribute name="CheckBox" attributetype="CheckBox" />
+					<attribute name="Date" attributetype="Date">
+						<validations>
+							<rangestart attribute="Date" />
+							<rangeend>10/10/2030</rangeend>
+						</validations>
+					</attribute>
+					<attribute name="Enumerator" attributetype="Enumerator" separator="," />
+					<attribute name="Hypertext" attributetype="Hypertext" />
+					<attribute name="Longtext" attributetype="Longtext" />
+					<attribute name="Monotext" attributetype="Monotext" />
+					<attribute name="Number" attributetype="Number">
+						<validations>
+							<expression evalOnValuedAttribute="true">
+								<ognlexpression><![CDATA[#entity.getAttribute('Number').value == null || (#entity.getAttribute('Number').value != null && value > #entity.getAttribute('Number').value)]]></ognlexpression>
+								<errormessage><![CDATA[Value has to be upper then 'Number' attribute]]></errormessage>
+								<helpmessage><![CDATA[If 'Number' valued attribute, Value has to be upper]]></helpmessage>
+							</expression>
+						</validations>
+					</attribute>
+					<attribute name="Text" attributetype="Text" />
+					<attribute name="ThreeState" attributetype="ThreeState" />
+					<attribute name="Timestamp" attributetype="Timestamp" />
+				</attributes>
+			</attribute>
+			<attribute name="MARKER" attributetype="Monotext">
+				<validations>
+					<required>true</required>
+				</validations>
+			</attribute>
+		</attributes>
+	</profiletype>
+</profiletypes>
