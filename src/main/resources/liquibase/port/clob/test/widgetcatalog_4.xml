@@ -1,0 +1,6 @@
+<config>
+	<parameter name="actionPath">
+		Path relativo di una action o una Jsp
+	</parameter>
+	<action name="configSimpleParameter"/>
+</config>

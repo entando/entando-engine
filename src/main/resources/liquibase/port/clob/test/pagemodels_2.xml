@@ -1,0 +1,6 @@
+<frames>
+	<frame pos="0"><descr>Navigazione orizzontale</descr></frame>
+	<frame pos="1"><descr>Lingue</descr></frame>
+	<frame pos="2"><descr>Navigazione verticale sinistra</descr></frame>
+	<frame pos="3" main="true"><descr>Area principale</descr></frame>
+</frames>

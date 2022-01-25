@@ -1,0 +1,1530 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000001_dataPort_production" author="entando" context="production">
+        <preConditions onFail="MARK_RAN">
+            <!-- Use uppercase table name to avoid MySQL issue -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataPort_restore'</sqlCheck>
+            <!-- This changeSet contains the same logic (in XML) of the old 00000000000001_dataPort_production.sql file, that was included by changeSetPort.xml
+                 Execution of this changeSet must be skipped if tables had already been filled using that file -->
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM DATABASECHANGELOG WHERE id = '00000000000001_dataPort_production' AND filename = 'liquibase/changeSetPort.xml'</sqlCheck>
+        </preConditions>
+
+        <insert tableName="categories">
+            <column name="catcode" value="home" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/production/categories_1.xml" />
+        </insert>
+
+
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_MODEL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page template" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_MODEL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="modello pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_TITLE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page title" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_TITLE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="titolo pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="RESERVED_AREA" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Please sign in" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="RESERVED_AREA" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="È necessario autenticarsi" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USERNAME" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Username" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USERNAME" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utente" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PASSWORD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PASSWORD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="SIGNIN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Sign in" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="SIGNIN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Entra" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="WELCOME" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Welcome" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="WELCOME" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Benvenuto" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_CREATION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Creation date" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_CREATION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Data creazione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_ACCESS_LAST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Last access" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_ACCESS_LAST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Ultimo accesso" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_PASSWORD_CHANGE_LAST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Last change" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_DATE_PASSWORD_CHANGE_LAST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Ultimo cambio password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="LOGOUT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Logout" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="LOGOUT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Logout" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_NOT_ALLOWED" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="User not allowed" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_NOT_ALLOWED" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utente non autorizzato" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_NOT_FOUND" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Page not found" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_NOT_FOUND" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Pagina non trovata" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="GENERIC_ERROR" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Generic Error" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="GENERIC_ERROR" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Errore Generico" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_BASIC" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Normale" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_BASIC" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Normal" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_MINT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Avanzata" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_MINT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Advanced" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_BASIC_GOTO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Accedi con client normale" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_BASIC_GOTO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Go to the administration with normal client" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_MINT_GOTO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Accedi con client avanzato" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ADMINISTRATION_MINT_GOTO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Go to the administration with advanced client" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="DATE_FROM" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="From" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="DATE_FROM" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Da" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="DATE_TO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="To" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="DATE_TO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="A" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="TEXT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Text" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="TEXT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Testo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ALL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="All" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ALL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Tutte" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NUMBER_FROM" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="From" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NUMBER_FROM" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Da" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NUMBER_TO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="To" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NUMBER_TO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="A" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCES" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Risorse API" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCES" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="API Resources" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_ERROR" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Errore" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_ERROR" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Errors" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Risorsa" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Resource" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_DESCRIPTION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Descrizione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_DESCRIPTION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Description" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_DETAILS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Vai al dettaglio" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_DETAILS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Go to details" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_SERVICE_LIST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Elenco Servizi API" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_SERVICE_LIST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Service List" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Servizio" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Service" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_OFF" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Non Attivo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_OFF" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Not Active" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_FREE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Attivo, Accesso Libero" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_FREE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Active, Free Access" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_AUTH" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Attivo, Utenti Registrati" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_AUTH" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Active, Registered Users" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_LOCK" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Metodo Attivo, Utenti Registrati con Autorizzazione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_LOCK" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Active, Registered Users with Permission" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_NA" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Metodo Non Disponibile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_STATUS_NA" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Method Not Available" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_NO_RESOURCES" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Non ci sono Risorse API disponibili." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_NO_RESOURCES" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="No API Resources available at the moment." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_TABLE_SUMMARY" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="La tabella elenaca le Risorse API disponibile nel sistema. Nome della risorsa, la sua descrizione e lo stato di ciascun metodo." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_TABLE_SUMMARY" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="The table lists the API Resources available in the system. Method name, description, group and the status of each method." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_NAME" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Nome" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_NAME" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Name" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_NAMESPACE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Namespace" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_NAMESPACE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Namespace" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_SOURCE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Sorgente" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_SOURCE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Source" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_URI" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="URI" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_RESOURCE_URI" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="URI" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_EXTENSION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Estensione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_EXTENSION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Extension" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_EXTENSION_NOTE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="'.xml' per la risposta in formato xml e '.json' per la risposta in formato json." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_EXTENSION_NOTE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="'.xml' for response in xml format and '.json' for json." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_KO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Non disponibile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_KO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Not available" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Metodo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Method" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_OK" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Disponibile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_OK" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Available" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTHORIZATION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Autorizzazione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTHORIZATION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Authorization" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_FREE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Nessuna, questo metodo è pubblico" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_FREE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="None, this method is public" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_WITH_PERM" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utenti registrati con permesso" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_WITH_PERM" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Registered users with permission" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_SIMPLE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utenti registrati" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_AUTH_SIMPLE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Registered users" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMAS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Schema XML" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMAS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="XML Schemas" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMA_REQ" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Richiesta" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMA_REQ" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Request" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMA_RESP" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Risposta" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_SCHEMA_RESP" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Response" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_PARAMS_SUMM" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Questa tabella mostra i parametri per la richiesta del metodo. Per ciascuno di essi ci sono tre colonne: il nome del parametro, la descrizione del parametro e l'indicazione di obbligatorietà." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_PARAMS_SUMM" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="This table shows the request parameters for this method. For each of them there are three columns: the parameter name, the parameter description and whether if it's mandatory or not." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_REQUEST_PARAMS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Parametri" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_METHOD_REQUEST_PARAMS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Parameters" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_NAME" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Nome" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_NAME" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Name" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_DESCRIPTION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Descrizione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_DESCRIPTION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Description" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_REQUIRED" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Obbligatorio" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_PARAM_REQUIRED" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Mandatory" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="YES" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Si" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="YES" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Yes" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="No" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="NO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="No" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="BOTH" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Entrambi" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="BOTH" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Both" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_LIST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Lista delle Risorse API" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_GOTO_LIST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="API Resource List" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_PREV" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Indietro" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_PREV" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Previous" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_NEXT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Ancora" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_NEXT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Next" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_FIRST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Inizio" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_FIRST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Start" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_LAST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Fine" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_LAST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="End" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_STEP_BACKWARD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Indietro di" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_STEP_BACKWARD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Previous" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_STEP_FORWARD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Avanti di" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGER_STEP_FORWARD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Next" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="CATEGORY" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Categoria" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="CATEGORY" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Category" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="IGNORE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Ignora" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="IGNORE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Ignore" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ERRORS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Oops! Hai sbagliato qualcosa!" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ERRORS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Whoops! You're doing it wrong!" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CONFIGURATION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Configura il profile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CONFIGURATION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Edit profile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CONFIRM_NEWPASS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Conferma nuova password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CONFIRM_NEWPASS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Confirm new password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPASSWORD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Modifica Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPASSWORD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Edit Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPASSWORD_TITLE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Modifica Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPASSWORD_TITLE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Edit Password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPROFILE_TITLE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Modifica profilo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_EDITPROFILE_TITLE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Edit Profile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEUP" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Sposta su" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEUP" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Move up" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEUP_IN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Sposta su in posizione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEUP_IN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Move at position" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEDOWN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Sposta giu" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEDOWN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Move down" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEDOWN_IN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Sposta giu in posizione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_MOVEDOWN_IN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Move down at position" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_REMOVE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Rimuovi dalla lista" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ITEM_REMOVE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Remove from list" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_MESSAGE_TITLE_FIELDERRORS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Attenzione, si sono verificati i seguenti errori nella compilazione del modulo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_MESSAGE_TITLE_FIELDERRORS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Warning, please check the module" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_NEWPASS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Nuova password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_NEWPASS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="New password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_OLDPASSWORD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Vecchia password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_OLDPASSWORD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Old password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PASSWORD_UPDATED" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="La password è stata aggiornata correttamente." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PASSWORD_UPDATED" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Your password updated successfully." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="E' necessario effettuare l'accesso" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Please login" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN_AGAIN" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="E' necessario riloggarsi." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN_AGAIN" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Please logout and login again." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN_TO_EDIT_PASSWORD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="E' necessario effettuare l'accesso per cambiare la password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PLEASE_LOGIN_TO_EDIT_PASSWORD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Please login in order to change your password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PROFILE_UPDATED" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Profilo aggiornato correttamente." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PROFILE_UPDATED" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Your profile is now updated." />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_SAVE_PASSWORD" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Salva password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_SAVE_PASSWORD" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Save password" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_SAVE_PROFILE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Salva il profilo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_SAVE_PROFILE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Save profile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ADDITEM_LIST" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Aggiungi nuovo elemento alla lista" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ADDITEM_LIST" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Add an element to the list" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_YES" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Si" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_YES" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Yes" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_NO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="No" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_NO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="No" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_BOTH_YES_AND_NO" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Indifferente" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_BOTH_YES_AND_NO" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Both" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MANDATORY_SHORT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="*" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MANDATORY_SHORT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="*" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MANDATORY_FULL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Obbligatorio" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MANDATORY_FULL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Mandatory" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MINLENGTH_SHORT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Min" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MINLENGTH_SHORT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Min" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MINLENGTH_FULL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Lunghezza Minima" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MINLENGTH_FULL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Minimum length" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_SHORT" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Max" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_SHORT" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Max" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_FULL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Lunghezza Massima" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_FULL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Maximum length" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CURRENT_USER_WITHOUT_PROFILE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utente corrente senza profilo" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_CURRENT_USER_WITHOUT_PROFILE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Current user without profile" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_KEY" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Key" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_KEY" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Id" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_PARENT_API" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Parent API" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_PARENT_API" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="API Padre" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_AUTHORIZATION" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Authorization" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_AUTHORIZATION" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Autorizzazione" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_AUTH_FREE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Free" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_AUTH_FREE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Accesso Libero" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_URI" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="URI" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_URI" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="URI" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_PARAMETERS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Parameters" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="ENTANDO_API_SERVICE_PARAMETERS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Parametri" />
+        </insert>
+
+
+        <insert tableName="pagemodels">
+            <column name="code" value="single_frame_page" />
+            <column name="descr" value="Single Frame Page" />
+            <column name="frames" valueClobFile="clob/production/pagemodels_1.xml" />
+            <column name="templategui" valueClobFile="clob/production/pagemodels_2.ftl" />
+        </insert>
+        <insert tableName="pagemodels">
+            <column name="code" value="home" />
+            <column name="descr" value="Home Page" />
+        </insert>
+
+
+        <insert tableName="pages">
+            <column name="code" value="service" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="login" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="3" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="notfound" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="errorpage" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="2" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="homepage" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="-1" />
+        </insert>
+
+
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="service" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_online_1.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="login" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_online_2.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T15:32:34" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="notfound" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_online_3.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T16:37:10" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="errorpage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_online_4.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T21:11:54" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="homepage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_online_5.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-18T00:12:24" />
+        </insert>
+
+
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="service" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_draft_1.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="login" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_draft_2.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T15:32:34" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="notfound" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_draft_3.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T16:37:10" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="errorpage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_draft_4.xml" />
+            <column name="modelcode" value="single_frame_page" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T21:11:54" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="homepage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/production/pages_metadata_draft_5.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-18T00:12:24" />
+        </insert>
+
+
+        <insert tableName="widgetcatalog">
+            <column name="code" value="messages_system" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_1.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="0" />
+            <column name="widgetcategory" value="system" />
+            <column name="icon" value="font-awesome:fa-envelope-square" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="login_form" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_2.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="0" />
+            <column name="widgetcategory" value="system" />
+            <column name="icon" value="font-awesome:fa-sign-in" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="formAction" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_3.xml" />
+            <column name="parameters" valueClobFile="clob/production/widgetcatalog_4.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="0" />
+            <column name="widgetcategory" value="system" />
+            <column name="icon" value="asset:ent-form-action" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="entando_apis" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_5.xml" />
+            <column name="parenttypecode" value="formAction" />
+            <column name="defaultconfig" valueClobFile="clob/production/widgetcatalog_6.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="maingroup" value="free" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="system" />
+            <column name="icon" value="asset:ent-entando-apis" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="userprofile_editCurrentUser" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_7.xml" />
+            <column name="parenttypecode" value="formAction" />
+            <column name="defaultconfig" valueClobFile="clob/production/widgetcatalog_8.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="user" />
+            <column name="icon" value="asset:ent-user-profile-edit" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="userprofile_editCurrentUser_password" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_9.xml" />
+            <column name="parenttypecode" value="formAction" />
+            <column name="defaultconfig" valueClobFile="clob/production/widgetcatalog_10.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="user" />
+            <column name="icon" value="font-awesome:fa-key" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="userprofile_editCurrentUser_profile" />
+            <column name="titles" valueClobFile="clob/production/widgetcatalog_11.xml" />
+            <column name="parenttypecode" value="formAction" />
+            <column name="defaultconfig" valueClobFile="clob/production/widgetcatalog_12.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="user" />
+            <column name="icon" value="font-awesome:fa-address-card" />
+        </insert>
+
+
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_editCurrentUser_profile" />
+            <column name="widgettypecode" value="userprofile_editCurrentUser_profile" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_1.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-DateAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_2.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front_attributeInfo-help-block" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_3.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_passwordChanged" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_4.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-HypertextAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_5.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-NumberAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_6.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-BooleanAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_7.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-ThreeStateAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_8.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front_AttributeInfo" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_9.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front_AllList_operationModule" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_10.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-AllList-addElementButton" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_11.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_IteratorAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_12.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_editCurrentUser_password" />
+            <column name="widgettypecode" value="userprofile_editCurrentUser_password" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_13.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-MonolistAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_14.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_profileChangeConfirmation" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_15.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_entryCurrentProfile" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_16.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_currentWithoutProfile" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_17.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-CheckboxAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_18.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-MonotextAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_19.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-LongtextAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_20.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-CompositeAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_21.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-EnumeratorAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_22.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="userprofile_is_front-EnumeratorMapAttribute" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_23.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="entandoapi_is_resource_list" />
+            <column name="widgettypecode" value="entando_apis" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_24.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="entandoapi_is_resource_detail" />
+            <column name="widgettypecode" value="entando_apis" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_25.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="entandoapi_is_resource_detail_include" />
+            <column name="gui" value="" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_26.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="entandoapi_is_service_list" />
+            <column name="widgettypecode" value="entando_apis" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_27.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="entandoapi_is_service_detail" />
+            <column name="widgettypecode" value="entando_apis" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_28.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="login_form" />
+            <column name="widgettypecode" value="login_form" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_29.ftl" />
+            <column name="locked" valueNumeric="0" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="internal_servlet_generic_error" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_30.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="internal_servlet_user_not_allowed" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_31.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="messages_system" />
+            <column name="widgettypecode" value="messages_system" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_32.ftl" />
+            <column name="locked" valueNumeric="0" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="default_pagerBlock" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_33.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="default_pagerInfo_is" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_34.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+        <insert tableName="guifragment">
+            <column name="code" value="default_pagerFormBlock_is" />
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_35.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+
+
+        <insert tableName="sysconfig">
+            <column name="version" value="production" />
+            <column name="item" value="langs" />
+            <column name="descr" value="Definition of the system languages" />
+            <column name="config" valueClobFile="clob/production/sysconfig_1.xml" />
+        </insert>
+        <insert tableName="sysconfig">
+            <column name="version" value="production" />
+            <column name="item" value="params" />
+            <column name="descr" value="Configuration params." />
+            <column name="config" valueClobFile="clob/production/sysconfig_2.xml" />
+        </insert>
+        <insert tableName="sysconfig">
+            <column name="version" value="production" />
+            <column name="item" value="userProfileTypes" />
+            <column name="descr" value="User Profile Types Definitions" />
+            <column name="config" valueClobFile="clob/production/sysconfig_3.xml" />
+        </insert>
+
+
+        <insert tableName="uniquekeys">
+            <column name="id" valueNumeric="1" />
+            <column name="keyvalue" valueNumeric="1" />
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

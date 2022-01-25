@@ -1,0 +1,706 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000001_dataPort_test" author="entando" context="test">
+
+        <insert tableName="categories">
+            <column name="catcode" value="home" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/test/categories_1.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="cat1" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/test/categories_2.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="evento" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/test/categories_3.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="resource_root" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/test/categories_4.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="Attach" />
+            <column name="parentcode" value="resource_root" />
+            <column name="titles" valueClobFile="clob/test/categories_5.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="Image" />
+            <column name="parentcode" value="resource_root" />
+            <column name="titles" valueClobFile="clob/test/categories_6.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="general" />
+            <column name="parentcode" value="home" />
+            <column name="titles" valueClobFile="clob/test/categories_7.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="general_cat1" />
+            <column name="parentcode" value="general" />
+            <column name="titles" valueClobFile="clob/test/categories_8.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="general_cat2" />
+            <column name="parentcode" value="general" />
+            <column name="titles" valueClobFile="clob/test/categories_9.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="resCat2" />
+            <column name="parentcode" value="Image" />
+            <column name="titles" valueClobFile="clob/test/categories_10.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="resCat1" />
+            <column name="parentcode" value="Image" />
+            <column name="titles" valueClobFile="clob/test/categories_11.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="resCat3" />
+            <column name="parentcode" value="Image" />
+            <column name="titles" valueClobFile="clob/test/categories_12.xml" />
+        </insert>
+        <insert tableName="categories">
+            <column name="catcode" value="general_cat3" />
+            <column name="parentcode" value="general" />
+            <column name="titles" valueClobFile="clob/test/categories_13.xml" />
+        </insert>
+
+
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_MODEL" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page template" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_MODEL" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="modello pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_TITLE" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="page title" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="PAGE_TITLE" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="titolo pagina" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_fullname" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="fullname" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_email" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="email" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_birthdate" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="birthdate" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_language" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="language" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_boolean1" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="boolean 1" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="userprofile_PFL_boolean2" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="boolean 2" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="LABEL_WITH_PARAMS" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Benvenuto ${name} ${surname} (${:username} - ${name}.${surname})" />
+        </insert>
+        <insert tableName="localstrings">
+            <column name="keycode" value="LABEL_WITH_PARAMS" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="Welcome ${surname} ${name} (${:username} - ${name}.${surname})" />
+        </insert>
+
+
+        <insert tableName="pagemodels">
+            <column name="code" value="home" />
+            <column name="descr" value="Modello home page" />
+            <column name="frames" valueClobFile="clob/test/pagemodels_1.xml" />
+        </insert>
+        <insert tableName="pagemodels">
+            <column name="code" value="service" />
+            <column name="descr" value="Modello pagine di servizio" />
+            <column name="frames" valueClobFile="clob/test/pagemodels_2.xml" />
+        </insert>
+        <insert tableName="pagemodels">
+            <column name="code" value="internal" />
+            <column name="descr" value="Internal Page" />
+            <column name="frames" valueClobFile="clob/test/pagemodels_3.xml" />
+        </insert>
+
+
+        <insert tableName="pages">
+            <column name="code" value="service" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="primapagina" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="notfound" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="2" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="login" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="3" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="homepage" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="-1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="errorpage" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="5" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="customers_page" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="5" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="coach_page" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="4" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="administrators_page" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="6" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="customer_subpage_2" />
+            <column name="parentcode" value="customers_page" />
+            <column name="pos" valueNumeric="2" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="pagina_12" />
+            <column name="parentcode" value="pagina_1" />
+            <column name="pos" valueNumeric="2" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="pagina_11" />
+            <column name="parentcode" value="pagina_1" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="customer_subpage_1" />
+            <column name="parentcode" value="customers_page" />
+            <column name="pos" valueNumeric="1" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="pagina_1" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="2" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="contentview" />
+            <column name="parentcode" value="service" />
+            <column name="pos" valueNumeric="4" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="pagina_2" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="3" />
+        </insert>
+        <insert tableName="pages">
+            <column name="code" value="pagina_draft" />
+            <column name="parentcode" value="homepage" />
+            <column name="pos" valueNumeric="7" />
+        </insert>
+
+
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="service" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_1.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="primapagina" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_2.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="notfound" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_3.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="login" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_4.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="homepage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_5.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="errorpage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_6.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="customers_page" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_7.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="coach_page" />
+            <column name="groupcode" value="coach" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_8.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="administrators_page" />
+            <column name="groupcode" value="administrators" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_9.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="customer_subpage_2" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_10.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_online_11.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="pagina_12" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_12.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="pagina_11" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_13.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="customer_subpage_1" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_14.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_online_15.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="pagina_1" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_16.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_online_17.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="contentview" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_18.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_online_19.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_online">
+            <column name="code" value="pagina_2" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_online_20.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_online_21.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+
+
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="service" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_1.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="primapagina" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_2.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="notfound" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_3.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="login" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_4.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="homepage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_5.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="errorpage" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_6.xml" />
+            <column name="modelcode" value="service" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="customers_page" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_7.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="coach_page" />
+            <column name="groupcode" value="coach" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_8.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="administrators_page" />
+            <column name="groupcode" value="administrators" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_9.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="customer_subpage_2" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_10.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_11.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="pagina_12" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_12.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="pagina_11" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_13.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="customer_subpage_1" />
+            <column name="groupcode" value="customers" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_14.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_15.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="pagina_1" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_16.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_17.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="contentview" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_18.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_19.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="pagina_2" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_20.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="1" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_21.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+        <insert tableName="pages_metadata_draft">
+            <column name="code" value="pagina_draft" />
+            <column name="groupcode" value="free" />
+            <column name="titles" valueClobFile="clob/test/pages_metadata_draft_22.xml" />
+            <column name="modelcode" value="home" />
+            <column name="showinmenu" valueNumeric="0" />
+            <column name="extraconfig" valueClobFile="clob/test/pages_metadata_draft_23.xml" />
+            <column name="updatedat" valueDate="2017-02-17T13:06:24" />
+        </insert>
+
+
+        <insert tableName="widgetcatalog">
+            <column name="code" value="login_form" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_1.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="system" />
+            <column name="icon" value="font-awesome:fa-sign-in" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="messages_system" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_2.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="system" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="formAction" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_3.xml" />
+            <column name="parameters" valueClobFile="clob/test/widgetcatalog_4.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="system" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="leftmenu" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_5.xml" />
+            <column name="parameters" valueClobFile="clob/test/widgetcatalog_6.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="navigation" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="entando_apis" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_7.xml" />
+            <column name="parenttypecode" value="formAction" />
+            <column name="defaultconfig" valueClobFile="clob/test/widgetcatalog_8.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="maingroup" value="free" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="system" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="logic_type" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_9.xml" />
+            <column name="parenttypecode" value="leftmenu" />
+            <column name="defaultconfig" valueClobFile="clob/test/widgetcatalog_10.xml" />
+            <column name="locked" valueNumeric="0" />
+            <column name="readonlypagewidgetconfig" valueNumeric="0" />
+            <column name="widgetcategory" value="logic" />
+        </insert>
+        <insert tableName="widgetcatalog">
+            <column name="code" value="parent_widget" />
+            <column name="titles" valueClobFile="clob/test/widgetcatalog_11.xml" />
+            <column name="parameters" valueClobFile="clob/test/widgetcatalog_12.xml" />
+            <column name="locked" valueNumeric="1" />
+            <column name="readonlypagewidgetconfig" valueNumeric="1" />
+            <column name="widgetcategory" value="parentWidgetType" />
+        </insert>
+
+
+        <insert tableName="guifragment">
+            <column name="code" value="login_form" />
+            <column name="widgettypecode" value="login_form" />
+            <column name="defaultgui" valueClobFile="clob/test/guifragment_1.ftl" />
+            <column name="locked" valueNumeric="1" />
+        </insert>
+
+
+        <insert tableName="widgetconfig">
+            <column name="pagecode" value="pagina_1" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="leftmenu" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_1.xml" />
+        </insert>
+        <insert tableName="widgetconfig">
+            <column name="pagecode" value="contentview" />
+            <column name="framepos" valueNumeric="1" />
+            <column name="widgetcode" value="login_form" />
+        </insert>
+        <insert tableName="widgetconfig">
+            <column name="pagecode" value="contentview" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_2.xml" />
+        </insert>
+        <insert tableName="widgetconfig">
+            <column name="pagecode" value="pagina_2" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_3.xml" />
+        </insert>
+        <insert tableName="widgetconfig">
+            <column name="pagecode" value="coach_page" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_4.xml" />
+        </insert>
+
+
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="pagina_1" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="leftmenu" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_1.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="contentview" />
+            <column name="framepos" valueNumeric="1" />
+            <column name="widgetcode" value="login_form" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="contentview" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_2.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="pagina_2" />
+            <column name="framepos" valueNumeric="0" />
+            <column name="widgetcode" value="leftmenu" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_3.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="pagina_2" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_4.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="pagina_draft" />
+            <column name="framepos" valueNumeric="1" />
+            <column name="widgetcode" value="leftmenu" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_5.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="pagina_draft" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_6.xml" />
+        </insert>
+        <insert tableName="widgetconfig_draft">
+            <column name="pagecode" value="coach_page" />
+            <column name="framepos" valueNumeric="2" />
+            <column name="widgetcode" value="formAction" />
+            <column name="config" valueClobFile="clob/test/widgetconfig_draft_7.xml" />
+        </insert>
+
+
+        <insert tableName="sysconfig">
+            <column name="version" value="test" />
+            <column name="item" value="langs" />
+            <column name="descr" value="Definition of the system languages" />
+            <column name="config" valueClobFile="clob/test/sysconfig_1.xml" />
+        </insert>
+        <insert tableName="sysconfig">
+            <column name="version" value="test" />
+            <column name="item" value="params" />
+            <column name="descr" value="Configuration params. Tags other than &quot;Param&quot; are ignored" />
+            <column name="config" valueClobFile="clob/test/sysconfig_2.xml" />
+        </insert>
+        <insert tableName="sysconfig">
+            <column name="version" value="test" />
+            <column name="item" value="userProfileTypes" />
+            <column name="descr" value="User Profile Types Definitions" />
+            <column name="config" valueClobFile="clob/test/sysconfig_3.xml" />
+        </insert>
+
+
+        <insert tableName="uniquekeys">
+            <column name="id" valueNumeric="1" />
+            <column name="keyvalue" valueNumeric="200" />
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>
