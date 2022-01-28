@@ -43,6 +43,7 @@ import liquibase.changelog.ChangeSetStatus;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -318,7 +319,12 @@ public class DatabaseManager extends AbstractInitializerManager
                 writer.close();
             }
             if (null != liquibase) {
-                liquibase.close();
+                try {
+                    liquibase.close();
+                } catch (DatabaseException ex) {
+                    // An error happens when Liquibase closes Derby inside Wildfly. The application can proceed.
+                    logger.error("Error while closing Liquibase connection", ex);
+                }
             }
             if (null != connection) {
                 connection.close();
