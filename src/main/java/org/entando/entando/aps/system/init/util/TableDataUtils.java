@@ -31,9 +31,7 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
-import org.entando.entando.aps.system.init.model.DataInstallationReport;
 
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpReport;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -46,24 +44,15 @@ public class TableDataUtils {
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(TableDataUtils.class);
     
     public static void valueDatabase(String script, String databaseName,
-            DataSource dataSource, DataInstallationReport schemaReport) throws EntException {
+            DataSource dataSource) throws EntException {
         try {
             String[] queries = (null != script) ? QueryExtractor.extractInsertQueries(script) : null;
             if (null == queries || queries.length == 0) {
                 _logger.info("Script file for db {} void", databaseName);
-                if (null != schemaReport) {
-                    schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.NOT_AVAILABLE);
-                }
                 return;
             }
             executeQueries(dataSource, queries, true);
-            if (null != schemaReport) {
-                schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.OK);
-            }
         } catch (Throwable t) {
-            if (null != schemaReport) {
-                schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
-            }
             _logger.error("Error executing script into db {} ", databaseName, t);
             throw new EntException("Error executing script into db " + databaseName, t);
         }

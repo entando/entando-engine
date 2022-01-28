@@ -49,7 +49,6 @@ public class SystemInstallationReport implements Serializable {
     protected static final String COMPONENT_POST_PROCESS_ELEMENT = "postProcess";
     protected static final String NAME_ATTRIBUTE = "name";
     protected static final String DATE_ATTRIBUTE = "date";
-    protected static final String DATA_ELEMENT = "data";
     protected static final String LIQUIBASE_ELEMENT = "liquibase";
     protected static final String STATUS_ATTRIBUTE = "status";
     protected static final String DATASOURCE_ELEMENT = "datasource";

@@ -34,12 +34,6 @@ public class ComponentInstallationReport implements Serializable {
         String dateString = element.getAttributeValue(SystemInstallationReport.DATE_ATTRIBUTE);
         Date date = DateConverter.parseDate(dateString, SystemInstallationReport.DATE_FORMAT);
         this.setDate(date);
-        Element dataElement = element.getChild(SystemInstallationReport.DATA_ELEMENT);
-        if (null != dataElement) {
-            this.setDataReport(new DataInstallationReport(dataElement));
-        } else {
-            this.setDataReport(new DataInstallationReport());
-        }
         Element liquibaseElement = element.getChild(SystemInstallationReport.LIQUIBASE_ELEMENT);
         if (null != liquibaseElement) {
             this.setLiquibaseReport(new LiquibaseInstallationReport(liquibaseElement));
@@ -62,7 +56,6 @@ public class ComponentInstallationReport implements Serializable {
         ComponentInstallationReport report = new ComponentInstallationReport();
         report.setDate(new Date());
         report.setComponentCode(componentCode);
-        report.setDataReport(new DataInstallationReport());
         report.setLiquibaseReport(new LiquibaseInstallationReport());
         return report;
     }
@@ -75,8 +68,6 @@ public class ComponentInstallationReport implements Serializable {
         if (null != this.getStatus()) {
             element.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getStatus().toString());
         }
-        Element dataElement = this.getDataReport().toJdomElement();
-        element.addContent(dataElement);
         if (null != this.getLiquibaseReport()) {
             Element liquibaseElement = this.getLiquibaseReport().toJdomElement();
             element.addContent(liquibaseElement);
@@ -91,28 +82,15 @@ public class ComponentInstallationReport implements Serializable {
     }
 
     public SystemInstallationReport.Status getStatus() {
-        SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
-        boolean isDataStatusSafe = SystemInstallationReport.isSafeStatus(dataStatus);
         SystemInstallationReport.Status postProcessStatus = this.getPostProcessStatus();
         boolean isPostProcessStatusSafe = SystemInstallationReport.isSafeStatus(postProcessStatus);
-        if (!isDataStatusSafe ||
-                (!isPostProcessStatusSafe && !postProcessStatus.equals(SystemInstallationReport.Status.INIT))) {
+        if (!isPostProcessStatusSafe && !postProcessStatus.equals(SystemInstallationReport.Status.INIT)) {
             return SystemInstallationReport.Status.INCOMPLETE;
         } else if (isPostProcessStatusSafe) {
-            if (null != dataStatus && SystemInstallationReport.Status.UNINSTALLED.equals(dataStatus)) {
-                return SystemInstallationReport.Status.UNINSTALLED;
-            } else {
-                return SystemInstallationReport.Status.OK;
-            }
+            return SystemInstallationReport.Status.OK;
         } else {
             return SystemInstallationReport.Status.INIT;
         }
-    }
-
-    public boolean isPostProcessExecutionRequired() {
-        SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
-        SystemInstallationReport.Status ok = SystemInstallationReport.Status.OK;
-        return (dataStatus.equals(ok) && !this.getDataReport().isDataAlreadyPresent());
     }
 
     public boolean isUninstalled() {
@@ -143,14 +121,6 @@ public class ComponentInstallationReport implements Serializable {
         this._postProcessStatus = postProcessStatus;
     }
 
-    public DataInstallationReport getDataReport() {
-        return _dataReport;
-    }
-
-    private void setDataReport(DataInstallationReport dataReport) {
-        this._dataReport = dataReport;
-    }
-
     public LiquibaseInstallationReport getLiquibaseReport() {
         return liquibaseReport;
     }
@@ -162,8 +132,7 @@ public class ComponentInstallationReport implements Serializable {
     private String _componentCode;
     private Date _date;
     private SystemInstallationReport.Status _postProcessStatus = SystemInstallationReport.Status.INIT;
-
-    private DataInstallationReport _dataReport;
+    
     private LiquibaseInstallationReport liquibaseReport;
 
 }
