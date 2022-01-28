@@ -21,7 +21,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
-import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -68,8 +67,6 @@ class DatabaseManagerIntegrationTest extends BaseTestCase {
             Assertions.assertEquals(1, compReports.size());
             ComponentInstallationReport engineReport = compReports.get(0);
             Assertions.assertEquals(SystemInstallationReport.Status.OK, engineReport.getStatus());
-            DataInstallationReport dataReport = engineReport.getDataReport();
-            Assertions.assertEquals(SystemInstallationReport.Status.OK, dataReport.getStatus());
             LiquibaseInstallationReport liquibaseReport = engineReport.getLiquibaseReport();
             Assertions.assertEquals(SystemInstallationReport.Status.OK, liquibaseReport.getStatus());
             Assertions.assertNotNull(liquibaseReport);

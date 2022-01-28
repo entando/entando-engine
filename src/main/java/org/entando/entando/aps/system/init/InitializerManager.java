@@ -144,9 +144,9 @@ public class InitializerManager extends AbstractInitializerManager implements II
             postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
         } else if (DatabaseMigrationStrategy.DISABLED.equals(this.getMigrationStrategyEnum())) {
             postProcessStatus = SystemInstallationReport.Status.SKIPPED;
-        } else if (!componentReport.isPostProcessExecutionRequired()) {
+        } else if (componentReport.getStatus().equals(SystemInstallationReport.Status.RESTORE) || componentReport.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
             //Porting or restore
-            postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
+            postProcessStatus = componentReport.getStatus();
         } else {
             postProcessStatus = this.executePostProcesses(postProcesses);
         }
