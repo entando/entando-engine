@@ -26,7 +26,7 @@ public class QueryLimitResolver {
     //TODO MOVE
     private static final String JDBC_DRIVER_DERBY_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String JDBC_DRIVER_POSTGRES = "org.postgresql.Driver";
-    private static final String JDBC_DRIVER_MYSQL = "com.mysql.jdbc.Driver";
+    private static final String JDBC_DRIVER_MYSQL = "com.mysql.*jdbc.Driver";
     private static final String JDBC_DRIVER_ORACLE = "oracle.jdbc.*OracleDriver";
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(QueryLimitResolver.class);
@@ -44,7 +44,7 @@ public class QueryLimitResolver {
                 || driverClassName.equalsIgnoreCase(JDBC_DRIVER_POSTGRES)
                 || driverClassName.matches(JDBC_DRIVER_ORACLE)) {
             limitBlock = String.format(" OFFSET %d ROWS FETCH NEXT %d ROWS ONLY ", offset, limit);
-        } else if (driverClassName.equalsIgnoreCase(JDBC_DRIVER_MYSQL)) {
+        } else if (driverClassName.matches(JDBC_DRIVER_MYSQL)) {
             limitBlock = String.format(" LIMIT %d OFFSET %d ", limit, offset);
         } else {
             logger.warn("driver {} not implemented", driverClassName);
