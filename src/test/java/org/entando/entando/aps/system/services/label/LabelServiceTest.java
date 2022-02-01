@@ -83,7 +83,7 @@ class LabelServiceTest {
         labelGroups = labelService.getLabelGroups(request);
 
         assertThat(labelGroups.getBody()).hasSize(0);
-        assertThat(labelGroups.getTotalItems()).isEqualTo(0);
+        assertThat(labelGroups.getTotalItems()).isZero();
     }
 
     @Test
