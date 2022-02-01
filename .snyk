@@ -34,3 +34,6 @@ ignore:
   SNYK-JAVA-COMGOOGLEPROTOBUF-2331703:
     - '*':
         reason: '.'
+  SNYK-JAVA-XERCES-2359991:
+    - '*':
+        reason: '.'
