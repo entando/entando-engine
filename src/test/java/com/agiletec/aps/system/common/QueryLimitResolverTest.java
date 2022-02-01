@@ -28,8 +28,14 @@ class QueryLimitResolverTest {
     }
 
     @Test
-    void testMySQLDriver() throws Exception {
+    void testDeprecatedMySQLDriver() throws Exception {
         testCreateLimitBlock("com.mysql.jdbc.Driver",
+                " LIMIT 1 OFFSET 0 ");
+    }
+
+    @Test
+    void testMySQLDriver() throws Exception {
+        testCreateLimitBlock("com.mysql.cj.jdbc.Driver",
                 " LIMIT 1 OFFSET 0 ");
     }
 
