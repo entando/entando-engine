@@ -83,6 +83,7 @@ class LabelServiceTest {
         labelGroups = labelService.getLabelGroups(request);
 
         assertThat(labelGroups.getBody()).hasSize(0);
+        assertThat(labelGroups.getTotalItems()).isZero();
     }
 
     @Test
@@ -112,6 +113,7 @@ class LabelServiceTest {
         assertThat(labelGroups.getBody()).hasSize(1);
         assertThat(labelGroups.getBody().get(0).getKey()).isEqualTo("EN");
         assertThat(labelGroups.getBody().get(0).getTitles()).containsOnly(entry("EN", "some_value"));
+        assertThat(labelGroups.getTotalItems()).isEqualTo(1);
     }
 
     @Test

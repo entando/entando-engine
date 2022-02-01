@@ -72,7 +72,7 @@ public class LabelService implements ILabelService {
     public PagedMetadata<LabelDto> getLabelGroups(final RestListRequest restRequest) {
         final List<LabelDto> dtoList = this.getDtoBuilder().convert(this.i18nManager.getLabelGroups());
         final List<LabelDto> subList = new LabelRequestListProcessor(restRequest, dtoList).filterAndSort().toList();
-        final SearcherDaoPaginatedResult<LabelDto> result = new SearcherDaoPaginatedResult(dtoList.size(), subList);
+        final SearcherDaoPaginatedResult<LabelDto> result = new SearcherDaoPaginatedResult(subList);
         final PagedMetadata<LabelDto> pagedMetadata = new PagedMetadata<>(restRequest, result);
         pagedMetadata.setBody(subList);
         pagedMetadata.imposeLimits();
