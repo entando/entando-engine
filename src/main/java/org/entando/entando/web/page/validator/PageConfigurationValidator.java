@@ -13,7 +13,7 @@
  */
 package org.entando.entando.web.page.validator;
 
-import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
+import java.util.Map;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
@@ -21,16 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import java.util.Map;
-
-
 @Component
 public class PageConfigurationValidator extends AbstractPaginationValidator {
 
     private static final String ERRCODE_OPERATION_WIDEGT_CONF_NOT_OVERRIDABLE = "10";
-
-    @Autowired
-    private JsonPatchValidator jsonPatchValidator;
 
     @Autowired
     private WidgetTypeManager widgetTypeManager;
@@ -38,7 +32,7 @@ public class PageConfigurationValidator extends AbstractPaginationValidator {
     public void validateWidgetConfigOverridable(String widgetCode, Map<String, Object> widgetConfig, Errors errors) {
 
         final WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
-        if (null != widgetConfig && !widgetConfig.isEmpty() && type.isReadonlyPageWidgetConfig()) {
+        if (null != widgetConfig && !widgetConfig.isEmpty() && type != null && type.isReadonlyPageWidgetConfig()) {
             errors.rejectValue("code", ERRCODE_OPERATION_WIDEGT_CONF_NOT_OVERRIDABLE,
                     new String[]{widgetCode}, "page.widgetconfig.notoverridable");
         }
