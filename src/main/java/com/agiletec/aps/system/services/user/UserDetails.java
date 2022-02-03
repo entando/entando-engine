@@ -31,6 +31,7 @@ public interface UserDetails extends Serializable {
      * @return 'true' if the current user is an Entando user
      * @deprecated use isEntandoUser()
      */
+    @Deprecated
     boolean isJapsUser();
 
     boolean isEntandoUser();
