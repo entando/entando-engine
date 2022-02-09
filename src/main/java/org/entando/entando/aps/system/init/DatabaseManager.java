@@ -288,8 +288,11 @@ public class DatabaseManager extends AbstractInitializerManager
                 try {
                     liquibase.close();
                 } catch (DatabaseException ex) {
-                    // An error happens when Liquibase closes Derby inside Wildfly. The application can proceed.
-                    logger.error("Error while closing Liquibase connection", ex);
+                    if ("Error closing derby cleanly".equals(ex.getMessage())) {
+                        logger.warn("Error while closing Liquibase connection. This is a known issue when running the application on Derby and Wildfly");
+                    } else {
+                        throw ex;
+                    }
                 }
             }
             if (null != connection) {
