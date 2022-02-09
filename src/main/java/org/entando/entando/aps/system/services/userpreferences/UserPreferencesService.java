@@ -13,6 +13,8 @@
  */
 package org.entando.entando.aps.system.services.userpreferences;
 
+import com.google.common.util.concurrent.Striped;
+import java.util.concurrent.locks.Lock;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
 import org.entando.entando.ent.exception.EntException;
@@ -30,8 +32,14 @@ public class UserPreferencesService implements IUserPreferencesService {
 
     IUserPreferencesManager userPreferencesManager;
 
+    // Striped lock used to allow different users to access concurrently the
+    // getUserPreferences() method but forcing the same user to access it sequentially
+    private final Striped<Lock> newPreferencesLocks = Striped.lazyWeakLock(64);
+
     @Override
     public UserPreferencesDto getUserPreferences(String username) {
+        Lock lock = newPreferencesLocks.get(username);
+        lock.lock();
         try {
             UserPreferences userPreferences = userPreferencesManager.getUserPreferences(username);
             if (userPreferences == null) {
@@ -42,6 +50,8 @@ public class UserPreferencesService implements IUserPreferencesService {
         } catch (EntException e) {
             logger.error("Error getting userPreferences for {}", username, e);
             throw new RestServerError("Error getting userPreferences", e);
+        } finally {
+            lock.unlock();
         }
     }
 
