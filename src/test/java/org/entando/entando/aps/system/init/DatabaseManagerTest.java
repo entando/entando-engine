@@ -14,24 +14,33 @@
 package org.entando.entando.aps.system.init;
 
 import com.agiletec.aps.util.FileTextReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import liquibase.Liquibase;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.database.DatabaseFactory;
 import liquibase.exception.DatabaseException;
+import org.entando.entando.aps.system.init.AbstractInitializerManager.Environment;
 import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
 import org.entando.entando.aps.system.init.exception.DatabaseMigrationException;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.LiquibaseInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
+import org.entando.entando.aps.system.init.util.TableDataUtils;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.exception.EntException;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -57,6 +66,12 @@ class DatabaseManagerTest {
 
     @Mock
     private IComponentManager componentManager;
+
+    @Mock
+    private IStorageManager storageManager;
+
+    @Mock
+    private DatabaseRestorer databaseRestorer;
 
     @InjectMocks
     @Spy
@@ -96,7 +111,7 @@ class DatabaseManagerTest {
     }
 
     @Test
-    void testDisabledDatabaseMigrationStrategy() throws Throwable {
+    void testDisabledDatabaseMigrationStrategy() throws Exception {
         List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         changeSetToExecute.add(Mockito.mock(ChangeSetStatus.class));
         Mockito.lenient().doReturn(changeSetToExecute).when(databaseManager)
@@ -109,21 +124,112 @@ class DatabaseManagerTest {
     }
 
     @Test
+    void testInstallDatabaseRestoreLastDump() throws Exception {
+
+        ListableBeanFactory beanFactory = getMockedBeanFactory();
+        Mockito.when(beanFactory.getBean("StorageManager")).thenReturn(storageManager);
+
+        DataSourceDumpReport dataSourceDumpReport = Mockito.mock(DataSourceDumpReport.class);
+        Mockito.when(dataSourceDumpReport.getSubFolderName()).thenReturn("/path/to/dump");
+        Mockito.doReturn(Arrays.asList(dataSourceDumpReport)).when(databaseManager).getBackupReports();
+        Mockito.doReturn("/path/to/dump").when(databaseManager).getLocalBackupsFolder();
+
+        Mockito.when(storageManager.exists(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean())).thenReturn(true);
+        databaseManager.setEnvironment(Environment.production);
+
+        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class);
+                MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
+            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
+
+            databaseManager.installDatabase(null, DatabaseMigrationStrategy.AUTO);
+            Mockito.verify(databaseRestorer).restoreBackup("/path/to/dump");
+        }
+    }
+
+    @Test
+    void testInstallDatabaseRestoreDefaultDump() throws Throwable {
+
+        getMockedBeanFactory();
+
+        Mockito.doReturn(null).when(databaseManager).getBackupReports();
+        databaseManager.setEnvironment(Environment.production);
+
+        Resource resource = Mockito.mock(Resource.class);
+        Mockito.when(resource.getInputStream()).thenReturn(
+                new ByteArrayInputStream("SQL CONTENT".getBytes(StandardCharsets.UTF_8)));
+        Map<String, Resource> resourceMap = Collections.singletonMap("portDataSource", resource);
+        databaseManager.setDefaultSqlDump(resourceMap);
+
+        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class);
+                MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class);
+                MockedStatic<TableDataUtils> tableDataUtils = Mockito.mockStatic(TableDataUtils.class)) {
+
+            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
+            tableDataUtils.when(() -> TableDataUtils.valueDatabase(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+                    .thenAnswer(invocationOnMock -> null);
+
+            databaseManager.installDatabase(null, DatabaseMigrationStrategy.AUTO);
+            Mockito.verify(databaseRestorer).initOracleSchema(ArgumentMatchers.any());
+        }
+    }
+
+    @Test
+    void testGenerateSqlStrategy() throws Exception {
+
+        Map<String, String> liquibaseChangeSets = new HashMap<>();
+        liquibaseChangeSets.put("portDataSource", "changeSetPort.xml");
+        Component componentConfiguration = Mockito.mock(Component.class);
+        Mockito.when(componentConfiguration.getLiquibaseChangeSets()).thenReturn(liquibaseChangeSets);
+        Mockito.when(componentConfiguration.getCode()).thenReturn("test-component");
+
+        ListableBeanFactory beanFactory = getMockedBeanFactory();
+        Mockito.when(beanFactory.getBean("StorageManager")).thenReturn(storageManager);
+
+        ChangeSetStatus changeSetStatus = Mockito.mock(ChangeSetStatus.class);
+        Mockito.when(changeSetStatus.getWillRun()).thenReturn(true);
+        Mockito.when(changeSetStatus.getChangeSet()).thenReturn(Mockito.mock(ChangeSet.class));
+
+        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class, (liquibase, context) -> {
+            Mockito.when(liquibase.getChangeSetStatuses(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                    .thenReturn(Arrays.asList(changeSetStatus));
+        }); MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
+            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
+
+            databaseManager.initLiquiBaseResources(componentConfiguration, getMockedReport(), DatabaseMigrationStrategy.GENERATE_SQL);
+            Mockito.verify(storageManager).saveFile(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.any());
+        }
+    }
+
+    @Test
     void testDerbyErrorOnLiquibaseClose() throws Throwable {
         testLiquibaseCloseException(new DatabaseException("Error closing derby cleanly"));
     }
 
     @Test
     void testUnexpectedErrorOnLiquibaseClose() throws Throwable {
-        EntException exception = Assertions.assertThrows(EntException.class, () ->
-                testLiquibaseCloseException(new DatabaseException("Unexpected error")));
-        Assertions.assertEquals("Unexpected error", exception.getCause().getMessage());
+        testLiquibaseCloseException(new DatabaseException("Unexpected error"));
     }
 
     private void testLiquibaseCloseException(DatabaseException ex) throws Throwable {
 
-        SystemInstallationReport report = Mockito.mock(SystemInstallationReport.class);
+        getMockedBeanFactory();
+
+        Map<String, String> liquibaseChangeSets = new HashMap<>();
+        liquibaseChangeSets.put("portDataSource", "changeSetPort.xml");
         Component componentConfiguration = Mockito.mock(Component.class);
+        Mockito.when(componentConfiguration.getLiquibaseChangeSets()).thenReturn(liquibaseChangeSets);
+
+        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class,
+                (liquibase, context) -> Mockito.doThrow(ex).when(liquibase).close());
+                MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
+            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
+            databaseManager.initLiquiBaseResources(componentConfiguration, getMockedReport(), DatabaseMigrationStrategy.AUTO);
+        }
+    }
+
+    private SystemInstallationReport getMockedReport() {
+
+        SystemInstallationReport report = Mockito.mock(SystemInstallationReport.class);
         ComponentInstallationReport componentReport = Mockito.mock(ComponentInstallationReport.class);
         LiquibaseInstallationReport liquibaseInstallationReport = Mockito.mock(LiquibaseInstallationReport.class);
 
@@ -131,23 +237,15 @@ class DatabaseManagerTest {
         Mockito.when(report.getStatus()).thenReturn(Status.INIT);
         Mockito.when(componentReport.getLiquibaseReport()).thenReturn(liquibaseInstallationReport);
 
+        return report;
+    }
+
+    private ListableBeanFactory getMockedBeanFactory() {
         ListableBeanFactory beanFactory = Mockito.mock(ListableBeanFactory.class);
         Mockito.when(databaseManager.getBeanFactory()).thenReturn(beanFactory);
-
         Mockito.when(beanFactory.getBeanNamesForType(DataSource.class)).thenReturn(new String[]{"portDataSource"});
         Mockito.when(beanFactory.getBean("portDataSource")).thenReturn(Mockito.mock(DataSource.class));
-
-        Map<String, String> liquibaseChangeSets = new HashMap<>();
-        liquibaseChangeSets.put("portDataSource", "changeSetPort.xml");
-
-        Mockito.when(componentConfiguration.getLiquibaseChangeSets()).thenReturn(liquibaseChangeSets);
-
-        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class,
-                (liquibase, context) -> Mockito.doThrow(ex).when(liquibase).close());
-                MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
-            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
-            databaseManager.initLiquiBaseResources(componentConfiguration, report, DatabaseMigrationStrategy.AUTO);
-        }
+        return beanFactory;
     }
 
     private static class ComponentDefDOMForTest {

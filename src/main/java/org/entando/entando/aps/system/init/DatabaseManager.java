@@ -44,6 +44,7 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -77,7 +78,6 @@ public class DatabaseManager extends AbstractInitializerManager
     private static final String LOG_PREFIX = "|   ";
     public static final int STATUS_READY = 0;
     public static final int STATUS_DUMPING_IN_PROGRESS = 1;
-    public static final String INIT_MSG_P = "+ [ Component: {} ] :: DATA\n{}";
     public static final String INIT_MSG_L = "+ [ Component: {} ] :: Liquibase\n{}";
     private static final String LIQUIBASE_CHANGELOG_TABLE = "DATABASECHANGELOG";
 
@@ -90,7 +90,7 @@ public class DatabaseManager extends AbstractInitializerManager
 
     private ServletContext servletContext;
 
-    public void init() throws Exception {
+    public void init() {
         logger.debug("{} ready", this.getClass().getName());
     }
 
@@ -100,38 +100,14 @@ public class DatabaseManager extends AbstractInitializerManager
         migrationStrategy = (null == migrationStrategy) ? DatabaseMigrationStrategy.DISABLED : migrationStrategy;
         if (null == report) {
             report = SystemInstallationReport.getInstance();
-            if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy) && !Environment.test.equals(this.getEnvironment())) {
-                // There's no local database installed, lookup in the local databases
-                DataSourceDumpReport lastDumpReport = this.getLastDumpReport();
-                if (null != lastDumpReport) {
-                    lastLocalBackupFolder = lastDumpReport.getSubFolderName();
-                    report.setStatus(Status.RESTORE);
-                } else {
-                    // Try with the default db dump
-                    Map<String, Resource> sqlDump = this.getDefaultSqlDump();
-                    if (null != sqlDump && sqlDump.size() > 0) {
-                        report.setStatus(Status.RESTORE);
-                    }
-                }
-            }
+            lastLocalBackupFolder = checkRestore(report, migrationStrategy);
         }
 
         // Check if we are dealing with an old database version (not Liquibase compliant - Entando <= 6.3.2)
         legacyDatabaseCheck();
 
         try {
-            List<Component> components = this.getComponentManager().getCurrentComponents();
-            Map<String, List<ChangeSetStatus>> pendingChangeSetMap = new HashMap<>();
-            for (Component entandoComponentConfiguration : components) {
-                List<ChangeSetStatus> pendingChangeSet = this.initLiquiBaseResources(entandoComponentConfiguration,
-                        report, migrationStrategy);
-                if (!pendingChangeSet.isEmpty()) {
-                    pendingChangeSetMap.put(entandoComponentConfiguration.getCode(), pendingChangeSet);
-                }
-            }
-            if (!pendingChangeSetMap.isEmpty()) {
-                throw new DatabaseMigrationException(pendingChangeSetMap);
-            }
+            initComponents(report, migrationStrategy);
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy) && report.getStatus()
                     .equals(Status.RESTORE)) {
                 //ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
@@ -153,6 +129,40 @@ public class DatabaseManager extends AbstractInitializerManager
             }
         }
         return report;
+    }
+
+    private String checkRestore(SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) {
+        String lastLocalBackupFolder = null;
+        if (!DatabaseMigrationStrategy.DISABLED.equals(migrationStrategy) && !Environment.test.equals(this.getEnvironment())) {
+            // There's no local database installed, lookup in the local databases
+            DataSourceDumpReport lastDumpReport = this.getLastDumpReport();
+            if (null != lastDumpReport) {
+                lastLocalBackupFolder = lastDumpReport.getSubFolderName();
+                report.setStatus(Status.RESTORE);
+            } else {
+                // Try with the default db dump
+                Map<String, Resource> sqlDump = this.getDefaultSqlDump();
+                if (null != sqlDump && sqlDump.size() > 0) {
+                    report.setStatus(Status.RESTORE);
+                }
+            }
+        }
+        return lastLocalBackupFolder;
+    }
+
+    private void initComponents(SystemInstallationReport report, DatabaseMigrationStrategy migrationStrategy) throws DatabaseMigrationException, EntException {
+        List<Component> components = this.getComponentManager().getCurrentComponents();
+        Map<String, List<ChangeSetStatus>> pendingChangeSetMap = new HashMap<>();
+        for (Component entandoComponentConfiguration : components) {
+            List<ChangeSetStatus> pendingChangeSet = this.initLiquiBaseResources(entandoComponentConfiguration,
+                    report, migrationStrategy);
+            if (!pendingChangeSet.isEmpty()) {
+                pendingChangeSetMap.put(entandoComponentConfiguration.getCode(), pendingChangeSet);
+            }
+        }
+        if (!pendingChangeSetMap.isEmpty()) {
+            throw new DatabaseMigrationException(pendingChangeSetMap);
+        }
     }
 
     private void legacyDatabaseCheck() throws DatabaseMigrationException, SQLException {
@@ -240,7 +250,7 @@ public class DatabaseManager extends AbstractInitializerManager
 
     private List<ChangeSetStatus> executeLiquibaseUpdate(Date timestamp, String componentCode,
             String changeLogFile, String dataSourceName, Status status, DatabaseMigrationStrategy migrationStrategy)
-            throws Exception {
+            throws LiquibaseException, IOException, SQLException {
         List<ChangeSetStatus> changeSetToExecute = new ArrayList<>();
         Connection connection = null;
         Liquibase liquibase = null;
@@ -251,18 +261,12 @@ public class DatabaseManager extends AbstractInitializerManager
             JdbcConnection liquibaseConnection = new JdbcConnection(connection);
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
             liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
-            String context = null;
-            if (status.equals(Status.RESTORE)) {
-                context = "restore";
-            } else {
-                context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
-            }
-            Contexts contexts = new Contexts(context);
+            Contexts contexts = getContexts(status);
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
                 liquibase.update(contexts, new LabelExpression());
             } else {
                 List<ChangeSetStatus> statusList = liquibase.getChangeSetStatuses(contexts, new LabelExpression());
-                changeSetToExecute = statusList.stream().filter(cs -> cs.getWillRun()).collect(Collectors.toList());
+                changeSetToExecute = statusList.stream().filter(ChangeSetStatus::getWillRun).collect(Collectors.toList());
                 if (!changeSetToExecute.isEmpty()) {
                     String messagePrexix = "Component '" + componentCode + "', database '" + dataSourceName + "'";
                     changeSetToExecute.stream().forEach(cs -> logger.warn(messagePrexix + ", changeSet '{}' has to be executed manually", cs.getChangeSet().getId()));
@@ -272,9 +276,9 @@ public class DatabaseManager extends AbstractInitializerManager
                         ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
                         String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
                         this.getStorageManager().saveFile(path, true, stream);
-                        logger.warn(messagePrexix + ", Please find the update SQL script under \"<PROTECTED_ENTANDO_DATA>" + File.separator + path + "\"");
+                        logger.warn("{}, Please find the update SQL script under \"<PROTECTED_ENTANDO_DATA>{}{}\"", messagePrexix, File.separator, path);
                     } else {
-                        logger.warn(messagePrexix + ", Please update the DB manually");
+                        logger.warn("{}, Please update the DB manually", messagePrexix);
                     }
                 }
             }
@@ -285,21 +289,35 @@ public class DatabaseManager extends AbstractInitializerManager
                 writer.close();
             }
             if (null != liquibase) {
-                try {
-                    liquibase.close();
-                } catch (DatabaseException ex) {
-                    if ("Error closing derby cleanly".equals(ex.getMessage())) {
-                        logger.warn("Error while closing Liquibase connection. This is a known issue when running the application on Derby and Wildfly");
-                    } else {
-                        throw ex;
-                    }
-                }
+                handleLiquibaseClose(liquibase);
             }
             if (null != connection) {
                 connection.close();
             }
         }
         return changeSetToExecute;
+    }
+
+    private Contexts getContexts(Status status) {
+        String context = null;
+        if (status.equals(Status.RESTORE)) {
+            context = "restore";
+        } else {
+            context = (this.getEnvironment().toString().equalsIgnoreCase("test")) ? "test" : "production";
+        }
+        return new Contexts(context);
+    }
+
+    private void handleLiquibaseClose(Liquibase liquibase) throws LiquibaseException {
+        try {
+            liquibase.close();
+        } catch (DatabaseException ex) {
+            if ("Error closing derby cleanly".equals(ex.getMessage())) {
+                logger.warn("Error while closing Liquibase connection. This is a known issue when running the application on Derby and Wildfly");
+            } else {
+                logger.error("Unexpected error while closing Liquibase connection", ex);
+            }
+        }
     }
 
     private void restoreDefaultDump() throws EntException {
@@ -389,7 +407,7 @@ public class DatabaseManager extends AbstractInitializerManager
         }
     }
 
-    protected DataSourceDumpReport getLastDumpReport() throws EntException {
+    protected DataSourceDumpReport getLastDumpReport() {
         if (Environment.develop.equals(this.getEnvironment())) {
             return this.getBackupReport(this.getEnvironment().toString());
         }
