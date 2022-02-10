@@ -73,6 +73,9 @@ class DatabaseManagerTest {
     @Mock
     private DatabaseRestorer databaseRestorer;
 
+    @Mock
+    private LiquibaseInstallationReport liquibaseInstallationReport;
+
     @InjectMocks
     @Spy
     private DatabaseManager databaseManager;
@@ -182,6 +185,8 @@ class DatabaseManagerTest {
         Mockito.when(componentConfiguration.getLiquibaseChangeSets()).thenReturn(liquibaseChangeSets);
         Mockito.when(componentConfiguration.getCode()).thenReturn("test-component");
 
+        Mockito.when(componentManager.getCurrentComponents()).thenReturn(Arrays.asList(componentConfiguration));
+
         ListableBeanFactory beanFactory = getMockedBeanFactory();
         Mockito.when(beanFactory.getBean("StorageManager")).thenReturn(storageManager);
 
@@ -195,7 +200,9 @@ class DatabaseManagerTest {
         }); MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
             dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
 
-            databaseManager.initLiquiBaseResources(componentConfiguration, getMockedReport(), DatabaseMigrationStrategy.GENERATE_SQL);
+            Assertions.assertThrows(DatabaseMigrationException.class, () -> {
+                databaseManager.installDatabase(getMockedReport(), DatabaseMigrationStrategy.GENERATE_SQL);
+            });
             Mockito.verify(storageManager).saveFile(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.any());
         }
     }
@@ -219,11 +226,17 @@ class DatabaseManagerTest {
         Component componentConfiguration = Mockito.mock(Component.class);
         Mockito.when(componentConfiguration.getLiquibaseChangeSets()).thenReturn(liquibaseChangeSets);
 
+        Mockito.when(componentManager.getCurrentComponents()).thenReturn(Arrays.asList(componentConfiguration));
+
+        Map<String, Status> databaseStatus = new HashMap<>();
+        Mockito.when(liquibaseInstallationReport.getDatabaseStatus()).thenReturn(databaseStatus);
+
         try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class,
                 (liquibase, context) -> Mockito.doThrow(ex).when(liquibase).close());
                 MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
             dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
-            databaseManager.initLiquiBaseResources(componentConfiguration, getMockedReport(), DatabaseMigrationStrategy.AUTO);
+            databaseManager.installDatabase(getMockedReport(), DatabaseMigrationStrategy.AUTO);
+            Assertions.assertEquals(Status.OK, databaseStatus.get("portDataSource"));
         }
     }
 
@@ -231,7 +244,6 @@ class DatabaseManagerTest {
 
         SystemInstallationReport report = Mockito.mock(SystemInstallationReport.class);
         ComponentInstallationReport componentReport = Mockito.mock(ComponentInstallationReport.class);
-        LiquibaseInstallationReport liquibaseInstallationReport = Mockito.mock(LiquibaseInstallationReport.class);
 
         Mockito.when(report.getComponentReport(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean())).thenReturn(componentReport);
         Mockito.when(report.getStatus()).thenReturn(Status.INIT);
