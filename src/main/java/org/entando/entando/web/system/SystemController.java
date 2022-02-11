@@ -34,8 +34,6 @@ import java.util.Map;
 @RequestMapping(value = "/system")
 public class SystemController {
 
-    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
-
     static final String CONTENT_SCHEDULER_CODE="jpcontentscheduler";
 
     @Autowired
