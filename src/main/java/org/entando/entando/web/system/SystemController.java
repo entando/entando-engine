@@ -45,8 +45,6 @@ public class SystemController {
     @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String,Boolean>>> getReport() {
 
-        logger.debug("system - getting system report");
-
         Map<String, Boolean> report = new HashMap<>();
 
         boolean componentInstalled = componentManager.isComponentInstalled(CONTENT_SCHEDULER_CODE);
