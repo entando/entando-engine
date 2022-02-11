@@ -268,17 +268,17 @@ public class DatabaseManager extends AbstractInitializerManager
                 List<ChangeSetStatus> statusList = liquibase.getChangeSetStatuses(contexts, new LabelExpression());
                 changeSetToExecute = statusList.stream().filter(ChangeSetStatus::getWillRun).collect(Collectors.toList());
                 if (!changeSetToExecute.isEmpty()) {
-                    String messagePrexix = "Component '" + componentCode + "', database '" + dataSourceName + "'";
-                    changeSetToExecute.stream().forEach(cs -> logger.warn(messagePrexix + ", changeSet '{}' has to be executed manually", cs.getChangeSet().getId()));
+                    String messagePrefix = "Component '" + componentCode + "', database '" + dataSourceName + "'";
+                    changeSetToExecute.stream().forEach(cs -> logger.warn("{}, changeSet '{}' has to be executed manually", messagePrefix, cs.getChangeSet().getId()));
                     writer = new StringBuilderWriter();
                     liquibase.update(contexts, new LabelExpression(), writer);
                     if (DatabaseMigrationStrategy.GENERATE_SQL.equals(migrationStrategy)) {
                         ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes(StandardCharsets.UTF_8));
                         String path = "liquibase" + File.separator + DateConverter.getFormattedDate(timestamp, "yyyyMMddHHmmss") + File.separator + componentCode + "_" + dataSourceName + ".sql";
                         this.getStorageManager().saveFile(path, true, stream);
-                        logger.warn("{}, Please find the update SQL script under \"<PROTECTED_ENTANDO_DATA>{}{}\"", messagePrexix, File.separator, path);
+                        logger.warn("{}, Please find the update SQL script under \"<PROTECTED_ENTANDO_DATA>{}{}\"", messagePrefix, File.separator, path);
                     } else {
-                        logger.warn("{}, Please update the DB manually", messagePrexix);
+                        logger.warn("{}, Please update the DB manually", messagePrefix);
                     }
                 }
             }
