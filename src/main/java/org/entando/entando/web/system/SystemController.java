@@ -23,8 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -36,24 +36,22 @@ public class SystemController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
-    final static String CONTENT_SCHEDULER_CODE="jpcontentscheduler";
-    final static String CONTENT_SCHEDULER_INSTALLED ="contentSchedulerPluginInstalled";
+    static final String CONTENT_SCHEDULER_CODE="jpcontentscheduler";
 
     @Autowired
     private IComponentManager componentManager;
 
     @RestAccessControl(permission = Permission.CONTENT_SUPERVISOR)
-    @RequestMapping(value = "/report", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> getReport() {
+    @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Map<String,Boolean>>> getReport() {
 
         logger.debug("system - getting system report");
+
         Map<String, Boolean> report = new HashMap<>();
 
-        if (componentManager.isComponentInstalled(CONTENT_SCHEDULER_CODE)) {
-            report.put(CONTENT_SCHEDULER_INSTALLED, true);
-        } else {
-            report.put(CONTENT_SCHEDULER_INSTALLED, false);
-        }
-        return new ResponseEntity<SimpleRestResponse<Map>>(new SimpleRestResponse(report), HttpStatus.OK);
+        boolean componentInstalled = componentManager.isComponentInstalled(CONTENT_SCHEDULER_CODE);
+        report.put("contentSchedulerPluginInstalled", componentInstalled);
+
+        return new ResponseEntity<>(new SimpleRestResponse<>(report), HttpStatus.OK);
     }
 }
