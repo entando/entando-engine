@@ -33,15 +33,12 @@ public class SystemInstallationReportTest {
         Assertions.assertEquals(5, componentReports.size());
         ComponentInstallationReport engineReport = report.getComponentReport("entandoCore", false);
         Assertions.assertNotNull(engineReport);
-        Assertions.assertNotNull(engineReport.getDataReport());
         Assertions.assertNotNull(engineReport.getLiquibaseReport());
         ComponentInstallationReport comTest1Report = report.getComponentReport("comp_test_1", false);
         Assertions.assertNotNull(comTest1Report);
-        Assertions.assertNotNull(comTest1Report.getDataReport());
         Assertions.assertNotNull(comTest1Report.getLiquibaseReport());
         ComponentInstallationReport comTest2Report = report.getComponentReport("comp_test_2", false);
         Assertions.assertNotNull(comTest2Report);
-        Assertions.assertNotNull(comTest2Report.getDataReport());
         Assertions.assertNotNull(comTest2Report.getLiquibaseReport());
     }
     

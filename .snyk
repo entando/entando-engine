@@ -7,15 +7,12 @@ ignore:
         reason: 'False positive. Even though the vulnerability exists and we use SAXBuilder in our code, our usage is
           exclusively against internal and static XML files that reference no external entity, making this
           vulnerability impossible to be exploited by external sources.'
-		 
   SNYK-JAVA-IOSPRINGFOX-1317096:
     - '*':
         reason: 'Swagger is enabled only in development environment. This is also a low risk and low possibility attack.'
-		
   SNYK-JAVA-IONETTY-1042268:
     - '*':
         reason: 'Temporary suppression. We always connect to an internal and safe Redis server.'
-  
   SNYK-JAVA-ORGJBOSSRESTEASY-1009963:
     - '*':
         reason: '.'
@@ -29,5 +26,8 @@ ignore:
     - '*':
         reason: '.'
   SNYK-JAVA-ORGKEYCLOAK-1085642:
+    - '*':
+        reason: '.'
+  SNYK-JAVA-COMFASTERXMLJACKSONCORE-2326698:
     - '*':
         reason: '.'
