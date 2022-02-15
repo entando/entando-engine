@@ -467,6 +467,48 @@ class UserPreferencesControllerIntegrationTest extends AbstractControllerIntegra
         }
     }
 
+    @Test
+    void testGetOtherUserPreferencesShouldFail() throws Exception {
+
+        String callerUsername = "reader";
+        String preferencesUsername = "admin";
+        UserDetails user = new OAuth2TestUtils.UserBuilder(callerUsername, "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        mockMvc.perform(
+                        get("/userPreferences/{username}", preferencesUsername)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .header("Authorization", "Bearer " + accessToken))
+                .andDo(resultPrint())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors[0].code", Matchers.is("9")))
+                .andExpect(jsonPath("$.errors[0].message", Matchers.is("Cannot update other users' preferences")));
+    }
+
+    @Test
+    void testUpdateOtherUserPreferencesShouldFail() throws Exception {
+
+        String callerUsername = "reader";
+        String preferencesUsername = "admin";
+        UserDetails user = new OAuth2TestUtils.UserBuilder(callerUsername, "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String bodyRequest;
+        try (InputStream file = this.getClass().getResourceAsStream("1_PUT_user_preferences.json")) {
+            bodyRequest = FileTextReader.getText(file);
+        }
+
+        mockMvc.perform(
+                        put("/userPreferences/{username}", preferencesUsername)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(bodyRequest)
+                                .header("Authorization", "Bearer " + accessToken))
+                .andDo(resultPrint())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors[0].code", Matchers.is("9")))
+                .andExpect(jsonPath("$.errors[0].message", Matchers.is("Cannot update other users' preferences")));
+    }
+
     private UserDetails createUser(String username) {
         User user = new User();
         user.setUsername(username);
