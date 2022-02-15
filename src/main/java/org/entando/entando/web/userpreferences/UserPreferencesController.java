@@ -47,22 +47,22 @@ public class UserPreferencesController {
     @Autowired
     private UserPreferencesValidator userPreferencesValidator;
 
-    @GetMapping(value = "/userPreferences/{username:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/userPreferences/{preferencesUsername:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> getUserPreferences(
-            @ModelAttribute("user") UserDetails user, @PathVariable String username, BindingResult bindingResult) {
-        logger.debug("Getting user '{}' preferences ", username);
-        userPreferencesValidator.validate(user, username, bindingResult);
-        UserPreferencesDto response = userPreferencesService.getUserPreferences(username);
+            @ModelAttribute("user") UserDetails user, @PathVariable String preferencesUsername, BindingResult bindingResult) {
+        logger.debug("Getting user '{}' preferences ", preferencesUsername);
+        userPreferencesValidator.validate(user, preferencesUsername, bindingResult);
+        UserPreferencesDto response = userPreferencesService.getUserPreferences(preferencesUsername);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/userPreferences/{username:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/userPreferences/{preferencesUsername:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> updateUserPreferences(
-            @ModelAttribute("user") UserDetails user, @PathVariable String username,
+            @ModelAttribute("user") UserDetails user, @PathVariable String preferencesUsername,
             @Valid @RequestBody UserPreferencesRequest bodyRequest, BindingResult bindingResult) {
-        logger.debug("Updating user '{}' preferences to -> {}", username, bodyRequest);
-        userPreferencesValidator.validate(user, username, bindingResult);
-        UserPreferencesDto response = userPreferencesService.updateUserPreferences(username, bodyRequest);
+        logger.debug("Updating user '{}' preferences to -> {}", preferencesUsername, bodyRequest);
+        userPreferencesValidator.validate(user, preferencesUsername, bindingResult);
+        UserPreferencesDto response = userPreferencesService.updateUserPreferences(preferencesUsername, bodyRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 }
