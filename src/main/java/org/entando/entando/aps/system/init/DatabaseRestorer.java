@@ -50,24 +50,6 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 		}
 	}
 
-	protected void initDerbySchema(DataSource dataSource) throws Throwable {
-		String username = this.invokeGetMethod("getUsername", dataSource);
-		try {
-			String[] queryCreateSchema = new String[]{"CREATE SCHEMA " + username.toUpperCase()};
-			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
-		} catch (Throwable t) {
-			_logger.info("Error creating derby schema" + t);
-			throw new EntException("Error creating derby schema", t);
-		}
-		try {
-			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
-			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
-		} catch (Throwable t) {
-			_logger.error("Error initializating Derby Schema", t);
-			throw new EntException("Error initializating Derby Schema", t);
-		}
-	}
-
 	protected void dropAndRestoreBackup(String backupSubFolder) throws EntException {
 		try {
 			List<Component> components = this.getComponents();
