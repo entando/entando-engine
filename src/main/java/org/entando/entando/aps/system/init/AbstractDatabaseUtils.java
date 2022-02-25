@@ -15,12 +15,14 @@ package org.entando.entando.aps.system.init;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Iterator;
+import java.sql.Connection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.entando.entando.aps.system.init.IDatabaseManager.DatabaseType;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -37,34 +39,34 @@ import org.entando.entando.ent.exception.EntException;
 public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 
 	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractDatabaseUtils.class);
-	
+
 	protected IDatabaseManager.DatabaseType getType(DataSource dataSource) throws EntException {
-		String typeString = null;
 		try {
-			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
-			Iterator<Object> typesIter = this.getDatabaseTypeDrivers().keySet().iterator();
-			while (typesIter.hasNext()) {
-				String typeCode = (String) typesIter.next();
-				List<String> driverClassNames = (List<String>) this.getDatabaseTypeDrivers().get(typeCode);
-				if (null != driverClassNames && driverClassNames.contains(driverClassName)) {
-					typeString = typeCode;
-					break;
-				}
+			String dbProductName;
+			try (Connection connection = dataSource.getConnection()) {
+				dbProductName = connection.getMetaData().getDatabaseProductName().toLowerCase();
 			}
-			if (null == typeString) {
-				_logger.error("Type not recognized for Driver '{}' - Recognized types '{}'", driverClassName, IDatabaseManager.DatabaseType.values());
-				return IDatabaseManager.DatabaseType.UNKNOWN;
+
+			if (dbProductName.contains("derby")) {
+				return DatabaseType.DERBY;
+			} else if (dbProductName.contains("postgres")) {
+				return DatabaseType.POSTGRESQL;
+			} else if (dbProductName.contains("mysql")) {
+				return DatabaseType.MYSQL;
+			} else if (dbProductName.contains("oracle")) {
+				return DatabaseType.ORACLE;
+			} else if (dbProductName.contains("sql server")) {
+				return DatabaseType.SQLSERVER;
 			}
-			return Enum.valueOf(IDatabaseManager.DatabaseType.class, typeString.toUpperCase());
+
+			String recognizedTypes = Arrays.toString(IDatabaseManager.DatabaseType.values());
+			_logger.error("Type not recognized for database product name '{}' - Recognized types '{}'", dbProductName, recognizedTypes);
+
+			return DatabaseType.UNKNOWN;
+
 		} catch (Throwable t) {
-			_logger.error("Invalid type for db - '{}' - ", typeString, t);
-			throw new EntException("Invalid type for db - '" + typeString + "'", t);
+			throw new EntException("Unable to retrieve database product name", t);
 		}
-	}
-	
-	protected String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
-		Method method = dataSource.getClass().getDeclaredMethod(methodName);
-		return (String) method.invoke(dataSource);
 	}
 	
 	protected String getLocalBackupsFolder() {
