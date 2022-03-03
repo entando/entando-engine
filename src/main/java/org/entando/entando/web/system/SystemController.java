@@ -15,8 +15,6 @@ package org.entando.entando.web.system;
 
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.init.IComponentManager;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
