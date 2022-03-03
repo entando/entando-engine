@@ -934,7 +934,7 @@ class UserControllerIntegrationTest extends AbstractControllerIntegrationTest {
     @Test
     void testGetMyGroups() throws Exception {
         UserDetails loggedUser = new OAuth2TestUtils.UserBuilder("new_user", "0x24")
-                .withAuthorization("coach", "editor", Permission.BACKOFFICE)
+                .withAuthorization("coach", "editor", Permission.ENTER_BACKEND)
                 .build();
         mockMvc
                 .perform(get("/users/myGroups", new Object[]{"editorCoach"})

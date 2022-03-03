@@ -15,8 +15,6 @@ package org.entando.entando.web.system;
 
 import com.agiletec.aps.system.services.role.Permission;
 import org.entando.entando.aps.system.init.IComponentManager;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class SystemController {
     @Autowired
     private IComponentManager componentManager;
 
-    @RestAccessControl(permission = Permission.CONTENT_SUPERVISOR)
+    @RestAccessControl(permission = Permission.ENTER_BACKEND)
     @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String,Boolean>>> getReport() {
 

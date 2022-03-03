@@ -1284,7 +1284,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     @Test
     void testUserPermissionToSeePages() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("user_group_coach", "0x24")
-                .withAuthorization("coach", "tempRole", Permission.MANAGE_PAGES, Permission.BACKOFFICE)
+                .withAuthorization("coach", "tempRole", Permission.MANAGE_PAGES, Permission.ENTER_BACKEND)
                 .build();
         String accessToken = mockOAuthInterceptor(user);
 

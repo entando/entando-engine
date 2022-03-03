@@ -173,7 +173,7 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
             Assertions.assertNotNull(userManager.getUser(loggedUsername));
 
             UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
-                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.ENTER_BACKEND)
                     .withUserProfile(loggedUserProfile)
                     .build();
 
@@ -198,7 +198,7 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
             final IUserProfile invalidProfile = new UserProfile();
             invalidProfile.setTypeCode("ABC");
             UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
-                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                    .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.ENTER_BACKEND)
                     .withUserProfile(invalidProfile)
                     .build();
 
@@ -213,7 +213,7 @@ class ProfileTypeControllerIntegrationTest extends AbstractControllerIntegration
         String loggedUserPassword = "0x24";
 
         UserDetails loggedUser = new OAuth2TestUtils.UserBuilder(loggedUsername, loggedUserPassword)
-                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.BACKOFFICE)
+                .withAuthorization(Group.FREE_GROUP_NAME, "editor", Permission.ENTER_BACKEND)
                 .withUserProfile(null)
                 .build();
 
