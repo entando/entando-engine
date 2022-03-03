@@ -68,7 +68,9 @@ public class Permission implements Comparable, Serializable {
 
 	/**
 	 * Nome del permesso base per l'accesso all'area di amministrazione
+	 * @deprecated use ENTER_BACKEND
 	 */
+	@Deprecated
 	public static final String BACKOFFICE = "enterBackend";
 
 	public static final String CONTENT_EDITOR = "editContents";
