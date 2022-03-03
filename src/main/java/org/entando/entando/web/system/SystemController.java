@@ -39,7 +39,7 @@ public class SystemController {
     @Autowired
     private IComponentManager componentManager;
 
-    @RestAccessControl(permission = Permission.CONTENT_SUPERVISOR)
+    @RestAccessControl(permission = Permission.ENTER_BACKEND)
     @GetMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String,Boolean>>> getReport() {
 
