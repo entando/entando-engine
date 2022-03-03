@@ -95,7 +95,7 @@ public class ProfileTypeController {
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = {Permission.BACKOFFICE})
+    @RestAccessControl(permission = {Permission.ENTER_BACKEND})
     @GetMapping(value = "/myProfileType", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) {
         logger.debug("Requested profile type for the logged user-> {}", user.getUsername());

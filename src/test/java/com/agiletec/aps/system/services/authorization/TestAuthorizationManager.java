@@ -220,7 +220,7 @@ class TestAuthorizationManager extends BaseTestCase {
         assertFalse(checkPermission);
         checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.SUPERUSER);
         assertFalse(checkPermission);
-        checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.BACKOFFICE);
+        checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.ENTER_BACKEND);
         assertTrue(checkPermission);
         checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.CONTENT_EDITOR);
         assertFalse(checkPermission);
@@ -251,7 +251,7 @@ class TestAuthorizationManager extends BaseTestCase {
             assertFalse(checkPermission);
             checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.SUPERUSER);
             assertFalse(checkPermission);
-            checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.BACKOFFICE);
+            checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.ENTER_BACKEND);
             assertTrue(checkPermission);
             checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.CONTENT_EDITOR);
             assertTrue(checkPermission);
