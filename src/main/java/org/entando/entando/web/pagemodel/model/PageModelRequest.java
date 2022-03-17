@@ -14,14 +14,15 @@
 package org.entando.entando.web.pagemodel.model;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class PageModelRequest {
 
-    @NotNull(message = "pageModel.code.notBlank")
+    @NotBlank(message = "pageModel.code.notBlank")
     private String code;
 
-    @NotNull(message = "pageModel.descr.notBlank")
+    @NotBlank(message = "pageModel.descr.notBlank")
     private String descr;
 
     @Valid
