@@ -503,16 +503,39 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
     @Test
     void testPostPageTemplateValidations() throws Exception {
         try {
-            // Blank PageCode
-            String payloadBlankCode = createPageModelPayload("");
+            // Null PageCode
+
+            String payloadNullCode = createPageModelPayload(null);
             ResultActions result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadNullCode)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // Blank PageCode
+
+            String payloadBlankCode = createPageModelPayload("");
+            result = mockMvc.perform(
                     post("/pageModels")
                             .content(payloadBlankCode)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isBadRequest());
 
+            // Null Descr
+
+            String payloadNullDescr = createPageModelPayload(PAGE_MODEL_CODE, null);
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadNullDescr)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
             // Blank Descr
+
             String payloadBlankDescr = createPageModelPayload(PAGE_MODEL_CODE, "");
             result = mockMvc.perform(
                     post("/pageModels")
@@ -522,12 +545,14 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
             result.andExpect(status().isBadRequest());
 
             // x1 with negative value
+
             result = mockMvc.perform(
                     post("/pageModels")
                             .content(getJsonRequest("invalid_Y1Y2_frames_1.json"))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isBadRequest());
+
             // y1 with negative value
 
             result = mockMvc.perform(
