@@ -51,6 +51,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -61,6 +62,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
     private static final String PAGE_MODEL_CODE = "testPM";
     private static final String PAGE_MODEL_WITH_DOT_CODE = "test.PM";
     private static final String NONEXISTENT_PAGE_MODEL = "nonexistentPageModel";
+    private static final String PAGE_MODEL_DESCR = "descr";
 
     private String accessToken;
     private ObjectMapper jsonMapper = new ObjectMapper().setSerializationInclusion(NON_NULL);
@@ -190,9 +192,13 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
     }
 
     private String createPageModelPayload(String pageModelCode) throws JsonProcessingException {
+        return createPageModelPayload(pageModelCode, PAGE_MODEL_DESCR);
+    }
+
+    private String createPageModelPayload(String pageModelCode, String pageModelDescr) throws JsonProcessingException {
         PageModelRequest pageModelRequest = validPageModelRequest();
         pageModelRequest.setCode(pageModelCode);
-
+        pageModelRequest.setDescr(pageModelDescr);
         PageModelConfigurationRequest configuration = new PageModelConfigurationRequest();
         List<PageModelFrameReq> frames = new ArrayList<>();
 
@@ -300,7 +306,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
             PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
 
             FrameSketch newSketch = new FrameSketch();
-            newSketch.setCoords(0,3,11,3);
+            newSketch.setCoords(0, 3, 11, 3);
             final PageModelFrameReq newFrames = new PageModelFrameReq(3, "Position 3");
             newFrames.setSketch(newSketch);
 
@@ -388,6 +394,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
             throw e;
         }
     }
+
     @Test
     void updatePageModelWithErrors() throws Exception {
         try {
@@ -406,13 +413,11 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
             Assertions.assertEquals(3, pageModel.getFrames().length);
 
 
-
-
             PageModelFrameReq newFrames = new PageModelFrameReq(3, "Position 3");
             newFrames.getDefaultWidget().setCode("invalid_widget");
 
             FrameSketch newSketch = new FrameSketch();
-            newSketch.setCoords(0,3,11,3);
+            newSketch.setCoords(0, 3, 11, 3);
 
             newFrames.setSketch(newSketch);
 
@@ -498,13 +503,56 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
     @Test
     void testPostPageTemplateValidations() throws Exception {
         try {
-            // x1 with negative value
+            // Null PageCode
+
+            String payloadNullCode = createPageModelPayload(null);
             ResultActions result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadNullCode)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+
+            // Blank PageCode
+
+            String payloadBlankCode = createPageModelPayload("");
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadBlankCode)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // Null Descr
+
+            String payloadNullDescr = createPageModelPayload(PAGE_MODEL_CODE, null);
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadNullDescr)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // Blank Descr
+
+            String payloadBlankDescr = createPageModelPayload(PAGE_MODEL_CODE, "");
+            result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(payloadBlankDescr)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isBadRequest());
+
+            // x1 with negative value
+
+            result = mockMvc.perform(
                     post("/pageModels")
                             .content(getJsonRequest("invalid_Y1Y2_frames_1.json"))
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isBadRequest());
+
             // y1 with negative value
 
             result = mockMvc.perform(

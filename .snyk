@@ -37,3 +37,6 @@ ignore:
   SNYK-JAVA-ORGLIQUIBASE-2419059:
     - '*':
         reason: '.'
+  SNYK-JAVA-COMFASTERXMLJACKSONCORE-2421244:
+    - '*':
+        reason: '.'
