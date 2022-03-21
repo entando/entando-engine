@@ -213,7 +213,7 @@ public class PageController {
     public ResponseEntity<RestResponse<PageDto, Map<String, String>>> updatePage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @Valid @RequestBody PageRequest pageRequest, BindingResult bindingResult) {
         logger.debug("updating page {} with request {}", pageCode, pageRequest);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         //field validations
@@ -248,8 +248,8 @@ public class PageController {
             @Valid @RequestBody PageStatusRequest pageStatusRequest, BindingResult bindingResult) {
         logger.debug("changing status for page {} with request {}", pageCode, pageStatusRequest);
         Map<String, String> metadata = new HashMap<>();
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            return new ResponseEntity<>(new RestResponse<>(new PageDto(), metadata), HttpStatus.UNAUTHORIZED);
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         //field validations
         if (bindingResult.hasErrors()) {
@@ -311,11 +311,11 @@ public class PageController {
             @PathVariable String pageCode) {
         //-
         logger.debug("deleting {}", pageCode);
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            return new ResponseEntity<>(new SimpleRestResponse<>(new PageDto()), HttpStatus.UNAUTHORIZED);
-        }
         DataBinder binder = new DataBinder(pageCode);
         BindingResult bindingResult = binder.getBindingResult();
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+        }
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -353,8 +353,8 @@ public class PageController {
         }
         this.getPageValidator().validateMovePage(pageCode, bindingResult, pageRequest);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            return new ResponseEntity<>(new SimpleRestResponse<>(new PageDto()), HttpStatus.UNAUTHORIZED);
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 
         PageDto page = this.getPageService().movePage(pageCode, pageRequest);

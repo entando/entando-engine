@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.entando.entando.aps.system.services.page.IPageService;
+import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.JsonPatchBuilder;
@@ -90,6 +91,12 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageModelManager pageModelManager;
+
+    @Autowired
+    private IPageService pageService;
+
+    @Autowired
+    private PageDtoToRequestConverter pageDtoToRequestConverter;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -1655,6 +1662,83 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         }
     }
 
+    @Test
+    void testFreePageCanBeEditedByFreeAccessManagers() throws Exception {
+
+        UserDetails freeAccessManager = new OAuth2TestUtils.UserBuilder("freeAccessManager", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditFreePage(freeAccessManager, status().isOk());
+    }
+
+    @Test
+    void testFreePageCannotBeEditedByOtherManagers() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditFreePage(customersManager, status().isForbidden());
+    }
+
+    private void testEditFreePage(UserDetails userDetails, ResultMatcher expected) throws Exception {
+
+        String pageCode = "testFreePage";
+
+        try {
+            this.pageManager.addPage(createPage(pageCode, null, "homepage"));
+
+            String accessToken = mockOAuthInterceptor(userDetails);
+
+            // edit
+            PageDto pageDto = this.pageService.getPage(pageCode, IPageService.STATUS_DRAFT);
+            PageRequest pageRequest = this.pageDtoToRequestConverter.convert(pageDto);
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{code}", pageCode)
+                            .content(mapper.writeValueAsString(pageRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(expected);
+
+            // set status
+            PageStatusRequest statusRequest = new PageStatusRequest();
+            statusRequest.setStatus("published");
+
+            mockMvc.perform(put("/pages/{code}/status", pageCode)
+                            .content(mapper.writeValueAsString(statusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            // move
+            PagePositionRequest pagePositionRequest = new PagePositionRequest();
+            pagePositionRequest.setCode(pageCode);
+            pagePositionRequest.setParentCode("homepage");
+            pagePositionRequest.setPosition(1);
+
+            mockMvc.perform(put("/pages/{code}/position", pageCode)
+                            .content(mapper.writeValueAsString(pagePositionRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            // set draft and delete
+            statusRequest.setStatus("draft");
+            mockMvc.perform(put("/pages/{code}/status", pageCode)
+                            .content(mapper.writeValueAsString(statusRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            mockMvc.perform(delete("/pages/{code}", pageCode)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
+    }
 
     /**
      * executes a test of page usage details

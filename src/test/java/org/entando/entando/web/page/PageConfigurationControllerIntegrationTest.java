@@ -15,10 +15,13 @@ package org.entando.entando.web.page;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
+import org.entando.entando.web.mockhelper.PageRequestMockHelper;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -52,6 +55,9 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
 
     @Autowired
     private IPageManager pageManager;
+
+    @Autowired
+    private IPageService pageService;
 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
@@ -306,6 +312,58 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                     Assertions.fail("Error removing page " + pageCode);
                 }
             });
+        }
+    }
+
+    @Test
+    void testWidgetOfFreeAccessPageCanBeEditedByFreeAccessManager() throws Exception {
+
+        UserDetails freeAccessManager = new OAuth2TestUtils.UserBuilder("freeAccessManager", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditFreePageWidgets(freeAccessManager, status().isOk());
+    }
+
+    @Test
+    void testWidgetOfFreeAccessPageCannotBeEditedByOtherManagers() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditFreePageWidgets(customersManager, status().isForbidden());
+    }
+
+    private void testEditFreePageWidgets(UserDetails userDetails, ResultMatcher expected) throws Exception {
+        String accessToken = mockOAuthInterceptor(userDetails);
+
+        String pageCode = "myFreePage";
+        PageRequest pageRequest = getPageRequest(pageCode);
+
+        try {
+            this.pageService.addPage(pageRequest);
+            this.pageManager.setPageOnline(pageCode);
+
+            // test default widgets
+            mockMvc.perform(put("/pages/{pageCode}/configuration/defaultWidgets", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            // test single frame widget
+            WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
+            wcr.setCode("login_form");
+            this.executePutPageFrameWidget(pageCode, 0, wcr, accessToken, expected);
+
+            // test delete widget
+            this.executeDeletePageFrameWidget(pageCode, 0, accessToken, expected);
+
+            // test restore
+            mockMvc.perform(put("/pages/{pageCode}/configuration/restore", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expected);
+        } finally {
+            pageManager.deletePage(pageCode);
         }
     }
     
