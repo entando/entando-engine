@@ -15,6 +15,7 @@ package com.agiletec.aps.system.services.user;
 
 import com.agiletec.aps.system.services.authorization.Authorization;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
  *
  * @author E.Santoboni
  */
-public interface UserDetails {
+public interface UserDetails extends Serializable {
 
     /**
      * Return 'true' if the current user is an Entando user, that is, exists within jAPS local table
@@ -30,72 +31,73 @@ public interface UserDetails {
      * @return 'true' if the current user is an Entando user
      * @deprecated use isEntandoUser()
      */
-    public boolean isJapsUser();
+    @Deprecated
+    boolean isJapsUser();
 
-    public boolean isEntandoUser();
+    boolean isEntandoUser();
 
     /**
      * Get the authorizations of the current user
      *
      * @return The user authorizations
      */
-    public List<Authorization> getAuthorizations();
+    List<Authorization> getAuthorizations();
 
     /**
      * Add an authorization to the current user
      *
      * @param auth The authorization to add
      */
-    public void addAuthorization(Authorization auth);
+    void addAuthorization(Authorization auth);
 
     /**
      * Add a list of authorizations to the current user
      *
      * @param auths The authorizations to set
      */
-    public void addAuthorizations(List<Authorization> auths);
+    void addAuthorizations(List<Authorization> auths);
 
     /**
      * Return the plain password (that is, NOT decrypted) of the current user
      *
      * @return the user password
      */
-    public String getPassword();
+    String getPassword();
 
     /**
      * Return the username or, in other words, the ID of the current user
      *
      * @return the username
      */
-    public String getUsername();
+    String getUsername();
 
     /**
      * Return the expiration status of the current user
      *
      * @return 'true' if the user is not expired, false otherwise
      */
-    public boolean isAccountNotExpired();
+    boolean isAccountNotExpired();
 
     /**
      * Return the credential status of the current user
      *
      * @return 'true' when the credentials are not expired, false otherwise
      */
-    public boolean isCredentialsNotExpired();
+    boolean isCredentialsNotExpired();
 
     /**
      * Return the ability of the current user to access the system
      *
      * @return 'true' if the current user has been disabled
      */
-    public boolean isDisabled();
+    boolean isDisabled();
 
     /**
      * Return the profile associated to the current user, if any
      *
      * @return The profile
      */
-    public Object getProfile();
+    Object getProfile();
 
     void setAccessToken(final String accessToken);
 

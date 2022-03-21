@@ -39,6 +39,7 @@ public class PageModelValidator extends AbstractPaginationValidator {
     public static final String ERRCODE_SKETCH_XY = "8";
     public static final String ERRCODE_OVERLAPPING_FRAMES = "9";
     public static final String ERRCODE_SKETCH_NULL = "10";
+    public static final String ERRCODE_PAGEMODEL_LOCKED = "11";
 
     private static final String ERR_MSG_FRAMES_POS_MISMATCH = "pageModel.frames.pos.mismatch";
     private static final String ERR_MSG_CODE_MISMATCH = "pageModel.code.mismatch";

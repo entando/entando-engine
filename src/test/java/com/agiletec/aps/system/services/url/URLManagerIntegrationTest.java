@@ -69,6 +69,28 @@ class URLManagerIntegrationTest extends BaseTestCase {
         }
     }
 
+    @Test
+    void testGetWebUiURLString() throws Throwable {
+        String webUiBaseUrl = "https://webui.entando.org/webui";
+        RequestContext reqCtx = this.getRequestContext();
+        reqCtx.addExtraParam(SystemConstants.EXTRAPAR_WEB_UI_APPL_BASE_URL, webUiBaseUrl);
+        PageURL pageURL = urlManager.createURL(reqCtx);
+        pageURL.setLangCode("en");
+        pageURL.setPageCode("pagina_11");
+        try {
+            String url = this.urlManager.getURLString(pageURL, reqCtx);
+            assertEquals(webUiBaseUrl + "/en/pagina_11.page", url);
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_BREADCRUMBS);
+            url = this.urlManager.getURLString(pageURL, reqCtx);
+            assertEquals(webUiBaseUrl + "/pages/en/homepage/pagina_1/pagina_11/", url);
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            this.changeUrlStyle(IPageManager.CONFIG_PARAM_URL_STYLE_CLASSIC);
+            reqCtx.removeExtraParam(SystemConstants.EXTRAPAR_WEB_UI_APPL_BASE_URL);
+        }
+    }
+
     private void changeUrlStyle(String styleType) throws Throwable {
         try {
             String xmlParams = this.configManager.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);

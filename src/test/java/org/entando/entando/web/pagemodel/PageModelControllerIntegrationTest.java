@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.pagemodel.FrameSketch;
+import com.agiletec.aps.system.services.pagemodel.PageModelType;
 import com.agiletec.aps.util.FileTextReader;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
@@ -231,6 +232,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
         PageModel pageModel = new PageModel();
         pageModel.setCode(PAGE_MODEL_CODE);
         pageModel.setDescription(PAGE_MODEL_CODE);
+        pageModel.setType(PageModelType.NT);
         this.pageModelManager.addPageModel(pageModel);
         ResultActions result = mockMvc.perform(
                 delete("/pageModels/{code}", PAGE_MODEL_CODE)
@@ -733,7 +735,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
                 get("/pageModels?sort=pluginCode")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(3)));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(4)));
     }
 
     private String getJsonRequest(String filename) throws Exception {

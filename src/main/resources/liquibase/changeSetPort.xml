@@ -12,5 +12,7 @@
     <include file="port/00000000000001_dataPort_production.xml" relativeToChangelogFile="true" />
 
     <changeSet id="00000000000001_dataPort_restore" author="entando" context="restore" />
+    
+    <include file="port/00000000000002_nx_pagemodels.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

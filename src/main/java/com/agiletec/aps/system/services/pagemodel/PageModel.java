@@ -23,14 +23,14 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Representation of a page template. 
- * This object contains the description and the definition of "frames" available. 
- * The definition of the page template is in the form of jsp or freemarker template. 
+ * Representation of a page template.
+ * This object contains the description and the definition of "frames" available.
+ * The definition of the page template is in the form of jsp or freemarker template.
  * In the case of representation on jsp, the file name is equals then the template code.
  * The "frames" are page sections that can contains a "widget".
  */
 @XmlRootElement(name = "pageModel")
-@XmlType(propOrder = {"code", "description", "pluginCode", "template", "configuration"})
+@XmlType(propOrder = {"code", "description", "pluginCode", "template", "configuration", "type", "locked"})
 public class PageModel implements Serializable {
 
 	private String code;
@@ -39,6 +39,8 @@ public class PageModel implements Serializable {
 	private int mainFrame = -1;
 	private String pluginCode;
 	private String template;
+	private PageModelType type;
+	private boolean locked;
 
 	/**
 	 * Return the code of page template.
@@ -243,6 +245,24 @@ public class PageModel implements Serializable {
 		this.template = template;
 	}
 
+    @XmlElement(name = "type")
+    public PageModelType getType() {
+        return type;
+    }
+
+    public void setType(PageModelType type) {
+        this.type = type;
+    }
+
+    @XmlElement(name = "locked")
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
@@ -252,6 +272,8 @@ public class PageModel implements Serializable {
 				.append("mainFrame", mainFrame)
 				.append("pluginCode", pluginCode)
 				.append("template", template)
+				.append("type", type)
+				.append("locked", locked)
 				.toString();
 	}
 
@@ -265,12 +287,14 @@ public class PageModel implements Serializable {
 			   Objects.equals(description, pageModel.description) &&
 			   Arrays.equals(configuration, pageModel.configuration) &&
 			   Objects.equals(pluginCode, pageModel.pluginCode) &&
-			   Objects.equals(template, pageModel.template);
+			   Objects.equals(template, pageModel.template) &&
+			   Objects.equals(type, pageModel.type) &&
+			   Objects.equals(locked, pageModel.locked);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(code, description, mainFrame, pluginCode, template);
+		int result = Objects.hash(code, description, mainFrame, pluginCode, template, type, locked);
 		result = 31 * result + Arrays.hashCode(configuration);
 		return result;
 	}

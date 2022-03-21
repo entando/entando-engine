@@ -55,6 +55,7 @@ class TestPageModelDAO extends BaseTestCase {
             PageModel extractedMockModel = models.get(testPageModelCode);
             assertNotNull(extractedMockModel);
             assertEquals(testPageModelCode, extractedMockModel.getCode());
+            assertEquals(mockModel.getType(), extractedMockModel.getType());
             assertTrue(extractedMockModel.getDescription().contains(testPageModelCode));
             assertEquals(3, extractedMockModel.getFrames().length);
             Widget[] defaultWidgets = extractedMockModel.getDefaultWidget();
@@ -169,6 +170,7 @@ class TestPageModelDAO extends BaseTestCase {
         Frame[] configuration = {frame0, frame1, frame2};
         model.setConfiguration(configuration);
         model.setTemplate("<strong>Freemarker template content</strong>");
+        model.setType(PageModelType.NT);
         return model;
     }
 
