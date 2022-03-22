@@ -265,7 +265,7 @@ class PageControllerTest extends AbstractControllerTest {
                 + "        }";
         PageDto mockResult = (PageDto) this.createMetadata(mockJsonResult, PageDto.class);
         Mockito.lenient().when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class), any(Boolean.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
                 .sessionAttr("user", user)
@@ -327,7 +327,7 @@ class PageControllerTest extends AbstractControllerTest {
     void shouldValidateDeleteOnlinePage() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class), any(Boolean.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getOnlinePage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "online_page")
@@ -348,7 +348,7 @@ class PageControllerTest extends AbstractControllerTest {
         Page page = new Page();
         page.setCode("page_with_children");
         page.addChildCode("child");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class), any(Boolean.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(page);
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "page_with_children")

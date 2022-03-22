@@ -73,13 +73,26 @@ public class PageAuthorizationService extends AbstractAuthorizationService<PageD
         return this.isAuth(user, pageCode, true);
     }
 
+    public boolean isAuthOnGroup(UserDetails user, String pageCode) {
+        IPage page = getPage(pageCode);
+        return this.getAuthorizationManager().isAuthOnGroup(user, page.getGroup());
+    }
+
     @Override
     public boolean isAuth(UserDetails user, String pageCode, boolean allowFreeGroup) {
+        IPage page = getPage(pageCode);
+        if (page.getCode().equals(page.getParentCode())) { // root
+            return true;
+        }
+        return this.isAuth(user, getPage(pageCode), allowFreeGroup);
+    }
+
+    private IPage getPage(String pageCode) {
         IPage page = this.getPageManager().getDraftPage(pageCode);
         if (page == null) {
             throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
         }
-        return this.isAuth(user, page, allowFreeGroup);
+        return page;
     }
 
     public boolean isAuth(UserDetails user, IPage page) {

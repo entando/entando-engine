@@ -133,7 +133,7 @@ public class PageConfigurationController {
             BindingResult bindingResult) {
         logger.debug("updating widget configuration in page {} and frame {}", pageCode, frameId);
 
-        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+        if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 
@@ -156,7 +156,7 @@ public class PageConfigurationController {
     @RequestMapping(value = "/pages/{pageCode}/widgets/{frameId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<Map, Map>> deletePageWidget(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @PathVariable String frameId, BindingResult bindingResult) {
         logger.debug("removing widget configuration in page {} and frame {}", pageCode, frameId);
-        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+        if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         this.validateFrameId(frameId, bindingResult);
@@ -176,7 +176,7 @@ public class PageConfigurationController {
     @RequestMapping(value = "/pages/{pageCode}/configuration/restore", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<PageConfigurationDto, Map>> updatePageConfiguration(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, BindingResult bindingResult) {
         logger.debug("restore configuration on page {}", pageCode);
-        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+        if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         PageConfigurationDto pageConfiguration = this.getPageService().restorePageConfiguration(pageCode);
@@ -189,7 +189,7 @@ public class PageConfigurationController {
     @RequestMapping(value = "/pages/{pageCode}/configuration/defaultWidgets", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<PageConfigurationDto>> applyDefaultWidgetsPageConfiguration(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, BindingResult bindingResult) {
         logger.debug("applying default widgets on page {}", pageCode);
-        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+        if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         PageConfigurationDto pageConfiguration = this.getPageService().applyDefaultWidgets(pageCode);

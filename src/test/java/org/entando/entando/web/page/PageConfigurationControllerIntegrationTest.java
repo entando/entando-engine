@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-import org.entando.entando.web.mockhelper.PageRequestMockHelper;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.model.WidgetConfigurationRequest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
@@ -44,12 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Widget;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Assertions;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -322,7 +323,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditFreePageWidgets(freeAccessManager, status().isOk());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, status().isOk());
     }
 
     @Test
@@ -332,14 +333,41 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditFreePageWidgets(customersManager, status().isForbidden());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, status().isForbidden());
     }
+    
+    @Test
+    void testWidgetOfAdminPageWithCustomersJoinGroupCannotBeEditedByCustomersManager() throws Exception {
 
-    private void testEditFreePageWidgets(UserDetails userDetails, ResultMatcher expected) throws Exception {
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        PageRequest pageRequest = getPageRequest("myAdminPage");
+        pageRequest.setOwnerGroup(Group.ADMINS_GROUP_NAME);
+        pageRequest.setJoinGroups(List.of("customers"));
+        
+        testEditPageWidgetPermissions(pageRequest, customersManager, status().isForbidden());
+    }
+    
+    @Test
+    void testWidgetOfFreePageWithCustomersJoinGroupCannotBeEditedByCustomersManager() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        PageRequest pageRequest = getPageRequest("myAdminPage");
+        pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
+        pageRequest.setJoinGroups(List.of("customers"));
+        
+        testEditPageWidgetPermissions(pageRequest, customersManager, status().isForbidden());
+    }
+    
+    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, ResultMatcher expected) throws Exception {
         String accessToken = mockOAuthInterceptor(userDetails);
 
-        String pageCode = "myFreePage";
-        PageRequest pageRequest = getPageRequest(pageCode);
+        String pageCode = pageRequest.getCode();
 
         try {
             this.pageService.addPage(pageRequest);

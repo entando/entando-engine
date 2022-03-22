@@ -18,7 +18,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -48,6 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,10 +72,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import org.springframework.util.LinkedMultiValueMap;
 
 /**
@@ -1663,33 +1664,74 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    void testFreePageCanBeEditedByFreeAccessManagers() throws Exception {
+    void testFreeAccessManagerCanEditFreePage() throws Exception {
 
         UserDetails freeAccessManager = new OAuth2TestUtils.UserBuilder("freeAccessManager", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditFreePage(freeAccessManager, status().isOk());
+        testPagePermissions(createPage("testFreePage", null, "homepage"), freeAccessManager, true, true);
     }
 
     @Test
-    void testFreePageCannotBeEditedByOtherManagers() throws Exception {
+    void testCustomersManagerCannotSeeOrEditFreePage() throws Exception {
 
         UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditFreePage(customersManager, status().isForbidden());
+        testPagePermissions(createPage("testFreePage", null, "homepage"), customersManager, false, false);
     }
 
-    private void testEditFreePage(UserDetails userDetails, ResultMatcher expected) throws Exception {
+    @Test
+    void testCustomersManagerCanViewButNotEditPageWithCustomersJoinGroup() throws Exception {
 
-        String pageCode = "testFreePage";
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        Page page = createPage("pageWithCustomerJoinGroup", null, "homepage", Group.ADMINS_GROUP_NAME);
+        page.setExtraGroups(Set.of("customers"));
+
+        testPagePermissions(page, customersManager, true, false);
+    }
+
+    @Test
+    void testCustomersManagerCannotSeeOrEditAdminPages() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        Page page = createPage("testAdminPage", null, "homepage");
+        page.setGroup(Group.ADMINS_GROUP_NAME);
+        testPagePermissions(page, customersManager, false, false);
+    }
+
+    private void testPagePermissions(Page page, UserDetails userDetails, boolean canRead, boolean canWrite) throws Exception {
+
+        ResultMatcher expectedRead = canRead ? status().isOk() : status().isForbidden();
+        ResultMatcher expectedWrite = canWrite ? status().isOk() : status().isForbidden();
+        
+        String pageCode = page.getCode();
+        String accessToken = mockOAuthInterceptor(userDetails);
 
         try {
-            this.pageManager.addPage(createPage(pageCode, null, "homepage"));
+            this.pageManager.addPage(page);
 
-            String accessToken = mockOAuthInterceptor(userDetails);
+            // get
+            mockMvc.perform(get("/pages/{pageCode}", pageCode)
+                    .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expectedRead);
+            
+            JsonPathResultMatchers pageInResult = jsonPath("$.payload[?(@.code=='" + pageCode +"')].code");
+            
+            // list
+            mockMvc.perform(get("/pages")
+                    .header("Authorization", "Bearer " + accessToken))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(canRead ? pageInResult.exists() : pageInResult.doesNotExist());
 
             // edit
             PageDto pageDto = this.pageService.getPage(pageCode, IPageService.STATUS_DRAFT);
@@ -1700,7 +1742,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(expected);
+            result.andExpect(expectedWrite);
 
             // set status
             PageStatusRequest statusRequest = new PageStatusRequest();
@@ -1710,7 +1752,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(statusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
 
             // move
             PagePositionRequest pagePositionRequest = new PagePositionRequest();
@@ -1722,7 +1764,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(pagePositionRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
 
             // set draft and delete
             statusRequest.setStatus("draft");
@@ -1730,14 +1772,39 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(statusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
 
             mockMvc.perform(delete("/pages/{code}", pageCode)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
         } finally {
             this.pageManager.deletePage(pageCode);
         }
+    }
+    
+    @Test
+    void testRootIsVisibleAlsoToNonAdminUser() throws Exception {
+        
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        
+        String accessToken = mockOAuthInterceptor(customersManager);
+
+        // get
+        mockMvc.perform(get("/pages/{pageCode}", "homepage")
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+
+        // search
+        mockMvc.perform(get("/pages/search")
+                        .param("sort", "code")
+                        .param("direction", "ASC")
+                        .param("pageCodeToken", "homepage")
+                        .param("page", "1").param("pageSize", "100")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload[?(@.code=='homepage')].code").exists());
     }
 
     /**

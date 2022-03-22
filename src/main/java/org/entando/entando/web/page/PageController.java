@@ -162,11 +162,12 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<PageDto, Map<String, String>>> getPage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
+    public ResponseEntity<RestResponse<PageDto, Map<String, String>>> getPage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode,
+            @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status, BindingResult bindingResult) {
         logger.debug("getting page {}", pageCode);
         Map<String, String> metadata = new HashMap<>();
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            return new ResponseEntity<>(new RestResponse<>(new PageDto(), metadata), HttpStatus.UNAUTHORIZED);
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         PageDto page = this.getPageService().getPage(pageCode, status);
         metadata.put("status", status);
@@ -213,7 +214,7 @@ public class PageController {
     public ResponseEntity<RestResponse<PageDto, Map<String, String>>> updatePage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @Valid @RequestBody PageRequest pageRequest, BindingResult bindingResult) {
         logger.debug("updating page {} with request {}", pageCode, pageRequest);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+        if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         //field validations
@@ -248,7 +249,7 @@ public class PageController {
             @Valid @RequestBody PageStatusRequest pageStatusRequest, BindingResult bindingResult) {
         logger.debug("changing status for page {} with request {}", pageCode, pageStatusRequest);
         Map<String, String> metadata = new HashMap<>();
-        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+        if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         //field validations
@@ -313,7 +314,7 @@ public class PageController {
         logger.debug("deleting {}", pageCode);
         DataBinder binder = new DataBinder(pageCode);
         BindingResult bindingResult = binder.getBindingResult();
-        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+        if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
         //field validations
@@ -353,7 +354,7 @@ public class PageController {
         }
         this.getPageValidator().validateMovePage(pageCode, bindingResult, pageRequest);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+        if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 
