@@ -16,9 +16,7 @@ package org.entando.entando.aps.system.services.page;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import com.agiletec.aps.system.services.group.Group;
@@ -29,6 +27,8 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,6 +57,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
@@ -176,15 +177,17 @@ class PageServiceTest {
         // Support lambda for running the tests
 
         BiPredicate<Pair<String, List<String>>, List<String>> forLinkingTo = (p, exp) -> {
-            List<PageDto> dtoPages = pageService
-                    .getPages("PP", p.getLeft(),
-                            (p.getRight() != null) ? new HashSet<>(p.getRight()) : null);
-
-            for (int i = 0; i < dtoPages.size(); i++) {
-                String es = (i < exp.size()) ? exp.get(i) : null;
-                assertThat(dtoPages.get(i).getCode()).isEqualTo(es);
+            try (MockedStatic<URLEncoder> urlEncoderMockedStatic = Mockito.mockStatic(URLEncoder.class)) {
+                urlEncoderMockedStatic.when(() -> URLEncoder.encode(anyString(), eq("UTF-8"))).thenReturn("token");
+                List<PageDto> dtoPages = pageService
+                        .getPages("PP", p.getLeft(),
+                                (p.getRight() != null) ? new HashSet<>(p.getRight()) : null);
+                for (int i = 0; i < dtoPages.size(); i++) {
+                    String es = (i < exp.size()) ? exp.get(i) : null;
+                    assertThat(dtoPages.get(i).getCode()).isEqualTo(es);
+                }
+                assertThat(dtoPages.size()).isEqualTo(exp.size());
             }
-            assertThat(dtoPages.size()).isEqualTo(exp.size());
             return true;
         };
 
@@ -232,7 +235,7 @@ class PageServiceTest {
         forLinkingTo.test(Pair.of(O, pSubCase5), Arrays.asList("FR","FR#"));
         forLinkingTo.test(Pair.of(O, pSubCase6), Arrays.asList("FR","FR#"));
         forLinkingTo.test(Pair.of(O, pSubCase7), Arrays.asList("FR","G1","FR#","G1#"));
-        
+
         // PARENT OWNER: GROUP2
         O = A_GROUP_THAT_IS_NOT_PRESENT;
         forLinkingTo.test(Pair.of(O, pSubCase1), Arrays.asList("FR","FR#"));
@@ -275,7 +278,7 @@ class PageServiceTest {
 
     @Test
     void getPageUsageDetailsWithInvalidCodeShouldThrowResourceNotFoundException() {
-        
+
         PageDto pageDto = PageMockHelper.mockPageDto();
         mockForSinglePage(PageMockHelper.mockTestPage(PageMockHelper.PAGE_CODE), pageDto, PageMockHelper.UTILIZERS);
 
