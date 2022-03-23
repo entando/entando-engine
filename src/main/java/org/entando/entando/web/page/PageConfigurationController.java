@@ -77,7 +77,7 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<PageConfigurationDto, Map>> getPageConfiguration(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
+    public ResponseEntity<RestResponse<PageConfigurationDto, Map<String, String>>> getPageConfiguration(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
         logger.debug("requested {} configuration", pageCode);
         PageConfigurationDto pageConfiguration = this.getPageService().getPageConfiguration(pageCode, status);
         Map<String, String> metadata = new HashMap<>();
@@ -87,7 +87,7 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<WidgetConfigurationDto>, Map>> getPageWidgets(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
+    public ResponseEntity<RestResponse<List<WidgetConfigurationDto>, Map<String, String>>> getPageWidgets(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
         logger.debug("requested {} widgets detail", pageCode);
         PageConfigurationDto pageConfiguration = this.getPageService().getPageConfiguration(pageCode, status);
         Map<String, String> metadata = new HashMap<>();
@@ -102,7 +102,7 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets/{frameId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map>> getPageWidget(@PathVariable String pageCode,
+    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map<String, String>>> getPageWidget(@PathVariable String pageCode,
             @PathVariable String frameId,
             @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status
     ) {
@@ -125,7 +125,7 @@ public class PageConfigurationController {
     @ActivityStreamAuditable
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets/{frameId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map>> updatePageWidget(
+    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map<String, String>>> updatePageWidget(
             @ModelAttribute("user") UserDetails user,
             @PathVariable String pageCode,
             @PathVariable String frameId,
@@ -154,7 +154,7 @@ public class PageConfigurationController {
     @ActivityStreamAuditable
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets/{frameId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<Map, Map>> deletePageWidget(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @PathVariable String frameId, BindingResult bindingResult) {
+    public ResponseEntity<RestResponse<Map<String, String>, Map<String, String>>> deletePageWidget(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @PathVariable String frameId, BindingResult bindingResult) {
         logger.debug("removing widget configuration in page {} and frame {}", pageCode, frameId);
         if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
@@ -174,7 +174,7 @@ public class PageConfigurationController {
     @ActivityStreamAuditable
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/configuration/restore", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<PageConfigurationDto, Map>> updatePageConfiguration(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, BindingResult bindingResult) {
+    public ResponseEntity<RestResponse<PageConfigurationDto, Map<String, String>>> updatePageConfiguration(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, BindingResult bindingResult) {
         logger.debug("restore configuration on page {}", pageCode);
         if (!this.authorizationService.isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
