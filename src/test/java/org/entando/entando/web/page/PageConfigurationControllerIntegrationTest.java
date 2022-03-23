@@ -317,27 +317,27 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
     }
 
     @Test
-    void testWidgetOfFreeAccessPageCanBeEditedByFreeAccessManager() throws Exception {
+    void testWidgetOfFreeAccessPageCanBeSeenAndEditedByFreeAccessManager() throws Exception {
 
         UserDetails freeAccessManager = new OAuth2TestUtils.UserBuilder("freeAccessManager", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, status().isOk());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, status().isOk(), status().isOk());
     }
 
     @Test
-    void testWidgetOfFreeAccessPageCannotBeEditedByOtherManagers() throws Exception {
+    void testWidgetOfFreeAccessPageCannotBeSeenOrEditedByOtherManagers() throws Exception {
 
         UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, status().isForbidden());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, status().isForbidden(), status().isForbidden());
     }
     
     @Test
-    void testWidgetOfAdminPageWithCustomersJoinGroupCannotBeEditedByCustomersManager() throws Exception {
+    void testWidgetOfAdminPageWithCustomersJoinGroupCanBeSeenButNotEditedByCustomersManager() throws Exception {
 
         UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
@@ -347,11 +347,11 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         pageRequest.setOwnerGroup(Group.ADMINS_GROUP_NAME);
         pageRequest.setJoinGroups(List.of("customers"));
         
-        testEditPageWidgetPermissions(pageRequest, customersManager, status().isForbidden());
+        testEditPageWidgetPermissions(pageRequest, customersManager, status().isOk(), status().isForbidden());
     }
     
     @Test
-    void testWidgetOfFreePageWithCustomersJoinGroupCannotBeEditedByCustomersManager() throws Exception {
+    void testWidgetOfFreePageWithCustomersJoinGroupCanBeSeenButNotEditedByCustomersManager() throws Exception {
 
         UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
@@ -361,10 +361,10 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
         pageRequest.setJoinGroups(List.of("customers"));
         
-        testEditPageWidgetPermissions(pageRequest, customersManager, status().isForbidden());
+        testEditPageWidgetPermissions(pageRequest, customersManager, status().isOk(), status().isForbidden());
     }
     
-    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, ResultMatcher expected) throws Exception {
+    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, ResultMatcher expectedRead, ResultMatcher expectedWrite) throws Exception {
         String accessToken = mockOAuthInterceptor(userDetails);
 
         String pageCode = pageRequest.getCode();
@@ -373,23 +373,34 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             this.pageService.addPage(pageRequest);
             this.pageManager.setPageOnline(pageCode);
 
+            // test read configuration
+            mockMvc.perform(get("/pages/{pageCode}/configuration", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead);
+            mockMvc.perform(get("/pages/{pageCode}/widgets", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead);
+            mockMvc.perform(get("/pages/{pageCode}/widgets/{frameId}", pageCode, 0)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead);
+
             // test default widgets
             mockMvc.perform(put("/pages/{pageCode}/configuration/defaultWidgets", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
 
             // test single frame widget
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
             wcr.setCode("login_form");
-            this.executePutPageFrameWidget(pageCode, 0, wcr, accessToken, expected);
+            this.executePutPageFrameWidget(pageCode, 0, wcr, accessToken, expectedWrite);
 
             // test delete widget
-            this.executeDeletePageFrameWidget(pageCode, 0, accessToken, expected);
+            this.executeDeletePageFrameWidget(pageCode, 0, accessToken, expectedWrite);
 
             // test restore
             mockMvc.perform(put("/pages/{pageCode}/configuration/restore", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expected);
+                    .andExpect(expectedWrite);
         } finally {
             pageManager.deletePage(pageCode);
         }

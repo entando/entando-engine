@@ -77,8 +77,15 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<PageConfigurationDto, Map<String, String>>> getPageConfiguration(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
+    public ResponseEntity<RestResponse<PageConfigurationDto, Map<String, String>>> getPageConfiguration(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String pageCode,
+            @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status,
+            BindingResult bindingResult) {
         logger.debug("requested {} configuration", pageCode);
+        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+        }
         PageConfigurationDto pageConfiguration = this.getPageService().getPageConfiguration(pageCode, status);
         Map<String, String> metadata = new HashMap<>();
         metadata.put("status", status);
@@ -87,8 +94,15 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<List<WidgetConfigurationDto>, Map<String, String>>> getPageWidgets(@PathVariable String pageCode, @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
+    public ResponseEntity<RestResponse<List<WidgetConfigurationDto>, Map<String, String>>> getPageWidgets(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String pageCode,
+            @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status,
+            BindingResult bindingResult) {
         logger.debug("requested {} widgets detail", pageCode);
+        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+        }
         PageConfigurationDto pageConfiguration = this.getPageService().getPageConfiguration(pageCode, status);
         Map<String, String> metadata = new HashMap<>();
         metadata.put("status", status);
@@ -102,7 +116,9 @@ public class PageConfigurationController {
 
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}/widgets/{frameId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map<String, String>>> getPageWidget(@PathVariable String pageCode,
+    public ResponseEntity<RestResponse<WidgetConfigurationDto, Map<String, String>>> getPageWidget(
+            @ModelAttribute("user") UserDetails user,
+            @PathVariable String pageCode,
             @PathVariable String frameId,
             @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status
     ) {
@@ -113,6 +129,9 @@ public class PageConfigurationController {
 
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
+        }
+        if (!this.authorizationService.isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 
         WidgetConfigurationDto widgetConfiguration = this.getPageService().getWidgetConfiguration(pageCode, Integer.valueOf(frameId), status);
