@@ -163,11 +163,11 @@ public class PageController {
     @RestAccessControl(permission = Permission.MANAGE_PAGES)
     @RequestMapping(value = "/pages/{pageCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse<PageDto, Map<String, String>>> getPage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode,
-            @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status, BindingResult bindingResult) {
+            @RequestParam(value = "status", required = false, defaultValue = IPageService.STATUS_DRAFT) String status) {
         logger.debug("getting page {}", pageCode);
         Map<String, String> metadata = new HashMap<>();
         if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
         PageDto page = this.getPageService().getPage(pageCode, status);
         metadata.put("status", status);
@@ -191,7 +191,7 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/pages/{pageCode}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, PageSearchRequest searchRequest, BindingResult bindingResult) {
+    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, PageSearchRequest searchRequest) {
 
         logger.trace("get {} usage details by code {}", COMPONENT_ID, pageCode);
 
@@ -199,7 +199,7 @@ public class PageController {
         searchRequest.setFilters(new Filter[0]);
 
         if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
 
         PagedMetadata<ComponentUsageEntity> result = pageService.getComponentUsageDetails(pageCode, searchRequest);
@@ -215,7 +215,7 @@ public class PageController {
         logger.debug("updating page {} with request {}", pageCode, pageRequest);
 
         if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
         //field validations
         if (bindingResult.hasErrors()) {
@@ -250,7 +250,7 @@ public class PageController {
         logger.debug("changing status for page {} with request {}", pageCode, pageStatusRequest);
         Map<String, String> metadata = new HashMap<>();
         if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
         //field validations
         if (bindingResult.hasErrors()) {
@@ -283,7 +283,7 @@ public class PageController {
         validatePagePlacement(pageRequest, bindingResult);
 
         if (!this.getAuthorizationService().getAuthorizationManager().isAuthOnGroup(user, pageRequest.getOwnerGroup())) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageRequest.getCode());
+            throw new ResourcePermissionsException(user.getUsername(), pageRequest.getCode());
         }
 
         PageDto dto = this.getPageService().addPage(pageRequest);
@@ -319,7 +319,7 @@ public class PageController {
         DataBinder binder = new DataBinder(pageCode);
         BindingResult bindingResult = binder.getBindingResult();
         if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
         //field validations
         if (bindingResult.hasErrors()) {
@@ -359,7 +359,7 @@ public class PageController {
         this.getPageValidator().validateMovePage(pageCode, bindingResult, pageRequest);
 
         if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
 
         PageDto page = this.getPageService().movePage(pageCode, pageRequest);
@@ -401,7 +401,7 @@ public class PageController {
         logger.debug("clone page {}", pageCode);
 
         if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
-            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
 
         if (bindingResult.hasErrors()) {

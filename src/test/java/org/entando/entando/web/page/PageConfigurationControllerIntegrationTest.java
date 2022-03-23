@@ -323,7 +323,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, status().isOk(), status().isOk());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, true, true);
     }
 
     @Test
@@ -333,7 +333,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
                 .build();
 
-        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, status().isForbidden(), status().isForbidden());
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, false, false);
     }
     
     @Test
@@ -347,7 +347,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         pageRequest.setOwnerGroup(Group.ADMINS_GROUP_NAME);
         pageRequest.setJoinGroups(List.of("customers"));
         
-        testEditPageWidgetPermissions(pageRequest, customersManager, status().isOk(), status().isForbidden());
+        testEditPageWidgetPermissions(pageRequest, customersManager, true, false);
     }
     
     @Test
@@ -361,10 +361,14 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
         pageRequest.setJoinGroups(List.of("customers"));
         
-        testEditPageWidgetPermissions(pageRequest, customersManager, status().isOk(), status().isForbidden());
+        testEditPageWidgetPermissions(pageRequest, customersManager, true, false);
     }
     
-    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, ResultMatcher expectedRead, ResultMatcher expectedWrite) throws Exception {
+    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, boolean canRead, boolean canWrite) throws Exception {
+        
+        ResultMatcher expectedRead = canRead ? status().isOk() : status().isForbidden();
+        ResultMatcher expectedWrite = canWrite ? status().isOk() : status().isForbidden();
+        
         String accessToken = mockOAuthInterceptor(userDetails);
 
         String pageCode = pageRequest.getCode();
@@ -376,18 +380,22 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             // test read configuration
             mockMvc.perform(get("/pages/{pageCode}/configuration", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expectedRead);
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
             mockMvc.perform(get("/pages/{pageCode}/widgets", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expectedRead);
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
             mockMvc.perform(get("/pages/{pageCode}/widgets/{frameId}", pageCode, 0)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expectedRead);
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
 
             // test default widgets
             mockMvc.perform(put("/pages/{pageCode}/configuration/defaultWidgets", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // test single frame widget
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
@@ -400,7 +408,8 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             // test restore
             mockMvc.perform(put("/pages/{pageCode}/configuration/restore", pageCode)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
         } finally {
             pageManager.deletePage(pageCode);
         }

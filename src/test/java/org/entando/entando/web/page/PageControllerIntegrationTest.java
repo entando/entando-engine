@@ -1752,7 +1752,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             // get
             mockMvc.perform(get("/pages/{pageCode}", pageCode)
                     .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedRead);
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
             
             JsonPathResultMatchers pageInResult = jsonPath("$.payload[?(@.code=='" + pageCode +"')].code");
 
@@ -1770,7 +1771,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // set status
             PageStatusRequest statusRequest = new PageStatusRequest();
@@ -1780,7 +1782,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(statusRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // move
             PagePositionRequest pagePositionRequest = new PagePositionRequest();
@@ -1792,7 +1795,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(pagePositionRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // clone
             PageCloneRequest cloneRequest = new PageCloneRequest();
@@ -1803,7 +1807,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(cloneRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // update using patch
             String patchPayload = new JsonPatchBuilder()
@@ -1813,7 +1818,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(patchPayload)
                             .contentType(RestMediaTypes.JSON_PATCH_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             // set draft and delete
             statusRequest.setStatus("draft");
@@ -1825,7 +1831,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             mockMvc.perform(delete("/pages/{code}", pageCode)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
 
             this.pageManager.deletePage(pageCode);
 
@@ -1834,7 +1841,8 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
-                    .andExpect(expectedWrite);
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
         } finally {
             this.pageManager.deletePage(pageCode);
             this.pageManager.deletePage(pageCode + "_cloned");
