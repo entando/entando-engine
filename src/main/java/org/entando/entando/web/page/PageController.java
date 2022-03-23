@@ -191,7 +191,7 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/pages/{pageCode}/usage/details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, PageSearchRequest searchRequest) {
+    public ResponseEntity<PagedRestResponse<ComponentUsageEntity>> getComponentUsageDetails(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, PageSearchRequest searchRequest, BindingResult bindingResult) {
 
         logger.trace("get {} usage details by code {}", COMPONENT_ID, pageCode);
 
@@ -199,7 +199,7 @@ public class PageController {
         searchRequest.setFilters(new Filter[0]);
 
         if (!this.getAuthorizationService().isAuth(user, pageCode)) {
-            return new ResponseEntity<>(new PagedRestResponse<>(new PagedMetadata<>()), HttpStatus.UNAUTHORIZED);
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 
         PagedMetadata<ComponentUsageEntity> result = pageService.getComponentUsageDetails(pageCode, searchRequest);
@@ -400,7 +400,7 @@ public class PageController {
             BindingResult bindingResult) {
         logger.debug("clone page {}", pageCode);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
+        if (!this.getAuthorizationService().isAuthOnGroup(user, pageCode)) {
             throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageCode);
         }
 

@@ -1585,7 +1585,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
 
     @Test
-    void testPageUsageDetailsWithoutPermissionWillResultIn401() throws Exception {
+    void testPageUsageDetailsWithoutPermissionWillResultIn403() throws Exception {
 
         UserDetails admin = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String adminAccessToken = mockOAuthInterceptor(admin);
@@ -1605,7 +1605,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .header("Authorization", "Bearer " + userAccessToken));
 
 
-            resultActions.andExpect(status().isUnauthorized());
+            resultActions.andExpect(status().isForbidden());
 
         } catch (Exception e) {
             Assertions.fail();
@@ -1794,6 +1794,27 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .header("Authorization", "Bearer " + accessToken))
                     .andExpect(expectedWrite);
 
+            // clone
+            PageCloneRequest cloneRequest = new PageCloneRequest();
+            cloneRequest.setParentCode(page.getParentCode());
+            cloneRequest.setNewPageCode(pageCode + "_cloned");
+            cloneRequest.setTitles(pageRequest.getTitles());
+            mockMvc.perform(post("/pages/{code}/clone", pageCode)
+                            .content(mapper.writeValueAsString(cloneRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expectedWrite);
+
+            // update using patch
+            String patchPayload = new JsonPatchBuilder()
+                    .withReplace("/charset", "utf8")
+                    .getJsonPatchAsString();
+            mockMvc.perform(patch("/pages/{code}", pageCode)
+                            .content(patchPayload)
+                            .contentType(RestMediaTypes.JSON_PATCH_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expectedWrite);
+
             // set draft and delete
             statusRequest.setStatus("draft");
             mockMvc.perform(put("/pages/{code}/status", pageCode)
@@ -1816,6 +1837,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(expectedWrite);
         } finally {
             this.pageManager.deletePage(pageCode);
+            this.pageManager.deletePage(pageCode + "_cloned");
         }
     }
     
