@@ -76,7 +76,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import org.springframework.util.LinkedMultiValueMap;
 
 /**
@@ -1708,6 +1707,37 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         testPagePermissions(page, customersManager, false, false);
     }
 
+    @Test
+    void testCustomersManagerCannotEditRootPage() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        String accessToken = mockOAuthInterceptor(customersManager);
+        String pageCode = "homepage";
+
+        // edit
+        PageDto pageDto = this.pageService.getPage(pageCode, IPageService.STATUS_DRAFT);
+        PageRequest pageRequest = this.pageDtoToRequestConverter.convert(pageDto);
+
+        mockMvc.perform(put("/pages/{code}", pageCode)
+                        .content(mapper.writeValueAsString(pageRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isForbidden());
+
+        // set status
+        PageStatusRequest statusRequest = new PageStatusRequest();
+        statusRequest.setStatus("published");
+
+        mockMvc.perform(put("/pages/{code}/status", pageCode)
+                        .content(mapper.writeValueAsString(statusRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isForbidden());
+    }
+
     private void testPagePermissions(Page page, UserDetails userDetails, boolean canRead, boolean canWrite) throws Exception {
 
         ResultMatcher expectedRead = canRead ? status().isOk() : status().isForbidden();
@@ -1725,11 +1755,10 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(expectedRead);
             
             JsonPathResultMatchers pageInResult = jsonPath("$.payload[?(@.code=='" + pageCode +"')].code");
-            
+
             // list
             mockMvc.perform(get("/pages")
                     .header("Authorization", "Bearer " + accessToken))
-                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(canRead ? pageInResult.exists() : pageInResult.doesNotExist());
 
@@ -1737,12 +1766,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             PageDto pageDto = this.pageService.getPage(pageCode, IPageService.STATUS_DRAFT);
             PageRequest pageRequest = this.pageDtoToRequestConverter.convert(pageDto);
 
-            ResultActions result = mockMvc
-                    .perform(put("/pages/{code}", pageCode)
+            mockMvc.perform(put("/pages/{code}", pageCode)
                             .content(mapper.writeValueAsString(pageRequest))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(expectedWrite);
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expectedWrite);
 
             // set status
             PageStatusRequest statusRequest = new PageStatusRequest();
@@ -1775,6 +1803,15 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(expectedWrite);
 
             mockMvc.perform(delete("/pages/{code}", pageCode)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expectedWrite);
+
+            this.pageManager.deletePage(pageCode);
+
+            // create
+            mockMvc.perform(post("/pages")
+                            .content(mapper.writeValueAsString(pageRequest))
+                            .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken))
                     .andExpect(expectedWrite);
         } finally {

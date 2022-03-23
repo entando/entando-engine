@@ -282,6 +282,10 @@ public class PageController {
 
         validatePagePlacement(pageRequest, bindingResult);
 
+        if (!this.getAuthorizationService().getAuthorizationManager().isAuthOnGroup(user, pageRequest.getOwnerGroup())) {
+            throw new ResourcePermissionsException(bindingResult, user.getUsername(), pageRequest.getCode());
+        }
+
         PageDto dto = this.getPageService().addPage(pageRequest);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
