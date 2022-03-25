@@ -176,8 +176,12 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/pages/{pageCode}/usage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@PathVariable String pageCode) {
+    public ResponseEntity<SimpleRestResponse<ComponentUsage>> getComponentUsage(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode) {
         logger.trace("get {} usage by code {}", COMPONENT_ID, pageCode);
+
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
+        }
 
         ComponentUsage usage = ComponentUsage.builder()
                 .type(COMPONENT_ID)
@@ -198,7 +202,7 @@ public class PageController {
         // clear filters
         searchRequest.setFilters(new Filter[0]);
 
-        if (!this.getAuthorizationService().isAuth(user, pageCode)) {
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
             throw new ResourcePermissionsException(user.getUsername(), pageCode);
         }
 
@@ -368,8 +372,11 @@ public class PageController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/pages/{pageCode}/references/{manager}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedRestResponse<?>> getPageReferences(@PathVariable String pageCode, @PathVariable String manager, RestListRequest requestList) {
+    public ResponseEntity<PagedRestResponse<?>> getPageReferences(@ModelAttribute("user") UserDetails user, @PathVariable String pageCode, @PathVariable String manager, RestListRequest requestList) {
         logger.debug("loading references for page {} and manager {}", pageCode, manager);
+        if (!this.getAuthorizationService().isAuth(user, pageCode, false)) {
+            throw new ResourcePermissionsException(user.getUsername(), pageCode);
+        }
         PagedMetadata<?> result = this.getPageService().getPageReferences(pageCode, manager, requestList);
         return new ResponseEntity<>(new PagedRestResponse<>(result), HttpStatus.OK);
     }

@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.entando.entando.aps.system.services.page.IPageService;
+import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
 import org.entando.entando.aps.system.services.page.model.PageDto;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
@@ -70,9 +71,15 @@ import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.rest.webmvc.RestMediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
@@ -81,6 +88,7 @@ import org.springframework.util.LinkedMultiValueMap;
 /**
  * @author paddeo
  */
+@ActiveProfiles("pageControllerIntegrationTest")
 class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
@@ -97,6 +105,21 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private PageDtoToRequestConverter pageDtoToRequestConverter;
+
+    @Configuration
+    @Profile("pageControllerIntegrationTest")
+    static class PageControllerTestConfiguration {
+
+        /**
+         * Mocking a PageServiceUtilizer (needed for testing the getPageReferences() endpoint)
+         */
+        @Bean
+        public PageServiceUtilizer jacmsContentManager() {
+            PageServiceUtilizer jacmsContentManager = Mockito.mock(PageServiceUtilizer.class);
+            Mockito.when(jacmsContentManager.getManagerName()).thenReturn("jacmsContentManager");
+            return jacmsContentManager;
+        }
+    }
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -144,12 +167,12 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             result.andExpect(jsonPath("$.payload[7].onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload[7].titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload[7].titles.en", is("Title EN")));
-            
+
             IPage extracted = this.pageManager.getDraftPage(newPageCode);
             extracted.setTitle("it", "DRAFT title IT");
             extracted.setTitle("en", "DRAFT title EN");
             this.pageManager.updatePage(extracted);
-            
+
             result = mockMvc
                 .perform(get("/pages")
                         .header("Authorization", "Bearer " + accessToken));
@@ -176,7 +199,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload.size()", is(4)));
     }
-    
+
     @Test
     void testPageSearchByCode() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
@@ -295,12 +318,12 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             result.andExpect(jsonPath("$.payload.onlineInstance", is(false)));
             result.andExpect(jsonPath("$.payload.titles.it", is("Title IT")));
             result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
-            
+
             IPage extracted = this.pageManager.getDraftPage(newPageCode);
             extracted.setTitle("it", "DRAFT title IT");
             extracted.setTitle("en", "DRAFT title EN");
             this.pageManager.updatePage(extracted);
-            
+
             result = mockMvc
                 .perform(get("/pages/{code}", newPageCode)
                         .header("Authorization", "Bearer " + accessToken));
@@ -1742,7 +1765,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
         ResultMatcher expectedRead = canRead ? status().isOk() : status().isForbidden();
         ResultMatcher expectedWrite = canWrite ? status().isOk() : status().isForbidden();
-        
+
         String pageCode = page.getCode();
         String accessToken = mockOAuthInterceptor(userDetails);
 
@@ -1754,7 +1777,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .header("Authorization", "Bearer " + accessToken))
                     .andExpect(expectedRead)
                     .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
-            
+
             JsonPathResultMatchers pageInResult = jsonPath("$.payload[?(@.code=='" + pageCode +"')].code");
 
             // list
@@ -1848,14 +1871,14 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             this.pageManager.deletePage(pageCode + "_cloned");
         }
     }
-    
+
     @Test
     void testRootIsVisibleAlsoToNonAdminUser() throws Exception {
-        
+
         UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
                 .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
                 .build();
-        
+
         String accessToken = mockOAuthInterceptor(customersManager);
 
         // get
@@ -1872,6 +1895,75 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload[?(@.code=='homepage')].code").exists());
+    }
+
+    @Test
+    void testCustomersSuperuserCanSeeCustomerPageReferences() throws Exception {
+
+        UserDetails customersSuperuser = new OAuth2TestUtils.UserBuilder("customersSuperuser", "0x24")
+                .withAuthorization("customers", "managePages", Permission.SUPERUSER)
+                .build();
+
+        Page page = createPage("customerPage", null, "homepage", "customers");
+        testPagePermissionsForSuperuserEndpoints(page, customersSuperuser, status().isOk());
+    }
+
+    @Test
+    void testCustomersSuperuserCanSeeAdminPageWithCustomersJoinGroupReferences() throws Exception {
+
+        UserDetails customersSuperuser = new OAuth2TestUtils.UserBuilder("customersSuperuser", "0x24")
+                .withAuthorization("customers", "managePages", Permission.SUPERUSER)
+                .build();
+
+        Page page = createPage("adminPage", null, "homepage", Group.ADMINS_GROUP_NAME);
+        page.setExtraGroups(Set.of("customers"));
+        testPagePermissionsForSuperuserEndpoints(page, customersSuperuser, status().isOk());
+    }
+
+    @Test
+    void testCustomersSuperuserCannotSeeFreeAccessPageReferences() throws Exception {
+
+        UserDetails customersSuperuser = new OAuth2TestUtils.UserBuilder("customersSuperuser", "0x24")
+                .withAuthorization("customers", "managePages", Permission.SUPERUSER)
+                .build();
+
+        Page page = createPage("adminPage", null, "homepage", Group.ADMINS_GROUP_NAME);
+        testPagePermissionsForSuperuserEndpoints(page, customersSuperuser, status().isForbidden());
+    }
+
+    @Test
+    void testCustomersSuperuserCannotSeeAdminPageReferences() throws Exception {
+
+        UserDetails customersSuperuser = new OAuth2TestUtils.UserBuilder("customersSuperuser", "0x24")
+                .withAuthorization("customers", "managePages", Permission.SUPERUSER)
+                .build();
+
+        Page page = createPage("adminPage", null, "homepage", Group.ADMINS_GROUP_NAME);
+        testPagePermissionsForSuperuserEndpoints(page, customersSuperuser, status().isForbidden());
+    }
+
+    private void testPagePermissionsForSuperuserEndpoints(Page page, UserDetails userDetails, ResultMatcher expected) throws Exception {
+
+        String pageCode = page.getCode();
+        String accessToken = mockOAuthInterceptor(userDetails);
+
+        try {
+            this.pageManager.addPage(page);
+
+            mockMvc.perform(get("/pages/{pageCode}/usage", pageCode)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            mockMvc.perform(get("/pages/{pageCode}/usage/details", pageCode)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+
+            mockMvc.perform(get("/pages/{pageCode}/references/jacmsContentManager", pageCode)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(expected);
+        } finally {
+            this.pageManager.deletePage(pageCode);
+        }
     }
 
     /**
