@@ -15,6 +15,7 @@ package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.List;
 
+import java.util.regex.Pattern;
 import org.jdom.CDATA;
 import org.jdom.Element;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -67,7 +68,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
 
     protected void initItems() {
         if (null != this.getStaticItems() && this.getStaticItems().trim().length() > 0) {
-            this.setItems(this.getStaticItems().split(this.getCustomSeparator()));
+            this.setItems(this.getStaticItems().split(Pattern.quote(this.getCustomSeparator())));
         }
         if (null != this.getExtractorBeanName()) {
             try {
