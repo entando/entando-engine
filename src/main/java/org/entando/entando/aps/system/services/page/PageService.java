@@ -31,6 +31,9 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
@@ -222,7 +226,12 @@ public class PageService implements IComponentExistsService, IPageService,
                                     childD.getGroup(), childD.getExtraGroups(),
                                     forLinkingToOwnerGroup, forLinkingToExtraGroups)
                     ) {
-                        res.add(dtoBuilder.convert(childD));
+                        PageDto pageDto = dtoBuilder.convert(childD);
+                        String pageCode = pageDto.getCode();
+                        String token = this.getPageTokenManager().encrypt(pageCode);
+                        String urlToken = getUrlToken(token);
+                        pageDto.setToken(urlToken);
+                        res.add(pageDto);
                     }
                 })));
         return res;
@@ -239,11 +248,21 @@ public class PageService implements IComponentExistsService, IPageService,
             bindingResult.reject(errorCode, new String[]{pageCode, status}, "page.NotFound");
             throw new ResourceNotFoundException(bindingResult);
         }
-        String token = this.getPageTokenManager().encrypt(pageCode);
         PageDto pageDto = this.getDtoBuilder().convert(page);
-        pageDto.setToken(token);
+        String token = this.getPageTokenManager().encrypt(pageCode);
+        String urlToken = getUrlToken(token);
+        pageDto.setToken(urlToken);
         pageDto.setReferences(this.getReferencesInfo(page));
         return pageDto;
+    }
+
+    private String getUrlToken(String token) {
+        try {
+            return URLEncoder.encode(token, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Error encoding token page", e);
+            throw new RestServerError("error encoding token page", e);
+        }
     }
 
     public boolean exists(String pageCode, String status) {
@@ -771,7 +790,7 @@ public class PageService implements IComponentExistsService, IPageService,
         try {
             List<String> groups = new ArrayList<>();
             groups.add(Group.FREE_GROUP_NAME);
-            List<IPage> rawPages = this.getPageManager().searchOnlinePages(null, null,groups);
+            List<IPage> rawPages = this.getPageManager().searchOnlinePages(null, null, groups);
             List<PageDto> pages = this.getDtoBuilder().convert(rawPages);
             return pageSearchMapper.toPageSearchDto(request, pages);
         } catch (EntException ex) {
@@ -932,6 +951,6 @@ public class PageService implements IComponentExistsService, IPageService,
         if (result == null) {
             result = getPageManager().getOnlinePage(pageCode);
         }
-        return (Page)result;
+        return (Page) result;
     }
 }
