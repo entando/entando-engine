@@ -33,6 +33,10 @@ public class ResourcePermissionsException extends RuntimeException {
         this.resource = resource;
     }
 
+    public ResourcePermissionsException(String username, String resource) {
+        this(null, username, resource);
+    }
+
     public BindingResult getBindingResult() {
         return bindingResult;
     }
