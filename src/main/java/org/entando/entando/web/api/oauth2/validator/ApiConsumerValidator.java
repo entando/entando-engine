@@ -43,7 +43,6 @@ public class ApiConsumerValidator extends AbstractPaginationValidator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        
         if (target instanceof ApiConsumer) {
             ApiConsumer consumer = (ApiConsumer) target;
             validateGrantTypes(consumer.getAuthorizedGrantTypes(), errors);
