@@ -43,3 +43,6 @@ ignore:
   SNYK-JAVA-COMFASTERXMLJACKSONCORE-2421244:
     - '*':
         reason: '.'
+  SNYK-JAVA-ORGSPRINGFRAMEWORK-2434828:
+    - '*':
+        reason: '.'
