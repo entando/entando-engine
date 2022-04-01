@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import java.util.regex.Pattern;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.common.entity.model.attribute.util.EnumeratorMapAttributeItemsExtractor;
@@ -89,7 +90,7 @@ public class EnumeratorMapAttribute extends EnumeratorAttribute {
     private SelectItem[] extractStaticItems() {
         List<SelectItem> items = new ArrayList<SelectItem>();
         if (!StringUtils.isEmpty(this.getStaticItems())) {
-            String[] entries = this.getStaticItems().split(this.getCustomSeparator());
+            String[] entries = this.getStaticItems().split(Pattern.quote(this.getCustomSeparator()));
             for (String entry : entries) {
                 if (!StringUtils.isEmpty(entry) && entry.contains(DEFAULT_KEY_VALUE_SEPARATOR)) {
                     String[] keyValue = entry.split(DEFAULT_KEY_VALUE_SEPARATOR);
