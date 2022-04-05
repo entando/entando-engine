@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.page.PageServiceUtilizer;
 import org.entando.entando.aps.system.services.page.model.PageDto;
@@ -71,7 +70,6 @@ import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -235,12 +233,12 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
         result = mockMvc
                 .perform(get("/pages/search")
                         .param("pageSize", "20")
-                        .param("title", "pagina")
+                        .param("title", "iniziale")
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andDo(resultPrint());
-        result.andExpect(jsonPath("$.metaData.totalItems", is(12)));
-        result.andExpect(jsonPath("$.payload[0].code", is("administrators_page")));
+        result.andExpect(jsonPath("$.metaData.totalItems", is(1)));
+        result.andExpect(jsonPath("$.payload[0].code", is("homepage")));
 
         result = mockMvc
                 .perform(get("/pages/search")
