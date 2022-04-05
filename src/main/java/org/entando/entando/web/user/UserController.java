@@ -40,6 +40,7 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
+import org.entando.entando.web.user.model.PasswordRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
 import org.entando.entando.web.user.model.UserPasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
@@ -54,6 +55,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -153,7 +155,7 @@ public class UserController {
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{username:.+}/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserDto>> updateUserPassword(@PathVariable String username, @Valid @RequestBody UserPasswordRequest passwordRequest, BindingResult bindingResult) {
-        logger.debug("changing pasword for user {} with request {}", username, passwordRequest);
+        logger.debug("changing password for user {}", username);
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -280,4 +282,16 @@ public class UserController {
         return new ResponseEntity<>(new SimpleRestResponse<>(groups), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/myPassword", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody PasswordRequest passwordRequest, BindingResult bindingResult, HttpServletRequest request) {
+
+        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);
+
+        UserPasswordRequest userPasswordRequest = new UserPasswordRequest();
+        userPasswordRequest.setUsername(userDetails.getUsername());
+        userPasswordRequest.setOldPassword(passwordRequest.getOldPassword());
+        userPasswordRequest.setNewPassword(passwordRequest.getNewPassword());
+
+        return updateUserPassword(userDetails.getUsername(), userPasswordRequest, bindingResult);
+    }
 }
