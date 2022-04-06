@@ -19,7 +19,7 @@ import javax.validation.constraints.NotBlank;
  *
  * @author paddeo
  */
-public class UserPasswordRequest extends PasswordRequest {
+public class UserUpdatePasswordRequest extends UpdatePasswordRequest {
 
     @NotBlank(message = "user.username.NotBlank")
     private String username;

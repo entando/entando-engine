@@ -2,7 +2,7 @@ package org.entando.entando.web.user.model;
 
 import javax.validation.constraints.NotBlank;
 
-public class PasswordRequest {
+public class UpdatePasswordRequest {
 
     @NotBlank(message = "user.old.password.NotBlank")
     private String oldPassword;
