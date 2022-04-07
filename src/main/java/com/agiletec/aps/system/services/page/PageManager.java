@@ -549,7 +549,7 @@ public class PageManager extends AbstractParameterizableService implements IPage
 
     private void searchPages(IPage currentTarget, String pageCodeToken, String title, List<String> allowedGroups,
             List<IPage> searchResult, Function<String, IPage> childProvider) {
-        if (allowedGroup(allowedGroups, currentTarget) &&
+        if ((allowedGroup(allowedGroups, currentTarget) || currentTarget.isRoot()) &&
                 (noFilter(pageCodeToken, title) ||
                 filterByCode(pageCodeToken, currentTarget) ||
                 filterByTitle(title, currentTarget))) {

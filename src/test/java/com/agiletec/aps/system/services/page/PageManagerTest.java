@@ -34,52 +34,52 @@ public class PageManagerTest {
 
     @Test
     void searchPages_FilterByCodeOnAllowedGroup_ShouldReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", "page_a", null, true);
+        testSearchPages("page_a", "group_a", "group_a", "page_a", null, "page_a");
     }
     
     @Test
     void searchPages_FilterByTitleOnAllowedGroup_ShouldReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", null, "page_a_title_en", true);
+        testSearchPages("page_a", "group_a", "group_a", null, "page_a_title_en", "page_a");
     }
     
     @Test
     void searchPages_OnAllowedGroup_ShouldReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", null, null, true);
+        testSearchPages("page_a", "group_a", "group_a", null, null, "homepage", "page_a");
     }
     
     @Test
     void searchPages_FilterOnEmptyCodeOnAllowedGroup_ShouldReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", "", null, true);
+        testSearchPages("page_a", "group_a", "group_a", "", null, "homepage", "page_a");
     }
 
     @Test
     void searchPages_FilterOnWrongCodeOnAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", "fooCode", null, false);
+        testSearchPages("page_a", "group_a", "group_a", "fooCode", null);
     }
 
     @Test
     void searchPages_FilterOnWrongTitleOnAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_a", null, "fooTitle", false);
+        testSearchPages("page_a", "group_a", "group_a", null, "fooTitle");
     }
     
     @Test
     void searchPages_FilterByCodeOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_b", "page_a", null, false);
+        testSearchPages("page_a", "group_a", "group_b", "page_a", null);
     }
     
     @Test
     void searchPages_FilterByTitleOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_b", null, "page_a_title_en", false);
+        testSearchPages("page_a", "group_a", "group_b", null, "page_a_title_en");
     }
     
     @Test
     void searchPages_OnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_b", null, null, false);
+        testSearchPages("page_a", "group_a", "group_b", null, null, "homepage");
     }
     
     @Test
     void searchPages_FilterOnEmptyCodeOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
-        testSearchPages("page_a", "group_a", "group_b", "", null, false);
+        testSearchPages("page_a", "group_a", "group_b", "", null, "homepage");
     }
 
     @Test
@@ -99,35 +99,34 @@ public class PageManagerTest {
     }
 
     private void testSearchPages(String pageCode, String pageGroup, String userGroup, 
-            String codeFilter, String titleFilter, boolean expectedFound) throws Exception {
+            String codeFilter, String titleFilter, String... expectedFound) throws Exception {
 
-        Page onlineRoot = getPage("homepage", "free", true, pageCode);
-        Page draftRoot = getPage("homepage", "free", false, pageCode);
+        Page onlineRoot = getPage("homepage", null, "free", true, pageCode);
+        Page draftRoot = getPage("homepage", null, "free", false, pageCode);
         Mockito.when(cacheWrapper.getOnlineRoot()).thenReturn(onlineRoot);
         Mockito.when(cacheWrapper.getDraftRoot()).thenReturn(draftRoot);
 
-        Page onlinePage = getPage(pageCode, pageGroup, true);
-        Page draftPage = getPage(pageCode, pageGroup, false);
+        Page onlinePage = getPage(pageCode, "homepage", pageGroup, true);
+        Page draftPage = getPage(pageCode, "homepage", pageGroup, false);
         Mockito.when(cacheWrapper.getOnlinePage(pageCode)).thenReturn(onlinePage);
         Mockito.when(cacheWrapper.getDraftPage(pageCode)).thenReturn(draftPage);
 
         List<IPage> onlinePages = pageManager.searchOnlinePages(codeFilter, titleFilter, List.of(userGroup));
         List<IPage> draftPages = pageManager.searchPages(codeFilter, titleFilter, List.of(userGroup));
 
-        if (expectedFound) {
-            Assertions.assertEquals(1, onlinePages.size());
-            Assertions.assertTrue(onlinePages.contains(onlinePage));
-            Assertions.assertEquals(1, draftPages.size());
-            Assertions.assertTrue(draftPages.contains(draftPage));
-        } else {
-            Assertions.assertTrue(onlinePages.isEmpty());
-            Assertions.assertTrue(draftPages.isEmpty());
+        Assertions.assertEquals(expectedFound.length, onlinePages.size());
+        Assertions.assertEquals(expectedFound.length, draftPages.size());
+
+        for (int i = 0; i < expectedFound.length; i++) {
+            Assertions.assertEquals(expectedFound[i], onlinePages.get(i).getCode());
+            Assertions.assertEquals(expectedFound[i], draftPages.get(i).getCode());
         }
     }
 
-    private Page getPage(String code, String ownerGroup, boolean online, String... children) {
+    private Page getPage(String code, String parentCode, String ownerGroup, boolean online, String... children) {
         Page page = new Page();
         page.setCode(code);
+        page.setParentCode(parentCode);
         page.setTitle("en", code + "_title_en");
         page.setTitle("it", code + "_title_it");
         page.setGroup(ownerGroup);

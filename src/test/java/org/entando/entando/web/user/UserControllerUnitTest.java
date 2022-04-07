@@ -16,6 +16,9 @@ package org.entando.entando.web.user;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -322,6 +325,76 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
         result.andExpect(status().isBadRequest());
         result.andExpect(jsonPath("$.errors[0].code", is(UserValidator.ERRCODE_PASSWORD_CONFIRM_MISMATCH)));
+    }
+
+    @Test
+    void updateMyPassword_validRequest_shouldUpdatePassword() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String mockJson = "{\"oldPassword\": \"old_password\",\n"
+                + "\"newPassword\": \"new_password\"}";
+
+        when(userManager.getUser(any())).thenReturn(user);
+        when(userManager.getUser(any(), any())).thenReturn(user);
+
+        mockMvc.perform(post("/users/myPassword")
+                        .sessionAttr("user", user)
+                        .content(mockJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).updateUserPassword(any());
+    }
+
+    @Test
+    void updateMyPassword_invalidPassword_shouldReturnBadRequest() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String mockJson = "{\"oldPassword\": \"old_password\",\n"
+                + "\"newPassword\": \"new_password\"}";
+
+        when(userManager.getUser(any())).thenReturn(user);
+
+        mockMvc.perform(post("/users/myPassword")
+                        .sessionAttr("user", user)
+                        .content(mockJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).updateUserPassword(any());
+    }
+
+    @Test
+    void updateMyPassword_emptyFields_shouldReturnBadRequest() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String mockJson = "{\"oldPassword\": \"\", \"newPassword\": \"\"}";
+
+        mockMvc.perform(post("/users/myPassword")
+                        .sessionAttr("user", user)
+                        .content(mockJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).updateUserPassword(any());
+    }
+
+    @Test
+    void updateMyPassword_anonymousUser_shouldReturnUnauthorized() throws Exception {
+
+        String mockJson = "{\"oldPassword\": \"old_password\",\n"
+                + "\"newPassword\": \"new_password\"}";
+
+        mockMvc.perform(post("/users/myPassword")
+                        .content(mockJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     private Group mockedGroup() {
