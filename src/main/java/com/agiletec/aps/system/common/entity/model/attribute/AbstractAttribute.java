@@ -24,6 +24,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsPropertiesDOM;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +33,12 @@ import java.util.List;
 import java.util.Optional;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.exception.EntRuntimeException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * This abstract class must be used when implementing Entity Attributes.
@@ -614,4 +617,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         this._langManager = langManager;
     }
 
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
+        this.setLangManager(ctx.getBean(ILangManager.class));
+    }
 }

@@ -13,20 +13,20 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
+import java.io.IOException;
 import java.util.List;
-
 import java.util.regex.Pattern;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.jdom.CDATA;
 import org.jdom.Element;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
-import org.entando.entando.ent.exception.EntException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.ContextLoader;
 
 /**
@@ -207,4 +207,10 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
 
     private transient BeanFactory _beanFactory;
 
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) ContextLoader.getCurrentWebApplicationContext();
+        this.setBeanFactory(ctx.getBeanFactory());
+    }
 }
