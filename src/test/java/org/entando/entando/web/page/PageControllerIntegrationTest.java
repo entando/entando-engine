@@ -1407,6 +1407,9 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.payload.numWidget", is(0)))
                     .andExpect(jsonPath("$.payload.fullPath", is("homepage/service/testAddClone_clone")));
 
+
+
+
             mockMvc
                     .perform(post("/pages")
                             .content(getPageJson("3_POST_valid_page.json", code2))
@@ -1524,6 +1527,51 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             this.pageManager.deletePage(clonedCode3);
         }
     }
+
+
+    @Test
+    void testCloneValidations() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .withAuthorization("coach", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        String code = "testExistingCodeClone";
+        try {
+
+            // Check validation for page code that already exist
+            mockMvc
+                    .perform(post("/pages")
+                            .content(getPageJson("1_POST_valid_page.json", code))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andExpect(status().isOk());
+
+            mockMvc
+                    .perform(get("/pages/{code}", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk());
+
+            PageCloneRequest pageCloneRequest = new PageCloneRequest();
+            pageCloneRequest.setParentCode("service");
+            pageCloneRequest.setNewPageCode(code);
+            pageCloneRequest.setTitles(ImmutableMap.of("en", "testCloneValidation en", "it", "testCloneValidation it"));
+
+            mockMvc
+                    .perform(post("/pages/{code}/clone", code)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(mapper.writeValueAsString(pageCloneRequest))
+                            .header("Authorization", "Bearer " + accessToken))
+                    .andDo(resultPrint())
+                    .andExpect(status().isConflict());
+
+        } finally {
+            this.pageManager.deletePage(code);
+        }
+    }
+
 
     private ResultActions performListViewPages(String accessToken) throws Exception {
         return mockMvc.perform(get("/pages/viewpages")
