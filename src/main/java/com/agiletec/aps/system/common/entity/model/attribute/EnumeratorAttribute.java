@@ -211,6 +211,10 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) ContextLoader.getCurrentWebApplicationContext();
+        if (ctx == null) {
+            _logger.warn("Null WebApplicationContext during deserialization");
+            return;
+        }
         this.setBeanFactory(ctx.getBeanFactory());
     }
 }

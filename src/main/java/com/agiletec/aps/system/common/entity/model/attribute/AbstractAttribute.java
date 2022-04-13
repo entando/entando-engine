@@ -621,6 +621,10 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         WebApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
+        if (ctx == null) {
+            _logger.warn("Null WebApplicationContext during deserialization");
+            return;
+        }
         this.setLangManager(ctx.getBean(ILangManager.class));
     }
 }
