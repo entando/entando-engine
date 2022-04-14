@@ -11,6 +11,8 @@
 
     <include file="serv/00000000000001_dataServ_production.xml" relativeToChangelogFile="true" />
 
+    <include file="serv/00000000000002_schemaServ.xml" relativeToChangelogFile="true" />
+
     <changeSet id="00000000000001_dataServ_restore" author="entando" context="restore" />
 
 </databaseChangeLog>
