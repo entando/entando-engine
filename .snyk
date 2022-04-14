@@ -28,9 +28,6 @@ ignore:
   SNYK-JAVA-ORGKEYCLOAK-1085642:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGKEYCLOAK-2434281:
-    - '*':
-        reason: '.'    
   SNYK-JAVA-COMFASTERXMLJACKSONCORE-2326698:
     - '*':
         reason: '.'
@@ -43,6 +40,18 @@ ignore:
   SNYK-JAVA-COMFASTERXMLJACKSONCORE-2421244:
     - '*':
         reason: '.'
+  SNYK-JAVA-ORGAPACHESTRUTS-2635340:
+    - '*':
+        reason: '.'
+  SNYK-JAVA-ORGSPRINGFRAMEWORK-2436751:
+    - '*':
+        reason: '.'
+  SNYK-JAVA-ORGSPRINGFRAMEWORK-2689634:
+    - '*':
+        reason: '.'
   SNYK-JAVA-ORGSPRINGFRAMEWORK-2434828:
+    - '*':
+        reason: '.'
+  SNYK-JAVA-ORGKEYCLOAK-2434281:
     - '*':
         reason: '.'
