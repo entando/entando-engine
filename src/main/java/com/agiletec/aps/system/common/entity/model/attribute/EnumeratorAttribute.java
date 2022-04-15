@@ -185,11 +185,13 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         this._customSeparator = customSeparator;
     }
 
+    @Deprecated
     protected BeanFactory getBeanFactory() {
         return this._beanFactory;
     }
 
     @Override
+    @Deprecated
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }

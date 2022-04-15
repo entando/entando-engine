@@ -37,6 +37,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -578,7 +579,13 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
 
     @Override
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+        return this.validate(tracer, langManager, null);
+    }
+
+    @Override
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
         List<AttributeFieldError> errors = new ArrayList<>();
         try {
             if (this.getStatus().equals(Status.INCOMPLETE)) {
@@ -609,10 +616,12 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         this._attributeManagerClassName = attributeManagerClassName;
     }
 
+    @Deprecated
     protected ILangManager getLangManager() {
         return _langManager;
     }
 
+    @Deprecated
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
