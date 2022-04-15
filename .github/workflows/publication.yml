@@ -1,0 +1,203 @@
+name: PUB
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  ENTANDO_OPT_USE_PPL_TAG: "v1.3.0"
+  ENTANDO_OPT_ENVIRONMENTS: "${{ secrets.ENTANDO_OPT_ENVIRONMENTS }}"
+  ENTANDO_OPT_ENVIRONMENT_NAMES: "${{ secrets.ENTANDO_OPT_ENVIRONMENT_NAMES }}"
+  PPL_CONTEXT: ${{ toJson(github) }}
+  GIT_USER_NAME: "${{ secrets.GIT_USER_NAME }}"
+  GIT_USER_EMAIL: "${{ secrets.GIT_USER_EMAIL }}"
+  LOCAL_CLONE_DIR: "local-checkout"
+
+
+jobs:
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # PUBLICATION
+
+  publication:
+    outputs:
+      POST_PUB_DOCKER_SCAN: ${{ steps.START.outputs.POST_PUB_DOCKER_SCAN }}
+      POST_DEP_TESTS: ${{ steps.START.outputs.POST_DEP_TESTS }}
+    env:
+      ENTANDO_OPT_MAVEN_REPO_DEVL: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_DEVL }}
+      ENTANDO_OPT_MAVEN_REPO_PROD: ${{ secrets.ENTANDO_OPT_MAVEN_REPO_PROD }}
+      ENTANDO_BOT_TOKEN: ${{ secrets.ENTANDO_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "PR PIPELINE START"
+        id: START
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run \
+            .. status-report \
+            .. @setup-feature-flags "PR_FORMAT_CHECK" "BOM_CHECK" "BOM" "POST_PUB_DOCKER_SCAN" "POST_DEP_TESTS" \
+          ;
+      #~ CHECKOUT
+      - name: "CHECKOUT"
+        id: CHECKOUT
+        run: |
+          ~/ppl-run \
+            .. checkout-branch --id "CHECKOUT FOR PUBLICATION" \
+                  --lcd "$LOCAL_CLONE_DIR" \
+                  --token "$ENTANDO_BOT_TOKEN" \
+            .. pr-preflight-checks --only flags --lcd "$LOCAL_CLONE_DIR" \
+          ;
+          ~/ppl-run generic GENERATE-BUILD-CACHE-KEY "BUILD_CACHE_KEY" --lcd "$LOCAL_CLONE_DIR" >> $GITHUB_ENV
+      #~ JDK
+      - name: "Set up JDK 11"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #~ MAVEN CACHE
+      - name: "Cache Maven packages"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2
+          restore-keys: ${{ runner.os }}-m2
+      #~ BUILD CACHE
+      - name: "Cache Build Dir"
+        id: build-cache
+        uses: actions/cache@v2
+        with:
+          path: "${{ env.LOCAL_CLONE_DIR }}/target/"
+          key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
+      #~ CONFIGURE REPO
+      - name: "Configure Entando Nexus Repository"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          server-id: internal-nexus
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
+      #~ PUBLISH THE ARTIFACT
+      - name: "Publish package"
+        run: |
+          ~/ppl-run generic PUBLISH --id "PUBLICATION" \
+            --lcd "$LOCAL_CLONE_DIR"
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      #~ UPDATE THE BOM (if required)
+      - name: "BOM Update"
+        if: steps.CHECKOUT.outputs.BOM_UPDATE_FLAG == 'true' && steps.START.outputs.BOM == 'true'
+        run: |
+          ~/ppl-run bom update-bom \
+            --id "UPDATE-BOM" \
+            --lcd "$LOCAL_CLONE_DIR" \
+            --token "$ENTANDO_BOT_TOKEN" \
+          ;
+      #~ PUBLISH TO DOCKER
+      - name: "Publish docker"
+        run: |
+          export ENTANDO_OPT_DOCKER_PASSWORD="${{ secrets.ENTANDO_OPT_DOCKER_PASSWORD }}"
+          export ENTANDO_OPT_DOCKER_ALT_LOGIN_URL="${{ secrets.ENTANDO_OPT_DOCKER_ALT_LOGIN }}"
+          export ENTANDO_OPT_DOCKER_ALT_USERNAME="${{ secrets.ENTANDO_OPT_DOCKER_ALT_USERNAME }}"
+          export ENTANDO_OPT_DOCKER_ALT_PASSWORD="${{ secrets.ENTANDO_OPT_DOCKER_ALT_PASSWORD }}"
+          
+          ~/ppl-run docker publish --id "PUBLISH-DOCKER" --lcd "$LOCAL_CLONE_DIR"
+
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # POST PUB JOBS
+
+  post-pub-docker-scan:
+    needs: [ 'publication' ]
+    if: needs.publication.outputs.POST_PUB_DOCKER_SCAN == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      #~ CHECKOUT
+      - name: "CHECKOUT"
+        id: CHECKOUT
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run \
+            .. checkout-branch --id "CHECKOUT FOR PUBLICATION" \
+                  --lcd "$LOCAL_CLONE_DIR" \
+                  --token "$ENTANDO_BOT_TOKEN" \
+            .. pr-preflight-checks --only flags --lcd "$LOCAL_CLONE_DIR" \
+          ;
+          ~/ppl-run generic GENERATE-BUILD-CACHE-KEY "BUILD_CACHE_KEY" --lcd "$LOCAL_CLONE_DIR" >> $GITHUB_ENV
+      #~ JDK
+      - name: "Set up JDK 11"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #~ MAVEN CACHE
+      - name: "Cache Maven packages"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2
+          restore-keys: ${{ runner.os }}-m2
+      #~ BUILD CACHE
+      - name: "Cache Build Dir"
+        id: build-cache
+        uses: actions/cache@v2
+        with:
+          path: "${{ env.LOCAL_CLONE_DIR }}/target/"
+          key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
+      #~ SCAN
+      - name: "Scan docker"
+        env:
+          ENTANDO_OPT_SNYK_ORG: "${{ secrets.ENTANDO_OPT_SNYK_ORG }}"
+          SNYK_TOKEN: "${{ secrets.SNYK_TOKEN }}"
+          ENTANDO_OPT_DOCKER_BUILDS: "${{ secrets.ENTANDO_OPT_DOCKER_BUILDS }}"
+          ENTANDO_OPT_DOCKER_ORG: "${{ secrets.ENTANDO_OPT_DOCKER_ORG }}"
+        run: |
+          ~/ppl-run docker scan --id "SCAN-DOCKER" --lcd "$LOCAL_CLONE_DIR"
+
+  post-dep-tests:
+    needs: [ 'publication' ]
+    if: needs.publication.outputs.POST_DEP_TESTS == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      #~ CHECKOUT
+      - name: "CHECKOUT"
+        id: CHECKOUT
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          ~/ppl-run \
+            .. checkout-branch --id "CHECKOUT FOR PUBLICATION" \
+                  --lcd "$LOCAL_CLONE_DIR" \
+                  --token "$ENTANDO_BOT_TOKEN" \
+            .. pr-preflight-checks --only flags --lcd "$LOCAL_CLONE_DIR" \
+          ;
+          ~/ppl-run generic GENERATE-BUILD-CACHE-KEY "BUILD_CACHE_KEY" --lcd "$LOCAL_CLONE_DIR" >> $GITHUB_ENV
+      #~ JDK
+      - name: "Set up JDK 11"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #~ MAVEN CACHE
+      - name: "Cache Maven packages"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2
+          restore-keys: ${{ runner.os }}-m2
+      #~ BUILD CACHE
+      - name: "Cache Build Dir"
+        id: build-cache
+        uses: actions/cache@v2
+        with:
+          path: "${{ env.LOCAL_CLONE_DIR }}/target/"
+          key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
+      - name: "Post deployment tests"
+        run: |
+          ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
+          
+          export ENTANDO_OPT_OKD_LOGIN_TOKEN="${{ secrets.ENTANDO_OPT_OKD_LOGIN_TOKEN }}"
+          export ENTANDO_OPT_IMAGE_REGISTRY_CREDENTIALS="${{ secrets.ENTANDO_OPT_IMAGE_REGISTRY_CREDENTIALS }}"
+          export ENTANDO_OPT_DOCKER_USERNAME="${{ secrets.ENTANDO_OPT_DOCKER_USERNAME }}"
+          export ENTANDO_OPT_DOCKER_PASSWORD="${{ secrets.ENTANDO_OPT_DOCKER_PASSWORD }}"
+          export ENTANDO_OPT_TEST_TLS_CRT="${{ secrets.ENTANDO_OPT_TEST_TLS_CRT }}"
+          export ENTANDO_OPT_TEST_TLS_KEY="${{ secrets.ENTANDO_OPT_TEST_TLS_KEY }}"
+
+          ~/ppl-run generic "POST-DEP-TESTS" --id "POST_DEP_TESTS" --lcd "$LOCAL_CLONE_DIR"
