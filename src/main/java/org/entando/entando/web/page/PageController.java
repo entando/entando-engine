@@ -417,6 +417,12 @@ public class PageController {
 
         validateClonePagePlacement(pageCode, pageCloneRequest.getParentCode(), bindingResult);
 
+        getPageValidator().validateClone(pageCloneRequest, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationConflictException(bindingResult);
+        }
+
         PageDto dto = this.getPageService().clonePage(pageCode, pageCloneRequest, bindingResult);
         return new ResponseEntity<>(new SimpleRestResponse<>(dto), HttpStatus.OK);
     }
