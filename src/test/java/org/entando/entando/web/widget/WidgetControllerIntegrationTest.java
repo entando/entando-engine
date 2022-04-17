@@ -47,6 +47,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+
 class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
     @Autowired
@@ -54,6 +57,9 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
+    
+    @Autowired
+    private IGuiFragmentManager guiFragmentManager;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -444,6 +450,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
                     oldParent.getIcon());
             this.widgetTypeManager.deleteWidgetType(childCode);
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("parent_widget");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 
