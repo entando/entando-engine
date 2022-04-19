@@ -17,7 +17,6 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -48,6 +47,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+
 class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest {
     
     @Autowired
@@ -55,6 +57,9 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
+    
+    @Autowired
+    private IGuiFragmentManager guiFragmentManager;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -445,6 +450,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
                     oldParent.getIcon());
             this.widgetTypeManager.deleteWidgetType(childCode);
+            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("parent_widget");
+            for (int i = 0; i < codes.size(); i++) {
+                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            }
         }
     }
 
@@ -687,8 +696,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
             result.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_OPERATION_FORBIDDEN_LOCKED)));
 
-            //Try to update the config of locked widget with the old value
-
+            //Try to update the config of locked widget with the same config
+/*
+            // INVALID BLOCK
+            widgetTypeCode = "entando_apis";
             final ApsProperties config = widgetTypeManager.getWidgetType(widgetTypeCode).getConfig();
 
             titles = new HashMap<>();
@@ -701,8 +712,13 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             Map<String, String> configMap = (Map) config;
 
             request.setConfig(configMap);
-            this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result = this.executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+            result.andDo(resultPrint());
 
+            result.andExpect(jsonPath("$.payload.titles.it", is("Titolo ITA")));
+            result.andExpect(jsonPath("$.payload.titles.en", is("Title EN")));
+            result.andExpect(jsonPath("$.payload.group", is("free")));
+*/
         } catch (Exception e) {
             throw e;
         }

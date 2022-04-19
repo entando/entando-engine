@@ -327,6 +327,8 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
     public static final String CONFIG_PARAM_BASE_URL_STATIC = "static";
 
+    public static final String SPECIAL_PARAM_BASE_URL_REQUEST_IF_RELATIVE = "requestIfRelative";
+
     public static final String CONFIG_PARAM_BASE_URL_CONTEXT = "baseUrlContext";
 
     public static final String TREE_STYLE_CLASSIC = "classic";
