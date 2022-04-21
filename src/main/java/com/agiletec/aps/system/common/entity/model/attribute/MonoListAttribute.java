@@ -25,6 +25,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.ent.exception.EntRuntimeException;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This class implements a list of homogeneous attributes.
@@ -183,8 +184,14 @@ public class MonoListAttribute extends AbstractListAttribute {
     }
 
     @Override
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
-        List<AttributeFieldError> errors = super.validate(tracer, langManager);
+        return this.validate(tracer, langManager, null);
+    }
+
+    @Override
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager, beanFactory);
         try {
             List<AttributeInterface> attributes = this.getAttributes();
             for (int i = 0; i < attributes.size(); i++) {
@@ -196,7 +203,7 @@ public class MonoListAttribute extends AbstractListAttribute {
                 if (elementStatus.equals(Status.EMPTY)) {
                     errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                 } else {
-                    List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager);
+                    List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager, beanFactory);
                     if (null != elementErrors) {
                         errors.addAll(elementErrors);
                     }

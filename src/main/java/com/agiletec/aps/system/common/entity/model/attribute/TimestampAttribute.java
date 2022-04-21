@@ -22,6 +22,7 @@ import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * @author E.Santoboni
@@ -38,10 +39,16 @@ public class TimestampAttribute extends DateAttribute {
         }
         return attributeElement;
     }
-	
+
+	@Override
+	@Deprecated
+	public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
+		return this.validate(tracer, langManager, null);
+	}
+
     @Override
-    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
-        List<AttributeFieldError> errors = super.validate(tracer, langManager);
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager, beanFactory);
         if (null == this.getDate() && 
 				(null != this.getFailedDateString() || null != this.getFailedHourString() || null != this.getFailedMinuteString() || null != this.getFailedSecondString())) {
             errors.add(new AttributeFieldError(this, FieldError.INVALID_FORMAT, tracer));

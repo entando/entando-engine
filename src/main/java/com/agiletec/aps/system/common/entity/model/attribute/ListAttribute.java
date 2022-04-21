@@ -29,6 +29,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import org.entando.entando.ent.exception.EntRuntimeException;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This class represents the Attribute of type "Multi-language List", composed by several homogeneous attributes; there
@@ -209,8 +210,14 @@ public class ListAttribute extends AbstractListAttribute {
     }
 
     @Override
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
-        List<AttributeFieldError> errors = super.validate(tracer, langManager);
+        return this.validate(tracer, langManager, null);
+    }
+
+    @Override
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager, beanFactory);
         try {
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
@@ -226,7 +233,7 @@ public class ListAttribute extends AbstractListAttribute {
                     if (elementStatus.equals(Status.EMPTY)) {
                         errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                     } else {
-                        List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager);
+                        List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer, langManager, beanFactory);
                         if (null != elementErrors) {
                             errors.addAll(elementErrors);
                         }
