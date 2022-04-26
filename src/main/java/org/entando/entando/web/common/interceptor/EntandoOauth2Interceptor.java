@@ -13,22 +13,20 @@
  */
 package org.entando.entando.web.common.interceptor;
 
-import com.agiletec.aps.system.SystemConstants;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
 import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
+import org.entando.entando.ent.exception.EntException;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.EntandoAuthorizationException;
 import org.entando.entando.web.common.exceptions.EntandoTokenException;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
-import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -71,8 +69,6 @@ public class EntandoOauth2Interceptor extends HandlerInterceptorAdapter {
 
     protected UserDetails extractOAuthParameters(HttpServletRequest request) {
         try {
-            request.getSession().setAttribute("user", null); //Clear previous session
-
             String accessToken = new EntandoBearerTokenExtractor().extractToken(request);
             if (StringUtils.isBlank(accessToken)) {
                 return null;
@@ -94,8 +90,7 @@ public class EntandoOauth2Interceptor extends HandlerInterceptorAdapter {
                 return null;
             }
 
-            request.getSession().setAttribute("user", user);
-            request.getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
+            request.setAttribute("user", user);
             return user;
         } catch (EntException ex) {
             logger.error("System exception {}", ex.getMessage());

@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
@@ -37,18 +36,16 @@ import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
 import org.entando.entando.aps.system.services.user.UserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.user.model.UserDtoBuilder;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.aps.util.crypto.CryptoException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -71,7 +68,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.MapBindingResult;
 
 /**
  * @author paddeo
@@ -527,8 +523,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
     void deleteAdminReturnsError() throws EntException {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
             Mockito.lenient().when(user.getUsername()).thenReturn("admin");
-            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-            new UserController().deleteUser(user, "admin", bindingResult);
+            new UserController().deleteUser(user, "admin");
         });
     }
 
@@ -536,8 +531,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
     void selfDeleteReturnsError() throws EntException {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
             when(user.getUsername()).thenReturn("test");
-            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-            new UserController().deleteUser(user, "test", bindingResult);
+            new UserController().deleteUser(user, "test");
         });
     }
 }
