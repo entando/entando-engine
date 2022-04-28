@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author E.Santoboni
  */
+@Disabled("disabled for unused functionality")
 class TestSearchEngineManager extends BaseTestCase {
 
 	@Test
