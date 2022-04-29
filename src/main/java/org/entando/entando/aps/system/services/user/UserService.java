@@ -310,16 +310,14 @@ public class UserService implements IUserService {
             throw new RestServerError("Error in updating password", e);
         }
     }
-
-
+    
     @Override
     public List<UserGroupPermissions> getMyGroupPermissions(UserDetails user) {
-
         return Optional.ofNullable(user)
                 .map(UserDetails::getAuthorizations)
                 .orElse(new ArrayList<>())
                 .stream()
-                .map(authorization -> new UserGroupPermissions(authorization.getGroup().getName(), authorization.getRole().getPermissions()))
+                .map(authorization -> new UserGroupPermissions(authorization.getGroup(), authorization.getRole()))
                 .collect(Collectors.toList());
     }
 
