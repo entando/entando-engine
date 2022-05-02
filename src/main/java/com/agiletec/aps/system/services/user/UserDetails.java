@@ -15,6 +15,7 @@ package com.agiletec.aps.system.services.user;
 
 import com.agiletec.aps.system.services.authorization.Authorization;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
  *
  * @author E.Santoboni
  */
-public interface UserDetails {
+public interface UserDetails extends Serializable {
 
     /**
      * Return 'true' if the current user is an Entando user, that is, exists within jAPS local table
