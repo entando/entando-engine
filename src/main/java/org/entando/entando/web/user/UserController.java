@@ -25,13 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.IUserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
-import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
@@ -278,10 +276,10 @@ public class UserController {
         return new ResponseEntity<>(new SimpleRestResponse<>(groups), HttpStatus.OK);
     }
 
+    @RestAccessControl(permission = Permission.MANAGE_USERS)
     @PostMapping(value = "/myPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest, BindingResult bindingResult, HttpServletRequest request) {
-
-        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
+            BindingResult bindingResult, @RequestAttribute("user") UserDetails userDetails) {
 
         UserUpdatePasswordRequest userPasswordRequest = new UserUpdatePasswordRequest();
         userPasswordRequest.setUsername(userDetails.getUsername());
