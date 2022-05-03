@@ -122,7 +122,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
                         .param("filter[0].attribute", "username")
                         .param("filter[0].operator", "like")
                         .param("filter[0].value", "user")
-                        .requestAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         System.out.println("result: " + result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
@@ -139,7 +138,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
                         .param("filter[0].attribute", "username")
                         .param("filter[0].operator", "like")
                         .param("filter[0].value", "user")
-                        //.sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isOk());
@@ -158,7 +156,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userManager.getUser("username_test")).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 put("/users/{username}", "username_test")
-                        //.sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -181,7 +178,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 put("/users/{target}", "mismach")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -203,7 +199,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 post("/users/{username}/password", "username_test")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -228,7 +223,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -252,7 +246,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -276,7 +269,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class))).thenReturn(authorities);
         ResultActions result = mockMvc.perform(
                 put("/users/{target}/authorities", "mockuser")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -314,7 +306,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -335,7 +326,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(userManager.getUser(any(), any())).thenReturn(user);
 
         mockMvc.perform(post("/users/myPassword")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
@@ -355,7 +345,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(userManager.getUser(any())).thenReturn(user);
 
         mockMvc.perform(post("/users/myPassword")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
@@ -372,7 +361,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         String mockJson = "{\"oldPassword\": \"\", \"newPassword\": \"\"}";
 
         mockMvc.perform(post("/users/myPassword")
-                        .requestAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
