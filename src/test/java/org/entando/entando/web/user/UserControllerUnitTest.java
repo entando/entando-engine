@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.user;
 
+import static com.agiletec.aps.system.SystemConstants.GUEST_USER_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -370,15 +371,19 @@ class UserControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateMyPassword_anonymousUser_shouldReturnUnauthorized() throws Exception {
+    void updateMyPassword_anonymousUser_shouldReturnForbidden() throws Exception {
 
         String mockJson = "{\"oldPassword\": \"old_password\",\n"
                 + "\"newPassword\": \"new_password\"}";
 
+        User guestUser = new User();
+        guestUser.setUsername(GUEST_USER_NAME);
+
         mockMvc.perform(post("/users/myPassword")
                         .content(mockJson)
+                        .requestAttr("user", guestUser)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     private Group mockedGroup() {

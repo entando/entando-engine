@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.user;
 
+import static com.agiletec.aps.system.SystemConstants.GUEST_USER_NAME;
 import static org.entando.entando.web.user.validator.UserValidator.createDeleteAdminError;
 import static org.entando.entando.web.user.validator.UserValidator.createSelfDeleteUserError;
 import static org.entando.entando.web.user.validator.UserValidator.isAdminUser;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.IUserService;
@@ -33,6 +35,7 @@ import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
+import org.entando.entando.web.common.exceptions.EntandoAuthorizationException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -276,10 +279,13 @@ public class UserController {
         return new ResponseEntity<>(new SimpleRestResponse<>(groups), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = Permission.MANAGE_USERS)
     @PostMapping(value = "/myPassword", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
-            BindingResult bindingResult, @RequestAttribute("user") UserDetails userDetails) {
+            BindingResult bindingResult, @RequestAttribute("user") UserDetails userDetails, HttpServletRequest request) {
+
+        if (GUEST_USER_NAME.equals(userDetails.getUsername())) {
+            throw new EntandoAuthorizationException(null, request, userDetails.getUsername());
+        }
 
         UserUpdatePasswordRequest userPasswordRequest = new UserUpdatePasswordRequest();
         userPasswordRequest.setUsername(userDetails.getUsername());
