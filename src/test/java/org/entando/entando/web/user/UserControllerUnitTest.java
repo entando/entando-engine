@@ -337,7 +337,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
     @Test
     void updateMyPassword_invalidPassword_shouldReturnBadRequest() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
 
         String mockJson = "{\"oldPassword\": \"old_password\",\n"
@@ -356,7 +356,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
     @Test
     void updateMyPassword_emptyFields_shouldReturnBadRequest() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
         String accessToken = mockOAuthInterceptor(user);
 
         String mockJson = "{\"oldPassword\": \"\", \"newPassword\": \"\"}";
