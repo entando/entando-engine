@@ -59,7 +59,7 @@ public class LegacyApiUserExtractor {
             }
             return null;
         } catch (EntException ex) {
-            log.error("System exception {}", ex);
+            log.error("System exception", ex);
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, ex.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
