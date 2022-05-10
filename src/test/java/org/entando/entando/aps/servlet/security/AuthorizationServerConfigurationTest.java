@@ -189,7 +189,7 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
         String resultString = result.andReturn().getResponse().getContentAsString();
         Assertions.assertTrue(StringUtils.isNotBlank(resultString));
         result.andExpect(jsonPath("$.error", is("invalid_client")));
-        String expectedMessage = "Unauthorized grant type: " + grantType;
+        String expectedMessage = "Unauthorized grant type";
         result.andExpect(jsonPath("$.error_description", is(expectedMessage)));
         Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
         Assertions.assertEquals(0, oauthTokens.size());
