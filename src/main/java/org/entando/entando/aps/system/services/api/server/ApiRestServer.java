@@ -14,29 +14,41 @@
 package org.entando.entando.aps.system.services.api.server;
 
 import com.agiletec.aps.system.SystemConstants;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.url.IURLManager;
-import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.apache.cxf.jaxrs.impl.ResponseBuilderImpl;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.UnmarshalUtils;
-import org.entando.entando.aps.system.services.api.model.*;
-import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
-import org.entando.entando.aps.system.services.oauth2.model.OAuth2AccessTokenImpl;
-import org.entando.entando.web.common.interceptor.EntandoBearerTokenExtractor;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
+import org.entando.entando.aps.system.services.api.model.ApiError;
+import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.*;
-import java.util.Map.Entry;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * @author E.Santoboni
@@ -263,56 +275,28 @@ public class ApiRestServer {
     }
 
     protected void extractOAuthParameters(HttpServletRequest request, ApiMethod apiMethod, Properties properties) throws ApiException {
-        IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
         IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-        try {
-            properties.put(SystemConstants.API_REQUEST_PARAMETER, request);
-            UserDetails user = null;
-            String permission = apiMethod.getRequiredPermission();
-            _logger.debug("Permission required: {}", permission);
-            String accessToken = new EntandoBearerTokenExtractor().extractToken(request);
-            IApiOAuth2TokenManager tokenManager = (IApiOAuth2TokenManager) ApsWebApplicationUtils.getBean(SystemConstants.OAUTH_TOKEN_MANAGER, request);
-            final OAuth2AccessTokenImpl token = (OAuth2AccessTokenImpl) tokenManager.readAccessToken(accessToken);
-            if (token != null) {
-                // Validate the access token
-                if (!token.getValue().equals(accessToken)) {
-                    throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Token does not match", Response.Status.UNAUTHORIZED);
-                } // check if access token is expired
-                else if (token.isExpired()) {
-                    throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Token expired", Response.Status.UNAUTHORIZED);
-                }
-                String username = token.getLocalUser();
-                user = userManager.getUser(username);
-                if (user != null) {
-                    user.addAuthorizations(authManager.getUserAuthorizations(username));
-                    properties.put(SystemConstants.API_USER_PARAMETER, user);
-                    _logger.info("User {} requesting resource that requires {} permission ", username, permission);
-                    UserDetails userOnSession = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-                    if (null == userOnSession || userOnSession.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
-                        user.setAccessToken(accessToken);
-                        request.getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
-                    } 
-                }
-            } else if (accessToken != null) {
-                _logger.warn("Token not found from access token");
-            }
-            if (null != user) {
-                String username = user.getUsername();
-                if (permission != null) {
-                    if (!authManager.isAuthOnPermission(user, permission)) {
-                        List<Role> roles = authManager.getUserRoles(user);
-                        for (Role role : roles) {
-                            _logger.debug("User {} requesting resource has {} permission ", username, (null != role.getPermissions()) ? role.getPermissions().toString() : "");
-                        }
-                        throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
+        properties.put(SystemConstants.API_REQUEST_PARAMETER, request);
+        String permission = apiMethod.getRequiredPermission();
+        _logger.debug("Permission required: {}", permission);
+
+        LegacyApiUserExtractor legacyApiUserExtractor = (LegacyApiUserExtractor) ApsWebApplicationUtils.getBean(SystemConstants.LEGACY_API_USER_EXTRACTOR, request);
+
+        UserDetails user = legacyApiUserExtractor.getUser(request);
+
+        if (null != user) {
+            String username = user.getUsername();
+            if (permission != null) {
+                if (!authManager.isAuthOnPermission(user, permission)) {
+                    List<Role> roles = authManager.getUserRoles(user);
+                    for (Role role : roles) {
+                        _logger.debug("User {} requesting resource has {} permission ", username, (null != role.getPermissions()) ? role.getPermissions().toString() : "");
                     }
+                    throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
                 }
-            } else if (apiMethod.getRequiredAuth()) {
-                throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
             }
-        } catch (EntException ex) {
-            _logger.error("System exception {}", ex);
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, ex.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+        } else if (apiMethod.getRequiredAuth()) {
+            throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
         }
     }
 
