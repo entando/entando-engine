@@ -129,6 +129,15 @@ public class RestExceptionHandler {
         return processAllErrors(result);
     }
 
+    @ExceptionHandler(value = ValidationUnprocessableEntityException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
+    public ErrorRestResponse processValidationError(ValidationUnprocessableEntityException ex) {
+        logger.debug("Handling {} error", ex.getClass().getSimpleName());
+        BindingResult result = ex.getBindingResult();
+        return processAllErrors(result);
+    }
+
     @ExceptionHandler(value = ValidationUpdateSelfException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody

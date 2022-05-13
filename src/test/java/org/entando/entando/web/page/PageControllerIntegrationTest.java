@@ -466,7 +466,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(request))
                             .header("Authorization", "Bearer " + accessToken));
 
-            result.andExpect(status().isBadRequest());
+            result.andExpect(status().isUnprocessableEntity());
 
             //move a free group page under a reserved  group page is not allowed
 
@@ -486,7 +486,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(request))
                             .header("Authorization", "Bearer " + accessToken));
 
-            result.andExpect(status().isBadRequest());
+            result.andExpect(status().isUnprocessableEntity());
 
             //move a published page under an unpublished_page is not allowed
 
@@ -634,11 +634,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                                     Group.FREE_GROUP_NAME,
                                     "admin_pg"))))
                     .andDo(resultPrint())
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Cannot move a free page under a reserved page")));
+                    .andExpect(jsonPath("$.errors[0].message", is("A page can only be a direct child of a page with the same owner group or free access")));
 
             pageCode = "admin_pg_into_group1_pg";
 
@@ -651,11 +651,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                                     Group.ADMINS_GROUP_NAME,
                                     "group1_pg"))))
                     .andDo(resultPrint())
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+                    .andExpect(jsonPath("$.errors[0].message", is("A page can only be a direct child of a page with the same owner group or free access")));
 
             pageCode = "group1_pg_into_admin_pg";
 
@@ -668,11 +668,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                                     "coach",
                                     "admin_pg"))))
                     .andDo(resultPrint())
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+                    .andExpect(jsonPath("$.errors[0].message", is("A page can only be a direct child of a page with the same owner group or free access")));
 
             pageCode = "group1_pg_into_group2_pg";
 
@@ -685,11 +685,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                                     "coach",
                                     "group2_pg"))))
                     .andDo(resultPrint())
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+                    .andExpect(jsonPath("$.errors[0].message", is("A page can only be a direct child of a page with the same owner group or free access")));
 
             pageCode = "group2_pg_into_group1_pg";
 
@@ -702,11 +702,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                                     "customers",
                                     "group1_pg"))))
                     .andDo(resultPrint())
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.payload.size()", is(0)))
                     .andExpect(jsonPath("$.errors.size()", is(1)))
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
-                    .andExpect(jsonPath("$.errors[0].message", is("Can not move a page under a page owned by a different group")));
+                    .andExpect(jsonPath("$.errors[0].message", is("A page can only be a direct child of a page with the same owner group or free access")));
 
         } finally {
             this.pageManager.deletePage("group2_pg_into_group1_pg");
@@ -902,7 +902,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                             .content(mapper.writeValueAsString(movementRequest))
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + accessToken));
-            result.andExpect(status().isBadRequest());
+            result.andExpect(status().isUnprocessableEntity());
             result.andExpect(jsonPath("$.errors.size()", is(1)));
             result.andExpect(jsonPath("$.errors[0].code", is("2")));
 
