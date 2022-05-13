@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.user;
 
+import static com.agiletec.aps.system.SystemConstants.GUEST_USER_NAME;
 import static org.entando.entando.web.user.validator.UserValidator.createDeleteAdminError;
 import static org.entando.entando.web.user.validator.UserValidator.createSelfDeleteUserError;
 import static org.entando.entando.web.user.validator.UserValidator.isAdminUser;
@@ -31,10 +32,10 @@ import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.IUserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
-import org.entando.entando.aps.util.HttpSessionHelper;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
+import org.entando.entando.web.common.exceptions.EntandoAuthorizationException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -42,8 +43,8 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.user.model.UpdatePasswordRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.entando.entando.web.user.model.UserUpdatePasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
+import org.entando.entando.web.user.model.UserUpdatePasswordRequest;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,15 +54,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  *
@@ -70,7 +70,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Validated
 @RestController
 @RequestMapping(value = "/users")
-@SessionAttributes("user")
 public class UserController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
@@ -137,7 +136,7 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateUser(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateUser(@RequestAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) {
         logger.debug("updating user {} with request {}", target, userRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -172,14 +171,15 @@ public class UserController {
     @RequestMapping(value = "/{target:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<Map<String, String>>> deleteUser(
             //-
-            @ModelAttribute("user") UserDetails user,
-            @PathVariable String target,
-            BindingResult bindingResult) {
+            @RequestAttribute("user") UserDetails user,
+            @PathVariable String target) {
         logger.debug("deleting {}", target);
         if (isAdminUser(target)) {
             throw new ValidationGenericException(createDeleteAdminError());
         }
         if (isUserDeletingHimself(target, user.getUsername())) {
+            DataBinder binder = new DataBinder(target);
+            BindingResult bindingResult = binder.getBindingResult();
             throw new ValidationGenericException(createSelfDeleteUserError(bindingResult));
         }
         this.getUserService().removeUser(target);
@@ -190,7 +190,7 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> updateUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) {
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> updateUserAuthorities(@RequestAttribute("user") UserDetails user, @PathVariable String target, @Valid @RequestBody UserAuthoritiesRequest authRequest, BindingResult bindingResult) {
         logger.debug("user {} requesting update authorities for username {} with req {}", user.getUsername(), target, authRequest);
         //field validations
         if (bindingResult.hasErrors()) {
@@ -211,7 +211,7 @@ public class UserController {
 
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> getUserAuthorities(@ModelAttribute("user") UserDetails user, @PathVariable String target) {
+    public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> getUserAuthorities(@RequestAttribute("user") UserDetails user, @PathVariable String target) {
         logger.debug("requesting authorities for username {}", target);
         List<UserAuthorityDto> authorities = this.getUserService().getUserAuthorities(target);
         return new ResponseEntity<>(new SimpleRestResponse<>(authorities), HttpStatus.OK);
@@ -220,7 +220,7 @@ public class UserController {
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<List<UserAuthorityDto>>> addUserAuthorities(
-            @ModelAttribute("user") UserDetails user,
+            @RequestAttribute("user") UserDetails user,
             @PathVariable String target,
             @Valid @RequestBody UserAuthoritiesRequest authRequest,
             BindingResult bindingResult) {
@@ -246,7 +246,7 @@ public class UserController {
     @RestAccessControl(permission = Permission.MANAGE_USERS)
     @RequestMapping(value = "/{target:.+}/authorities", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<ArrayList<Object>>> deleteUserAuthorities(
-            @ModelAttribute("user") UserDetails user,
+            @RequestAttribute("user") UserDetails user,
             @PathVariable String target) {
         //-
         logger.debug("user {} requesting delete authorities for username {}", user.getUsername(), target);
@@ -267,25 +267,25 @@ public class UserController {
 
 
     @GetMapping("/myGroupPermissions")
-    public ResponseEntity<SimpleRestResponse<List<UserGroupPermissions>>> getMyGroupPermissions(HttpServletRequest request) {
-
-        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);
-
+    public ResponseEntity<SimpleRestResponse<List<UserGroupPermissions>>> getMyGroupPermissions(@RequestAttribute("user") UserDetails userDetails) {
         List<UserGroupPermissions> currentUserPermissions = this.userService.getMyGroupPermissions(userDetails);
 
         return new ResponseEntity<>(new SimpleRestResponse<>(currentUserPermissions), HttpStatus.OK);
     }
 
     @GetMapping("/myGroups")
-    public ResponseEntity<SimpleRestResponse<List<GroupDto>>> getMyGroups(HttpServletRequest request) {
-        List<GroupDto> groups = this.userService.getMyGroups(HttpSessionHelper.extractCurrentUser(request));
+    public ResponseEntity<SimpleRestResponse<List<GroupDto>>> getMyGroups(@RequestAttribute("user") UserDetails userDetails) {
+        List<GroupDto> groups = this.userService.getMyGroups(userDetails);
         return new ResponseEntity<>(new SimpleRestResponse<>(groups), HttpStatus.OK);
     }
 
     @PostMapping(value = "/myPassword", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest, BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseEntity<SimpleRestResponse<UserDto>> updateMyPassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
+            BindingResult bindingResult, @RequestAttribute("user") UserDetails userDetails, HttpServletRequest request) {
 
-        UserDetails userDetails = HttpSessionHelper.extractCurrentUser(request);
+        if (GUEST_USER_NAME.equals(userDetails.getUsername())) {
+            throw new EntandoAuthorizationException(null, request, userDetails.getUsername());
+        }
 
         UserUpdatePasswordRequest userPasswordRequest = new UserUpdatePasswordRequest();
         userPasswordRequest.setUsername(userDetails.getUsername());

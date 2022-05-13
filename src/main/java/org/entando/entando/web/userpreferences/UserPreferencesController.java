@@ -27,16 +27,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @RestController
-@SessionAttributes("user")
 public class UserPreferencesController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
@@ -49,16 +48,17 @@ public class UserPreferencesController {
 
     @GetMapping(value = "/userPreferences/{preferencesUsername:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> getUserPreferences(
-            @ModelAttribute("user") UserDetails user, @PathVariable String preferencesUsername, BindingResult bindingResult) {
+            @RequestAttribute("user") UserDetails user, @PathVariable String preferencesUsername) {
         logger.debug("Getting user '{}' preferences ", preferencesUsername);
-        userPreferencesValidator.validate(user, preferencesUsername, bindingResult);
+        DataBinder binder = new DataBinder(preferencesUsername);
+        userPreferencesValidator.validate(user, preferencesUsername, binder.getBindingResult());
         UserPreferencesDto response = userPreferencesService.getUserPreferences(preferencesUsername);
         return new ResponseEntity<>(new SimpleRestResponse<>(response), HttpStatus.OK);
     }
 
     @PutMapping(value = "/userPreferences/{preferencesUsername:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<UserPreferencesDto>> updateUserPreferences(
-            @ModelAttribute("user") UserDetails user, @PathVariable String preferencesUsername,
+            @RequestAttribute("user") UserDetails user, @PathVariable String preferencesUsername,
             @Valid @RequestBody UserPreferencesRequest bodyRequest, BindingResult bindingResult) {
         logger.debug("Updating user '{}' preferences to -> {}", preferencesUsername, bodyRequest);
         userPreferencesValidator.validate(user, preferencesUsername, bindingResult);

@@ -16,6 +16,9 @@ package org.entando.entando.web.userprofile;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.services.entity.model.AttributeTypeDto;
@@ -23,17 +26,19 @@ import org.entando.entando.aps.system.services.entity.model.EntityTypeAttributeF
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.entity.model.EntityTypesStatusDto;
 import org.entando.entando.aps.system.services.user.IUserService;
-import org.entando.entando.aps.system.services.user.model.ProfileTypeDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileTypeService;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileTypeDto;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
-import org.entando.entando.web.common.model.*;
+import org.entando.entando.web.common.model.PagedMetadata;
+import org.entando.entando.web.common.model.PagedRestResponse;
+import org.entando.entando.web.common.model.RestListRequest;
+import org.entando.entando.web.common.model.RestResponse;
+import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
 import org.entando.entando.web.userprofile.model.ProfileTypeDtoRequest;
 import org.entando.entando.web.userprofile.model.ProfileTypeRefreshRequest;
@@ -43,17 +48,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author E.Santoboni
  */
 @RestController
-@SessionAttributes("user")
 public class ProfileTypeController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
@@ -97,7 +103,7 @@ public class ProfileTypeController {
 
     @RestAccessControl(permission = {Permission.ENTER_BACKEND})
     @GetMapping(value = "/myProfileType", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@ModelAttribute("user") UserDetails user) {
+    public ResponseEntity<SimpleRestResponse<UserProfileTypeDto>> getMyProfileType(@RequestAttribute("user") UserDetails user) {
         logger.debug("Requested profile type for the logged user-> {}", user.getUsername());
         UserDto userDto = userService.getUser(user.getUsername());
         if (userDto != null && userDto.getProfileType() != null && userDto.getProfileType().getTypeCode() != null) {

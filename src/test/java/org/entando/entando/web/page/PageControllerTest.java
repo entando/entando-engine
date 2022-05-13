@@ -191,7 +191,6 @@ class PageControllerTest extends AbstractControllerTest {
         ResultActions result = mockMvc.perform(
                 get("/pages").
                         param("parentCode", "service")
-                        .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken)
         );
 
@@ -227,7 +226,6 @@ class PageControllerTest extends AbstractControllerTest {
                         param("parentCode", "service").
                         param("forLinkingToOwnerGroup", "a_group").
                         param("forLinkingToExtraGroups", "GROUP1,GROUP2").
-                        sessionAttr("user", user).
                         header("Authorization", "Bearer " + accessToken)
         );
 
@@ -268,7 +266,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
-                .sessionAttr("user", user)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mockJsonResult)
                 .header("Authorization", "Bearer " + accessToken)
@@ -290,7 +287,6 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/pages/{parentCode}", "mock_page")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken)
         );
 
@@ -312,7 +308,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 post("/pages")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(page))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -331,7 +326,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getOnlinePage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "online_page")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
@@ -352,7 +346,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(page);
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "page_with_children")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
@@ -373,7 +366,6 @@ class PageControllerTest extends AbstractControllerTest {
         Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -399,7 +391,6 @@ class PageControllerTest extends AbstractControllerTest {
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -424,7 +415,6 @@ class PageControllerTest extends AbstractControllerTest {
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -448,7 +438,6 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -482,7 +471,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -520,7 +508,6 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -556,7 +543,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
