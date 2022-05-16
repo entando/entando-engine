@@ -4,7 +4,7 @@ import org.springframework.validation.BindingResult;
 
 public class ValidationUnprocessableEntityException extends RuntimeException {
 
-    private final BindingResult bindingResult;
+    private final transient BindingResult bindingResult;
 
     public ValidationUnprocessableEntityException(BindingResult bindingResult) {
         this.bindingResult = bindingResult;
