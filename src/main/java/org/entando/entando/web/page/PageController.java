@@ -32,6 +32,7 @@ import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.exceptions.ResourcePermissionsException;
 import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.exceptions.ValidationUnprocessableEntityException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.PagedRestResponse;
@@ -306,7 +307,7 @@ public class PageController {
     private void validatePagePlacement(String pageGroup, String parentGroup, BindingResult bindingResult) {
         pageValidator.validateGroups(pageGroup, parentGroup, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
+            throw new ValidationUnprocessableEntityException(bindingResult);
         }
     }
 
