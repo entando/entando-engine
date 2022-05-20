@@ -16,12 +16,6 @@ ignore:
   SNYK-JAVA-ORGJBOSSRESTEASY-1009963:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGKEYCLOAK-1061996:
-    - '*':
-        reason: '.'
-  SNYK-JAVA-ORGKEYCLOAK-1062507:
-    - '*':
-        reason: '.'
   SNYK-JAVA-ORGKEYCLOAK-1083276:
     - '*':
         reason: '.'
@@ -43,15 +37,16 @@ ignore:
   SNYK-JAVA-ORGKEYCLOAK-2434281:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORKSECURITYOAUTH-2772728:
+  SNYK-JAVA-ORGKEYCLOAK-2805802:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORK-2436751:
+  SNYK-JAVA-ORGOWASPESAPI-2805301:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORK-2689634:
+  SNYK-JAVA-ORGOWASPESAPI-2803305:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORK-2434828:
+  SNYK-JAVA-IONETTY-2812456:
     - '*':
-        reason: '.'
+        reason: '.'        
+        
