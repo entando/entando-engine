@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.user;
 
+import static com.agiletec.aps.system.SystemConstants.GUEST_USER_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
@@ -37,18 +37,16 @@ import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
 import org.entando.entando.aps.system.services.user.UserService;
 import org.entando.entando.aps.system.services.user.model.UserAuthorityDto;
 import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.aps.system.services.user.model.UserDtoBuilder;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.aps.util.crypto.CryptoException;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -71,7 +69,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.MapBindingResult;
 
 /**
  * @author paddeo
@@ -126,7 +123,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
                         .param("filter[0].attribute", "username")
                         .param("filter[0].operator", "like")
                         .param("filter[0].value", "user")
-                        .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
         System.out.println("result: " + result.andReturn().getResponse().getContentAsString());
         result.andExpect(status().isOk());
@@ -143,7 +139,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
                         .param("filter[0].attribute", "username")
                         .param("filter[0].operator", "like")
                         .param("filter[0].value", "user")
-                        //.sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isOk());
@@ -162,7 +157,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userManager.getUser("username_test")).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 put("/users/{username}", "username_test")
-                        //.sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -185,7 +179,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 put("/users/{target}", "mismach")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -207,7 +200,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userManager.getUser(any(String.class))).thenReturn(this.mockUserDetails("username_test"));
         ResultActions result = mockMvc.perform(
                 post("/users/{username}/password", "username_test")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -232,7 +224,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -256,7 +247,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -280,7 +270,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.controller.getUserService().addUserAuthorities(any(String.class), any(UserAuthoritiesRequest.class))).thenReturn(authorities);
         ResultActions result = mockMvc.perform(
                 put("/users/{target}/authorities", "mockuser")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -318,7 +307,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         Mockito.lenient().when(this.userService.addUser(any(UserRequest.class))).thenReturn(this.mockUser());
         ResultActions result = mockMvc.perform(
                 post("/users")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -329,7 +317,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
 
     @Test
     void updateMyPassword_validRequest_shouldUpdatePassword() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").build();
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
 
         String mockJson = "{\"oldPassword\": \"old_password\",\n"
@@ -339,7 +327,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(userManager.getUser(any(), any())).thenReturn(user);
 
         mockMvc.perform(post("/users/myPassword")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
@@ -359,7 +346,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         when(userManager.getUser(any())).thenReturn(user);
 
         mockMvc.perform(post("/users/myPassword")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
@@ -376,7 +362,6 @@ class UserControllerUnitTest extends AbstractControllerTest {
         String mockJson = "{\"oldPassword\": \"\", \"newPassword\": \"\"}";
 
         mockMvc.perform(post("/users/myPassword")
-                        .sessionAttr("user", user)
                         .content(mockJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken))
@@ -386,15 +371,19 @@ class UserControllerUnitTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateMyPassword_anonymousUser_shouldReturnUnauthorized() throws Exception {
+    void updateMyPassword_anonymousUser_shouldReturnForbidden() throws Exception {
 
         String mockJson = "{\"oldPassword\": \"old_password\",\n"
                 + "\"newPassword\": \"new_password\"}";
 
+        User guestUser = new User();
+        guestUser.setUsername(GUEST_USER_NAME);
+
         mockMvc.perform(post("/users/myPassword")
                         .content(mockJson)
+                        .requestAttr("user", guestUser)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     private Group mockedGroup() {
@@ -527,8 +516,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
     void deleteAdminReturnsError() throws EntException {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
             Mockito.lenient().when(user.getUsername()).thenReturn("admin");
-            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-            new UserController().deleteUser(user, "admin", bindingResult);
+            new UserController().deleteUser(user, "admin");
         });
     }
 
@@ -536,8 +524,7 @@ class UserControllerUnitTest extends AbstractControllerTest {
     void selfDeleteReturnsError() throws EntException {
         Assertions.assertThrows(ValidationGenericException.class, () -> {
             when(user.getUsername()).thenReturn("test");
-            MapBindingResult bindingResult = new MapBindingResult(new HashMap<Object, Object>(), "user");
-            new UserController().deleteUser(user, "test", bindingResult);
+            new UserController().deleteUser(user, "test");
         });
     }
 }
