@@ -78,6 +78,13 @@
         </property>
     </bean>
 
+    <bean id="LegacyApiUserExtractor"
+            class="org.entando.entando.aps.system.services.api.server.LegacyApiUserExtractor">
+        <constructor-arg name="userManager" ref="UserManager" />
+        <constructor-arg name="authorizationManager" ref="AuthorizationManager" />
+        <constructor-arg name="tokenManager" ref="OAuth2TokenManager" />
+    </bean>
+
     <beans profile="swagger">
         <bean id="swaggerInitializer" class="org.entando.entando.aps.system.init.SwaggerInitializer" >
             <constructor-arg name="baseConfigManager" ref="BaseConfigManager" />
