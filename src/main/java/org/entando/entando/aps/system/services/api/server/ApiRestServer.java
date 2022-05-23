@@ -292,7 +292,7 @@ public class ApiRestServer {
                     for (Role role : roles) {
                         _logger.debug("User {} requesting resource has {} permission ", username, (null != role.getPermissions()) ? role.getPermissions().toString() : "");
                     }
-                    throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
+                    throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.FORBIDDEN);
                 }
             }
         } else if (apiMethod.getRequiredAuth()) {
