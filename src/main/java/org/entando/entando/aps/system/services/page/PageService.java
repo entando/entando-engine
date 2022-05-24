@@ -225,27 +225,7 @@ public class PageService implements IComponentExistsService, IPageService,
                         res.add(dtoBuilder.convert(childD));
                     }
                 })));
-        // make sure the position is matching the index
-        for (int i = 0; i < res.size(); i++) {
-            PageDto pageDto = res.get(i);
-            if (pageDto.getPosition() != (i + 1)) {
-                updatePagePosition(i, pageDto);
-            }
-        }
         return res;
-    }
-
-    private void updatePagePosition(int index, PageDto pageDto) {
-        IPage page = pageDto.isOnlineInstance() ? getPageManager().getOnlinePage(pageDto.getCode()) :
-                getPageManager().getDraftPage(pageDto.getCode());
-        page.setPosition(index + 1);
-        try {
-            getPageManager().updatePage(page);
-        } catch (EntException ex) {
-            logger.error("Error updating the position for page {}", page.getCode());
-            throw new RestServerError("Error updating the page position", ex);
-        }
-        pageDto.setPosition(page.getPosition());
     }
 
     @Override
