@@ -207,6 +207,9 @@ public class PagedMetadata<T> {
     private boolean isValidObj(Filter filter, Object obj) {
         String fieldToScan = filter.getAttribute();
         Object value = this.getFieldValue(obj, fieldToScan);
+        if (filter.getOperator().equals("eq")) {
+            return value != null && value instanceof String && value.equals(filter.getValue());
+        }
         return value != null && value instanceof String && ((String) value).contains(filter.getValue());
     }
 
