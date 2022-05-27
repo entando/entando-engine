@@ -24,6 +24,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -32,6 +33,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -229,7 +231,7 @@ class TestAuthorizationManager extends BaseTestCase {
     }
 
     @Test
-    void testCheckNewUser() throws Throwable {
+    void testCheckNewUser_1() throws Throwable {
         String username = "UserForTest";
         String password = "PasswordForTest";
         this.addUserForTest(username, password);
@@ -255,6 +257,46 @@ class TestAuthorizationManager extends BaseTestCase {
             assertTrue(checkPermission);
             checkPermission = this.authorizationManager.isAuthOnPermission(extractedUser, Permission.CONTENT_EDITOR);
             assertTrue(checkPermission);
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            if (null != extractedUser) {
+                this.userManager.removeUser(extractedUser);
+            }
+            extractedUser = this.userManager.getUser(username);
+            assertNull(extractedUser);
+        }
+    }
+
+    @Test
+    void testCheckNewUser_2() throws Throwable {
+        String username = "UserForTest_2";
+        String password = "PasswordForTest_2";
+        this.addUserForTest(username, password);
+        UserDetails extractedUser = null;
+        try {
+            this.authorizationManager.addUserAuthorization(username, null, "supervisor");
+            this.authorizationManager.addUserAuthorization(username, "customers", null);
+            this.authorizationManager.addUserAuthorization(username, "helpdesk", "pageManager");
+            this.authorizationManager.addUserAuthorization(username, null, null);
+            extractedUser = this.authenticationProvider.getUser(username, password);
+            assertEquals(username, extractedUser.getUsername());
+            assertNotNull(extractedUser);
+            assertEquals(4, extractedUser.getAuthorizations().size());
+            
+            List<Group> groupsByPermission = this.authorizationManager.getGroupsByPermission(extractedUser, Permission.MANAGE_PAGES);
+            Assertions.assertEquals(1, groupsByPermission.size());
+            Assertions.assertEquals("helpdesk", groupsByPermission.get(0).getName());
+            
+            List<Group> groupsByRole = this.authorizationManager.getGroupsByRole(extractedUser, "editor");
+            Assertions.assertEquals(1, groupsByRole.size());
+            Assertions.assertEquals(Group.FREE_GROUP_NAME, groupsByRole.get(0).getName());
+            
+            List<Role> rolesByGroup = this.authorizationManager.getRolesByGroup(extractedUser, "customers");
+            Assertions.assertEquals(0, rolesByGroup.size());
+            rolesByGroup = this.authorizationManager.getRolesByGroup(extractedUser, "helpdesk");
+            Assertions.assertEquals(1, rolesByGroup.size());
+            Assertions.assertEquals("pageManager", rolesByGroup.get(0).getName());
         } catch (Throwable t) {
             throw t;
         } finally {
