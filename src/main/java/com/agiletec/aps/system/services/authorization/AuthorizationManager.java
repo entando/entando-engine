@@ -138,7 +138,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             return null;
         }
 
-        List<String> adminRoleNames = new ArrayList<String>();
+        List<String> adminRoleNames = new ArrayList<>();
         if (isRole) {
             List<Role> adminRoles = this.getRolesWithPermission(user, Permission.SUPERUSER);
             if (null != adminRoles && !adminRoles.isEmpty()) {
@@ -150,17 +150,17 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
                 }
             }
         }
-        List authorities = new ArrayList<IApsAuthority>();
+        List<IApsAuthority> authorities = new ArrayList<>();
         List<Authorization> userAuths = user.getAuthorizations();
         for (int i = 0; i < userAuths.size(); i++) {
             Authorization userAuth = userAuths.get(i);
-            if (null == userAuth) {
+            if (null == userAuth || null == userAuth.getRole() || null == userAuth.getGroup()) {
                 continue;
             }
-            if (!isRole && null != userAuth.getGroup() && (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME) || requiredAuthName.equals(userAuth.getGroup().getAuthority()))) {
+            if (!isRole && (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME) || requiredAuthName.equals(userAuth.getGroup().getAuthority()))) {
                 authorities.add(userAuth.getRole());
             }
-            if (isRole && null != userAuth.getRole() && (adminRoleNames.contains(userAuth.getRole().getName()) || requiredAuthName.equals(userAuth.getRole().getAuthority()))) {
+            if (isRole && (adminRoleNames.contains(userAuth.getRole().getName()) || requiredAuthName.equals(userAuth.getRole().getAuthority()))) {
                 if (userAuth.getGroup().getName().equals(Group.ADMINS_GROUP_NAME)) {
                     return this.getGroupManager().getGroups();
                 } else {
