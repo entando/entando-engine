@@ -398,14 +398,23 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         if (widgetRequest.isReadonlyPageWidgetConfig() != null) {
             type.setReadonlyPageWidgetConfig(widgetRequest.isReadonlyPageWidgetConfig());
         }
-        if (widgetRequest.getParentType() != null) {
+        if (!StringUtils.isBlank(widgetRequest.getParentType())) {
             type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
+        } else if (widgetRequest.getParameters() != null) {
+            List<WidgetTypeParameter> parameters = 
+                    widgetRequest.getParameters().stream()
+                            .map(r -> new WidgetTypeParameter(r.getCode(), r.getDescription())).collect(Collectors.toList());
+            if (!parameters.isEmpty()) {
+                type.setTypeParameters(parameters);
+            }
+            String action = (StringUtils.isBlank(widgetRequest.getAction())) ? "configSimpleParameter" : widgetRequest.getAction();
+            type.setAction(action);
         }
-
+        
         if ((widgetRequest.getConfig() != null) && !type.isLocked()){
             type.setConfig(ApsProperties.fromMap(widgetRequest.getConfig()));
         }
-
+        
         try {
             if (widgetRequest.getConfigUi() != null) {
                 type.setConfigUi(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));

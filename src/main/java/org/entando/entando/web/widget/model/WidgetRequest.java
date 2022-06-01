@@ -13,12 +13,15 @@
  */
 package org.entando.entando.web.widget.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Map;
 
-public class WidgetRequest {
+public class WidgetRequest implements Serializable {
 
     @NotBlank(message = "widgettype.code.notBlank")
     private String code;
@@ -35,6 +38,10 @@ public class WidgetRequest {
     private String bundleId;
 
     private Map<String, Object> configUi;
+    
+    private List<WidgetParameter> parameters = new ArrayList<>();
+    
+    private String action;
 
     private String parentType;
 
@@ -93,6 +100,20 @@ public class WidgetRequest {
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
     }
+    
+    public List<WidgetParameter> getParameters() {
+        return parameters;
+    }
+    public void setParameters(List<WidgetParameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    public String getAction() {
+        return action;
+    }
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public String getParentType() {
         return parentType;
@@ -133,4 +154,32 @@ public class WidgetRequest {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+    
+    public static class WidgetParameter {
+
+        public WidgetParameter() { }
+        public WidgetParameter(String code, String description) {
+            this.code = code;
+            this.description = description;
+        }
+        
+        private String code;
+        private String description;
+
+        public String getCode() {
+            return code;
+        }
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+        public void setDescription(String description) {
+            this.description = description;
+        }
+        
+    }
+    
 }
