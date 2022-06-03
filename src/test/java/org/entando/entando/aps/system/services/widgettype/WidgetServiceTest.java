@@ -40,7 +40,6 @@ import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.page.model.PageSearchRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -258,7 +257,7 @@ class WidgetServiceTest {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n"
                 + "<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
-        WidgetUpdateRequest widgetRequest = getWidgetUpdateRequest1();
+        WidgetRequest widgetRequest = getWidgetUpdateRequest1();
         when(widgetManager.getWidgetType(eq(WIDGET_1_CODE))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
         GuiFragment mockedFragment = mock(GuiFragment.class);
@@ -286,7 +285,7 @@ class WidgetServiceTest {
     void shouldNotUpdateWidgetCustomUiNonce() throws Exception {
         // Given
         String expectedCustomUi = "<#assign wp=JspTaglibs[ \"/aps-core\"]>\n<script nonce=\"<@wp.cspNonce />\">my_js_script</script>";
-        WidgetUpdateRequest widgetRequest = getWidgetUpdateRequest1();
+        WidgetRequest widgetRequest = getWidgetUpdateRequest1();
         widgetRequest.setCustomUi(expectedCustomUi);
         when(widgetManager.getWidgetType(eq(WIDGET_1_CODE))).thenReturn(getWidget1());
         when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
@@ -349,8 +348,8 @@ class WidgetServiceTest {
         return widgetRequest;
     }
 
-    private WidgetUpdateRequest getWidgetUpdateRequest1() {
-        WidgetUpdateRequest widgetRequest = new WidgetUpdateRequest();
+    private WidgetRequest getWidgetUpdateRequest1() {
+        WidgetRequest widgetRequest = new WidgetRequest();
         widgetRequest.setTitles(ImmutableMap.of("it", "Mio Titolo", "en", "My Title"));
         widgetRequest.setCustomUi("<script>my_js_script</script>");
         widgetRequest.setGroup("group");

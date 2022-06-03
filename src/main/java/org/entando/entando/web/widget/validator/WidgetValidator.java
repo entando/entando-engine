@@ -13,8 +13,6 @@
  */
 package org.entando.entando.web.widget.validator;
 
-import static org.entando.entando.web.page.validator.PageValidator.ERRCODE_URINAME_MISMATCH;
-
 import com.agiletec.aps.util.ApsProperties;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +21,6 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -68,7 +65,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
         this.validateParameters(widgetRequest, errors);
     }
     
-    public void validateUpdateWidget(String widgetCode, WidgetUpdateRequest widgetRequest, Errors errors) {
+    public void validateUpdateWidget(String widgetCode, WidgetRequest widgetRequest, Errors errors) {
         WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
         if (type == null) {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);

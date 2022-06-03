@@ -44,14 +44,12 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -195,6 +193,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     @Override
     public WidgetDto addWidget(WidgetRequest widgetRequest) {
         WidgetType widgetType = new WidgetType();
+        widgetType.setCode(widgetRequest.getCode());
         this.processWidgetType(widgetType, widgetRequest);
         WidgetType oldWidgetType = this.getWidgetManager().getWidgetType(widgetType.getCode());
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
@@ -225,7 +224,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
     @Override
-    public WidgetDto updateWidget(String widgetCode, WidgetUpdateRequest widgetUpdateRequest) {
+    public WidgetDto updateWidget(String widgetCode, WidgetRequest widgetUpdateRequest) {
         WidgetType type = this.getWidgetManager().getWidgetType(widgetCode);
         if (type == null) {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);
@@ -237,10 +236,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
                 bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetUpdateRequest.getGroup()}, "widgettype.group.invalid");
                 throw new ValidationGenericException(bindingResult);
             }
-
-            WidgetRequest widgetRequest = getWidgetRequestFromUpdate(widgetCode, widgetUpdateRequest);
-            this.processWidgetType(type, widgetRequest);
-
+            this.processWidgetType(type, widgetUpdateRequest);
             String customUi = NonceInjector.process(widgetUpdateRequest.getCustomUi());
             if (StringUtils.isEmpty(customUi) && type.getParentType() != null) {
                 GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(type.getParentTypeCode());
@@ -279,23 +275,6 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             throw new RestServerError("Failed to update widget", e);
         }
         return widgetDto;
-    }
-
-    @NotNull
-    private WidgetRequest getWidgetRequestFromUpdate(String widgetCode, WidgetUpdateRequest widgetUpdateRequest) {
-        WidgetRequest widgetRequest = new WidgetRequest();
-        widgetRequest.setCode(widgetCode);
-        widgetRequest.setGroup(widgetUpdateRequest.getGroup());
-        widgetRequest.setWidgetCategory(widgetUpdateRequest.getWidgetCategory());
-        widgetRequest.setTitles(widgetUpdateRequest.getTitles());
-        widgetRequest.setReadonlyPageWidgetConfig(widgetUpdateRequest.isReadonlyPageWidgetConfig());
-        widgetRequest.setConfig(widgetUpdateRequest.getConfig());
-        widgetRequest.setCustomUi(widgetUpdateRequest.getCustomUi());
-        widgetRequest.setConfigUi(widgetUpdateRequest.getConfigUi());
-        widgetRequest.setParentType(widgetUpdateRequest.getParentType());
-        widgetRequest.setBundleId(widgetUpdateRequest.getBundleId());
-        widgetRequest.setIcon(widgetUpdateRequest.getIcon());
-        return widgetRequest;
     }
 
     @Override
@@ -387,7 +366,6 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
     private void processWidgetType(WidgetType type, WidgetRequest widgetRequest) {
-        type.setCode(widgetRequest.getCode());
         ApsProperties titles = new ApsProperties();
         titles.putAll(widgetRequest.getTitles());
         type.setTitles(titles);

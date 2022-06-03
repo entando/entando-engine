@@ -35,7 +35,6 @@ import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -222,7 +221,7 @@ class WidgetControllerTest extends AbstractControllerTest {
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         assertNotNull(response);
-        Mockito.verify(widgetService, Mockito.times(1)).updateWidget(Mockito.anyString(), Mockito.any(WidgetUpdateRequest.class));
+        Mockito.verify(widgetService, Mockito.times(1)).updateWidget(Mockito.anyString(), Mockito.any(WidgetRequest.class));
     }
 
     @Test
