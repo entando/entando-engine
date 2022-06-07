@@ -43,12 +43,3 @@ ignore:
   SNYK-JAVA-IONETTY-2812456:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGAPACHETIKA-2825265:
-    - '*':
-        reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORKSECURITY-2833360:
-    - '*':
-        reason: '.'
-  SNYK-JAVA-ORGSPRINGFRAMEWORKSECURITY-2833359:
-    - '*':
-        reason: '.'
