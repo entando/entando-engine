@@ -22,9 +22,6 @@ ignore:
   SNYK-JAVA-COMFASTERXMLJACKSONCORE-2326698:
     - '*':
         reason: '.'
-  SNYK-JAVA-ORGAPACHEPOI-2419052:
-    - '*':
-        reason: '.'
   SNYK-JAVA-ORGLIQUIBASE-2419059:
     - '*':
         reason: '.'
@@ -44,8 +41,5 @@ ignore:
     - '*':
         reason: '.'
   SNYK-JAVA-IONETTY-2812456:
-    - '*':
-        reason: '.'
-  SNYK-JAVA-ORGAPACHETIKA-2825265:
     - '*':
         reason: '.'
