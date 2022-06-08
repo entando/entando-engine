@@ -452,6 +452,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             request.getParameters().add(new WidgetParameter("param1", "Description of parameter 1"));
             request.getParameters().add(new WidgetParameter("param2", "Description of parameter 2"));
             request.getParameters().add(new WidgetParameter("param3", "Description of parameter 3"));
+            request.getParameters().add(new WidgetParameter("param4", null));
             request.setAction("configAction");
             ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
             
@@ -461,13 +462,15 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             resultMaster.andExpect(jsonPath("$.payload.guiFragments.size()", is(1)));
             resultMaster.andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(mainCustomUi)));
             resultMaster.andExpect(jsonPath("$.payload.hasConfig", is(true)));
-            resultMaster.andExpect(jsonPath("$.payload.parameters.size()", is(3)));
+            resultMaster.andExpect(jsonPath("$.payload.parameters.size()", is(4)));
             resultMaster.andExpect(jsonPath("$.payload.parameters[0].code", is("param1")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[0].description", is("Description of parameter 1")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[1].code", is("param2")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[1].description", is("Description of parameter 2")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[2].code", is("param3")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[2].description", is("Description of parameter 3")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[3].code", is("param4")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[3].description", nullValue()));
             
             widgetType = this.widgetTypeManager.getWidgetType(code);
             Assertions.assertNotNull(widgetType);
@@ -545,7 +548,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             executeWidgetGet(code, accessToken, status().isOk())
                     .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(code)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(3)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(4)))
                     .andExpect(jsonPath("$.payload.parameters[0].code", is("param1")))
                     .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of parameter 1")));
             
