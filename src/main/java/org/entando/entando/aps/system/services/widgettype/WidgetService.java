@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 @Service
 public class WidgetService implements IWidgetService, GroupServiceUtilizer<WidgetDto>, ServletContextAware {
 
-    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetService.class);
 
     private IWidgetTypeManager widgetManager;
 
@@ -268,14 +268,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         if (widgetType.isLogic()) {
             return null;
         }
-        String customUi = NonceInjector.process(widgetRequest.getCustomUi());
-        if (StringUtils.isEmpty(customUi) && widgetType.getParentType() != null) {
-            GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetType.getParentTypeCode());
-            if (guiFragment != null) {
-                customUi = guiFragment.getCurrentGui();
-            }
-        }
-        return customUi;
+        return NonceInjector.process(widgetRequest.getCustomUi());
     }
 
     @Override
