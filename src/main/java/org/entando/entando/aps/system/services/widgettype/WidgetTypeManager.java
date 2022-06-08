@@ -79,7 +79,7 @@ public class WidgetTypeManager extends AbstractService
 
     @Override
     public List<WidgetType> getWidgetTypes() {
-        List<WidgetType> types = new ArrayList<WidgetType>();
+        List<WidgetType> types = new ArrayList<>();
         types.addAll(this.getCacheWrapper().getWidgetTypes());
         BeanComparator comparator = new BeanComparator("code");
         Collections.sort(types, comparator);

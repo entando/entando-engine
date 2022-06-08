@@ -289,6 +289,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 try {
                     ResultActions result = this.executeWidgetPost(request, accessToken, status().isOk());
                     result.andExpect(jsonPath("$.payload.code", is(request.getCode())));
+                    result.andExpect(jsonPath("$.payload.parentType", nullValue()));
+                    result.andExpect(jsonPath("$.payload.guiFragments.size()", is(1)));
+                    result.andExpect(jsonPath("$.payload.hasConfig", is(false)));
+                    result.andExpect(jsonPath("$.payload.parameters.size()", is(0)));
                 } catch (Exception e) {
                     Assertions.fail("Error adding widgetType " + request.getCode());
                 }
@@ -303,9 +307,9 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             IntStream.range(1, 20).parallel().forEach(i -> {
                 String code = newCode_prefix + "_" + i;
                 try {
-                ResultActions result = this.executeWidgetDelete(code, accessToken, status().isOk());
-                result.andExpect(jsonPath("$.payload.code", is(code)));
-                                } catch (Exception e) {
+                    ResultActions result = this.executeWidgetDelete(code, accessToken, status().isOk());
+                    result.andExpect(jsonPath("$.payload.code", is(code)));
+                } catch (Exception e) {
                     Assertions.fail("Error deleting widgetType " + code);
                 }
                 assertNull(this.widgetTypeManager.getWidgetType(code));
@@ -490,8 +494,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             
             resultSlave.andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(code)))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1))) // WRONG - TODO to clarify
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(mainCustomUi))) // WRONG - TODO to clarify
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
                     .andExpect(jsonPath("$.payload.hasConfig", is(false)))
                     .andExpect(jsonPath("$.payload.config.size()", is(1)))
@@ -516,8 +519,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(code)))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1))) // WRONG - TODO to clarify
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(childCustomUi))) // WRONG - TODO to clarify
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
                     .andExpect(jsonPath("$.payload.hasConfig", is(false)))
                     .andExpect(jsonPath("$.payload.config.size()", is(2)))
@@ -533,8 +535,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                     .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(code)))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1))) // WRONG - TODO to clarify
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(mainCustomUi))) // WRONG - TODO to clarify
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
                     .andExpect(jsonPath("$.payload.hasConfig", is(false)))
                     .andExpect(jsonPath("$.payload.config.size()", is(1)))
