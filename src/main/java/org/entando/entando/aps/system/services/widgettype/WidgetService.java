@@ -373,7 +373,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         } else if (widgetRequest.getParameters() != null) {
             List<WidgetTypeParameter> parameters = 
                     widgetRequest.getParameters().stream()
-                            .map(r -> new WidgetTypeParameter(r.getCode(), r.getDescription())).collect(Collectors.toList());
+                            .map(r -> new WidgetTypeParameter(r.getName(), r.getDescription())).collect(Collectors.toList());
             if (!parameters.isEmpty()) {
                 type.setTypeParameters(parameters);
             }
