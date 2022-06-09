@@ -43,9 +43,9 @@ public class WidgetRequest implements Serializable {
     
     private String action;
 
-    private String parentType;
+    private String parentCode;
 
-    private Map<String, String> config;
+    private Map<String, String> paramDefaults;
 
     private Boolean readonlyPageWidgetConfig;
 
@@ -115,20 +115,38 @@ public class WidgetRequest implements Serializable {
         this.action = action;
     }
 
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+
+    @Deprecated
     public String getParentType() {
-        return parentType;
+        return this.getParentCode();
     }
-
+    @Deprecated
     public void setParentType(String parentType) {
-        this.parentType = parentType;
+        this.setParentCode(parentType);
     }
 
+    public Map<String, String> getParamDefaults() {
+        return paramDefaults;
+    }
+
+    public void setParamDefaults(Map<String, String> paramDefaults) {
+        this.paramDefaults = paramDefaults;
+    }
+
+    @Deprecated
     public Map<String, String> getConfig() {
-        return config;
+        return this.getParamDefaults();
     }
-
+    @Deprecated
     public void setConfig(Map<String, String> config) {
-        this.config = config;
+        this.setParamDefaults(config);
     }
 
     public Boolean isReadonlyPageWidgetConfig() {

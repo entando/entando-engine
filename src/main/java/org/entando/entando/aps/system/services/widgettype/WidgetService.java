@@ -368,8 +368,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         if (widgetRequest.isReadonlyPageWidgetConfig() != null) {
             type.setReadonlyPageWidgetConfig(widgetRequest.isReadonlyPageWidgetConfig());
         }
-        if (!StringUtils.isBlank(widgetRequest.getParentType())) {
-            type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
+        if (!StringUtils.isBlank(widgetRequest.getParentCode())) {
+            type.setParentType(this.widgetManager.getWidgetType(widgetRequest.getParentCode()));
         } else if (widgetRequest.getParameters() != null) {
             List<WidgetTypeParameter> parameters = 
                     widgetRequest.getParameters().stream()
@@ -379,10 +379,10 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             }
             String action = (StringUtils.isBlank(widgetRequest.getAction())) ? "configSimpleParameter" : widgetRequest.getAction();
             type.setAction(action);
-            type.setConfigUi(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
+            type.setConfigUi(this.objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         }
-        if ((widgetRequest.getConfig() != null) && !type.isLocked()){
-            type.setConfig(ApsProperties.fromMap(widgetRequest.getConfig()));
+        if ((widgetRequest.getParamDefaults()!= null) && !type.isLocked()){
+            type.setConfig(ApsProperties.fromMap(widgetRequest.getParamDefaults()));
         }
     }
 

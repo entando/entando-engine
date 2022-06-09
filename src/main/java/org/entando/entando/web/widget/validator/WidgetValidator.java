@@ -58,7 +58,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
     @Override
     public void validate(Object target, Errors errors) {
         WidgetRequest widgetRequest = (WidgetRequest) target;
-        if (StringUtils.isEmpty(widgetRequest.getCustomUi()) && StringUtils.isEmpty(widgetRequest.getParentType())) {
+        if (StringUtils.isEmpty(widgetRequest.getCustomUi()) && StringUtils.isEmpty(widgetRequest.getParentCode())) {
             errors.rejectValue("customUi", ERRCODE_NOT_BLANK, new String[]{}, "widgettype.customUi.notBlank");
         }
         this.validateTitles(widgetRequest.getTitles(), errors);
@@ -73,9 +73,9 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (!StringUtils.equals(widgetCode, widgetRequest.getCode())) {
             errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.code.mismatch");
         }
-        ApsProperties newWidgetConfig = ApsProperties.fromMap(widgetRequest.getConfig());
+        ApsProperties newWidgetConfig = ApsProperties.fromMap(widgetRequest.getParamDefaults());
         ApsProperties widgetTypeConfig = type.getConfig();
-        if (newWidgetConfig.size( ) == 0) {
+        if (newWidgetConfig.isEmpty()) {
             newWidgetConfig = null;
         }
         if ((widgetTypeConfig == null && newWidgetConfig != null && type.isLocked()) || 
@@ -103,22 +103,22 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (null != widgetRequest.getParameters() && !widgetRequest.getParameters().isEmpty()) {
             return;
         }
-        String parentTypeCode = widgetRequest.getParentType();
+        String parentTypeCode = widgetRequest.getParentCode();
         if (StringUtils.isBlank(parentTypeCode)) {
             return;
         }
         WidgetType parentType = this.widgetTypeManager.getWidgetType(parentTypeCode);
         if (null == parentType) {
-            throw new ResourceNotFoundException(WidgetValidator.ERRCODE_PARENT_WIDGET_INVALID, "parentType", parentTypeCode);
+            throw new ResourceNotFoundException(WidgetValidator.ERRCODE_PARENT_WIDGET_INVALID, "parentCode", parentTypeCode);
         }
-        Map<String, String> config = widgetRequest.getConfig();
+        Map<String, String> config = widgetRequest.getParamDefaults();
         if (null == config) {
             return;
         }
         config.entrySet().stream().forEach(e -> {
             String key = e.getKey();
             if (!parentType.hasParameter(key)) {
-                errors.rejectValue("config", ERRCODE_CONFIG_PARAMETER_INVALID, new String[]{key, parentTypeCode}, "widgettype.config.invalid");
+                errors.rejectValue("paramDefaults", ERRCODE_CONFIG_PARAMETER_INVALID, new String[]{key, parentTypeCode}, "widgettype.config.invalid");
             }
         });
     }
