@@ -40,6 +40,3 @@ ignore:
   SNYK-JAVA-ORGOWASPESAPI-2803305:
     - '*':
         reason: '.'
-  SNYK-JAVA-IONETTY-2812456:
-    - '*':
-        reason: '.'
