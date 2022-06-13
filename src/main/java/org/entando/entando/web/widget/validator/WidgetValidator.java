@@ -73,7 +73,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (!StringUtils.equals(widgetCode, widgetRequest.getCode())) {
             errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{widgetCode, widgetRequest.getCode()}, "widgettype.code.mismatch");
         }
-        ApsProperties newWidgetConfig = ApsProperties.fromMap(widgetRequest.getParamDefaults());
+        ApsProperties newWidgetConfig = ApsProperties.fromMap(widgetRequest.getParamsDefaults());
         ApsProperties widgetTypeConfig = type.getConfig();
         if (newWidgetConfig.isEmpty()) {
             newWidgetConfig = null;
@@ -100,7 +100,7 @@ public class WidgetValidator extends AbstractPaginationValidator {
     }
 
     protected void validateParameters(WidgetRequest widgetRequest, Errors errors) {
-        if (null != widgetRequest.getParameters() && !widgetRequest.getParameters().isEmpty()) {
+        if (null != widgetRequest.getParams() && !widgetRequest.getParams().isEmpty()) {
             return;
         }
         String parentTypeCode = widgetRequest.getParentCode();
@@ -111,14 +111,14 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (null == parentType) {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_PARENT_WIDGET_INVALID, "parentCode", parentTypeCode);
         }
-        Map<String, String> config = widgetRequest.getParamDefaults();
+        Map<String, String> config = widgetRequest.getParamsDefaults();
         if (null == config) {
             return;
         }
         config.entrySet().stream().forEach(e -> {
             String key = e.getKey();
             if (!parentType.hasParameter(key)) {
-                errors.rejectValue("paramDefaults", ERRCODE_CONFIG_PARAMETER_INVALID, new String[]{key, parentTypeCode}, "widgettype.config.invalid");
+                errors.rejectValue("paramsDefaults", ERRCODE_CONFIG_PARAMETER_INVALID, new String[]{key, parentTypeCode}, "widgettype.config.invalid");
             }
         });
     }

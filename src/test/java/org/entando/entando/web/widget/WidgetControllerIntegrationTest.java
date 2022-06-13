@@ -449,10 +449,10 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
 
             request.setCustomUi(mainCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
-            request.getParameters().add(new WidgetParameter("param1", "Description of parameter 1"));
-            request.getParameters().add(new WidgetParameter("param2", "Description of parameter 2"));
-            request.getParameters().add(new WidgetParameter("param3", "Description of parameter 3"));
-            request.getParameters().add(new WidgetParameter("param4", null));
+            request.getParams().add(new WidgetParameter("param1", "Description of parameter 1"));
+            request.getParams().add(new WidgetParameter("param2", "Description of parameter 2"));
+            request.getParams().add(new WidgetParameter("param3", "Description of parameter 3"));
+            request.getParams().add(new WidgetParameter("param4", null));
             request.setAction("configAction");
             ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
             

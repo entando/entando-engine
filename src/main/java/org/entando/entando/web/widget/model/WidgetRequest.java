@@ -39,13 +39,13 @@ public class WidgetRequest implements Serializable {
 
     private Map<String, Object> configUi;
     
-    private List<WidgetParameter> parameters = new ArrayList<>();
+    private List<WidgetParameter> params = new ArrayList<>();
     
     private String action;
 
     private String parentCode;
 
-    private Map<String, String> paramDefaults;
+    private Map<String, String> paramsDefaults;
 
     private Boolean readonlyPageWidgetConfig;
 
@@ -100,14 +100,14 @@ public class WidgetRequest implements Serializable {
     public void setConfigUi(Map<String, Object> configUi) {
         this.configUi = configUi;
     }
-    
-    public List<WidgetParameter> getParameters() {
-        return parameters;
-    }
-    public void setParameters(List<WidgetParameter> parameters) {
-        this.parameters = parameters;
-    }
 
+    public List<WidgetParameter> getParams() {
+        return params;
+    }
+    public void setParams(List<WidgetParameter> params) {
+        this.params = params;
+    }
+    
     public String getAction() {
         return action;
     }
@@ -132,21 +132,21 @@ public class WidgetRequest implements Serializable {
         this.setParentCode(parentType);
     }
 
-    public Map<String, String> getParamDefaults() {
-        return paramDefaults;
+    public Map<String, String> getParamsDefaults() {
+        return paramsDefaults;
     }
 
-    public void setParamDefaults(Map<String, String> paramDefaults) {
-        this.paramDefaults = paramDefaults;
+    public void setParamsDefaults(Map<String, String> paramsDefaults) {
+        this.paramsDefaults = paramsDefaults;
     }
 
     @Deprecated
     public Map<String, String> getConfig() {
-        return this.getParamDefaults();
+        return this.getParamsDefaults();
     }
     @Deprecated
     public void setConfig(Map<String, String> config) {
-        this.setParamDefaults(config);
+        this.setParamsDefaults(config);
     }
 
     public Boolean isReadonlyPageWidgetConfig() {

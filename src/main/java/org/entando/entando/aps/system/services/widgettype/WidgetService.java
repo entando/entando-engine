@@ -370,9 +370,9 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
         if (!StringUtils.isBlank(widgetRequest.getParentCode())) {
             type.setParentType(this.widgetManager.getWidgetType(widgetRequest.getParentCode()));
-        } else if (widgetRequest.getParameters() != null) {
+        } else if (widgetRequest.getParams() != null) {
             List<WidgetTypeParameter> parameters = 
-                    widgetRequest.getParameters().stream()
+                    widgetRequest.getParams().stream()
                             .map(r -> new WidgetTypeParameter(r.getName(), r.getDescription())).collect(Collectors.toList());
             if (!parameters.isEmpty()) {
                 type.setTypeParameters(parameters);
@@ -381,8 +381,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             type.setAction(action);
             type.setConfigUi(this.objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         }
-        if ((widgetRequest.getParamDefaults()!= null) && !type.isLocked()){
-            type.setConfig(ApsProperties.fromMap(widgetRequest.getParamDefaults()));
+        if ((widgetRequest.getParamsDefaults()!= null) && !type.isLocked()){
+            type.setConfig(ApsProperties.fromMap(widgetRequest.getParamsDefaults()));
         }
     }
 
