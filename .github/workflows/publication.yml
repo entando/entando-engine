@@ -189,7 +189,7 @@ jobs:
         with:
           path: "${{ env.LOCAL_CLONE_DIR }}/target/"
           key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
-      - name: "Post publication tests"
+      - name: "Post deployment tests"
         run: |
           ${{ secrets.ENTANDO_OPT_PPL_INSTALL_CMD }}
           
