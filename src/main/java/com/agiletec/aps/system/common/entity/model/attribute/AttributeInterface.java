@@ -28,6 +28,7 @@ import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInt
 import com.agiletec.aps.system.services.lang.ILangManager;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.lang.Lang;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Interface for Entity Attributes. The attributes contain the informations constituting the Entity. Is it very
@@ -319,7 +320,10 @@ public interface AttributeInterface extends Serializable {
 
     public DefaultJAXBAttributeType getJAXBAttributeType();
 
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager);
+
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory);
 
     public Status getStatus();
 

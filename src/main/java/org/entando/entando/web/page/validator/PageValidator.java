@@ -21,7 +21,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.jsonpatch.validator.JsonPatchValidator;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.web.common.exceptions.ValidationGenericException;
+import org.entando.entando.web.common.exceptions.ValidationUnprocessableEntityException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +84,12 @@ public class PageValidator extends AbstractPaginationValidator {
             errors.reject(ERRCODE_PAGE_ALREADY_EXISTS, new String[]{pageCode}, "page.exists");
         }
     }
-
+    public void validateClone(PageCloneRequest request, Errors errors) {
+        String pageCode = request.getNewPageCode();
+        if (null != this.getPage(pageCode)) {
+            errors.reject(ERRCODE_PAGE_ALREADY_EXISTS, new String[]{pageCode}, "page.exists");
+        }
+    }
     public void validateBodyCode(String pageCode, PageRequest pageRequest, Errors errors) {
         if (!StringUtils.equals(pageCode, pageRequest.getCode())) {
             errors.rejectValue("code", ERRCODE_URINAME_MISMATCH, new String[]{pageCode, pageRequest.getCode()}, "page.code.mismatch");
@@ -132,11 +139,7 @@ public class PageValidator extends AbstractPaginationValidator {
 
     public void validateGroups(String pageGroup, String parentGroup, Errors errors) {
         if (!parentGroup.equals(Group.FREE_GROUP_NAME) && !pageGroup.equals(parentGroup)) {
-            if (pageGroup.equals(Group.FREE_GROUP_NAME)) {
-                errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.freeUnderReserved.notAllowed");
-            } else {
-                errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.move.group.mismatch");
-            }
+            errors.reject(ERRCODE_GROUP_MISMATCH, new String[]{}, "page.group.notAllowed");
         }
     }
 
@@ -178,7 +181,7 @@ public class PageValidator extends AbstractPaginationValidator {
         }
         this.validateGroups(pageCode, pagePositionRequest, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new ValidationGenericException(bindingResult);
+            throw new ValidationUnprocessableEntityException(bindingResult);
         }
         this.validatePagesStatus(pageCode, pagePositionRequest, bindingResult);
         if (bindingResult.hasErrors()) {

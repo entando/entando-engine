@@ -44,7 +44,6 @@ import javax.validation.Valid;
  * @author E.Santoboni
  */
 @RestController
-@SessionAttributes("user")
 public class ProfileController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(this.getClass());
@@ -88,7 +87,7 @@ public class ProfileController {
 
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
     @GetMapping(value = "/myUserProfile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> getMyUserProfile(@ModelAttribute("user") UserDetails user) {
+    public ResponseEntity<SimpleRestResponse<EntityDto>> getMyUserProfile(@RequestAttribute("user") UserDetails user) {
         final EntityDto userProfileEntityDto = getUserProfileEntityDto(user.getUsername());
         logger.debug("Main Response -> {}", userProfileEntityDto);
         return new ResponseEntity<>(new SimpleRestResponse<>(userProfileEntityDto), HttpStatus.OK);
@@ -166,7 +165,7 @@ public class ProfileController {
 
     @PutMapping(value = "/myUserProfile", produces = MediaType.APPLICATION_JSON_VALUE)
     @RestAccessControl(permission = Permission.ENTER_BACKEND)
-    public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyUserProfile(@ModelAttribute("user") UserDetails user,
+    public ResponseEntity<SimpleRestResponse<EntityDto>> updateMyUserProfile(@RequestAttribute("user") UserDetails user,
                                                                          @Valid @RequestBody EntityDto bodyRequest, BindingResult bindingResult) {
         logger.debug("Update profile for the logged user {} -> {}", user.getUsername(), bodyRequest);
         this.getProfileValidator().validateBodyName(user.getUsername(), bodyRequest, bindingResult);

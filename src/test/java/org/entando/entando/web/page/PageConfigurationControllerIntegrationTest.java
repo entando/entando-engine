@@ -15,8 +15,10 @@ package org.entando.entando.web.page;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.entando.entando.aps.system.services.page.IPageService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.page.model.PageRequest;
@@ -41,17 +43,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Widget;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Assertions;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PageConfigurationControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     @Autowired
     private IPageManager pageManager;
+
+    @Autowired
+    private IPageService pageService;
 
     @Autowired
     private IWidgetTypeManager widgetTypeManager;
@@ -306,6 +313,105 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
                     Assertions.fail("Error removing page " + pageCode);
                 }
             });
+        }
+    }
+
+    @Test
+    void testWidgetOfFreeAccessPageCanBeSeenAndEditedByFreeAccessManager() throws Exception {
+
+        UserDetails freeAccessManager = new OAuth2TestUtils.UserBuilder("freeAccessManager", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), freeAccessManager, true, true);
+    }
+
+    @Test
+    void testWidgetOfFreeAccessPageCannotBeSeenOrEditedByOtherManagers() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        testEditPageWidgetPermissions(getPageRequest("myFreePage"), customersManager, false, false);
+    }
+    
+    @Test
+    void testWidgetOfAdminPageWithCustomersJoinGroupCanBeSeenButNotEditedByCustomersManager() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        PageRequest pageRequest = getPageRequest("myAdminPage");
+        pageRequest.setOwnerGroup(Group.ADMINS_GROUP_NAME);
+        pageRequest.setJoinGroups(List.of("customers"));
+        
+        testEditPageWidgetPermissions(pageRequest, customersManager, true, false);
+    }
+    
+    @Test
+    void testWidgetOfFreePageWithCustomersJoinGroupCanBeSeenButNotEditedByCustomersManager() throws Exception {
+
+        UserDetails customersManager = new OAuth2TestUtils.UserBuilder("customersManager", "0x24")
+                .withAuthorization("customers", "managePages", Permission.MANAGE_PAGES)
+                .build();
+
+        PageRequest pageRequest = getPageRequest("myAdminPage");
+        pageRequest.setOwnerGroup(Group.FREE_GROUP_NAME);
+        pageRequest.setJoinGroups(List.of("customers"));
+        
+        testEditPageWidgetPermissions(pageRequest, customersManager, true, false);
+    }
+    
+    private void testEditPageWidgetPermissions(PageRequest pageRequest, UserDetails userDetails, boolean canRead, boolean canWrite) throws Exception {
+        
+        ResultMatcher expectedRead = canRead ? status().isOk() : status().isForbidden();
+        ResultMatcher expectedWrite = canWrite ? status().isOk() : status().isForbidden();
+        
+        String accessToken = mockOAuthInterceptor(userDetails);
+
+        String pageCode = pageRequest.getCode();
+
+        try {
+            this.pageService.addPage(pageRequest);
+            this.pageManager.setPageOnline(pageCode);
+
+            // test read configuration
+            mockMvc.perform(get("/pages/{pageCode}/configuration", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
+            mockMvc.perform(get("/pages/{pageCode}/widgets", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
+            mockMvc.perform(get("/pages/{pageCode}/widgets/{frameId}", pageCode, 0)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedRead)
+                    .andExpect(jsonPath("$.errors.size()", is(canRead ? 0 : 1)));
+
+            // test default widgets
+            mockMvc.perform(put("/pages/{pageCode}/configuration/defaultWidgets", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
+
+            // test single frame widget
+            WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
+            wcr.setCode("login_form");
+            this.executePutPageFrameWidget(pageCode, 0, wcr, accessToken, expectedWrite);
+
+            // test delete widget
+            this.executeDeletePageFrameWidget(pageCode, 0, accessToken, expectedWrite);
+
+            // test restore
+            mockMvc.perform(put("/pages/{pageCode}/configuration/restore", pageCode)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                    .andExpect(expectedWrite)
+                    .andExpect(jsonPath("$.errors.size()", is(canWrite ? 0 : 1)));
+        } finally {
+            pageManager.deletePage(pageCode);
         }
     }
     

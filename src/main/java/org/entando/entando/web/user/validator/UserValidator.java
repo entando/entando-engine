@@ -35,7 +35,7 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.validator.AbstractPaginationValidator;
 import org.entando.entando.web.entity.validator.AbstractEntityTypeValidator;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.entando.entando.web.user.model.UserPasswordRequest;
+import org.entando.entando.web.user.model.UserUpdatePasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,19 +228,19 @@ public class UserValidator extends AbstractPaginationValidator {
         }
     }
 
-    public void validateChangePasswords(String username, UserPasswordRequest passwordRequest, BindingResult bindingResult) {
+    public void validateChangePasswords(String username, UserUpdatePasswordRequest userUpdatePasswordRequest, BindingResult bindingResult) {
         UserDetails user = this.extractUser(username);
-        if (!StringUtils.equals(username, passwordRequest.getUsername())) {
-            bindingResult.rejectValue("username", ERRCODE_USERNAME_MISMATCH, new String[]{username, passwordRequest.getUsername()}, "user.username.mismatch");
+        if (!StringUtils.equals(username, userUpdatePasswordRequest.getUsername())) {
+            bindingResult.rejectValue("username", ERRCODE_USERNAME_MISMATCH, new String[]{username, userUpdatePasswordRequest.getUsername()}, "user.username.mismatch");
             throw new ValidationConflictException(bindingResult);
         } else if (null == user) {
             throw new ResourceNotFoundException(ERRCODE_USER_NOT_FOUND, "username", username);
-        } else if (StringUtils.equals(passwordRequest.getNewPassword(), passwordRequest.getOldPassword())) {
+        } else if (StringUtils.equals(userUpdatePasswordRequest.getNewPassword(), userUpdatePasswordRequest.getOldPassword())) {
             bindingResult.rejectValue("newPassword", ERRCODE_NEW_PASSWORD_EQUALS, new String[]{}, "user.passwords.same");
-        } else if (!this.verifyPassword(passwordRequest.getUsername(), passwordRequest.getOldPassword())) {
+        } else if (!this.verifyPassword(userUpdatePasswordRequest.getUsername(), userUpdatePasswordRequest.getOldPassword())) {
             bindingResult.rejectValue("oldPassword", ERRCODE_OLD_PASSWORD_FORMAT, new String[]{}, "user.password.old.invalid");
         } else {
-            this.checkNewPassword(username, passwordRequest.getNewPassword(), bindingResult);
+            this.checkNewPassword(username, userUpdatePasswordRequest.getNewPassword(), bindingResult);
         }
     }
 

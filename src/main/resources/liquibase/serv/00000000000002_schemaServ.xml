@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000002_schemaServ" author="entando">
+        <addNotNullConstraint tableName="authuserprofileattrroles" columnName="attrname" columnDataType="varchar(30)"></addNotNullConstraint>
+        <addNotNullConstraint tableName="authuserprofileattrroles" columnName="rolename" columnDataType="varchar(50)"></addNotNullConstraint>
+        <addNotNullConstraint tableName="authuserprofilesearch" columnName="attrname" columnDataType="varchar(30)"></addNotNullConstraint>
+    </changeSet>
+
+</databaseChangeLog>

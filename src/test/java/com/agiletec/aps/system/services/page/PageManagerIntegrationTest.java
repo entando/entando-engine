@@ -48,7 +48,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana, E.Mezzano
  */
-class TestPageManager extends BaseTestCase {
+class PageManagerIntegrationTest extends BaseTestCase {
 
     @Test
     void testGetPage_1() throws Throwable {

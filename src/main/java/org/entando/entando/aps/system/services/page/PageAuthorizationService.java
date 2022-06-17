@@ -73,13 +73,35 @@ public class PageAuthorizationService extends AbstractAuthorizationService<PageD
         return this.isAuth(user, pageCode, true);
     }
 
+    /**
+     * Checks if the owner group of a page is contained in the list of user's groups.
+     * @return true if the user has write permissions on a page, false otherwise
+     */
+    public boolean isAuthOnGroup(UserDetails user, String pageCode) {
+        IPage page = getPage(pageCode);
+        return this.getAuthorizationManager().isAuthOnGroup(user, page.getGroup());
+    }
+
+    /**
+     * Checks if a user can see a page according to its owner group or join groups.
+     * @param allowFreeGroup flag used to return always true for free access pages
+     * @return true if the user has read permissions on a page, false otherwise
+     */
     @Override
     public boolean isAuth(UserDetails user, String pageCode, boolean allowFreeGroup) {
+        IPage page = getPage(pageCode);
+        if (page.getCode().equals(page.getParentCode())) { // root
+            return true;
+        }
+        return this.isAuth(user, getPage(pageCode), allowFreeGroup);
+    }
+
+    private IPage getPage(String pageCode) {
         IPage page = this.getPageManager().getDraftPage(pageCode);
         if (page == null) {
             throw new ResourceNotFoundException(ERRCODE_PAGE_NOT_FOUND, "page", pageCode);
         }
-        return this.isAuth(user, page, allowFreeGroup);
+        return page;
     }
 
     public boolean isAuth(UserDetails user, IPage page) {
