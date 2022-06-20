@@ -30,6 +30,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeVali
 import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This class describes a numeric information common for all the languages.
@@ -176,8 +177,14 @@ public class NumberAttribute extends AbstractAttribute implements IndexableAttri
     }
 
     @Override
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
-        List<AttributeFieldError> errors = super.validate(tracer, langManager);
+        return this.validate(tracer, langManager, null);
+    }
+
+    @Override
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager, beanFactory);
         if (null == this.getValue() && null != this.getFailedNumberString()) {
             errors.add(new AttributeFieldError(this, FieldError.INVALID_FORMAT, tracer));
         }

@@ -32,6 +32,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeV
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This class describes the "Date" attribute; obviously it does not support
@@ -219,8 +220,14 @@ public class DateAttribute extends AbstractAttribute implements IndexableAttribu
     }
 
     @Override
+    @Deprecated
     public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager) {
-        List<AttributeFieldError> errors = super.validate(tracer, langManager);
+        return this.validate(tracer, langManager, null);
+    }
+
+    @Override
+    public List<AttributeFieldError> validate(AttributeTracer tracer, ILangManager langManager, BeanFactory beanFactory) {
+        List<AttributeFieldError> errors = super.validate(tracer, langManager, beanFactory);
         if (null == this.getDate() && null != this.getFailedDateString()) {
             errors.add(new AttributeFieldError(this, FieldError.INVALID_FORMAT, tracer));
         }

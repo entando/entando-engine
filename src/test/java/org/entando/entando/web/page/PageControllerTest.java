@@ -25,10 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.entando.entando.ent.exception.EntException;
+import com.agiletec.aps.system.services.authorization.AuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -42,13 +43,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import org.entando.entando.aps.system.services.page.PageAuthorizationService;
 import org.entando.entando.aps.system.services.page.PageService;
 import org.entando.entando.aps.system.services.page.model.PageDto;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerTest;
+import org.entando.entando.web.page.model.PageCloneRequest;
 import org.entando.entando.web.page.model.PagePositionRequest;
 import org.entando.entando.web.page.model.PageRequest;
 import org.entando.entando.web.page.validator.PageValidator;
@@ -81,6 +85,9 @@ class PageControllerTest extends AbstractControllerTest {
     @Mock
     private PageAuthorizationService authorizationService;
 
+    @Mock
+    private AuthorizationManager authorizationManager;
+
     @InjectMocks
     private PageController controller;
 
@@ -91,6 +98,8 @@ class PageControllerTest extends AbstractControllerTest {
         MockitoAnnotations.initMocks(this);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+        entandoOauth2Interceptor.setAuthorizationManager(authorizationManager);
+        when(authorizationManager.isAuthOnPermission(any(UserDetails.class), any(String.class))).thenReturn(true);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .addInterceptors(entandoOauth2Interceptor)
                 .setHandlerExceptionResolvers(createHandlerExceptionResolver())
@@ -191,7 +200,6 @@ class PageControllerTest extends AbstractControllerTest {
         ResultActions result = mockMvc.perform(
                 get("/pages").
                         param("parentCode", "service")
-                        .sessionAttr("user", user)
                         .header("Authorization", "Bearer " + accessToken)
         );
 
@@ -227,7 +235,6 @@ class PageControllerTest extends AbstractControllerTest {
                         param("parentCode", "service").
                         param("forLinkingToOwnerGroup", "a_group").
                         param("forLinkingToExtraGroups", "GROUP1,GROUP2").
-                        sessionAttr("user", user).
                         header("Authorization", "Bearer " + accessToken)
         );
 
@@ -265,10 +272,9 @@ class PageControllerTest extends AbstractControllerTest {
                 + "        }";
         PageDto mockResult = (PageDto) this.createMetadata(mockJsonResult, PageDto.class);
         Mockito.lenient().when(pageService.updatePage(any(String.class), any(PageRequest.class))).thenReturn(mockResult);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}", "wrong_page")
-                .sessionAttr("user", user)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mockJsonResult)
                 .header("Authorization", "Bearer " + accessToken)
@@ -290,7 +296,6 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get("/pages/{parentCode}", "mock_page")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken)
         );
 
@@ -312,7 +317,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 post("/pages")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(page))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -327,11 +331,10 @@ class PageControllerTest extends AbstractControllerTest {
     void shouldValidateDeleteOnlinePage() throws EntException, Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getOnlinePage(any(String.class))).thenReturn(new Page());
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "online_page")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
@@ -348,11 +351,10 @@ class PageControllerTest extends AbstractControllerTest {
         Page page = new Page();
         page.setCode("page_with_children");
         page.addChildCode("child");
-        when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
+        when(authorizationService.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
         when(this.controller.getPageValidator().getPageManager().getDraftPage(any(String.class))).thenReturn(page);
         ResultActions result = mockMvc.perform(
                 delete("/pages/{pageCode}", "page_with_children")
-                .sessionAttr("user", user)
                 .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isBadRequest());
@@ -373,7 +375,6 @@ class PageControllerTest extends AbstractControllerTest {
         Mockito.lenient().when(authorizationService.isAuth(any(UserDetails.class), any(String.class))).thenReturn(true);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -399,7 +400,6 @@ class PageControllerTest extends AbstractControllerTest {
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -424,7 +424,6 @@ class PageControllerTest extends AbstractControllerTest {
         
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -448,7 +447,6 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
@@ -482,12 +480,11 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
 
-        result.andExpect(status().isBadRequest());
+        result.andExpect(status().isUnprocessableEntity());
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(jsonPath("$.errors", hasSize(1)));
         result.andExpect(jsonPath("$.errors[0].code", is(PageValidator.ERRCODE_GROUP_MISMATCH)));
@@ -520,12 +517,11 @@ class PageControllerTest extends AbstractControllerTest {
 
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                        .sessionAttr("user", user)
                         .content(convertObjectToJsonBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + accessToken));
 
-        result.andExpect(status().isBadRequest())
+        result.andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(PageValidator.ERRCODE_GROUP_MISMATCH)));
     }
@@ -556,7 +552,6 @@ class PageControllerTest extends AbstractControllerTest {
         when(this.controller.getPageValidator().getPageManager().getDraftPage("new_parent_page")).thenReturn(newParent);
         ResultActions result = mockMvc.perform(
                 put("/pages/{pageCode}/position", "page_to_move")
-                .sessionAttr("user", user)
                 .content(convertObjectToJsonBytes(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + accessToken));
@@ -565,6 +560,225 @@ class PageControllerTest extends AbstractControllerTest {
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(jsonPath("$.errors", hasSize(1)));
         result.andExpect(jsonPath("$.errors[0].code", is(PageValidator.ERRCODE_STATUS_PAGE_MISMATCH)));
+    }
+
+    @Test
+    void shouldAllowCreatingReservedPageUnderFreePage() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn(Group.FREE_GROUP_NAME);
+
+        PageRequest page = new PageRequest();
+        page.setCode("reserved_page");
+        page.setPageModel("test_model");
+        page.setParentCode("free_page");
+        page.setOwnerGroup("test_group");
+
+        when(pageManager.getDraftPage("reserved_page")).thenReturn(null);
+        when(pageManager.getDraftPage("free_page")).thenReturn(parentPage);
+
+        when(authorizationService.getAuthorizationManager()).thenReturn(authorizationManager);
+        when(authorizationManager.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
+
+        mockMvc.perform(post("/pages")
+                        .content(convertObjectToJsonBytes(page))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+
+        Mockito.verify(pageService).addPage(any());
+    }
+
+    @Test
+    void shouldAllowCreatingReservedPageHavingSameGroupOfParentPage() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn("test_group");
+
+        PageRequest page = new PageRequest();
+        page.setCode("reserved_page");
+        page.setPageModel("test_model");
+        page.setParentCode("parent_reserved_page");
+        page.setOwnerGroup("test_group");
+
+        when(pageManager.getDraftPage("reserved_page")).thenReturn(null);
+        when(pageManager.getDraftPage("parent_reserved_page")).thenReturn(parentPage);
+
+        when(authorizationService.getAuthorizationManager()).thenReturn(authorizationManager);
+        when(authorizationManager.isAuthOnGroup(any(UserDetails.class), any(String.class))).thenReturn(true);
+
+        mockMvc.perform(post("/pages")
+                        .content(convertObjectToJsonBytes(page))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+
+        Mockito.verify(pageService).addPage(any());
+    }
+
+    @Test
+    void shouldDenyCreatingPageWhenParentGroupMismatch() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .withAuthorization("different_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn("different_group");
+
+        PageRequest page = new PageRequest();
+        page.setCode("reserved_page");
+        page.setPageModel("test_model");
+        page.setParentCode("parent_reserved_page");
+        page.setOwnerGroup("test_group");
+
+        when(pageManager.getDraftPage("reserved_page")).thenReturn(null);
+        when(pageManager.getDraftPage("parent_reserved_page")).thenReturn(parentPage);
+
+        mockMvc.perform(post("/pages")
+                        .content(convertObjectToJsonBytes(page))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void shouldAllowCloningReservedPageInFreePage() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn(Group.FREE_GROUP_NAME);
+        Page pageToClone = Mockito.mock(Page.class);
+        when(pageToClone.getGroup()).thenReturn("test_group");
+
+        PageCloneRequest pageCloneRequest = new PageCloneRequest();
+        pageCloneRequest.setParentCode("parent_page");
+        pageCloneRequest.setNewPageCode("cloned_page");
+        pageCloneRequest.setTitles(Map.of("en", "testAddClone en"));
+
+        when(authorizationService.isAuthOnGroup(any(), any())).thenReturn(true);
+        when(pageManager.getDraftPage("cloned_page")).thenReturn(null);
+        when(pageManager.getDraftPage("page_to_clone")).thenReturn(pageToClone);
+        when(pageManager.getDraftPage("parent_page")).thenReturn(parentPage);
+
+        mockMvc.perform(post("/pages/{code}/clone", "page_to_clone")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(pageCloneRequest))
+                        .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Mockito.verify(pageService).clonePage(any(), any(), any());
+    }
+
+    @Test
+    void shouldAllowCloningReservedPageInParentHavingSameGroup() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn("test_group");
+        Page pageToClone = Mockito.mock(Page.class);
+        when(pageToClone.getGroup()).thenReturn("test_group");
+
+        PageCloneRequest pageCloneRequest = new PageCloneRequest();
+        pageCloneRequest.setParentCode("parent_page");
+        pageCloneRequest.setNewPageCode("cloned_page");
+        pageCloneRequest.setTitles(Map.of("en", "testAddClone en"));
+
+        when(authorizationService.isAuthOnGroup(any(), any())).thenReturn(true);
+        when(pageManager.getDraftPage("cloned_page")).thenReturn(null);
+        when(pageManager.getDraftPage("page_to_clone")).thenReturn(pageToClone);
+        when(pageManager.getDraftPage("parent_page")).thenReturn(parentPage);
+
+        mockMvc.perform(post("/pages/{code}/clone", "page_to_clone")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(pageCloneRequest))
+                        .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Mockito.verify(pageService).clonePage(any(), any(), any());
+    }
+
+    @Test
+    void shouldDenyCloningFreePageInReservedPage() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn("test_group");
+        Page pageToClone = Mockito.mock(Page.class);
+        when(pageToClone.getGroup()).thenReturn(Group.FREE_GROUP_NAME);
+
+        PageCloneRequest pageCloneRequest = new PageCloneRequest();
+        pageCloneRequest.setParentCode("parent_page");
+        pageCloneRequest.setNewPageCode("cloned_page");
+        pageCloneRequest.setTitles(Map.of("en", "testAddClone en"));
+
+        when(authorizationService.isAuthOnGroup(any(), any())).thenReturn(true);
+        when(pageManager.getDraftPage("page_to_clone")).thenReturn(pageToClone);
+        when(pageManager.getDraftPage("parent_page")).thenReturn(parentPage);
+
+        mockMvc.perform(post("/pages/{code}/clone", "page_to_clone")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(pageCloneRequest))
+                        .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void shouldDenyCloningReservedPageInParentPageHavingDifferentGroup() throws Exception {
+
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization("test_group", "managePages", Permission.MANAGE_PAGES)
+                .withAuthorization("different_group", "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        Page parentPage = Mockito.mock(Page.class);
+        when(parentPage.getGroup()).thenReturn("test_group");
+        Page pageToClone = Mockito.mock(Page.class);
+        when(pageToClone.getGroup()).thenReturn("different_group");
+
+        PageCloneRequest pageCloneRequest = new PageCloneRequest();
+        pageCloneRequest.setParentCode("parent_page");
+        pageCloneRequest.setNewPageCode("cloned_page");
+        pageCloneRequest.setTitles(Map.of("en", "testAddClone en"));
+
+        when(authorizationService.isAuthOnGroup(any(), any())).thenReturn(true);
+        when(pageManager.getDraftPage("page_to_clone")).thenReturn(pageToClone);
+        when(pageManager.getDraftPage("parent_page")).thenReturn(parentPage);
+
+        mockMvc.perform(post("/pages/{code}/clone", "page_to_clone")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(pageCloneRequest))
+                        .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     private List<PageDto> createMetadataList(String json) throws IOException, JsonParseException, JsonMappingException {

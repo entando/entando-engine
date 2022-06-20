@@ -8,7 +8,6 @@ import com.google.common.collect.*;
 import org.entando.entando.aps.system.services.entity.model.EntityTypeShortDto;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 import org.entando.entando.web.common.model.*;
-import org.junit.*;
 import org.mockito.*;
 
 import java.util.*;

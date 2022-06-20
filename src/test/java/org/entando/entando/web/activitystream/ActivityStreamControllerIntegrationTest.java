@@ -13,9 +13,17 @@
  */
 package org.entando.entando.web.activitystream;
 
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
@@ -30,33 +38,19 @@ import com.agiletec.aps.util.DateConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import java.sql.Timestamp;
+import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.activitystream.ISocialActivityStreamManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
-
-import static org.hamcrest.CoreMatchers.is;
-
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.hamcrest.Matchers;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -162,6 +156,8 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.comments.size()", is(1)));
 
+            int commentId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.payload.comments[0].id");
+
             result = mockMvc
                     .perform(get("/activityStream")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -171,10 +167,10 @@ class ActivityStreamControllerIntegrationTest extends AbstractControllerIntegrat
 
             //remove comment
             result = mockMvc
-                    .perform(delete("/activityStream/{recordId}/like", recordId)
+                    .perform(delete("/activityStream/{recordId}/comments/{commentId}", recordId, commentId)
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
-            result.andExpect(jsonPath("$.payload.comments.size()", is(1)));
+            result.andExpect(jsonPath("$.payload.comments.size()", is(0)));
 
             //add invalid comment
             req = new ActivityStreamCommentRequest();

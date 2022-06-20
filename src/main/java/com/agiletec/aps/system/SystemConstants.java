@@ -241,6 +241,8 @@ public interface SystemConstants {
 
     public static final String OAUTH_CONSUMER_MANAGER = "OAuthConsumerManager";
 
+    public static final String LEGACY_API_USER_EXTRACTOR = "LegacyApiUserExtractor";
+
     /**
      * Prefisso del nome del gruppo di oggetti in cache a servizio di una
      * pagina. Il nome và completato con il codice della pagina specifica.

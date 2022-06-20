@@ -13,16 +13,19 @@
  */
 package org.entando.entando.aps.system.services.api;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
@@ -30,14 +33,8 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.aps.system.services.api.model.ServiceInfo;
 import org.entando.entando.aps.system.services.api.model.ServiceParameterInfo;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
-
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsProperties;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * @author E.Santoboni
@@ -145,7 +142,7 @@ public class ApiServiceInterface {
 			if ((null != service.getRequiredGroup() && !this.getAuthorizationManager().isAuthOnGroup(user, service.getRequiredGroup())) 
 					|| (null != service.getRequiredPermission() && !this.getAuthorizationManager().isAuthOnPermission(user, service.getRequiredPermission()))) {
 				throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, 
-						"Permission denied for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
+						"Permission denied for service '" + service.getKey() + "'", Status.FORBIDDEN);
 			}
 		} catch (ApiException ae) {
 			if (throwApiException) {

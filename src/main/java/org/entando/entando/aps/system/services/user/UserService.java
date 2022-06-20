@@ -37,7 +37,7 @@ import org.entando.entando.web.common.exceptions.ValidationConflictException;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.entando.entando.web.user.model.UserPasswordRequest;
+import org.entando.entando.web.user.model.UserUpdatePasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 import org.entando.entando.web.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -300,13 +300,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto updateUserPassword(UserPasswordRequest passwordRequest) {
+    public UserDto updateUserPassword(UserUpdatePasswordRequest userUpdatePasswordRequest) {
         try {
-            this.getUserManager().changePassword(passwordRequest.getUsername(), passwordRequest.getNewPassword());
-            UserDetails user = this.loadUser(passwordRequest.getUsername());
+            this.getUserManager().changePassword(userUpdatePasswordRequest.getUsername(), userUpdatePasswordRequest.getNewPassword());
+            UserDetails user = this.loadUser(userUpdatePasswordRequest.getUsername());
             return dtoBuilder.convert(user);
         } catch (EntException e) {
-            logger.error("Error in updating password for user {}", passwordRequest.getUsername(), e);
+            logger.error("Error in updating password for user {}", userUpdatePasswordRequest.getUsername(), e);
             throw new RestServerError("Error in updating password", e);
         }
     }

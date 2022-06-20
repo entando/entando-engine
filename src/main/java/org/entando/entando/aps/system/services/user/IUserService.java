@@ -23,7 +23,7 @@ import org.entando.entando.aps.system.services.user.model.UserDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.user.model.UserAuthoritiesRequest;
-import org.entando.entando.web.user.model.UserPasswordRequest;
+import org.entando.entando.web.user.model.UserUpdatePasswordRequest;
 import org.entando.entando.web.user.model.UserRequest;
 
 /**
@@ -44,7 +44,7 @@ public interface IUserService {
     UserDto updateUser(UserRequest userRequest);
     UserDto addUser(UserRequest userRequest);
     void removeUser(String username);
-    UserDto updateUserPassword(UserPasswordRequest passwordRequest);
+    UserDto updateUserPassword(UserUpdatePasswordRequest userUpdatePasswordRequest);
 
     /**
      * gets and returns informations about received user group and received user permissions

@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import com.agiletec.aps.system.common.AbstractParameterizableService;
 import org.entando.entando.ent.exception.EntException;
@@ -506,30 +508,37 @@ public class PageManager extends AbstractParameterizableService implements IPage
 
     @Override
     public List<IPage> searchOnlinePages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException {
-        List<IPage> searchResult = new ArrayList<>();
         try {
-            if (null == allowedGroups || allowedGroups.isEmpty()) {
-                return searchResult;
-            }
-            IPage root = this.getOnlineRoot();
-            this.searchPages(root, pageCodeToken, title, allowedGroups, searchResult);
+            return this.searchPages(pageCodeToken, title, allowedGroups,
+                    () -> this.getOnlineRoot(), code -> this.getOnlinePage(code));
         } catch (Throwable t) {
             String message = "Error during searching pages online with token " + pageCodeToken;
             _logger.error("Error during searching online pages with token {}", pageCodeToken, t);
             throw new EntException(message, t);
         }
-        return searchResult;
     }
 
     @Override
     public List<IPage> searchPages(String pageCodeToken, String title, List<String> allowedGroups) throws EntException {
+        try {
+            return this.searchPages(pageCodeToken, title, allowedGroups,
+                    () -> this.getDraftRoot(), code -> this.getDraftPage(code));
+        } catch (Throwable t) {
+            String message = "Error during searching pages with token " + pageCodeToken;
+            _logger.error("Error during searching pages with token {}", pageCodeToken, t);
+            throw new EntException(message, t);
+        }
+    }
+
+    private List<IPage> searchPages(String pageCodeToken, String title, List<String> allowedGroups,
+            Supplier<IPage> rootSupplier, Function<String, IPage> childProvider) throws EntException {
         List<IPage> searchResult = new ArrayList<>();
         try {
             if (null == allowedGroups || allowedGroups.isEmpty()) {
                 return searchResult;
             }
-            IPage root = this.getDraftRoot();
-            this.searchPages(root, pageCodeToken, title, allowedGroups, searchResult);
+            IPage root = rootSupplier.get();
+            this.searchPages(root, pageCodeToken, title, allowedGroups, searchResult, childProvider);
         } catch (Throwable t) {
             String message = "Error during searching pages with token " + pageCodeToken;
             _logger.error("Error during searching pages with token {}", pageCodeToken, t);
@@ -539,17 +548,17 @@ public class PageManager extends AbstractParameterizableService implements IPage
     }
 
     private void searchPages(IPage currentTarget, String pageCodeToken, String title, List<String> allowedGroups,
-            List<IPage> searchResult) {
-        if (allowedGroup(allowedGroups, currentTarget) &&
-                noFilter(pageCodeToken, title) ||
+            List<IPage> searchResult, Function<String, IPage> childProvider) {
+        if ((allowedGroup(allowedGroups, currentTarget) || currentTarget.isRoot()) &&
+                (noFilter(pageCodeToken, title) ||
                 filterByCode(pageCodeToken, currentTarget) ||
-                filterByTitle(title, currentTarget)) {
+                filterByTitle(title, currentTarget))) {
             searchResult.add(currentTarget);
         }
         String[] childrenCodes = currentTarget.getChildrenCodes();
         for (int i = 0; i < childrenCodes.length; i++) {
-            IPage child = this.getDraftPage(childrenCodes[i]);
-            this.searchPages(child, pageCodeToken, title, allowedGroups, searchResult);
+            IPage child = childProvider.apply(childrenCodes[i]);
+            this.searchPages(child, pageCodeToken, title, allowedGroups, searchResult, childProvider);
         }
     }
 
