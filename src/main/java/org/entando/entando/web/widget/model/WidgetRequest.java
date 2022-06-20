@@ -22,6 +22,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.Map;
 
 public class WidgetRequest implements Serializable {
+    
+    public static final String INTERNAL_CONFIG_MFE_PREFIX = "internal:";
 
     @NotBlank(message = "widgettype.code.notBlank")
     private String code;
@@ -41,7 +43,7 @@ public class WidgetRequest implements Serializable {
     
     private List<WidgetParameter> params = new ArrayList<>();
     
-    private String action;
+    private String configMfe;
 
     private String parentCode;
 
@@ -107,14 +109,14 @@ public class WidgetRequest implements Serializable {
     public void setParams(List<WidgetParameter> params) {
         this.params = params;
     }
-    
-    public String getAction() {
-        return action;
-    }
-    public void setAction(String action) {
-        this.action = action;
-    }
 
+    public String getConfigMfe() {
+        return configMfe;
+    }
+    public void setConfigMfe(String configMfe) {
+        this.configMfe = configMfe;
+    }
+    
     public String getParentCode() {
         return parentCode;
     }

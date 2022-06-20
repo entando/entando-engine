@@ -453,7 +453,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             request.getParams().add(new WidgetParameter("param2", "Description of parameter 2"));
             request.getParams().add(new WidgetParameter("param3", "Description of parameter 3"));
             request.getParams().add(new WidgetParameter("param4", null));
-            request.setAction("configAction");
+            request.setConfigMfe("internal:configAction");
             ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
             
             resultMaster.andExpect(jsonPath("$.payload.code", is(code)));
@@ -482,11 +482,11 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             titlesChild.put("it", "Titolo ITA child");
             titlesChild.put("en", "Title EN child");
             requestChild.setTitles(titlesChild);
-            requestChild.setParentType(code);
+            requestChild.setParentCode(code);
             Map<String, String> config = new HashMap<>();
             config.put("param1", "Value1");
             config.put("wrong", "Value of wrong param");
-            requestChild.setConfig(config);
+            requestChild.setParamsDefaults(config);
             
             ResultActions resultSlave = this.executeWidgetPost(requestChild, accessToken, status().isBadRequest());
             resultSlave.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_CONFIG_PARAMETER_INVALID)));
@@ -531,7 +531,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             
             //Update a child widget
             requestChild.setCustomUi(mainCustomUi);
-            requestChild.setConfig(Collections.singletonMap("param2", "ValueX"));
+            requestChild.setParamsDefaults(Collections.singletonMap("param2", "ValueX"));
 
             //When updating, request parameters override everything
             executeWidgetPut(requestChild, childCode, accessToken, status().isOk())
