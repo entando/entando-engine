@@ -39,7 +39,7 @@ public class WidgetRequest implements Serializable {
 
     private String bundleId;
 
-    private Map<String, Object> configUi;
+    private Map<String, Object> configUi; //NOSONAR
     
     private List<WidgetParameter> params = new ArrayList<>();
     
@@ -124,11 +124,16 @@ public class WidgetRequest implements Serializable {
     public void setParentCode(String parentCode) {
         this.parentCode = parentCode;
     }
-
+    /**
+     * @deprecated Use getParentCode method
+     */
     @Deprecated
     public String getParentType() {
         return this.getParentCode();
     }
+    /**
+     * @deprecated Use setParentCode method
+     */
     @Deprecated
     public void setParentType(String parentType) {
         this.setParentCode(parentType);
@@ -141,11 +146,17 @@ public class WidgetRequest implements Serializable {
     public void setParamsDefaults(Map<String, String> paramsDefaults) {
         this.paramsDefaults = paramsDefaults;
     }
-
+    
+    /**
+     * @deprecated Use getConfig method
+     */
     @Deprecated
     public Map<String, String> getConfig() {
         return this.getParamsDefaults();
     }
+    /**
+     * @deprecated Use setParamsDefaults method
+     */
     @Deprecated
     public void setConfig(Map<String, String> config) {
         this.setParamsDefaults(config);
@@ -175,7 +186,7 @@ public class WidgetRequest implements Serializable {
         this.icon = icon;
     }
     
-    public static class WidgetParameter {
+    public static class WidgetParameter implements Serializable {
 
         public WidgetParameter() { }
         public WidgetParameter(String name, String description) {

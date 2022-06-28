@@ -67,7 +67,7 @@ public class WidgetTypeManager extends AbstractService
     public void updateFromLangsChanged(LangsChangedEvent event) {
         try {
             this.init();
-        } catch (Throwable t) {
+        } catch (Exception t) {
             logger.error("Error on init method", t);
         }
     }
@@ -111,7 +111,7 @@ public class WidgetTypeManager extends AbstractService
             this.getWidgetTypeDAO().addWidgetType(widgetType);
             this.getCacheWrapper().addWidgetType(widgetType);
             this.notifyWidgetTypeChanging(widgetType.getCode(), WidgetTypeChangedEvent.INSERT_OPERATION_CODE);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             logger.error("Error adding a Widget Type", t);
             throw new EntException("Error adding a Widget Type", t);
         }
@@ -142,7 +142,7 @@ public class WidgetTypeManager extends AbstractService
             this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
             this.getCacheWrapper().deleteWidgetType(widgetTypeCode);
             this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.REMOVE_OPERATION_CODE);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             for (int i = 0; i < deletedFragments.size(); i++) {
                 GuiFragment guiFragment = deletedFragments.get(i);
                 if (null == this.getGuiFragmentManager().getGuiFragment(guiFragment.getCode())) {

@@ -134,7 +134,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             PagedMetadata<WidgetDto> pagedMetadata = new PagedMetadata<>(restListReq, paginatedResult);
             pagedMetadata.setBody(sublist);
             return pagedMetadata;
-        } catch (Throwable t) {
+        } catch (Exception t) {
             logger.error("error in get widgets", t);
             throw new RestServerError("error in get widgets", t);
         }
@@ -257,7 +257,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         } catch (ValidationGenericException vge) {
             logger.error("Found an error on validation, throwing original exception", vge);
             throw vge;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("failed to update widget type", e);
             throw new RestServerError("Failed to update widget", e);
         }
