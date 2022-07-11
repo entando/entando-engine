@@ -41,7 +41,7 @@ public class WidgetDto {
     private List<WidgetParameter> parameters = new ArrayList<>();
     private ApsProperties config;
     private String parentType;
-    private String action;
+    private String configMfe;
     private Boolean readonlyPageWidgetConfig;
     private boolean locked;
     private String widgetCategory;
@@ -220,12 +220,20 @@ public class WidgetDto {
         this.parameters = parameters;
     }
 
+    @Deprecated
     public String getAction() {
-        return action;
+        return this.getConfigMfe();
     }
-    
+    @Deprecated
     public void setAction(String action) {
-        this.action = action;
+        this.setConfigMfe(action);
+    }
+
+    public String getConfigMfe() {
+        return configMfe;
+    }
+    public void setConfigMfe(String configMfe) {
+        this.configMfe = configMfe;
     }
 
     public String getParentType() {
