@@ -56,7 +56,7 @@ public class PageSettingsController {
         return new ResponseEntity<>(new SimpleRestResponse<>(pageSettings), HttpStatus.OK);
     }
 
-    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/pageSettings", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleRestResponse<PageSettingsDto>> updatePageSettings(@RequestBody PageSettingsRequest request) {
         //params validations

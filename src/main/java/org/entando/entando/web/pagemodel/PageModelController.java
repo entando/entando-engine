@@ -130,7 +130,7 @@ public class PageModelController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "Bad Request")
     })
-    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @PutMapping(value = "/{code:.+}", name = "roleGroup")
     public ResponseEntity<SimpleRestResponse<PageModelDto>> updatePageModel(@PathVariable String code,
             @Valid @RequestBody PageModelRequest pageModelRequest, BindingResult bindingResult) {
@@ -156,7 +156,7 @@ public class PageModelController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 409, message = "Conflict")
     })
-    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @PostMapping
     public ResponseEntity<SimpleRestResponse<PageModelDto>> addPageModel(
             @Valid @RequestBody PageModelRequest pagemodelRequest, BindingResult bindingResult) {
@@ -179,7 +179,7 @@ public class PageModelController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK")
     })
-    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RestAccessControl(permission = Permission.SUPERUSER)
     @DeleteMapping(value = "/{code:.+}")
     public ResponseEntity<SimpleRestResponse<Map>> deletePageModel(@PathVariable String code) {
         logger.debug("deleting {}", code);
