@@ -58,7 +58,6 @@ import org.junit.jupiter.api.BeforeEach;
 class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
     private static final String USERNAME = "jack_bauer";
-    private static final String USERNAME_ADMIN = "admin";
     private static final String PASSWORD = "0x24";
     private static final String PAGE_MODEL_CODE = "testPM";
     private static final String PAGE_MODEL_WITH_DOT_CODE = "test.PM";
@@ -107,8 +106,7 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
     }
 
     private String getAdminAuthenticationToken() {
-        User admin = new OAuth2TestUtils.UserBuilder(USERNAME_ADMIN, PASSWORD)
-                .withAuthorization(Group.FREE_GROUP_NAME, Permission.MANAGE_PAGES, Permission.SUPERUSER)
+        User admin = new OAuth2TestUtils.UserBuilder(USERNAME, PASSWORD).grantedToRoleAdmin()
                 .build();
         return mockOAuthInterceptor(admin);
     }
