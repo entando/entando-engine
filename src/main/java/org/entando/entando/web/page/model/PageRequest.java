@@ -30,7 +30,7 @@ public class PageRequest {
 
     @Size(max = 30, message = "string.size.invalid")
     @NotNull(message = "page.code.notBlank")
-    @Pattern(regexp = "[a-zA-Z0-9_]+", message="page.code.wrongCharacters")
+    @Pattern(regexp = "[a-zA-Z0-9_-]+", message="page.code.wrongCharacters")
     private String code;
     private String status;
     private boolean displayedInMenu;
