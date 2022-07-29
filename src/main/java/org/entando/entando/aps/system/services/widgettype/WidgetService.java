@@ -377,8 +377,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             if (!parameters.isEmpty()) {
                 type.setTypeParameters(parameters);
             }
-            String action = (StringUtils.isBlank(widgetRequest.getConfigMfe()) || !widgetRequest.getConfigMfe().startsWith(WidgetRequest.INTERNAL_CONFIG_MFE_PREFIX)) 
-                    ? "configSimpleParameter" : widgetRequest.getConfigMfe().substring(WidgetRequest.INTERNAL_CONFIG_MFE_PREFIX.length());
+            String action = (StringUtils.isBlank(widgetRequest.getConfigMfe())) ? "configSimpleParameter" : widgetRequest.getConfigMfe();
             type.setAction(action);
             type.setConfigUi(this.objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
         }

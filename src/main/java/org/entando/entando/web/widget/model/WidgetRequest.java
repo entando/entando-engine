@@ -22,8 +22,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.util.Map;
 
 public class WidgetRequest implements Serializable {
-    
-    public static final String INTERNAL_CONFIG_MFE_PREFIX = "internal:";
 
     @NotBlank(message = "widgettype.code.notBlank")
     private String code;
