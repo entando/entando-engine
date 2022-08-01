@@ -617,6 +617,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
         String accessToken = mockOAuthInterceptor(user);
+        String ecrPageCode = "test_bundle-17d83bae";
         try {
 
             pageManager.addPage(createPage("page_root", null, null));
@@ -694,7 +695,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.errors[0].message", is(PAGE_GROUP_MISMATCH_ERROR)));
 
             pageCode = "group2_pg_into_group1_pg";
-
+            
             mockMvc.perform(post("/pages", pageCode)
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -710,6 +711,17 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
                     .andExpect(jsonPath("$.errors[0].code", is("2")))
                     .andExpect(jsonPath("$.errors[0].message", is(PAGE_GROUP_MISMATCH_ERROR)));
 
+            mockMvc.perform(post("/pages", ecrPageCode)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(
+                            createPageRequest(
+                                    ecrPageCode,
+                                    Group.FREE_GROUP_NAME,
+                                    "homepage"))))
+                    .andDo(resultPrint())
+                    .andExpect(status().isOk());
+
         } finally {
             this.pageManager.deletePage("group2_pg_into_group1_pg");
             this.pageManager.deletePage("group1_pg_into_group2_pg");
@@ -721,6 +733,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             this.pageManager.deletePage("admin_pg");
             this.pageManager.deletePage("free_pg");
             this.pageManager.deletePage("page_root");
+            this.pageManager.deletePage(ecrPageCode);
         }
     }
 

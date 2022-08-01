@@ -27,7 +27,9 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import java.util.HashMap;
 import java.util.Map;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetService;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -39,7 +41,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -52,14 +55,20 @@ class WidgetControllerTest extends AbstractControllerTest {
     private WidgetService widgetService;
 
     @Mock
-    private WidgetValidator widgetValidator;
+    private WidgetType widgetType;
+
+    @Mock
+    private IWidgetTypeManager widgetTypeManager;
+
+    @Spy @InjectMocks
+    private WidgetValidator widgetValidator = Mockito.spy(WidgetValidator.class);
 
     @InjectMocks
     private WidgetController controller;
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        //MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .addInterceptors(entandoOauth2Interceptor)
                 .setHandlerExceptionResolvers(createHandlerExceptionResolver())
@@ -131,7 +140,9 @@ class WidgetControllerTest extends AbstractControllerTest {
     void testAddWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        this.controller.setWidgetValidator(new WidgetValidator());
+        this.controller.setWidgetValidator(this.widgetValidator);
+        Mockito.lenient().when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(this.widgetType);
+        
         // @formatter:off
         ResultActions result = mockMvc.perform(
                 post("/widgets")
@@ -142,12 +153,63 @@ class WidgetControllerTest extends AbstractControllerTest {
         String response = result.andReturn().getResponse().getContentAsString();
         result.andExpect(status().isOk());
         assertNotNull(response);
+        Mockito.verify(widgetService, Mockito.times(1)).addWidget(Mockito.any(WidgetRequest.class));
+    }
+
+    @Test
+    void failTestAddWidget_1() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        this.controller.setWidgetValidator(this.widgetValidator);
+        WidgetRequest mockRequest = this.createMockRequest();
+        mockRequest.setParentType("parentCode");
+        Mockito.lenient().when(widgetTypeManager.getWidgetType("parentCode")).thenReturn(null);
+        // @formatter:off
+        ResultActions result = mockMvc.perform(
+                post("/widgets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(mockRequest))
+                        .header("Authorization", "Bearer " + accessToken)
+        );
+        String response = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isNotFound());
+        assertNotNull(response);
+        Mockito.verify(widgetService, Mockito.times(0)).addWidget(Mockito.any(WidgetRequest.class));
+    }
+
+    @Test
+    void failTestAddWidget_2() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+        this.controller.setWidgetValidator(this.widgetValidator);
+        WidgetRequest mockRequest = this.createMockRequest();
+        mockRequest.setParentType("parentCode_2");
+        Map<String, String> config = new HashMap<>();
+        config.put("param1", "Value 1");
+        config.put("wrongParam2", "Value 2");
+        mockRequest.setConfig(config);
+        Mockito.lenient().when(widgetType.hasParameter("param1")).thenReturn(true);
+        Mockito.lenient().when(widgetType.hasParameter("wrongParam2")).thenReturn(false);
+        Mockito.lenient().when(widgetTypeManager.getWidgetType("parentCode_2")).thenReturn(this.widgetType);
+        // @formatter:off
+        ResultActions result = mockMvc.perform(
+                post("/widgets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonBytes(mockRequest))
+                        .header("Authorization", "Bearer " + accessToken)
+        );
+        String response = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isBadRequest());
+        assertNotNull(response);
+        Mockito.verify(widgetService, Mockito.times(0)).addWidget(Mockito.any(WidgetRequest.class));
     }
 
     @Test
     void testUpdateWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
+        this.controller.setWidgetValidator(this.widgetValidator);
+        Mockito.lenient().when(widgetTypeManager.getWidgetType(Mockito.anyString())).thenReturn(this.widgetType);
         when(widgetService.updateWidget(any(), any())).thenReturn(new WidgetDto());
         // @formatter:off
         ResultActions result = mockMvc.perform(
@@ -156,8 +218,10 @@ class WidgetControllerTest extends AbstractControllerTest {
                         .content(convertObjectToJsonBytes(createMockRequest()))
                         .header("Authorization", "Bearer " + accessToken)
         );
-        String response = result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String response = result.andReturn().getResponse().getContentAsString();
+        result.andExpect(status().isOk());
         assertNotNull(response);
+        Mockito.verify(widgetService, Mockito.times(1)).updateWidget(Mockito.anyString(), Mockito.any(WidgetRequest.class));
     }
 
     @Test

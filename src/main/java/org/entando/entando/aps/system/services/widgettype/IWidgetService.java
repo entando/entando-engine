@@ -20,7 +20,6 @@ import org.entando.entando.aps.system.services.widgettype.model.WidgetInfoDto;
 import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 
 public interface IWidgetService extends IComponentExistsService, IComponentUsageService {
 
@@ -34,7 +33,7 @@ public interface IWidgetService extends IComponentExistsService, IComponentUsage
 
     PagedMetadata<WidgetDto> getWidgets(RestListRequest restRequest);
 
-    WidgetDto updateWidget(String widgetCode, WidgetUpdateRequest widgetUpdateRequest);
+    WidgetDto updateWidget(String widgetCode, WidgetRequest widgetUpdateRequest);
 
     WidgetInfoDto getWidgetInfo(String widgetCode);
 
