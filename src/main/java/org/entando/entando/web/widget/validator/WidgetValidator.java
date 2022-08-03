@@ -115,12 +115,6 @@ public class WidgetValidator extends AbstractPaginationValidator {
         if (null == config) {
             return;
         }
-        config.entrySet().stream().forEach(e -> {
-            String key = e.getKey();
-            if (!parentType.hasParameter(key)) {
-                errors.rejectValue("paramsDefaults", ERRCODE_CONFIG_PARAMETER_INVALID, new String[]{key, parentTypeCode}, "widgettype.config.invalid");
-            }
-        });
     }
     
 }
