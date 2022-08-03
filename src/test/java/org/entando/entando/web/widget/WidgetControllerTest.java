@@ -178,33 +178,6 @@ class WidgetControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void failTestAddWidget_2() throws Exception {
-        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
-        String accessToken = mockOAuthInterceptor(user);
-        this.controller.setWidgetValidator(this.widgetValidator);
-        WidgetRequest mockRequest = this.createMockRequest();
-        mockRequest.setParentType("parentCode_2");
-        Map<String, String> config = new HashMap<>();
-        config.put("param1", "Value 1");
-        config.put("wrongParam2", "Value 2");
-        mockRequest.setConfig(config);
-        Mockito.lenient().when(widgetType.hasParameter("param1")).thenReturn(true);
-        Mockito.lenient().when(widgetType.hasParameter("wrongParam2")).thenReturn(false);
-        Mockito.lenient().when(widgetTypeManager.getWidgetType("parentCode_2")).thenReturn(this.widgetType);
-        // @formatter:off
-        ResultActions result = mockMvc.perform(
-                post("/widgets")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertObjectToJsonBytes(mockRequest))
-                        .header("Authorization", "Bearer " + accessToken)
-        );
-        String response = result.andReturn().getResponse().getContentAsString();
-        result.andExpect(status().isBadRequest());
-        assertNotNull(response);
-        Mockito.verify(widgetService, Mockito.times(0)).addWidget(Mockito.any(WidgetRequest.class));
-    }
-
-    @Test
     void testUpdateWidget() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
