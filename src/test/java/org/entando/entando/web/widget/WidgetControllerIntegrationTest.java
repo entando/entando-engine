@@ -486,15 +486,9 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             requestChild.setParentCode(code);
             Map<String, String> config = new HashMap<>();
             config.put("param1", "Value1");
-            config.put("wrong", "Value of wrong param");
             requestChild.setParamsDefaults(config);
             
-            ResultActions resultSlave = this.executeWidgetPost(requestChild, accessToken, status().isBadRequest());
-            resultSlave.andExpect(jsonPath("$.errors[0].code", is(WidgetValidator.ERRCODE_CONFIG_PARAMETER_INVALID)));
-            Assertions.assertNull(this.widgetTypeManager.getWidgetType(childCode));
-            config.remove("wrong");
-            
-            resultSlave = this.executeWidgetPost(requestChild, accessToken, status().isOk());
+            ResultActions resultSlave = this.executeWidgetPost(requestChild, accessToken, status().isOk());
             
             resultSlave.andExpect(jsonPath("$.payload.code", is(childCode)))
                     .andExpect(jsonPath("$.payload.parentType", is(code)))
