@@ -41,7 +41,7 @@ public class WidgetRequest implements Serializable {
     
     private List<WidgetParameter> params = new ArrayList<>();
     
-    private String configMfe;
+    private String configUiName;
 
     private String parentCode;
 
@@ -108,11 +108,11 @@ public class WidgetRequest implements Serializable {
         this.params = params;
     }
 
-    public String getConfigMfe() {
-        return configMfe;
+    public String getConfigUiName() {
+        return configUiName;
     }
-    public void setConfigMfe(String configMfe) {
-        this.configMfe = configMfe;
+    public void setConfigUiName(String configUiName) {
+        this.configUiName = configUiName;
     }
     
     public String getParentCode() {

@@ -453,7 +453,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             request.getParams().add(new WidgetParameter("param2", "Description of parameter 2"));
             request.getParams().add(new WidgetParameter("param3", "Description of parameter 3"));
             request.getParams().add(new WidgetParameter("param4", null));
-            request.setConfigMfe("configAction");
+            request.setConfigUiName("configAction");
             ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
             
             resultMaster.andExpect(jsonPath("$.payload.code", is(code)));
