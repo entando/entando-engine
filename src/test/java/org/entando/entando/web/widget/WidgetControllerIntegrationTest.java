@@ -471,7 +471,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             resultMaster.andExpect(jsonPath("$.payload.parameters[2].description", is("Description of parameter 3")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].code", is("param4")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].description", nullValue()));
-            resultMaster.andExpect(jsonPath("$.payload.configMfe", is("configAction")));
+            resultMaster.andExpect(jsonPath("$.payload.action", is("configAction")));
             
             widgetType = this.widgetTypeManager.getWidgetType(code);
             Assertions.assertNotNull(widgetType);
