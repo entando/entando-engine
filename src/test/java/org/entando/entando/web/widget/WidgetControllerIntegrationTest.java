@@ -453,7 +453,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             request.getParams().add(new WidgetParameter("param2", "Description of parameter 2"));
             request.getParams().add(new WidgetParameter("param3", "Description of parameter 3"));
             request.getParams().add(new WidgetParameter("param4", null));
-            request.setConfigMfe("configAction");
+            request.setConfigUiName("configAction");
             ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
             
             resultMaster.andExpect(jsonPath("$.payload.code", is(code)));
@@ -471,7 +471,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             resultMaster.andExpect(jsonPath("$.payload.parameters[2].description", is("Description of parameter 3")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].code", is("param4")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].description", nullValue()));
-            resultMaster.andExpect(jsonPath("$.payload.configMfe", is("configAction")));
+            resultMaster.andExpect(jsonPath("$.payload.action", is("configAction")));
             
             widgetType = this.widgetTypeManager.getWidgetType(code);
             Assertions.assertNotNull(widgetType);
