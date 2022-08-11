@@ -22,10 +22,8 @@ import static org.entando.entando.web.user.validator.UserValidator.isUserDeletin
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
@@ -73,7 +71,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
-
     @Autowired
     private IUserService userService;
 
@@ -271,6 +268,14 @@ public class UserController {
         List<UserGroupPermissions> currentUserPermissions = this.userService.getMyGroupPermissions(userDetails);
 
         return new ResponseEntity<>(new SimpleRestResponse<>(currentUserPermissions), HttpStatus.OK);
+    }
+
+    @GetMapping("/{username:.+}/hasPermissions")
+    @RestAccessControl(permission = Permission.MANAGE_USERS)
+    public ResponseEntity<SimpleRestResponse<Map<String,String>>> hasPermission(@RequestParam("username") String username,
+                                                                    @RequestParam("permissions") List<String> permissions) {
+        Map<String, String> hasPermissions = this.userService.hasPermissions(username, permissions);
+        return new ResponseEntity<>(new SimpleRestResponse<>(hasPermissions), HttpStatus.OK);
     }
 
     @GetMapping("/myGroups")

@@ -56,6 +56,8 @@ public class UserService implements IUserService {
     private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
 
     private static final String ERRCODE_USER_NOT_FOUND = "1";
+    private static final String PERMISSION_ALLOWED = "ALLOWED";
+    private static final String PERMISSION_DENIED = "DENIED";
 
     @Autowired
     private IUserManager userManager;
@@ -319,6 +321,30 @@ public class UserService implements IUserService {
                 .stream()
                 .map(authorization -> new UserGroupPermissions(authorization.getGroup(), authorization.getRole()))
                 .collect(Collectors.toList());
+
+
+    }
+    @Override
+    public Map<String,String> hasPermissions(String username, List<String> permissions) {
+        UserDetails user = loadUser(username);
+        Map<String,String> hasPermissions = new HashMap<>();
+
+        List<UserGroupPermissions> userGroupPermissions = this.getMyGroupPermissions(user);
+
+        for (UserGroupPermissions userPermission : userGroupPermissions) {
+            Set<String> userPermissionsSet = userPermission.getPermissions();
+
+            for (String permission: permissions) {
+                if (userPermissionsSet.contains(permission)){
+                    hasPermissions.put(permission,PERMISSION_ALLOWED);
+                }
+                else {
+                    hasPermissions.put(permission,PERMISSION_DENIED);
+                }
+            }
+        }
+
+        return hasPermissions;
     }
 
     @Override

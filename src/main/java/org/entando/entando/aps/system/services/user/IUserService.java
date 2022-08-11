@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.user;
 
 import java.util.List;
+import java.util.Map;
 
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
@@ -62,4 +63,15 @@ public interface IUserService {
      * @return all the groups that the user has at least a permission on it, plus the free group
      */
     List<GroupDto> getMyGroups(UserDetails user);
+
+    /**
+     * Method to check if the user have or not the permissions passed in input
+     *
+     * @param username the user that will be used to retrieve the permissions
+     * @param permissions the list of permissions to check
+     *
+     * @return a map with ALLOWED, DENIED values for each permission passed as input
+     */
+    Map<String, String> hasPermissions(String username, List<String> permissions);
+
 }
