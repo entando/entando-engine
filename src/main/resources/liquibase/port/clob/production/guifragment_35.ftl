@@ -47,7 +47,7 @@
 		</@wpsf.submit>
 	</li>
 	<li>
-		<@wpsf.submit name="%{#pagerIdMarker + '_' + #group.size}" type="button" disabled="%{#group.maxItem == #group.currItem}" title="%{getText('label.goToLast')}">
+		<@wpsf.submit name="%{#pagerIdMarker + '_' + #group.maxItem}" type="button" disabled="%{#group.maxItem == #group.currItem}" title="%{getText('label.goToLast')}">
 			<span class="icon fa fa-step-forward"></span>
 		</@wpsf.submit>
 	</li>
