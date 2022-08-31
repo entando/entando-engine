@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.system.services.controller.executor;
 
+import freemarker.core.TemplateClassResolver;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateModel;
 
@@ -24,6 +25,7 @@ import freemarker.template.TemplateModel;
 public class ExecutorBeanContainer {
 	
 	public ExecutorBeanContainer(Configuration configuration, TemplateModel templateModel) {
+        configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 		this.setConfiguration(configuration);
 		this.setTemplateModel(templateModel);
 	}
