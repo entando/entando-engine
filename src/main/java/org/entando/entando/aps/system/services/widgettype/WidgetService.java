@@ -211,6 +211,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             WidgetDto widgetDto = this.dtoBuilder.convert(widgetType);
             this.addFragments(widgetDto);
             return widgetDto;
+        } catch (ValidationGenericException validationGenericException) {
+            throw validationGenericException;
         } catch (Exception e) {
             logger.error("Failed to add widget type for request {} ", widgetRequest, e);
             throw new RestServerError("error in add widget", e);
