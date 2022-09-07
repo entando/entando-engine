@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -46,7 +47,12 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
                 writeCategories(jsonGenerator, property.getKey().toString(), property.getValue().toString());
             } else if (property.getKey().equals("contents")) {
                 logger.warn("Serializing WidgetConfig.config.contents into JSON Format");
-                writeContentsConfig(jsonGenerator, property.getKey().toString(), property.getValue().toString());
+                if (property.getValue() instanceof List && !((List<?>) property.getValue()).isEmpty() && ((List<?>) property.getValue()).get(0) instanceof Properties) {
+                    writeContentsConfig(jsonGenerator, "contents", (List<Properties>) property.getValue());
+                } else {
+                    // Not sure in which cases the value is not a list or contains objects that are not instances of Properties
+                    writeContentsConfig(jsonGenerator, property.getKey().toString(), property.getValue().toString());
+                }
             } else if (property.getKey().toString().toLowerCase().contains("filters")) {
                 logger.warn("Serializing WidgetConfig.config.filters into JSON Format");
                 writeFiltersConfig(jsonGenerator, property.getKey().toString(), property.getValue().toString());
@@ -78,6 +84,23 @@ public class WidgetConfigPropertiesSerializer extends StdSerializer<ApsPropertie
             for (Entry<String,String> entry : filter.entrySet()) {
                 writeProperty(jsonGenerator, entry.getKey(), entry.getValue());
             }
+            jsonGenerator.writeEndObject();
+        }
+
+        jsonGenerator.writeEndArray();
+    }
+
+    private void writeContentsConfig(JsonGenerator jsonGenerator, String key, List<Properties> contents) throws IOException {
+        jsonGenerator.writeFieldName(key);
+        jsonGenerator.writeStartArray();
+
+        for (Properties contentProperties : contents) {
+            jsonGenerator.writeStartObject();
+
+            for (Entry<Object, Object> property : contentProperties.entrySet()) {
+                writeProperty(jsonGenerator, property.getKey().toString(), property.getValue().toString());
+            }
+
             jsonGenerator.writeEndObject();
         }
 
