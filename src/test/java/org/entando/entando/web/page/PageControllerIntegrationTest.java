@@ -757,6 +757,45 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             this.pageManager.deletePage("page_root");
         }
     }
+
+    @Test
+    void testMoveToDifferentSubTreeOnSpecificPosition() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        try {
+            pageManager.addPage(createPage("root_1", null, null));
+            pageManager.addPage(createPage("child_of_1", null, "root_1"));
+            pageManager.addPage(createPage("root_2", null, null));
+            pageManager.addPage(createPage("first_child_of_root_2", null, "root_2"));
+            pageManager.addPage(createPage("second_child_of_root_2", null, "root_2"));
+
+            PagePositionRequest request = new PagePositionRequest();
+            request.setCode("child_of_1");
+            request.setParentCode("root_2");
+            request.setPosition(2);
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/position", "child_of_1")
+                            .param("pageCodeToken", "pagin")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(request))
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result.andExpect(status().isOk());
+
+            assertThat(pageManager.getDraftPage("first_child_of_root_2").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("child_of_1").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("second_child_of_root_2").getPosition(), is(3));
+        } finally {
+            this.pageManager.deletePage("child_of_1");
+            this.pageManager.deletePage("first_child_of_root_2");
+            this.pageManager.deletePage("second_child_of_root_2");
+            this.pageManager.deletePage("root_1");
+            this.pageManager.deletePage("root_2");
+        }
+    }
     
     @Test
     void testCreatePageIntoDifferentOwnerGroupPages() throws Throwable {

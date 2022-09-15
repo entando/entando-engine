@@ -413,13 +413,18 @@ public class PageService implements IComponentExistsService, IPageService,
                     new String[]{pageRequest.getParentCode(), pageCode}, "page.movement.parent.invalid.2");
             throw new ValidationGenericException(bindingResult);
         }
-        int iterations = Math.abs(page.getPosition() - pageRequest.getPosition());
-        boolean moveUp = page.getPosition() > pageRequest.getPosition();
         try {
             if (page.getParentCode().equals(parent.getCode())) {
-                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp)) ;
+                int iterations = Math.abs(page.getPosition() - pageRequest.getPosition());
+                boolean moveUp = page.getPosition() > pageRequest.getPosition();
+                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp));
             } else {
                 this.getPageManager().movePage(page, parent);
+                // Page is appended as last element, moving it at desired position:
+                int lastPosition = parent.getChildrenCodes().length + 1;
+                int iterations = Math.abs(lastPosition - pageRequest.getPosition());
+                boolean moveUp = lastPosition > pageRequest.getPosition();
+                while (iterations-- > 0 && this.getPageManager().movePage(pageCode, moveUp));
             }
             page = this.getPageManager().getDraftPage(pageCode);
         } catch (EntException e) {
