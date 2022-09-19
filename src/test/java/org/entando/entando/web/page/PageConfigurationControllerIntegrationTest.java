@@ -96,7 +96,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
 
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
             wcr.setCode(newWidgetCode);
-            wcr.setConfig(Collections.singletonMap("key", "value_edited"));
+            wcr.setConfig(Collections.singletonMap("parentCode", "value_edited"));
 
             executePutPageFrameWidget(pageCode, wcr, accessToken, status().isBadRequest());
 
@@ -107,7 +107,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
 
             WidgetConfigurationRequest wcr1 = new WidgetConfigurationRequest();
             wcr1.setCode(newWidgetCode);
-            wcr1.setConfig(Collections.singletonMap("key", "value"));
+            wcr1.setConfig(Collections.singletonMap("parentCode", "value"));
 
             // Update the Widget at frame 0
             executePutPageFrameWidget(pageCode, wcr1, accessToken, status().isBadRequest());
@@ -131,7 +131,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", Matchers.is(newWidgetCode)))
-                    .andExpect(jsonPath("$.payload.config.key", Matchers.is("value")));
+                    .andExpect(jsonPath("$.payload.config.parentCode", Matchers.is("value")));
 
 
         } catch (Exception e) {
@@ -160,7 +160,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             //Create the widget
             ResultActions result = this.executeWidgetPost(widgetRequestOverridable, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", is(newWidgetCode)))
-                    .andExpect(jsonPath("$.payload.config.key", Matchers.is("value")));
+                    .andExpect(jsonPath("$.payload.config.parentCode", Matchers.is("value")));
 
             Assertions.assertNotNull(this.widgetTypeManager.getWidgetType(newWidgetCode));
 
@@ -175,10 +175,10 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             // Update the Widget at frame 0 with a new configuration
             WidgetConfigurationRequest wcr = new WidgetConfigurationRequest();
             wcr.setCode(newWidgetCode);
-            wcr.setConfig(Collections.singletonMap("key", "value_edited"));
+            wcr.setConfig(Collections.singletonMap("parentCode", "value_edited"));
             result = executePutPageFrameWidget(pageCode, wcr, accessToken, status().isOk());
             result.andExpect(jsonPath("$.payload.code", Matchers.is(newWidgetCode)))
-                    .andExpect(jsonPath("$.payload.config.key", Matchers.is("value_edited")));
+                    .andExpect(jsonPath("$.payload.config.parentCode", Matchers.is("value_edited")));
 
             //Count widget usages
             result = this.executeWidgetGet(newWidgetCode, accessToken, status().isOk());
@@ -188,7 +188,7 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
             result = this.executeGetPageFrameWidget(pageCode, accessToken, status().isOk());
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.payload.code", Matchers.is(newWidgetCode)))
-                    .andExpect(jsonPath("$.payload.config.key", Matchers.is("value_edited")));
+                    .andExpect(jsonPath("$.payload.config.parentCode", Matchers.is("value_edited")));
         } catch (Exception e) {
             throw e;
         } finally {
@@ -437,8 +437,8 @@ class PageConfigurationControllerIntegrationTest extends AbstractControllerInteg
         titles.put("it", "Titolo");
         titles.put("en", "Title");
         request.setTitles(titles);
-        request.setConfig(Collections.singletonMap("key", "value"));
-        request.setCustomUi("<h1>Test</h1>");
+        request.setConfig(Collections.singletonMap("parentCode", "value"));
+        request.setCustomUi("<h1>Test</h1>"); // TODO to clarify
         request.setGroup(Group.FREE_GROUP_NAME);
         request.setReadonlyPageWidgetConfig(readonlyPageWidgetConfig);
         request.setWidgetCategory("test");

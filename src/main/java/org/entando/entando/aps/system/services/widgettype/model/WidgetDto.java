@@ -221,9 +221,8 @@ public class WidgetDto {
     }
 
     public String getAction() {
-        return action;
+        return this.action;
     }
-    
     public void setAction(String action) {
         this.action = action;
     }

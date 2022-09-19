@@ -13,12 +13,15 @@
  */
 package org.entando.entando.web.widget.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Map;
 
-public class WidgetRequest {
+public class WidgetRequest implements Serializable {
 
     @NotBlank(message = "widgettype.code.notBlank")
     private String code;
@@ -34,11 +37,15 @@ public class WidgetRequest {
 
     private String bundleId;
 
-    private Map<String, Object> configUi;
+    private Map<String, Object> configUi; //NOSONAR
+    
+    private List<WidgetParameter> params = new ArrayList<>();
+    
+    private String configUiName;
 
-    private String parentType;
+    private String parentCode;
 
-    private Map<String, String> config;
+    private Map<String, String> paramsDefaults;
 
     private Boolean readonlyPageWidgetConfig;
 
@@ -94,20 +101,63 @@ public class WidgetRequest {
         this.configUi = configUi;
     }
 
+    public List<WidgetParameter> getParams() {
+        return params;
+    }
+    public void setParams(List<WidgetParameter> params) {
+        this.params = params;
+    }
+
+    public String getConfigUiName() {
+        return configUiName;
+    }
+    public void setConfigUiName(String configUiName) {
+        this.configUiName = configUiName;
+    }
+    
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+    /**
+     * @deprecated Use getParentCode method
+     */
+    @Deprecated
     public String getParentType() {
-        return parentType;
+        return this.getParentCode();
     }
-
+    /**
+     * @deprecated Use setParentCode method
+     */
+    @Deprecated
     public void setParentType(String parentType) {
-        this.parentType = parentType;
+        this.setParentCode(parentType);
     }
 
+    public Map<String, String> getParamsDefaults() {
+        return paramsDefaults;
+    }
+
+    public void setParamsDefaults(Map<String, String> paramsDefaults) {
+        this.paramsDefaults = paramsDefaults;
+    }
+    
+    /**
+     * @deprecated Use getConfig method
+     */
+    @Deprecated
     public Map<String, String> getConfig() {
-        return config;
+        return this.getParamsDefaults();
     }
-
+    /**
+     * @deprecated Use setParamsDefaults method
+     */
+    @Deprecated
     public void setConfig(Map<String, String> config) {
-        this.config = config;
+        this.setParamsDefaults(config);
     }
 
     public Boolean isReadonlyPageWidgetConfig() {
@@ -133,4 +183,32 @@ public class WidgetRequest {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+    
+    public static class WidgetParameter implements Serializable {
+
+        public WidgetParameter() { }
+        public WidgetParameter(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+        
+        private String name;
+        private String description;
+
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        
+        public String getDescription() {
+            return description;
+        }
+        public void setDescription(String description) {
+            this.description = description;
+        }
+        
+    }
+    
 }

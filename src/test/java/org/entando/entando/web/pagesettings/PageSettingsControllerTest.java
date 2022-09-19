@@ -139,7 +139,7 @@ class PageSettingsControllerTest extends AbstractControllerTest {
 
     private UserDetails createManagePagesUser() {
         return new OAuth2TestUtils.UserBuilder("managePages", "0x01")
-                .withAuthorization(Group.FREE_GROUP_NAME, Permission.MANAGE_PAGES, Permission.MANAGE_PAGES)
+                .withAuthorization(Group.FREE_GROUP_NAME, Permission.MANAGE_PAGES, Permission.SUPERUSER)
                 .build();
     }
 

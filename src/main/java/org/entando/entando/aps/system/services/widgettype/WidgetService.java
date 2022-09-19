@@ -44,14 +44,12 @@ import org.entando.entando.web.common.model.PagedMetadata;
 import org.entando.entando.web.common.model.RestListRequest;
 import org.entando.entando.web.component.ComponentUsageEntity;
 import org.entando.entando.web.widget.model.WidgetRequest;
-import org.entando.entando.web.widget.model.WidgetUpdateRequest;
 import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +57,7 @@ import java.util.stream.Collectors;
 @Service
 public class WidgetService implements IWidgetService, GroupServiceUtilizer<WidgetDto>, ServletContextAware {
 
-    private final EntLogger logger = EntLogFactory.getSanitizedLogger(getClass());
+    private final EntLogger logger = EntLogFactory.getSanitizedLogger(WidgetService.class);
 
     private IWidgetTypeManager widgetManager;
 
@@ -136,7 +134,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             PagedMetadata<WidgetDto> pagedMetadata = new PagedMetadata<>(restListReq, paginatedResult);
             pagedMetadata.setBody(sublist);
             return pagedMetadata;
-        } catch (Throwable t) {
+        } catch (Exception t) {
             logger.error("error in get widgets", t);
             throw new RestServerError("error in get widgets", t);
         }
@@ -194,30 +192,27 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     @Override
     public WidgetDto addWidget(WidgetRequest widgetRequest) {
-        WidgetType widgetType = new WidgetType();
-        this.processWidgetType(widgetType, widgetRequest);
-        WidgetType oldWidgetType = this.getWidgetManager().getWidgetType(widgetType.getCode());
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
-        if (null != oldWidgetType) {
-            bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_ALREADY_EXISTS, new String[]{widgetType.getCode()}, "widgettype.exists");
-            throw new ValidationGenericException(bindingResult);
-        } else if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
-            bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()}, "widgettype.group.invalid");
-            throw new ValidationGenericException(bindingResult);
-        }
         try {
-            this.getWidgetManager().addWidgetType(widgetType);
-            String customUi = NonceInjector.process(widgetRequest.getCustomUi());
-            if (StringUtils.isEmpty(customUi) && widgetType.getParentType() != null) {
-                GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetType.getParentTypeCode());
-                if (guiFragment != null) {
-                    customUi = guiFragment.getCurrentGui();
-                }
+            WidgetType widgetType = new WidgetType();
+            widgetType.setCode(widgetRequest.getCode());
+            this.processWidgetType(widgetType, widgetRequest);
+            WidgetType oldWidgetType = this.getWidgetManager().getWidgetType(widgetType.getCode());
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(widgetType, "widget");
+            if (null != oldWidgetType) {
+                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_ALREADY_EXISTS, new String[]{widgetType.getCode()}, "widgettype.exists");
+                throw new ValidationGenericException(bindingResult);
+            } else if (null == this.getGroupManager().getGroup(widgetRequest.getGroup())) {
+                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetRequest.getGroup()}, "widgettype.group.invalid");
+                throw new ValidationGenericException(bindingResult);
             }
+            this.getWidgetManager().addWidgetType(widgetType);
+            String customUi = this.extractCustomUi(widgetType, widgetRequest);
             this.createAndAddFragment(widgetType, customUi);
             WidgetDto widgetDto = this.dtoBuilder.convert(widgetType);
             this.addFragments(widgetDto);
             return widgetDto;
+        } catch (ValidationGenericException validationGenericException) {
+            throw validationGenericException;
         } catch (Exception e) {
             logger.error("Failed to add widget type for request {} ", widgetRequest, e);
             throw new RestServerError("error in add widget", e);
@@ -225,7 +220,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
     @Override
-    public WidgetDto updateWidget(String widgetCode, WidgetUpdateRequest widgetUpdateRequest) {
+    public WidgetDto updateWidget(String widgetCode, WidgetRequest widgetUpdateRequest) {
         WidgetType type = this.getWidgetManager().getWidgetType(widgetCode);
         if (type == null) {
             throw new ResourceNotFoundException(WidgetValidator.ERRCODE_WIDGET_DOES_NOT_EXISTS, "widget", widgetCode);
@@ -237,26 +232,16 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
                 bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetUpdateRequest.getGroup()}, "widgettype.group.invalid");
                 throw new ValidationGenericException(bindingResult);
             }
-
-            WidgetRequest widgetRequest = getWidgetRequestFromUpdate(widgetCode, widgetUpdateRequest);
-            this.processWidgetType(type, widgetRequest);
-
-            String customUi = NonceInjector.process(widgetUpdateRequest.getCustomUi());
-            if (StringUtils.isEmpty(customUi) && type.getParentType() != null) {
-                GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(type.getParentTypeCode());
-                if (guiFragment != null) {
-                    customUi = guiFragment.getCurrentGui();
-                }
-            }
-
+            this.processWidgetType(type, widgetUpdateRequest);
+            String customUi = this.extractCustomUi(type, widgetUpdateRequest);
             if (type.isUserType()
                     && StringUtils.isBlank(customUi)
-                    && !WidgetType.existsJsp(this.srvCtx, widgetCode, widgetCode)) {
+                    && !type.isLogic() 
+                    && !WidgetType.existsJsp(this.srvCtx, widgetCode, type.getPluginCode())) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");
                 bindingResult.reject(WidgetValidator.ERRCODE_NOT_BLANK, new String[]{type.getCode()}, "widgettype.customUi.notBlank");
                 throw new ValidationGenericException(bindingResult);
             }
-
             widgetDto = dtoBuilder.convert(type);
             this.getWidgetManager().updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(), type.getWidgetCategory(),
@@ -274,28 +259,18 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         } catch (ValidationGenericException vge) {
             logger.error("Found an error on validation, throwing original exception", vge);
             throw vge;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             logger.error("failed to update widget type", e);
             throw new RestServerError("Failed to update widget", e);
         }
         return widgetDto;
     }
-
-    @NotNull
-    private WidgetRequest getWidgetRequestFromUpdate(String widgetCode, WidgetUpdateRequest widgetUpdateRequest) {
-        WidgetRequest widgetRequest = new WidgetRequest();
-        widgetRequest.setCode(widgetCode);
-        widgetRequest.setGroup(widgetUpdateRequest.getGroup());
-        widgetRequest.setWidgetCategory(widgetUpdateRequest.getWidgetCategory());
-        widgetRequest.setTitles(widgetUpdateRequest.getTitles());
-        widgetRequest.setReadonlyPageWidgetConfig(widgetUpdateRequest.isReadonlyPageWidgetConfig());
-        widgetRequest.setConfig(widgetUpdateRequest.getConfig());
-        widgetRequest.setCustomUi(widgetUpdateRequest.getCustomUi());
-        widgetRequest.setConfigUi(widgetUpdateRequest.getConfigUi());
-        widgetRequest.setParentType(widgetUpdateRequest.getParentType());
-        widgetRequest.setBundleId(widgetUpdateRequest.getBundleId());
-        widgetRequest.setIcon(widgetUpdateRequest.getIcon());
-        return widgetRequest;
+    
+    protected String extractCustomUi(WidgetType widgetType, WidgetRequest widgetRequest) throws EntException {
+        if (widgetType.isLogic()) {
+            return null;
+        }
+        return NonceInjector.process(widgetRequest.getCustomUi());
     }
 
     @Override
@@ -333,7 +308,6 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
     }
 
-
     @Override
     public Integer getComponentUsage(String componentCode) {
         try {
@@ -346,18 +320,14 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     @Override
     public PagedMetadata<ComponentUsageEntity> getComponentUsageDetails(String componentCode, RestListRequest restListRequest) {
-
         WidgetInfoDto widgetInfoDto = this.getWidgetInfo(componentCode);
-
         List<ComponentUsageEntity> totalReferenced = widgetInfoDto.getPublishedUtilizers().stream()
                 .map(widgetDetail -> new ComponentUsageEntity(ComponentUsageEntity.TYPE_PAGE, widgetDetail.getPageCode(), IPageService.STATUS_ONLINE))
                 .collect(Collectors.toList());
         List<ComponentUsageEntity> draftReferenced = widgetInfoDto.getDraftUtilizers().stream()
                 .map(widgetDetail -> new ComponentUsageEntity(ComponentUsageEntity.TYPE_PAGE, widgetDetail.getPageCode(), IPageService.STATUS_DRAFT))
                 .collect(Collectors.toList());
-
         totalReferenced.addAll(draftReferenced);
-
         return pagedMetadataMapper.getPagedResult(restListRequest, totalReferenced);
     }
 
@@ -377,6 +347,9 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
     }
 
     private void createAndAddFragment(WidgetType widgetType, String customUi) throws Exception {
+        if (StringUtils.isBlank(customUi)) {
+            return;
+        }
         GuiFragment guiFragment = new GuiFragment();
         String code = this.extractUniqueGuiFragmentCode(widgetType.getCode());
         guiFragment.setCode(code);
@@ -386,8 +359,7 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         this.getGuiFragmentManager().addGuiFragment(guiFragment);
     }
 
-    private void processWidgetType(WidgetType type, WidgetRequest widgetRequest) {
-        type.setCode(widgetRequest.getCode());
+    private void processWidgetType(WidgetType type, WidgetRequest widgetRequest) throws JsonProcessingException {
         ApsProperties titles = new ApsProperties();
         titles.putAll(widgetRequest.getTitles());
         type.setTitles(titles);
@@ -398,23 +370,22 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         if (widgetRequest.isReadonlyPageWidgetConfig() != null) {
             type.setReadonlyPageWidgetConfig(widgetRequest.isReadonlyPageWidgetConfig());
         }
-        if (widgetRequest.getParentType() != null) {
-            type.setParentType(widgetManager.getWidgetType(widgetRequest.getParentType()));
-        }
-
-        if ((widgetRequest.getConfig() != null) && !type.isLocked()){
-            type.setConfig(ApsProperties.fromMap(widgetRequest.getConfig()));
-        }
-
-        try {
-            if (widgetRequest.getConfigUi() != null) {
-                type.setConfigUi(objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
-            } else {
-                type.setConfigUi(null);
+        if (!StringUtils.isBlank(widgetRequest.getParentCode())) {
+            type.setParentType(this.widgetManager.getWidgetType(widgetRequest.getParentCode()));
+        } else if (widgetRequest.getParams() != null) {
+            List<WidgetTypeParameter> parameters = 
+                    widgetRequest.getParams().stream()
+                            .map(r -> new WidgetTypeParameter(r.getName(), r.getDescription())).collect(Collectors.toList());
+            if (!parameters.isEmpty()) {
+                type.setTypeParameters(parameters);
             }
-        } catch (JsonProcessingException e) {
-            logger.error("Failed to parse configUi property for request {} ", widgetRequest, e);
-            throw new RestServerError("error in add widget", e);
+            type.setAction(widgetRequest.getConfigUiName());
+            if (null != widgetRequest.getConfigUi()) {
+                type.setConfigUi(this.objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
+            }
+        }
+        if ((widgetRequest.getParamsDefaults()!= null) && !type.isLocked()){
+            type.setConfig(ApsProperties.fromMap(widgetRequest.getParamsDefaults()));
         }
     }
 

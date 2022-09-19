@@ -21,9 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
 import org.entando.entando.web.analysis.AnalysisControllerDiffAnalysisEngineTestsStubs;
@@ -46,6 +49,9 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
 
     @Autowired
     private IGuiFragmentManager guiFragmentManager;
+
+    @Autowired
+    private IWidgetTypeManager widgetTypeManager;
 
     @BeforeEach
     public void init() throws EntException {
@@ -147,6 +153,88 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
     }
 
     @Test
+    void testGetFragments_4() throws Exception {
+        String accessToken = getAccessToken();
+
+        String widgetTypeCode1 = "testWidgetType1";
+        String widgetTypeCode2 = "testWidgetType";
+        String guiFragmentCode1 = "test_search_1";
+        String guiFragmentCode2 = "test_search_2";
+
+        String widgetCategory = "test";
+        ApsProperties titles = new ApsProperties();
+        titles.put("it", "Titolo in ITA");
+        titles.put("en", "Title in ENG");
+        ApsProperties config = new ApsProperties();
+
+        WidgetType widgetType1 = new WidgetType();
+        widgetType1.setCode(widgetTypeCode1);
+        widgetType1.setTitles(titles);
+        widgetType1.setWidgetCategory(widgetCategory);
+
+        WidgetType widgetType2 = new WidgetType();
+        widgetType2.setCode(widgetTypeCode2);
+        widgetType2.setTitles(titles);
+        widgetType2.setWidgetCategory(widgetCategory);
+
+        widgetTypeManager.addWidgetType(widgetType1);
+        widgetTypeManager.addWidgetType(widgetType2);
+
+        GuiFragment guiFragment1 = new GuiFragment();
+        guiFragment1.setCode(guiFragmentCode1);
+        guiFragment1.setWidgetTypeCode(widgetTypeCode1);
+        guiFragment1.setGui("<div>test</div>");
+
+        GuiFragment guiFragment2 = new GuiFragment();
+        guiFragment2.setCode(guiFragmentCode2);
+        guiFragment2.setWidgetTypeCode(widgetTypeCode2);
+        guiFragment2.setGui("<div>test</div>");
+
+        guiFragmentManager.addGuiFragment(guiFragment1);
+        guiFragmentManager.addGuiFragment(guiFragment2);
+
+        try {
+
+            ResultActions result = mockMvc.perform(
+                    get("/fragments").param("page", "1")
+                            .param("pageSize", "4")
+                            .param("filter[0].attribute", "widgetType.code")
+                            .param("filter[0].operator", "eq")
+                            .param("filter[0].value", widgetTypeCode1)
+                            .header("Authorization", "Bearer " + accessToken)
+            );
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload", Matchers.hasSize(1)));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.page", is(1)));
+            result.andExpect(jsonPath("$.metaData.totalItems", is(1)));
+            result.andExpect(jsonPath("$.payload[0].widgetType.code", is(widgetTypeCode1)));
+
+            result = mockMvc.perform(
+                    get("/fragments").param("page", "1")
+                            .param("pageSize", "10")
+                            .param("filter[0].attribute", "widgetType.code")
+                            .param("filter[0].value", widgetTypeCode2)
+                            .header("Authorization", "Bearer " + accessToken)
+            );
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload", Matchers.hasSize(2)));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.page", is(1)));
+            result.andExpect(jsonPath("$.metaData.totalItems", is(2)));
+
+        } catch (Throwable t){
+            throw new RuntimeException(t);
+        }
+        finally{
+            guiFragmentManager.deleteGuiFragment(guiFragmentCode1);
+            guiFragmentManager.deleteGuiFragment(guiFragmentCode2);
+            widgetTypeManager.deleteWidgetType(widgetTypeCode1);
+            widgetTypeManager.deleteWidgetType(widgetTypeCode2);
+        }
+    }
+
+    @Test
     void testGetFragmentUsage() throws Exception {
         String accessToken = getAccessToken();
         String code = "login_form";
@@ -229,4 +317,5 @@ class GuiFragmentControllerIntegrationTest extends AbstractControllerIntegration
                 .grantedToRoleAdmin().build();
         return mockOAuthInterceptor(user);
     }
+
 }
