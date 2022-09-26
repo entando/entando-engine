@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -432,7 +433,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
     }
 
     @Test
-    void testMove() throws Throwable {
+    void testMove_1() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
                 .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
                 .build();
@@ -452,6 +453,7 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             //move a page with test group under a different group page is not allowed
 
+            assertThat(pageManager.getDraftPage("free_group_page").getPosition(), is(6));
             assertThat(pageManager.getDraftPage("admin_group_page").getPosition(), is(7));
             assertThat(pageManager.getDraftPage("test_group_page").getPosition(), is(8));
 
@@ -471,10 +473,15 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             result.andExpect(status().isUnprocessableEntity());
 
             //move a free group page under a reserved  group page is not allowed
-
-            assertThat(pageManager.getDraftPage("free_group_page").getPosition(), is(6));
-            assertThat(pageManager.getDraftPage("admin_group_page").getPosition(), is(7));
-
+            
+            assertThat(this.pageManager.getDraftPage("free_group_page").getPosition(), is(6));
+            assertThat(this.pageManager.getDraftPage("admin_group_page").getPosition(), is(7));
+            assertThat(this.pageManager.getDraftPage("test_group_page").getPosition(), is(8));
+            ((IManager) pageManager).refresh();
+            assertThat(this.pageManager.getDraftPage("free_group_page").getPosition(), is(6));
+            assertThat(this.pageManager.getDraftPage("admin_group_page").getPosition(), is(7));
+            assertThat(this.pageManager.getDraftPage("test_group_page").getPosition(), is(8));
+            
             request = new PagePositionRequest();
             request.setCode("free_group_page");
             request.setParentCode("admin_group_page");
@@ -494,8 +501,13 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             assertThat(pageManager.getDraftPage("published_page").getPosition(), is(4));
             assertThat(pageManager.getDraftPage("unpublished_page").getPosition(), is(5));
+            ((IManager) pageManager).refresh();
+            assertThat(pageManager.getDraftPage("published_page").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("unpublished_page").getPosition(), is(5));
 
+            pageManager.setPageOnline("page_root");
             pageManager.setPageOnline("published_page");
+            ((IManager) pageManager).refresh();
 
             request = new PagePositionRequest();
             request.setCode("published_page");
@@ -514,6 +526,10 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             //move a page to an invalid position is not allowed
 
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            ((IManager) pageManager).refresh();
             assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
             assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
             assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
@@ -538,6 +554,10 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
             assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
             assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            ((IManager) pageManager).refresh();
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
 
             request = new PagePositionRequest();
             request.setCode("page_b");
@@ -559,6 +579,11 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
             assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
             assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            ((IManager) pageManager).refresh();
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            
             request = new PagePositionRequest();
             request.setCode("page_a");
             request.setParentCode("page_root");
@@ -574,6 +599,10 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
             result.andExpect(status().isOk());
 
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(2));
+            ((IManager) pageManager).refresh();
             assertThat(pageManager.getDraftPage("page_a").getPosition(), is(3));
             assertThat(pageManager.getDraftPage("page_b").getPosition(), is(1));
             assertThat(pageManager.getDraftPage("page_c").getPosition(), is(2));
@@ -597,6 +626,10 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
             assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
             assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            ((IManager) pageManager).refresh();
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
 
         } finally {
             this.pageManager.deletePage("published_page");
@@ -610,7 +643,160 @@ class PageControllerIntegrationTest extends AbstractControllerIntegrationTest {
             this.pageManager.deletePage("page_root");
         }
     }
+    
+    @Test
+    void testMove_2() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.ADMINS_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        try {
+            pageManager.addPage(createPage("page_root", null, null));
+            this.pageManager.setPageOnline("page_root");
+            pageManager.addPage(createPage("page_a", null, "page_root"));
+            pageManager.addPage(createPage("page_b", null, "page_root"));
+            pageManager.addPage(createPage("page_c", null, "page_root", Group.ADMINS_GROUP_NAME));
+            pageManager.addPage(createPage("page_d", null, "page_root"));
+            this.pageManager.setPageOnline("page_d");
+            pageManager.addPage(createPage("page_e", null, "page_root"));
+            pageManager.addPage(createPage("page_f", null, "page_root", Group.FREE_GROUP_NAME));
+            pageManager.addPage(createPage("page_g", null, "page_root", Group.ADMINS_GROUP_NAME));
+            pageManager.addPage(createPage("page_h", null, "page_root", "test"));
 
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_d").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("page_e").getPosition(), is(5));
+            assertThat(pageManager.getDraftPage("page_f").getPosition(), is(6));
+            assertThat(pageManager.getDraftPage("page_g").getPosition(), is(7));
+            assertThat(pageManager.getDraftPage("page_h").getPosition(), is(8));
+
+            PagePositionRequest request = new PagePositionRequest();
+            request.setCode("page_f");
+            request.setParentCode("page_root");
+            request.setPosition(2);
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/position", "page_f")
+                            .param("pageCodeToken", "pagin")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(request))
+                            .header("Authorization", "Bearer " + accessToken));
+            
+            result.andExpect(status().isOk());
+            
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("page_d").getPosition(), is(5));
+            assertThat(pageManager.getDraftPage("page_e").getPosition(), is(6));
+            assertThat(pageManager.getDraftPage("page_f").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_g").getPosition(), is(7));
+            assertThat(pageManager.getDraftPage("page_h").getPosition(), is(8));
+            
+            request = new PagePositionRequest();
+            request.setCode("page_c");
+            request.setParentCode("page_root");
+            request.setPosition(12);
+            result = mockMvc
+                    .perform(put("/pages/{pageCode}/position", "page_c")
+                            .param("pageCodeToken", "pagin")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(request))
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(8));
+            assertThat(pageManager.getDraftPage("page_d").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("page_e").getPosition(), is(5));
+            assertThat(pageManager.getDraftPage("page_f").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_g").getPosition(), is(6));
+            assertThat(pageManager.getDraftPage("page_h").getPosition(), is(7));
+            
+            request = new PagePositionRequest();
+            request.setCode("page_g");
+            request.setParentCode("page_root");
+            request.setPosition(1);
+            result = mockMvc
+                    .perform(put("/pages/{pageCode}/position", "page_g")
+                            .param("pageCodeToken", "pagin")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(request))
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(8));
+            assertThat(pageManager.getDraftPage("page_d").getPosition(), is(5));
+            assertThat(pageManager.getDraftPage("page_e").getPosition(), is(6));
+            assertThat(pageManager.getDraftPage("page_f").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_g").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_h").getPosition(), is(7));
+            ((IManager) pageManager).refresh();
+            assertThat(pageManager.getDraftPage("page_a").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("page_b").getPosition(), is(4));
+            assertThat(pageManager.getDraftPage("page_c").getPosition(), is(8));
+            assertThat(pageManager.getDraftPage("page_d").getPosition(), is(5));
+            assertThat(pageManager.getDraftPage("page_e").getPosition(), is(6));
+            assertThat(pageManager.getDraftPage("page_f").getPosition(), is(3));
+            assertThat(pageManager.getDraftPage("page_g").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("page_h").getPosition(), is(7));
+        } finally {
+            this.pageManager.setPageOffline("page_d");
+            this.pageManager.setPageOffline("page_root");
+            this.pageManager.deletePage("page_a");
+            this.pageManager.deletePage("page_b");
+            this.pageManager.deletePage("page_c");
+            this.pageManager.deletePage("page_d");
+            this.pageManager.deletePage("page_e");
+            this.pageManager.deletePage("page_f");
+            this.pageManager.deletePage("page_g");
+            this.pageManager.deletePage("page_h");
+            this.pageManager.deletePage("page_root");
+        }
+    }
+
+    @Test
+    void testMoveToDifferentSubTreeOnSpecificPosition() throws Throwable {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
+                .withAuthorization(Group.FREE_GROUP_NAME, "managePages", Permission.MANAGE_PAGES)
+                .build();
+        String accessToken = mockOAuthInterceptor(user);
+        try {
+            pageManager.addPage(createPage("root_1", null, null));
+            pageManager.addPage(createPage("child_of_1", null, "root_1"));
+            pageManager.addPage(createPage("root_2", null, null));
+            pageManager.addPage(createPage("first_child_of_root_2", null, "root_2"));
+            pageManager.addPage(createPage("second_child_of_root_2", null, "root_2"));
+
+            PagePositionRequest request = new PagePositionRequest();
+            request.setCode("child_of_1");
+            request.setParentCode("root_2");
+            request.setPosition(2);
+
+            ResultActions result = mockMvc
+                    .perform(put("/pages/{pageCode}/position", "child_of_1")
+                            .param("pageCodeToken", "pagin")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(mapper.writeValueAsString(request))
+                            .header("Authorization", "Bearer " + accessToken));
+
+            result.andExpect(status().isOk());
+
+            assertThat(pageManager.getDraftPage("first_child_of_root_2").getPosition(), is(1));
+            assertThat(pageManager.getDraftPage("child_of_1").getPosition(), is(2));
+            assertThat(pageManager.getDraftPage("second_child_of_root_2").getPosition(), is(3));
+        } finally {
+            this.pageManager.deletePage("child_of_1");
+            this.pageManager.deletePage("first_child_of_root_2");
+            this.pageManager.deletePage("second_child_of_root_2");
+            this.pageManager.deletePage("root_1");
+            this.pageManager.deletePage("root_2");
+        }
+    }
+    
     @Test
     void testCreatePageIntoDifferentOwnerGroupPages() throws Throwable {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24")
