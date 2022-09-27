@@ -119,7 +119,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         String response = result.andReturn().getResponse().getContentAsString();
         assertNotNull(response);
         result.andExpect(jsonPath("$.payload.code", is("formAction")));        
-        result.andExpect(jsonPath("$.payload.action", is("configSimpleParameter")));
+        result.andExpect(jsonPath("$.payload.configUiName", is("configSimpleParameter")));
         result.andExpect(jsonPath("$.payload.parameters.size()", is(1)));
         result.andExpect(jsonPath("$.payload.parameters[0].code", is("actionPath")));
         result.andExpect(jsonPath("$.payload.parameters[0].description", is("Path relativo di una action o una Jsp")));
@@ -501,7 +501,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             resultMaster.andExpect(jsonPath("$.payload.parameters[2].description", is("Description of parameter 3")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].code", is("param4")));
             resultMaster.andExpect(jsonPath("$.payload.parameters[3].description", nullValue()));
-            resultMaster.andExpect(jsonPath("$.payload.action", is("configAction")));
+            resultMaster.andExpect(jsonPath("$.payload.configUiName", is("configAction")));
             
             widgetType = this.widgetTypeManager.getWidgetType(code);
             Assertions.assertNotNull(widgetType);
