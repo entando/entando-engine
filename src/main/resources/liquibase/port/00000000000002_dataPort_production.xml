@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+           http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="00000000000002_dataPort_production" author="entando" context="production">
+        
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_UNAUTHORIZED" />
+            <column name="langcode" value="it" />
+            <column name="stringvalue" value="Utente non autorizzato" />
+        </insert>
+        
+        <insert tableName="localstrings">
+            <column name="keycode" value="USER_UNAUTHORIZED" />
+            <column name="langcode" value="en" />
+            <column name="stringvalue" value="USer unauthorized" />
+        </insert>
+        
+        <update tableName="guifragment">
+            <column name="defaultgui" valueClobFile="clob/production/guifragment_32_1.ftl" />
+            <where>code='messages_system'</where>
+        </update>
+
+    </changeSet>
+
+</databaseChangeLog>
