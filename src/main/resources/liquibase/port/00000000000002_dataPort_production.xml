@@ -16,7 +16,7 @@
         <insert tableName="localstrings">
             <column name="keycode" value="USER_UNAUTHORIZED" />
             <column name="langcode" value="en" />
-            <column name="stringvalue" value="USer unauthorized" />
+            <column name="stringvalue" value="User unauthorized" />
         </insert>
         
         <update tableName="guifragment">
