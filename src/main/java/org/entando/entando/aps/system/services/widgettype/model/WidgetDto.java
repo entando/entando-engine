@@ -41,7 +41,7 @@ public class WidgetDto {
     private List<WidgetParameter> parameters = new ArrayList<>();
     private ApsProperties config;
     private String parentType;
-    private String action;
+    private String configUiName;
     private Boolean readonlyPageWidgetConfig;
     private boolean locked;
     private String widgetCategory;
@@ -220,11 +220,12 @@ public class WidgetDto {
         this.parameters = parameters;
     }
 
-    public String getAction() {
-        return this.action;
+    public String getConfigUiName() {
+        return this.configUiName;
     }
-    public void setAction(String action) {
-        this.action = action;
+
+    public void setConfigUiName(String configUiName) {
+        this.configUiName = configUiName;
     }
 
     public String getParentType() {
