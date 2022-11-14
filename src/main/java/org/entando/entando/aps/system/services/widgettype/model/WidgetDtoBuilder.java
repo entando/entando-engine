@@ -83,7 +83,7 @@ public class WidgetDtoBuilder extends DtoBuilder<WidgetType, WidgetDto> {
         } else {
             dest.setTypology(WidgetDto.CUSTOM_TYPOLOGY_CODE);
         }
-        dest.setAction(src.getAction());
+        dest.setConfigUiName(src.getAction());
         if (null != src.getTypeParameters()) {
             src.getTypeParameters().stream().forEach(t -> {
                 dest.addWidgetParameter(t.getName(), t.getDescr());
