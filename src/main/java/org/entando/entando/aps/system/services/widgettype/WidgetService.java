@@ -211,6 +211,8 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
             WidgetDto widgetDto = this.dtoBuilder.convert(widgetType);
             this.addFragments(widgetDto);
             return widgetDto;
+        } catch (ValidationGenericException validationGenericException) {
+            throw validationGenericException;
         } catch (Exception e) {
             logger.error("Failed to add widget type for request {} ", widgetRequest, e);
             throw new RestServerError("error in add widget", e);
@@ -370,14 +372,19 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         }
         if (!StringUtils.isBlank(widgetRequest.getParentCode())) {
             type.setParentType(this.widgetManager.getWidgetType(widgetRequest.getParentCode()));
-        } else if (widgetRequest.getParams() != null) {
-            List<WidgetTypeParameter> parameters = 
-                    widgetRequest.getParams().stream()
-                            .map(r -> new WidgetTypeParameter(r.getName(), r.getDescription())).collect(Collectors.toList());
-            if (!parameters.isEmpty()) {
-                type.setTypeParameters(parameters);
+        } else {
+            if (widgetRequest.getParams() != null) {
+                List<WidgetTypeParameter> parameters =
+                        widgetRequest.getParams().stream()
+                                .map(r -> new WidgetTypeParameter(r.getName(), r.getDescription()))
+                                .collect(Collectors.toList());
+                if (!parameters.isEmpty()) {
+                    type.setTypeParameters(parameters);
+                }
             }
+            // ENG-4198 with descriptor v1 ConfigUiName is always null
             type.setAction(widgetRequest.getConfigUiName());
+            // ENG-4198 compatibility fix with descriptor v1 with configUi (it's valid also without params)
             if (null != widgetRequest.getConfigUi()) {
                 type.setConfigUi(this.objectMapper.writeValueAsString(widgetRequest.getConfigUi()));
             }

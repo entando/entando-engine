@@ -25,7 +25,7 @@ import freemarker.template.TemplateModel;
 public class ExecutorBeanContainer {
 	
 	public ExecutorBeanContainer(Configuration configuration, TemplateModel templateModel) {
-        configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
+		configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 		this.setConfiguration(configuration);
 		this.setTemplateModel(templateModel);
 	}
