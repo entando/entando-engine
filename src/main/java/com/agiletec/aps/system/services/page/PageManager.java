@@ -38,6 +38,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import com.agiletec.aps.system.common.AbstractParameterizableService;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
+import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedObserver;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -52,7 +55,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractParameterizableService implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
+public class PageManager extends AbstractParameterizableService implements IPageManager, GroupUtilizer, 
+        LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver, WidgetTypeChangedObserver {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageManager.class);
     public static final String ERRMSG_ERROR_WHILE_MOVING_A_PAGE = "Error while moving a page";
@@ -710,6 +714,21 @@ public class PageManager extends AbstractParameterizableService implements IPage
             }
         } catch (Throwable t) {
             _logger.error("Error during refres pages", t);
+        }
+    }
+
+    @Override
+    public void updateFromShowletTypeChanged(WidgetTypeChangedEvent event) {
+        try {
+            if (event.getOperationCode() != WidgetTypeChangedEvent.UPDATE_OPERATION_CODE) {
+                return;
+            }
+            String typeCode = event.getWidgetTypeCode();
+            if (!this.getDraftWidgetUtilizers(typeCode).isEmpty() || !this.getOnlineWidgetUtilizers(typeCode).isEmpty()) {
+                this.init();
+            }
+        } catch (Throwable t) {
+            _logger.error("Error refreshing pages", t);
         }
     }
     

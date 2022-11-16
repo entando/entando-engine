@@ -33,6 +33,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.PageMetadata;
+import com.agiletec.aps.system.services.page.PageTestUtil;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Assertions;
@@ -370,16 +377,81 @@ class TestWidgetTypeManager extends BaseTestCase {
         type.setReadonlyPageWidgetConfig(false);
         return type;
     }
+    
+    @Test
+    void testWidgetEvent() throws Throwable {
+        String widgetTypeCode = "test_widgetType";
+        String testCode = "test_page_code";
+        try {
+            WidgetType type = this.createNewWidgetType(widgetTypeCode);
+            type.setMainGroup(Group.FREE_GROUP_NAME);
+            this._widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(extracted);
+            assertEquals(Group.FREE_GROUP_NAME, extracted.getMainGroup());
+            
+            IPage page = createPageForTest(testCode, "service");
+            Widget widgetOnPage = new Widget();
+            widgetOnPage.setType(extracted);
+            page.getWidgets()[3] = widgetOnPage;
+            this._pageManager.addPage(page);
+            
+            IPage extractedPage = this._pageManager.getDraftPage(testCode);
+            assertNotNull(extractedPage);
+            assertNotNull(extractedPage.getWidgets()[3]);
+            assertEquals(Group.FREE_GROUP_NAME, extractedPage.getWidgets()[3].getType().getMainGroup());
+            this._pageManager.setPageOnline(testCode);
+            IPage extractedPublicPage = this._pageManager.getDraftPage(testCode);
+            assertNotNull(extractedPublicPage);
+            assertNotNull(extractedPublicPage.getWidgets()[3]);
+            assertEquals(Group.FREE_GROUP_NAME, extractedPublicPage.getWidgets()[3].getType().getMainGroup());
+            
+            this._widgetTypeManager.updateWidgetType(widgetTypeCode, 
+                    extracted.getTitles(), extracted.getConfig(), Group.ADMINS_GROUP_NAME, 
+                    extracted.getConfigUi(), null, Boolean.FALSE, null, null);
+            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            assertNotNull(extracted);
+            assertEquals(Group.ADMINS_GROUP_NAME, extracted.getMainGroup());
+            synchronized (this) {
+                this.wait(1000);
+            }
+            extractedPage = this._pageManager.getDraftPage(testCode);
+            assertNotNull(extractedPage);
+            assertNotNull(extractedPage.getWidgets()[3]);
+            assertEquals(Group.ADMINS_GROUP_NAME, extractedPage.getWidgets()[3].getType().getMainGroup());
+            extractedPublicPage = this._pageManager.getDraftPage(testCode);
+            assertNotNull(extractedPublicPage);
+            assertNotNull(extractedPublicPage.getWidgets()[3]);
+            assertEquals(Group.ADMINS_GROUP_NAME, extractedPublicPage.getWidgets()[3].getType().getMainGroup());
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this._pageManager.setPageOffline(testCode);
+            this._pageManager.deletePage(testCode);
+            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+        }
+    }
+    
+    private IPage createPageForTest(String code, String parentCode) throws Throwable {
+        IPage prototype = this._pageManager.getDraftPage("service");
+        PageModel pageModel = prototype.getMetadata().getModel();
+        PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
+                true, "pagina temporanea", null, null, false, null, null);
+        Widget[] widgets = new Widget[pageModel.getFrames().length];
+        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
+    }
 
     @BeforeEach
     private void init() {
         this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
         this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
         this._mockWidgetTypeDAO.setDataSource(dataSource);
     }
 
     private IWidgetTypeManager _widgetTypeManager = null;
+    private IPageManager _pageManager = null;
     private MockWidgetTypeDAO _mockWidgetTypeDAO;
 
 }
