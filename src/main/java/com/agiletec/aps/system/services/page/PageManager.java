@@ -316,7 +316,7 @@ public class PageManager extends AbstractParameterizableService implements IPage
                 this.getPageDAO().updateWidgetPosition(pageCode, frameToMove, destFrame);
             }
             this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, frameToMove, destFrame, PageChangedEvent.EVENT_TYPE_MOVE_WIDGET);
-        } catch (EntException e) {
+        } catch (Exception e) {
             _logger.error("Error while moving widget. page {} from position {} to position {}", pageCode, frameToMove, destFrame, e);
             throw new EntException("Error while moving a widget", e);
         }

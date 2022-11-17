@@ -54,6 +54,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
 class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTest {
 
@@ -313,7 +314,56 @@ class PageModelControllerIntegrationTest extends AbstractControllerIntegrationTe
                         .header("Authorization", "Bearer " + accessTokenAdmin));
         result.andExpect(status().isOk());
     }
-
+    
+    @Test
+    void addUpdatePageModelWithTemplate() throws Exception {
+        String accessTokenAdmin = getAdminAuthenticationToken();
+        String templateCode = "page_template_test_freemarker";
+        try {
+            PageModelRequest pageModelRequest = PageModelTestUtil.validPageModelRequest();
+            pageModelRequest.setCode(templateCode);
+            pageModelRequest.setTemplate(null);
+            ResultActions result = mockMvc.perform(
+                    post("/pageModels")
+                            .content(createJson(pageModelRequest))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessTokenAdmin));
+            result.andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is(templateCode)))
+                    .andExpect(jsonPath("$.payload.descr", is("description")));
+            PageModel pageModel = this.pageModelManager.getPageModel(templateCode);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertEquals(3, pageModel.getFramesConfig().length);
+            Assertions.assertNull(pageModel.getTemplate());
+            pageModelRequest.setDescr("description2");
+            pageModelRequest.setTemplate("<h1>template</h1>");
+            result = mockMvc.perform(
+                    put("/pageModels/{code}", templateCode)
+                            .content(createJson(pageModelRequest))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessTokenAdmin));
+            result.andDo(resultPrint())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.payload.code", is(templateCode)))
+                    .andExpect(jsonPath("$.payload.descr", is("description2")));
+            pageModel = this.pageModelManager.getPageModel(templateCode);
+            Assertions.assertNotNull(pageModel);
+            Assertions.assertEquals(3, pageModel.getFrames().length);
+            Assertions.assertEquals(3, pageModel.getFramesConfig().length);
+            Assertions.assertEquals("<h1>template</h1>", pageModel.getTemplate());
+        } finally {
+            ResultActions result = mockMvc.perform(
+                    delete("/pageModels/{code}", templateCode)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer " + accessTokenAdmin));
+            result.andDo(resultPrint())
+                    .andExpect(status().isOk());
+            Assertions.assertNull(this.pageModelManager.getPageModel(templateCode));
+        }
+    }
+    
     @Test
     void addPageModelWithDotReturnOK() throws Exception {
         String accessTokenAdmin = getAdminAuthenticationToken();
