@@ -13,8 +13,13 @@
  */
 package com.agiletec.aps.system.services.page;
 
+import com.agiletec.aps.system.common.notify.INotifyManager;
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.cache.IPageManagerCacheWrapper;
+import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.List;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,12 +30,127 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class PageManagerTest {
+    
+    @Mock
+    private IPageDAO pageDao;
+    
+    @Mock
+    private INotifyManager notifyManager;
  
     @Mock
     private IPageManagerCacheWrapper cacheWrapper;
     
     @InjectMocks
     private PageManager pageManager;
+    
+    @Test
+    void deletePageWithError() throws Exception {
+        IPage mockPage = Mockito.mock(IPage.class);
+        Mockito.when(mockPage.getChildrenCodes()).thenReturn(new String[]{});
+        Mockito.when(cacheWrapper.getDraftPage(Mockito.anyString())).thenReturn(mockPage);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).deletePage(mockPage);
+            pageManager.deletePage("pageCode");
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).initCache(pageDao);
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void addPageWithError() throws Exception {
+        IPage mockPage = Mockito.mock(IPage.class);
+        Mockito.when(mockPage.getParentCode()).thenReturn("parent");
+        Mockito.when(cacheWrapper.getDraftPage("parent")).thenReturn(Mockito.mock(IPage.class));
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).addPage(mockPage);
+            pageManager.addPage(mockPage);
+        });
+        Mockito.verify(mockPage, Mockito.times(1)).setPosition(Mockito.anyInt());
+        Mockito.verify(cacheWrapper, Mockito.times(0)).addDraftPage(mockPage);
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void updatePageWithError() throws Exception {
+        IPage mockPage = Mockito.mock(IPage.class);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).updatePage(mockPage);
+            pageManager.updatePage(mockPage);
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(mockPage);
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void setPageOnlineWithError() throws Exception {
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).setPageOnline(Mockito.anyString());
+            pageManager.setPageOnline(Mockito.anyString());
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOnline(Mockito.anyString());
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void setPageOfflineWithError() throws Exception {
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).setPageOffline(Mockito.anyString());
+            pageManager.setPageOffline(Mockito.anyString());
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOffline(Mockito.anyString());
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void movePageWithError() throws Exception {
+        IPage mockPage = Mockito.mock(IPage.class);
+        IPage otherMockPage = Mockito.mock(IPage.class);
+        IPage parentMockPage = Mockito.mock(IPage.class);
+        Mockito.when(parentMockPage.getChildrenCodes()).thenReturn(new String[]{"child1", "child2"});
+        Mockito.when(cacheWrapper.getDraftPage("child1")).thenReturn(mockPage);
+        Mockito.when(cacheWrapper.getDraftPage("child2")).thenReturn(otherMockPage);
+        Mockito.when(mockPage.getCode()).thenReturn("child1");
+        Mockito.when(mockPage.getParentCode()).thenReturn("parent");
+        Mockito.when(otherMockPage.getParentCode()).thenReturn("parent");
+        Mockito.when(cacheWrapper.getDraftPage("parent")).thenReturn(parentMockPage);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).updatePosition(Mockito.anyString(), Mockito.anyString());
+            pageManager.movePage("child1", false);
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(1)).moveUpDown(Mockito.anyString(), Mockito.anyString());
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void removeWidgetWithError() throws Exception {
+        Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
+        this.addMetadata(draftPage);
+        Widget widget = new Widget();
+        widget.setType(Mockito.mock(WidgetType.class));
+        draftPage.setWidgets(new Widget[]{null, null, widget, null});
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).removeWidget(draftPage, 2);
+            pageManager.removeWidget("page_code", 2);
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOffline(Mockito.anyString());
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void joinWidgetWithError() throws Exception {
+        Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
+        this.addMetadata(draftPage);
+        Widget widget = new Widget();
+        widget.setType(Mockito.mock(WidgetType.class));
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).joinWidget(draftPage, widget, 2);
+            pageManager.joinWidget("page_code", widget, 2);
+        });
+        Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(Mockito.any(IPage.class));
+        Mockito.verifyNoInteractions(notifyManager);
+    }
 
     @Test
     void searchPages_FilterByCodeOnAllowedGroup_ShouldReturnResult() throws Exception {
@@ -134,4 +254,13 @@ public class PageManagerTest {
         page.setChildrenCodes(children);
         return page;
     }
+    
+    private void addMetadata(Page page) {
+        PageMetadata metadata = new PageMetadata();
+        PageModel model = Mockito.mock(PageModel.class);
+        Mockito.when(model.getFrames()).thenReturn(new String[]{"pos0", "pos1", "pos2", "pos3"});
+        metadata.setModel(model);
+        page.setMetadata(metadata);
+    }
+    
 }
