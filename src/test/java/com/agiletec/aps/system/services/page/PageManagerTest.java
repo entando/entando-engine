@@ -15,6 +15,7 @@ package com.agiletec.aps.system.services.page;
 
 import com.agiletec.aps.system.common.notify.INotifyManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.page.cache.IPageManagerCacheWrapper;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.List;
@@ -102,6 +103,13 @@ public class PageManagerTest {
     }
     
     @Test
+    void moveNullPage() throws Exception {
+        Assertions.assertThrows(EntException.class, () -> {
+            pageManager.movePage("child1", false);
+        });
+    }
+    
+    @Test
     void movePageWithError() throws Exception {
         IPage mockPage = Mockito.mock(IPage.class);
         IPage otherMockPage = Mockito.mock(IPage.class);
@@ -150,6 +158,31 @@ public class PageManagerTest {
         });
         Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(Mockito.any(IPage.class));
         Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void moveWidgetWithError() throws Exception {
+        Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
+        this.addMetadata(draftPage);
+        Widget widget = new Widget();
+        widget.setType(Mockito.mock(WidgetType.class));
+        draftPage.setWidgets(new Widget[]{null, null, widget, null});
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
+        Assertions.assertThrows(EntException.class, () -> {
+            Mockito.doThrow(RuntimeException.class).when(this.pageDao).updateWidgetPosition(Mockito.eq("page_code"), Mockito.anyInt(), Mockito.anyInt());
+            pageManager.moveWidget("page_code", 2, 1);
+        });
+        Mockito.verifyNoInteractions(notifyManager);
+    }
+    
+    @Test
+    void updateLangWithError() throws Exception {
+        Mockito.doThrow(EntException.class).when(this.cacheWrapper).initCache(pageDao);
+        try {
+            pageManager.updateFromLangsChanged(new LangsChangedEvent());
+        } catch (Exception e) {
+            Assertions.fail("Should not have thrown any exception");
+        }
     }
 
     @Test
@@ -258,7 +291,7 @@ public class PageManagerTest {
     private void addMetadata(Page page) {
         PageMetadata metadata = new PageMetadata();
         PageModel model = Mockito.mock(PageModel.class);
-        Mockito.when(model.getFrames()).thenReturn(new String[]{"pos0", "pos1", "pos2", "pos3"});
+        Mockito.lenient().when(model.getFrames()).thenReturn(new String[]{"pos0", "pos1", "pos2", "pos3"});
         metadata.setModel(model);
         page.setMetadata(metadata);
     }
