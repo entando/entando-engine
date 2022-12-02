@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.user;
 
+import static com.agiletec.aps.system.SystemConstants.ADMIN_USER_NAME;
 import static com.agiletec.aps.system.SystemConstants.GUEST_USER_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.model.dao.SearcherDaoPaginatedResult;
@@ -526,5 +528,53 @@ class UserControllerUnitTest extends AbstractControllerTest {
             when(user.getUsername()).thenReturn("test");
             new UserController().deleteUser(user, "test");
         });
+    }
+
+    @Test
+    void testInitSessionLogin() throws Exception {
+        User admin = new User();
+        admin.setUsername(ADMIN_USER_NAME);
+        mockMvc.perform(get("/users/initSession")
+                        .requestAttr("user", admin)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", is(true)));
+    }
+
+    @Test
+    void testInitSessionAlreadyLoggedIn() throws Exception {
+        User admin = new User();
+        admin.setUsername(ADMIN_USER_NAME);
+        mockMvc.perform(get("/users/initSession")
+                        .requestAttr("user", admin)
+                        .sessionAttr(SystemConstants.SESSIONPARAM_CURRENT_USER, admin)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", is(false)));
+    }
+
+    @Test
+    void testInitSessionLogout() throws Exception {
+        User guest = new User();
+        guest.setUsername(GUEST_USER_NAME);
+        User admin = new User();
+        admin.setUsername(ADMIN_USER_NAME);
+        mockMvc.perform(get("/users/initSession")
+                        .requestAttr("user", guest)
+                        .sessionAttr(SystemConstants.SESSIONPARAM_CURRENT_USER, admin)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", is(true)));
+    }
+
+    @Test
+    void testInitGuestSession() throws Exception {
+        User guest = new User();
+        guest.setUsername(GUEST_USER_NAME);
+        mockMvc.perform(get("/users/initSession")
+                        .requestAttr("user", guest)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.payload", is(true)));
     }
 }

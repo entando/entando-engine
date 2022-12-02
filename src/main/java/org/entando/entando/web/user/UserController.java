@@ -19,7 +19,9 @@ import static org.entando.entando.web.user.validator.UserValidator.createSelfDel
 import static org.entando.entando.web.user.validator.UserValidator.isAdminUser;
 import static org.entando.entando.web.user.validator.UserValidator.isUserDeletingHimself;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.system.services.user.UserGroupPermissions;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.entando.entando.aps.system.services.group.model.GroupDto;
 import org.entando.entando.aps.system.services.user.IUserService;
@@ -293,5 +296,27 @@ public class UserController {
         userPasswordRequest.setNewPassword(updatePasswordRequest.getNewPassword());
 
         return updateUserPassword(userDetails.getUsername(), userPasswordRequest, bindingResult);
+    }
+
+    @GetMapping(value = "/initSession", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleRestResponse<Boolean>> initializeSession(
+            @RequestAttribute("user") UserDetails userDetails,
+            HttpServletRequest request) {
+        boolean reloadPage = false;
+        if (!userDetails.getUsername().equals(getUsernameFromSession(request))) {
+            request.getSession().setAttribute("user", userDetails);
+            request.getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, userDetails);
+            reloadPage = true;
+        }
+        return new ResponseEntity<>(new SimpleRestResponse<>(reloadPage), HttpStatus.OK);
+    }
+
+    private String getUsernameFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        User user = (User) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+        return user == null ? null : user.getUsername();
     }
 }
