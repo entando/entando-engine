@@ -312,8 +312,12 @@ public class DatabaseManager extends AbstractInitializerManager
         Instant releaseLockLimit = Instant.now().minus(lockFallbackMinutes, ChronoUnit.MINUTES);
         for (DatabaseChangeLogLock lock : liquibase.listLocks()) {
             if (lock.getLockGranted().toInstant().isBefore(releaseLockLimit)) {
+                logger.warn("A Liquibase lock older than {} minutes has been detected. Locks are being forcedly released.", lockFallbackMinutes);
                 liquibase.forceReleaseLocks();
                 break;
+            } else {
+                logger.warn("A Liquibase lock has been detected but it has not been released since it was "
+                        + "created less than {} minutes ago, that is the configured waiting time", lockFallbackMinutes);
             }
         }
     }
