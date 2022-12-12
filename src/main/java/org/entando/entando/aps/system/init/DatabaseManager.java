@@ -27,6 +27,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +47,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import liquibase.lockservice.DatabaseChangeLogLock;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -87,6 +90,7 @@ public class DatabaseManager extends AbstractInitializerManager
     private DatabaseDumper databaseDumper;
     private DatabaseRestorer databaseRestorer;
     private List<DataSource> defaultDataSources;
+    private int lockFallbackMinutes;
 
     private ServletContext servletContext;
 
@@ -261,6 +265,7 @@ public class DatabaseManager extends AbstractInitializerManager
             JdbcConnection liquibaseConnection = new JdbcConnection(connection);
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liquibaseConnection);
             liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database); // NOSONAR
+            this.releaseLockIfNeeded(liquibase);
             Contexts contexts = getContexts(status);
             if (DatabaseMigrationStrategy.AUTO.equals(migrationStrategy)) {
                 liquibase.update(contexts, new LabelExpression());
@@ -296,6 +301,25 @@ public class DatabaseManager extends AbstractInitializerManager
             }
         }
         return changeSetToExecute;
+    }
+
+    /**
+     * Checks if the application is stuck waiting for changelog lock release
+     * for too much time and in that case it forces the release of the lock.
+     * @param liquibase
+     */
+    private void releaseLockIfNeeded(Liquibase liquibase) throws LiquibaseException {
+        Instant releaseLockLimit = Instant.now().minus(lockFallbackMinutes, ChronoUnit.MINUTES);
+        for (DatabaseChangeLogLock lock : liquibase.listLocks()) {
+            if (lock.getLockGranted().toInstant().isBefore(releaseLockLimit)) {
+                logger.warn("A Liquibase lock older than {} minutes has been detected. Locks are being forcedly released.", lockFallbackMinutes);
+                liquibase.forceReleaseLocks();
+                break;
+            } else {
+                logger.warn("A Liquibase lock has been detected but it has not been released since it was "
+                        + "created less than {} minutes ago, that is the configured waiting time", lockFallbackMinutes);
+            }
+        }
     }
 
     private Contexts getContexts(Status status) {
@@ -605,5 +629,10 @@ public class DatabaseManager extends AbstractInitializerManager
 
     public void setDefaultDataSources(List<DataSource> defaultDataSources) {
         this.defaultDataSources = defaultDataSources;
+    }
+
+    @Override
+    public void setLockFallbackMinutes(int lockFallbackMinutes) {
+        this.lockFallbackMinutes = lockFallbackMinutes;
     }
 }

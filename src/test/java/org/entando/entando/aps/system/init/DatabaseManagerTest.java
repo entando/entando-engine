@@ -18,9 +18,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,7 @@ import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSetStatus;
 import liquibase.database.DatabaseFactory;
 import liquibase.exception.DatabaseException;
+import liquibase.lockservice.DatabaseChangeLogLock;
 import org.entando.entando.aps.system.init.AbstractInitializerManager.Environment;
 import org.entando.entando.aps.system.init.IInitializerManager.DatabaseMigrationStrategy;
 import org.entando.entando.aps.system.init.exception.DatabaseMigrationException;
@@ -57,6 +61,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.verification.VerificationMode;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -197,6 +202,7 @@ class DatabaseManagerTest {
         try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class, (liquibase, context) -> {
             Mockito.when(liquibase.getChangeSetStatuses(ArgumentMatchers.any(), ArgumentMatchers.any()))
                     .thenReturn(Arrays.asList(changeSetStatus));
+            Mockito.when(liquibase.listLocks()).thenReturn(new DatabaseChangeLogLock[]{});
         }); MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
             dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
 
@@ -204,6 +210,38 @@ class DatabaseManagerTest {
                 databaseManager.installDatabase(getMockedReport(), DatabaseMigrationStrategy.GENERATE_SQL);
             });
             Mockito.verify(storageManager).saveFile(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.any());
+        }
+    }
+
+    @Test
+    void testForceReleaseLockIsNotNeeded() throws Exception {
+        testForceReleaseLock(2, Mockito.never());
+    }
+
+    @Test
+    void testForceReleaseLockIsNeeded() throws Exception {
+        testForceReleaseLock(30, Mockito.times(1));
+    }
+
+    private void testForceReleaseLock(int minutes, VerificationMode mode) throws Exception {
+        databaseManager.setLockFallbackMinutes(10);
+
+        DatabaseChangeLogLock lock = Mockito.mock(DatabaseChangeLogLock.class);
+        Date lockGranted = Date.from(Instant.now().minus(minutes, ChronoUnit.MINUTES));
+        Mockito.when(lock.getLockGranted()).thenReturn(lockGranted);
+
+        ChangeSetStatus changeSetStatus = Mockito.mock(ChangeSetStatus.class);
+        getMockedBeanFactory();
+
+        try (MockedConstruction<Liquibase> construction = Mockito.mockConstruction(Liquibase.class,
+                (liquibase, context) -> {
+                    Mockito.when(liquibase.getChangeSetStatuses(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                            .thenReturn(Arrays.asList(changeSetStatus));
+                    Mockito.when(liquibase.listLocks()).thenReturn(new DatabaseChangeLogLock[]{lock});
+                }); MockedStatic<DatabaseFactory> dbFactory = Mockito.mockStatic(DatabaseFactory.class)) {
+            dbFactory.when(DatabaseFactory::getInstance).thenReturn(Mockito.mock(DatabaseFactory.class));
+            databaseManager.installDatabase(getMockedReport(), DatabaseMigrationStrategy.AUTO);
+            Mockito.verify(construction.constructed().get(0), mode).forceReleaseLocks();
         }
     }
 
