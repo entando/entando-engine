@@ -99,12 +99,24 @@ public class FileBrowserController {
             @RequestParam(value = CURRENT_PATH, required = false, defaultValue = "") String currentPath,
             @RequestParam(value = PROTECTED_FOLDER, required = false, defaultValue = "false") Boolean protectedFolder) {
         logger.debug("required file {} - protected {}", currentPath, protectedFolder);
-        byte[] base64 = this.getFileBrowserService().getFileStream(currentPath, protectedFolder);
+
+        boolean isDirectory = this.getFileBrowserService().isDirectory(currentPath, protectedFolder);
+
         Map<String, Object> result = new HashMap<>();
         result.put(PROTECTED_FOLDER, protectedFolder);
+
+        result.put("isDirectory", isDirectory);
         result.put("path", currentPath);
-        result.put("filename", this.getFilename(currentPath));
-        result.put("base64", base64);
+
+        if (!isDirectory){
+            byte[] base64 = this.getFileBrowserService().getFileStream(currentPath, protectedFolder);
+            result.put("filename", this.getFilename(currentPath));
+            result.put("base64", base64);
+        } else {
+            result.put("filename", "");
+            result.put("base64", "");
+        }
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put(PREV_PATH, this.getPrevFolderName(currentPath));
         return new ResponseEntity<>(new RestResponse<>(result, metadata), HttpStatus.OK);

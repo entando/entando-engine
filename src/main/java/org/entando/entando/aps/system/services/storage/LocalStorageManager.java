@@ -114,6 +114,18 @@ public class LocalStorageManager implements IStorageManager {
 	}
 
 	@Override
+	public boolean isDirectory(String subPath, boolean isProtectedResource) {
+		Boolean isDir = withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> {
+			File dir = new File(fullPath);
+			if (dir != null) {
+				return dir.isDirectory();
+			}
+			return false;
+		});
+		return isDir;
+	}
+
+	@Override
 	public void deleteDirectory(String subPath, boolean isProtectedResource) throws EntException {
 		subPath = (null == subPath) ? "" : subPath;
 		withValidResourcePath(subPath, isProtectedResource, (basePath, fullPath) -> {
