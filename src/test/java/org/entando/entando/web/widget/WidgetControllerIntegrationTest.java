@@ -19,6 +19,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -913,12 +915,62 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                 new ContextOfControllerTests(mockMvc, mapper)
         );
     }
-    
+
+    /**
+     * Non-logical widgets having a default UI can be saved without custom UI.
+     * When the custom UI is null in the database, the API populates it using the value of default UI.
+     */
+    @Test
+    void testUpdateWidgetWithNullCustomUiShouldReturnDefaultUi() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String accessToken = mockOAuthInterceptor(user);
+
+        String widgetTypeCode = "login_form";
+
+        GuiFragment fragment = guiFragmentManager.getGuiFragment(widgetTypeCode);
+        assertNull(fragment.getGui());
+        assertNotNull(fragment.getDefaultGui());
+
+        WidgetType type = widgetTypeManager.getWidgetType(widgetTypeCode);
+
+        Map<String, String> titles = new HashMap<>();
+        titles.put("it", type.getTitles().getProperty("it"));
+        titles.put("en", type.getTitles().getProperty("en"));
+
+        WidgetRequest request = new WidgetRequest();
+        request.setCode(type.getCode());
+        request.setTitles(titles);
+        request.setGroup(Group.FREE_GROUP_NAME);
+        request.setWidgetCategory(type.getWidgetCategory());
+        request.setIcon(type.getIcon());
+
+        // Set a custom UI different from the default UI
+        request.setCustomUi("new-custom-ui");
+        executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+
+        // Verify that it has been updated
+        executeWidgetGet(widgetTypeCode, accessToken, status().isOk())
+                .andExpect(jsonPath("$.payload.guiFragments[0].defaultUi", is(fragment.getDefaultGui())))
+                .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is("new-custom-ui")));
+
+        // Set the custom UI to null
+        request.setCustomUi(null);
+        executeWidgetPut(request, widgetTypeCode, accessToken, status().isOk());
+
+        // Verify that customUI is equal to defaultUI
+        executeWidgetGet(widgetTypeCode, accessToken, status().isOk())
+                .andExpect(jsonPath("$.payload.guiFragments[0].defaultUi", is(fragment.getDefaultGui())))
+                .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(fragment.getDefaultGui())));
+
+        fragment = guiFragmentManager.getGuiFragment(widgetTypeCode);
+        assertNull(fragment.getGui());
+    }
+
     private ResultActions executeWidgetGet(String widgetTypeCode, String accessToken, ResultMatcher expected) throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/widgets/{code}", new Object[]{widgetTypeCode})
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
 
@@ -926,7 +978,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         ResultActions result = mockMvc
                 .perform(get("/widgets/{code}/usage", new Object[]{widgetTypeCode})
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
     
@@ -936,7 +988,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
     
@@ -946,7 +998,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
     
@@ -954,7 +1006,7 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
         ResultActions result = mockMvc.perform(
                 delete("/widgets/{code}", new Object[]{widgetTypeCode})
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken));
-        result.andExpect(expected);
+        result.andDo(resultPrint()).andExpect(expected);
         return result;
     }
     
