@@ -113,7 +113,7 @@ public class FileBrowserController {
             result.put("filename", this.getFilename(currentPath));
             result.put("base64", base64);
         } else {
-            result.put("filename", "");
+            result.put("filename", currentPath);
             result.put("base64", "");
         }
 

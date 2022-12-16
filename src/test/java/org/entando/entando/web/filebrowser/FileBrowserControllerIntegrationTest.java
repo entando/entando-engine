@@ -169,14 +169,15 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
     @Test
     void testGetFileWithDirectoryAsParameter() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String folderNameParam= "conf";
         String accessToken = mockOAuthInterceptor(user);
         ResultActions result = mockMvc
-                .perform(get("/fileBrowser/file").param("currentPath", "conf")
+                .perform(get("/fileBrowser/file").param("currentPath", folderNameParam)
                         .header("Authorization", "Bearer " + accessToken));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.payload.protectedFolder", is(false)));
-        result.andExpect(jsonPath("$.payload.filename", is("")));
-        result.andExpect(jsonPath("$.payload.path", Matchers.is("conf")));
+        result.andExpect(jsonPath("$.payload.filename", Matchers.is(folderNameParam)));
+        result.andExpect(jsonPath("$.payload.path", Matchers.is(folderNameParam)));
         result.andExpect(jsonPath("$.payload.base64", Matchers.is("")));
         result.andExpect(jsonPath("$.payload.isDirectory", Matchers.is(true)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
@@ -200,7 +201,7 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
                             .header("Authorization", "Bearer " + accessToken));
             result.andExpect(status().isOk());
             result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
-            result.andExpect(jsonPath("$.payload.filename", is("")));
+            result.andExpect(jsonPath("$.payload.filename", Matchers.is(folderNameParam)));
             result.andExpect(jsonPath("$.payload.path", Matchers.is(folderNameParam)));
             result.andExpect(jsonPath("$.payload.base64", Matchers.is("")));
             result.andExpect(jsonPath("$.payload.isDirectory", Matchers.is(true)));
