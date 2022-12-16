@@ -202,6 +202,10 @@ public class FileBrowserService implements IFileBrowserService {
     }
 
     @Override
+    public boolean isDirectory(String currentPath, Boolean protectedFolder)  {
+        return this.getStorageManager().isDirectory(currentPath, protectedFolder);
+    }
+    @Override
     public boolean exists(String code) throws EntException {
         return this.getStorageManager().exists(code, false);
     }

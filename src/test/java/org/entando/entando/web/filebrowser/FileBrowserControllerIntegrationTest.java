@@ -149,6 +149,7 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
         result.andExpect(jsonPath("$.payload.base64", Matchers.notNullValue()));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.metaData.size()", is(1)));
+        result.andExpect(jsonPath("$.payload.isDirectory", is(false)));
         result.andExpect(jsonPath("$.metaData.prevPath", is("conf")));
     }
 
@@ -163,6 +164,53 @@ class FileBrowserControllerIntegrationTest extends AbstractControllerIntegration
         result.andExpect(jsonPath("$.payload", Matchers.hasSize(0)));
         result.andExpect(jsonPath("$.errors", Matchers.hasSize(1)));
         result.andExpect(jsonPath("$.metaData.size()", is(0)));
+    }
+
+    @Test
+    void testGetFileWithDirectoryAsParameter() throws Exception {
+        UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+        String folderNameParam= "conf";
+        String accessToken = mockOAuthInterceptor(user);
+        ResultActions result = mockMvc
+                .perform(get("/fileBrowser/file").param("currentPath", folderNameParam)
+                        .header("Authorization", "Bearer " + accessToken));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.payload.protectedFolder", is(false)));
+        result.andExpect(jsonPath("$.payload.filename", Matchers.is(folderNameParam)));
+        result.andExpect(jsonPath("$.payload.path", Matchers.is(folderNameParam)));
+        result.andExpect(jsonPath("$.payload.base64", Matchers.is("")));
+        result.andExpect(jsonPath("$.payload.isDirectory", Matchers.is(true)));
+        result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.metaData.size()", is(1)));
+        result.andExpect(jsonPath("$.metaData.prevPath", is("")));
+    }
+
+    @Test
+    void testGetFileWithProtectedDirectoryAsParameter() throws Exception {
+        String folderName= "test_protected_folder/";
+        String folderNameParam= folderName.substring(0,folderName.length()-1);
+        boolean isProtected=true;
+        Assertions.assertFalse(this.storageManager.exists(folderName, false));
+        this.storageManager.createDirectory(folderName+"/", isProtected);
+        try {
+            UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
+            String accessToken = mockOAuthInterceptor(user);
+            ResultActions result = mockMvc
+                    .perform(get("/fileBrowser/file").param("currentPath", folderNameParam)
+                            .param("protectedFolder", String.valueOf(isProtected))
+                            .header("Authorization", "Bearer " + accessToken));
+            result.andExpect(status().isOk());
+            result.andExpect(jsonPath("$.payload.protectedFolder", is(true)));
+            result.andExpect(jsonPath("$.payload.filename", Matchers.is(folderNameParam)));
+            result.andExpect(jsonPath("$.payload.path", Matchers.is(folderNameParam)));
+            result.andExpect(jsonPath("$.payload.base64", Matchers.is("")));
+            result.andExpect(jsonPath("$.payload.isDirectory", Matchers.is(true)));
+            result.andExpect(jsonPath("$.errors", Matchers.hasSize(0)));
+            result.andExpect(jsonPath("$.metaData.size()", is(1)));
+            result.andExpect(jsonPath("$.metaData.prevPath", is("")));
+        } finally {
+            this.storageManager.deleteDirectory(folderName, true);
+        }
     }
 
     @Test
