@@ -13,6 +13,21 @@
  */
 package org.entando.entando.aps.system.services.widgettype;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
@@ -22,6 +37,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.servlet.ServletContext;
 import org.entando.entando.aps.system.init.IComponentManager;
 import org.entando.entando.aps.system.services.assertionhelper.WidgetAssertionHelper;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -33,6 +58,7 @@ import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.aps.system.services.widgettype.model.WidgetDtoBuilder;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.web.common.assembler.PagedMetadataMapper;
+import org.entando.entando.web.common.exceptions.ValidationGenericException;
 import org.entando.entando.web.common.model.Filter;
 import org.entando.entando.web.common.model.FilterOperator;
 import org.entando.entando.web.common.model.PagedMetadata;
@@ -49,17 +75,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import org.springframework.util.FileSystemUtils;
 
 @ExtendWith(MockitoExtension.class)
 class WidgetServiceTest {
@@ -92,6 +108,9 @@ class WidgetServiceTest {
 
     @Mock
     private PagedMetadataMapper pagedMetadataMapper;
+
+    @Mock
+    private ServletContext srvCtx;
 
     @InjectMocks
     private WidgetService widgetService;
@@ -467,8 +486,97 @@ class WidgetServiceTest {
         assertThat(result.getBody()).hasSize(0);
     }
 
+    @Test
+    void updateWidgetWithDefaultUiAndNoCustomUi() throws Exception {
 
+        WidgetRequest widgetRequest = getWidgetUpdateRequest1();
+        widgetRequest.setCustomUi(null);
 
+        WidgetType type = getWidget1();
+        type.setLocked(false);
+
+        when(widgetManager.getWidgetType(WIDGET_1_CODE)).thenReturn(type);
+        when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+        GuiFragment mockedFragment = mock(GuiFragment.class);
+        when(mockedFragment.getDefaultGui()).thenReturn("default-gui");
+        when(guiFragmentManager.getUniqueGuiFragmentByWidgetType(any())).thenReturn(mockedFragment);
+
+        widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
+
+        verify(widgetManager).updateWidgetType(eq(WIDGET_1_CODE), any(), any(), anyString(), anyString(),
+                anyString(), anyBoolean(), anyString(), anyString());
+        verify(guiFragmentManager).updateGuiFragment(argThat(fragment -> fragment.getGui() == null));
+    }
+
+    @Test
+    void updateWidgetWithExistingJspAndNoCustomUi() throws Exception {
+
+        String jspRelativePath = WidgetType.getJspPath(WIDGET_1_CODE, null).substring(1);
+        Path tmpDir = Files.createTempDirectory(null);
+        Path jspPath = tmpDir.resolve(jspRelativePath);
+        jspPath.getParent().toFile().mkdirs();
+        jspPath.toFile().createNewFile();
+        Mockito.when(srvCtx.getRealPath("/")).thenReturn(tmpDir.toAbsolutePath().toString());
+
+        try {
+            WidgetRequest widgetRequest = getWidgetUpdateRequest1();
+            widgetRequest.setCustomUi(null);
+
+            WidgetType type = getWidget1();
+            type.setLocked(false);
+
+            when(widgetManager.getWidgetType(WIDGET_1_CODE)).thenReturn(type);
+            when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+
+            widgetService.updateWidget(WIDGET_1_CODE, widgetRequest);
+
+            verify(widgetManager).updateWidgetType(eq(WIDGET_1_CODE), any(), any(), anyString(), anyString(),
+                    anyString(), anyBoolean(), anyString(), anyString());
+            verify(guiFragmentManager, never()).updateGuiFragment(any());
+        } finally {
+            FileSystemUtils.deleteRecursively(tmpDir.toFile());
+        }
+    }
+
+    @Test
+    void updateWidgetWithoutDefaultUiAndCustomUi() throws Exception {
+
+        WidgetRequest widgetRequest = getWidgetUpdateRequest1();
+        widgetRequest.setCustomUi(null);
+
+        WidgetType type = getWidget1();
+        type.setLocked(false);
+
+        when(widgetManager.getWidgetType(WIDGET_1_CODE)).thenReturn(type);
+        when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+        GuiFragment mockedFragment = mock(GuiFragment.class);
+        when(guiFragmentManager.getUniqueGuiFragmentByWidgetType(any())).thenReturn(mockedFragment);
+
+        ValidationGenericException ex = assertThrows(ValidationGenericException.class,
+                () -> widgetService.updateWidget(WIDGET_1_CODE, widgetRequest));
+
+        assertEquals(1, ex.getBindingResult().getAllErrors().size());
+        assertEquals("widgettype.customUi.notBlank", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    void updateWidgetWithoutGuiFragmentAndCustomUi() throws Exception {
+
+        WidgetRequest widgetRequest = getWidgetUpdateRequest1();
+        widgetRequest.setCustomUi(null);
+
+        WidgetType type = getWidget1();
+        type.setLocked(false);
+
+        when(widgetManager.getWidgetType(WIDGET_1_CODE)).thenReturn(type);
+        when(groupManager.getGroup(widgetRequest.getGroup())).thenReturn(mock(Group.class));
+
+        ValidationGenericException ex = assertThrows(ValidationGenericException.class,
+                () -> widgetService.updateWidget(WIDGET_1_CODE, widgetRequest));
+
+        assertEquals(1, ex.getBindingResult().getAllErrors().size());
+        assertEquals("widgettype.customUi.notBlank", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+    }
 
     /**
      * init mock for a multipaged request

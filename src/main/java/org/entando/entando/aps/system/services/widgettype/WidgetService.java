@@ -229,31 +229,34 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
         try {
             if (null == this.getGroupManager().getGroup(widgetUpdateRequest.getGroup())) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");
-                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID, new String[]{widgetUpdateRequest.getGroup()}, "widgettype.group.invalid");
+                bindingResult.reject(WidgetValidator.ERRCODE_WIDGET_GROUP_INVALID,
+                        new String[]{widgetUpdateRequest.getGroup()}, "widgettype.group.invalid");
                 throw new ValidationGenericException(bindingResult);
             }
             this.processWidgetType(type, widgetUpdateRequest);
             String customUi = this.extractCustomUi(type, widgetUpdateRequest);
+            GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetCode);
             if (type.isUserType()
                     && StringUtils.isBlank(customUi)
-                    && !type.isLogic() 
-                    && !WidgetType.existsJsp(this.srvCtx, widgetCode, type.getPluginCode())) {
+                    && !type.isLogic()
+                    && !(WidgetType.existsJsp(this.srvCtx, widgetCode, type.getPluginCode())
+            || (guiFragment != null && !(StringUtils.isBlank(guiFragment.getDefaultGui()))))) {
                 BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(type, "widget");
-                bindingResult.reject(WidgetValidator.ERRCODE_NOT_BLANK, new String[]{type.getCode()}, "widgettype.customUi.notBlank");
+                bindingResult.reject(WidgetValidator.ERRCODE_NOT_BLANK, new String[]{type.getCode()},
+                        "widgettype.customUi.notBlank");
                 throw new ValidationGenericException(bindingResult);
             }
             widgetDto = dtoBuilder.convert(type);
-            this.getWidgetManager().updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
-                    type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(), type.getWidgetCategory(),
-                    type.getIcon());
-            if (!StringUtils.isEmpty(widgetCode)) {
-                GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetCode);
-                if (null == guiFragment) {
-                    this.createAndAddFragment(type, customUi);
-                } else {
-                    guiFragment.setGui(customUi);
-                    this.getGuiFragmentManager().updateGuiFragment(guiFragment);
-                }
+            this.getWidgetManager()
+                    .updateWidgetType(widgetCode, type.getTitles(), type.getConfig(), type.getMainGroup(),
+                            type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),
+                            type.getWidgetCategory(),
+                            type.getIcon());
+            if (null == guiFragment) {
+                this.createAndAddFragment(type, customUi);
+            } else {
+                guiFragment.setGui(customUi);
+                this.getGuiFragmentManager().updateGuiFragment(guiFragment);
             }
             this.addFragments(widgetDto);
         } catch (ValidationGenericException vge) {
