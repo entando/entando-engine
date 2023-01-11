@@ -400,17 +400,9 @@
         <property name="configManager" ref="BaseConfigManager" />
     </bean>
 
-    <bean id="BulkCommandManager" class="org.entando.entando.aps.system.services.command.BulkCommandManager" parent="abstractService" />
-
     <bean id="UserPreferencesManager"
             class="org.entando.entando.aps.system.services.userpreferences.UserPreferencesManager">
         <property name="userPreferencesDAO" ref="UserPreferencesDAO" />
     </bean>
-
-    <task:scheduler id="entandoScheduler" pool-size="10"/>
-
-    <task:scheduled-tasks scheduler="entandoScheduler">
-        <task:scheduled ref="BulkCommandManager" method="cleanCache" fixed-delay="3600000"  />
-    </task:scheduled-tasks>
 
 </beans>
