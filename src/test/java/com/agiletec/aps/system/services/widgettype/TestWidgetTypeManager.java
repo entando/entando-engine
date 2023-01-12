@@ -17,6 +17,7 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.util.ApsProperties;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -392,19 +393,21 @@ class TestWidgetTypeManager extends BaseTestCase {
             
             IPage page = createPageForTest(testCode, "service");
             Widget widgetOnPage = new Widget();
-            widgetOnPage.setType(extracted);
+            widgetOnPage.setTypeCode(extracted.getCode());
             page.getWidgets()[3] = widgetOnPage;
             this._pageManager.addPage(page);
             
             IPage extractedPage = this._pageManager.getDraftPage(testCode);
             assertNotNull(extractedPage);
             assertNotNull(extractedPage.getWidgets()[3]);
-            assertEquals(Group.FREE_GROUP_NAME, extractedPage.getWidgets()[3].getType().getMainGroup());
+            WidgetType widgetType = this._widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
+            assertEquals(Group.FREE_GROUP_NAME, widgetType.getMainGroup());
             this._pageManager.setPageOnline(testCode);
             IPage extractedPublicPage = this._pageManager.getDraftPage(testCode);
             assertNotNull(extractedPublicPage);
             assertNotNull(extractedPublicPage.getWidgets()[3]);
-            assertEquals(Group.FREE_GROUP_NAME, extractedPublicPage.getWidgets()[3].getType().getMainGroup());
+            widgetType = this._widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
+            assertEquals(Group.FREE_GROUP_NAME, widgetType.getMainGroup());
             
             this._widgetTypeManager.updateWidgetType(widgetTypeCode, 
                     extracted.getTitles(), extracted.getConfig(), Group.ADMINS_GROUP_NAME, 
@@ -418,11 +421,13 @@ class TestWidgetTypeManager extends BaseTestCase {
             extractedPage = this._pageManager.getDraftPage(testCode);
             assertNotNull(extractedPage);
             assertNotNull(extractedPage.getWidgets()[3]);
-            assertEquals(Group.ADMINS_GROUP_NAME, extractedPage.getWidgets()[3].getType().getMainGroup());
+            widgetType = this._widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
+            assertEquals(Group.ADMINS_GROUP_NAME, widgetType.getMainGroup());
             extractedPublicPage = this._pageManager.getDraftPage(testCode);
             assertNotNull(extractedPublicPage);
             assertNotNull(extractedPublicPage.getWidgets()[3]);
-            assertEquals(Group.ADMINS_GROUP_NAME, extractedPublicPage.getWidgets()[3].getType().getMainGroup());
+            widgetType = this._widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
+            assertEquals(Group.ADMINS_GROUP_NAME, widgetType.getMainGroup());
         } catch (Exception e) {
             throw e;
         } finally {
@@ -434,17 +439,18 @@ class TestWidgetTypeManager extends BaseTestCase {
     
     private IPage createPageForTest(String code, String parentCode) throws Throwable {
         IPage prototype = this._pageManager.getDraftPage("service");
-        PageModel pageModel = prototype.getMetadata().getModel();
+        PageModel pageModel = this.pageModelManager.getPageModel(prototype.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                 true, "pagina temporanea", null, null, false, null, null);
         Widget[] widgets = new Widget[pageModel.getFrames().length];
-        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, metadata, widgets);
+        return PageTestUtil.createPage(code, parentCode, Group.FREE_GROUP_NAME, pageModel, metadata, widgets);
     }
 
     @BeforeEach
     private void init() {
         this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+        this.pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
         this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
         this._mockWidgetTypeDAO.setDataSource(dataSource);
@@ -452,6 +458,7 @@ class TestWidgetTypeManager extends BaseTestCase {
 
     private IWidgetTypeManager _widgetTypeManager = null;
     private IPageManager _pageManager = null;
+    private IPageModelManager pageModelManager;
     private MockWidgetTypeDAO _mockWidgetTypeDAO;
 
 }

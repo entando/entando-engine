@@ -17,6 +17,8 @@ import com.agiletec.aps.system.common.notify.INotifyManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.page.cache.IPageManagerCacheWrapper;
+import com.agiletec.aps.system.services.pagemodel.Frame;
+import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import java.util.List;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -40,7 +42,10 @@ public class PageManagerTest {
  
     @Mock
     private IPageManagerCacheWrapper cacheWrapper;
-    
+
+    @Mock
+    private IPageModelManager pageModelManager;
+
     @InjectMocks
     private PageManager pageManager;
     
@@ -134,11 +139,11 @@ public class PageManagerTest {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
         this.addMetadata(draftPage);
         Widget widget = new Widget();
-        widget.setType(Mockito.mock(WidgetType.class));
         draftPage.setWidgets(new Widget[]{null, null, widget, null});
         Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
+        Mockito.when(pageModelManager.getPageModel(Mockito.any())).thenReturn(getPageModel());
+        Mockito.doThrow(RuntimeException.class).when(this.pageDao).removeWidget(draftPage, 2);
         Assertions.assertThrows(EntException.class, () -> {
-            Mockito.doThrow(RuntimeException.class).when(this.pageDao).removeWidget(draftPage, 2);
             pageManager.removeWidget("page_code", 2);
         });
         Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOffline(Mockito.anyString());
@@ -150,10 +155,11 @@ public class PageManagerTest {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
         this.addMetadata(draftPage);
         Widget widget = new Widget();
-        widget.setType(Mockito.mock(WidgetType.class));
+        widget.setTypeCode("my_widget");
         Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
+        Mockito.when(pageModelManager.getPageModel(Mockito.any())).thenReturn(getPageModel());
+        Mockito.doThrow(RuntimeException.class).when(this.pageDao).joinWidget(draftPage, widget, 2);
         Assertions.assertThrows(EntException.class, () -> {
-            Mockito.doThrow(RuntimeException.class).when(this.pageDao).joinWidget(draftPage, widget, 2);
             pageManager.joinWidget("page_code", widget, 2);
         });
         Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(Mockito.any(IPage.class));
@@ -165,7 +171,6 @@ public class PageManagerTest {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
         this.addMetadata(draftPage);
         Widget widget = new Widget();
-        widget.setType(Mockito.mock(WidgetType.class));
         draftPage.setWidgets(new Widget[]{null, null, widget, null});
         Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(draftPage);
         Assertions.assertThrows(EntException.class, () -> {
@@ -292,8 +297,13 @@ public class PageManagerTest {
         PageMetadata metadata = new PageMetadata();
         PageModel model = Mockito.mock(PageModel.class);
         Mockito.lenient().when(model.getFrames()).thenReturn(new String[]{"pos0", "pos1", "pos2", "pos3"});
-        metadata.setModel(model);
+        metadata.setModelCode(model.getCode());
         page.setMetadata(metadata);
     }
-    
+
+    private PageModel getPageModel() {
+        PageModel pageModel = new PageModel();
+        pageModel.setConfiguration(new Frame[3]);
+        return pageModel;
+    }
 }
