@@ -52,7 +52,7 @@ class TestWidgetTypeManager extends BaseTestCase {
     
     @Test
     void testGetWidgetTypes() throws EntException {
-        List<WidgetType> list = this._widgetTypeManager.getWidgetTypes();
+        List<WidgetType> list = this.widgetTypeManager.getWidgetTypes();
         Iterator<WidgetType> iter = list.iterator();
         Map<String, String> widgetTypes = new HashMap<>();
         while (iter.hasNext()) {
@@ -71,7 +71,7 @@ class TestWidgetTypeManager extends BaseTestCase {
 
     @Test
     void testGetWidgetType_1() throws EntException {
-        WidgetType widgetType = _widgetTypeManager.getWidgetType("leftmenu");
+        WidgetType widgetType = widgetTypeManager.getWidgetType("leftmenu");
         assertEquals("leftmenu", widgetType.getCode());
         assertEquals("Menu di navigazione verticale", widgetType.getTitles().get("it"));
         assertTrue(widgetType.isLocked());
@@ -95,7 +95,7 @@ class TestWidgetTypeManager extends BaseTestCase {
 
     @Test
     void testGetWidgetType_2() throws EntException {
-        WidgetType widgetType = _widgetTypeManager.getWidgetType("entando_apis");
+        WidgetType widgetType = widgetTypeManager.getWidgetType("entando_apis");
         assertEquals("entando_apis", widgetType.getCode());
         assertEquals("APIs", widgetType.getTitles().get("it"));
         assertTrue(widgetType.isLocked());
@@ -113,60 +113,60 @@ class TestWidgetTypeManager extends BaseTestCase {
     @Test
     void testFailureDeleteWidgetType_1() throws Throwable {
         String widgetTypeCode = "formAction";
-        assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNotNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
-            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
         } catch (Throwable t) {
             throw t;
         }
-        assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNotNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
     }
 
     @Test
     void testFailureDeleteWidgetType_2() throws Throwable {
         String widgetTypeCode = "test_widgetType";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
             type.setLocked(true);
-            this._widgetTypeManager.addWidgetType(type);
-            assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
-            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
-            assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            this.widgetTypeManager.addWidgetType(type);
+            assertNotNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
+            this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            assertNotNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._mockWidgetTypeDAO.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.mockWidgetTypeDAO.deleteWidgetType(widgetTypeCode);
             }
-            ((IManager) this._widgetTypeManager).refresh();
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            ((IManager) this.widgetTypeManager).refresh();
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
 
     @Test
     void testAddDeleteWidgetType() throws Throwable {
         String widgetTypeCode = "test_widgetType";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
-            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            this._widgetTypeManager.addWidgetType(type);
-            assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            this.widgetTypeManager.addWidgetType(type);
+            assertNotNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
     
     @Test
     void testParallelAddDeleteWidgetType() throws Throwable {
         String widgetTypeCode = "test_widgetType";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             List<WidgetType> types = IntStream.range(1, 20).boxed().map(i -> {
                 String code = widgetTypeCode + "_" + i;
@@ -174,14 +174,14 @@ class TestWidgetTypeManager extends BaseTestCase {
             }).collect(Collectors.toList());
             types.parallelStream().forEach(wt -> {
                 try {
-                    this._widgetTypeManager.addWidgetType(wt);
+                    this.widgetTypeManager.addWidgetType(wt);
                 } catch (Exception e) {
                     Assertions.fail("Error adding widgetType " + wt.getCode());
                 }
             });
             IntStream.range(1, 20).parallel().forEach(i -> {
                 String code = widgetTypeCode + "_" + i;
-                assertNotNull(this._widgetTypeManager.getWidgetType(code));
+                assertNotNull(this.widgetTypeManager.getWidgetType(code));
             });
         } catch (Throwable t) {
             throw t;
@@ -189,11 +189,11 @@ class TestWidgetTypeManager extends BaseTestCase {
             IntStream.range(1, 20).parallel().forEach(i -> {
                 String code = widgetTypeCode + "_" + i;
                 try {
-                    this._widgetTypeManager.deleteWidgetType(code);
+                    this.widgetTypeManager.deleteWidgetType(code);
                 } catch (Exception e) {
                     Assertions.fail("Error deleting widgetType " + code);
                 }
-                assertNull(this._widgetTypeManager.getWidgetType(code));
+                assertNull(this.widgetTypeManager.getWidgetType(code));
             });
         }
     }
@@ -201,30 +201,30 @@ class TestWidgetTypeManager extends BaseTestCase {
     @Test
     void testUpdateTitles() throws Throwable {
         String widgetTypeCode = "test_widgetType";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            this._widgetTypeManager.addWidgetType(type);
-            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            this.widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("Titolo", extracted.getTitles().get("it"));
             assertEquals("Title", extracted.getTitles().get("en"));
             ApsProperties newTitles = new ApsProperties();
             newTitles.put("it", "Titolo modificato");
             newTitles.put("en", "Modified title");
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, newTitles, type.getConfig(), type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, newTitles, type.getConfig(), type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig());
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("Titolo modificato", extracted.getTitles().get("it"));
             assertEquals("Modified title", extracted.getTitles().get("en"));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
 
@@ -232,54 +232,54 @@ class TestWidgetTypeManager extends BaseTestCase {
     void testUpdate() throws Throwable {
         String widgetTypeCode = "test_showletType";
         String icon= "font-awesome:fa-box";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            this._widgetTypeManager.addWidgetType(type);
-            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            this.widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("formAction", extracted.getParentType().getCode());
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
             ApsProperties newProperties = new ApsProperties();
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), true, type.getWidgetCategory(),icon);
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals(0, extracted.getConfig().size());
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             assertEquals(icon, extracted.getIcon());
             newProperties.put("contentId", "EVN103");
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory(),icon);
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
 
     @Test
     void testUpdateWithoutWidgetCategory() throws Throwable {
         String widgetTypeCode = "test_showletType";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            this._widgetTypeManager.addWidgetType(type);
-            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            this.widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("formAction", extracted.getParentType().getCode());
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
             ApsProperties newProperties = new ApsProperties();
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), true);
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals("test",extracted.getWidgetCategory());
@@ -287,18 +287,18 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertEquals(0, extracted.getConfig().size());
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             newProperties.put("contentId", "EVN103");
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory());
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
 
@@ -306,18 +306,18 @@ class TestWidgetTypeManager extends BaseTestCase {
     void testUpdateWithoutIcon() throws Throwable {
         String widgetTypeCode = "test_showletType";
         String icon= "font-awesome:fa-box";
-        assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+        assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
-            this._widgetTypeManager.addWidgetType(type);
-            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            this.widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("formAction", extracted.getParentType().getCode());
             assertEquals("/myNewJsp.jsp", extracted.getConfig().get("actionPath"));
             ApsProperties newProperties = new ApsProperties();
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), true, "test");
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertNotNull(extracted.getConfig());
             assertEquals("test",extracted.getWidgetCategory());
@@ -325,30 +325,30 @@ class TestWidgetTypeManager extends BaseTestCase {
             assertEquals(0, extracted.getConfig().size());
             assertTrue(extracted.isReadonlyPageWidgetConfig());
             newProperties.put("contentId", "EVN103");
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup(),
                     type.getConfigUi(), type.getBundleId(), type.isReadonlyPageWidgetConfig(),type.getWidgetCategory(), icon);
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals("EVN103", extracted.getConfig().get("contentId"));
         } catch (Throwable t) {
             throw t;
         } finally {
-            if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-                this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            if (null != this.widgetTypeManager.getWidgetType(widgetTypeCode)) {
+                this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
             }
-            assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+            assertNull(this.widgetTypeManager.getWidgetType(widgetTypeCode));
         }
     }
 
     @Test
     void testUpdateReadOnlyPageConfigLockedWidget() throws Throwable {
         String widgetTypeCode = "entando_apis";
-        WidgetType widgetType = _widgetTypeManager.getWidgetType(widgetTypeCode);
+        WidgetType widgetType = widgetTypeManager.getWidgetType(widgetTypeCode);
         try {
             assertNotNull(widgetType);
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup(),
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode, widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup(),
                     widgetType.getConfigUi(), widgetType.getBundleId(), false, "test", "test");
-            WidgetType updated = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            WidgetType updated = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(updated);
             assertNotNull(updated.getConfig());
             assertTrue(updated.isReadonlyPageWidgetConfig());
@@ -366,7 +366,7 @@ class TestWidgetTypeManager extends BaseTestCase {
         titles.put("it", "Titolo");
         titles.put("en", "Title");
         type.setTitles(titles);
-        WidgetType parent = this._widgetTypeManager.getWidgetType("formAction");
+        WidgetType parent = this.widgetTypeManager.getWidgetType("formAction");
         assertNotNull(parent);
         type.setParentType(parent);
         type.setPluginCode(null);
@@ -386,8 +386,8 @@ class TestWidgetTypeManager extends BaseTestCase {
         try {
             WidgetType type = this.createNewWidgetType(widgetTypeCode);
             type.setMainGroup(Group.FREE_GROUP_NAME);
-            this._widgetTypeManager.addWidgetType(type);
-            WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            this.widgetTypeManager.addWidgetType(type);
+            WidgetType extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals(Group.FREE_GROUP_NAME, extracted.getMainGroup());
             
@@ -395,50 +395,50 @@ class TestWidgetTypeManager extends BaseTestCase {
             Widget widgetOnPage = new Widget();
             widgetOnPage.setTypeCode(extracted.getCode());
             page.getWidgets()[3] = widgetOnPage;
-            this._pageManager.addPage(page);
+            this.pageManager.addPage(page);
             
-            IPage extractedPage = this._pageManager.getDraftPage(testCode);
+            IPage extractedPage = this.pageManager.getDraftPage(testCode);
             assertNotNull(extractedPage);
             assertNotNull(extractedPage.getWidgets()[3]);
-            WidgetType widgetType = this._widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
+            WidgetType widgetType = this.widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
             assertEquals(Group.FREE_GROUP_NAME, widgetType.getMainGroup());
-            this._pageManager.setPageOnline(testCode);
-            IPage extractedPublicPage = this._pageManager.getDraftPage(testCode);
+            this.pageManager.setPageOnline(testCode);
+            IPage extractedPublicPage = this.pageManager.getDraftPage(testCode);
             assertNotNull(extractedPublicPage);
             assertNotNull(extractedPublicPage.getWidgets()[3]);
-            widgetType = this._widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
+            widgetType = this.widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
             assertEquals(Group.FREE_GROUP_NAME, widgetType.getMainGroup());
             
-            this._widgetTypeManager.updateWidgetType(widgetTypeCode, 
+            this.widgetTypeManager.updateWidgetType(widgetTypeCode,
                     extracted.getTitles(), extracted.getConfig(), Group.ADMINS_GROUP_NAME, 
                     extracted.getConfigUi(), null, Boolean.FALSE, null, null);
-            extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+            extracted = this.widgetTypeManager.getWidgetType(widgetTypeCode);
             assertNotNull(extracted);
             assertEquals(Group.ADMINS_GROUP_NAME, extracted.getMainGroup());
             synchronized (this) {
                 this.wait(1000);
             }
-            extractedPage = this._pageManager.getDraftPage(testCode);
+            extractedPage = this.pageManager.getDraftPage(testCode);
             assertNotNull(extractedPage);
             assertNotNull(extractedPage.getWidgets()[3]);
-            widgetType = this._widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
+            widgetType = this.widgetTypeManager.getWidgetType(extractedPage.getWidgets()[3].getTypeCode());
             assertEquals(Group.ADMINS_GROUP_NAME, widgetType.getMainGroup());
-            extractedPublicPage = this._pageManager.getDraftPage(testCode);
+            extractedPublicPage = this.pageManager.getDraftPage(testCode);
             assertNotNull(extractedPublicPage);
             assertNotNull(extractedPublicPage.getWidgets()[3]);
-            widgetType = this._widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
+            widgetType = this.widgetTypeManager.getWidgetType(extractedPublicPage.getWidgets()[3].getTypeCode());
             assertEquals(Group.ADMINS_GROUP_NAME, widgetType.getMainGroup());
         } catch (Exception e) {
             throw e;
         } finally {
-            this._pageManager.setPageOffline(testCode);
-            this._pageManager.deletePage(testCode);
-            this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+            this.pageManager.setPageOffline(testCode);
+            this.pageManager.deletePage(testCode);
+            this.widgetTypeManager.deleteWidgetType(widgetTypeCode);
         }
     }
     
     private IPage createPageForTest(String code, String parentCode) throws Throwable {
-        IPage prototype = this._pageManager.getDraftPage("service");
+        IPage prototype = this.pageManager.getDraftPage("service");
         PageModel pageModel = this.pageModelManager.getPageModel(prototype.getMetadata().getModelCode());
         PageMetadata metadata = PageTestUtil.createPageMetadata(pageModel,
                 true, "pagina temporanea", null, null, false, null, null);
@@ -448,17 +448,17 @@ class TestWidgetTypeManager extends BaseTestCase {
 
     @BeforeEach
     private void init() {
-        this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-        this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+        this.widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+        this.pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
         this.pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
         DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-        this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
-        this._mockWidgetTypeDAO.setDataSource(dataSource);
+        this.mockWidgetTypeDAO = new MockWidgetTypeDAO();
+        this.mockWidgetTypeDAO.setDataSource(dataSource);
     }
 
-    private IWidgetTypeManager _widgetTypeManager = null;
-    private IPageManager _pageManager = null;
+    private IWidgetTypeManager widgetTypeManager = null;
+    private IPageManager pageManager = null;
     private IPageModelManager pageModelManager;
-    private MockWidgetTypeDAO _mockWidgetTypeDAO;
+    private MockWidgetTypeDAO mockWidgetTypeDAO;
 
 }
