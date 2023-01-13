@@ -14,6 +14,7 @@
 package org.entando.entando.aps.system.services.widgettype;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Rappresenta un parametro di configurazione del widget.
@@ -26,8 +27,8 @@ public class WidgetTypeParameter implements Serializable {
 	}
 
 	public WidgetTypeParameter(String name, String descr) {
-		this._name = name;
-		this._descr = descr;
+		this.name = name;
+		this.descr = descr;
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class WidgetTypeParameter implements Serializable {
 	 * @return La descrizione del parametro.
 	 */
 	public String getDescr() {
-		return _descr;
+		return descr;
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class WidgetTypeParameter implements Serializable {
 	 * @param descr La descrizione del parametro.
 	 */
 	public void setDescr(String descr) {
-		this._descr = descr;
+		this.descr = descr;
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class WidgetTypeParameter implements Serializable {
 	 * @return Returns the name.
 	 */
 	public String getName() {
-		return _name;
+		return name;
 	}
 
 	/**
@@ -64,10 +65,26 @@ public class WidgetTypeParameter implements Serializable {
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {
-		this._name = name;
+		this.name = name;
 	}
 	
-	private String _name;
-	private String _descr;
-	
+	private String name;
+	private String descr;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		WidgetTypeParameter that = (WidgetTypeParameter) o;
+		return Objects.equals(name, that.name) && Objects.equals(descr, that.descr);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, descr);
+	}
 }

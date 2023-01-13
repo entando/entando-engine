@@ -123,9 +123,8 @@ public class InternalServletTag extends TagSupport {
         ServletRequest req = this.pageContext.getRequest();
         RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
         try {
-            IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
             ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse) this.pageContext.getResponse());
-            String output = this.buildWidgetOutput(page, responseWrapper);
+            String output = this.buildWidgetOutput(responseWrapper);
             if (responseWrapper.isRedirected()) {
                 String redirect = responseWrapper.getRedirectPath();
                 reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXTERNAL_REDIRECT, redirect);
@@ -141,7 +140,7 @@ public class InternalServletTag extends TagSupport {
         return result;
     }
 
-    protected String buildWidgetOutput(IPage page, ResponseWrapper responseWrapper) throws JspException {
+    protected String buildWidgetOutput(ResponseWrapper responseWrapper) throws JspException {
         String output = null;
         ServletRequest req = this.pageContext.getRequest();
         RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);

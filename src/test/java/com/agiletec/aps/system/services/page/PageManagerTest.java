@@ -33,13 +33,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class PageManagerTest {
-    
+
     @Mock
     private IPageDAO pageDao;
-    
+
     @Mock
     private INotifyManager notifyManager;
- 
+
     @Mock
     private IPageManagerCacheWrapper cacheWrapper;
 
@@ -48,7 +48,7 @@ public class PageManagerTest {
 
     @InjectMocks
     private PageManager pageManager;
-    
+
     @Test
     void deletePageWithError() throws Exception {
         IPage mockPage = Mockito.mock(IPage.class);
@@ -61,7 +61,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).initCache(pageDao);
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void addPageWithError() throws Exception {
         IPage mockPage = Mockito.mock(IPage.class);
@@ -75,7 +75,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).addDraftPage(mockPage);
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void updatePageWithError() throws Exception {
         IPage mockPage = Mockito.mock(IPage.class);
@@ -86,7 +86,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(mockPage);
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void setPageOnlineWithError() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
@@ -96,7 +96,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOnline(Mockito.anyString());
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void setPageOfflineWithError() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
@@ -106,14 +106,14 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOffline(Mockito.anyString());
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void moveNullPage() throws Exception {
         Assertions.assertThrows(EntException.class, () -> {
             pageManager.movePage("child1", false);
         });
     }
-    
+
     @Test
     void movePageWithError() throws Exception {
         IPage mockPage = Mockito.mock(IPage.class);
@@ -133,7 +133,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(1)).moveUpDown(Mockito.anyString(), Mockito.anyString());
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void removeWidgetWithError() throws Exception {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
@@ -149,7 +149,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).setPageOffline(Mockito.anyString());
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void joinWidgetWithError() throws Exception {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
@@ -165,7 +165,7 @@ public class PageManagerTest {
         Mockito.verify(cacheWrapper, Mockito.times(0)).updateDraftPage(Mockito.any(IPage.class));
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void moveWidgetWithError() throws Exception {
         Page draftPage = getPage("page_code", "homepage", Group.FREE_GROUP_NAME, false);
@@ -179,7 +179,7 @@ public class PageManagerTest {
         });
         Mockito.verifyNoInteractions(notifyManager);
     }
-    
+
     @Test
     void updateLangWithError() throws Exception {
         Mockito.doThrow(EntException.class).when(this.cacheWrapper).initCache(pageDao);
@@ -191,20 +191,71 @@ public class PageManagerTest {
     }
 
     @Test
+    void testJoinWidgetNotExistingPage() throws Exception {
+        EntException exception = Assertions.assertThrows(EntException.class, () -> {
+            pageManager.joinWidget("does_not_exists", null, 0);
+        });
+        Assertions.assertEquals("The page 'does_not_exists' does not exist!", exception.getMessage());
+    }
+
+    @Test
+    void testJoinWidgetNullMetadata() throws Exception {
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(Mockito.mock(IPage.class));
+        EntException exception = Assertions.assertThrows(EntException.class, () -> {
+            pageManager.joinWidget("page_code", null, 0);
+        });
+        Assertions.assertEquals("Null metadata for page 'page_code'!", exception.getMessage());
+    }
+
+    @Test
+    void testJoinWidgetNullWidget() throws Exception {
+        IPage page = Mockito.mock(IPage.class);
+        PageMetadata pageMetadata = Mockito.mock(PageMetadata.class);
+        Mockito.when(pageMetadata.getModelCode()).thenReturn("page_model");
+        Mockito.when(page.getMetadata()).thenReturn(pageMetadata);
+        PageModel pageModel = new PageModel();
+        pageModel.setConfiguration(new Frame[]{new Frame()});
+        Mockito.when(pageModelManager.getPageModel("page_model")).thenReturn(pageModel);
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(page);
+        EntException exception = Assertions.assertThrows(EntException.class, () -> {
+            pageManager.joinWidget("page_code", null, 0);
+        });
+        Assertions.assertEquals("Invalid null value found in either the Widget or the widgetType",
+                exception.getMessage());
+    }
+
+    @Test
+    void testJoinWidgetNullWidgetTypeCode() throws Exception {
+        IPage page = Mockito.mock(IPage.class);
+        PageMetadata pageMetadata = Mockito.mock(PageMetadata.class);
+        Mockito.when(pageMetadata.getModelCode()).thenReturn("page_model");
+        Mockito.when(page.getMetadata()).thenReturn(pageMetadata);
+        PageModel pageModel = new PageModel();
+        pageModel.setConfiguration(new Frame[]{new Frame()});
+        Mockito.when(pageModelManager.getPageModel("page_model")).thenReturn(pageModel);
+        Mockito.when(cacheWrapper.getDraftPage("page_code")).thenReturn(page);
+        EntException exception = Assertions.assertThrows(EntException.class, () -> {
+            pageManager.joinWidget("page_code", new Widget(), 0);
+        });
+        Assertions.assertEquals("Invalid null value found in either the Widget or the widgetType",
+                exception.getMessage());
+    }
+
+    @Test
     void searchPages_FilterByCodeOnAllowedGroup_ShouldReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_a", "page_a", null, "page_a");
     }
-    
+
     @Test
     void searchPages_FilterByTitleOnAllowedGroup_ShouldReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_a", null, "page_a_title_en", "page_a");
     }
-    
+
     @Test
     void searchPages_OnAllowedGroup_ShouldReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_a", null, null, "homepage", "page_a");
     }
-    
+
     @Test
     void searchPages_FilterOnEmptyCodeOnAllowedGroup_ShouldReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_a", "", null, "homepage", "page_a");
@@ -219,22 +270,22 @@ public class PageManagerTest {
     void searchPages_FilterOnWrongTitleOnAllowedGroup_ShouldNotReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_a", null, "fooTitle");
     }
-    
+
     @Test
     void searchPages_FilterByCodeOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_b", "page_a", null);
     }
-    
+
     @Test
     void searchPages_FilterByTitleOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_b", null, "page_a_title_en");
     }
-    
+
     @Test
     void searchPages_OnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_b", null, null, "homepage");
     }
-    
+
     @Test
     void searchPages_FilterOnEmptyCodeOnNotAllowedGroup_ShouldNotReturnResult() throws Exception {
         testSearchPages("page_a", "group_a", "group_b", "", null, "homepage");
@@ -256,7 +307,7 @@ public class PageManagerTest {
         Assertions.assertTrue(draftPages.isEmpty());
     }
 
-    private void testSearchPages(String pageCode, String pageGroup, String userGroup, 
+    private void testSearchPages(String pageCode, String pageGroup, String userGroup,
             String codeFilter, String titleFilter, String... expectedFound) throws Exception {
 
         Page onlineRoot = getPage("homepage", null, "free", true, pageCode);
@@ -292,7 +343,7 @@ public class PageManagerTest {
         page.setChildrenCodes(children);
         return page;
     }
-    
+
     private void addMetadata(Page page) {
         PageMetadata metadata = new PageMetadata();
         PageModel model = Mockito.mock(PageModel.class);

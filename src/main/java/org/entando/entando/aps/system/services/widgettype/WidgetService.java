@@ -25,6 +25,12 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.util.ApsProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.ResourceNotFoundException;
 import org.entando.entando.aps.system.exception.RestServerError;
@@ -50,11 +56,6 @@ import org.entando.entando.web.widget.validator.WidgetValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.context.ServletContextAware;
-
-import javax.servlet.ServletContext;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WidgetService implements IWidgetService, GroupServiceUtilizer<WidgetDto>, ServletContextAware {
@@ -192,7 +193,10 @@ public class WidgetService implements IWidgetService, GroupServiceUtilizer<Widge
 
     private WidgetDetails getWidgetDetails(IPage page, String widgetCode) {
         List<Widget> list = Arrays.asList(page.getWidgets());
-        int index = list.indexOf(list.stream().filter(widget -> widget != null && widget.getTypeCode().equals(widgetCode)).findFirst().get());
+        int index = Iterables.indexOf(list, widget -> widget != null && widget.getTypeCode().equals(widgetCode));
+        if (index == -1) {
+            throw new NoSuchElementException();
+        }
         WidgetDetails details = new WidgetDetails();
         details.setFrameIndex(index);
         PageModel model = this.getPageModelManager().getPageModel(page.getMetadata().getModelCode());
