@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
-import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -33,6 +31,7 @@ import com.agiletec.aps.system.common.entity.IEntityDAO;
 import com.agiletec.aps.system.common.entity.IEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import org.entando.entando.ent.exception.EntException;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -44,6 +43,14 @@ import org.springframework.cache.annotation.Cacheable;
 public class UserProfileManager extends ApsEntityManager implements IUserProfileManager {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(UserProfileManager.class);
+
+    private static final String USER_PROFILES_CACHE_GROUP = "UserProfileTypes_cacheGroup";
+
+    private transient IUserProfileDAO profileDAO;
+
+    private transient IEntitySearcherDAO entitySearcherDAO;
+
+    private transient ICacheInfoManager cacheInfoManager;
 
     @Override
     public IApsEntity getEntity(String entityId) throws EntException {
@@ -100,7 +107,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
 
     @Override
     @Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#username)")
-    @CacheableInfo(groups = "'UserProfileTypes_cacheGroup'")
     public IUserProfile getProfile(String username) throws EntException {
         IUserProfile profile = null;
         try {
@@ -108,6 +114,8 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             if (profileVO != null) {
                 profile = (IUserProfile) this.createEntityFromXml(profileVO.getTypeCode(), profileVO.getXml());
                 profile.setPublicProfile(profileVO.isPublicProfile());
+                String cacheKey = "UserProfile_" + username;
+                this.getCacheInfoManager().putInGroup(ICacheInfoManager.DEFAULT_CACHE_NAME, cacheKey, new String[]{USER_PROFILES_CACHE_GROUP});
             }
         } catch (Throwable t) {
             logger.error("Error loading profile. user: {} ", username, t);
@@ -137,15 +145,15 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
     }
 
     @Override
-    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'UserProfileTypes_cacheGroup'")
     public void removeEntityPrototype(String entityTypeCode) throws EntException {
         super.removeEntityPrototype(entityTypeCode);
+        this.getCacheInfoManager().flushGroup(ICacheInfoManager.DEFAULT_CACHE_NAME, USER_PROFILES_CACHE_GROUP);
     }
 
     @Override
-    @CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'UserProfileTypes_cacheGroup'")
     public void updateEntityPrototype(IApsEntity entityType) throws EntException {
         super.updateEntityPrototype(entityType);
+        this.getCacheInfoManager().flushGroup(ICacheInfoManager.DEFAULT_CACHE_NAME, USER_PROFILES_CACHE_GROUP);
     }
 
     @Override
@@ -160,26 +168,32 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
 
     @Override
     protected IEntitySearcherDAO getEntitySearcherDao() {
-        return _entitySearcherDAO;
+        return this.getEntitySearcherDAO();
     }
 
     protected IUserProfileDAO getProfileDAO() {
-        return _profileDAO;
+        return profileDAO;
     }
 
     public void setProfileDAO(IUserProfileDAO profileDAO) {
-        this._profileDAO = profileDAO;
+        this.profileDAO = profileDAO;
     }
 
     protected IEntitySearcherDAO getEntitySearcherDAO() {
-        return _entitySearcherDAO;
+        return entitySearcherDAO;
     }
 
     public void setEntitySearcherDAO(IEntitySearcherDAO entitySearcherDAO) {
-        this._entitySearcherDAO = entitySearcherDAO;
+        this.entitySearcherDAO = entitySearcherDAO;
     }
 
-    private IUserProfileDAO _profileDAO;
-    private IEntitySearcherDAO _entitySearcherDAO;
+    protected ICacheInfoManager getCacheInfoManager() {
+        return this.cacheInfoManager;
+    }
+
+    @Autowired
+    public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
+        this.cacheInfoManager = cacheInfoManager;
+    }
 
 }
