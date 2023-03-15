@@ -360,15 +360,15 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
     void testAddUpdateWidgetWithParentAndParameters() throws Exception {
         UserDetails user = new OAuth2TestUtils.UserBuilder("jack_bauer", "0x24").grantedToRoleAdmin().build();
         String accessToken = mockOAuthInterceptor(user);
-        String parentCode = "parent_widget";
-        String parentCustomUi = "<h1>Parent Custom UI</h1>";
+        String code = "parametrized_widget";
+        String mainCustomUi = "<h1>Main Custom UI</h1>";
         String childCustomUi = "<h1>Child Custom UI</h1>";
         String childCode = "test_new_type_2";
-        WidgetType oldParent = this.widgetTypeManager.getWidgetType(parentCode);
-        Assertions.assertNotNull(oldParent);
+        WidgetType widgetType = this.widgetTypeManager.getWidgetType(code);
+        Assertions.assertNull(widgetType);
         try {
             WidgetRequest request = new WidgetRequest();
-            request.setCode(parentCode);
+            request.setCode(code);
             request.setGroup(Group.FREE_GROUP_NAME);
             Map<String, String> titles = new HashMap<>();
             titles.put("it", "Titolo ITA");
@@ -376,83 +376,117 @@ class WidgetControllerIntegrationTest extends AbstractControllerIntegrationTest 
             request.setTitles(titles);
             request.setReadonlyPageWidgetConfig(true);
 
-            request.setCustomUi(parentCustomUi);
+            request.setCustomUi(mainCustomUi);
             request.setGroup(Group.FREE_GROUP_NAME);
+            request.getParams().add(new WidgetParameter("param1", "Description of parameter 1"));
+            request.getParams().add(new WidgetParameter("param2", "Description of parameter 2"));
+            request.getParams().add(new WidgetParameter("param3", "Description of parameter 3"));
+            request.getParams().add(new WidgetParameter("param4", null));
+            request.setConfigUiName("configAction");
+            ResultActions resultMaster = executeWidgetPost(request, accessToken, status().isOk());
 
-            //Update parent, with parameters
-            executeWidgetPut(request, parentCode, accessToken, status().isOk())
-                    .andDo(resultPrint())
-                    .andExpect(jsonPath("$.payload.code", is(parentCode)))
-                    .andExpect(jsonPath("$.payload.parentType", nullValue()))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentCode")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of the Widget Parameter")));
+            resultMaster.andExpect(jsonPath("$.payload.code", is(code)));
+            resultMaster.andExpect(jsonPath("$.payload.code", is(code)));
+            resultMaster.andExpect(jsonPath("$.payload.parentType", nullValue()));
+            resultMaster.andExpect(jsonPath("$.payload.guiFragments.size()", is(1)));
+            resultMaster.andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(mainCustomUi)));
+            resultMaster.andExpect(jsonPath("$.payload.hasConfig", is(true)));
+            resultMaster.andExpect(jsonPath("$.payload.parameters.size()", is(4)));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[0].code", is("param1")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[0].description", is("Description of parameter 1")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[1].code", is("param2")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[1].description", is("Description of parameter 2")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[2].code", is("param3")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[2].description", is("Description of parameter 3")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[3].code", is("param4")));
+            resultMaster.andExpect(jsonPath("$.payload.parameters[3].description", nullValue()));
+            resultMaster.andExpect(jsonPath("$.payload.configUiName", is("configAction")));
 
-            //Create a child widget
-            WidgetType widgetType = this.widgetTypeManager.getWidgetType(parentCode);
+            widgetType = this.widgetTypeManager.getWidgetType(code);
             Assertions.assertNotNull(widgetType);
 
-            request = new WidgetRequest();
-            request.setCode(childCode);
-            request.setGroup(Group.FREE_GROUP_NAME);
-            titles = new HashMap<>();
-            titles.put("it", "Titolo ITA");
-            titles.put("en", "Title EN");
-            request.setTitles(titles);
-            request.setCustomUi(null); //Should use parent
-            request.setGroup(Group.FREE_GROUP_NAME);
-            request.setParentType(parentCode);
-            request.setConfig(Collections.singletonMap("parentCode", "configValue"));
-            request.setReadonlyPageWidgetConfig(true);
-            //When creating and has parent, should also inherit parent paremeters
-            executeWidgetPost(request, accessToken, status().isOk())
-                    .andDo(resultPrint())
-                    .andExpect(jsonPath("$.payload.code", is(childCode)))
-                    .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(parentCustomUi)))
+            WidgetRequest requestChild = new WidgetRequest();
+            requestChild.setCode(childCode);
+            requestChild.setGroup(Group.FREE_GROUP_NAME);
+            Map<String, String> titlesChild = new HashMap<>();
+            titlesChild.put("it", "Titolo ITA child");
+            titlesChild.put("en", "Title EN child");
+            requestChild.setTitles(titlesChild);
+            requestChild.setParentCode(code);
+            Map<String, String> config = new HashMap<>();
+            config.put("param1", "Value1");
+            requestChild.setParamsDefaults(config);
+
+            ResultActions resultSlave = this.executeWidgetPost(requestChild, accessToken, status().isOk());
+
+            resultSlave.andExpect(jsonPath("$.payload.code", is(childCode)))
+                    .andExpect(jsonPath("$.payload.parentType", is(code)))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
                     .andExpect(jsonPath("$.payload.hasConfig", is(false)))
-                    .andExpect(jsonPath("$.payload.config.parentCode", is("configValue")));
+                    .andExpect(jsonPath("$.payload.config.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.config.param1", is("Value1")));
 
-            widgetType = this.widgetTypeManager.getWidgetType(childCode);
-            Assertions.assertNotNull(widgetType);
+            WidgetType childWidgetType = this.widgetTypeManager.getWidgetType(childCode);
+            Assertions.assertNotNull(childWidgetType);
+            Assertions.assertEquals(code, childWidgetType.getParentType().getCode());
+            Assertions.assertNull(childWidgetType.getTypeParameters());
+            Assertions.assertNull(childWidgetType.getAction());
+            Assertions.assertEquals(1, childWidgetType.getConfig().size());
+            Assertions.assertEquals("Value1", childWidgetType.getConfig().get("param1"));
+            Assertions.assertEquals("Titolo ITA child", childWidgetType.getTitles().get("it"));
+            Assertions.assertEquals("Title EN child", childWidgetType.getTitles().get("en"));
 
-            //Update a child widget
-            request.setCustomUi(childCustomUi);
-            request.setConfig(Collections.singletonMap("parentCode", "anotherConfigValue"));
+            titlesChild.put("en", "Title EN child modified");
+            config.put("param3", "Value3");
+            requestChild.setCustomUi(childCustomUi);
 
             //When updating, request parameters override everything
-            executeWidgetPut(request, childCode, accessToken, status().isOk())
+            executeWidgetPut(requestChild, childCode, accessToken, status().isOk())
                     .andDo(resultPrint())
                     .andExpect(jsonPath("$.payload.code", is(childCode)))
-                    .andExpect(jsonPath("$.payload.parentType", is(parentCode)))
-                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.guiFragments[0].customUi", is(childCustomUi)))
+                    .andExpect(jsonPath("$.payload.parentType", is(code)))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
                     .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
                     .andExpect(jsonPath("$.payload.hasConfig", is(false)))
-                    .andExpect(jsonPath("$.payload.config.parentCode", is("anotherConfigValue")));
+                    .andExpect(jsonPath("$.payload.config.size()", is(2)))
+                    .andExpect(jsonPath("$.payload.config.param1", is("Value1")))
+                    .andExpect(jsonPath("$.payload.config.param3", is("Value3")));
+
+            //Update a child widget
+            requestChild.setCustomUi(mainCustomUi);
+            requestChild.setParamsDefaults(Collections.singletonMap("param2", "ValueX"));
+
+            //When updating, request parameters override everything
+            executeWidgetPut(requestChild, childCode, accessToken, status().isOk())
+                    .andDo(resultPrint())
+                    .andExpect(jsonPath("$.payload.code", is(childCode)))
+                    .andExpect(jsonPath("$.payload.parentType", is(code)))
+                    .andExpect(jsonPath("$.payload.guiFragments.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(0)))
+                    .andExpect(jsonPath("$.payload.hasConfig", is(false)))
+                    .andExpect(jsonPath("$.payload.config.size()", is(1)))
+                    .andExpect(jsonPath("$.payload.config.param2", is("ValueX")));
 
             //Parent should remain unchanged
-            executeWidgetGet(parentCode, accessToken, status().isOk())
+            executeWidgetGet(code, accessToken, status().isOk())
                     .andDo(resultPrint())
-                    .andExpect(jsonPath("$.payload.code", is(parentCode)))
-                    .andExpect(jsonPath("$.payload.parameters.size()", is(1)))
-                    .andExpect(jsonPath("$.payload.parameters[0].code", is("parentCode")))
-                    .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of the Widget Parameter")));
+                    .andExpect(jsonPath("$.payload.code", is(code)))
+                    .andExpect(jsonPath("$.payload.parameters.size()", is(4)))
+                    .andExpect(jsonPath("$.payload.parameters[0].code", is("param1")))
+                    .andExpect(jsonPath("$.payload.parameters[0].description", is("Description of parameter 1")));
+
         } catch (Exception e) {
             throw e;
         } finally {
-            this.widgetTypeManager.updateWidgetType(oldParent.getCode(), 
-                    oldParent.getTitles(), oldParent.getConfig(), oldParent.getMainGroup(), oldParent.getConfigUi(), 
-                    oldParent.getBundleId(), oldParent.isReadonlyPageWidgetConfig(), oldParent.getWidgetCategory(),
-                    oldParent.getIcon());
-            this.widgetTypeManager.deleteWidgetType(childCode);
-            List<String> codes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType("parent_widget");
-            for (int i = 0; i < codes.size(); i++) {
-                this.guiFragmentManager.deleteGuiFragment(codes.get(i));
+            List<String> codesOfWidgetToDelete = Arrays.asList(childCode, code);
+            for (int j = 0; j < codesOfWidgetToDelete.size(); j++) {
+                String codeOfWidgetToDelete = codesOfWidgetToDelete.get(j);
+                List<String> fragmentCodes = this.guiFragmentManager.getGuiFragmentCodesByWidgetType(codeOfWidgetToDelete);
+                for (int i = 0; i < fragmentCodes.size(); i++) {
+                    this.guiFragmentManager.deleteGuiFragment(fragmentCodes.get(i));
+                }
+                this.widgetTypeManager.deleteWidgetType(codeOfWidgetToDelete);
             }
         }
     }
