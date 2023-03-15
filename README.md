@@ -14,7 +14,7 @@ It provides a one-way encryption for passwords in the Entando Platform.
 
 
 **Configuration**
-You can configure the execution of the algorithm by editing the properties file ```security.properties```; you can find this file in ```src/main/config``` path of your project.
+You can configure the execution of the algorithm by editing the properties file ```security.properties```; you can find this file in ```src/main/config``` path of your project. Test
 The default values of the settings are:
 
 ```algo.argon2.type=ARGON2i
