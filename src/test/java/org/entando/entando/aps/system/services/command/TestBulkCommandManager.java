@@ -68,6 +68,7 @@ class TestBulkCommandManager extends BaseTestCase {
 		FakeBulkCommand command = new FakeBulkCommand(context, startSignal, doneSignal);
 		int numOfThreads = this.countThreads();
 		BulkCommandReport<String> report = this._bulkCommandManager.addCommand(owner, command, true);
+		Thread.sleep(500);
 		assertEquals(numOfThreads + 1, this.countThreads());
 		Thread thread = this.getThreadByName(command.getId());
 		assertNotNull(thread);

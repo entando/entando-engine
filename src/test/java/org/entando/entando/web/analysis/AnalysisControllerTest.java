@@ -13,10 +13,17 @@
  */
 package org.entando.entando.web.analysis;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.Map;
 import org.entando.entando.aps.system.services.category.CategoryService;
 import org.entando.entando.aps.system.services.category.model.CategoryDto;
 import org.entando.entando.aps.system.services.group.GroupService;
@@ -37,26 +44,18 @@ import org.entando.entando.aps.system.services.widgettype.model.WidgetDto;
 import org.entando.entando.web.AbstractControllerTest;
 import org.entando.entando.web.utils.OAuth2TestUtils;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class AnalysisControllerTest extends AbstractControllerTest {
@@ -126,8 +125,7 @@ class AnalysisControllerTest extends AbstractControllerTest {
                         .header("Authorization", "Bearer " + accessToken));
 
         result.andExpect(status().isOk());
-        result.andDo(MockMvcResultHandlers.print());
-        result.andExpect(content().contentType("application/json;charset=UTF-8"));
+        result.andExpect(content().contentType("application/json"));
         checkByComponentType(result, "widgets");
         checkByComponentType(result, "fragments");
         checkByComponentType(result, "pages");
