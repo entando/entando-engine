@@ -13,23 +13,23 @@
  */
 package org.entando.entando.aps.servlet.security;
 
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.jayway.jsonpath.JsonPath;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.services.oauth2.IApiOAuth2TokenManager;
-import org.springframework.security.crypto.codec.Base64;
 import org.entando.entando.web.AbstractControllerIntegrationTest;
-
-import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.is;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -70,7 +70,6 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
-            System.out.println(resultString);
             Assertions.assertTrue(StringUtils.isNotBlank(resultString));
             String token = JsonPath.parse(resultString).read("$.access_token");
             Assertions.assertTrue(StringUtils.isNotBlank(token));
@@ -114,7 +113,6 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json;charset=UTF-8"));
             String resultString = result.andReturn().getResponse().getContentAsString();
-            System.out.println(resultString);
             Assertions.assertTrue(StringUtils.isNotBlank(resultString));
             String newAccesstoken = JsonPath.parse(resultString).read("$.access_token");
             Assertions.assertFalse(newAccesstoken.equals(accessToken.getValue()));
@@ -156,11 +154,11 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
                         .params(params)
                         .header("Authorization", "Basic " + hash)
                         .accept("application/json;charset=UTF-8"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
         String resultString = result.andReturn().getResponse().getContentAsString();
         Assertions.assertTrue(StringUtils.isNotBlank(resultString));
-        result.andExpect(jsonPath("$.error", is("unauthorized")));
+        result.andExpect(jsonPath("$.error", is("invalid_grant")));
         result.andExpect(jsonPath("$.error_description", anything()));
         if (!StringUtils.isEmpty(username)) {
             Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
@@ -189,7 +187,7 @@ class AuthorizationServerConfigurationTest extends AbstractControllerIntegration
         String resultString = result.andReturn().getResponse().getContentAsString();
         Assertions.assertTrue(StringUtils.isNotBlank(resultString));
         result.andExpect(jsonPath("$.error", is("invalid_client")));
-        String expectedMessage = "Unauthorized grant type: " + grantType;
+        String expectedMessage = "Unauthorized grant type: password";
         result.andExpect(jsonPath("$.error_description", is(expectedMessage)));
         Collection<OAuth2AccessToken> oauthTokens = apiOAuth2TokenManager.findTokensByUserName(username);
         Assertions.assertEquals(0, oauthTokens.size());

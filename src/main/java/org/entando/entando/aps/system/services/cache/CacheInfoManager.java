@@ -15,12 +15,10 @@ package org.entando.entando.aps.system.services.cache;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,26 +29,18 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.expression.EvaluationContext;
 
 /**
  * Manager of the System Cache
  *
  * @author E.Santoboni
  */
-@Aspect
 public class CacheInfoManager extends AbstractService implements ICacheInfoManager, PageChangedObserver {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(CacheInfoManager.class);
@@ -62,94 +52,18 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
         logger.debug("{} (cache info service initialized) ready", this.getClass().getName());
     }
 
-    @Around("@annotation(cacheableInfo)")
-    public Object aroundCacheableMethod(ProceedingJoinPoint pjp, CacheableInfo cacheableInfo) throws Throwable {
-        boolean skipCacheableInfo = (cacheableInfo.expiresInMinute() < 0 && (StringUtils.isBlank(cacheableInfo.groups())));
-        if (skipCacheableInfo) {
-            return pjp.proceed();
-        }
-        Object result = null;
-        try {
-            MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-            Method targetMethod = methodSignature.getMethod();
-            Class targetClass = pjp.getTarget().getClass();
-            Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
-            Cacheable cacheable = effectiveTargetMethod.getAnnotation(Cacheable.class);
-            String keyExpression = null;
-            String[] cacheNames = null;
-            if (null == cacheable) {
-                CachePut cachePut = effectiveTargetMethod.getAnnotation(CachePut.class);
-                if (null == cachePut) {
-                    return pjp.proceed();
-                }
-                cacheNames = cachePut.value();
-                keyExpression = cachePut.key();
-            } else {
-                if (!StringUtils.isBlank(cacheable.condition())) {
-                    Object isCacheable = this.evaluateExpression(cacheable.condition(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-                    Boolean check = Boolean.valueOf(isCacheable.toString());
-                    if (null != check && !check) {
-                        return pjp.proceed();
-                    }
-                }
-                cacheNames = cacheable.value();
-                keyExpression = cacheable.key();
-            }
-            Object key = this.evaluateExpression(keyExpression, targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-            result = pjp.proceed();
-            for (String cacheName : cacheNames) {
-                if (cacheableInfo.groups() != null && cacheableInfo.groups().trim().length() > 0) {
-                    Object groupsCsv = this.evaluateExpression(cacheableInfo.groups(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-                    if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
-                        String[] groups = groupsCsv.toString().split(",");
-                        this.putInGroup(cacheName, key.toString(), groups);
-                    }
-                }
-                if (cacheableInfo.expiresInMinute() > 0) {
-                    this.setExpirationTime(cacheName, key.toString(), cacheableInfo.expiresInMinute());
-                }
-            }
-        } catch (Throwable t) {
-            logger.error("Error while evaluating cacheableInfo annotation", t);
-            throw new EntException("Error while evaluating cacheableInfo annotation", t);
-        }
-        return result;
-    }
-
-    @Around("@annotation(cacheInfoEvict)")
-    public Object aroundCacheInfoEvictMethod(ProceedingJoinPoint pjp, CacheInfoEvict cacheInfoEvict) throws Throwable {
-        try {
-            MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-            Method targetMethod = methodSignature.getMethod();
-            Class targetClass = pjp.getTarget().getClass();
-            Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
-            String[] cacheNames = cacheInfoEvict.value();
-            Object groupsCsv = this.evaluateExpression(cacheInfoEvict.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-            if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
-                String[] groups = groupsCsv.toString().split(",");
-                for (String group : groups) {
-                    for (String cacheName : cacheNames) {
-                        this.flushGroup(cacheName, group);
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            logger.error("Error while flushing group", t);
-            throw new EntException("Error while flushing group", t);
-        }
-        return pjp.proceed();
-    }
-
     public void setExpirationTime(String targetCache, String key, int expiresInMinute) {
         Date expirationTime = DateUtils.addMinutes(new Date(), expiresInMinute);
         this.setExpirationTime(targetCache, key, expirationTime);
     }
 
+    @Override
     public void setExpirationTime(String targetCache, String key, long expiresInSeconds) {
         Date expirationTime = DateUtils.addSeconds(new Date(), (int) expiresInSeconds);
         this.setExpirationTime(targetCache, key, expirationTime);
     }
 
+    @Override
     public void setExpirationTime(String targetCache, String key, Date expirationTime) {
         Cache cache = this.getCache(CACHE_INFO_MANAGER_CACHE_NAME);
         Map<String, Date> expirationTimes = this.get(cache, EXPIRATIONS_CACHE_NAME_PREFIX + targetCache, Map.class);
@@ -210,11 +124,13 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
      * @param key The key
      * @param obj The object to put into cache.
      */
+    @Override
     public void putInCache(String targetCache, String key, Object obj) {
         Cache cache = this.getCache(targetCache);
         cache.put(key, obj);
     }
 
+    @Override
     public void putInCache(String targetCache, String key, Object obj, String[] groups) {
         Cache cache = this.getCache(targetCache);
         cache.put(key, obj);
@@ -273,14 +189,6 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
         }
     }
 
-    protected Object evaluateExpression(String expression, Method method, Object[] args, Object target, Class<?> targetClass) {
-        Collection<Cache> caches = this.getCaches();
-        ExpressionEvaluator evaluator = new ExpressionEvaluator();
-        EvaluationContext context = evaluator.createEvaluationContext(caches,
-                method, args, target, targetClass, ExpressionEvaluator.NO_RESULT);
-        return evaluator.evaluateExpression(expression, method, context);
-    }
-
     protected Collection<Cache> getCaches() {
         Collection<Cache> caches = new ArrayList<Cache>();
         Iterator<String> iter = this.getSpringCacheManager().getCacheNames().iterator();
@@ -323,13 +231,19 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
         return this.getSpringCacheManager().getCache(cacheName);
     }
 
+    @Override
     public Object getFromCache(String targetCache, String key) {
+        return this.getFromCache(targetCache, key, Object.class);
+    }
+
+    @Override
+    public <T> T getFromCache(String targetCache, String key, Class<T> requiredType) {
         if (isExpired(targetCache, key)) {
             this.flushEntry(targetCache, key);
             return null;
         }
         Cache cache = this.getCache(targetCache);
-        return this.get(cache, key, Object.class);
+        return this.get(cache, key, requiredType);
     }
 
     protected <T> T get(String name, Class<T> requiredType) {
