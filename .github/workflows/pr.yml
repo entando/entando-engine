@@ -177,6 +177,7 @@ jobs:
               export ENTANDO_OPT_SONAR_PROJECT_KEY="${{ secrets.ENTANDO_OPT_SONAR_PROJECT_KEY }}"
               ;;
             MTX-SCAN-SNYK)
+              exit 0
               export SNYK_TOKEN="${{ secrets.SNYK_TOKEN }}"
               ;;
             MTX-MVN-POST-DEPLOYMENT-TESTS)

@@ -13,17 +13,17 @@
  */
 package com.agiletec.aps.util;
 
-import java.io.IOException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-
+import com.agiletec.aps.system.ApsSystemUtils.ApsDeepDebug;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.RefreshableBean;
-import org.entando.entando.ent.util.EntLogging.EntLogger;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -33,6 +33,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @author E.Santoboni
  */
 public class ApsWebApplicationUtils {
+
+	private static final AtomicBoolean isReloadInProgress = new AtomicBoolean(false);
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsWebApplicationUtils.class);
 	
@@ -143,21 +145,51 @@ public class ApsWebApplicationUtils {
 	}
 	
 	private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
-		RefreshableBean configManager = (RefreshableBean) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
-		configManager.refresh();
-		String[] defNames = wac.getBeanNamesForType(RefreshableBean.class);
-		for (int i=0; i<defNames.length; i++) {
-			Object bean = null;
-			try {
-				bean = wac.getBean(defNames[i]);
-			} catch (Throwable t) {
-                logger.error("error in executeSystemRefresh", t);
-				bean = null;
-			}
-			if (bean != null) {
-				((RefreshableBean) bean).refresh();
-			}
+
+		if (!isReloadInProgress.compareAndSet(false, true)) {
+			ApsDeepDebug.print("service-reload","!!! " + Thread.currentThread().getName() + " tried to reload system services but another reload is in progress, aborting!!!");
+			logger.info("rejecting the reload of the configuration while still executing the previous one!");
+			return;
 		}
+		long startTime = System.currentTimeMillis();
+		try {
+			RefreshableBean configManager = (RefreshableBean) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
+			ApsDeepDebug.print("service-reload", "RELOADING " + SystemConstants.BASE_CONFIG_MANAGER + " start...");
+			configManager.refresh();
+			ApsDeepDebug.print("service-reload", "RELOADING " + SystemConstants.BASE_CONFIG_MANAGER + " completed");
+			String[] defNames = wac.getBeanNamesForType(RefreshableBean.class);
+			for (int i = 0; i < defNames.length; i++) {
+				Object bean = null;
+
+				try {
+					if (defNames[i].equals(SystemConstants.BASE_CONFIG_MANAGER)) {
+						continue;
+					}
+					bean = wac.getBean(defNames[i]);
+					if (bean != null) {
+						ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " start...");
+
+						((RefreshableBean) bean).refresh();
+
+						ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " completed");
+					} else {
+						ApsDeepDebug.print("service-reload", "THE BEAN WITH NAME " + defNames[i] + " DOES NOT EXIST");
+					}
+				} catch (Exception t) {
+					ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " COMPLETED WITH ERRORS");
+					logger.error("error in executeSystemRefresh", t);
+				}
+			}
+		} finally {
+			isReloadInProgress.set(false);
+			long endTime = System.currentTimeMillis(); // Fine conteggio tempo
+			ApsDeepDebug.print("service-reload", "Tempo di esecuzione: " + (endTime - startTime) + " ms");
+			logger.info("reload configuration completed in {} ms", (endTime - startTime));
+		}
+	}
+
+	public static boolean isReloadInProgress() {
+		return isReloadInProgress.get();
 	}
 	
 }
