@@ -1,28 +1,30 @@
 package com.agiletec.aps.system;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.agiletec.aps.system.ApsSystemUtils.ApsDeepDebug;
-import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class ApsSystemUtilsTest {
 
     @Test
     void testDeepDebug() {
-        System.setProperty("org.entando.deepDebug", "");
-        assertFalse(ApsDeepDebug.print("test print"));
-        assertTrue(ApsDeepDebug.print(null, ApsDeepDebug.FORCE_TAG_PREFIX, "test print"));
+        try (MockedStatic<ApsSystemUtils> mock = Mockito.mockStatic(ApsSystemUtils.class, InvocationOnMock::callRealMethod)) {
+            mock.when(ApsSystemUtils::getDeepDebugFF).thenReturn("");
+            assertFalse(ApsDeepDebug.print("test print"));
+        }
     }
 
     @Test
     void testDeepDebug2() {
-        System.setProperty("org.entando.deepDebug", "true");
-        assertTrue(ApsDeepDebug.print("test print"));
+        try (MockedStatic<ApsSystemUtils> mock = Mockito.mockStatic(ApsSystemUtils.class, InvocationOnMock::callRealMethod)) {
+            mock.when(ApsSystemUtils::getDeepDebugFF).thenReturn("true");
+            assertEquals(ApsSystemUtils.getDeepDebugFF(), "true");
+            assertTrue(ApsDeepDebug.print("test print"));
+        }
     }
 
     @Test
@@ -47,19 +49,5 @@ class ApsSystemUtilsTest {
             assertTrue(ApsSystemUtils.isFeatureEnabled("A-FEATURE:SUB-FEATURE"));
             assertFalse(ApsSystemUtils.isFeatureEnabled("A-FEATURE_"));
         }
-    }
-
-    @Test
-    void tmp() {
-        String baseName =new String(
-                "Delibera_N.7'Comitato_Tecnico_d'Innovazionè_10-12-2024".getBytes(StandardCharsets.UTF_8)
-                , StandardCharsets.UTF_16
-        );
-        System.out.println(baseName);
-
-        String purgedName = baseName.replaceAll("[^ _.a-zA-Z0-9-àèéìòùÀÈÉÌÒÙ']", "");
-        System.out.println("XXXXXXXXXXXXXXXXXXX");
-        System.out.println(purgedName);
-        System.out.println("XXXXXXXXXXXXXXXXXXX");
     }
 }

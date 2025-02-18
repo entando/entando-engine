@@ -180,7 +180,7 @@ public class ApsSystemUtils {
          * Check also {@link ApsSystemUtils#isTagEnabled}
          */
         public static boolean isTagEnabled(String tag) {
-            return ApsSystemUtils.isTagEnabled(ENTANDO_FF_DEEP_DEBUG, tag);
+            return ApsSystemUtils.isTagEnabled(getDeepDebugFF(), tag);
         }
 
         /**
@@ -245,6 +245,10 @@ public class ApsSystemUtils {
     /* Mockable getter of the constant */
     public static String getFeatureFlags() {
         return ENTANDO_FEATURE_FLAGS;
+    }
+
+    static public String getDeepDebugFF() {
+        return ApsDeepDebug.ENTANDO_FF_DEEP_DEBUG;
     }
 
 }
