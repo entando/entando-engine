@@ -85,15 +85,15 @@ jobs:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       #~ UPDATE THE BOM (if required)
-      - name: "BOM Update"
-        if: steps.CHECKOUT.outputs.BOM_UPDATE_FLAG == 'true' && steps.START.outputs.BOM == 'true'
-        run: |
-          ~/ppl-run bom update-bom \
-            --id "UPDATE-BOM" \
-            --lcd "$LOCAL_CLONE_DIR" \
-            --token "$ENTANDO_BOT_TOKEN" \
-          ;
-      #~ PUBLISH TO DOCKER
+#      - name: "BOM Update"
+#        if: steps.CHECKOUT.outputs.BOM_UPDATE_FLAG == 'true' && steps.START.outputs.BOM == 'true'
+#        run: |
+#          ~/ppl-run bom update-bom \
+#            --id "UPDATE-BOM" \
+#            --lcd "$LOCAL_CLONE_DIR" \
+#            --token "$ENTANDO_BOT_TOKEN" \
+#          ;
+#      #~ PUBLISH TO DOCKER
       - name: "Publish docker"
         run: |
           export ENTANDO_OPT_DOCKER_PASSWORD="${{ secrets.ENTANDO_OPT_DOCKER_PASSWORD }}"
