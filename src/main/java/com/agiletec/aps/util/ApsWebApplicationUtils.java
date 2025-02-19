@@ -154,9 +154,8 @@ public class ApsWebApplicationUtils {
 		long startTime = System.currentTimeMillis();
 		try {
 			RefreshableBean configManager = (RefreshableBean) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
-			ApsDeepDebug.print("service-reload", "RELOADING " + SystemConstants.BASE_CONFIG_MANAGER + " start...");
-			configManager.refresh();
-			ApsDeepDebug.print("service-reload", "RELOADING " + SystemConstants.BASE_CONFIG_MANAGER + " completed");
+			reloadRefreshableBean(configManager, SystemConstants.BASE_CONFIG_MANAGER);
+
 			String[] defNames = wac.getBeanNamesForType(RefreshableBean.class);
 			for (int i = 0; i < defNames.length; i++) {
 				Object bean = null;
@@ -166,15 +165,7 @@ public class ApsWebApplicationUtils {
 						continue;
 					}
 					bean = wac.getBean(defNames[i]);
-					if (bean != null) {
-						ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " start...");
-
-						((RefreshableBean) bean).refresh();
-
-						ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " completed");
-					} else {
-						ApsDeepDebug.print("service-reload", "THE BEAN WITH NAME " + defNames[i] + " DOES NOT EXIST");
-					}
+					reloadRefreshableBean(bean, defNames[i]);
 				} catch (Exception t) {
 					ApsDeepDebug.print("service-reload", "RELOADING " + defNames[i] + " COMPLETED WITH ERRORS");
 					logger.error("error in executeSystemRefresh", t);
@@ -182,9 +173,24 @@ public class ApsWebApplicationUtils {
 			}
 		} finally {
 			isReloadInProgress.set(false);
-			long endTime = System.currentTimeMillis(); // Fine conteggio tempo
+			long endTime = System.currentTimeMillis();
 			ApsDeepDebug.print("service-reload", "Tempo di esecuzione: " + (endTime - startTime) + " ms");
 			logger.info("reload configuration completed in {} ms", (endTime - startTime));
+		}
+	}
+
+	private static void reloadRefreshableBean(final Object bean, final String name) throws Throwable {
+		if (bean != null) {
+			long currentServiceStart =0;
+			long currentServiceEnd = 0;
+
+			ApsDeepDebug.print("service-reload", "RELOADING " + name + " start...");
+			currentServiceStart = System.currentTimeMillis();
+			((RefreshableBean) bean).refresh();
+			currentServiceEnd = System.currentTimeMillis();
+			ApsDeepDebug.print("service-reload", "RELOADING " + name + " completed in " + (currentServiceEnd - currentServiceStart) + " ms");
+		} else {
+			ApsDeepDebug.print("service-reload", "THE BEAN WITH NAME " + name + " DOES NOT EXIST");
 		}
 	}
 
