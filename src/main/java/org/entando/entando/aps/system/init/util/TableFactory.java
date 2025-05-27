@@ -139,7 +139,7 @@ public class TableFactory {
 					continue;
 				}
 				try {
-					ApsSystemUtils.directStdoutTrace("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
+					ApsSystemUtils.markedTrace("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
 					this.createTable(tableClass, connectionSource);
 					tables.add(tableName);
 				} catch (Throwable t) {

@@ -35,12 +35,13 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
+        long startMs = System.currentTimeMillis();
         ServletContext svCtx = event.getServletContext();
         String msg = this.getClass().getName() + ": INIT " + svCtx.getServletContextName();
-        ApsSystemUtils.directStdoutTrace(msg, true);
+        ApsSystemUtils.markedTrace(msg);
         super.contextInitialized(event);
         msg = this.getClass().getName() + ": INIT DONE " + svCtx.getServletContextName();
-        ApsSystemUtils.directStdoutTrace(msg, true);
+        ApsSystemUtils.markedTrace(msg);
 
         boolean isActive = Objects.nonNull(System.getenv(SystemConstants.ENTANDO_CSRF_PROTECTION));
         String whiteList = System.getenv(SystemConstants.ENTANDO_CSRF_ALLOWED_DOMAINS);
@@ -67,6 +68,11 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
         } else {
             LOGGER.warn("Content Security Policy (CSP) header is not enabled");
         }
+
+        long endMs = System.currentTimeMillis();
+        String executionTimeMsg = String.format("%s: contextInitialized takes ms:'%s' of execution",
+                this.getClass().getName(), endMs - startMs);
+        ApsSystemUtils.markedTrace(executionTimeMsg);
     }
 
 }

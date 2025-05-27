@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.entando.entando.aps.system.services.cache.IFCacheWithPipeline;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
@@ -66,22 +67,26 @@ public class ConfigManagerCacheWrapper extends AbstractCacheWrapper implements I
         this.insertAndCleanCache(cache, configItems, CONFIG_ITEMS_CODES_CACHE_NAME, CONFIG_ITEM_CACHE_NAME_PREFIX);
         this.insertAndCleanCache(cache, params, CONFIG_PARAMS_CODES_CACHE_NAME, CONFIG_PARAM_CACHE_NAME_PREFIX);
     }
-    
-    protected void insertAndCleanCache(Cache cache,
-            Map<String, String> objects, String codesCacheName, String codeCachePrefix) {
-        List<String> oldCodes = (List<String>) this.get(cache, codesCacheName, List.class);
-        List<String> codes = new ArrayList<>();
-        Iterator<String> iter = objects.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            cache.put(codeCachePrefix + key, objects.get(key));
-            if (null != oldCodes) {
-                oldCodes.remove(key);
+
+    protected void insertAndCleanCache(
+            Cache cache,
+            Map<String, String> objects, String codesCacheName, String codeCachePrefix
+    ) {
+        IFCacheWithPipeline.pipelined(cache.getNativeCache(), cp -> {
+            List<String> oldCodes = this.get(cache, codesCacheName, List.class);
+            List<String> codes = new ArrayList<>();
+            Iterator<String> iter = objects.keySet().iterator();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                cache.put(codeCachePrefix + key, objects.get(key));
+                if (null != oldCodes) {
+                    oldCodes.remove(key);
+                }
+                codes.add(key);
             }
-            codes.add(key);
-        }
-        cache.put(codesCacheName, codes);
-        this.releaseObjects(cache, oldCodes, codeCachePrefix);
+            cache.put(codesCacheName, codes);
+            this.releaseObjects(cache, oldCodes, codeCachePrefix);
+        });
     }
 
     private void releaseObjects(Cache cache, List<String> keysToRelease, String prefix) {
