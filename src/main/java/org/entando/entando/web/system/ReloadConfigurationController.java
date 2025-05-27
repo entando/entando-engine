@@ -47,7 +47,6 @@ public class ReloadConfigurationController {
             logger.error("Error reloading configuration", e);
             throw e;
         }
-        ApsWebApplicationUtils.executeSystemRefresh(request);
         logger.debug("reload configuration: done!");
         Map<String, String> result = new HashMap<>();
         result.put("status", "success");

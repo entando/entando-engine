@@ -17,6 +17,8 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * Utility class for system logger
@@ -26,9 +28,7 @@ import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 public class ApsSystemUtils {
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsSystemUtils.class);
-
-    private static final boolean ENABLE_DIRECT_STDOUT_TRACE =
-            ("" + System.getProperty("org.entando.enableDirectStdoutTrace")).equals("true");
+    private static final Marker startupMarker = MarkerFactory.getMarker("STARTUP");
 
     /**
      * Comma-separated list of feature flags tags that are enabled.
@@ -52,8 +52,7 @@ public class ApsSystemUtils {
      * @param methodName The method in which the error occurred.
      * @param message The message to include
      */
-    public static void logThrowable(Throwable t, Object caller,
-            String methodName, String message) {
+    public static void logThrowable(Throwable t, Object caller, String methodName, String message) {
         String className = null;
         if (caller != null) {
             className = caller.getClass().getName();
@@ -72,17 +71,8 @@ public class ApsSystemUtils {
         logThrowable(t, caller, methodName, "Exception");
     }
 
-    public static boolean directStdoutTrace(String str) {
-        return directStdoutTrace(str, false);
-    }
-
-    public static boolean directStdoutTrace(String str, boolean force) {
-        if (ENABLE_DIRECT_STDOUT_TRACE || force) {
-            System.out.println(str);    //NOSONAR
-            return true;
-        } else {
-            return false;
-        }
+    public static void markedTrace(String str) {
+        logger.info(startupMarker, str);
     }
 
     /**

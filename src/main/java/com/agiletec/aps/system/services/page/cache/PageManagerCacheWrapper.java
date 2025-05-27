@@ -14,6 +14,9 @@
 package com.agiletec.aps.system.services.page.cache;
 
 import com.agiletec.aps.system.common.AbstractCacheWrapper;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import org.entando.entando.aps.system.services.cache.IFCacheWithPipeline;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageDAO;
@@ -27,9 +30,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -122,8 +126,12 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
         this.localObject.clear();
     }
     
-    protected void insertObjectsOnCache(Cache cache, PagesStatus status,
-            IPage newDraftRoot, IPage newOnLineRoot, List<IPage> pageListD, List<IPage> pageListO) {
+    protected void insertObjectsOnCache(
+            Cache cache,
+            PagesStatus status, IPage newDraftRoot, IPage newOnLineRoot, List<IPage> pageListD, List<IPage> pageListO
+    ) {
+
+        IFCacheWithPipeline.pipelined(cache.getNativeCache(), cp -> {
         cache.put(DRAFT_ROOT_CACHE_NAME, newDraftRoot);
         cache.put(ONLINE_ROOT_CACHE_NAME, newOnLineRoot);
         cache.put(PAGE_STATUS_CACHE_NAME, status);
@@ -135,6 +143,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
             IPage onLinePage = pageListO.get(i);
             cache.put(ONLINE_PAGE_CACHE_NAME_PREFIX + onLinePage.getCode(), onLinePage);
         }
+        });
     }
 
     @Override
@@ -582,7 +591,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
     }
 
     private void getWidgetUtilizers(IPage page, Map<String, List> utilizersMap, boolean draft) {
-        Widget[] widgets = page.getWidgets();
+        Widget[] widgets = (page != null) ? page.getWidgets() : null;
         if (widgets != null) {
             for (Widget widget : widgets) {
                 if (null != widget && null != widget.getType()) {
@@ -596,7 +605,7 @@ public class PageManagerCacheWrapper extends AbstractCacheWrapper implements IPa
                 }
             }
         }
-        String[] childrenCodes = page.getChildrenCodes();
+        String[] childrenCodes = (page != null) ? page.getChildrenCodes() : null;
         if (childrenCodes != null) {
             for (String childrenCode : childrenCodes) {
                 IPage child = (draft) ? this.getDraftPage(childrenCode) : this.getOnlinePage(childrenCode);
