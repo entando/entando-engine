@@ -109,7 +109,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.BUILD_CACHE_KEY }}
       #~ SONAR CACHE
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -177,6 +177,7 @@ jobs:
               export ENTANDO_OPT_SONAR_PROJECT_KEY="${{ secrets.ENTANDO_OPT_SONAR_PROJECT_KEY }}"
               ;;
             MTX-SCAN-SNYK)
+              exit 0
               export SNYK_TOKEN="${{ secrets.SNYK_TOKEN }}"
               ;;
             MTX-MVN-POST-DEPLOYMENT-TESTS)

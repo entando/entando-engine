@@ -165,7 +165,7 @@ public interface SystemConstants {
     public static final String ROLE_MANAGER = "RoleManager";
 
     /**
-     * Nome del del servizio di gestione degli utenti.
+     * Nome del servizio di gestione degli utenti.
      */
     public static final String USER_MANAGER = "UserManager";
 
