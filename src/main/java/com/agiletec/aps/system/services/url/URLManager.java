@@ -16,6 +16,7 @@ package com.agiletec.aps.system.services.url;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.util.UrlUtils;
 import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -39,6 +40,8 @@ import java.util.Map;
 public class URLManager extends AbstractURLManager {
 
     private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(URLManager.class);
+
+    private static boolean forceHttps = UrlUtils.determineForceHttps();
 
     @Override
     public void init() throws Exception {
@@ -69,8 +72,8 @@ public class URLManager extends AbstractURLManager {
      * @param pageUrl L'oggetto contenente le informazioni da tradurre in URL.
      * @param reqCtx Il contesto della richiesta.
      * @return La Stringa contenente l'URL.
-     * @see com.agiletec.aps.system.services.url.AbstractURLManager#getURLString(com.agiletec.aps.system.services.url.PageURL,
-     * com.agiletec.aps.system.RequestContext)
+     * @see AbstractURLManager#getURLString(PageURL,
+     * RequestContext)
      */
     @Override
     public String getURLString(PageURL pageUrl, RequestContext reqCtx) {
@@ -186,9 +189,14 @@ public class URLManager extends AbstractURLManager {
         }
         String baseUrlMode = this.calculateBaseUrlMode(forcedBaseUrlMode, request);
         if (this.isForceAddSchemeHost(baseUrlMode)) {
-            String reqScheme = request.getHeader("X-Forwarded-Proto");
-            if (StringUtils.isBlank(reqScheme)) {
-                reqScheme = request.getScheme();
+            String reqScheme = null;
+            if (this.forceHttps) {
+                reqScheme = "https";
+            } else {
+                reqScheme = request.getHeader("X-Forwarded-Proto");
+                if (StringUtils.isBlank(reqScheme)) {
+                    reqScheme = request.getScheme();
+                }
             }
             link.append(reqScheme);
             link.append("://");
