@@ -47,7 +47,7 @@ class LangManagerTest {
 	private LangManager langManager;
 
 	@BeforeEach
-	public static void setUp() throws Exception {
+	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(LangManagerTest.class);
 	}
 
