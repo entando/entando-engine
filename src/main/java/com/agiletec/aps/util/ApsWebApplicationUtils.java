@@ -18,6 +18,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.RefreshableBean;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.ServletContext;
@@ -133,26 +134,30 @@ public class ApsWebApplicationUtils {
 	
 	/**
 	 * Esegue il refresh del sistema.
+	 *
 	 * @param request La request.
+	 * @return
 	 * @throws Throwable In caso di errori in fase di aggiornamento del sistema.
 	 */
-	public static void executeSystemRefresh(HttpServletRequest request) throws Throwable {
+	public static ArrayList<String> executeSystemRefresh(HttpServletRequest request) throws Throwable {
 		WebApplicationContext wac = getWebApplicationContext(request);
-		executeSystemRefresh(wac);
+		return executeSystemRefresh(wac);
 	}
 	
-	public static void executeSystemRefresh(ServletContext svCtx) throws Throwable {
+	public static ArrayList<String> executeSystemRefresh(ServletContext svCtx) throws Throwable {
 		WebApplicationContext wac = getWebApplicationContext(svCtx);
-		executeSystemRefresh(wac);
+		return executeSystemRefresh(wac);
 	}
 
-	private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
+	private static ArrayList<String> executeSystemRefresh(WebApplicationContext wac) throws Throwable {
+		final long startTime = System.currentTimeMillis();
+		final ArrayList<String> problematicBeans = new ArrayList<>();
+
 		if (!isReloadInProgress.compareAndSet(false, true)) {
 			ApsDeepDebug.print("service-reload","!!! " + Thread.currentThread().getName() + " tried to reload system services but another reload is in progress, aborting!!!");
 			logger.info("rejecting the reload of the configuration while still executing the previous one!");
-			return;
+			return problematicBeans;
 		}
-		final long startTime = System.currentTimeMillis();
 
 		reloadProgress.set(0);
 		try {
@@ -174,10 +179,12 @@ public class ApsWebApplicationUtils {
 					reloadProgress.set(progress);
 					reloadRefreshableBean(bean, beansNames[i], progress);
 				} catch (Exception t) {
+					problematicBeans.add(beansNames[i]);
 					ApsDeepDebug.print("service-reload", "RELOADING " + beansNames[i] + " COMPLETED WITH ERRORS");
 					logger.error("error in executeSystemRefresh", t);
 				}
 			}
+			return problematicBeans;
 		} finally {
 			isReloadInProgress.set(false);
 			reloadProgress.set(0);
