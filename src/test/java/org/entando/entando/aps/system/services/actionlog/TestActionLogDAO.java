@@ -129,7 +129,7 @@ class TestActionLogDAO extends BaseTestCase {
 	}
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		ActionLogDAO actionLoggerDAO = new ActionLogDAO();
 		DataSource dataSource = (DataSource) TestActionLogDAO.getApplicationContext().getBean("servDataSource");
 		actionLoggerDAO.setDataSource(dataSource);
@@ -139,11 +139,11 @@ class TestActionLogDAO extends BaseTestCase {
 	}
 
 	@AfterAll
-	protected static void destroy() throws Exception {
+	static void destroy() {
 		TestActionLogDAO._helper.cleanRecords();
 	}
 
-	private static IActionLogDAO _actionLoggerDAO;
-	private static ActionLoggerTestHelper _helper;
+	private static IActionLogDAO _actionLoggerDAO; // NOSONAR
+	private static ActionLoggerTestHelper _helper; // NOSONAR
 
 }

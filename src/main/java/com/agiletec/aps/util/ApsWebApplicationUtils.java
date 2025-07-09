@@ -154,7 +154,8 @@ public class ApsWebApplicationUtils {
 		final ArrayList<String> problematicBeans = new ArrayList<>();
 
 		if (!isReloadInProgress.compareAndSet(false, true)) {
-			ApsDeepDebug.print("service-reload","!!! " + Thread.currentThread().getName() + " tried to reload system services but another reload is in progress, aborting!!!");
+			ApsDeepDebug.print("service-reload","!!! " + Thread.currentThread().getName() +
+					" tried to reload system services but another reload is in progress, aborting!!!"); // NOSONAR
 			logger.info("rejecting the reload of the configuration while still executing the previous one!");
 			return problematicBeans;
 		}
@@ -180,7 +181,7 @@ public class ApsWebApplicationUtils {
 					reloadRefreshableBean(bean, beansNames[i], progress);
 				} catch (Exception t) {
 					problematicBeans.add(beansNames[i]);
-					ApsDeepDebug.print("service-reload", "RELOADING " + beansNames[i] + " COMPLETED WITH ERRORS");
+					ApsDeepDebug.print("service-reload", "RELOADING " + beansNames[i] + " COMPLETED WITH ERRORS"); // NOSONAR
 					logger.error("error in executeSystemRefresh", t);
 				}
 			}
@@ -189,7 +190,7 @@ public class ApsWebApplicationUtils {
 			isReloadInProgress.set(false);
 			reloadProgress.set(0);
 			long endTime = System.currentTimeMillis();
-			ApsDeepDebug.print("service-reload", "Tempo di esecuzione: " + (endTime - startTime) + " ms");
+			ApsDeepDebug.print("service-reload", "Tempo di esecuzione: " + (endTime - startTime) + " ms"); // NOSONAR
 			logger.info("reload configuration completed in {} ms", (endTime - startTime));
 		}
 	}
@@ -199,13 +200,13 @@ public class ApsWebApplicationUtils {
 			long currentServiceStart =0;
 			long currentServiceEnd = 0;
 
-			ApsDeepDebug.print("service-reload", "RELOADING " + name + " start...");
+			ApsDeepDebug.print("service-reload", "RELOADING " + name + " start..."); // NOSONAR
 			currentServiceStart = System.currentTimeMillis();
 			((RefreshableBean) bean).refresh();
 			currentServiceEnd = System.currentTimeMillis();
-			ApsDeepDebug.print("service-reload", "RELOADING " + name + " completed in " + (currentServiceEnd - currentServiceStart) + " ms, " + progress + "% completed");
+			ApsDeepDebug.print("service-reload", "RELOADING " + name + " completed in " + (currentServiceEnd - currentServiceStart) + " ms, " + progress + "% completed"); // NOSONAR
 		} else {
-			ApsDeepDebug.print("service-reload", "THE BEAN WITH NAME " + name + " DOES NOT EXIST");
+			ApsDeepDebug.print("service-reload", "THE BEAN WITH NAME " + name + " DOES NOT EXIST"); // NOSONAR
 		}
 	}
 

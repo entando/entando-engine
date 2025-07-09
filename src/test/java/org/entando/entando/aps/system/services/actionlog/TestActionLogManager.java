@@ -109,18 +109,18 @@ class TestActionLogManager extends BaseTestCase {
 	}
 	
 	@BeforeAll
-	public static void init() {
+	static void init() {
 		_actionLoggerManager = (IActionLogManager) getService(SystemConstants.ACTION_LOGGER_MANAGER);
 		_helper = new ActionLoggerTestHelper(getApplicationContext());
         _helper.cleanRecords();
 	}
 	
 	@AfterAll
-	protected static void destroy() throws Exception {
+	static void destroy() {
 		_helper.cleanRecords();
 	}
 	
-	private static IActionLogManager _actionLoggerManager;
-	private static ActionLoggerTestHelper _helper;
+	private static IActionLogManager _actionLoggerManager; // NOSONAR
+	private static ActionLoggerTestHelper _helper; // NOSONAR
 	
 }
