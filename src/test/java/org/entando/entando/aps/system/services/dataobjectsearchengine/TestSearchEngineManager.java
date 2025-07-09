@@ -387,7 +387,7 @@ class TestSearchEngineManager extends BaseTestCase {
 	}
 
     @BeforeEach
-    public void init() throws Exception {
+    void init() throws Exception {
 		try {
 			this.dataObjectSearchEngineManager = (IDataObjectSearchEngineManager) this.getService("DataObjectSearchEngineManager");
 			this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
