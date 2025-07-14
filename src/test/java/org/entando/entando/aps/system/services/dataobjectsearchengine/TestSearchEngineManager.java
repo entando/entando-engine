@@ -18,11 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
@@ -31,6 +26,10 @@ import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
@@ -346,7 +345,7 @@ class TestSearchEngineManager extends BaseTestCase {
 	}
 
     @BeforeEach
-    void init() throws Exception {
+    void init() {
         this.dataObjectSearchEngineManager = (IDataObjectSearchEngineManager) this.getService("DataObjectSearchEngineManager");
         this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
     }
