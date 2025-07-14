@@ -38,7 +38,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class ApsWebApplicationUtils {
 
 	private static final AtomicBoolean isReloadInProgress = new AtomicBoolean(false);
-	private static final AtomicInteger reloadProgress = new AtomicInteger();
+	private static final AtomicInteger reloadProgress = new AtomicInteger(-1);
 	private static final Map<String, String> reloadInfo = new ConcurrentHashMap<>();
 
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(ApsWebApplicationUtils.class);
