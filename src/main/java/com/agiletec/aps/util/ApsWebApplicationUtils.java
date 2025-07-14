@@ -186,7 +186,7 @@ public class ApsWebApplicationUtils {
 			}
 		} finally {
 			isReloadInProgress.set(false);
-			reloadProgress.set(0);
+			reloadProgress.set(-1);
 			long endTime = System.currentTimeMillis();
 			ApsDeepDebug.print("service-reload", "Execution time: " + (endTime - startTime) + " ms"); // NOSONAR
 			logger.info("reload configuration completed in {} ms", (endTime - startTime));
@@ -195,8 +195,8 @@ public class ApsWebApplicationUtils {
 
 	private static void reloadRefreshableBean(final Object bean, final String name, final int progress) throws Throwable {
 		if (bean != null) {
-			long currentServiceStart =0;
-			long currentServiceEnd = 0;
+			long currentServiceStart;
+			long currentServiceEnd;
 
 			ApsDeepDebug.print("service-reload", "RELOADING " + name + " start..."); // NOSONAR
 			currentServiceStart = System.currentTimeMillis();
