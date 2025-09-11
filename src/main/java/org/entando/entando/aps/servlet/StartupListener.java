@@ -16,11 +16,13 @@ package org.entando.entando.aps.servlet;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import org.entando.entando.aps.system.exception.CSRFProtectionException;
+import org.entando.entando.aps.util.UrlUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.SessionCookieConfig;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,10 +71,23 @@ public class StartupListener extends org.springframework.web.context.ContextLoad
             LOGGER.warn("Content Security Policy (CSP) header is not enabled");
         }
 
+        this.setSessionCookieConfig(svCtx);
+
         long endMs = System.currentTimeMillis();
         String executionTimeMsg = String.format("%s: contextInitialized takes ms:'%s' of execution",
                 this.getClass().getName(), endMs - startMs);
         ApsSystemUtils.markedTrace(executionTimeMsg);
+    }
+
+    protected void setSessionCookieConfig(ServletContext svCtx) {
+        String secureFlag = System.getenv("ENTANDO_SECURE_SECRET_COOKIES");
+        boolean secure = StringUtils.isNotEmpty(secureFlag) ?
+                Boolean.parseBoolean(secureFlag) :
+                UrlUtils.determineForceHttps();
+        if (secure) {
+            SessionCookieConfig sessionCookieConfig = svCtx.getSessionCookieConfig();
+            sessionCookieConfig.setSecure(true);
+        }
     }
 
 }
