@@ -13,6 +13,7 @@
  */
 package org.entando.entando.web.system;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.web.common.annotation.RestAccessControl;
 import org.entando.entando.web.common.model.SimpleRestResponse;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
@@ -39,10 +41,13 @@ public class ReloadConfigurationController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleRestResponse<Map>> reloadConfiguration(HttpServletRequest request) throws Throwable {
+    public ResponseEntity<SimpleRestResponse<Map>> reloadConfiguration(HttpServletRequest request, Principal principal) throws Throwable {
         logger.debug("reload configuration: start..");
         try {
-            ApsWebApplicationUtils.executeSystemRefresh(request);
+            String user = (principal != null && StringUtils.isNotBlank(principal.getName()))
+                    ? principal.getName()
+                    : "system-agent";
+            ApsWebApplicationUtils.executeSystemRefresh(request, user);
         } catch (Exception e) {
             logger.error("Error reloading configuration", e);
             throw e;

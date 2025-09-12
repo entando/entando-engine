@@ -13,10 +13,13 @@
  */
 package com.agiletec.aps.util;
 
+import static com.agiletec.aps.system.SystemConstants.SESSIONPARAM_CURRENT_USER;
+
 import com.agiletec.aps.system.ApsSystemUtils.ApsDeepDebug;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.RefreshableBean;
+import com.agiletec.aps.system.services.user.UserDetails;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+import org.apache.commons.lang3.StringUtils;
+import org.entando.entando.aps.system.services.sync.IFReloadConfigurationGlobalLock;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.springframework.core.io.Resource;
@@ -141,16 +146,31 @@ public class ApsWebApplicationUtils {
 	 */
 	public static void executeSystemRefresh(HttpServletRequest request) throws Throwable {
 		WebApplicationContext wac = getWebApplicationContext(request);
-		executeSystemRefresh(wac);
+        UserDetails user =  (UserDetails) request.getSession().getAttribute(SESSIONPARAM_CURRENT_USER);
+        if (user != null ) {
+            executeSystemRefresh(wac, user.getUsername());
+        } else {
+            executeSystemRefresh(wac);
+        }
 	}
+
+    public static void executeSystemRefresh(HttpServletRequest request, String initiatingUser) throws Throwable {
+        WebApplicationContext wac = getWebApplicationContext(request);
+        executeSystemRefresh(wac, initiatingUser);
+    }
 	
 	public static void executeSystemRefresh(ServletContext svCtx) throws Throwable {
 		WebApplicationContext wac = getWebApplicationContext(svCtx);
 		executeSystemRefresh(wac);
 	}
 
-	private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
+    private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
+        executeSystemRefresh(wac, "system-agent");
+    }
+
+	private static void executeSystemRefresh(WebApplicationContext wac, String initiatingUser) throws Throwable {
 		final long startTime = System.currentTimeMillis();
+        final String token = IFReloadConfigurationGlobalLock.doLock(wac, initiatingUser);
 
 		if (!isReloadInProgress.compareAndSet(false, true)) {
 			ApsDeepDebug.print("service-reload","!!! " + Thread.currentThread().getName() + " tried to reload system services but another reload is in progress, aborting!!!"); // NOSONAR
@@ -185,6 +205,9 @@ public class ApsWebApplicationUtils {
 				}
 			}
 		} finally {
+            if (!IFReloadConfigurationGlobalLock.doUnlock(wac, token) && StringUtils.isNotEmpty(token)) {
+                logger.error("could not successfully release the lock");
+            };
 			isReloadInProgress.set(false);
 			reloadProgress.set(-1);
 			long endTime = System.currentTimeMillis();
