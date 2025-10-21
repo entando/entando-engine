@@ -29,7 +29,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * This servlet handles the requests for protected resources. 
  * @author E.Santoboni
  */
-public class ProtectedResourceWardenServlet extends HttpServlet {
+public class ProtectedResourceWardenServlet extends HttpServlet implements IFSuppressNIOException {
 	
 	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ProtectedResourceWardenServlet.class);
 	
@@ -49,7 +49,9 @@ public class ProtectedResourceWardenServlet extends HttpServlet {
 				}
 			}
 		} catch (Throwable t) {
-			_logger.error("Error providing protected resource", t);
+            if (!isEnabled()) {
+                _logger.error("Error providing protected resource", t);
+            }
 			throw new ServletException("Error providing protected resource", t);
 		}
 	}

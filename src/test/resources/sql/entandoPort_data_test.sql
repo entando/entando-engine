@@ -438,7 +438,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup, readonlypagewidgetconfig, widgetcategory) VALUES ('parent_widget', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Parent Widget</property>
-<property key="it">Parent Widget em Italiano</property>
+<property key="it">Widget Genitore</property>
 </properties>', '<config>
 	<parameter name="parentCode">
 		Description of the Widget Parameter

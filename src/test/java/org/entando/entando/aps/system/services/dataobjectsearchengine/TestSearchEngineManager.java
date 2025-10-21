@@ -18,11 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
@@ -31,6 +26,10 @@ import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.entando.entando.aps.system.services.dataobject.model.DataObject;
 import org.entando.entando.aps.system.services.searchengine.FacetedContentsResult;
 import org.entando.entando.aps.system.services.searchengine.SearchEngineFilter;
@@ -48,285 +47,244 @@ class TestSearchEngineManager extends BaseTestCase {
 
 	@Test
     void testSearchAllContents() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			Set<String> allowedGroup = new HashSet<String>();
-			SearchEngineFilter[] filters = {};
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			List<String> freeContentsId = sem.searchEntityId(filters, null, allowedGroup);
-			assertNotNull(freeContentsId);
-			allowedGroup.add(Group.ADMINS_GROUP_NAME);
-			List<String> allContentsId = sem.searchEntityId(filters, null, allowedGroup);
-			assertNotNull(allContentsId);
-			assertTrue(allContentsId.size() > freeContentsId.size());
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        Set<String> allowedGroup = new HashSet<String>();
+        SearchEngineFilter[] filters = {};
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        List<String> freeContentsId = sem.searchEntityId(filters, null, allowedGroup);
+        assertNotNull(freeContentsId);
+        allowedGroup.add(Group.ADMINS_GROUP_NAME);
+        List<String> allContentsId = sem.searchEntityId(filters, null, allowedGroup);
+        assertNotNull(allContentsId);
+        assertTrue(allContentsId.size() > freeContentsId.size());
+    }
 
 	@Test
     void testSearchContentsId_1() throws Throwable {
-		try {
-			DataObject content_1 = this.createDataObject_1();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
+        DataObject content_1 = this.createDataObject_1();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
 
-			DataObject content_2 = this.createDataObject_2();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
+        DataObject content_2 = this.createDataObject_2();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
 
-			List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", null);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains(content_1.getId()));
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("en", "Petersburg wonderful", null);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains(content_1.getId()));
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("en", "meravigliosa", null);
-			assertNotNull(contentsId);
-			assertFalse(contentsId.contains(content_1.getId()));
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", null);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains(content_1.getId()));
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("en", "Petersburg wonderful", null);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains(content_1.getId()));
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("en", "meravigliosa", null);
+        assertNotNull(contentsId);
+        assertFalse(contentsId.contains(content_1.getId()));
+    }
 
 	@Test
     void testSearchContentsId_2() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
 
-			Set<String> allowedGroup = new HashSet<String>();
-			List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "Corpo coach", allowedGroup);
-			assertNotNull(contentsId);
-			assertFalse(contentsId.contains("ART104"));
+        Set<String> allowedGroup = new HashSet<String>();
+        List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "Corpo coach", allowedGroup);
+        assertNotNull(contentsId);
+        assertFalse(contentsId.contains("ART104"));
 
-			allowedGroup.add("coach");
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "testo coach", allowedGroup);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains("ART104"));//coach content
+        allowedGroup.add("coach");
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "testo coach", allowedGroup);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains("ART104"));//coach content
 
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "Titolo Evento 4", allowedGroup);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains("EVN194"));//free content
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "Titolo Evento 4", allowedGroup);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains("EVN194"));//free content
 
-			Set<String> allowedGroup2 = new HashSet<String>();
-			allowedGroup2.add(Group.ADMINS_GROUP_NAME);
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "testo coach", allowedGroup2);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains("ART104"));//coach content
-
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Set<String> allowedGroup2 = new HashSet<String>();
+        allowedGroup2.add(Group.ADMINS_GROUP_NAME);
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "testo coach", allowedGroup2);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains("ART104"));//coach content
+    }
 
 	@Test
     void testSearchContentsId_3() throws Throwable {
-		try {
-			DataObject content_1 = this.createDataObject_1();
-			content_1.setMainGroup(Group.ADMINS_GROUP_NAME);
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
+        DataObject content_1 = this.createDataObject_1();
+        content_1.setMainGroup(Group.ADMINS_GROUP_NAME);
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
 
-			DataObject content_2 = this.createDataObject_2();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
+        DataObject content_2 = this.createDataObject_2();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
 
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.FREE_GROUP_NAME);
-			List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
-			assertNotNull(contentsId);
-			assertFalse(contentsId.contains(content_1.getId()));
-			allowedGroup.add("secondaryGroup");
-			contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.contains(content_1.getId()));
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        List<String> allowedGroup = new ArrayList<>();
+        allowedGroup.add(Group.FREE_GROUP_NAME);
+        List<String> contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
+        assertNotNull(contentsId);
+        assertFalse(contentsId.contains(content_1.getId()));
+        allowedGroup.add("secondaryGroup");
+        contentsId = this.dataObjectSearchEngineManager.searchEntityId("it", "San meravigliosa", allowedGroup);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.contains(content_1.getId()));
+    }
 
 	@Test
     void testSearchContentsId_4() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			SearchEngineFilter filterByType = new SearchEngineFilter(IIndexerDAO.DATAOBJECT_TYPE_FIELD_NAME, "ART");
-			SearchEngineFilter[] filters = {filterByType};
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.FREE_GROUP_NAME);
-			List<String> contentsId = sem.searchEntityId(filters, null, allowedGroup);
-			assertNotNull(contentsId);
-			String[] expected1 = {"ART180", "ART1", "ART187", "ART121"};
-			this.verify(contentsId, expected1);
-			Category cat1 = this._categoryManager.getCategory("cat1");
-			List<ITreeNode> categories = new ArrayList<ITreeNode>();
-			categories.add(cat1);
-			contentsId = sem.searchEntityId(filters, categories, allowedGroup);
-			assertNotNull(contentsId);
-			String[] expected2 = {"ART180"};
-			this.verify(contentsId, expected2);
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        SearchEngineFilter filterByType = new SearchEngineFilter(IIndexerDAO.DATAOBJECT_TYPE_FIELD_NAME, "ART");
+        SearchEngineFilter[] filters = {filterByType};
+        List<String> allowedGroup = new ArrayList<String>();
+        allowedGroup.add(Group.FREE_GROUP_NAME);
+        List<String> contentsId = sem.searchEntityId(filters, null, allowedGroup);
+        assertNotNull(contentsId);
+        String[] expected1 = {"ART180", "ART1", "ART187", "ART121"};
+        this.verify(contentsId, expected1);
+        Category cat1 = this._categoryManager.getCategory("cat1");
+        List<ITreeNode> categories = new ArrayList<ITreeNode>();
+        categories.add(cat1);
+        contentsId = sem.searchEntityId(filters, categories, allowedGroup);
+        assertNotNull(contentsId);
+        String[] expected2 = {"ART180"};
+        this.verify(contentsId, expected2);
+    }
 
 	@Test
     void testSearchContentsId_5() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			Category general_cat2 = this._categoryManager.getCategory("general_cat2");
-			List<ITreeNode> categories = new ArrayList<ITreeNode>();
-			categories.add(general_cat2);
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.FREE_GROUP_NAME);
-			List<String> contentsId = sem.searchEntityId(null, categories, allowedGroup);
-			assertNotNull(contentsId);
-			assertTrue(contentsId.isEmpty());
-			allowedGroup.add(Group.ADMINS_GROUP_NAME);
-			contentsId = sem.searchEntityId(null, categories, allowedGroup);
-			String[] expected1 = {"ART111", "ART120"};
-			this.verify(contentsId, expected1);
-			Category general_cat1 = this._categoryManager.getCategory("general_cat1");
-			categories.add(general_cat1);
-			contentsId = sem.searchEntityId(null, categories, allowedGroup);
-			assertNotNull(contentsId);
-			String[] expected2 = {"ART111"};
-			this.verify(contentsId, expected2);
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        Category general_cat2 = this._categoryManager.getCategory("general_cat2");
+        List<ITreeNode> categories = new ArrayList<>();
+        categories.add(general_cat2);
+        List<String> allowedGroup = new ArrayList<>();
+        allowedGroup.add(Group.FREE_GROUP_NAME);
+        List<String> contentsId = sem.searchEntityId(null, categories, allowedGroup);
+        assertNotNull(contentsId);
+        assertTrue(contentsId.isEmpty());
+        allowedGroup.add(Group.ADMINS_GROUP_NAME);
+        contentsId = sem.searchEntityId(null, categories, allowedGroup);
+        String[] expected1 = {"ART111", "ART120"};
+        this.verify(contentsId, expected1);
+        Category general_cat1 = this._categoryManager.getCategory("general_cat1");
+        categories.add(general_cat1);
+        contentsId = sem.searchEntityId(null, categories, allowedGroup);
+        assertNotNull(contentsId);
+        String[] expected2 = {"ART111"};
+        this.verify(contentsId, expected2);
+    }
 
     @Disabled("temporary disabling")
 	@Test
     void testSearchContentsId_6() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			Category general = this._categoryManager.getCategory("general");
-			List<ITreeNode> categories = new ArrayList<ITreeNode>();
-			categories.add(general);
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.ADMINS_GROUP_NAME);
-			List<String> contentsId = sem.searchEntityId(null, categories, allowedGroup);
-			assertNotNull(contentsId);
-			String[] expected1 = {"ART122", "ART102", "ART111", "ART120"};
-			this.verify(contentsId, expected1);
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        Category general = this._categoryManager.getCategory("general");
+        List<ITreeNode> categories = new ArrayList<>();
+        categories.add(general);
+        List<String> allowedGroup = new ArrayList<>();
+        allowedGroup.add(Group.ADMINS_GROUP_NAME);
+        List<String> contentsId = sem.searchEntityId(null, categories, allowedGroup);
+        assertNotNull(contentsId);
+        String[] expected1 = {"ART122", "ART102", "ART111", "ART120"};
+        this.verify(contentsId, expected1);
+    }
 
 	@Test
     void testSearchContentsId_7() throws Throwable {
-		try {
-			DataObject content_1 = this.createDataObject_1();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
+        DataObject content_1 = this.createDataObject_1();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_1.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_1);
 
-			DataObject content_2 = this.createDataObject_2();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
+        DataObject content_2 = this.createDataObject_2();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_2.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_2);
 
-			DataObject content_3 = this.createDataObject_3();
-			this.dataObjectSearchEngineManager.deleteIndexedEntity(content_3.getId());
-			this.dataObjectSearchEngineManager.addEntityToIndex(content_3);
+        DataObject content_3 = this.createDataObject_3();
+        this.dataObjectSearchEngineManager.deleteIndexedEntity(content_3.getId());
+        this.dataObjectSearchEngineManager.addEntityToIndex(content_3);
 
-			//San Pietroburgo è una città meravigliosa W3C-WAI
-			//100
-			//Il turismo ha incrementato più del 20 per cento nel 2011-2013, quando la Croazia ha aderito all'Unione europea. Consegienda di questo aumento è una serie di modernizzazione di alloggi di recente costruzione, tra cui circa tre dozzine di ostelli.
-			//101
-			//La vita è una cosa meravigliosa
-			//103
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        //San Pietroburgo è una città meravigliosa W3C-WAI
+        //100
+        //Il turismo ha incrementato più del 20 per cento nel 2011-2013, quando la Croazia ha aderito all'Unione europea. Consegienda di questo aumento è una serie di modernizzazione di alloggi di recente costruzione, tra cui circa tre dozzine di ostelli.
+        //101
+        //La vita è una cosa meravigliosa
+        //103
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
 
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.FREE_GROUP_NAME);
-			SearchEngineFilter filter1 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
-			SearchEngineFilter[] filters1 = {filter1};
-			List<String> contentsId = sem.searchEntityId(filters1, null, allowedGroup);
-			assertNotNull(contentsId);
-			assertEquals(1, contentsId.size());
-			assertTrue(contentsId.contains(content_1.getId()));
+        List<String> allowedGroup = new ArrayList<String>();
+        allowedGroup.add(Group.FREE_GROUP_NAME);
+        SearchEngineFilter filter1 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.ALL_WORDS);
+        SearchEngineFilter[] filters1 = {filter1};
+        List<String> contentsId = sem.searchEntityId(filters1, null, allowedGroup);
+        assertNotNull(contentsId);
+        assertEquals(1, contentsId.size());
+        assertTrue(contentsId.contains(content_1.getId()));
 
-			SearchEngineFilter filter2 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD);
-			SearchEngineFilter[] filters2 = {filter2};
-			contentsId = sem.searchEntityId(filters2, null, allowedGroup);
-			assertNotNull(contentsId);
-			assertEquals(2, contentsId.size());
-			assertTrue(contentsId.contains(content_1.getId()));
-			assertTrue(contentsId.contains(content_3.getId()));
+        SearchEngineFilter filter2 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.AT_LEAST_ONE_WORD);
+        SearchEngineFilter[] filters2 = {filter2};
+        contentsId = sem.searchEntityId(filters2, null, allowedGroup);
+        assertNotNull(contentsId);
+        assertEquals(2, contentsId.size());
+        assertTrue(contentsId.contains(content_1.getId()));
+        assertTrue(contentsId.contains(content_3.getId()));
 
-			SearchEngineFilter filter3 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
-			SearchEngineFilter[] filters3 = {filter3};
-			contentsId = sem.searchEntityId(filters3, null, allowedGroup);
-			assertNotNull(contentsId);
-			assertEquals(0, contentsId.size());
+        SearchEngineFilter filter3 = new SearchEngineFilter("it", "San meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
+        SearchEngineFilter[] filters3 = {filter3};
+        contentsId = sem.searchEntityId(filters3, null, allowedGroup);
+        assertNotNull(contentsId);
+        assertEquals(0, contentsId.size());
 
-			SearchEngineFilter filter4 = new SearchEngineFilter("it", "una cosa meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
-			SearchEngineFilter[] filters4 = {filter4};
-			contentsId = sem.searchEntityId(filters4, null, allowedGroup);
-			assertNotNull(contentsId);
-			assertEquals(1, contentsId.size());
-			assertTrue(contentsId.contains(content_3.getId()));
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        SearchEngineFilter filter4 = new SearchEngineFilter("it", "una cosa meravigliosa", SearchEngineFilter.TextSearchOption.EXACT);
+        SearchEngineFilter[] filters4 = {filter4};
+        contentsId = sem.searchEntityId(filters4, null, allowedGroup);
+        assertNotNull(contentsId);
+        assertEquals(1, contentsId.size());
+        assertTrue(contentsId.contains(content_3.getId()));
+    }
 
 	@Test
     void testFacetedAllContents() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			Set<String> allowedGroup = new HashSet<String>();
-			allowedGroup.add(Group.ADMINS_GROUP_NAME);
-			SearchEngineFilter[] filters = {};
-			FacetedContentsResult result = sem.searchFacetedEntities(filters, null, allowedGroup);
-			assertNotNull(result);
-			assertNotNull(result.getContentsId());
-			assertNotNull(result.getOccurrences());
-			assertTrue(result.getContentsId().size() > 0);
-			assertTrue(result.getOccurrences().size() > 0);
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        Set<String> allowedGroup = new HashSet<>();
+        allowedGroup.add(Group.ADMINS_GROUP_NAME);
+        SearchEngineFilter[] filters = {};
+        FacetedContentsResult result = sem.searchFacetedEntities(filters, null, allowedGroup);
+        assertNotNull(result);
+        assertNotNull(result.getContentsId());
+        assertNotNull(result.getOccurrences());
+        assertTrue(result.getContentsId().size() > 0);
+        assertTrue(result.getOccurrences().size() > 0);
+    }
 
 	@Test
     void testSearchFacetedContents_1() throws Throwable {
-		try {
-			Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
-			thread.join();
-			SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
-			Category general = this._categoryManager.getCategory("general");
-			List<ITreeNode> categories = new ArrayList<ITreeNode>();
-			categories.add(general);
-			List<String> allowedGroup = new ArrayList<String>();
-			allowedGroup.add(Group.FREE_GROUP_NAME);
-			allowedGroup.add(Group.ADMINS_GROUP_NAME);
-			FacetedContentsResult result = sem.searchFacetedEntities(null, categories, allowedGroup);
-			assertNotNull(result);
-			String[] expected1 = {"ART122", "ART102", "ART111", "ART120"};
-			this.verify(result.getContentsId(), expected1);
-			assertEquals(4, result.getOccurrences().size());
-		} catch (Throwable t) {
-			throw t;
-		}
-	}
+        Thread thread = this.dataObjectSearchEngineManager.startReloadDataObjectsReferences();
+        thread.join();
+        SearchEngineManager sem = (SearchEngineManager) this.dataObjectSearchEngineManager;
+        Category general = this._categoryManager.getCategory("general");
+        List<ITreeNode> categories = new ArrayList<>();
+        categories.add(general);
+        List<String> allowedGroup = new ArrayList<>();
+        allowedGroup.add(Group.FREE_GROUP_NAME);
+        allowedGroup.add(Group.ADMINS_GROUP_NAME);
+        FacetedContentsResult result = sem.searchFacetedEntities(null, categories, allowedGroup);
+        assertNotNull(result);
+        String[] expected1 = {"ART122", "ART102", "ART111", "ART120"};
+        this.verify(result.getContentsId(), expected1);
+        assertEquals(4, result.getOccurrences().size());
+    }
 
 	private void verify(List<String> contentsId, String[] array) {
 		assertEquals(array.length, contentsId.size());
-		for (int i = 0; i < array.length; i++) {
-			assertTrue(contentsId.contains(array[i]));
-		}
+        for (String s : array) {
+            assertTrue(contentsId.contains(s));
+        }
 	}
 
 	private DataObject createDataObject_1() {
@@ -387,14 +345,10 @@ class TestSearchEngineManager extends BaseTestCase {
 	}
 
     @BeforeEach
-	private void init() throws Exception {
-		try {
-			this.dataObjectSearchEngineManager = (IDataObjectSearchEngineManager) this.getService("DataObjectSearchEngineManager");
-			this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
-		} catch (Exception e) {
-			throw e;
-		}
-	}
+    void init() {
+        this.dataObjectSearchEngineManager = (IDataObjectSearchEngineManager) this.getService("DataObjectSearchEngineManager");
+        this._categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);
+    }
 
 	private IDataObjectSearchEngineManager dataObjectSearchEngineManager = null;
 	private ICategoryManager _categoryManager;

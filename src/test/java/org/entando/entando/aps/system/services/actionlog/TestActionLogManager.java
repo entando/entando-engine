@@ -33,60 +33,60 @@ class TestActionLogManager extends BaseTestCase {
 	
     @Test
 	public void testGetActionRecords() throws Throwable {
-		List<Integer> ids = this._actionLoggerManager.getActionRecords(null);
+		List<Integer> ids = _actionLoggerManager.getActionRecords(null);
 		this.compareIds(new Integer [] {}, ids);
 		
-		ActionLogRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
+		ActionLogRecord record1 = _helper.createActionRecord(1, "username1", "actionName1",
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
-		ActionLogRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
+		ActionLogRecord record2 = _helper.createActionRecord(2, "username2", "actionName2",
 				"namespace2", DateConverter.parseDate("01/01/2009 10:00", "dd/MM/yyyy HH:mm"), "params2");
-		ActionLogRecord record3 = this._helper.createActionRecord(3, "username123", "actionName123", 
+		ActionLogRecord record3 = _helper.createActionRecord(3, "username123", "actionName123",
 				"namespace123", DateConverter.parseDate("02/01/2009 12:00", "dd/MM/yyyy HH:mm"), "params123");
-		this._helper.addActionRecord(record1);
-		this._helper.addActionRecord(record2);
-		this._helper.addActionRecord(record3);
+		_helper.addActionRecord(record1);
+		_helper.addActionRecord(record2);
+		_helper.addActionRecord(record3);
 		
-		ids = this._actionLoggerManager.getActionRecords(null);
+		ids = _actionLoggerManager.getActionRecords(null);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 		
-		ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);
-		ids = this._actionLoggerManager.getActionRecords(searchBean);
+		ActionLogRecordSearchBean searchBean = _helper.createSearchBean("name", "Name", "space", "arams", null, null);
+		ids = _actionLoggerManager.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 		
-		searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"), null);
-		ids = this._actionLoggerManager.getActionRecords(searchBean);
+		searchBean = _helper.createSearchBean("name", "Name", "space", "arams", DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"), null);
+		ids = _actionLoggerManager.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 3 }, ids);
 		
-		searchBean = this._helper.createSearchBean(null, null, null, null, null, DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"));
-		ids = this._actionLoggerManager.getActionRecords(searchBean);
+		searchBean = _helper.createSearchBean(null, null, null, null, null, DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"));
+		ids = _actionLoggerManager.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 1, 2 }, ids);
 		
-		searchBean = this._helper.createSearchBean(null, "Name", null, null, DateConverter.parseDate("01/01/2009 09:01", "dd/MM/yyyy HH:mm"), 
+		searchBean = _helper.createSearchBean(null, "Name", null, null, DateConverter.parseDate("01/01/2009 09:01", "dd/MM/yyyy HH:mm"),
 				DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"));
-		ids = this._actionLoggerManager.getActionRecords(searchBean);
+		ids = _actionLoggerManager.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 2 }, ids);
 		
 	}
 	
 	@Test
 	public void testAddGetDeleteActionRecord() throws Throwable {
-		ActionLogRecord record1 = this._helper.createActionRecord(0, "username1", "actionName1", "namespace1", null, "params1");
-		ActionLogRecord record2 = this._helper.createActionRecord(0, "username2", "actionName2", "namespace2", null, "params2");
+		ActionLogRecord record1 = _helper.createActionRecord(0, "username1", "actionName1", "namespace1", null, "params1");
+		ActionLogRecord record2 = _helper.createActionRecord(0, "username2", "actionName2", "namespace2", null, "params2");
 		
-		this._actionLoggerManager.addActionRecord(record1);
-		this._actionLoggerManager.addActionRecord(record2);
-		super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+		_actionLoggerManager.addActionRecord(record1);
+		_actionLoggerManager.addActionRecord(record2);
+		waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
 		
-		ActionLogRecord addedRecord1 = this._actionLoggerManager.getActionRecord(record1.getId());
+		ActionLogRecord addedRecord1 = _actionLoggerManager.getActionRecord(record1.getId());
 		this.compareActionRecords(record1, addedRecord1);
-		ActionLogRecord addedRecord2 = this._actionLoggerManager.getActionRecord(record2.getId());
+		ActionLogRecord addedRecord2 = _actionLoggerManager.getActionRecord(record2.getId());
 		this.compareActionRecords(record2, addedRecord2);
 		
-		this._actionLoggerManager.deleteActionRecord(record1.getId());
-		assertNull(this._actionLoggerManager.getActionRecord(record1.getId()));
+		_actionLoggerManager.deleteActionRecord(record1.getId());
+		assertNull(_actionLoggerManager.getActionRecord(record1.getId()));
 		
-		this._actionLoggerManager.deleteActionRecord(record2.getId());
-		assertNull(this._actionLoggerManager.getActionRecord(record2.getId()));
+		_actionLoggerManager.deleteActionRecord(record2.getId());
+		assertNull(_actionLoggerManager.getActionRecord(record2.getId()));
 	}
 	
 	private void compareIds(Integer[] expected, List<Integer> received) {
@@ -109,18 +109,18 @@ class TestActionLogManager extends BaseTestCase {
 	}
 	
 	@BeforeAll
-	private void init() {
-		this._actionLoggerManager = (IActionLogManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
-		this._helper = new ActionLoggerTestHelper(this.getApplicationContext());
-        this._helper.cleanRecords();
+	static void init() {
+		_actionLoggerManager = (IActionLogManager) getService(SystemConstants.ACTION_LOGGER_MANAGER);
+		_helper = new ActionLoggerTestHelper(getApplicationContext());
+        _helper.cleanRecords();
 	}
 	
 	@AfterAll
-	protected void destroy() throws Exception {
-		this._helper.cleanRecords();
+	static void destroy() {
+		_helper.cleanRecords();
 	}
 	
-	private IActionLogManager _actionLoggerManager;
-	private ActionLoggerTestHelper _helper;
+	private static IActionLogManager _actionLoggerManager; // NOSONAR
+	private static ActionLoggerTestHelper _helper; // NOSONAR
 	
 }
