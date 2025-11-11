@@ -52,10 +52,10 @@ public interface IFCacheWithPipeline extends IFeatureFlag {
                 openPipeline(cache);
                 pipelinedBlock.accept((IFCacheWithPipeline) cache);
                 closePipeline(cache);
+                return;
             }
-        } else {
-            pipelinedBlock.accept(null);
         }
+        pipelinedBlock.accept(null);
     }
 
     default boolean isEnabled() {
