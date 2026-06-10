@@ -164,8 +164,14 @@ public class ApsWebApplicationUtils {
 			final String[] beansNames = wac.getBeanNamesForType(RefreshableBean.class);
 			final int beansCount = beansNames.length;
 
-			reloadRefreshableBean(configManager, SystemConstants.BASE_CONFIG_MANAGER,
+			try {
+				reloadRefreshableBean(configManager, SystemConstants.BASE_CONFIG_MANAGER,
                     (int) ( 100.0 / beansCount));
+				reloadInfo.put(SystemConstants.BASE_CONFIG_MANAGER, "");
+			} catch (Throwable t) {
+				reloadInfo.put(SystemConstants.BASE_CONFIG_MANAGER, t.getMessage());
+				throw t;
+			}
 			for (int i = 0; i < beansCount; i++) {
 				Object bean = null;
 
@@ -178,7 +184,7 @@ public class ApsWebApplicationUtils {
 					reloadProgress.set(progress);
 					reloadRefreshableBean(bean, beansNames[i], progress);
 					reloadInfo.put(beansNames[i], "");
-				} catch (Exception t) {
+				} catch (Throwable t) {
 					reloadInfo.put(beansNames[i], t.getMessage());
 					ApsDeepDebug.print("service-reload", "RELOADING " + beansNames[i] + " COMPLETED WITH ERRORS"); // NOSONAR
 					logger.error("error in executeSystemRefresh", t);
