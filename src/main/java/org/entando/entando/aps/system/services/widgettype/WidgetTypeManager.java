@@ -29,6 +29,7 @@ import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChang
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.LabelSanitizer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,6 +109,7 @@ public class WidgetTypeManager extends AbstractService
             if (null != widgetType.getTypeParameters() && null != widgetType.getConfig()) {
                 throw new EntException("ERROR : Params not null and config not null");
             }
+            LabelSanitizer.stripMarkup(widgetType.getTitles());
             this.getWidgetTypeDAO().addWidgetType(widgetType);
             this.getCacheWrapper().addWidgetType(widgetType);
             this.notifyWidgetTypeChanging(widgetType.getCode(), WidgetTypeChangedEvent.INSERT_OPERATION_CODE);
@@ -208,6 +210,7 @@ public class WidgetTypeManager extends AbstractService
             } else {
                 readonlyPageWidgetConfigLocalVar = readonlyPageWidgetConfig;
             }
+            LabelSanitizer.stripMarkup(titles);
             this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup, configUi, bundleId, readonlyPageWidgetConfigLocalVar, widgetCategory, icon);
             type.setTitles(titles);
             type.setConfig(defaultConfig);
