@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import org.entando.entando.ent.exception.EntException;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.LabelSanitizer;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like
@@ -106,6 +107,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     public void addPage(IPage page) throws EntException {
+        LabelSanitizer.stripMarkup(page.getTitles());
         try {
             IPage parent = this.getDraftPage(page.getParentCode());
             if (null == parent) {
@@ -140,6 +142,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
      */
     @Override
     public void updatePage(IPage page) throws EntException {
+        LabelSanitizer.stripMarkup(page.getTitles());
         try {
             this.getPageDAO().updatePage(page);
             this.getCacheWrapper().updateDraftPage(page);
@@ -682,7 +685,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
             _logger.error("Error during refres pages", t);
         }
     }
-    
+
     @Override
 	public boolean movePage(IPage currentPage, IPage newParent) throws EntException {
         return this.movePage(currentPage.getCode(), newParent.getCode());
