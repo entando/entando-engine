@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -71,6 +72,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	 */
 	@Override
 	public void addCategory(Category category) throws EntException {
+		category.setCode(LabelSanitizer.stripMarkup(category.getCode()));
+		LabelSanitizer.stripMarkup(category.getTitles());
 		try {
 			this.getCategoryDAO().addCategory(category);
             this.getCacheWrapper().addCategory(category);
@@ -110,6 +113,7 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 	 */
 	@Override
 	public void updateCategory(Category category) throws EntException {
+		LabelSanitizer.stripMarkup(category.getTitles());
 		try {
 			this.getCategoryDAO().updateCategory(category);
             this.getCacheWrapper().updateCategory(category);
