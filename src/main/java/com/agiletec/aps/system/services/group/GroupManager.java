@@ -26,6 +26,7 @@ import java.util.Collections;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.LabelSanitizer;
 
 /**
  * Servizio gestore dei gruppi.
@@ -76,6 +77,7 @@ public class GroupManager extends AbstractService implements IGroupManager {
     @Override
     public void addGroup(Group group) throws EntException {
         try {
+            group.setDescr(LabelSanitizer.stripMarkup(group.getDescr()));
             this.getGroupDAO().addGroup(group);
             this.getCacheWrapper().addGroup(group);
         } catch (Throwable t) {
@@ -110,6 +112,7 @@ public class GroupManager extends AbstractService implements IGroupManager {
     @Override
     public void updateGroup(Group group) throws EntException {
         try {
+            group.setDescr(LabelSanitizer.stripMarkup(group.getDescr()));
             this.getGroupDAO().updateGroup(group);
             this.getCacheWrapper().updateGroup(group);
         } catch (Throwable t) {

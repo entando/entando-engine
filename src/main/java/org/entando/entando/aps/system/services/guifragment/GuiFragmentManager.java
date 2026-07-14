@@ -32,6 +32,7 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
 import org.entando.entando.ent.util.EntLogging.EntLogger;
 import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.LabelSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -123,6 +124,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
     public void addGuiFragment(GuiFragment guiFragment) throws EntException {
         try {
+            guiFragment.setCode(LabelSanitizer.stripMarkup(guiFragment.getCode()));
             this.getGuiFragmentDAO().insertGuiFragment(guiFragment);
             this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.INSERT_OPERATION_CODE);
             this.evictGroups();
@@ -136,6 +138,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
     @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
     public void updateGuiFragment(GuiFragment guiFragment) throws EntException {
         try {
+            guiFragment.setCode(LabelSanitizer.stripMarkup(guiFragment.getCode()));
             this.getGuiFragmentDAO().updateGuiFragment(guiFragment);
             this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.UPDATE_OPERATION_CODE);
             this.evictGroups();
